@@ -257,7 +257,13 @@
     <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04.gfx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04_I1.dds">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04_I20.dds">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04_I26.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04_I3.dds">

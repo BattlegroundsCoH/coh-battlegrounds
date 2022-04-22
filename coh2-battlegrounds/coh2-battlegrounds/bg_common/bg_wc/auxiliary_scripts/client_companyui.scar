@@ -30,7 +30,7 @@ function BG_CreateCallInUI(player)
     BG_CreateCompanyView();
 
     -- Create Special Company abilities selector
-    BG_CreateCompanyAbilityView(_bg_playerData[bgPlayerID].company);
+    --BG_CreateCompanyAbilityView(_bg_playerData[bgPlayerID].company);
 
     -- Add a function update deployment
     Rule_AddInterval(BG_UpdateCompanyUIValues, _BG_UI_UpdateInterval);
@@ -455,8 +455,7 @@ function BG_UnitCardCancelClicked(tag)
     end
 end
 
-function BG_UpdateCompanyUIValues()
-    Player_CallLocal(Game_GetLocalPlayer(), function(player)
+function BG_UpdateLocalCompanyUIValues(player)
 
         -- The player ID
         local refPlayerID = BG_GetPlayerID(player);
@@ -493,7 +492,10 @@ function BG_UpdateCompanyUIValues()
         -- Update the company button
         BG_UpdateCompanyButtonView(_bg_playerData[refPlayerID].player, _bg_playerData[refPlayerID].company.name);
 
-    end)
+end
+
+function BG_UpdateCompanyUIValues()
+    Player_CallLocal(Game_GetLocalPlayer(), BG_UpdateLocalCompanyUIValues)
 end
 
 function BG_GetDeploytimeBar(unit)

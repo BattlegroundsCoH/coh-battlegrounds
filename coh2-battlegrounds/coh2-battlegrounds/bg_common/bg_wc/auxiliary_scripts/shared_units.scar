@@ -1,40 +1,11 @@
-function BG_HookUnitSystem()
-
-    -- Call every tick...
-    Rule_AddInterval(BG_UpdateUnitCounts, 0.35);
-
-end
-
-function BG_UpdateUnitCounts()
-
-    -- Loop through all players
-    for i=1, #_bg_playerData do
-
-        -- Get the new units (if any)
-        local unitset = bg_set:from_sgroup(Player_GetSquads(_bg_playerData[i].player));
-        local newunits = bg_set:diff(unitset, _bg_playerData[i].squads);
-
-        -- Apply updates if needed
-        if (#newunits > 0) then
-
-            -- Add new squads
-            for j=1, #newunits do
-                BG_SolveNewUnit(_bg_playerData[i], newunits[j]);
-            end
-
-            -- Update set
-            _bg_playerData[i].squads = unitset;
-
-        end
-
-    end
-
-end
-
+-- TODO: Call this when a new unit is discovered
 function BG_SolveNewUnit(playerData, sid)
 
     -- Retrieve basic data
-    local squad = Squad_FromWorldID(sid);
+    local squad = sid
+    if scartype(sid) == ST_NUMBER then
+        squad = Squad_FromWorldID(sid);
+    end
 
     -- Is this squad not one we've deployed?
     if playerData.deployed[sid] == nil then
@@ -91,6 +62,8 @@ function BG_SolveNewUnit(playerData, sid)
 
 end
 
+-- Fetches the first squad in company that is not dead (for the given player)
+-- Returns the squad ID and the unit's company ID
 function BG_FindFirstNonDeadSquadInCompany(playerRefID)
     for squadID, companyID in pairs(_bg_playerData[playerRefID].deployed) do
         if not Squad_IsValid(squadID) or Squad_Count(Squad_FromWorldID(squadID)) == 0 then
@@ -229,7 +202,7 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
             end
 
             -- If not a tow-squad (standard infantry)
-            if unit_data.transport.tow == nil or unit_data.transport.tow == false then
+            if not unit_data.transport.tow then
 
                 -- Garrison the squad
                 Cmd_Garrison(sg_temp, sg_transport_temp, true, false, true);
@@ -305,11 +278,6 @@ end
 
 function BG_ApplyCompanyData(player, squad, tempGroup, data)
 
-    -- Apply veterancy rank (This seems to be redundant tbh)
-    if (data.veterancy_rank > 0) then
-        --Squad_IncreaseVeterancyRank(squad, data.veterancy_rank, true );
-    end
-
     -- Apply veterancy progress
     if (data.veterancy_progress > 0) then
         Squad_IncreaseVeterancyExperience(squad, data.veterancy_progress, true, true );
@@ -335,6 +303,11 @@ function BG_ApplyCompanyData(player, squad, tempGroup, data)
         BG_ApplyUnitModifier(squad, data.modifiers[i]);
     end
 
+    -- Add name upgrade (if any)
+    if data.name then
+        Command_SquadUpgrade(player, tempGroup, BP_GetUpgradeBlueprint(_bg_tuning_guid .. ":" .. data.name), true, false);
+    end
+
 end
 
 function BG_ApplyUnitModifier(squad, modifierData)
@@ -344,12 +317,19 @@ end
 
 function BG_OnSquadDeath(squad)
 
-    -- Get required info
-    local playerOwner = Squad_GetPlayerOwner(squad);
-    local playerRefID = BG_GetPlayerID(playerOwner);
-    local id = Squad_GetGameID(squad);
+    -- Define locals
+    local playerOwner, playerRefID
+    local id = Squad_GetGameID(squad)
 
-    -- If not found - dont do anything. (This might be an AI unit)
+    -- Check if world owned, then get required info
+    if World_OwnsSquad(squad) then
+        playerOwner, playerRefID = BG_GetOwnerFromSquadId(squad);
+    else
+        playerOwner = Squad_GetPlayerOwner(squad);
+        playerRefID = BG_GetPlayerID(playerOwner);
+    end
+
+    -- If not found - dont do anything. (Not a unit we are tracking)
     if _bg_playerData[playerRefID] == nil then
         return;
     end
@@ -389,9 +369,8 @@ function BG_RegisterSquadDeath(playerData, companyID)
     -- Get the company squad
     local companySquad = BG_FindSquadInCompanyData(playerData.company.units, companyID);
 
-    -- If we fail to get the company squad data - it might be because of some debug issue
+    -- If we fail to get the company squad data
     if companySquad == nil then
-        -- TODO: if not in debug broadcast an error event
         return;
     end
 
@@ -637,4 +616,16 @@ function BG_GetDeployedCountOfUnitType(player, blueprint)
         end
     end
     return cntr;
+end
+
+-- Returns the player owner and player BG ID of the squad owner
+-- Returns nil, nil if unit owner is not found.
+function BG_GetOwnerFromSquadId(squadid)
+    for k, v in pairs(_bg_playerData) do
+        for q, _ in pairs(v.deployed) do
+            if q == squadid then
+                return v.player, k
+            end
+        end
+    end
 end
