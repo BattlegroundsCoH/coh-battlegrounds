@@ -102,6 +102,7 @@ public class CompanyBuilder : IBuilder<Company> {
 
     private readonly Stack<IEditAction<BuildableCompany>> m_actions;
     private readonly Stack<IEditAction<BuildableCompany>> m_redoActions;
+    private int m_changeCounter;
 
     /// <summary>
     /// Get or set the <see cref="CompanyAvailabilityType"/> of the company.
@@ -129,7 +130,7 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <summary>
     /// 
     /// </summary>
-    public bool IsChanged => this.m_actions.Count > 0;
+    public bool IsChanged => this.m_actions.Count + this.m_redoActions.Count > this.m_changeCounter;
 
     /// <summary>
     /// 
@@ -458,6 +459,9 @@ public class CompanyBuilder : IBuilder<Company> {
 
         // Set as result
         this.m_companyResult = company;
+
+        // Update change threshold
+        this.m_changeCounter = this.m_actions.Count + this.m_redoActions.Count;
 
         // Return self.
         return this;

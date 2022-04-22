@@ -260,13 +260,24 @@ public class CompanyBuilderViewModel : IViewModel {
 
         // Check if any changes were applied
         if (this.Builder.IsChanged) {
+            if (App.ViewManager.GetRightsideModalControl() is not ModalControl mc) {
+                App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
+                return;
+            }
+            YesNoDialogViewModel.ShowModal(mc, (_, res) => {
+                if (res is not ModalDialogResult.Cancel) {
 
-            // Await response
+                    // Then goback
+                    App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
+
+                }
+            }, "Unsaved Changes", "You have unsaved changes that will be lost if you leave the company builder. Are you sure you want to leave?");
+        } else {
+
+            // Then goback
+            App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
 
         }
-
-        // Then goback
-        App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
 
     }
 
