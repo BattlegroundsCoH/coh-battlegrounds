@@ -149,7 +149,7 @@ public class UnitBuilder : IBuilder<Squad> {
     private readonly Stack<IEditAction<BuildableSquad>> m_actions;
     private readonly Stack<IEditAction<BuildableSquad>> m_redoActions;
 
-    private Squad m_result;
+    private Squad? m_result;
     private BuildableSquad m_target;
 
     private readonly ushort m_overrideIndex = ushort.MaxValue;
@@ -233,7 +233,7 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <summary>
     /// Get the <see cref="Squad"/> instance result from a call to <see cref="Commit(object)"/>.
     /// </summary>
-    public Squad Result => this.m_result;
+    public Squad Result => this.m_result ?? throw new InvalidOperationException("No result available - commit must be invoked beforehand!");
 
     /// <summary>
     /// Get if any changes have been made
@@ -379,7 +379,7 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <param name="upb"></param>
     /// <returns>The modified instance the method is invoked with.</returns>
     public virtual UnitBuilder AddUpgrade(string upb)
-        => this.AddUpgrade(BlueprintManager.FromBlueprintName(upb, BlueprintType.UBP) as UpgradeBlueprint);
+        => this.AddUpgrade(BlueprintManager.FromBlueprintName(upb, BlueprintType.UBP) as UpgradeBlueprint ?? throw new ObjectNotFoundException("Blueprint not found"));
 
     /// <summary>
     /// 
@@ -387,7 +387,7 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <param name="upbs"></param>
     /// <returns>The modified instance the method is invoked with.</returns>
     public virtual UnitBuilder AddUpgrade(string[] upbs) {
-        upbs.ForEach(x => this.AddUpgrade(BlueprintManager.FromBlueprintName(x, BlueprintType.UBP) as UpgradeBlueprint));
+        upbs.ForEach(x => this.AddUpgrade(BlueprintManager.FromBlueprintName(x, BlueprintType.UBP) as UpgradeBlueprint ?? throw new ObjectNotFoundException("Blueprint not found")));
         return this;
     }
 
@@ -405,7 +405,7 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <param name="ibp"></param>
     /// <returns>The modified instance the method is invoked with.</returns>
     public virtual UnitBuilder AddSlotItem(string ibp)
-        => this.AddSlotItem(BlueprintManager.FromBlueprintName(ibp, BlueprintType.IBP) as SlotItemBlueprint);
+        => this.AddSlotItem(BlueprintManager.FromBlueprintName(ibp, BlueprintType.IBP) as SlotItemBlueprint ?? throw new ObjectNotFoundException("Blueprint not found"));
 
     /// <summary>
     /// 
@@ -413,7 +413,7 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <param name="ibps"></param>
     /// <returns>The modified instance the method is invoked with.</returns>
     public virtual UnitBuilder AddSlotItem(string[] ibps) {
-        ibps.ForEach(x => this.AddSlotItem(BlueprintManager.FromBlueprintName(x, BlueprintType.IBP) as SlotItemBlueprint));
+        ibps.ForEach(x => this.AddSlotItem(BlueprintManager.FromBlueprintName(x, BlueprintType.IBP) as SlotItemBlueprint ?? throw new ObjectNotFoundException("Blueprint not found")));
         return this;
     }
 
