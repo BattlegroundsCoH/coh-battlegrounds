@@ -245,7 +245,7 @@ namespace Battlegrounds.Game.Gameplay {
         /// <param name="transportBlueprint">The <see cref="Database.Blueprint"/> to use as transport unit.</param>
         /// <param name="deployMode">The mode used to deploy a <see cref="Squad"/>.</param>
         /// <param name="phase">The deployment phase</param>
-        public void SetDeploymentMethod(Blueprint transportBlueprint, DeploymentMethod deployMode, DeploymentPhase phase) {
+        public void SetDeploymentMethod(Blueprint? transportBlueprint, DeploymentMethod deployMode, DeploymentPhase phase) {
             this.m_deployMode = deployMode;
             this.m_deployBp = transportBlueprint;
             this.m_deployPhase = phase;

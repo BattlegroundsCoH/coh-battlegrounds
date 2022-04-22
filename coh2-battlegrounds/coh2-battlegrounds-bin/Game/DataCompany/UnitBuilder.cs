@@ -82,7 +82,7 @@ public class UnitBuilder : IBuilder<Squad> {
         };
     }
 
-    public sealed record TransportAction(SquadBlueprint Transport) : IEditAction<BuildableSquad> {
+    public sealed record TransportAction(SquadBlueprint? Transport) : IEditAction<BuildableSquad> {
         private SquadBlueprint? m_prev;
         public BuildableSquad Apply(BuildableSquad target) => target with {
             Transport = this.Transport.And(() => this.m_prev = target.Transport)
@@ -188,7 +188,7 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <summary>
     /// 
     /// </summary>
-    public SquadBlueprint Transport => this.m_target.Transport;
+    public SquadBlueprint? Transport => this.m_target.Transport;
 
     /// <summary>
     /// 
@@ -223,7 +223,7 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <summary>
     /// 
     /// </summary>
-    public UnitBuilder CrewBuilder => this.m_target.CrewBuilder;
+    public UnitBuilder? CrewBuilder => this.m_target.CrewBuilder;
 
     /// <summary>
     /// Get or set the amount of time this unit has been deployed.
@@ -249,25 +249,6 @@ public class UnitBuilder : IBuilder<Squad> {
     /// Get if anything can be redone
     /// </summary>
     public bool CanRedo => this.m_redoActions.Count > 0;
-
-    /// <summary>
-    /// New basic <see cref="UnitBuilder"/> instance of for building a <see cref="Squad"/>.
-    /// </summary>
-    [Obsolete("Please use specialised static methods when creating a unit.")]
-    public UnitBuilder() {
-    }
-
-    /// <summary>
-    /// New <see cref="UnitBuilder"/> instance based on the settings of an already built <see cref="Squad"/> instance.
-    /// </summary>
-    /// <param name="squad">The <see cref="Squad"/> instance to copy the unit data from.</param>
-    /// <param name="overrideIndex">Should the built squad keep the index from <paramref name="squad"/>.</param>
-    /// <remarks>This will not modify the <see cref="Squad"/> instance.</remarks>
-    [Obsolete("Please use specialised static methods when creating a unit.")]
-    public UnitBuilder(Squad squad, bool overrideIndex = true) {
-        this.m_hasOverrideIndex = overrideIndex;
-        this.m_overrideIndex = squad.SquadID;
-    }
 
     private UnitBuilder(BuildableSquad squad) {
 
@@ -344,7 +325,7 @@ public class UnitBuilder : IBuilder<Squad> {
     /// </summary>
     /// <param name="sbp">The <see cref="SquadBlueprint"/> to set.</param>
     /// <returns>The modified instance the method is invoked with.</returns>
-    public virtual UnitBuilder SetTransportBlueprint(SquadBlueprint sbp)
+    public virtual UnitBuilder SetTransportBlueprint(SquadBlueprint? sbp)
         => this.ApplyAction(new TransportAction(sbp));
 
     /// <summary>

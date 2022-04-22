@@ -2,17 +2,12 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:BattlegroundsApp"
-             xmlns:hostGame="clr-namespace:BattlegroundsApp.Dialogs.HostGame"
              xmlns:yesNo="clr-namespace:BattlegroundsApp.Dialogs.YesNo"
-             xmlns:lobbypwd="clr-namespace:BattlegroundsApp.Dialogs.LobbyPassword"
              xmlns:ok="clr-namespace:BattlegroundsApp.Dialogs.OK"
              xmlns:createCompany="clr-namespace:BattlegroundsApp.Dialogs.CreateCompany"
              xmlns:importExport="clr-namespace:BattlegroundsApp.Dialogs.ImportExport"
              xmlns:renameCopy="clr-namespace:BattlegroundsApp.Dialogs.RenameCopyDialog"
-             xmlns:newCampaign="clr-namespace:BattlegroundsApp.Dialogs.NewCampaign"
              xmlns:addUnit="clr-namespace:BattlegroundsApp.Dialogs.AddUnit"
-             xmlns:campaignModels="clr-namespace:BattlegroundsApp.Views.CampaignViews.Models"
-             xmlns:campaignViews="clr-namespace:BattlegroundsApp.Views.CampaignViews"
              xmlns:views="clr-namespace:BattlegroundsApp.MVVM.Views"
              xmlns:models="clr-namespace:BattlegroundsApp.MVVM.Models"
              xmlns:lobbyviews="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views"
@@ -24,19 +19,12 @@
              xmlns:dialogViews="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Views"
              xmlns:dialogModels="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Models"
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
-             xmlns:bindablepasswordbox="clr-namespace:BattlegroundsApp.Views.ViewComponent.BindablePasswordBox"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
     
     <Application.Resources>
-        <DataTemplate DataType="{x:Type hostGame:HostGameDialogViewModel}">
-            <hostGame:HostGameDialogView/>
-        </DataTemplate>
         <DataTemplate DataType="{x:Type yesNo:YesNoDialogViewModel}">
             <yesNo:YesNoDialogView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lobbypwd:LobbyPasswordDialogViewModel}">
-            <lobbypwd:LobbyPasswordDialogView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type ok:OKDialogViewModel}">
             <ok:OKDialogView/>
@@ -50,20 +38,8 @@
         <DataTemplate DataType="{x:Type renameCopy:RenameCopyDialogViewModel}">
             <renameCopy:RenameCopyDialogView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type newCampaign:NewCampaignDialogViewModel}">
-            <newCampaign:NewCampaignDialogView/>
-        </DataTemplate>
         <DataTemplate DataType="{x:Type addUnit:AddUnitDialogViewModel}">
             <addUnit:AddUnitDilaogView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type campaignModels:CampaignModelSelectionViewModel}">
-            <campaignViews:CampaignModelSelectionView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type campaignModels:CampaignObjectiveModel}">
-            <campaignViews:CampaignObjectiveView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type campaignModels:CampaignUnitReserveModel}">
-            <campaignViews:CampaignUnitReserveView/>
         </DataTemplate>
         
         <!-- New Dashboard-View Models -->
