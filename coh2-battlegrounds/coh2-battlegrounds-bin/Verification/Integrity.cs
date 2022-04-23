@@ -48,7 +48,7 @@ public static class Integrity {
             Trace.WriteLine($"<DEBUG> Integrity check failed - UPDATE CHECKSUM.TXT (Checksum = {IntegrityHashString})", nameof(Integrity));
 #else
             __integrityHash = 0; // Try prevent this from being stored in memory
-            //throw new FatalAppException($"Checksum integrity check failed."); // Should not actually write this
+            throw new FatalAppException($"Checksum integrity check failed."); // Should not actually write this
 #endif
         } else {
 
@@ -79,6 +79,10 @@ public static class Integrity {
     }
 
     private static ulong ComputeChecksum(string filepath) {
+
+        // Skip workshop file, it won't be the same for everybody
+        if (Path.GetFileNameWithoutExtension(filepath) is "workshop-map-db")
+            return 0;
 
         ulong check = 0;
         using var fs = File.OpenRead(filepath);
