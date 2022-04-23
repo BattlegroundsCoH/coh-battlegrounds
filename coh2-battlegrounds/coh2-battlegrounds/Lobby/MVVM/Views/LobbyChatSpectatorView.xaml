@@ -38,7 +38,7 @@
                 <Label Content="Observers" Style="{StaticResource ObserverLabel}"/>
                 <ListView MaxHeight="256"/>
             </StackPanel>
-            <FlowDocumentScrollViewer Margin="6,8,6,0"
+            <FlowDocumentScrollViewer Margin="0,8,6,0"
                                       Style="{StaticResource ChatHistory}"
                                       Document="{Binding MessageDocument}">
             </FlowDocumentScrollViewer>

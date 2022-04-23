@@ -13,158 +13,157 @@ using Battlegrounds.Lua.Generator;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Gameplay.Supply;
 
-namespace Battlegrounds.Compiler {
+namespace Battlegrounds.Compiler;
+
+/// <summary>
+/// Basic <see cref="Session"/> to Lua code compiler. Can be extended to add support for custom features.
+/// </summary>
+public class SessionCompiler : ISessionCompiler {
+
+    private ICompanyCompiler? m_companyCompiler;
 
     /// <summary>
-    /// Basic <see cref="Session"/> to Lua code compiler. Can be extended to add support for custom features.
+    /// Create a new <see cref="SessionCompiler{T}"/> instance.
     /// </summary>
-    public class SessionCompiler : ISessionCompiler {
+    public SessionCompiler() => this.m_companyCompiler = null;
 
-        private ICompanyCompiler? m_companyCompiler;
+    public virtual string CompileSession(ISession session) {
 
-        /// <summary>
-        /// Create a new <see cref="SessionCompiler{T}"/> instance.
-        /// </summary>
-        public SessionCompiler() => this.m_companyCompiler = null;
+        // Make sure we have a compiler compiler
+        if (this.m_companyCompiler is null) {
+            throw new ArgumentNullException(nameof(this.m_companyCompiler), "Cannot compile a session without a Company Compiler instance.");
+        }
 
-        public virtual string CompileSession(ISession session) {
+        // Get the participants
+        var participants = session.GetParticipants();
 
-            // Make sure we have a compiler compiler
-            if (this.m_companyCompiler is null) {
-                throw new ArgumentNullException(nameof(this.m_companyCompiler), "Cannot compile a session without a Company Compiler instance.");
+        // Prepare game settings data
+        Dictionary<string, object> bg_settings = new() {
+            ["playercount"] = participants.Count(x => x.IsHuman),
+            ["session_guid"] = session.SessionID.ToString(),
+            ["map"] = Path.GetFileNameWithoutExtension(session.Scenario.RelativeFilename),
+            ["tuning_mod"] = new Dictionary<string, object>() {
+                ["mod_name"] = session.TuningMod.Name,
+                ["mod_guid"] = session.TuningMod.Guid.GUID,
+                ["mod_verify_upg"] = $"{session.TuningMod.Guid.GUID}:{session.TuningMod.VerificationUpgrade}",
+            },
+            ["gamemode"] = session.Gamemode?.Name ?? "Victory Points",
+            ["gameoptions"] = session.Settings,
+            ["team_setup"] = new Dictionary<string, object>() {
+                ["allies"] = this.GetTeam("allies", participants.Where(x => x.TeamIndex is ParticipantTeam.TEAM_ALLIES)),
+                ["axis"] = this.GetTeam("axis", participants.Where(x => x.TeamIndex is ParticipantTeam.TEAM_AXIS)),
+            },
+        };
+
+        // Prepare company data
+        Dictionary<string, Dictionary<string, object>> bg_companies = participants
+            .Select(x => this.GetCompany(x, session.Names))
+            .ToDictionary();
+
+        // Save to lua
+        var sourceBuilder = new LuaSourceBuilder()
+            .Assignment(nameof(bg_settings), bg_settings)
+            .Assignment(nameof(bg_companies), bg_companies)
+            .Assignment("bg_db.towing_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowingUpgrade))
+            .Assignment("bg_db.towed_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowUpgrade));
+
+        // Write the precompiled database
+        this.WritePrecompiledDatabase(sourceBuilder, participants.Select(x => x.SelectedCompany));
+
+        // Return built source code
+        return sourceBuilder.GetSourceText();
+
+    }
+
+    private static string GetBlueprintName(ModGuid guid, string blueprint)
+        => $"{guid.GUID}:{blueprint}";
+
+    private static string GetCompanyUsername(ISessionParticipant participant)
+        => participant.IsHuman ? participant.GetName() : $"AIPlayer#{participant.PlayerIndexOnTeam-1}";
+
+    private KeyValuePair<string, Dictionary<string, object>> GetCompany(ISessionParticipant x, IList<string> customNames)
+        => this.m_companyCompiler is null ? throw new Exception("Company compiler instance is undefined!")
+        : new(GetCompanyUsername(x), this.m_companyCompiler.CompileToLua(x.SelectedCompany, !x.IsHuman, x.PlayerIndexOnTeam, customNames));
+
+    protected virtual List<Dictionary<string, object>> GetTeam(string team, IEnumerable<ISessionParticipant> players) {
+
+        List<Dictionary<string, object>> result = new();
+
+        foreach (var player in players) {
+            Dictionary<string, object> data = new() {
+                ["display_name"] = player.GetName(),
+                ["ai_value"] = (byte)player.Difficulty,
+                ["id"] = player.PlayerIndexOnTeam,
+                ["uid"] = player.PlayerIngameIndex
+            };
+            if (player.Difficulty is AIDifficulty.Human) {
+                data["steam_index"] = player.GetID().ToString(); // Store as string (Not sure Lua can handle steam ids, 64-bit unsigned integers)
             }
+            result.Add(data);
+        }
 
-            // Get the participants
-            var participants = session.GetParticipants();
+        return result;
 
-            // Prepare game settings data
-            Dictionary<string, object> bg_settings = new() {
-                ["playercount"] = participants.Count(x => x.IsHuman),
-                ["session_guid"] = session.SessionID.ToString(),
-                ["map"] = Path.GetFileNameWithoutExtension(session.Scenario.RelativeFilename),
-                ["tuning_mod"] = new Dictionary<string, object>() {
-                    ["mod_name"] = session.TuningMod.Name,
-                    ["mod_guid"] = session.TuningMod.Guid.GUID,
-                    ["mod_verify_upg"] = $"{session.TuningMod.Guid.GUID}:{session.TuningMod.VerificationUpgrade}",
-                },
-                ["gamemode"] = session.Gamemode?.Name ?? "Victory Points",
-                ["gameoptions"] = session.Settings,
-                ["team_setup"] = new Dictionary<string, object>() {
-                    ["allies"] = this.GetTeam("allies", participants.Where(x => x.TeamIndex is ParticipantTeam.TEAM_ALLIES)),
-                    ["axis"] = this.GetTeam("axis", participants.Where(x => x.TeamIndex is ParticipantTeam.TEAM_AXIS)),
-                },
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="lua"></param>
+    /// <param name="companies"></param>
+    protected virtual void WritePrecompiledDatabase(LuaSourceBuilder lua, IEnumerable<Company> companies) {
+
+        // Get all potential slot items
+        var upgrades = companies.SelectMany(x => x.Units.SelectMany(y => y.Upgrades).Cast<UpgradeBlueprint>()).Distinct();
+        var itemsInUpgrades = upgrades
+            .SelectMany(x => x.SlotItems.Select(y => BlueprintManager.FromBlueprintName<SlotItemBlueprint>(y))).Distinct();
+        var items = companies.SelectMany(x => x.Units.SelectMany(y => y.SlotItems.Cast<SlotItemBlueprint>()))
+            .Union(itemsInUpgrades).Distinct();
+        var upgradeItems = itemsInUpgrades.ToDictionary(k => k, v => upgrades.Where(x => x.SlotItems.Any(y => y == v.Name)).ToHashSet());
+
+        // Loop through all the items
+        foreach (var ibp in items) {
+
+            // Generate data entry
+            Dictionary<string, object> ibpData = new() {
+                ["icon"] = ibp.UI.Icon,
+                ["ignore_if"] = upgradeItems.TryGetValue(ibp, out var upgs) ? upgs.Select(x => x.GetScarName()) : Array.Empty<string>()
             };
 
-            // Prepare company data
-            Dictionary<string, Dictionary<string, object>> bg_companies = participants
-                .Select(x => this.GetCompany(x))
-                .ToDictionary();
-
-            // Save to lua
-            var sourceBuilder = new LuaSourceBuilder()
-                .Assignment(nameof(bg_settings), bg_settings)
-                .Assignment(nameof(bg_companies), bg_companies)
-                .Assignment("bg_db.towing_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowingUpgrade))
-                .Assignment("bg_db.towed_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowUpgrade));
-
-            // Write the precompiled database
-            this.WritePrecompiledDatabase(sourceBuilder, participants.Select(x => x.SelectedCompany));
-
-            // Return built source code
-            return sourceBuilder.GetSourceText();
+            // Write DB
+            _ = lua.Assignment($"bg_db.slot_items[\"{ibp.GetScarName()}\"]", ibpData);
 
         }
 
-        private static string GetBlueprintName(ModGuid guid, string blueprint)
-            => $"{guid.GUID}:{blueprint}";
+    }
 
-        private static string GetCompanyUsername(ISessionParticipant participant)
-            => participant.IsHuman ? participant.GetName() : $"AIPlayer#{participant.PlayerIndexOnTeam-1}";
+    public void SetCompanyCompiler(ICompanyCompiler companyCompiler) => this.m_companyCompiler = companyCompiler;
+    
+    public string CompileSupplyData(ISession session) {
 
-        private KeyValuePair<string, Dictionary<string, object>> GetCompany(ISessionParticipant x)
-            => new(GetCompanyUsername(x), this.m_companyCompiler.CompileToLua(x.SelectedCompany, !x.IsHuman, x.PlayerIndexOnTeam));
+        // Get the participants
+        var participants = session.GetParticipants();
 
-        protected virtual List<Dictionary<string, object>> GetTeam(string team, IEnumerable<ISessionParticipant> players) {
+        // Get the companies
+        var companies = participants.Select(x => x.SelectedCompany);
 
-            List<Dictionary<string, object>> result = new();
+        // Get the sqauds
+        var squads = companies.SelectMany(x => x.Units);
 
-            foreach (var player in players) {
-                Dictionary<string, object> data = new() {
-                    ["display_name"] = player.GetName(),
-                    ["ai_value"] = (byte)player.Difficulty,
-                    ["id"] = player.PlayerIndexOnTeam,
-                    ["uid"] = player.PlayerIngameIndex
-                };
-                if (player.Difficulty is AIDifficulty.Human) {
-                    data["steam_index"] = player.GetID().ToString(); // Store as string (Not sure Lua can handle steam ids, 64-bit unsigned integers)
-                }
-                result.Add(data);
-            }
+        // TODO: Save squad specific upgrades
 
-            return result;
+        // Get blueprints and create generic profiles
+        var profiles = squads.Select(x => x.SBP)
+            .Distinct()
+            .Select(x => new KeyValuePair<string, SupplyProfile>(x.GetScarName(), new(x)))
+            .ToDictionary();
 
-        }
+        // Save to lua
+        var sourceBuilder = new LuaSourceBuilder()
+            .Assignment("bgsupplydata_profiles", profiles);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="lua"></param>
-        /// <param name="companies"></param>
-        protected virtual void WritePrecompiledDatabase(LuaSourceBuilder lua, IEnumerable<Company> companies) {
-
-            // Get all potential slot items
-            var upgrades = companies.SelectMany(x => x.Units.SelectMany(y => y.Upgrades).Cast<UpgradeBlueprint>()).Distinct();
-            var itemsInUpgrades = upgrades
-                .SelectMany(x => x.SlotItems.Select(y => BlueprintManager.FromBlueprintName<SlotItemBlueprint>(y))).Distinct();
-            var items = companies.SelectMany(x => x.Units.SelectMany(y => y.SlotItems.Cast<SlotItemBlueprint>()))
-                .Union(itemsInUpgrades).Distinct();
-            var upgradeItems = itemsInUpgrades.ToDictionary(k => k, v => upgrades.Where(x => x.SlotItems.Any(y => y == v.Name)).ToHashSet());
-
-            // Loop through all the items
-            foreach (var ibp in items) {
-
-                // Generate data entry
-                Dictionary<string, object> ibpData = new() {
-                    ["icon"] = ibp.UI.Icon,
-                    ["ignore_if"] = upgradeItems.TryGetValue(ibp, out var upgs) ? upgs.Select(x => x.GetScarName()) : Array.Empty<string>()
-                };
-
-                // Write DB
-                _ = lua.Assignment($"bg_db.slot_items[\"{ibp.GetScarName()}\"]", ibpData);
-
-            }
-
-        }
-
-        public void SetCompanyCompiler(ICompanyCompiler companyCompiler) => this.m_companyCompiler = companyCompiler;
-        
-        public string CompileSupplyData(ISession session) {
-
-            // Get the participants
-            var participants = session.GetParticipants();
-
-            // Get the companies
-            var companies = participants.Select(x => x.SelectedCompany);
-
-            // Get the sqauds
-            var squads = companies.SelectMany(x => x.Units);
-
-            // TODO: Save squad specific upgrades
-
-            // Get blueprints and create generic profiles
-            var profiles = squads.Select(x => x.SBP)
-                .Distinct()
-                .Select(x => new KeyValuePair<string, SupplyProfile>(x.GetScarName(), new(x)))
-                .ToDictionary();
-
-            // Save to lua
-            var sourceBuilder = new LuaSourceBuilder()
-                .Assignment("bgsupplydata_profiles", profiles);
-
-            // Return source code
-            return sourceBuilder.GetSourceText();
-
-        }
+        // Return source code
+        return sourceBuilder.GetSourceText();
 
     }
 

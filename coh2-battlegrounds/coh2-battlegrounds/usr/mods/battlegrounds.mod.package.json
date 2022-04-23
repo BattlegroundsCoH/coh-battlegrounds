@@ -16,13 +16,6 @@
     ],
     "Gamemodes": [
         {
-            "ID": "bg_attrition",
-            "Display": "30",
-            "DisplayDesc": "31",
-            "DefaultOption": 0,
-            "Files": []
-        },
-        {
             "ID": "bg_vp",
             "Display": "32",
             "DisplayDesc": "33",

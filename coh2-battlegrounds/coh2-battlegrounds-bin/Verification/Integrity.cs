@@ -80,6 +80,10 @@ public static class Integrity {
 
     private static ulong ComputeChecksum(string filepath) {
 
+        // Skip workshop file, it won't be the same for everybody
+        if (Path.GetFileNameWithoutExtension(filepath) is "workshop-map-db")
+            return 0;
+
         ulong check = 0;
         using var fs = File.OpenRead(filepath);
         while (fs.Position < fs.Length) {

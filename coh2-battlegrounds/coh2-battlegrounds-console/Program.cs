@@ -120,7 +120,7 @@ namespace coh2_battlegrounds_console {
             public override void Execute(CommandArgumentList argumentList) {
 
                 LoadBGAndProceed();
-                CampaignCompiler.Output = argumentList.GetValue(PATH);
+               // CampaignCompiler.Output = argumentList.GetValue(PATH);
                 CampaignCompiler.Compile(argumentList.GetValue(OUT));
 
             }

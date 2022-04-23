@@ -128,7 +128,7 @@ end
 ------------------------------------------------------------
 
 function Table_ContainsAny(table, predicate)
-    for k,v in pairs(table) do
+    for _,v in pairs(table) do
         if predicate(v) then
             return true;
         end

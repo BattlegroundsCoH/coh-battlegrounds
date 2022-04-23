@@ -70,7 +70,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
     public ObservableCollection<AbilitySlotViewModel> CompanyAbilities { get; set; }
     public ObservableCollection<AbilitySlotViewModel> CompanyUnitAbilities { get; set; }
-    public ObservableCollection<EquipmentSlot> CompanyEquipment { get; set; }
+    //public ObservableCollection<EquipmentSlot> CompanyEquipment { get; set; }
 
     public CompanyBuilder Builder => this.m_builder ?? throw new Exception("Expected a valid instance of a company builder but found none (Invalid call tree!)");
 
@@ -150,7 +150,7 @@ public class CompanyBuilderViewModel : IViewModel {
         this.CompanyVehicleSquads = new();
         this.CompanyAbilities = new();
         this.CompanyUnitAbilities = new();
-        this.CompanyEquipment = new();
+        //this.CompanyEquipment = new();
         this.AvailableItems = new();
 
         // Define list
@@ -260,13 +260,24 @@ public class CompanyBuilderViewModel : IViewModel {
 
         // Check if any changes were applied
         if (this.Builder.IsChanged) {
+            if (App.ViewManager.GetRightsideModalControl() is not ModalControl mc) {
+                App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
+                return;
+            }
+            YesNoDialogViewModel.ShowModal(mc, (_, res) => {
+                if (res is not ModalDialogResult.Cancel) {
 
-            // Await response
+                    // Then goback
+                    App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
+
+                }
+            }, "Unsaved Changes", "You have unsaved changes that will be lost if you leave the company builder. Are you sure you want to leave?");
+        } else {
+
+            // Then goback
+            App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
 
         }
-
-        // Then goback
-        App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
 
     }
 
@@ -339,7 +350,7 @@ public class CompanyBuilderViewModel : IViewModel {
         this.CompanyVehicleSquads.Clear();
         this.CompanyAbilities.Clear();
         this.CompanyUnitAbilities.Clear();
-        this.CompanyEquipment.Clear();
+        //this.CompanyEquipment.Clear();
 
         // Add all units
         this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.Phase);
@@ -409,11 +420,11 @@ public class CompanyBuilderViewModel : IViewModel {
     private void AddEquipmentToDisplay(Blueprint blueprint) {
 
         // Create display
-        EquipmentSlot equipmentSlot = new(blueprint);
-        equipmentSlot.OnRemove += this.OnEquipmentRemoveClicked;
-        equipmentSlot.OnEquipped += this.EquipItem;
+        //EquipmentSlot equipmentSlot = new(blueprint);
+        //equipmentSlot.OnRemove += this.OnEquipmentRemoveClicked;
+        //equipmentSlot.OnEquipped += this.EquipItem;
 
-        this.CompanyEquipment.Add(equipmentSlot);
+        //this.CompanyEquipment.Add(equipmentSlot);
 
     }
 
@@ -613,13 +624,13 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    private void OnEquipmentRemoveClicked(EquipmentSlot equipmentSlot) { 
+    /*private void OnEquipmentRemoveClicked(EquipmentSlot equipmentSlot) { 
     
     }
 
     private void EquipItem(EquipmentSlot equipmentSlot, SquadBlueprint sbp) { 
     
-    }
+    }*/
 
     private void RefreshAbilityDisplay() {
 
@@ -673,7 +684,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    public void UnloadViewModel(OnModelClosed closeCallback) {
+    public void UnloadViewModel(OnModelClosed closeCallback, bool destroy) {
         App.ViewManager.DestroyView(this);
         if (this.HasChanges) {
             if (App.ViewManager.GetRightsideModalControl() is not ModalControl mc) {

@@ -117,7 +117,7 @@ function Battlegrounds_OnGamemodeInit()
         _bg_custom.teams[t] = (_bg_custom.teams[t] or 0) + 1;
     end
 
-    Rule_AddInterval(Battlegrounds_check_periodically, 5);
+    --Rule_AddInterval(Battlegrounds_check_periodically, 5);
 
 end
 

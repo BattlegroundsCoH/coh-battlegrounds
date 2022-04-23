@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using Battlegrounds.Functional;
 
 namespace BattlegroundsApp.Controls.Editor;
+
 /// <summary>
 /// Interaction logic for Icon.xaml
 /// </summary>
@@ -36,12 +29,12 @@ public partial class Icon : UserControl {
         = DependencyProperty.Register(nameof(IconName), typeof(string), typeof(Icon), new FrameworkPropertyMetadata(
             string.Empty,
             FrameworkPropertyMetadataOptions.AffectsRender,
-            (a, b) => (a as Icon).IconName = b.NewValue as string));
+            (a, b) => a.Cast<Icon>(i => i.IconName = b.NewValue as string)));
 
     /// <summary>
     /// Get or set icon name to display
     /// </summary>
-    public string IconName {
+    public string? IconName {
         get => this.GetValue(IconNameProperty) as string;
         set {
             this.SetValue(IconNameProperty, value);
@@ -56,12 +49,12 @@ public partial class Icon : UserControl {
         = DependencyProperty.Register(nameof(SymbolName), typeof(string), typeof(Icon), new FrameworkPropertyMetadata(
             string.Empty,
             FrameworkPropertyMetadataOptions.AffectsRender,
-            (a, b) => (a as Icon).SymbolName = b.NewValue as string));
+            (a, b) => a.Cast<Icon>(i => i.SymbolName = b.NewValue as string)));
 
     /// <summary>
     /// Get or set name of symbol to display
     /// </summary>
-    public string SymbolName {
+    public string? SymbolName {
         get => this.GetValue(SymbolNameProperty) as string;
         set {
             this.SetValue(SymbolNameProperty, value);
@@ -78,7 +71,7 @@ public partial class Icon : UserControl {
     /// <summary>
     /// Get the colour of the mask.
     /// </summary>
-    public Brush MaskColour {
+    public Brush? MaskColour {
         get => this.GetValue(MaskColourProperty) as Brush;
         set {
             this.SetValue(MaskColourProperty, value);
@@ -105,10 +98,10 @@ public partial class Icon : UserControl {
     }
 
     private void TrySetIcon()
-        => TrySet(IconImage, ICON_SOURCE, IconName);
+        => TrySet(IconImage, ICON_SOURCE, IconName ?? string.Empty);
 
     private void TrySetSymbol()
-        => TrySet(SymbolImage, SYMBOL_SOURCE, SymbolName);
+        => TrySet(SymbolImage, SYMBOL_SOURCE, SymbolName ?? string.Empty);
 
     private static void TrySet(Image img, string source, string name) {
 

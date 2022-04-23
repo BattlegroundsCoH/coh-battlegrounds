@@ -39,7 +39,7 @@
 					<float name="action" value="0" />
 					<float name="command" value="0" />
 					<float name="fuel" value="0" />
-					<float name="manpower" value="360" />
+					<float name="manpower" value="120" />
 					<float name="munition" value="0" />
 					<float name="popcap" value="0" />
 				</group>
@@ -313,7 +313,7 @@
 			<bool name="obb_selectable" value="False" />
 			<string name="overlay_name" value="" />
 			<bool name="reveal_for_decryption" value="False" />
-			<locstring name="screen_name" value="2198050" />
+			<locstring name="screen_name" value="76" mod="142b113740474c82a60b0a428bd553d5" />
 			<enum name="selection_name" value="soldier" />
 			<float name="selection_scale" value="1" />
 			<enum name="selection_type" value="squad_select" />

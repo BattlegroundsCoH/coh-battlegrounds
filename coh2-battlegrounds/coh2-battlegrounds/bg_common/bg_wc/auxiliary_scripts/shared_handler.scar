@@ -33,10 +33,6 @@ function BG_Init()
         return;
     end
 
-    if g_towdebug then
-        Rule_AddOneShot(_tow_test, 1);
-    end
-
     -- Load the player companies
     local companyError = BG_LoadCompanies();
 
@@ -68,7 +64,7 @@ function BG_Init()
     BG_PrepareMapdata();
 
     -- Activate the unit system
-    BG_HookUnitSystem();
+    --BG_HookUnitSystem();
 
     -- Properly set up win condition data
     BG_SetupWincondition();
@@ -80,10 +76,9 @@ function BG_Init()
     UI_AddSetupFunction(function()
         BG_CreateCallInUI(Game_GetLocalPlayer()); -- Call-in / Deploy UI
         BG_CreateAndDisplayMultiplayerActionsScreenOverride(Game_GetLocalPlayer()); -- Game actions (Vote on withdraw, Surrender)
-        if BGSupply_SetupUI ~= nil then -- Make the supply UI check here (TODO: Add more dynamic hook function for this)
+        if BGSupply_SetupUI ~= nil then -- Make the supply UI check here
             BGSupply_SetupUI();
         end
-        --_endgame_test(); -- DISABLE WHEN DONE
     end);
 
     -- Init AE functions for BG
@@ -103,73 +98,6 @@ function BG_Init()
 
     -- Add the broadcast event callback
     Rule_AddGlobalEvent(BG_GameBroadcastMessageReceived, GE_BroadcastMessage);
-
-end
-
-function _endgame_test()
-
-    _bg_playerData[BG_GetPlayerID(Game_GetLocalPlayer())].lossData = {
-        {
-            company_id = 100,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 5,
-            item_symbol = "Icons_weapons_weapon_pps",
-        },
-        {
-            company_id = 101,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 3,
-        },
-        {
-            company_id = 102,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 0,
-            item_symbol = "Icons_weapons_weapon_pps",
-        },
-        {
-            company_id = 103,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 5,
-            item_symbol = "Icons_weapons_weapon_pps",
-        },
-        {
-            company_id = 104,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 4,
-            item_symbol = "Icons_weapons_weapon_pps",
-        },
-        {
-            company_id = 105,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 1,
-            item_symbol = "Icons_weapons_weapon_pps",
-        },
-        {
-            company_id = 106,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 2,
-        },
-    };
-    _bg_playerData[BG_GetPlayerID(Game_GetLocalPlayer())].gainsData = {
-        {
-            type = 3,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            rank = 4, -- Starting rank
-            now = 5,
-            item_symbol = "Icons_weapons_weapon_pps",
-        },
-        {
-            type = 2,
-            symbol = "Icons_symbols_unit_soviet_conscript_02_symbol",
-            item_symbol = "Icons_weapons_weapon_panzerschreck",
-        },
-        {
-            type = 1,
-            symbol = "Icons_symbols_vehicle_german_panzer_iv_symbol",
-        }
-    }
-
-    BG_CreateAndDisplayGameOverScreenOverride(Game_GetLocalPlayer(), BG_SaveAndExit);
 
 end
 
@@ -264,7 +192,7 @@ end
 
 function BG_SaveAndExit()
 
-    -- Try this (Don't know what it actually does)
+    -- Set gamemover (By the looks of this, it just sets both teams to lose and looks like neither get supply points, which is fine.)
     World_SetGameOver();
 
     -- Make sure it's not a replay. (Would otherwise also close the game)
@@ -355,6 +283,17 @@ function BG_CollectEndofMatchData()
 
     -- Loop through all the players
     for i=1, #_bg_playerData do
+
+        -- Get all squads and handle newly detected ones
+        local playerSquads = SGroup_CreateIfNotFound("sg_eom_allsquads")
+        Player_GetAll(_bg_playerData[i].player, playerSquads);
+
+        -- Loop over an test
+        local __sgeach = function(sgroupid, itemindex, squadID)
+            BG_SolveNewUnit(_bg_playerData[i], squadID)
+        end
+        SGroup_ForEach(playerSquads, __sgeach);
+        SGroup_Clear(playerSquads)
 
         -- For all deployed units
         for squadID, company_id in pairs(_bg_playerData[i].deployed) do

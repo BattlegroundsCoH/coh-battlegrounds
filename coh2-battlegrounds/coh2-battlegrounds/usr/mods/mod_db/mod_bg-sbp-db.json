@@ -30,7 +30,8 @@
     ],
     "Abilities": [
       "blizzard_effect",
-      "blizzard_howitzer"
+      "blizzard_howitzer",
+      "detach_weapon_tow_bg"
     ],
     "Veterancy": [
       {
@@ -217,7 +218,8 @@
     "Abilities": [
       "blizzard_effect",
       "at_gun_ambush_tactics",
-      "at_gun_ambush_tactics"
+      "at_gun_ambush_tactics",
+      "detach_weapon_tow_bg"
     ],
     "Veterancy": [
       {
@@ -275,7 +277,8 @@
       }
     ],
     "Abilities": [
-      "blizzard_effect"
+      "blizzard_effect",
+      "detach_weapon_tow_bg"
     ],
     "Veterancy": [
       {
@@ -483,6 +486,10 @@
         "EBP": "opel_blitz_supply_truck_bg",
         "Count": 1
       }
+    ],
+    "Abilities": [
+      "transport_heavy_vehicle_bg",
+      "detach_tow_bg"
     ],
     "Types": [
       "light_vehicle",
@@ -3048,9 +3055,13 @@
       "Symbol": "Icons_symbols_unit_german_assault_grenadier_symbol",
       "Portrait": "Icons_portraits_unit_german_assault_grenadiers_s_portrait"
     },
+    "SquadCost": {
+      "Manpower": 280,
+      "FieldTime": 30
+    },
     "Entities": [
       {
-        "EBP": "assault_grenadiers_mp",
+        "EBP": "assault_grenadiers_bg",
         "Count": 5
       }
     ],
@@ -3102,7 +3113,7 @@
       "Portrait": "Icons_portraits_unit_german_grenadiers_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 300,
+      "Manpower": 260,
       "FieldTime": 30
     },
     "Entities": [
@@ -3167,7 +3178,7 @@
       "Portrait": "Icons_portraits_unit_german_officer_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 240,
+      "Manpower": 216,
       "FieldTime": 24
     },
     "Entities": [
@@ -3234,7 +3245,7 @@
       "Portrait": "Icons_portraits_unit_german_officer_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 300,
+      "Manpower": 284,
       "FieldTime": 30
     },
     "Entities": [
@@ -3357,9 +3368,13 @@
       "Symbol": "Icons_symbols_unit_german_panzer_grenadier_symbol",
       "Portrait": "Icons_portraits_unit_german_panzer_grenadiers_s_portrait"
     },
+    "SquadCost": {
+      "Manpower": 360,
+      "FieldTime": 28
+    },
     "Entities": [
       {
-        "EBP": "panzer_grenadiers_mp",
+        "EBP": "jaegers_bg",
         "Count": 4
       }
     ],
@@ -3421,7 +3436,7 @@
       "Portrait": "Icons_portraits_unit_german_panzer_grenadiers_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 240,
+      "Manpower": 208,
       "FieldTime": 24
     },
     "Entities": [
@@ -4244,7 +4259,7 @@
       "Portrait": "Icons_portraits_unit_soviet_sniper_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 1080,
+      "Manpower": 360,
       "FieldTime": 108
     },
     "Entities": [
@@ -4296,7 +4311,7 @@
       "Portrait": "Icons_portraits_unit_soviet_sniper_s_portrait"
     },
     "SquadCost": {
-      "Manpower": 720,
+      "Manpower": 480,
       "FieldTime": 72
     },
     "Entities": [

@@ -64,7 +64,7 @@ function BG_Init()
     BG_PrepareMapdata();
 
     -- Activate the unit system
-    BG_HookUnitSystem();
+    --BG_HookUnitSystem();
 
     -- Properly set up win condition data
     BG_SetupWincondition();
@@ -283,6 +283,17 @@ function BG_CollectEndofMatchData()
 
     -- Loop through all the players
     for i=1, #_bg_playerData do
+
+        -- Get all squads and handle newly detected ones
+        local playerSquads = SGroup_CreateIfNotFound("sg_eom_allsquads")
+        Player_GetAll(_bg_playerData[i].player, playerSquads);
+
+        -- Loop over an test
+        local __sgeach = function(sgroupid, itemindex, squadID)
+            BG_SolveNewUnit(_bg_playerData[i], squadID)
+        end
+        SGroup_ForEach(playerSquads, __sgeach);
+        SGroup_Clear(playerSquads)
 
         -- For all deployed units
         for squadID, company_id in pairs(_bg_playerData[i].deployed) do

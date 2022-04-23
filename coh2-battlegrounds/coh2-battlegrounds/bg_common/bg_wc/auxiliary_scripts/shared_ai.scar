@@ -86,11 +86,6 @@ function BGAI_RegisterAIPlayer(index, player)
         Rule_AddInterval(BGAI_UpdateAIPlayers, 5);
     end
 
-    -- Add the AI oneshot (if none)
-    if not Rule_Exists(BGAI_EvalAllInitial) then
-        Rule_AddOneShot(BGAI_EvalAllInitial, 5);
-    end
-
 end
 
 function BGAI_GetDifficultyFromValue(d)
@@ -190,7 +185,7 @@ function BGAI_EvalProduction(index)
 
     local squadCount = Player_GetSquadCount(_bg_aiData[index].player);
 
-    if (squadCount <= _bg_AISettings.thresholds[_bg_aiData[index].difficulty].smart_thinking) then -- The 'Get something unto the field' threshold
+    if (squadCount <= _bg_AISettings.thresholds[_bg_aiData[index].difficulty].smart_thinking) then -- The 'Get something onto the field' threshold
 
         if not BGAI_BuySomething(index, "infantry") then -- always try to buy infantry
             if not BGAI_BuySomething(index, "vehicle") then -- Then vehicles

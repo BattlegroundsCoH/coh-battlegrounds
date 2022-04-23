@@ -377,7 +377,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         }
     }
 
-    public void UnloadViewModel(OnModelClosed closeCallback) => closeCallback(false);
+    public void UnloadViewModel(OnModelClosed closeCallback, bool destroy) => closeCallback(false);
 
     public void Swapback() {
         Task.Run(async () => {

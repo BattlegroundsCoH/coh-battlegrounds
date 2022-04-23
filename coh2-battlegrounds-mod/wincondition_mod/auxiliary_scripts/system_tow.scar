@@ -94,9 +94,9 @@ end
 function Battlegrounds_AETowAttach(executer, target)
     local success = false;
     if scartype(target) == ST_ENTITY then
-        success = Battlegrounds_TowAttach(executer, Entity_GetSquad(target), offset);
+        success = Battlegrounds_TowAttach(executer, Entity_GetSquad(target));
     else
-        success = Battlegrounds_TowAttach(executer, target, offset);
+        success = Battlegrounds_TowAttach(executer, target);
     end
     if not success then
         UI_CreateColouredSquadKickerMessage(Util_GetPlayerOwner(executer), executer, BG_LocString(24), 186, 48, 1, 0 );
@@ -173,7 +173,7 @@ end
 
 function Battlegrounds_FindTowPairFromWeapon(weapon)
     for k, this in pairs(__BGTOWObjects) do
-        if this.tow_target_squad == weapon then
+        if this.tow_target_id == weapon then
             return k, this;
         end
     end
@@ -190,9 +190,12 @@ function Battlegrounds_HideCrew(towed, hide)
 end
 
 function Battlegrounds_TowDetachFromTransportAE(executer)
-    local id, data = Battlegrounds_FindTowPairFromWeapon(executer);
+    local sid = Squad_GetGameID(executer)
+    local id, data = Battlegrounds_FindTowPairFromWeapon(sid);
     if data ~= nil then
         Battlegrounds_TowDetachData(id, data);
+    else
+        UI_CreateColouredSquadKickerMessage(Util_GetPlayerOwner(executer), executer, LOC("Failed to detach from transport!"), 186, 48, 1, 0 );
     end
 end
 
@@ -259,7 +262,7 @@ function __BgUpdateTOW()
             end
             Battlegrounds_TOWPosUpdate(data.tow_transport, data.tow_target, data.tow_offset, data.delta);
             if data.tow_state ~= nil then
-                --Entity_SetAnimatorState(data.tow_target, data.tow_state.name, data.tow_state.value);
+                Entity_SetAnimatorState(data.tow_target, data.tow_state.name, data.tow_state.value);
             end
             if Squad_HasActiveCommand(data.tow_target_squad) then
                 local owner = Util_GetPlayerOwner(data.tow_target_squad);

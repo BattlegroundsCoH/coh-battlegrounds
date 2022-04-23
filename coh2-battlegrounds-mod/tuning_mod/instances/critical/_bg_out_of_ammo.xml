@@ -39,7 +39,7 @@
 						<list name="modifiers">
 							<template_reference name="modifier" value="modifiers\shoot_enable_modifier">
 								<enum name="application_type" value="apply_to_entity" />
-								<bool name="exclusive" value="False" />
+								<bool name="exclusive" value="True" />
 								<string name="modifier_id" value="" />
 								<string name="target_type_name" value="hardpoint_1" />
 								<enum name="usage_type" value="enable" />

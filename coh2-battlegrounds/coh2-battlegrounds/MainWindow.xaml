@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BattlegroundsApp"
-        xmlns:views="clr-namespace:BattlegroundsApp.Views"
         xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters" xmlns:modals="clr-namespace:BattlegroundsApp.Modals"
                      mc:Ignorable="d"
         Title="Company of Heroes 2: Battlegrounds Mod Launcher" Height="850" Width="1400" 

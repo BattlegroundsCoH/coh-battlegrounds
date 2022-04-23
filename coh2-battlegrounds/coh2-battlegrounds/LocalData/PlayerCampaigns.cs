@@ -7,18 +7,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Battlegrounds;
-using Battlegrounds.Campaigns;
 
 namespace BattlegroundsApp.LocalData {
 
     public static class PlayerCampaigns {
 
-        public static List<CampaignPackage> CampaignPackages { get; private set; }
+        public static List<object> CampaignPackages { get; private set; }
 
         public static void GetInstalledCampaigns() {
 
             // Create list
-            CampaignPackages = new List<CampaignPackage>();
+            CampaignPackages = new ();
 
             // Get the campaign folder
             string campaignFolder = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "campaigns");
@@ -31,14 +30,14 @@ namespace BattlegroundsApp.LocalData {
             string[] files = Directory.GetFiles(campaignFolder, "*.dat");
 
             // Load packages
-            for (int i = 0; i < files.Length; i++) {
+            /*for (int i = 0; i < files.Length; i++) {
                 CampaignPackage package = new CampaignPackage();
                 if (!package.LoadFromBinary(files[i])) {
                     Trace.WriteLine($"Failed to load campaign file @ {files[i]}", nameof(PlayerCampaigns));
                 } else {
                     CampaignPackages.Add(package);
                 }
-            }
+            }*/
 
         }
 

@@ -48,8 +48,8 @@ function BG_LoadSessionData()
             BGAI_RegisterAIPlayer(k, player);
             k = k + 1;
         end
-        BG_SpawnAbilityEntities(player, race);
-        Player_SetPopCapOverride(player, 260);
+        --BG_SpawnAbilityEntities(player, race);
+        Player_SetPopCapOverride(player, 128);
     end
 
     -- Fix towing upgrade

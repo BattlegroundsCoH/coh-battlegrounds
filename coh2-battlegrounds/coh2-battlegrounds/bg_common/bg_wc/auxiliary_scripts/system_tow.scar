@@ -94,9 +94,9 @@ end
 function Battlegrounds_AETowAttach(executer, target)
     local success = false;
     if scartype(target) == ST_ENTITY then
-        success = Battlegrounds_TowAttach(executer, Entity_GetSquad(target), offset);
+        success = Battlegrounds_TowAttach(executer, Entity_GetSquad(target));
     else
-        success = Battlegrounds_TowAttach(executer, target, offset);
+        success = Battlegrounds_TowAttach(executer, target);
     end
     if not success then
         UI_CreateColouredSquadKickerMessage(Util_GetPlayerOwner(executer), executer, BG_LocString(24), 186, 48, 1, 0 );
@@ -120,6 +120,10 @@ function Battlegrounds_GetTOWProfile(towEntityID, transportSquadID)
 end
 
 function Battlegrounds_TowAttach(executer, target, offset, detatchCallback)
+    if target == nil then
+        -- Note, at the moment this disallows towing of world entities
+        return
+    end
     local syncwpn = Squad_GetSyncWeapon(target);
     local profile = {};
     if offset == nil then
@@ -169,7 +173,7 @@ end
 
 function Battlegrounds_FindTowPairFromWeapon(weapon)
     for k, this in pairs(__BGTOWObjects) do
-        if this.tow_target_squad == weapon then
+        if this.tow_target_id == weapon then
             return k, this;
         end
     end
@@ -186,9 +190,12 @@ function Battlegrounds_HideCrew(towed, hide)
 end
 
 function Battlegrounds_TowDetachFromTransportAE(executer)
-    local id, data = Battlegrounds_FindTowPairFromWeapon(executer);
+    local sid = Squad_GetGameID(executer)
+    local id, data = Battlegrounds_FindTowPairFromWeapon(sid);
     if data ~= nil then
         Battlegrounds_TowDetachData(id, data);
+    else
+        UI_CreateColouredSquadKickerMessage(Util_GetPlayerOwner(executer), executer, LOC("Failed to detach from transport!"), 186, 48, 1, 0 );
     end
 end
 
@@ -285,105 +292,4 @@ function Battlegrounds_GetTowCoordinates(transport, target, off, delta) -- This 
     else
         return tow_target_pos:toscar(), tow_transport_dir:negate():toscar();
     end
-end
-
-------------------------------------------------------------
--- Battlegrounds TOW-System testing
-------------------------------------------------------------
-
-function _tow_test()
-
-    local gotopos = Player_GetStartingPosition(Game_GetLocalPlayer());
-    local startpos = Player_GetNearestMapEntry(Game_GetLocalPlayer(), gotopos);
-
-    local tow_transport = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint("142b113740474c82a60b0a428bd553d5:zis_6_transport_truck_bg"), Game_GetLocalPlayer(), 0, startpos, gotopos ) ;
-    local tow_target = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint("142b113740474c82a60b0a428bd553d5:m1931_203mm_b-4_howitzer_artillery_bg"), Game_GetLocalPlayer(), 0, startpos, gotopos ) ;
-
-    local test_a = SGroup_FromSquad(tow_transport, "sg_tow_transport_test");
-
-    Cmd_Move(test_a, gotopos, true);
-
-    Battlegrounds_TowFromOffmap(tow_transport, tow_target);
-
-    --_tow_test_distances();
-
-end
-
-function _tow_test_distances()
-
-    -- The table containing test table
-    local test_table = {
-        --["142b113740474c82a60b0a428bd553d5:m1942_zis-3_76mm_at_gun_squad_bg"] = {
-            --"142b113740474c82a60b0a428bd553d5:zis_6_transport_truck_bg",
-            --"142b113740474c82a60b0a428bd553d5:m5_halftrack_squad_bg",
-            --"142b113740474c82a60b0a428bd553d5:m3a1_scout_car_squad_bg",
-        --},
-        --["142b113740474c82a60b0a428bd553d5:m1937_53-k_45mm_at_gun_squad_bg"] = {
-            --"142b113740474c82a60b0a428bd553d5:zis_6_transport_truck_bg",
-            --"142b113740474c82a60b0a428bd553d5:m5_halftrack_squad_bg",
-          --  "142b113740474c82a60b0a428bd553d5:m3a1_scout_car_squad_bg",
-        --},
-        ["142b113740474c82a60b0a428bd553d5:m1937_152mm_ml_20_artillery_bg"] = {
-            "142b113740474c82a60b0a428bd553d5:zis_6_transport_truck_bg",
-            "142b113740474c82a60b0a428bd553d5:m5_halftrack_squad_bg",
-            --"142b113740474c82a60b0a428bd553d5:m3a1_scout_car_squad_bg",
-        },
-        --["142b113740474c82a60b0a428bd553d5:m1931_203mm_b-4_howitzer_artillery_bg"] = {
-            --"142b113740474c82a60b0a428bd553d5:zis_6_transport_truck_bg",
-            --"142b113740474c82a60b0a428bd553d5:m5_halftrack_squad_bg",
-            --"142b113740474c82a60b0a428bd553d5:m3a1_scout_car_squad_bg",
-        --}
-    };
-
-    -- The rangles to test
-    local test_ranges = {
-        --2.5,
-        --3,
-        --3.5,
-        --4,
-        --4.5,
-        --5,
-        -5.5,
-        -6,
-        -6.5,
-        -7,
-        -7.5,
-        -8,
-        -8.5,
-        -9,
-    };
-
-    -- Position to use
-    local pos = Player_GetStartingPosition(Player_FindFirstEnemyPlayer(Game_GetLocalPlayer()));
-    local off = -72;
-
-    -- Loop through the test table
-    for weapon, transporter in pairs(test_table) do
-
-        local wbp = BP_GetSquadBlueprint(weapon);
-
-        for i, this in pairs(transporter) do
-
-            local tbp = BP_GetSquadBlueprint(this);
-
-            for _, r in pairs(test_ranges) do
-
-                local spawn = Util_ScarPos(pos.x, pos.y, pos.z + off);
-                local head = Util_ScarPos(spawn.x  + 5, spawn.y, spawn.z);
-
-                local tow_transport = Squad_CreateAndSpawnToward(tbp, Game_GetLocalPlayer(), 0, spawn, head ) ;
-                local tow_target = Squad_CreateAndSpawnToward(wbp, Game_GetLocalPlayer(), 0, spawn, head ) ;
-
-                Battlegrounds_TowAttach(tow_transport, tow_target, r);
-
-                off = off + 16.0;
-
-                HintMouseover_Add(LOC("Distance = " .. r), SGroup_Single(SGroup_CreateIfNotFound("sg_testtow"..r), tow_transport), 3, false);
-
-            end
-
-        end
-
-    end
-
 end

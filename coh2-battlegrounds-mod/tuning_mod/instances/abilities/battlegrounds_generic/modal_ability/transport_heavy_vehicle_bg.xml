@@ -288,6 +288,17 @@
 					</template_reference>
 				</list>
 			</template_reference>
+			<template_reference name="required" value="requirements\required_not">
+				<enum name="reason" value="usage" />
+				<locstring name="ui_name" value="74" mod="142b113740474c82a60b0a428bd553d5" />
+				<list name="requirement_table">
+					<template_reference name="required" value="requirements\required_ownership">
+						<enum name="reason" value="usage" />
+						<locstring name="ui_name" value="0" />
+						<enum name="ownership_type" value="neutral" />
+					</template_reference>
+				</list>
+			</template_reference>
 		</list>
 		<template_reference name="targeted_ability_option" value="options\none">
 		</template_reference>
