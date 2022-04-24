@@ -82,6 +82,7 @@ public sealed class SteamInstance {
 
         // Get install path
         string steaminstall = Pathfinder.GetOrFindSteamPath().Replace("Steam.exe", "config\\loginusers.vdf");
+        Trace.WriteLine($"Fetching local user data: {steaminstall}", nameof(SteamUser));
 
         // Make sure the file exists
         if (File.Exists(steaminstall)) {

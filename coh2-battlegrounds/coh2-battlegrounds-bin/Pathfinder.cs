@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Battlegrounds;
 
@@ -65,6 +66,7 @@ public static class Pathfinder {
         // Set path
         if (!string.IsNullOrEmpty(steampath)) {
             SteamPath = steampath + "Steam.exe";
+            Trace.WriteLine($"Detected Steam install path: {CoHPath}", nameof(Pathfinder));
         }
 
         // Return found path
@@ -131,6 +133,7 @@ public static class Pathfinder {
         for (int i = 0; i < steampaths.Length; i++) {
             if (Directory.Exists(steampaths[i] + "Steamapps\\Common\\Company of Heroes 2\\")) {
                 CoHPath = steampaths[i] + "Steamapps\\Common\\Company of Heroes 2\\";
+                Trace.WriteLine($"Detected CoH2 install path: {CoHPath}", nameof(Pathfinder));
                 return CoHPath;
             }
         }
