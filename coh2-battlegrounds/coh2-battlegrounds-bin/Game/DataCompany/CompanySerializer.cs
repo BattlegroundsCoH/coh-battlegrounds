@@ -21,7 +21,7 @@ namespace Battlegrounds.Game.DataCompany;
 public class CompanySerializer : JsonConverter<Company> {
 
     public override Company? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
-        options.Converters.Add(new UnverifiedCompanyJson());
+        //options.Converters.Add(new UnverifiedCompanyJson());
         var unverified = JsonSerializer.Deserialize<UnverifiedCompany>(ref reader, options);
         if (unverified.Success) {
             return unverified.Company;
