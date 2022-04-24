@@ -66,7 +66,7 @@ public static class Pathfinder {
         // Set path
         if (!string.IsNullOrEmpty(steampath)) {
             SteamPath = steampath + "Steam.exe";
-            Trace.WriteLine($"Detected Steam install path: {CoHPath}", nameof(Pathfinder));
+            Trace.WriteLine($"Detected Steam install path: {SteamPath}", nameof(Pathfinder));
         }
 
         // Return found path
