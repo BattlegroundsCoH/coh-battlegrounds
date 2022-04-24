@@ -131,7 +131,7 @@ public static class Pathfinder {
 
         // Loop over steam paths and find first instance contaning the CoH2 path
         for (int i = 0; i < steampaths.Length; i++) {
-            if (Directory.Exists(steampaths[i] + "Steamapps\\Common\\Company of Heroes 2\\")) {
+            if (File.Exists(steampaths[i] + "Steamapps\\Common\\Company of Heroes 2\\RelicCoH2.exe")) {
                 CoHPath = steampaths[i] + "Steamapps\\Common\\Company of Heroes 2\\";
                 Trace.WriteLine($"Detected CoH2 install path: {CoHPath}", nameof(Pathfinder));
                 return CoHPath;
