@@ -181,8 +181,8 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
         // Ensure steam user is verified
         if (!BattlegroundsInstance.Steam.HasVerifiedUser && !BattlegroundsInstance.Steam.GetSteamUser()) {
-            Trace.WriteLine("Failed to verify steam user in attempt to join game.", nameof(LobbyBrowserViewModel));
-            return;
+            //Trace.WriteLine("Failed to verify steam user in attempt to join game.", nameof(LobbyBrowserViewModel));
+            //return;
         }
 
         // Show modal
