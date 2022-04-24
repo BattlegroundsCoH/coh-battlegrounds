@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -84,32 +85,25 @@ public sealed class SteamInstance {
         string steaminstall = Pathfinder.GetOrFindSteamPath().Replace("Steam.exe", "config\\loginusers.vdf");
         Trace.WriteLine($"Fetching local user data: {steaminstall}", nameof(SteamUser));
 
-        // Make sure the file exists
-        if (File.Exists(steaminstall)) {
+        // Get VDF
+        var vdf = Vdf.FromFile(steaminstall);
+        if (vdf is null) {
+            Trace.WriteLine($"Failed to parse local user data in {steaminstall}", nameof(SteamUser));
+            return null;
+        }
 
-            // Read all contents
-            string contents = File.ReadAllText(steaminstall);
+        // Grab users
+        var users = vdf.Table("users");
 
-            // Run regex match
-            var idCollection = Regex.Matches(contents, @"\""(?<id>\d+)\""\s*\{(?<body>(\s|\w|\d|\"")*)\}");
-
-            // Loop through matches
-            foreach (Match idMatch in idCollection) {
-
-                // Read ID
-                ulong id = ulong.Parse(idMatch.Groups["id"].Value);
-
-                // Read name and recent
-                Match name = Regex.Match(idMatch.Groups["body"].Value, @"\""PersonaName\""\s*\""(?<name>(\s|\w|\d)*)\""");
-                Match recent = Regex.Match(idMatch.Groups["body"].Value, @"\""(MostRecent|mostrecent)\""\s*\""(?<recent>1|0)\""");
-
-                // If recent, use that (Most likely the one running).
-                if (recent.Groups["recent"].Value.CompareTo("1") == 0) {
-                    return new SteamUser(id) { Name = name.Groups["name"].Value };
+        // Loop over each
+        foreach (var (k,v) in users) {
+            if (v is Dictionary<string, object> entries) {
+                if (entries.ContainsKey("MostRecent") && entries["MostRecent"] is "1") {
+                    ulong id = ulong.Parse(k);
+                    string name = (string)entries["PersonaName"];
+                    return new SteamUser(id) { Name = name };
                 }
-
             }
-
         }
 
         // Return null user
