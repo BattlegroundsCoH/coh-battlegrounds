@@ -13,7 +13,6 @@ using Battlegrounds.Game.Match.Composite;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Modding;
-using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Util;
 using Battlegrounds.Verification;
@@ -141,7 +140,7 @@ internal abstract class BasePlayModel {
             SelectedGamemode = WinconditionList.GetGamemodeByName(package.GamemodeGUID, gamemode),
             SelectedGamemodeOption = gamemodeoption,
             IsOptionValue = true,
-            SelectedTuningMod = ModManager.GetMod<ITuningMod>(package.TuningGUID),
+            SelectedTuningMod = ModManager.GetMod<ITuningMod>(package.TuningGUID) ?? throw new StartupException($"Failed to fetch tuning mod."),
             Allies = allies,
             Axis = axis,
             EnableDayNightCycle = enableWeather,
@@ -156,16 +155,20 @@ internal abstract class BasePlayModel {
         byte tIndex = index.Change(x => ++x);
         byte pIndex = count.Change(x => ++x);
 
-        Trace.WriteLine($"{participant.MemberID}: t:{tIndex} p:{pIndex}");
-
         // Add participant based on role
         if (participant.Role is 3) {
             var aiCompany = participant.Company;
+            if (aiCompany is null) {
+                throw new StartupException("AI startup company was null!");
+            }
             var c = aiCompany.IsAuto ? null : PlayerCompanies.FromNameAndFaction(aiCompany.Name, Faction.FromName(aiCompany.Army));
             return new SessionParticipant((AIDifficulty)participant.AILevel, c, team, tIndex, pIndex);
         } else {
             if (participant.MemberID == this.m_handle.Self.ID) {
-                this.m_selfCompany = PlayerCompanies.FromNameAndFaction(participant.Company.Name, Faction.FromName(participant.Company.Army));
+                if (participant.Company is not LobbyAPIStructs.LobbyCompany c) {
+                    throw new StartupException("Invalid startup company.");
+                }
+                this.m_selfCompany = PlayerCompanies.FromNameAndFaction(c.Name, Faction.FromName(participant.Company.Army));
             }
             return new SessionParticipant(participant.DisplayName, participant.MemberID, null, team, tIndex, pIndex);
         }
@@ -188,17 +191,8 @@ internal abstract class BasePlayModel {
         // Run through a sanitizer
         try {
 
-            // Grab json representation of company
-            var companyJson = CompanySerializer.GetCompanyAsJson(company, indent: false);
-
-            // Save the company (by literally converting it to and from json for checksum violation checks).
-            var selfCompany = CompanySerializer.GetCompanyFromJson(companyJson);
-            if (selfCompany is null) {
-                throw new OperationCanceledException($"Failed to deserialise {company.Name} (Sanitiser check failed!)");
-            }
-
             // Save the company
-            PlayerCompanies.SaveCompany(selfCompany);
+            PlayerCompanies.SaveCompany(company);
 
         } catch (ChecksumViolationException checksumViolation) {
 

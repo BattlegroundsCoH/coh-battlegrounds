@@ -37,7 +37,7 @@ namespace BattlegroundsApp.LocalData {
 
                 foreach (string companypath in companies) {
                     try {
-                        Company company = CompanySerializer.GetCompanyFromJson(File.ReadAllText(companypath));
+                        Company? company = CompanySerializer.GetCompanyFromFile(companypath, true);
                         if (company?.Name?.Replace(" ", "_")?.CompareTo(Path.GetFileNameWithoutExtension(companypath)) == 0) {
                             __companies.Add(company);
                         } else {
@@ -94,9 +94,8 @@ namespace BattlegroundsApp.LocalData {
                     Trace.WriteLine($"Deleting existing player company '{company.Name}'", nameof(PlayerCompanies));
                     File.Delete(filename);
                 }
-                string data = CompanySerializer.GetCompanyAsJson(company);
-                File.WriteAllText(filename, data);
-                Trace.WriteLine($"Saved player company '{company.Name}' ({data.Length} characters).", nameof(PlayerCompanies));
+                CompanySerializer.SaveCompanyToFile(company, filename);
+                Trace.WriteLine($"Saved player company '{company.Name}'.", nameof(PlayerCompanies));
             } catch (IOException ioex) {
                 Trace.WriteLine($"Failed to save player company '{company.Name}'. ", nameof(PlayerCompanies));
                 Trace.WriteLine(ioex, nameof(PlayerCompanies));
