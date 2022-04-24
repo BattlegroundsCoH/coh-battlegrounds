@@ -37,7 +37,9 @@
 			<Children>
 				<d2p1:anyType i:type="BurnModInfo">
 					<Dependencies />
-					<Description>[h1][b]THIS IS NOT A STAND ALONE MOD[/b][/h1]
+					<Description>[IMG]https://i.imgur.com/M3VO0hG.png[/IMG]
+
+[h1][b]THIS IS NOT A STAND ALONE MOD[/b][/h1]
 Please follow the guides below to properly install and play this mod.
 
 [h1]Requirements[/h1]
@@ -64,7 +66,8 @@ You can watch visual guide [url=https://www.youtube.com/watch?v=Sg14jNbBb-8]here
 [*] Navigate to [i]Game Browser[/i], host/join a lobby
 [*] Set up your lobby to your preference or wait for the host to set the lobby up
 [*] Click the [i]Start Match[/i] button and wait for Company of Heroes 2 to launch (do [b]NOT[/b] close the Company of Heroes 2: Battlegrounds Mod Launcher)
-[*] Recreate your lobby (Allies on the left side; Axis on the right side; [b]All[/b] settings must match to count as a valid match!)
+[*] Recreate your lobby ([b]All[/b] settings must match to count as a valid match!)
+[*] Make sure your Tunning Pack is set to CoH2: Battlegrounds and your Win Condition to Battlegrounds - Gamemode
 [*] Playout your match
 [*] Wait for match analysis
 [/olist]
