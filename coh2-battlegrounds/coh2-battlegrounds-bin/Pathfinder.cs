@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace Battlegrounds;
 
@@ -59,7 +60,7 @@ public static class Pathfinder {
         steampaths = paths.ToArray();
 
         // Get complete steam path
-        string? steampath = paths.Find(x => File.Exists(x + "Steam.exe"));
+        string? steampath = paths.FirstOrDefault(x => File.Exists(Path.Combine(x, "Steam.exe")));
 
         // Set path
         if (!string.IsNullOrEmpty(steampath)) {
@@ -91,7 +92,7 @@ public static class Pathfinder {
         if (d) t = 2;
         if (e) t = 3;
         if (f) t = 4;
-        if (g) t = 4;
+        if (g) t = 5;
 
         // Return if any
         return t != -1;
