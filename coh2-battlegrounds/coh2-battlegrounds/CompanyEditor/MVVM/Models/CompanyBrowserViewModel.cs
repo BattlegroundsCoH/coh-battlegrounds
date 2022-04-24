@@ -2,9 +2,6 @@
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
-using BattlegroundsApp.Dialogs.CreateCompany;
-using BattlegroundsApp.Dialogs.RenameCopyDialog;
-using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.MVVM;
@@ -162,19 +159,19 @@ public class CompanyBrowserViewModel : IViewModel {
         if (this.SelectedCompany is null)
             return;
 
-        if (RenameCopyDialogViewModel.ShowRenameDialog(new LocaleKey("CompanyView_RenameCopyDialog_Rename_Title"), out string companyName)
-            is RenameCopyDialogResult.Rename) {
+        //if (RenameCopyDialogViewModel.ShowRenameDialog(new LocaleKey("CompanyView_RenameCopyDialog_Rename_Title"), out string companyName)
+        //    is RenameCopyDialogResult.Rename) {
 
-            // Delete old company
-            PlayerCompanies.DeleteCompany(this.SelectedCompany);
+        //    // Delete old company
+        //    PlayerCompanies.DeleteCompany(this.SelectedCompany);
 
-            // Save new company
-            PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(companyName).Commit().Result);
+        //    // Save new company
+        //    PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(companyName).Commit().Result);
 
-            // Trigger refresh of company
-            UpdateCompanyList();
+        //    // Trigger refresh of company
+        //    UpdateCompanyList();
 
-        }
+        //}
 
     }
 
@@ -213,15 +210,15 @@ public class CompanyBrowserViewModel : IViewModel {
         if (this.SelectedCompany is null)
             return;
 
-        if (RenameCopyDialogViewModel.ShowCopyDialog(new LocaleKey("CompanyView_RenameCopyDialog_Copy_Title"), out string companyName)
-            is RenameCopyDialogResult.Copy) {
+        //if (RenameCopyDialogViewModel.ShowCopyDialog(new LocaleKey("CompanyView_RenameCopyDialog_Copy_Title"), out string companyName)
+        //    is RenameCopyDialogResult.Copy) {
 
-            // 'edit' company but immediately commit and save result
-            PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(companyName).Commit().Result);
+        //    // 'edit' company but immediately commit and save result
+        //    PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(companyName).Commit().Result);
 
-            UpdateCompanyList();
+        //    UpdateCompanyList();
 
-        }
+        //}
 
     }
 

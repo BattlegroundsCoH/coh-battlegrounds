@@ -2,12 +2,6 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:BattlegroundsApp"
-             xmlns:yesNo="clr-namespace:BattlegroundsApp.Dialogs.YesNo"
-             xmlns:ok="clr-namespace:BattlegroundsApp.Dialogs.OK"
-             xmlns:createCompany="clr-namespace:BattlegroundsApp.Dialogs.CreateCompany"
-             xmlns:importExport="clr-namespace:BattlegroundsApp.Dialogs.ImportExport"
-             xmlns:renameCopy="clr-namespace:BattlegroundsApp.Dialogs.RenameCopyDialog"
-             xmlns:addUnit="clr-namespace:BattlegroundsApp.Dialogs.AddUnit"
              xmlns:views="clr-namespace:BattlegroundsApp.MVVM.Views"
              xmlns:models="clr-namespace:BattlegroundsApp.MVVM.Models"
              xmlns:lobbyviews="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views"
@@ -21,27 +15,9 @@
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              Startup="App_Startup"
              ShutdownMode="OnMainWindowClose">
-    
+
     <Application.Resources>
-        <DataTemplate DataType="{x:Type yesNo:YesNoDialogViewModel}">
-            <yesNo:YesNoDialogView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type ok:OKDialogViewModel}">
-            <ok:OKDialogView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type createCompany:CreateCompanyDialogViewModel}">
-            <createCompany:CreateCompanyDialogView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type importExport:ImportExportDialogViewModel}">
-            <importExport:ImportExportDialogView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type renameCopy:RenameCopyDialogViewModel}">
-            <renameCopy:RenameCopyDialogView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type addUnit:AddUnitDialogViewModel}">
-            <addUnit:AddUnitDilaogView/>
-        </DataTemplate>
-        
+
         <!-- New Dashboard-View Models -->
         <DataTemplate DataType="{x:Type dashboardModels:DashboardViewModel}">
             <dashboardViews:DashboardView/>
