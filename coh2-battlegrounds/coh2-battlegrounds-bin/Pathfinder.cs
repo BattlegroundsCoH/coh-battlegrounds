@@ -75,11 +75,12 @@ public static class Pathfinder {
     static bool DriveHasSteam(char c, out int t) {
 
         // Collect bool flags
-        bool a = File.Exists($"{c}:\\SteamLibrary\\Steam.dll");
-        bool b = File.Exists($"{c}:\\Program Files\\SteamLibrary\\Steam.dll");
-        bool d = File.Exists($"{c}:\\Program Files (x86)\\SteamLibrary\\Steam.dll");
-        bool e = File.Exists($"{c}:\\Program Files\\Steam\\Steam.dll");
-        bool f = File.Exists($"{c}:\\Program Files (x86)\\Steam\\Steam.dll");
+        bool a = File.Exists($"{c}:\\Steam\\Steam.dll");
+        bool b = File.Exists($"{c}:\\SteamLibrary\\Steam.dll");
+        bool d = File.Exists($"{c}:\\Program Files\\SteamLibrary\\Steam.dll");
+        bool e = File.Exists($"{c}:\\Program Files (x86)\\SteamLibrary\\Steam.dll");
+        bool f = File.Exists($"{c}:\\Program Files\\Steam\\Steam.dll");
+        bool g = File.Exists($"{c}:\\Program Files (x86)\\Steam\\Steam.dll");
 
         // Any flag
         t = -1;
@@ -90,6 +91,7 @@ public static class Pathfinder {
         if (d) t = 2;
         if (e) t = 3;
         if (f) t = 4;
+        if (g) t = 4;
 
         // Return if any
         return t != -1;
@@ -98,6 +100,7 @@ public static class Pathfinder {
 
     static string GetSteamPath(char c, int t) {
         string[] ex = {
+            $"{c}:\\Steam\\",
             $"{c}:\\SteamLibrary\\",
             $"{c}:\\Program Files\\SteamLibrary\\",
             $"{c}:\\Program Files (x86)\\SteamLibrary\\",
