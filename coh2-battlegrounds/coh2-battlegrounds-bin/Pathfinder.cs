@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Collections.Generic;
 using System;
+using System.Linq;
+using System.Diagnostics;
 
 namespace Battlegrounds;
 
@@ -59,11 +61,12 @@ public static class Pathfinder {
         steampaths = paths.ToArray();
 
         // Get complete steam path
-        string? steampath = paths.Find(x => File.Exists(x + "Steam.exe"));
+        string? steampath = paths.FirstOrDefault(x => File.Exists(Path.Combine(x, "Steam.exe")));
 
         // Set path
         if (!string.IsNullOrEmpty(steampath)) {
             SteamPath = steampath + "Steam.exe";
+            Trace.WriteLine($"Detected Steam install path: {SteamPath}", nameof(Pathfinder));
         }
 
         // Return found path
@@ -75,11 +78,12 @@ public static class Pathfinder {
     static bool DriveHasSteam(char c, out int t) {
 
         // Collect bool flags
-        bool a = File.Exists($"{c}:\\SteamLibrary\\Steam.dll");
-        bool b = File.Exists($"{c}:\\Program Files\\SteamLibrary\\Steam.dll");
-        bool d = File.Exists($"{c}:\\Program Files (x86)\\SteamLibrary\\Steam.dll");
-        bool e = File.Exists($"{c}:\\Program Files\\Steam\\Steam.dll");
-        bool f = File.Exists($"{c}:\\Program Files (x86)\\Steam\\Steam.dll");
+        bool a = File.Exists($"{c}:\\Steam\\Steam.dll");
+        bool b = File.Exists($"{c}:\\SteamLibrary\\Steam.dll");
+        bool d = File.Exists($"{c}:\\Program Files\\SteamLibrary\\Steam.dll");
+        bool e = File.Exists($"{c}:\\Program Files (x86)\\SteamLibrary\\Steam.dll");
+        bool f = File.Exists($"{c}:\\Program Files\\Steam\\Steam.dll");
+        bool g = File.Exists($"{c}:\\Program Files (x86)\\Steam\\Steam.dll");
 
         // Any flag
         t = -1;
@@ -90,6 +94,7 @@ public static class Pathfinder {
         if (d) t = 2;
         if (e) t = 3;
         if (f) t = 4;
+        if (g) t = 5;
 
         // Return if any
         return t != -1;
@@ -98,6 +103,7 @@ public static class Pathfinder {
 
     static string GetSteamPath(char c, int t) {
         string[] ex = {
+            $"{c}:\\Steam\\",
             $"{c}:\\SteamLibrary\\",
             $"{c}:\\Program Files\\SteamLibrary\\",
             $"{c}:\\Program Files (x86)\\SteamLibrary\\",
@@ -125,8 +131,9 @@ public static class Pathfinder {
 
         // Loop over steam paths and find first instance contaning the CoH2 path
         for (int i = 0; i < steampaths.Length; i++) {
-            if (Directory.Exists(steampaths[i] + "Steamapps\\Common\\Company of Heroes 2\\")) {
+            if (File.Exists(steampaths[i] + "Steamapps\\Common\\Company of Heroes 2\\RelicCoH2.exe")) {
                 CoHPath = steampaths[i] + "Steamapps\\Common\\Company of Heroes 2\\";
+                Trace.WriteLine($"Detected CoH2 install path: {CoHPath}", nameof(Pathfinder));
                 return CoHPath;
             }
         }
