@@ -4,6 +4,7 @@ using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
+using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Utilities;
 using System;
@@ -123,7 +124,7 @@ public class CompanyBrowserViewModel : IViewModel {
         }
 
         // Do modal
-        Modals.Dialogs.MVVM.Models.CreateCompanyDialogViewModel.ShowModal(mControl, (vm, resault) => {
+        CreateCompanyDialogViewModel.ShowModal(mControl, (vm, resault) => {
             
             // Check return value
             if (resault is not ModalDialogResult.Confirm) {
@@ -187,7 +188,7 @@ public class CompanyBrowserViewModel : IViewModel {
         }
 
         // Do modal
-        Modals.Dialogs.MVVM.Models.YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
+        YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
 
             // Check return value
             if (resault is not ModalDialogResult.Confirm) {
@@ -199,8 +200,6 @@ public class CompanyBrowserViewModel : IViewModel {
             UpdateCompanyList();
 
         }, "Delete Company", "This action can not be undone. Are you sure?");
-
-        PlayerCompanies.LoadAll();
 
     }
 
@@ -240,14 +239,14 @@ public class CompanyBrowserViewModel : IViewModel {
     public void UpdateCompanyList() {
 
         // Clear all companies
-        Companies.Clear();
+        this.Companies.Clear();
 
         // Locad companies
         PlayerCompanies.LoadAll();
 
         // Update companies
         foreach (var company in PlayerCompanies.GetAllCompanies()) {
-            Companies.Add(company);
+            this.Companies.Add(company);
         }
 
     }
