@@ -21,8 +21,9 @@ namespace Battlegrounds.Game.DataCompany;
 public class CompanySerializer : JsonConverter<Company> {
 
     public override Company? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
-        //options.Converters.Add(new UnverifiedCompanyJson());
-        var unverified = JsonSerializer.Deserialize<UnverifiedCompany>(ref reader, options);
+        var newOptions = new JsonSerializerOptions(options);
+        newOptions.Converters.Add(new UnverifiedCompanyJson());
+        var unverified = JsonSerializer.Deserialize<UnverifiedCompany>(ref reader, newOptions);
         if (unverified.Success) {
             return unverified.Company;
         } else {
@@ -151,8 +152,15 @@ public class CompanySerializer : JsonConverter<Company> {
 
             // Verify checksum
             if (checkChecksum && !result.VerifyChecksum(unverified.Checksum)) {
-                Trace.WriteLine($"Fatal - Company '{result.Name}' has been modified (0x{unverified.Checksum:X} - 0x{result.Checksum:X}).", $"{nameof(CompanySerializer)}::{nameof(GetCompanyFromFile)}");
-                throw new ChecksumViolationException(result.Checksum, unverified.Checksum);
+                string dbstr =
+#if DEBUG
+                    $" (0x{unverified.Checksum:X} - 0x{result.Checksum:X})";
+#else
+                    ""
+#endif
+                Trace.WriteLine($"Fatal - Company '{result.Name}' has been modified{dbstr}.", $"{nameof(CompanySerializer)}::{nameof(GetCompanyFromFile)}");
+                
+                throw new ChecksumViolationException(0, unverified.Checksum);
             }
 
             // Return company

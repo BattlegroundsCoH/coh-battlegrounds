@@ -106,4 +106,3 @@ public class SingleplayerMatchAnalyzer : IAnalyzeStrategy {
     }
 
 }
-
