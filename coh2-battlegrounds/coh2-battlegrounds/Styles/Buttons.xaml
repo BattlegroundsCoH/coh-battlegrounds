@@ -254,7 +254,7 @@
     <!-- SYSTEM ICON BUTTON -->
     <Style x:Key="SystemIconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Hoverless}">
         <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
-        <Setter Property="Padding" Value="10" />
+        <Setter Property="Padding" Value="5" />
     </Style>
 
 </ResourceDictionary>

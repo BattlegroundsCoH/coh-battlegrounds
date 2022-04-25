@@ -92,7 +92,7 @@ public class MainWindowViewModel : ViewModelBase {
     /// <summary>
     /// The height of the title bar / the caption
     /// </summary>
-    public int TitleHeight { get; set; } = 30;
+    public int TitleHeight { get; set; } = 32;
 
     public GridLength TitleHeightGridLength { get { return new(TitleHeight + ResizeBorder); } }
 
