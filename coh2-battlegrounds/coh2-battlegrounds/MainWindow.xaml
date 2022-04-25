@@ -1,21 +1,29 @@
-﻿<local:CoreAppWindow x:Class="BattlegroundsApp.MainWindow"
+﻿<Window x:Class="BattlegroundsApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BattlegroundsApp"
-        xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters" xmlns:modals="clr-namespace:BattlegroundsApp.Modals"
-                     mc:Ignorable="d"
-        Title="Company of Heroes 2: Battlegrounds Mod Launcher" Height="850" Width="1400" 
-                     WindowStartupLocation="CenterScreen" 
-                     WindowStyle="SingleBorderWindow" 
-                     MinHeight="850" MinWidth="1400"
-                     Background="#212d3a"
-                     Closing="CoreAppWindow_Closing">
-    <local:CoreAppWindow.Resources>
-        <!-- LocaleConverter -->
-        <localeConvertor:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
-    </local:CoreAppWindow.Resources>
+        xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
+        xmlns:modals="clr-namespace:BattlegroundsApp.Modals"
+        mc:Ignorable="d"
+        Title="Company of Heroes 2: Battlegrounds Mod Launcher"
+        WindowStartupLocation="CenterScreen" 
+        WindowStyle="None"
+        AllowsTransparency="True"
+        MinHeight="{Binding WindowMinimumHeight}"
+        MinWidth="{Binding WindowMinimumWidth}"
+        Background="{StaticResource BackgroundDarkBlueBrush}"
+        Closing="CoreAppWindow_Closing"
+        Style="{StaticResource MainWindow}">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome ResizeBorderThickness="{Binding ResizeBorderThickness}"
+                      CaptionHeight="{Binding TitleHeight}"
+                      GlassFrameThickness="0"
+                      CornerRadius="0"/>
+    </WindowChrome.WindowChrome>
+
     <modals:ModalControl x:Name="ModalView" 
                          ModalMaskBehaviour="None"
                          ModalMaskOpacity="0.7"
@@ -45,4 +53,4 @@
 
         </Grid>
     </modals:ModalControl>    
-</local:CoreAppWindow>
+</Window>

@@ -2,6 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:locale="clr-namespace:BattlegroundsApp">
 
+    <Color x:Key="BackgroundDeepBlue">#1f2833</Color>
+    <SolidColorBrush x:Key="BackgroundDeepBlueBrush" Color="{StaticResource BackgroundDeepBlue}" />
+
     <Color x:Key="BackgroundDarkBlue">#212d3a</Color>
     <SolidColorBrush x:Key="BackgroundDarkBlueBrush" Color="{StaticResource BackgroundDarkBlue}" />
 

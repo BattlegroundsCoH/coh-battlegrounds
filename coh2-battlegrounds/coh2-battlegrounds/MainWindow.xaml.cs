@@ -8,6 +8,7 @@ using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using System.ComponentModel;
 using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
+using System.Windows;
 
 namespace BattlegroundsApp {
 
@@ -16,7 +17,7 @@ namespace BattlegroundsApp {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : CoreAppWindow {
+    public partial class MainWindow : Window {
 
         private AppDisplayState m_displayState;
         private bool m_isReady;
@@ -36,15 +37,9 @@ namespace BattlegroundsApp {
             // Set self display state
             this.m_displayState = AppDisplayState.LeftRight;
 
-        }
+            this.DataContext = new MainWindowViewModel(this);
 
-        // Hanlde view state change requests
-        public override bool StateChangeRequest(object request) {
-            return true;
         }
-
-        // Get the request handler
-        public override StateChangeRequestHandler GetRequestHandler() => this.StateChangeRequest;
 
         public void AllowGetSteamUser(Action<bool> callback) {
 
