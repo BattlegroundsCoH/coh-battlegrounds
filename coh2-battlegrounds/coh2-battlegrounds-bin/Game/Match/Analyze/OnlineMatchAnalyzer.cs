@@ -1,34 +1,27 @@
 ﻿using Battlegrounds.Game.Match.Data;
 
-namespace Battlegrounds.Game.Match.Analyze {
+namespace Battlegrounds.Game.Match.Analyze;
 
-    /// <summary>
-    /// Multiplayer match analysis strategy for analyzing multiplayer match data. Extension of <see cref="SingleplayerMatchAnalyzer"/>.
-    /// Can be extended with custom behaviour.
-    /// </summary>
-    public class OnlineMatchAnalyzer : SingleplayerMatchAnalyzer {
+/// <summary>
+/// Multiplayer match analysis strategy for analyzing multiplayer match data. Extension of <see cref="SingleplayerMatchAnalyzer"/>.
+/// Can be extended with custom behaviour.
+/// </summary>
+public class OnlineMatchAnalyzer : SingleplayerMatchAnalyzer {
 
-        private ReplayMatchData m_selfData;
+    private IMatchData? m_selfData;
 
-        public override void OnPrepare(object caller, IMatchData toAnalyze) {
+    public override void OnPrepare(object caller, IMatchData toAnalyze) {
 
-            // Create analysis result
-            this.m_analysisResult = new EventAnalysis(toAnalyze.Session);
+        // Create analysis result
+        this.m_analysisResult = new EventAnalysis(toAnalyze.Session);
+        this.m_selfData = toAnalyze;
 
-            // Set self data
-            if (toAnalyze is ReplayMatchData replay) {
-                this.m_selfData = replay;
-            } else {
-                // TODO: Handle
-            }
+    }
 
+    public override void OnAnalyze(object caller) {
+        if (!this.AnalyzePlaybackData(this.m_selfData)) {
+            this.m_analysisResult = new NullAnalysis(); // Invalid (Should give a null-analysis when finalizing).
         }
-
-        public override void OnAnalyze(object caller) {
-            if (!this.AnalyzePlaybackData(this.m_selfData)) {
-            }
-        }
-
     }
 
 }
