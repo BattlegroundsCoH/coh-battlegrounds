@@ -1,4 +1,5 @@
-﻿using BattlegroundsApp.Utilities;
+﻿using Battlegrounds;
+using BattlegroundsApp.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +12,7 @@ namespace BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 
 public class HostGameDialogViewModel : INotifyPropertyChanged {
 
-    private string _lobbyName;
+    private string _lobbyName = $"{BattlegroundsInstance.Steam.User.Name}'s Lobby";
     public string LobbyName {
         get => this._lobbyName;
         set {
