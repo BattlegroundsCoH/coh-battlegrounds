@@ -1,16 +1,16 @@
-﻿using BattlegroundsApp.ViewModels;
+﻿using BattlegroundsApp.Utilities;
+using BattlegroundsApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace BattlegroundsApp;
 
 public class MainWindowViewModel : ViewModelBase {
-
-    public string Title { get; } = "Company of Heroes 2: Battlegrounds Mod Launcher";
 
     /// <summary>
     /// The window that this view model controls
@@ -26,6 +26,21 @@ public class MainWindowViewModel : ViewModelBase {
     /// The radius of the edges of the window
     /// </summary>
     private int m_windowRadius = 10;
+
+    /// <summary>
+    /// The window title
+    /// </summary>
+    public string Title { get; } = "Company of Heroes 2: Battlegrounds Mod Launcher";
+
+    /// <summary>
+    /// Minimum width of the window
+    /// </summary>
+    public double WindowMinimumWidth { get; set; } = 1400.0;
+
+    /// <summary>
+    /// Minimum height of the window
+    /// </summary>
+    public double WindowMinimumHeight { get; set; } = 850.0;
 
     /// <summary>
     /// The size of the resize border around the window
@@ -79,6 +94,28 @@ public class MainWindowViewModel : ViewModelBase {
     /// </summary>
     public int TitleHeight { get; set; } = 30;
 
+    public GridLength TitleHeightGridLength { get { return new(TitleHeight + ResizeBorder); } }
+
+    /// <summary>
+    /// The command to minimize the window
+    /// </summary>
+    public ICommand MinimizeCommand { get; set; }
+
+    /// <summary>
+    /// The command to maximize the window
+    /// </summary>
+    public ICommand MaximizeCommand { get; set; }
+
+    /// <summary>
+    /// The command to close the window
+    /// </summary>
+    public ICommand CloseCommand { get; set; }
+
+    /// <summary>
+    /// The command to show the system menu
+    /// </summary>
+    public ICommand MenuCommand { get; set; }
+
     /// <summary>
     /// Default Constrictor
     /// </summary>
@@ -98,6 +135,31 @@ public class MainWindowViewModel : ViewModelBase {
 
         };
 
+        // Create commands
+        this.MinimizeCommand = new RelayCommand(() => m_window.WindowState = WindowState.Minimized);
+        this.MaximizeCommand = new RelayCommand(() => m_window.WindowState ^= WindowState.Maximized);
+        // TODO : Move closing logic from View here
+        this.CloseCommand = new RelayCommand(() => m_window.Close());
+        this.MenuCommand = new RelayCommand(() => SystemCommands.ShowSystemMenu(m_window, GetMousePosition()));
+
+        // Fix window resize issue
+        var resizer = new WindowResizer(m_window);
+
     }
+
+    /// <summary>
+    /// Gets the current mouse position on the screen
+    /// </summary>
+    /// <returns></returns>
+    private Point GetMousePosition() {
+
+        // Get position of the mouse relative to the window
+        var position = Mouse.GetPosition(m_window);
+
+        // Add the window position so its to screen
+        return new Point(position.X + m_window.Left, position.Y + m_window.Top);
+
+    }
+
 
 }
