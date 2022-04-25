@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Game.Gameplay;
@@ -44,7 +45,7 @@ namespace Battlegrounds.Game.Match.Data {
             public Player FromData() => new Player(this.Id, this.SteamID, this.team, this.Name, Faction.FromName(this.Army), Profile);
         }
 
-        [JsonIgnore] private readonly ReplayMatchData m_dataSource;
+        [JsonIgnore] private readonly ReplayMatchData? m_dataSource;
         [JsonInclude] private PlayerData[] players;
 
         public ISession Session { get; private set; }
@@ -60,20 +61,32 @@ namespace Battlegrounds.Game.Match.Data {
 
         public JsonPlayback() {
             this.Session = new NullSession();
+            this.Events = new();
+            this.players = Array.Empty<PlayerData>();
         }
 
         public JsonPlayback(ReplayMatchData events) {
             this.Session = events.Session;
             this.Length = events.Length;
             this.Events = new Dictionary<TimeSpan, EventTick>();
+            this.players = Array.Empty<PlayerData>();
             this.IsSessionMatch = events.IsSessionMatch;
             this.m_dataSource = events;
             this.ParseMatchData();
         }
 
+        public string ToJson() {
+            return JsonSerializer.Serialize(this.Events.Values, options: new() { IncludeFields = true, WriteIndented = true });
+        }
+
         public bool LoadMatchData(string matchFile) => true;
 
         public bool ParseMatchData() {
+
+            // Bail if invalid data source
+            if (this.m_dataSource is null) {
+                return false;
+            }
 
             // Run through all elements
             foreach (var entry in this.m_dataSource) {

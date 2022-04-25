@@ -9,6 +9,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Util;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Functional;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Battlegrounds.Game.DataSource.Replay;
 
@@ -74,16 +75,13 @@ public sealed class ReplayFile {
     }
 
     private ReplayHeader m_replayHeader;
-    private ScenarioDescription m_sdsc;
+    private ScenarioDescription? m_sdsc;
 
-    private Player[] m_playerlist;
-    private List<GameTick> m_tickList;
+    private Player[]? m_playerlist;
+    private readonly List<GameTick> m_tickList;
+    private readonly string m_replayfile;
 
-    private byte[] m_header;
-    private byte[] m_replaycontent;
-    private string m_replayfile;
-
-    private List<ChatMessage> m_chatHistory;
+    private readonly List<ChatMessage> m_chatHistory;
     private TimeSpan m_replayParsedLength;
     private MatchType m_replayMatchType;
     private uint m_seed;
@@ -91,12 +89,10 @@ public sealed class ReplayFile {
     private bool m_isParsed;
     private bool m_isPartial;
 
-    private ChunkyFile m_scenarioChunkyFile;
-    private ChunkyFile m_replayEventsChunkyFile;
-
     /// <summary>
     /// Get if the <see cref="ReplayFile"/> has been loaded and parsed.
     /// </summary>
+    [MemberNotNullWhen(true, nameof(m_sdsc), nameof(m_playerlist))]
     public bool IsParsed => this.m_isParsed;
 
     /// <summary>
@@ -116,19 +112,24 @@ public sealed class ReplayFile {
     /// </summary>
     /// <exception cref="InvalidDataException"/>
     public ScenarioDescription Scenario
-        => (this.m_isParsed) ? this.m_sdsc : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+        => (this.IsParsed) ? this.m_sdsc : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
     /// <summary>
     /// Array containing all players in the replay
     /// </summary>
     public Player[] Players
-        => (this.m_isParsed) ? this.m_playerlist.ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+        => (this.IsParsed) ? this.m_playerlist.ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
     /// <summary>
     /// Sorted array containing all game ticks in the replay
     /// </summary>
     public GameTick[] Ticks
         => (this.m_isParsed) ? this.m_tickList.OrderBy(x => x.TimeStamp).ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+
+    /// <summary>
+    /// Get the length of the match
+    /// </summary>
+    public TimeSpan Length => this.m_replayParsedLength;
 
     /// <summary>
     /// New instance of a <see cref="ReplayFile"/> from a given file path
@@ -153,7 +154,7 @@ public sealed class ReplayFile {
         this.m_isParsed = false;
         this.m_tickList = new List<GameTick>();
         this.m_chatHistory = new List<ChatMessage>();
-        this.m_replayfile = null;
+        this.m_replayfile = string.Empty;
     }
 
     /// <summary>
@@ -180,7 +181,7 @@ public sealed class ReplayFile {
 
         // Verify we can do this
         if (string.IsNullOrEmpty(this.m_replayfile)) {
-            throw new ArgumentNullException(nameof(m_replayfile), "Cannot load replay without being given ");
+            throw new ArgumentNullException(nameof(m_replayfile), "Cannot load replay without being given a valid replay file path");
         } else if (!File.Exists(this.m_replayfile)) {
             throw new FileNotFoundException(null, this.m_replayfile);
         }
@@ -194,59 +195,63 @@ public sealed class ReplayFile {
             return false;
         }
 
+        // Return OK -> read file
         return true;
 
     }
 
     private bool ParseReplayBinary(BinaryReader binaryReader) {
 
-        // Constant data beforehand
-        this.m_header = binaryReader.ReadBytes(76);
-
         // Parse header
-        if (!this.ParseHeader()) {
+        if (!this.ParseHeader(binaryReader.ReadBytes(76))) {
             Trace.WriteLine("Failed to parse replay header data", "ReplayFile");
             return false;
         }
 
-        this.m_scenarioChunkyFile = new ChunkyFile();
-        if (!this.m_scenarioChunkyFile.LoadFile(binaryReader)) {
+        // Read intro information
+        var introchunk = new ChunkyFile();
+        if (!introchunk.LoadFile(binaryReader)) {
             Trace.WriteLine("Failed to read replay intro data", "ReplayFile");
             return false;
         }
 
-        this.m_replayEventsChunkyFile = new ChunkyFile();
-        if (!this.m_replayEventsChunkyFile.LoadFile(binaryReader)) {
+        // Read match outro data
+        var datachunk = new ChunkyFile();
+        if (!datachunk.LoadFile(binaryReader)) {
             Trace.WriteLine("Failed to read replay outro data", "ReplayFile");
             return false;
         }
 
-        this.m_replaycontent = binaryReader.ReadToEnd();
-
-        if (!this.ParseScenarioDescription()) {
+        // Read scenario data
+        if (!this.ParseScenarioDescription(datachunk)) {
             Trace.WriteLine("Failed to read scenario data", "ReplayFile");
             return false;
         }
 
-        if (!this.ParseReplayContent()) {
+        // Read replay data
+        if (!this.ParseReplayContent(datachunk, binaryReader.ReadToEnd())) {
             Trace.WriteLine("Failed to read raw replay data", "ReplayFile");
             return false;
         }
 
+        // Return true (and set parsed flag to true)
         return this.m_isParsed = true;
 
     }
 
-    private bool ParseHeader() {
+    private bool ParseHeader(byte[] header) {
 
-        uint version = BitConverter.ToUInt32(this.m_header.AsSpan()[0..4]); // read version (unsigned 32-bit integer ==> 4 bytes)
-        string name = Encoding.ASCII.GetString(this.m_header[4..12]); // read game version (ASCII, 1 char = 1 byte, length is fixed and equal to 8)
+        // Get psan
+        var headerSpan = header.AsSpan();
+
+        uint version = BitConverter.ToUInt32(headerSpan[0..4]); // read version (unsigned 32-bit integer ==> 4 bytes)
+        string name = Encoding.ASCII.GetString(headerSpan[4..12]); // read game version (ASCII, 1 char = 1 byte, length is fixed and equal to 8)
 
         StringBuilder dateBuilder = new StringBuilder();
 
         int i = 12; // start position
-        while (i < this.m_header.Length) { // UTF-8 encoding (1 char = 2 byte)
-            ushort u = BitConverter.ToUInt16(this.m_header.AsSpan()[i..(i + 2)]);
+        while (i < headerSpan.Length) { // UTF-8 encoding (1 char = 2 byte)
+            ushort u = BitConverter.ToUInt16(headerSpan[i..(i + 2)]);
             if (u == 0) {
                 break;
             } else {
@@ -259,14 +264,17 @@ public sealed class ReplayFile {
         this.m_replayHeader = new ReplayHeader(version, name, dateBuilder.ToString());
 
         // Return true if i was not out of bounds and the game name is "COH2_REC"
-        return i < this.m_header.Length && name.Equals("COH2_REC");
+        return i < headerSpan.Length;
 
     }
 
-    private bool ParseScenarioDescription() {
+    private bool ParseScenarioDescription(ChunkyFile chunky) {
 
         // Get the scenario target chunk
-        Chunk scenarioChunk = this.m_replayEventsChunkyFile["SDSC"];
+        if (chunky["SDSC"] is not Chunk scenarioChunk) {
+            Trace.WriteLine("Failed to get scenario description...", nameof(ReplayFile));
+            return false;
+        }
 
         // Read data
         using (MemoryStream stream = new MemoryStream(scenarioChunk.Data)) {
@@ -312,10 +320,13 @@ public sealed class ReplayFile {
 
     }
 
-    private bool ParseReplayContent() {
+    private bool ParseReplayContent(ChunkyFile chunky, byte[] replayData) {
 
         // Get the important chunk data
-        Chunk gameinfoChunk = this.m_replayEventsChunkyFile["INFO"]["DATA"];
+        if (chunky.Walk("INFO", "DATA") is not Chunk gameinfoChunk) {
+            Trace.WriteLine("Failed to get replay match info chunk data", nameof(ReplayFile));
+            return false;
+        }
 
         // Parse the player data
         if (!this.ParseMatchdata(gameinfoChunk)) {
@@ -323,7 +334,7 @@ public sealed class ReplayFile {
         }
 
         // Parse the recorded data
-        if (!this.ParseRecordedData()) {
+        if (!this.ParseRecordedData(replayData)) {
             return false;
         }
 
@@ -347,7 +358,7 @@ public sealed class ReplayFile {
                     // Skip 10 bytes
                     reader.Skip(10);
 
-                    // Read in the seed
+                    // Read in the seed (random seed)
                     this.m_seed = reader.ReadUInt32();
 
                     // Read player count
@@ -356,7 +367,12 @@ public sealed class ReplayFile {
 
                     // Read player data
                     for (int i = 0; i < this.m_playerlist.Length; i++) {
-                        this.m_playerlist[i] = ParsePlayerInfo(reader);
+                        if (ParsePlayerInfo(reader) is Player p) {
+                            this.m_playerlist[i] = p;
+                        } else {
+                            Trace.WriteLine($"Failed to read player {i} from replay data!", nameof(ReplayFile));
+                            this.m_playerlist[i] = new(uint.MaxValue, ulong.MaxValue, uint.MaxValue, "Error", Faction.America, string.Empty);
+                        }
                     }
 
                 }
@@ -364,11 +380,12 @@ public sealed class ReplayFile {
             }
         }
 
+        // Return OK
         return true;
 
     }
 
-    private static Player ParsePlayerInfo(BinaryReader reader) {
+    private static Player? ParsePlayerInfo(BinaryReader reader) {
 
         // Read playertype
         byte playertype = reader.ReadByte();
@@ -391,10 +408,11 @@ public sealed class ReplayFile {
         // Read skins
         const ServerItemType skin = ServerItemType.Skin;
         if (!ReadItem(reader, skin, out ServerItem skin1) || !ReadItem(reader, skin, out ServerItem skin2) || !ReadItem(reader, skin, out ServerItem skin3)) {
+            Trace.WriteLine("Failed to read skin(s)", nameof(ReplayFile));
             return null;
         }
 
-        // Skip an additional two bytes
+        // Skip an additional ten bytes
         reader.Skip(10);
 
         // Read Steam ID
@@ -402,16 +420,19 @@ public sealed class ReplayFile {
 
         // Read faceplate (Why is this even saved in the replay?)
         if (!ReadItem(reader, ServerItemType.Faceplate, out _)) {
+            Trace.WriteLine("Failed to read faceplate", nameof(ReplayFile));
             return null;
         }
 
         // Read victory strike
-        if (!ReadItem(reader, ServerItemType.Faceplate, out _)) {
+        if (!ReadItem(reader, ServerItemType.VictoryStrike, out _)) {
+            Trace.WriteLine("Failed to read victory strike", nameof(ReplayFile));
             return null;
         }
 
         // Read decal
-        if (!ReadItem(reader, ServerItemType.Faceplate, out _)) {
+        if (!ReadItem(reader, ServerItemType.Decal, out _)) {
+            Trace.WriteLine("Failed to read decal", nameof(ReplayFile));
             return null;
         }
 
@@ -433,20 +454,30 @@ public sealed class ReplayFile {
     }
 
     private static bool ReadItem(BinaryReader reader, ServerItemType itemType, out ServerItem item) {
-        ServerItem? tmp = reader.ReadUInt16() switch {
+
+        // Read type
+        var itemty = reader.ReadUInt16();
+
+        // Determine what to read
+        ServerItem? tmp = itemty switch {
             1 => ServerItem.None,
             265 => Read265(itemType, reader),
             518 => Read518(itemType, reader),
             534 => Read534(itemType, reader),
             _ => null,
         };
+        
+        // Bail
         if (tmp is null) {
             item = ServerItem.None;
+            Trace.WriteLine("Unknown server item type {itemty}!", nameof(ReplayFile));
             return false;
-        } else {
-            item = tmp.Value;
-            return true;
         }
+        
+        // Return result
+        item = tmp.Value;
+        return true;
+
     }
 
     private static ServerItem? Read265(ServerItemType itemType, BinaryReader reader) {
@@ -467,9 +498,9 @@ public sealed class ReplayFile {
         return new ServerItem(itemType, uint.MaxValue);
     }
 
-    private bool ParseRecordedData() {
+    private bool ParseRecordedData(byte[] replayContent) {
 
-        using (MemoryStream stream = new MemoryStream(this.m_replaycontent)) {
+        using (MemoryStream stream = new MemoryStream(replayContent)) {
             using (BinaryReader reader = new BinaryReader(stream)) {
 
                 while (!reader.HasReachedEOS()) {
@@ -499,7 +530,7 @@ public sealed class ReplayFile {
                             reader.Skip(8);
                             string sender = reader.ReadASCIIString();
                             string content = reader.ReadASCIIString();
-                            Trace.WriteLine("{sender}: {content}", nameof(ReplayFile));
+                            Trace.WriteLine($"{sender}: {content}", nameof(ReplayFile));
                             this.m_chatHistory.Add(new ChatMessage() {
                                 Sender = sender,
                                 Content = content,

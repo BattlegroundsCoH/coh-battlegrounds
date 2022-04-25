@@ -29,7 +29,7 @@ public class GameEvent {
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/>
     public GameEventType EventType
-        => (this.Type < (byte)GameEventType.EVENT_MAX) ?
+        => (this.Type < (byte)GameEventType.EVENT_MAX2) ?
         ((GameEventType)this.Type) :
         throw new ArgumentOutOfRangeException($"The event type {this.Type} is out of range and cannot be interpreted.");
 
@@ -92,10 +92,11 @@ public class GameEvent {
                                                                            // ... = ...
                                                                            // ??? = ???
 
+        // Log event (to verify we got something)
         Trace.WriteLine($"[{timeStamp}] {this.Type} {this.PlayerID} {this.TargetType} {eventData.Length}", nameof(GameEvent));
 
         // Read type-specific content
-        if (this.Type < (byte)GameEventType.EVENT_MAX) {
+        if (this.Type < (byte)GameEventType.EVENT_MAX2) {
             switch (this.EventType) {
                 case GameEventType.CMD_BuildSquad:
                 case GameEventType.CMD_Upgrade:

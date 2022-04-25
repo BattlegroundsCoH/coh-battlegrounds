@@ -20,12 +20,12 @@ public sealed class GameTick {
     /// <summary>
     /// The timestamp of the <see cref="GameTick"/>.
     /// </summary>
-    public TimeSpan TimeStamp => m_tickTime;
+    public TimeSpan TimeStamp => this.m_tickTime;
 
     /// <summary>
     /// The events that occured within the span of the <see cref="GameTick"/>.
     /// </summary>
-    public List<GameEvent> Events => m_events;
+    public List<GameEvent> Events => this.m_events;
 
     /// <summary>
     /// Create a new <see cref="GameTick"/> instance
@@ -36,7 +36,7 @@ public sealed class GameTick {
     }
 
     /// <summary>
-    /// Parse a <see cref="GameTick"/> using a <see cref="BinaryReader"/> to extract the budled data and populate the <see cref="GameEvent"/> list with results.
+    /// Parse a <see cref="GameTick"/> using a <see cref="BinaryReader"/> to extract the bundled data and populate the <see cref="GameEvent"/> list with results.
     /// </summary>
     /// <param name="reader"></param>
     public void Parse(BinaryReader reader) {
@@ -80,7 +80,7 @@ public sealed class GameTick {
                     // Read length
                     ushort length = reader.ReadUInt16();
 
-                    // Parse gamevent and add to our list of events
+                    // Parse game event and add to our list of events
                     GameEvent ge = new GameEvent(this.m_tickTime, reader.ReadBytes(length - 2));
                     this.m_events.Add(ge);
 

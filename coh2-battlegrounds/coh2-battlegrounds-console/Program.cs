@@ -129,7 +129,8 @@ namespace coh2_battlegrounds_console {
 
         class ReplayAnalysis : Command {
 
-            public static readonly Argument<string> PATH = new Argument<string>("-playback", "Specifies the playback file to analyse.", ReplayMatchData.LATEST_REPLAY_FILE);
+            public static readonly Argument<string> PATH = 
+                new Argument<string>("-playback", "Specifies the playback file to analyse.", File.Exists("temp.rec") ? "temp.rec" : ReplayMatchData.LATEST_REPLAY_FILE);
             public static readonly Argument<bool> JSON = new Argument<bool>("-json", "Specifies the analysis should be saved to a json file.", false);
 
             public ReplayAnalysis() : base("replay", "Runs an analysis of the most recent replay file (or otherwise specified file).", PATH, JSON) { }
@@ -145,17 +146,18 @@ namespace coh2_battlegrounds_console {
                 ReplayFile replayFile = new ReplayFile(target);
                 Console.WriteLine($"Load Replay: {replayFile.LoadReplay()}");
                 Console.WriteLine($"Partial: {replayFile.IsPartial}");
+                ReplayMatchData playback = new ReplayMatchData(new NullSession());
+                playback.SetReplayFile(replayFile);
+                if (!playback.ParseMatchData()) {
+                    Console.WriteLine("Failed to parse match data");
+                    return;
+                }
+
                 if (compile_json) {
                     Console.WriteLine("Compiling to json playback");
-                    ReplayMatchData playback = new ReplayMatchData(new NullSession());
-                    playback.SetReplayFile(replayFile);
-                    if (playback.ParseMatchData()) {
-                        JsonPlayback events = new JsonPlayback(playback);
-                        File.WriteAllText("playback.json", JsonSerializer.Serialize(events));
-                        Console.WriteLine("Saved to replay analysis to playback.json");
-                    } else {
-                        Console.WriteLine("Failed to compile to json...");
-                    }
+                    JsonPlayback events = new JsonPlayback(playback);
+                    File.WriteAllText("playback.json", events.ToJson());
+                    Console.WriteLine("Saved to replay analysis to playback.json");
                 }
 
             }
