@@ -21,7 +21,7 @@ public class Vdf {
 
     private static readonly Regex TokenRegex = new(@"(?<lbrace>{)|(?<rbrace>})|(?<str>\"".*?(?<!\\)\"")");
 
-    private Dictionary<string, object> m_vdfDictionary;
+    private readonly Dictionary<string, object> m_vdfDictionary;
 
     private Vdf(Dictionary<string, object> vdfDictionary) {
         this.m_vdfDictionary = vdfDictionary;
