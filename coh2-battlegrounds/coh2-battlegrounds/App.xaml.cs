@@ -282,14 +282,25 @@ namespace BattlegroundsApp {
         /// </summary>
         /// <param name="type">The type to try and find data template for.</param>
         /// <returns>If found, the linked <see cref="DataTemplate"/> instance; Otherwise <see langword="null"/> if not found.</returns>
-        public static DataTemplate? TryFindDataTemplate(Type type) {
+        public static DataTemplate? TryFindDataTemplate(Type type) => TryFindDataTemplate(Current.Resources, type);
 
-            foreach (DictionaryEntry res in Current.Resources) {
+        private static DataTemplate? TryFindDataTemplate(ResourceDictionary dictionary, Type type) {
+
+            // Loop through basic entry
+            foreach (DictionaryEntry res in dictionary) {
                 if (res.Value is DataTemplate template && template.DataType.Equals(type)) {
                     return template;
                 }
             }
 
+            // Loop through merged
+            foreach (var subdic in dictionary.MergedDictionaries) {
+                if (TryFindDataTemplate(subdic, type) is DataTemplate tmpl) {
+                    return tmpl;
+                }
+            }
+
+            // Return nothing
             return null;
 
         }
