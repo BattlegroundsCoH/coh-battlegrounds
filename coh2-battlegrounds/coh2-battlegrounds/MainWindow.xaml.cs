@@ -37,6 +37,8 @@ namespace BattlegroundsApp {
             // Set self display state
             this.m_displayState = AppDisplayState.LeftRight;
 
+            this.DataContext = new MainWindowViewModel(this);
+
         }
 
         public void AllowGetSteamUser(Action<bool> callback) {

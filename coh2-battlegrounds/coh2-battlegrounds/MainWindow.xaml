@@ -6,12 +6,38 @@
                      xmlns:local="clr-namespace:BattlegroundsApp"
                      xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters" xmlns:modals="clr-namespace:BattlegroundsApp.Modals"
                      mc:Ignorable="d"
-                     Title="Company of Heroes 2: Battlegrounds Mod Launcher" Height="850" Width="1400" 
+                     Title="{Binding Title}" 
                      WindowStartupLocation="CenterScreen" 
-                     WindowStyle="SingleBorderWindow" 
+                     WindowStyle="None"
+                     AllowsTransparency="True"
+                     Height="850" Width="1400"
                      MinHeight="850" MinWidth="1400"
-                     Background="#212d3a"
+                     Background="{StaticResource BackgroundDarkBlueBrush}"
                      Closing="CoreAppWindow_Closing">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type local:MainWindow}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Window}">
+                        <!-- Main window with resizeable outline margin -->
+                        <Border x:Name="Container" Padding="{Binding OuterMarginThickness}">
+                            <Grid Background="{StaticResource BackgroundDarkBlueBrush}">
+                                
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome ResizeBorderThickness="{Binding ResizeBorderThickness}"
+                      CaptionHeight="{Binding TitleHeight}"
+                      GlassFrameThickness="0"
+                      CornerRadius="0"/>
+    </WindowChrome.WindowChrome>
 
     <modals:ModalControl x:Name="ModalView" 
                          ModalMaskBehaviour="None"
