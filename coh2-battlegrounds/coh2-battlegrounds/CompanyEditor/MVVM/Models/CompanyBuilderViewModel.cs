@@ -16,7 +16,6 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 
-using BattlegroundsApp.Controls.CompanyBuilderControls;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;

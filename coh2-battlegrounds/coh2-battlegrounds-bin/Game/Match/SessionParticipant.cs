@@ -32,7 +32,7 @@ namespace Battlegrounds.Game.Match {
         /// <summary>
         /// The <see cref="Company"/> used by the <see cref="SessionParticipant"/>.
         /// </summary>
-        public Company SelectedCompany => this.m_company ?? throw new Exception("Selected company is undefined.");
+        public Company? SelectedCompany => this.m_company;
 
         /// <summary>
         /// The faction to be used by the <see cref="SessionParticipant"/>.
@@ -77,7 +77,7 @@ namespace Battlegrounds.Game.Match {
             this.PlayerIndexOnTeam = pTeamIndex;
             this.PlayerIngameIndex = pIndex;
 
-            if (this.SelectedCompany != null) {
+            if (this.SelectedCompany is not null) {
                 this.TeamIndex = (this.SelectedCompany.Army.IsAllied) ? ParticipantTeam.TEAM_ALLIES : ParticipantTeam.TEAM_AXIS;
             }
 
@@ -114,7 +114,7 @@ namespace Battlegrounds.Game.Match {
             => this.IsHuman ? this.UserID : 0;
 
         public override string ToString()
-            => $"{this.GetName()} [{this.SelectedCompany.Name}]";
+            => $"{this.GetName()} [{this.SelectedCompany?.Name}]";
 
     }
 

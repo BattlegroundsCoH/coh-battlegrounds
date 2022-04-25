@@ -103,8 +103,8 @@ namespace Battlegrounds.Game.Match.Analyze {
         }
 
         private static bool IsDifferenceGreaterThan(TimeSpan first, TimeSpan second, TimeSpan maxDifference) {
-            TimeSpan max = (first > second) ? first : second;
-            TimeSpan min = (max == first) ? second : first;
+            var max = (first > second) ? first : second;
+            var min = (max == first) ? second : first;
             return (max - min) > maxDifference;
         }
 

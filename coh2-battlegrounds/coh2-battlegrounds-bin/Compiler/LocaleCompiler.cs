@@ -49,7 +49,9 @@ public class LocaleCompiler {
             } else {
 
                 // Log
-                Trace.WriteLine($"Failed to compile UCS file entry '{lines[i]}'", nameof(LocaleCompiler));
+                if (!string.IsNullOrEmpty(lines[i])) {
+                    Trace.WriteLine($"Failed to compile UCS file entry '{lines[i]}'", nameof(LocaleCompiler));
+                }
 
             }
 

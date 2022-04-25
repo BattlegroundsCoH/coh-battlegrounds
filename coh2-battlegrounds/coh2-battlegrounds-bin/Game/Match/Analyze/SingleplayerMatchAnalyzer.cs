@@ -13,10 +13,10 @@ namespace Battlegrounds.Game.Match.Analyze {
     /// </summary>
     public class SingleplayerMatchAnalyzer : IAnalyzeStrategy {
 
-        protected IMatchData m_subject;
-        protected EventAnalysis m_analysisResult;
+        protected IMatchData? m_subject;
+        protected IAnalyzedMatch? m_analysisResult;
 
-        public IAnalyzedMatch AnalysisResult => this.m_analysisResult;
+        public IAnalyzedMatch AnalysisResult => this.m_analysisResult ?? new NullAnalysis();
 
         public virtual void OnPrepare(object caller, IMatchData toAnalyze) {
             this.m_analysisResult = new EventAnalysis(toAnalyze.Session);
@@ -27,17 +27,23 @@ namespace Battlegrounds.Game.Match.Analyze {
 
             // Analyze given playback data
             if (!this.AnalyzePlaybackData(this.m_subject)) {
-                this.m_analysisResult = null; // Invalid (Should give a null-analysis when finalizing).
+                this.m_analysisResult = new NullAnalysis(); // Invalid (Should give a null-analysis when finalizing).
             }
 
         }
 
-        protected virtual bool AnalyzePlaybackData(IMatchData replayMatchData) {
+        protected virtual bool AnalyzePlaybackData(IMatchData? replayMatchData) {
+
+            // Bail if replay is null
+            if (replayMatchData is null) {
+                Trace.WriteLine("Failed get event analysis --> was null!.", nameof(SingleplayerMatchAnalyzer));
+                return false;
+            }
 
             // Save
             try {
                 if (replayMatchData is ReplayMatchData replayMatchDataConcrete) {
-                    JsonPlayback playback = new(replayMatchDataConcrete);
+                    var playback = new JsonPlayback(replayMatchDataConcrete);
                     if (playback.ParseMatchData()) {
                         File.WriteAllText("_last_matchdata.json", JsonSerializer.Serialize(playback, new JsonSerializerOptions() {
                             WriteIndented = true,
@@ -51,15 +57,20 @@ namespace Battlegrounds.Game.Match.Analyze {
                 Trace.WriteLine("Failed to save local json playback.", nameof(SingleplayerMatchAnalyzer));
             }
 
+            if (this.m_analysisResult is not EventAnalysis events) {
+                Trace.WriteLine("Failed get event analysis --> something went horribly wrong!.", nameof(SingleplayerMatchAnalyzer));
+                return false;
+            }
+
             // Set length of match
-            this.m_analysisResult.SetLength(replayMatchData.Length);
+            events.SetLength(replayMatchData.Length);
 
             // Set players
-            _ = this.m_analysisResult.SetPlayers(replayMatchData.Players.ToArray());
+            events.SetPlayers(replayMatchData.Players.ToArray());
 
             // Register all events
             foreach (TimeEvent timeEvent in replayMatchData) {
-                var reg = this.m_analysisResult.RegisterEvent(timeEvent);
+                var reg = events.RegisterEvent(timeEvent);
                 if (!reg) {
                     if (reg.WasOutsideTime) {
                         Trace.WriteLine("Time event was after the length of the match (Out of range)", nameof(SingleplayerMatchAnalyzer));
@@ -75,7 +86,7 @@ namespace Battlegrounds.Game.Match.Analyze {
             }
 
             // Log success (Not required in UI)
-            Trace.WriteLine($"Successfully analyzed match data with {this.m_analysisResult.EventCount} events", nameof(SingleplayerMatchAnalyzer));
+            Trace.WriteLine($"Successfully analyzed match data with {events.EventCount} events", nameof(SingleplayerMatchAnalyzer));
 
             // Return true -> Analysis "complete" for this type
             return true;
@@ -94,7 +105,7 @@ namespace Battlegrounds.Game.Match.Analyze {
             Trace.WriteLine($"Successfully compiled match data into a finalizable match data object.", nameof(SingleplayerMatchAnalyzer));
 
             // Return the analysis
-            return this.m_analysisResult;
+            return this.m_analysisResult ?? new NullAnalysis();
 
         }
 

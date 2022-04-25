@@ -62,7 +62,7 @@ namespace Battlegrounds.Game.Match {
         /// <summary>
         /// 
         /// </summary>
-        Company SelectedCompany { get; }
+        Company? SelectedCompany { get; }
         
         /// <summary>
         /// 
