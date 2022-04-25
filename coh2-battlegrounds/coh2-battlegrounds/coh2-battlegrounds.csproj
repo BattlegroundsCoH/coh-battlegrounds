@@ -56,6 +56,7 @@
     <None Remove="Resources\app\army_icons\FactionWEHRHighlighted.png" />
     <None Remove="Resources\app\checkmark.png" />
     <None Remove="Resources\app\checkmark_not.png" />
+    <None Remove="Resources\app\coh2-battlegrounds-logo.png" />
     <None Remove="Resources\app\company_types\ct_airborne.png" />
     <None Remove="Resources\app\company_types\ct_armoured.png" />
     <None Remove="Resources\app\company_types\ct_artillery.png" />
@@ -141,6 +142,7 @@
     <Resource Include="Resources\app\army_icons\FactionWEHRHighlighted.png" />
     <Resource Include="Resources\app\checkmark.png" />
     <Resource Include="Resources\app\checkmark_not.png" />
+    <Resource Include="Resources\app\coh2-battlegrounds-logo.png" />
     <Resource Include="Resources\app\company_types\ct_airborne.png" />
     <Resource Include="Resources\app\company_types\ct_armoured.png" />
     <Resource Include="Resources\app\company_types\ct_artillery.png" />

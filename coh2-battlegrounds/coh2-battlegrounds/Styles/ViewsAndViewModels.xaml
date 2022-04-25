@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:BattlegroundsApp"
                     xmlns:views="clr-namespace:BattlegroundsApp.MVVM.Views"
                     xmlns:models="clr-namespace:BattlegroundsApp.MVVM.Models"
                     xmlns:lobbyviews="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views"
