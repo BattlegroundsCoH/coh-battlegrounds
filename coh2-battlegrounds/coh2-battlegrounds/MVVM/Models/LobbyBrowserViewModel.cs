@@ -26,7 +26,7 @@ public record LobbyBrowserButton(ICommand Click, Func<bool> IsEnabledCheck) : IN
 
     public event PropertyChangedEventHandler? PropertyChanged;
     public void Update(object sender) {
-        this.PropertyChanged?.Invoke(this, new("Join"));
+        this.PropertyChanged?.Invoke(this, new("IsEnabled"));
     }
 }
 
