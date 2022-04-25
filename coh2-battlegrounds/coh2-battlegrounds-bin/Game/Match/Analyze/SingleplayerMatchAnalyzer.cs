@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Data.Events;
@@ -45,10 +44,7 @@ namespace Battlegrounds.Game.Match.Analyze {
                 if (replayMatchData is ReplayMatchData replayMatchDataConcrete) {
                     var playback = new JsonPlayback(replayMatchDataConcrete);
                     if (playback.ParseMatchData()) {
-                        File.WriteAllText("_last_matchdata.json", JsonSerializer.Serialize(playback, new JsonSerializerOptions() {
-                            WriteIndented = true,
-                            IncludeFields = true,
-                        }));
+                        File.WriteAllText("_last_matchdata.json", playback.ToJson());
                     } else {
                         Trace.WriteLine("Failed to save local json playback.", nameof(SingleplayerMatchAnalyzer));
                     }
