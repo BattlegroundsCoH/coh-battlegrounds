@@ -21,10 +21,4 @@
     <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="coh2-battlegrounds-networking">
-      <HintPath>..\coh2-battlegrounds-networking.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

@@ -23,24 +23,18 @@ public static class Integrity {
         // Grab self path
         string selfPath = processPath;
         string dllPath = processPath.Replace(".exe", "-bin.dll");
-        string netPath = processPath.Replace(".exe", "-networking.dll");
         string checksumpath = processPath.Replace("coh2-battlegrounds.exe", "checksum.txt");
 
         // If dll is not found -> bail
         if (!File.Exists(dllPath))
             throw new FatalAppException();
 
-        // If net dll not found -> bail
-        if (!File.Exists(netPath))
-            throw new FatalAppException();
-
         // Check self
         var selfCheck = ComputeChecksum(selfPath);
         var binCheck = ComputeChecksum(dllPath) + selfCheck;
-        var netCheck = ComputeChecksum(netPath) + binCheck;
 
         // Check common
-        __integrityHash = ComputeDirectoryChecksum(netCheck, Path.Combine(Path.GetDirectoryName(processPath) ?? throw new FatalAppException(), "bg_common"));
+        __integrityHash = ComputeDirectoryChecksum(binCheck, Path.Combine(Path.GetDirectoryName(processPath) ?? throw new FatalAppException(), "bg_common"));
 
         // Check validity
         if (__integrityHash != Convert.ToUInt64(File.ReadAllText(checksumpath), 16)) {

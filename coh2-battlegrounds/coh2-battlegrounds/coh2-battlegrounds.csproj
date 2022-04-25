@@ -169,12 +169,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="coh2-battlegrounds-networking">
-      <HintPath>..\coh2-battlegrounds-networking.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Resources\campaign\icon_attrition.png" />
     <Resource Include="Resources\campaign\icon_unittype_air.png" />
     <Resource Include="Resources\campaign\icon_unittype_arty.png" />
