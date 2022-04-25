@@ -334,10 +334,16 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <remarks>
     /// This must be called before certain other methods.
     /// </remarks>
-    /// <param name="sbpName">The blueprint name to use when finding the <see cref="Blueprint"/>.</param>
+    /// <param name="sbpName">The blueprint name to use when finding the <see cref="Blueprint"/>. If null or the empty string, the transport blueprint is set to 'none'</param>
     /// <returns>The modified instance the method is invoked with.</returns>
-    public virtual UnitBuilder SetTransportBlueprint(string sbpName) 
-        => this.SetTransportBlueprint(BlueprintManager.FromBlueprintName(sbpName, BlueprintType.SBP) as SquadBlueprint ?? throw new ObjectNotFoundException("Blueprint not found"));
+    public virtual UnitBuilder SetTransportBlueprint(string? sbpName) {
+        if (string.IsNullOrEmpty(sbpName)) {
+            this.ApplyAction(new TransportAction(null));
+        } else {
+            this.SetTransportBlueprint(BlueprintManager.FromBlueprintName(sbpName, BlueprintType.SBP) as SquadBlueprint ?? throw new ObjectNotFoundException("Blueprint not found"));
+        }
+        return this;
+    }
 
     /// <summary>
     /// Set the <see cref="DeploymentMethod"/> to use when the <see cref="Squad"/> instance being built is deployed.
