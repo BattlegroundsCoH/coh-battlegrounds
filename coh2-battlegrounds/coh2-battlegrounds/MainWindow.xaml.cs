@@ -98,7 +98,7 @@ namespace BattlegroundsApp {
         [Obsolete]
         public void ShowLeftPanel(bool show) {}
 
-        private void CoreAppWindow_Closing(object sender, CancelEventArgs e) {
+        private void OnAppClosing(object sender, CancelEventArgs e) {
 
             // Get current rhs
             if (this.RightContent.Content is LobbyModel lobby) {
