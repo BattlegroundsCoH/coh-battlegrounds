@@ -120,6 +120,7 @@
     <None Remove="Resources\ingame\vet\vstar_no.png" />
     <None Remove="Resources\ingame\vet\vstar_yes.png" />
     <None Remove="Resources\ingame\west_german.png" />
+    <None Remove="Resources\profanities.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -217,6 +218,7 @@
     <Resource Include="Resources\ingame\vet\vstar_no.png" />
     <Resource Include="Resources\ingame\vet\vstar_yes.png" />
     <Resource Include="Resources\ingame\west_german.png" />
+    <Resource Include="Resources\profanities.json" />
   </ItemGroup>
 
   <ItemGroup>

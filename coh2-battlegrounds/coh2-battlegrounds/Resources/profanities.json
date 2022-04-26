@@ -1,0 +1,16 @@
+{
+  "strict": {
+    "Superset": "profanities",
+    "FilterWords": {
+      "all": [],
+      "english": []
+    }
+  },
+  "profanities": {
+    "Superset": "",
+    "FilterWords": {
+      "all": [],
+      "english": []
+    }
+  }
+}

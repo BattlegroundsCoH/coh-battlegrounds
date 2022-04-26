@@ -110,6 +110,11 @@ public partial class App : Application {
         this.MainWindow = window;
         this.MainWindow.Show();
 
+        // Load filter
+        Task.Run(ProfanityFilter.LoadFilter);
+
+        // Load more low priority stuff down here
+
     }
 
     private static void VerifyIntegrity() {
@@ -198,8 +203,6 @@ public partial class App : Application {
         if (!IsStarted) {
             return;
         }
-
-        // TODO: Close active view (in case it's in modifier state, like the company builder)
 
         // Save all changes
         BattlegroundsInstance.SaveInstance();
@@ -306,4 +309,3 @@ public partial class App : Application {
     }
 
 }
-

@@ -245,6 +245,23 @@ namespace Battlegrounds.Functional {
             return before.Concat(after).ToArray();
         }
 
+        /// <summary>
+        /// Folds the input array using an accumulation function.
+        /// </summary>
+        /// <typeparam name="TSource">Source type to fold</typeparam>
+        /// <typeparam name="TState">The folded state</typeparam>
+        /// <param name="array">Array to fold into accumulation state.</param>
+        /// <param name="initial">The initial state to fold from.</param>
+        /// <param name="fun">Folder function.</param>
+        /// <returns>The folded state</returns>
+        public static TState Fold<TSource, TState>(this TSource[] array, TState initial, Func<TState, TSource, TState> fun) {
+            var state = initial;
+            for (int i = 0; i < array.Length; i++) {
+                state = fun(state, array[i]);
+            }
+            return state;
+        }
+
     }
 
 }
