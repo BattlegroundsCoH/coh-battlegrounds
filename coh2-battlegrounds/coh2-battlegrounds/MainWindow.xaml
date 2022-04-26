@@ -7,14 +7,14 @@
         xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
         xmlns:modals="clr-namespace:BattlegroundsApp.Modals"
         mc:Ignorable="d"
-        Title="Company of Heroes 2: Battlegrounds Mod Launcher"
+        Title="{Binding Title}"
         WindowStartupLocation="CenterScreen" 
         WindowStyle="None"
         AllowsTransparency="True"
         MinHeight="{Binding WindowMinimumHeight}"
         MinWidth="{Binding WindowMinimumWidth}"
         Background="{StaticResource BackgroundDarkBlueBrush}"
-        Closing="CoreAppWindow_Closing"
+        Closing="OnAppClosing"
         Style="{StaticResource MainWindow}">
 
     <WindowChrome.WindowChrome>
