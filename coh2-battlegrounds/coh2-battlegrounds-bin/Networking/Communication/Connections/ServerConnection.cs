@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Battlegrounds.Networking.Communication.Golang;
-using Battlegrounds.Networking.Memory;
+using Battlegrounds.Util;
 
 namespace Battlegrounds.Networking.Communication.Connections;
 

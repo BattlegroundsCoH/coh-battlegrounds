@@ -1,114 +1,182 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
+using Battlegrounds.Networking.LobbySystem;
 
 namespace Battlegrounds.Networking.Server;
 
-/*
-type Lobby struct {
-	    Host         *LobbyMember            `json:"-"`
-	    Participants map[uint64]*LobbyMember `json:"-"`
-	    Mutex        *sync.RWMutex           `json:"-"`
-	    Name         string
-	    Mode         string // gamemode, map etc.
-	    Status       string // playing, setting up etc.
-	    Password     string `json:"-"` // Makes json serializer skip it
-	    Capacity     int
-	    Occupants    int    // The amount of registed players/ais
-	    LobbyType    int    // if skirmish or campaign etc.
-	    UID          uint64 // unique identifier
+/* (Outdated as of 26th of April 2022)
+type LobbyPublic struct {
+	UID                 uint64
+	Name                string
+	Settings            map[string]string
+	IsPasswrodProtected bool
+	IsObserversAllowed  bool
+	Status              string
+	Capacity            byte
+	Occupants           byte
+	Teams               [][]LobbyPublicTeamSlot
+}
+type LobbyPublicTeamSlot struct {
+	DisplayName string
+	Army        string
+	Difficulty  byte
+	State       byte
 }
  */
 
 /// <summary>
 /// API representation of a server lobby.
 /// </summary>
-public struct ServerLobby {
+public readonly struct ServerLobby {
 
-    /// <summary>
-    /// Get (or set) the actual name of the server lobby.
-    /// </summary>
-    [JsonPropertyName("LobbyName")]
-    public string Name { get; set; }
+	/// <summary>
+	/// 
+	/// </summary>
+	public ulong UID { get; }
 
-    /// <summary>
-    /// Get (or set) the numeric type 
-    /// </summary>
-    [JsonPropertyName("LobbyType")]
-    public int Type { get; set; }
+	/// <summary>
+	/// 
+	/// </summary>
+	public string Name { get; }
 
-    /// <summary>
-    /// Get (or set) the current amount of active members in the lobby (includes AI).
-    /// </summary>
-    [JsonPropertyName("Occupants")]
-    public int Members { get; set; }
+	/// <summary>
+	/// 
+	/// </summary>
+	public Dictionary<string, string> Settings { get; }
 
-    /// <summary>
-    /// Get (or set) the current capacity of the lobby.
-    /// </summary>
-    [JsonPropertyName("LobbyCapacity")]
-    public int Capacity { get; set; }
+	/// <summary>
+	/// 
+	/// </summary>
+	public bool IsPasswrodProtected { get; }
 
-    /// <summary>
-    /// Get (or set) the current state of the lobby.
-    /// </summary>
-    [JsonPropertyName("LobbyPlayState")]
-    public string State { get; set; }
+	/// <summary>
+	/// 
+	/// </summary>
+	public bool IsObserversAllowed { get; }
 
-    /// <summary>
-    /// Get the translated version of <see cref="State"/>.
-    /// </summary>
-    /// <remarks>
-    /// Returns <see cref="State"/> raw if <see cref="StringTranslator"/> is not defined.
-    /// <br/>
-    /// This is not saved in json.
-    /// </remarks>
-    [JsonIgnore]
-    public string TranslatedState => this.StringTranslator?.Invoke(this.State, nameof(State)) ?? this.State;
+	/// <summary>
+	/// 
+	/// </summary>
+	public string Status { get; }
 
-    /// <summary>
-    /// Get (or set) the current mode played by the lobby.
-    /// </summary>
-    [JsonPropertyName("LobbyPlaymode")]
-    public string Mode { get; set; }
+	/// <summary>
+	/// 
+	/// </summary>
+	public byte Capacity { get; }
 
-    /// <summary>
-    /// Get the translated version of <see cref="Mode"/>.
-    /// </summary>
-    /// <remarks>
-    /// Returns <see cref="Mode"/> raw if <see cref="StringTranslator"/> is not defined.
-    /// <br/>
-    /// This is not saved in json.
-    /// </remarks>
-    [JsonIgnore]
-    public string TranslatedMode => this.StringTranslator?.Invoke(this.Mode, nameof(Mode)) ?? this.Mode;
+	/// <summary>
+	/// 
+	/// </summary>
+	public byte Occupants { get; }
 
-    /// <summary>
-    /// Get (or set) the GUID associated with the lobby.
-    /// </summary>
-    [JsonPropertyName("LobbyId")]
-    public ulong UID { get; set; }
+	/// <summary>
+	/// 
+	/// </summary>
+	public ServerSlot[][] Teams { get; }
 
-    /// <summary>
-    /// Get (or set) if the lobby is password-protected.
-    /// </summary>
-    [JsonPropertyName("HasPassword")]
-    public bool HasPassword { get; set; }
+	/// <summary>
+	/// 
+	/// </summary>
+	public string CapacityString => $"{this.Occupants}/{this.Capacity}";
 
-    /// <summary>
-    /// Get the string describing the filled slots of the lobby.
-    /// </summary>
-    /// <remarks>
-    /// This is not serialised in Json.
-    /// </remarks>
-    [JsonIgnore]
-    public string CapacityString => $"{this.Members}/{this.Capacity}";
+	/// <summary>
+	/// 
+	/// </summary>
+	public string Mode => this.Settings[LobbyAPI.SETTING_GAMEMODEOPTION] is "" 
+		? $"{this.Settings[LobbyAPI.SETTING_MAP]}, {this.Settings[LobbyAPI.SETTING_GAMEMODE]}"
+		: $"{this.Settings[LobbyAPI.SETTING_MAP]}, {this.Settings[LobbyAPI.SETTING_GAMEMODE]} ({this.Settings[LobbyAPI.SETTING_GAMEMODEOPTION]})";
 
-    /// <summary>
-    /// Get or set the translator functionality that will translate the server-stored value.
-    /// </summary>
-    /// <remarks>
-    /// This is not serialised in Json and must be defined by the local machine.
-    /// </remarks>
-    [JsonIgnore]
-    public ServerAPIResponseStringTranslator StringTranslator { get; set; }
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="UID"></param>
+	/// <param name="Name"></param>
+	/// <param name="Settings"></param>
+	/// <param name="IsPasswrodProtected"></param>
+	/// <param name="IsObserversAllowed"></param>
+	/// <param name="Status"></param>
+	/// <param name="Capacity"></param>
+	/// <param name="Occupants"></param>
+	/// <param name="Teams"></param>
+	[JsonConstructor]
+	public ServerLobby(ulong UID, string Name, Dictionary<string, string> Settings, bool IsPasswrodProtected, bool IsObserversAllowed, string Status,
+		byte Capacity, byte Occupants, ServerSlot[][] Teams) { 
+		this.UID = UID;
+		this.Name = Name;
+		this.IsPasswrodProtected = IsPasswrodProtected;
+		this.IsObserversAllowed = IsObserversAllowed;
+		this.Status = Status;
+		this.Capacity = Capacity;
+		this.Occupants = Occupants;
+
+		// Create default settings
+		if (Settings is null || Settings.Count is 0) {
+			this.Settings = new() {
+				[LobbyAPI.SETTING_MAP] = "None",
+				[LobbyAPI.SETTING_GAMEMODEOPTION] = "",
+				[LobbyAPI.SETTING_GAMEMODE] = "None"
+			};
+        } else {
+			this.Settings = Settings;
+		}
+
+		// Create default teams
+		if (Teams is null || Teams.Length is 0) {
+			this.Teams = new ServerSlot[3][] {
+				new ServerSlot[] { ServerSlot.None, ServerSlot.None, ServerSlot.None, ServerSlot.None  },
+				new ServerSlot[] { ServerSlot.None, ServerSlot.None, ServerSlot.None, ServerSlot.None },
+                Array.Empty<ServerSlot>()
+            };
+        } else {
+			this.Teams = Teams;
+        }
+
+	}
+
+}
+
+/// <summary>
+/// 
+/// </summary>
+public readonly struct ServerSlot {
+
+	public static readonly ServerSlot None = new("", "", 0, 0);
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public string DisplayName { get; }
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public string Army { get; }
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public byte Difficulty { get; }
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public byte State { get; }
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="DisplayName"></param>
+	/// <param name="Army"></param>
+	/// <param name="Difficulty"></param>
+	/// <param name="State"></param>
+	[JsonConstructor]
+	public ServerSlot(string DisplayName, string Army, byte Difficulty, byte State) {
+		this.DisplayName = DisplayName;
+		this.Army = Army;
+		this.Difficulty = Difficulty;
+		this.State = State;
+	}
 
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
-
+using System.Threading;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -14,7 +14,6 @@ using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
 using static Battlegrounds.Networking.LobbySystem.LobbyAPIStructs;
-using System.Threading;
 
 namespace Battlegrounds.Networking.LobbySystem;
 
@@ -72,6 +71,13 @@ public record LobbyMatchInfoEventArgs(bool IsError, string Type, string Reason);
 /// Class for interacting with the lobby logic on the server.
 /// </summary>
 public sealed class LobbyAPI {
+
+    public const string SETTING_MAP = "selected_map";
+    public const string SETTING_GAMEMODE = "selected_wc";
+    public const string SETTING_GAMEMODEOPTION = "selected_wco";
+    public const string SETTING_WEATHER = "selected_daynight";
+    public const string SETTING_LOGISTICS = "selected_supply";
+    public const string SETTING_MODPACK = "selected_tuning";
 
     private static readonly TimeZoneInfo __thisTimezone = TimeZoneInfo.Local;
 

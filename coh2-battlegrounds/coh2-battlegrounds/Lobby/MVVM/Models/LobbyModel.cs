@@ -4,12 +4,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 using Battlegrounds;
 using Battlegrounds.Game;
@@ -128,8 +125,6 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         } 
 
     }
-
-    protected static readonly ImageSource __mapNotFound = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
 
     protected static readonly LocaleKey __leaveTitle = new("LobbyView_DialogLeaveTitle");
     protected static readonly LocaleKey __leaveDesc = new("LobbyView_DialogLeaveDesc");
@@ -458,42 +453,6 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             }, modalTitle, modalDesc);
 
         });
-
-    }
-
-    protected BitmapSource? TryGetMapSource(Scenario? scenario, [CallerMemberName] string caller = "") {
-
-        // Check scenario
-        if (scenario is null) {
-            Trace.WriteLine($"Failed to set **null** scenario (Caller = {caller}).", nameof(LobbyHostModel));
-            return (BitmapSource?)__mapNotFound;
-        }
-
-        // Get Path
-        string fullpath = Path.GetFullPath($"bg_common\\gfx\\map_icons\\{scenario.RelativeFilename}_map.tga");
-
-        // Check if file exists
-        if (File.Exists(fullpath)) {
-            try {
-                return TgaImageSource.TargaBitmapSourceFromFile(fullpath);
-            } catch (BadImageFormatException bife) {
-                Trace.WriteLine(bife, nameof(this.TryGetMapSource));
-            }
-        } else {
-            fullpath = Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.RelativeFilename}_map.tga");
-            if (File.Exists(fullpath)) {
-                try {
-                    return TgaImageSource.TargaBitmapSourceFromFile(fullpath);
-                } catch (BadImageFormatException bife) {
-                    Trace.WriteLine(bife, nameof(this.TryGetMapSource));
-                }
-            } else {
-                Trace.WriteLine($"Failed to locate file: {fullpath}", nameof(this.TryGetMapSource));
-            }
-        }
-
-        // Nothing found
-        return (BitmapSource?)__mapNotFound;
 
     }
 

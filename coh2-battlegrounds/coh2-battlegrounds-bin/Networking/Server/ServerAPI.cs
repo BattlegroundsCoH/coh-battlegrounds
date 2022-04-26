@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 
 using Battlegrounds.Networking.Communication;
 using Battlegrounds.Networking.Communication.Golang;
-using Battlegrounds.Networking.Memory;
+using Battlegrounds.Util;
 
 namespace Battlegrounds.Networking.Server;
 

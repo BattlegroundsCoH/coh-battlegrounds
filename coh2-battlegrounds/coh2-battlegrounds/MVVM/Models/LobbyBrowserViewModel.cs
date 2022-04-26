@@ -6,13 +6,17 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 using Battlegrounds;
+using Battlegrounds.Functional;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Locale;
 using Battlegrounds.Networking;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 
+using BattlegroundsApp.Lobby;
 using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
@@ -26,8 +30,14 @@ public record LobbyBrowserButton(ICommand Click, Func<bool> IsEnabledCheck) : IN
 
     public event PropertyChangedEventHandler? PropertyChanged;
     public void Update(object sender) {
-        this.PropertyChanged?.Invoke(this, new("IsEnabled"));
+        this.PropertyChanged?.Invoke(this, new(nameof(IsEnabled)));
     }
+}
+
+public record LobbySettingPreview(string Key, string Value);
+
+public record LobbySlotPreview(ServerSlot Slot) {
+
 }
 
 public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
@@ -35,10 +45,18 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
     private static readonly LocaleKey _noMatches = new LocaleKey("GameBrowserView_NoLobbies");
     private static readonly LocaleKey _noConnection = new LocaleKey("GameBrowserView_NoConnection");
 
-    private readonly bool __useMockData = false; // SET TO FALSE WHEN TESTING IS OVER
+    private static readonly Dictionary<string, LocaleKey> _settingKeys = new() {
+        [LobbyAPI.SETTING_GAMEMODE] = new("LobbyView_SettingGamemode"),
+        [LobbyAPI.SETTING_GAMEMODEOPTION] = new("LobbyView_SettingOption"),
+        [LobbyAPI.SETTING_LOGISTICS] = new("LobbyView_SettingSupply"),
+        [LobbyAPI.SETTING_MAP] = new("LobbyView_SettingScenario"),
+        [LobbyAPI.SETTING_MODPACK] = new("LobbyView_SettingTuning"),
+        [LobbyAPI.SETTING_WEATHER] = new("LobbyView_SettingWeather")
+    };
+
     private DateTime m_lastRefresh;
 
-    public bool KeepAlive => true;
+    public bool KeepAlive => false;
 
     public LobbyBrowserButton Refresh { get; }
 
@@ -64,11 +82,21 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
     public EventCommand JoinLobbyDirectly { get; }
 
-    public bool SingleInstanceOnly => true;
+    public bool SingleInstanceOnly => false;
 
     public object? SelectedLobby { get; set; }
 
     public int SelectedLobbyIndex { get; set; }
+
+    public ObservableCollection<LobbySettingPreview> PreviewSettings { get; } 
+
+    public ImageSource? PreviewImage { get; set; }
+
+    public string PreviewTitle { get; set; }
+
+    public ObservableCollection<LobbySlotPreview> PreviewAllies { get; set; }
+
+    public ObservableCollection<LobbySlotPreview> PreviewAxis { get; set; }
 
     public LobbyBrowserViewModel() {
 
@@ -101,6 +129,16 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         // Set selected index
         this.SelectedLobbyIndex = -1;
 
+        // Create preview
+        this.PreviewSettings = new();
+        this.PreviewImage = null;
+        this.PreviewTitle = "No Lobby Selected";
+        this.PreviewAllies = new();
+        this.PreviewAxis = new();
+
+        // Set basic preview
+        this.ClearSelected();
+
         // Check connection and update
         Task.Run(() => {
             if (!NetworkInterface.HasInternetConnection()) {
@@ -116,7 +154,64 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public void RefreshJoin() => this.Join.Update(this);
+    public void RefreshJoin() {
+        
+        // Update join
+        this.Join.Update(this);
+
+        // Refresh
+        this.RefreshSelected();
+
+    }
+
+    private void RefreshSelected() {
+
+        // Baild if invalid (but reset info)
+        if (this.SelectedLobbyIndex is -1 || this.SelectedLobbyIndex > this.Lobbies.Count) {
+            this.ClearSelected();
+            return;
+        }
+
+        // Get selected
+        var selected = this.Lobbies[this.SelectedLobbyIndex];
+
+        // Set name
+        this.PreviewTitle = selected.Name;
+        this.PropertyChanged?.Invoke(this, new(nameof(PreviewTitle)));
+
+        // Read from settings
+        var scen = ScenarioList.FromRelativeFilename(selected.Settings["selected_map"]);
+
+        // Set scenario
+        this.PreviewImage = ScenarioLookup.TryGetMapSource(scen);
+        this.PropertyChanged?.Invoke(this, new(nameof(PreviewImage)));
+
+        // Clear current settings
+        this.PreviewSettings.Clear();
+
+        // Set settings
+        foreach (var setting in selected.Settings) {
+            if (_settingKeys.TryGetValue(setting.Key, out var keyloc) && keyloc is not null) {
+                this.PreviewSettings.Add(new(BattlegroundsInstance.Localize.GetString(keyloc), setting.Value));
+            }
+        }
+
+        // Refresh Allies
+        this.PreviewAllies.Clear();
+        selected.Teams[0].ForEach(x => this.PreviewAllies.Add(new(x)));
+
+        // Refresh axis
+        this.PreviewAxis.Clear();
+        selected.Teams[1].ForEach(x => this.PreviewAxis.Add(new(x)));
+
+    }
+
+    private void ClearSelected() {
+
+        // Give it a null
+        this.PreviewImage = ScenarioLookup.TryGetMapSource(null);
+
+    }
 
     public void RefreshButton() {
         if ((DateTime.Now - this.m_lastRefresh).TotalSeconds >= 2.5) {
@@ -134,10 +229,10 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         Trace.WriteLine("Refreshing lobby list", nameof(LobbyBrowserViewModel));
 
         // Get lobbies async
-        _ = Task.Run(() => {
+        Task.Run(() => {
 
             // Get lobbies
-            var lobbies = this.GetLobbiesFromServer();
+            var lobbies = GetLobbiesFromServer();
 
             // Log amount of lobbies fetched
             Trace.WriteLine($"Serverhub returned {lobbies.Count} lobbies.", nameof(LobbyBrowserViewModel));
@@ -199,7 +294,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
             }
 
             // Create lobby
-            _ = Task.Run(() => LobbyUtil.HostLobby(NetworkInterface.APIObject, vm.LobbyName, vm.LobbyPassword, this.HostLobbyResponse));
+            Task.Run(() => LobbyUtil.HostLobby(NetworkInterface.APIObject, vm.LobbyName, vm.LobbyPassword, this.HostLobbyResponse));
             
 
         });
@@ -264,7 +359,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         if (this.SelectedLobby is ServerLobby lobby) {
 
             // If password, ask for it
-            if (lobby.HasPassword) {
+            if (lobby.IsPasswrodProtected) {
 
                 // Null check
                 if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
@@ -279,7 +374,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
                         return;
                     }
 
-                    _ = Task.Run(() => {
+                    Task.Run(() => {
                         LobbyUtil.JoinLobby(NetworkInterface.APIObject, lobby, vm.Password, this.JoinLobbyResponse);
                     });
 
@@ -287,7 +382,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
             } else {
 
-                _ = Task.Run(() => {
+                Task.Run(() => {
                     LobbyUtil.JoinLobby(NetworkInterface.APIObject, lobby, string.Empty, this.JoinLobbyResponse);
                 });
 
@@ -336,45 +431,16 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
     public bool CanJoinLobby
         => PlayerCompanies.HasCompanyForBothAlliances() && this.SelectedLobby is not null;
 
-    private List<ServerLobby> GetLobbiesFromServer() {
-        if (this.__useMockData) {
-            return new() {
-                new() {
-                    Name = "Alfredo's Match",
-                    Capacity = 2,
-                    Members = 1,
-                    Type = 1,
-                    State = "2p_stalingrad, bg_vp (500)"
-                },
-                new() {
-                    Name = "Super Real Match",
-                    Capacity = 2,
-                    Members = 1,
-                    Type = 1,
-                    State = "2p_stalingrad, bg_vp (500)"
-                },
-                new() {
-                    Name = "WPF is bad",
-                    Capacity = 2,
-                    Members = 1,
-                    Type = 1,
-                    State = "2p_stalingrad, bg_vp (500)"
-                },
-            };
-        } else {
-            
-            // Get lobbies (if any)
-            List<ServerLobby> lobs;
-            if (NetworkInterface.APIObject is null) {
-                lobs =  new();
-            } else {
-                lobs = NetworkInterface.APIObject.GetLobbies();
-            }
+    private static List<ServerLobby> GetLobbiesFromServer() {
 
-            // Return lobbies
-            return lobs;
-
+        // Check if network interface has a server API object
+        if (NetworkInterface.APIObject is null) {
+            return new();
         }
+
+        // Return lobbies
+        return NetworkInterface.APIObject.GetLobbies();
+
     }
 
     public void UnloadViewModel(OnModelClosed closeCallback, bool destroy) => closeCallback(false);

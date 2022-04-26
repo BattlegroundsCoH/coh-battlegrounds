@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Battlegrounds.Networking.Memory;
+namespace Battlegrounds.Util;
 
 /// <summary>
 /// Represents a slice of an array from a start position to an end position.
