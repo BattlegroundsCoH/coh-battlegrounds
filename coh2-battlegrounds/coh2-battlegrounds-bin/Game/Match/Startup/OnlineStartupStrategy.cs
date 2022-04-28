@@ -252,7 +252,8 @@ namespace Battlegrounds.Game.Match.Startup {
                 byte[] gamemode = File.ReadAllBytes(sgapath);
 
                 // Upload gamemode
-                if (api.ServerHandle.UploadGamemode(gamemode, (a,b) => this.GamemodeUploadCallback(a,b,false)) == UploadResult.UPLOAD_SUCCESS) {
+                //if (api.ServerHandle.UploadGamemode(gamemode, (a,b) => this.GamemodeUploadCallback(a,b,false)) == UploadResult.UPLOAD_SUCCESS) {
+                if (api.UploadGamemodeFile(gamemode, this.GamemodeUploadProgress) == UploadResult.UPLOAD_SUCCESS) { 
 
                     // Instruct players to download gamemode
                     api.ReleaseGamemode();

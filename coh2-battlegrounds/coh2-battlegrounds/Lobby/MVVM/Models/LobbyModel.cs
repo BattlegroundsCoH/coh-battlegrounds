@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -374,7 +375,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             }
 
             // Upload file
-            if (obj.UploadCompany(selfid, companyJson, (a, b) => Trace.WriteLine($"Upload company progress {a}/{b}", nameof(LobbyHostModel))) is not UploadResult.UPLOAD_SUCCESS) {
+            var encoded = Encoding.UTF8.GetBytes(companyJson);
+            if (this.m_handle.UploadCompanyFile(encoded, selfid, (a, b, _) => Trace.WriteLine($"Upload company progress {a}/{b}", nameof(LobbyHostModel))) is not UploadResult.UPLOAD_SUCCESS) {
                 Trace.WriteLine("Failed to upload company json file.", nameof(LobbyHostModel));
             }
 

@@ -811,8 +811,18 @@ public sealed class LobbyAPI {
     /// <param name="contents">The .sga archive file contents.</param>
     /// <param name="callbackHandler">The callback that is triggered whenever a chunk is sent.</param>
     /// <returns><see langword="true"/> if file was uploaded; Otherwise <see langword="false"/>.</returns>
-    public bool UploadGamemodeFile(byte[] contents, UploadProgressCallbackHandler? callbackHandler)
-        => this.m_connection.SendFile(contents, 0, this.m_cidcntr++, callbackHandler);
+    public UploadResult UploadGamemodeFile(byte[] contents, UploadProgressCallbackHandler? callbackHandler)
+        => this.ServerHandle.UploadFile(1, this.Self.ID, this.ServerHandle.LobbyUID, contents, (a,b) => callbackHandler?.Invoke(a,b,a==-1));
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="contents"></param>
+    /// <param name="companyOwner"></param>
+    /// <param name="callbackHandler"></param>
+    /// <returns></returns>
+    public UploadResult UploadCompanyFile(byte[] contents, ulong companyOwner, UploadProgressCallbackHandler? callbackHandler)
+        => this.ServerHandle.UploadFile(0, companyOwner, this.ServerHandle.LobbyUID, contents, (a, b) => callbackHandler?.Invoke(a, b, a is -1));
 
     /// <summary>
     /// Conducts a simple yes/no poll across the server.

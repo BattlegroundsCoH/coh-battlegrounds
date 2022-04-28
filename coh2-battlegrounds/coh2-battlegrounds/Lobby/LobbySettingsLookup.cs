@@ -10,16 +10,16 @@ using BattlegroundsApp.Resources;
 
 namespace BattlegroundsApp.Lobby;
 
-public static class ScenarioLookup {
+public static class LobbySettingsLookup {
 
-    private static readonly ImageSource __mapNotFound = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
+    public static readonly ImageSource MapNotFound = new BitmapImage(new Uri("pack://application:,,,/Resources/ingame/unknown_map.png"));
 
     public static BitmapSource? TryGetMapSource(Scenario? scenario) {
 
         // Check scenario
         if (scenario is null) {
-            Trace.WriteLine($"Failed to set **null** scenario.", nameof(ScenarioLookup));
-            return (BitmapSource?)__mapNotFound;
+            Trace.WriteLine($"Failed to set **null** scenario.", nameof(LobbySettingsLookup));
+            return (BitmapSource?)MapNotFound;
         }
 
         // Get Path
@@ -46,7 +46,7 @@ public static class ScenarioLookup {
         }
 
         // Nothing found
-        return (BitmapSource?)__mapNotFound;
+        return (BitmapSource?)MapNotFound;
 
     }
 

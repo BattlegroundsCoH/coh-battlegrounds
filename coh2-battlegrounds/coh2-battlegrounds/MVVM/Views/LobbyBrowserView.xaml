@@ -66,7 +66,12 @@
                   Style="{StaticResource StandardBlueListViewStyle}"
                   ItemContainerStyle="{StaticResource StandardBlueListViewItem}"
                   SelectionChanged="GameLobbyList_SelectionChanged"
+                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <!--
+                    TODO: Implement scrollbar solution as
+                    the one for the company builder
+                -->
                 <ListView.Resources>
                     <Style x:Key="LobbyLabel" TargetType="{x:Type Label}">
                         <Setter Property="Foreground" Value="#d8dbde"/>
@@ -92,7 +97,7 @@
                         </GridViewColumn>
                         <GridViewColumn 
                             Header="{Binding GamemodeListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
-                            Width="194" 
+                            Width="172" 
                             DisplayMemberBinding="{Binding TranslatedMode}"
                             HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
                             <GridViewColumn.CellTemplate>
@@ -105,7 +110,7 @@
                         </GridViewColumn>
                         <GridViewColumn 
                             Header="{Binding StateListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
-                            Width="125" 
+                            Width="124" 
                             HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
@@ -151,8 +156,8 @@
               Margin="15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="194"/>
-                    <ColumnDefinition Width="125"/>
+                    <ColumnDefinition Width="172"/>
+                    <ColumnDefinition Width="124"/>
                     <ColumnDefinition Width="72"/>
                     <ColumnDefinition Width="72"/>
                 </Grid.ColumnDefinitions>
@@ -179,7 +184,7 @@
             <Grid >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="230"/>
+                    <ColumnDefinition Width="320"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
@@ -190,13 +195,20 @@
                 </Grid.RowDefinitions>
                 <Grid.Resources>
                     <DataTemplate x:Key="TeamSlotPreview">
-                        <Grid Grid.Row="2" Grid.Column="2" 
-                      Margin="5"
-                      Background="{StaticResource BackgroundBlueBrush}">
-                            <Image Grid.Column="0"/>
-                            <Label Content="????" VerticalAlignment="Center"
+                        <Grid Grid.Row="2" Grid.Column="2" Height="32" 
+                      Margin="5" Visibility="{Binding SlotVisibility}"
+                      Background="{StaticResource BackgroundLightBlueBrush}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="32"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0"
+                                   Source="{Binding SlotImage}"
+                                   Width="32" Height="32"/>
+                            <Label Content="{Binding SlotTitle}" 
+                                   VerticalAlignment="Center"
                            Foreground="White" FontFamily="Open Sans"
-                           Grid.Column="0"/>
+                           Grid.Column="1"/>
                         </Grid>
                     </DataTemplate>
                 </Grid.Resources>

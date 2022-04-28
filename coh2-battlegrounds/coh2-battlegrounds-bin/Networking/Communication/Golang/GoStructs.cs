@@ -13,7 +13,7 @@ namespace Battlegrounds.Networking.Communication.Golang;
 
 /*
 type IntroMessage struct {
-	Host          bool
+	Type          int
 	LobbyName     string
 	LobbyUID      uint64
 	LobbyPassword string
@@ -29,9 +29,9 @@ type IntroMessage struct {
 public readonly struct IntroMessage {
 
 	/// <summary>
-	/// Get or init if intro message is to host or join a lobby.
+	/// Get or init intro message request type
 	/// </summary>
-	public bool Host { get; init; }
+	public int Type { get; init; }
 
 	/// <summary>
 	/// Get or init the name of the lobby to join
@@ -63,6 +63,11 @@ public readonly struct IntroMessage {
 	/// </summary>
 	public string PlayerName { get; init; }
     
+	/// <summary>
+	/// Identity key (for verifying user)
+	/// </summary>
+	public byte[] IdentityKey { get; init; }
+
 }
 
 /*
@@ -90,7 +95,7 @@ public enum MessageMode : byte {
 	/// Message should be broadcast to all. (Obsolete)
 	/// </summary>
 	Broadcast = 1,
-	
+
 	/// <summary>
 	/// Message is direct communication with broker.
 	/// </summary>
@@ -106,7 +111,7 @@ public enum MessageMode : byte {
 	/// </summary>
 	FileUpload = 4
 
-    }
+}
 
 /// <summary>
 /// Represents a message that can be sent or received over a <see cref="ServerConnection"/>.
@@ -143,7 +148,7 @@ public readonly struct Message {
 	/// </summary>
 	public byte[] Content { get; init; }
 
-    }
+}
 
 /*
 type BrokerMessage struct {
@@ -187,7 +192,8 @@ public readonly struct BrokerRequestMessage {
 	/// </summary>
 	/// <returns>Array of bytes.</returns>
 	public byte[] Bytes() => GoMarshal.JsonMarshal(this);
-    }
+
+}
 
 /// <summary>
 /// Represents the request type that can be sent to the broker.
@@ -631,4 +637,3 @@ public enum UploadState : byte {
 /// <param name="UploadState">The state of the upload.</param>
 /// <param name="Content">The content of the upload.</param>
 public record struct UploadCallMessage(byte FileType, UploadState UploadState, byte[] Content);
-

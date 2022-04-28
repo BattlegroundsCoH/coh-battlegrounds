@@ -334,7 +334,7 @@ public class LobbyParticipantModel : LobbyModel {
 
             if (ScenarioList.FromRelativeFilename(map) is not Scenario scenario) {
                 this.MapDropdown.LabelContent = map;
-                this.ScenarioPreview = ScenarioLookup.TryGetMapSource(null);
+                this.ScenarioPreview = LobbySettingsLookup.TryGetMapSource(null);
                 this.NotifyProperty(nameof(ScenarioPreview));
                 return;
             }
@@ -342,7 +342,7 @@ public class LobbyParticipantModel : LobbyModel {
             this.MapDropdown.LabelContent = scenario.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(scenario.Name[1..], out uint key) ?
                                             GameLocale.GetString(key) : scenario.Name;
 
-            this.ScenarioPreview = ScenarioLookup.TryGetMapSource(scenario);
+            this.ScenarioPreview = LobbySettingsLookup.TryGetMapSource(scenario);
 
             this.NotifyProperty(nameof(ScenarioPreview));
 

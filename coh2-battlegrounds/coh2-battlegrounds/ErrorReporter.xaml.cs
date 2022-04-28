@@ -39,7 +39,7 @@ public partial class ErrorReporter : Window {
             this.Send.Content = "Sending";
 
             // Send along error
-            await Task.Run(() => api.UplouadAppCrashReport(info, Path.GetFullPath("coh2-bg.log"), isScar: false));
+            await Task.Run(() => api.UploadAppCrashReport(info, Path.GetFullPath("coh2-bg.log"), isScar: false));
 
             // Update visually
             this.Send.Content = "Sent (Closing)";

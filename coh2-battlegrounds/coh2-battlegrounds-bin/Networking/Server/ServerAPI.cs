@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.Functional;
 using Battlegrounds.Networking.Communication;
 using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Util;
+using Battlegrounds.Verification;
 
 namespace Battlegrounds.Networking.Server;
 
@@ -225,6 +229,11 @@ public class ServerAPI {
     public string GUID => this.m_lobbyGUID.HasValue ? this.m_lobbyGUID.Value.ToString() : "0";
 
     /// <summary>
+    /// Get the Lobby GUID associated with the <see cref="ServerAPI"/> instance.
+    /// </summary>
+    public ulong LobbyUID => this.m_lobbyGUID ?? throw new Exception("Value not defined!");
+
+    /// <summary>
     /// Initialise a new server API client for targetted <paramref name="address"/>.
     /// </summary>
     /// <param name="address">The address of the API.</param>
@@ -267,7 +276,7 @@ public class ServerAPI {
             }
 
             // Try get
-            var results = JsonSerializer.Deserialize<Dictionary<ulong, ServerLobby>>(apiResponse.Value);
+            var results = JsonSerializer.Deserialize<List<ServerLobby>>(apiResponse.Value);
             if (results is null) {
                 if (this.SafeMode) {
                     return new();
@@ -277,7 +286,19 @@ public class ServerAPI {
             }
 
             // Return found values.
-            return results.Values.ToList();
+            return results;
+
+        }
+        catch (JsonException jex) {
+
+            // Log it
+            Trace.WriteLine(jex, nameof(ServerAPI));
+
+            if (this.SafeMode) {
+                return new();
+            } else {
+                throw new APIConnectionException("lobbies/getlobbies", jex.Message, jex);
+            }
 
         } catch (Exception ex) {
 
@@ -675,12 +696,94 @@ public class ServerAPI {
 
     }
 
+
+    public UploadResult UploadFile(byte filetype, ulong uploadIdentity, ulong uploadTarget, byte[] filecontent, ServerAPIUploadCallback? uploadCallback = null) {
+
+        // Calculate how many chunks to send
+        int chunks = (int)Math.Ceiling(filecontent.Length / 1024.0);
+
+        // Set p,q
+        int p = 0;
+        int q = Math.Min(filecontent.Length, 1024);
+
+        try {
+
+            // Prepare intro
+            var intro = new IntroMessage() {
+                LobbyType = filetype,
+                PlayerUID = uploadIdentity,
+                LobbyUID = uploadTarget,
+                Type = 5
+            };
+
+            // Do socket connection
+            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            socket.Connect(IPEndPoint.Parse($"{NetworkInterface.GetBestAddress()}:11000"));
+
+            // Send
+            socket.Send(GoMarshal.JsonMarshal(intro));
+
+            // Send chunks
+            for (int i = 0; i < chunks; i++) {
+
+                // Grab chunk
+                var chunk = filecontent.Slice(p, q);
+                var checksum = Redundancy.CRC(chunk);
+
+                // Get flags
+                bool done = i == chunks - 1;
+
+                // Create header
+                var header = BitConverter.GetBytes((ushort)chunk.Length).Concat(BitConverter.GetBytes(checksum)).Append((byte)(done ? 1 : 0));
+                var packet = header.Concat(chunk);
+
+                // Send
+                socket.Send(packet);
+
+                // Get reply
+                byte[] response = new byte[2];
+                socket.Receive(response);
+
+                // aok
+                if (response[0] != 6) {
+                    Trace.WriteLine($"Error on server API file upload: {response[1]}", nameof(ServerAPI)); // not ok
+                    uploadCallback?.Invoke(-1, -1);
+                    return UploadResult.UPLOAD_ERROR_UNDEFINED;
+                }
+
+                // Do callback
+                uploadCallback?.Invoke(i + 1, chunks);
+
+                // Update offsets
+                p += chunk.Length;
+                q = Math.Min(filecontent.Length, p + 1024);
+
+            }
+
+        } catch (Exception e) {
+
+            // Log exception
+            Trace.WriteLine(e, nameof(ServerAPI));
+            
+            // Do callback
+            uploadCallback?.Invoke(-1, -1);
+
+            // Mark undefined
+            return UploadResult.UPLOAD_ERROR_UNDEFINED;
+
+        }
+
+        // No errors
+        return UploadResult.UPLOAD_SUCCESS;
+
+    }
+
     /// <summary>
     /// Uploads a crash report to the server.
     /// </summary>
     /// <param name="additionalInfo">Additional information associated with the error.</param>
     /// <param name="logFilePath">The path to the log file.</param>
-    public void UplouadAppCrashReport(string additionalInfo, string logFilePath, bool isScar) {
+    public void UploadAppCrashReport(string additionalInfo, string logFilePath, bool isScar) {
 
         // Read file contents
         var file = File.ReadAllText(logFilePath);

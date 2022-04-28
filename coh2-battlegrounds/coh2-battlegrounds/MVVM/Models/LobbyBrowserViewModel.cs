@@ -37,7 +37,25 @@ public record LobbyBrowserButton(ICommand Click, Func<bool> IsEnabledCheck) : IN
 public record LobbySettingPreview(string Key, string Value);
 
 public record LobbySlotPreview(ServerSlot Slot) {
-
+    public string SlotTitle => this.Slot.State switch {
+        0 => "Open", // TODO: Localise
+        1 => this.Slot.Difficulty switch {
+            0 => this.Slot.DisplayName,
+            1 => "",
+            2 => "",
+            3 => "",
+            4 => "",
+            _ => throw new InvalidOperationException()
+        },
+        2 => "Locked",
+        _ => ""
+    };
+    public ImageSource? SlotImage => this.Slot.State switch {
+        1 => LobbyVisualsLookup.FactionHoverIcons[this.Slot.Army],
+        2 => LobbyVisualsLookup.FactionHoverIcons[string.Empty],
+        _ => null
+    };
+    public Visibility SlotVisibility => this.Slot.State == 3 ? Visibility.Collapsed : Visibility.Visible;
 }
 
 public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
@@ -183,7 +201,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         var scen = ScenarioList.FromRelativeFilename(selected.Settings["selected_map"]);
 
         // Set scenario
-        this.PreviewImage = ScenarioLookup.TryGetMapSource(scen);
+        this.PreviewImage = LobbySettingsLookup.TryGetMapSource(scen);
         this.PropertyChanged?.Invoke(this, new(nameof(PreviewImage)));
 
         // Clear current settings
@@ -209,7 +227,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
     private void ClearSelected() {
 
         // Give it a null
-        this.PreviewImage = ScenarioLookup.TryGetMapSource(null);
+        this.PreviewImage = LobbySettingsLookup.TryGetMapSource(null);
 
     }
 

@@ -286,87 +286,6 @@ public sealed class ServerConnection : IConnection {
     }
 
     /// <summary>
-    /// Sends the file contents to the server. The file being sent is based on a byte ID and both endpoints must agree on this endpoint.
-    /// </summary>
-    /// <remarks>
-    /// A call to this function will block thread execution until file is uploaded or server has aborted. Invoke inside a thread for
-    /// non-blocking behaviour and use <paramref name="progressHandler"/> to detect upload completion.
-    /// </remarks>
-    /// <param name="contents">The file contents to upload.</param>
-    /// <param name="filetyp">The unique ID of the file type being sent.</param>
-    /// <param name="cid">The unique ID to use while communicating with the server. Used to get a response to a request.</param>
-    /// <param name="sender">The ID of the sender. Use to identify different users of the same <paramref name="filetyp"/>.</param>
-    /// <param name="progressHandler">Callback handler that reports on progress.</param>
-    /// <param name="chunkSize"></param>
-    /// <returns>If file was uploaded, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
-    public bool SendFile(byte[] contents, byte filetyp, uint cid, UploadProgressCallbackHandler? progressHandler = null, ulong sender = 0, uint chunkSize = 1024) {
-
-        // Calculate how many chunks to send
-        int chunks = (int)Math.Ceiling(contents.Length / (double)chunkSize);
-
-        // Set p,q
-        int p = 0;
-        int q = Math.Min(contents.Length, (int)chunkSize);
-
-        // Do initial progress call
-        progressHandler?.Invoke(0, chunks, false);
-
-        // Send chunks
-        for (int i = 0; i < chunks; i++) {
-
-            // Grab chunk
-            var chunk = contents.Slice(p, q);
-
-            // Send
-            try {
-
-                // Get flags
-                var state = i switch {
-                    0 => UploadState.Init,
-                    _ => i == chunks - 1 ? UploadState.Terminate : UploadState.Chunk
-                };
-
-                Trace.WriteLine($"SendFile: {p}, {q}, {chunks} {i} {state}", nameof(ServerConnection));
-
-                // Construct upload message
-                var umsg = new UploadCallMessage(filetyp, state, chunk);
-                var msg = new Message {
-                    CID = cid,
-                    Mode = MessageMode.FileUpload,
-                    Sender = this.SelfID,
-                    Target = sender,
-                    Content = GoMarshal.JsonMarshal(umsg)
-                };
-
-                // Send reply (TODO: Add server side content message response)
-                this.SendAndAwaitReply(msg);
-                
-                // Update event
-                progressHandler?.Invoke(i + 1, chunks, false);
-
-            } catch (Exception e) {
-                
-                // Log exception
-                Trace.WriteLine(e, nameof(ServerConnection));
-                
-                // Invoke callback with isCancelled flag set to true
-                progressHandler?.Invoke(i, chunks, true);
-                return false;
-
-            }
-
-            // Update offsets
-            p += chunk.Length;
-            q = (int)Math.Min(contents.Length, p + chunkSize);
-
-        }
-
-        // Return true -> AOK
-        return true;
-
-    }
-
-    /// <summary>
     /// Attempt to connect to remote server.
     /// </summary>
     /// <param name="ipaddress">The address of the remote server to connect to.</param>
@@ -412,7 +331,7 @@ public sealed class ServerConnection : IConnection {
                 if (content.MessageType != ContentMessgeType.OK) {
                     throw new Exception($"Server response type was not 'OK' but {content.MessageType} ({content.StrMsg})");
                 } else {
-                    if (introduction.Host) {
+                    if (introduction.Type == 0) {
                         lobbyID = content.Who;
                     }
                 }

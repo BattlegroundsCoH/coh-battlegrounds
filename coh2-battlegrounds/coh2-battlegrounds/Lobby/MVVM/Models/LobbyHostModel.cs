@@ -257,7 +257,7 @@ public class LobbyHostModel : LobbyModel {
         this.MapDropdown.LabelContent = scen.Name;
 
         // Try get image
-        this.ScenarioPreview = ScenarioLookup.TryGetMapSource(scen);
+        this.ScenarioPreview = LobbySettingsLookup.TryGetMapSource(scen);
 
         // Update gamemode
         this.UpdateGamemodeAndOptionsSelection(scen);
