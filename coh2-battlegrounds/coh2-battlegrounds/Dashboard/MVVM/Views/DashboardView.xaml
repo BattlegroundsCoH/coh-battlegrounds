@@ -6,10 +6,47 @@
              xmlns:local="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Width="500" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Label Content="Welcome to CoH2: Battlegrounds"
-               Foreground="White"
-               FontSize="32"
-               FontWeight="DemiBold"/>
+    <Grid Width="750" HorizontalAlignment="Center" VerticalAlignment="Center">
+        
+        <TextBlock TextAlignment="Center"
+                   Foreground="White"
+                   FontSize="24">
+            
+            <Run>Welcome</Run>
+            <Run Text="{Binding PlayerName, Mode=OneTime}" FontWeight="DemiBold" FontStyle="Italic"/>
+            <Run>to Company of Heroes 2: Battlegrounds</Run>
+
+        </TextBlock>
+
+        <Label Content="Statistics"/>
+        <TextBlock>
+            <Run>Total Games Played:</Run>
+            <Run Text="{Binding TotalGamesPlayed, FallbackValue='N/A'}" />
+            <LineBreak/>
+            <Run>Total Wins:</Run>
+            <Run Text="{Binding TotalWins, FallbackValue='N/A'}" />
+            <LineBreak/>
+            <Run>Total Losses:</Run>
+            <Run Text="{Binding TotalLosses, FallbackValue='N/A'}" />
+            <LineBreak/>
+            <Run>Win/Loss Ratio:</Run>
+            <Run Text="{Binding WinRate, FallbackValue='N/A'}" />
+            <LineBreak/>
+            <Run>Total Infantry Kills:</Run>
+            <Run Text="{Binding TotalInfantryKills, FallbackValue='N/A'}" />
+            <LineBreak/>
+            <Run>Total Vehicle Kills:</Run>
+            <Run Text="{Binding TotalVehicleKills, FallbackValue='N/A'}" />
+            <LineBreak/>
+            <Run>Total Infantry Losses:</Run>
+            <Run Text="{Binding TotalInfantryLosses, FallbackValue='N/A'}" />
+            <LineBreak/>
+            <Run>Total Vehicle Losses:</Run>
+            <Run Text="{Binding TotalVehicleLosses, FallbackValue='N/A'}" />
+            <LineBreak/>
+            <Run>Kill/Death Ratio:</Run>
+            <Run Text="{Binding KillDeathRatio, FallbackValue='N/A'}" />
+        </TextBlock>
+        
     </Grid>
 </UserControl>
