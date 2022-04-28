@@ -5,7 +5,7 @@
         <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="Margin" Value="0 6" />
+        <Setter Property="Margin" Value="0 7" />
         <Setter Property="FontFamily" Value="Open Sans" />
     </Style>
     
