@@ -210,7 +210,12 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         // Set settings
         foreach (var setting in selected.Settings) {
             if (_settingKeys.TryGetValue(setting.Key, out var keyloc) && keyloc is not null) {
-                this.PreviewSettings.Add(new(BattlegroundsInstance.Localize.GetString(keyloc), setting.Value));
+                string k = BattlegroundsInstance.Localize.GetString(keyloc);
+                string v = setting.Value switch {
+                    LobbyAPI.SETTING_MAP => LobbySettingsLookup.GetScenarioName(scen, setting.Value),
+                    _ => setting.Value
+                };
+                this.PreviewSettings.Add(new(k,v));
             }
         }
 
@@ -228,6 +233,13 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
         // Give it a null
         this.PreviewImage = LobbySettingsLookup.TryGetMapSource(null);
+
+        // Clear settings
+        this.PreviewSettings.Clear();
+
+        // Clear teams
+        this.PreviewAllies.Clear();
+        this.PreviewAxis.Clear();
 
     }
 

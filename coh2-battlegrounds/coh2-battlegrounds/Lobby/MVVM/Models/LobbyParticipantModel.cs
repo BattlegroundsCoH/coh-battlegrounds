@@ -332,6 +332,7 @@ public class LobbyParticipantModel : LobbyModel {
 
         Application.Current.Dispatcher.Invoke(() => {
 
+            // Check if valid
             if (ScenarioList.FromRelativeFilename(map) is not Scenario scenario) {
                 this.MapDropdown.LabelContent = map;
                 this.ScenarioPreview = LobbySettingsLookup.TryGetMapSource(null);
@@ -339,11 +340,11 @@ public class LobbyParticipantModel : LobbyModel {
                 return;
             }
 
-            this.MapDropdown.LabelContent = scenario.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(scenario.Name[1..], out uint key) ?
-                                            GameLocale.GetString(key) : scenario.Name;
-
+            // Set visuals
+            this.MapDropdown.LabelContent = LobbySettingsLookup.GetScenarioName(scenario, map);
             this.ScenarioPreview = LobbySettingsLookup.TryGetMapSource(scenario);
 
+            // Notify
             this.NotifyProperty(nameof(ScenarioPreview));
 
         });

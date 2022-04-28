@@ -227,10 +227,16 @@ public sealed class ServerConnection : IConnection {
         // Get lock
         this.m_rwlock.EnterWriteLock();
 
-        if (this.m_receivedMessages.ContainsKey(msg.Target)) {
-            this.m_receivedMessages[msg.Target][msg.CID] = null; // create entry
-        } else {
-            this.m_receivedMessages.Add(msg.Target, new() { [msg.CID] = null }); // add new entry to the entrie map
+        try {
+
+            if (this.m_receivedMessages.ContainsKey(msg.Target)) {
+                this.m_receivedMessages[msg.Target][msg.CID] = null; // create entry
+            } else {
+                this.m_receivedMessages.Add(msg.Target, new() { [msg.CID] = null }); // add new entry to the entrie map
+            }
+
+        } catch (SocketException soc) {
+            Trace.WriteLine($"SendMessage - Socket Exception: {soc.Message}", nameof(ServerConnection));
         }
 
         // Release lock

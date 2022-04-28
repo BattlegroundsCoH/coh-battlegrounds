@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -49,5 +50,10 @@ public static class LobbySettingsLookup {
         return (BitmapSource?)MapNotFound;
 
     }
+
+    public static string GetScenarioName(Scenario? scen, string defaultName)
+        => scen is null ?
+        defaultName :
+        scen.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(scen.Name[1..], out uint key) ? GameLocale.GetString(key) : scen.Name;
 
 }
