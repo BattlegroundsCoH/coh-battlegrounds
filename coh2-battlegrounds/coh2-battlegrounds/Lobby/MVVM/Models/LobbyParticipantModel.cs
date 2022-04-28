@@ -351,20 +351,8 @@ public class LobbyParticipantModel : LobbyModel {
 
     }
 
-    private void OnGamemodeChange(string gamemode) {
-
-        if (m_package is null) {
-            return;
-        }
-
-        if (WinconditionList.GetGamemodeByName(m_package.GamemodeGUID, gamemode) is not IGamemode wincondition) {
-            this.GamemodeDropdown.LabelContent = gamemode;
-            return;
-        }
-
-        this.GamemodeDropdown.LabelContent = wincondition.ToString() ?? "Unknown Wincondition";
-
-    }
+    private void OnGamemodeChange(string gamemode) 
+        => this.GamemodeDropdown.LabelContent = LobbySettingsLookup.GetGamemodeName(gamemode, this.m_package);
 
     private void OnGamemodeOptionChanage(string gamomodeOption) {
 

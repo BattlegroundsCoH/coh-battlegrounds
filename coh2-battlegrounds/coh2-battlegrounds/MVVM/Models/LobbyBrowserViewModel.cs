@@ -12,6 +12,7 @@ using Battlegrounds;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Locale;
+using Battlegrounds.Modding;
 using Battlegrounds.Networking;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
@@ -198,7 +199,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         this.PropertyChanged?.Invoke(this, new(nameof(PreviewTitle)));
 
         // Read from settings
-        var scen = ScenarioList.FromRelativeFilename(selected.Settings["selected_map"]);
+        var scen = ScenarioList.FromRelativeFilename(selected.Settings[LobbyAPI.SETTING_MAP]);
 
         // Set scenario
         this.PreviewImage = LobbySettingsLookup.TryGetMapSource(scen);
@@ -207,15 +208,28 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         // Clear current settings
         this.PreviewSettings.Clear();
 
+        // Grab mod package
+        var package = ModManager.GetPackage(selected.Settings.TryGetValue(LobbyAPI.SETTING_MODPACK, out string? s) ? s : string.Empty);
+
         // Set settings
         foreach (var setting in selected.Settings) {
             if (_settingKeys.TryGetValue(setting.Key, out var keyloc) && keyloc is not null) {
-                string k = BattlegroundsInstance.Localize.GetString(keyloc);
-                string v = setting.Value switch {
-                    LobbyAPI.SETTING_MAP => LobbySettingsLookup.GetScenarioName(scen, setting.Value),
-                    _ => setting.Value
+                bool show = setting.Key switch {
+                    LobbyAPI.SETTING_GAMEMODE => package is not null,
+                    LobbyAPI.SETTING_GAMEMODEOPTION => package is not null && setting.Key is not "",
+                    _ => true
                 };
-                this.PreviewSettings.Add(new(k,v));
+                if (show) {
+                    string k = BattlegroundsInstance.Localize.GetString(keyloc);
+                    string v = setting.Key switch {
+                        LobbyAPI.SETTING_MAP => LobbySettingsLookup.GetScenarioName(scen, setting.Value),
+                        LobbyAPI.SETTING_WEATHER or LobbyAPI.SETTING_LOGISTICS => setting.Value is "1" ? "On" : "Off",
+                        LobbyAPI.SETTING_MODPACK => package?.PackageName ?? setting.Value,
+                        LobbyAPI.SETTING_GAMEMODE => LobbySettingsLookup.GetGamemodeName(setting.Value, package),
+                        _ => setting.Value
+                    };
+                    this.PreviewSettings.Add(new(k, v));
+                }
             }
         }
 

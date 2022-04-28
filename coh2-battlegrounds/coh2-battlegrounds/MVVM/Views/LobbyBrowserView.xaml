@@ -98,7 +98,7 @@
                         <GridViewColumn 
                             Header="{Binding GamemodeListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
                             Width="172" 
-                            DisplayMemberBinding="{Binding TranslatedMode}"
+                            DisplayMemberBinding="{Binding Mode}"
                             HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>

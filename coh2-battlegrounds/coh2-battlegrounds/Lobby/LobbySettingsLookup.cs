@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Battlegrounds.Game.Database;
+using Battlegrounds.Modding;
 
 using BattlegroundsApp.Resources;
 
@@ -55,5 +56,19 @@ public static class LobbySettingsLookup {
         => scen is null ?
         defaultName :
         scen.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(scen.Name[1..], out uint key) ? GameLocale.GetString(key) : scen.Name;
+
+    public static string GetGamemodeName(string gamemode, ModPackage? package) {
+
+        if (package is null) {
+            return gamemode;
+        }
+
+        if (WinconditionList.GetGamemodeByName(package.GamemodeGUID, gamemode) is not IGamemode wincondition) {
+            return gamemode;
+        }
+
+        return wincondition.ToString() ?? wincondition.Name;
+
+    }
 
 }
