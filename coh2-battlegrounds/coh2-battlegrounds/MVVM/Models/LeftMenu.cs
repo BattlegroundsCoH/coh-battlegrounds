@@ -35,7 +35,7 @@ namespace BattlegroundsApp.MVVM.Models {
             this.Dashboard = new() {
                 Click = new RelayCommand(this.DashboardButton),
                 Text = new("MainWindow_Dashboard"),
-                Enabled = false
+                Enabled = true
             };
 
             // Create news

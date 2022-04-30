@@ -222,6 +222,8 @@ english:
  SERVERSTATUS_PLAYING: "Playing"
  SERVERSTATUS_STARTING: "Starting"
  SERVERSTATUS_IN_LOBBY: "Setting up"
+ DashboardView_Title: "Dashboard"
+ DashboardView_Statistics: "Statistics"
  STARTUP_BEGIN: "Auto-Detect"
  STARTUP_CONTINUE: "Continue"
  STARTUP_MESSAGE: ""

@@ -13,6 +13,8 @@ namespace BattlegroundsApp.LocalData {
 
     public static class PlayerCompanies {
 
+        public static event Action? PlayerCompaniesLoaded;
+
         private static readonly List<Company> __companies = new();
 
         public static bool HasCompanyForBothAlliances() {
@@ -48,6 +50,7 @@ namespace BattlegroundsApp.LocalData {
                     }
                 }
 
+                PlayerCompaniesLoaded.Invoke();
                 Trace.WriteLine($"Loaded {__companies.Count} user companies", nameof(PlayerCompanies));
 
             } catch (Exception ex) {
