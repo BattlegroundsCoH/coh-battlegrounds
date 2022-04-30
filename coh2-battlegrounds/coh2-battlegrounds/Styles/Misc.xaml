@@ -651,7 +651,7 @@
                              AlignmentY="Center" 
                              Stretch="None">
                 <VisualBrush.Visual>
-                    <Label Content="Enter message..." 
+                    <Label Content="Enter Message..." 
                                Foreground="DarkGray" 
                                FontStyle="Italic" />
                 </VisualBrush.Visual>

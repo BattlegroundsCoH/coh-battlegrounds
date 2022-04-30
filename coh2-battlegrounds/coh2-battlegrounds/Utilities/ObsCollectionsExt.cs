@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 
 namespace BattlegroundsApp.Utilities;
+
 public static class ObsCollectionsExt {
 
     public static void ClearTo<T>(this ObservableCollection<T> obs, T item) {

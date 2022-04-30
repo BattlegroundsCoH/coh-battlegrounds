@@ -10,7 +10,6 @@ using System.Diagnostics.CodeAnalysis;
 using Battlegrounds;
 using Battlegrounds.Networking;
 using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Steam;
 using Battlegrounds.ErrorHandling;
 using Battlegrounds.Verification;
 using Battlegrounds.Functional;
@@ -22,6 +21,8 @@ using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
+using BattlegroundsApp.Modals;
+using BattlegroundsApp.Modals.Startup.MVVM.Models;
 
 namespace BattlegroundsApp;
 
@@ -83,8 +84,10 @@ public partial class App : Application {
         // Load locale
         LoadLocale();
 
-        // Load databases (async)
-        DatabaseManager.LoadAllDatabases(OnDatabasesLoaded);
+        // Load
+        if (!BattlegroundsInstance.IsFirstRun) {
+            this.LoadNext();
+        }
 
         // Create window and hook into window events
         MainWindow window = new();
@@ -130,17 +133,31 @@ public partial class App : Application {
 
     private void MainWindow_Ready(MainWindow window) {
 
-        // Verify we have a user
-        if (!BattlegroundsInstance.Steam.HasUser) {
+        // Do first-time startup
+        if (BattlegroundsInstance.IsFirstRun) {
 
-            // We don't so try and get one
-            GetSteamUserWithPermission(window); 
+            // Grab modal control
+            if (ViewManager.GetModalControl() is not ModalControl fullModal) {
+                MessageBox.Show("The application failed to launch properly and will now exit.", "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(0);
+                return;
+            }
 
-        } else {
+            // Create sstartup
+            var startup = new StartupViewModel();
+            startup.OnClose(() => {
 
-            // Set network user
-            NetworkInterface.SelfIdentifier = BattlegroundsInstance.Steam.User.ID;
+                // Load next
+                this.LoadNext();
 
+                // Save all changes
+                BattlegroundsInstance.SaveInstance();
+
+            });
+
+            // Show modal
+            fullModal.ShowModal(startup);
+            
         }
 
         // Trigger discord setup
@@ -164,37 +181,14 @@ public partial class App : Application {
 
     }
 
-    private static void GetSteamUserWithPermission(MainWindow window) {
-        window.AllowGetSteamUser(x => {
-            if (x) {
-                Trace.WriteLine("No steam user was found - user has given permission to get steam user.", "App");
-                if (SteamInstance.IsSteamRunning) {
-                    if (BattlegroundsInstance.Steam.GetSteamUser()) {
+    private void LoadNext() {
 
-                        // Log the found user
-                        Trace.WriteLine($"Found steam user: {BattlegroundsInstance.Steam.User.ID} \"{BattlegroundsInstance.Steam.User.Name}\"", "App");
+        // Set network user
+        NetworkInterface.SelfIdentifier = BattlegroundsInstance.Steam.User.ID;
 
-                        // Set network user
-                        NetworkInterface.SelfIdentifier = BattlegroundsInstance.Steam.User.ID;
+        // Load databases (async)
+        DatabaseManager.LoadAllDatabases(OnDatabasesLoaded);
 
-                        // Save all changes
-                        BattlegroundsInstance.SaveInstance();
-
-                    } else {
-                        MessageBox.Show("Unable to detect the current Steam user!", "No steam user found!", MessageBoxButton.OK, MessageBoxImage.Error);
-                        Trace.WriteLine("Unable to detect the current Steam user.", "App");
-                        Environment.Exit(0);
-                    }
-                } else {
-                    MessageBox.Show("Unable to find a running instance of Steam. Please start Steam and try again.", "No steam instance running!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Trace.WriteLine("Unable to find a running instance of Steam.", "App");
-                    Environment.Exit(0);
-                }
-            } else {
-                Environment.Exit(0);
-            }
-
-        });
     }
 
     private void MainWindow_Closed(object? sender, EventArgs e) {

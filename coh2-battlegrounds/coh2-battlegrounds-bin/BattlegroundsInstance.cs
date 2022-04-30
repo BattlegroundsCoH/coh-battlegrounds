@@ -6,6 +6,7 @@ using System.IO;
 using System.Text.Json;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Steam;
@@ -20,13 +21,15 @@ public static class BattlegroundsInstance {
     /// <summary>
     /// Internal instance object
     /// </summary>
-    public class InternalInstance {
+    internal class InternalInstance {
 
         public Dictionary<string, string> Paths { get; set; }
 
         public string LastPlayedScenario { get; set; }
 
         public string LastPlayedGamemode { get; set; }
+
+        public Dictionary<string, string> LastPlayedCompany { get; set; }
 
         public int LastPlayedGamemodeSetting { get; set; }
 
@@ -40,9 +43,16 @@ public static class BattlegroundsInstance {
         /// Initialize a new <see cref="InternalInstance"/> class with default data.
         /// </summary>
         public InternalInstance() {
-            this.SteamData = new SteamInstance();
-            this.Paths = new Dictionary<string, string>();
-            this.LastPlayedGamemode = "Victory Points";
+            this.SteamData = new();
+            this.Paths = new();
+            this.LastPlayedCompany = new() {
+                [Faction.Soviet.Name] = string.Empty,
+                [Faction.Wehrmacht.Name] = string.Empty,
+                [Faction.OberkommandoWest.Name] = string.Empty,
+                [Faction.America.Name] = string.Empty,
+                [Faction.British.Name] = string.Empty,
+            };
+            this.LastPlayedGamemode = "bg_vp";
             this.LastPlayedGamemodeSetting = 1;
             this.LastPlayedScenario = string.Empty;
             this.OtherOptions = new();
@@ -196,14 +206,26 @@ public static class BattlegroundsInstance {
     public static Localize Localize => __localeManagement;
 
     /// <summary>
+    /// Set a specific path for the instance
+    /// </summary>
+    /// <param name="pathId">The ID of the path to save</param>
+    /// <param name="path">The actual path to set</param>
+    public static void SaveInstancePath(string pathId, string path) {
+        if (pathId is not BattlegroundsPaths.STEAM_FOLDER and not BattlegroundsPaths.COH_FOLDER) {
+            return;
+        }
+        __instance.Paths[pathId] = path;
+    }
+
+    /// <summary>
     /// Get the relative path to a predefined app path. Can be appened with remaining direct path to obtain the full path.
     /// </summary>
     /// <param name="pathID">The <see cref="string"/> path ID.</param>
     /// <param name="appendPath">The optional path to append to the relative path.</param>
     /// <returns>The relative path + potential append path.</returns>
     /// <exception cref="ArgumentException"/>
-    public static string GetRelativePath(string pathID, string appendPath = "")
-        => Path.Combine(__instance.GetPath(pathID), appendPath);
+    public static string GetRelativePath(string pathId, string appendPath = "")
+        => Path.Combine(__instance.GetPath(pathId), appendPath);
 
     /// <summary>
     /// Static constructor

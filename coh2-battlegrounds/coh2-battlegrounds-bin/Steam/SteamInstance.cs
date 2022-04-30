@@ -18,7 +18,10 @@ public sealed class SteamInstance {
     /// <summary>
     /// Get the active <see cref="SteamUser"/> that is using this instance.
     /// </summary>
-    public SteamUser User => this.m_user ?? throw new Exception("No local steam user found!");
+    public SteamUser User {
+        get => this.m_user ?? throw new Exception("No local steam user found!");
+        set => this.m_user = value;
+    }
 
     /// <summary>
     /// Get if any <see cref="SteamUser"/> has been set.
@@ -77,16 +80,16 @@ public sealed class SteamInstance {
     /// Fetch the <see cref="SteamUser"/> from the local instance of the Steam client.
     /// </summary>
     /// <returns>The <see cref="SteamUser"/> using the machine or null if it was not possible.</returns>
-    public static SteamUser? FromLocalInstall() {
+    public static SteamUser? FromLocalInstall(string? steamInstall = "") {
 
         // Get install path
-        string steaminstall = Pathfinder.GetOrFindSteamPath().Replace("Steam.exe", "config\\loginusers.vdf");
-        Trace.WriteLine($"Fetching local user data: {steaminstall}", nameof(SteamUser));
+        steamInstall = (string.IsNullOrEmpty(steamInstall) ? Pathfinder.GetOrFindSteamPath() : steamInstall).Replace("Steam.exe", "config\\loginusers.vdf");
+        Trace.WriteLine($"Fetching local user data: {steamInstall}", nameof(SteamUser));
 
         // Get VDF
-        var vdf = Vdf.FromFile(steaminstall);
+        var vdf = Vdf.FromFile(steamInstall);
         if (vdf is null) {
-            Trace.WriteLine($"Failed to parse local user data in {steaminstall}", nameof(SteamUser));
+            Trace.WriteLine($"Failed to parse local user data in {steamInstall}", nameof(SteamUser));
             return null;
         }
 

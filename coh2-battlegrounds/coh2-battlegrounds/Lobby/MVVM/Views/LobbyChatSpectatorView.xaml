@@ -56,9 +56,10 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <controls:BGTextbox Height="36" Grid.ColumnSpan="2"
-                     Style="{StaticResource StandardTextBox}"
-                     Text="{Binding MessageContent, Mode=TwoWay}"
-                     KeyDownEvent="{mvvm:EventBinding Handler=EnterKey}"/>
+                                Style="{StaticResource StandardTextBox}"
+                                Text="{Binding MessageContent, Mode=TwoWay}"
+                                KeyDownEvent="{mvvm:EventBinding Handler=EnterKey}"
+                                />
             <ComboBox Grid.Row="1" Width="132" Height="28" 
                       HorizontalAlignment="Left"
                       Style="{StaticResource StandardBlueDropdown}"

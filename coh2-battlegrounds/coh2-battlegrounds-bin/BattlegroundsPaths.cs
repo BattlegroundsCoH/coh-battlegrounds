@@ -50,4 +50,19 @@ public static class BattlegroundsPaths {
     /// </summary>
     public const string LOCALE_FOLDER = "locale_folder";
 
+    /// <summary>
+    /// Path ID for the steam folder
+    /// </summary>
+    public const string STEAM_FOLDER = "steam_folder";
+
+    /// <summary>
+    /// Path ID for the coh folder
+    /// </summary>
+    public const string COH_FOLDER = "coh_folder";
+
+    /// <summary>
+    /// Path ID for the documents folder
+    /// </summary>
+    public const string DOCUMENTS_FOLDER = "doc_folder";
+
 }

@@ -10,8 +10,15 @@
                     xmlns:dashboardViews="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Views"
                     xmlns:dashboardModels="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Models"
                     xmlns:dialogViews="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Views"
-                    xmlns:dialogModels="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Models">
+                    xmlns:dialogModels="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Models" 
+                    xmlns:startupViews="clr-namespace:BattlegroundsApp.Modals.Startup.MVVM.Views"
+                    xmlns:startupModels="clr-namespace:BattlegroundsApp.Modals.Startup.MVVM.Models">
 
+    <!-- Startup modal -->
+    <DataTemplate DataType="{x:Type startupModels:StartupViewModel}">
+        <startupViews:StartupView/>
+    </DataTemplate>
+    
     <!-- New Dashboard-View Models -->
     <DataTemplate DataType="{x:Type dashboardModels:DashboardViewModel}">
         <dashboardViews:DashboardView/>

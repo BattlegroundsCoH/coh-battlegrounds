@@ -222,3 +222,7 @@ english:
  SERVERSTATUS_PLAYING: "Playing"
  SERVERSTATUS_STARTING: "Starting"
  SERVERSTATUS_IN_LOBBY: "Setting up"
+ STARTUP_BEGIN: "Auto-Detect"
+ STARTUP_CONTINUE: "Continue"
+ STARTUP_MESSAGE: ""
+ STARTUP_USER: "Steam User: {0}"
