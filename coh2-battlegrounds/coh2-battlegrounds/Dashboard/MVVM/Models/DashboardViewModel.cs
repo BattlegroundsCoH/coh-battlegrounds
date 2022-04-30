@@ -30,7 +30,7 @@ public class DashboardViewModel : ViewModelBase, IViewModel {
     /// <summary>
     /// The name of the currently "loged" in player
     /// </summary>
-    private string m_playerName = BattlegroundsInstance.Steam.User.Name;
+    private string m_playerName = BattlegroundsInstance.IsFirstRun ? "" : BattlegroundsInstance.Steam.User.Name;
 
     /// <summary>
     /// The number of wins sumerized

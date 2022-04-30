@@ -161,11 +161,13 @@ public static class Pathfinder {
     /// <param name="cohpath"></param>
     /// <returns></returns>
     public static bool VerifyCoHPath(string cohpath) {
-        if (cohpath.ToLowerInvariant().EndsWith("reliccoh2.exe")) {
-            return File.Exists(cohpath);
-        } else {
-            return File.Exists(Path.Combine(cohpath, "RelicCoH2.exe"));
+        bool hasexe = cohpath.ToLowerInvariant().EndsWith("reliccoh2.exe");
+        bool basicVerify = hasexe ? File.Exists(cohpath) : File.Exists(Path.Combine(cohpath, "RelicCoH2.exe"));
+        if (!basicVerify) {
+            return false;
         }
+        string steamcheck = hasexe ? (Path.GetDirectoryName(cohpath) ?? "") : cohpath;
+        return File.Exists(Path.GetFullPath(Path.Combine(steamcheck, "..\\..\\..\\Steam.dll")));
     }
 
 }

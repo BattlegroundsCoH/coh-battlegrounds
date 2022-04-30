@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -222,7 +223,7 @@ public class StartupViewModel : INotifyPropertyChanged {
         if (ofd.ShowDialog() is true) {
 
             // Grab select file
-            this.DetectedCoHpath = ofd.FileName;
+            this.DetectedCoHpath = Path.GetDirectoryName(ofd.FileName) ?? ofd.FileName;
             this.PropertyChanged?.Invoke(this, new(nameof(DetectedCoHpath)));
 
             // Verify
