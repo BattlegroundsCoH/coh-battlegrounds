@@ -1,0 +1,113 @@
+﻿<UserControl x:Class="BattlegroundsApp.Controls.Dashboard.CompanyCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BattlegroundsApp.Controls.Dashboard"
+             mc:Ignorable="d" 
+             d:DesignHeight="175" d:DesignWidth="350"
+             Background="{StaticResource BackgroundDarkBlueBrush}">
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="64" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Row="0" Grid.Column="0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="64" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="64" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="64" />
+            </Grid.ColumnDefinitions>
+
+            <Image x:Name="factionIcon"
+                   Grid.Row="0"
+                   Grid.Column="0"
+                   Width="36"
+                   Height="36" />
+
+            <TextBlock x:Name="companyName"
+                       Grid.Row="0"
+                       Grid.Column="1"
+                       Foreground="White"
+                       FontSize="18"
+                       FontWeight="DemiBold"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center" />
+
+            <Image x:Name="typeIcon"
+                   Grid.Row="0"
+                   Grid.Column="2"
+                   Width="32"
+                   Height="632" />
+
+        </Grid>
+
+        <Border Grid.Row="1"
+                Grid.Column="0"
+                Width="275">
+
+            <TextBlock TextWrapping="Wrap"
+                       Foreground="White"
+                       FontSize="16"
+                       LineHeight="26"
+                       Margin="8, 5, 0, 5">
+                
+                <!-- Win Ratio -->
+                <InlineUIContainer>
+                    <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                        <TextBlock Text="Win/Loss Ratio:" />
+                        <TextBlock x:Name="winRateValue"
+                                   TextAlignment="Right" 
+                                   Margin="0, 0, 8, 0" />
+                    </Grid>
+                </InlineUIContainer>
+                
+                <!-- Infantry Kills -->
+                <InlineUIContainer>
+                    <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                        <TextBlock Text="Infantry Kills:" />
+                        <TextBlock x:Name="infantryKillsValue"
+                                   TextAlignment="Right" 
+                                   Margin="0, 0, 8, 0" />
+                    </Grid>
+                </InlineUIContainer>
+                
+                <!-- Vehicle Kills -->
+                <InlineUIContainer>
+                    <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                        <TextBlock Text="Vehicle Kills:" />
+                        <TextBlock x:Name="vehicleKillsValue"
+                                   TextAlignment="Right" 
+                                   Margin="0, 0, 8, 0" />
+                    </Grid>
+                </InlineUIContainer>
+                
+                <!-- KD Ratio -->
+                <InlineUIContainer>
+                    <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                        <TextBlock Text="Kill/Death Ratio:" />
+                        <TextBlock x:Name="killDeathRatioValue"
+                                   TextAlignment="Right" 
+                                   Margin="0, 0, 8, 0" />
+                    </Grid>
+                </InlineUIContainer>
+                
+            </TextBlock>
+            
+        </Border>
+        
+        
+    </Grid>
+</UserControl>

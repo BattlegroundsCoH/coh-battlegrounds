@@ -5,44 +5,29 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Views"
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
+             xmlns:card="clr-namespace:BattlegroundsApp.Controls.Dashboard"
              mc:Ignorable="d"
              Background="{StaticResource BackgroundBlueBrush}"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="36" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
 
-        <!-- Row 0 :: Column 0 :: View Title -->
-        <controls:LocLabel
-            Grid.Row="0"
-            Grid.Column="0"
-            Foreground="#d8dbde"
-            FontSize="28"
-            FontFamily="Open Sans"
-            FontWeight="Bold"
-            Margin="15, 0, 0, 0"
-            VerticalContentAlignment="Center"
-            LocKey="DashboardView_Title"/>
-
-        <!-- Row 1 :: Column 0 :: Welcome Message -->
-        <TextBlock Grid.Row="1"
+        <!-- Row 0 :: Column 0 :: Welcome Message -->
+        <TextBlock Grid.Row="0"
                    Grid.Column="0"
                    TextAlignment="Center"
                    Foreground="White"
                    FontSize="24"
-                   Margin="0, 64, 0, 64">
+                   Margin="0, 128, 0, 128">
             
             <Run>Welcome</Run>
             <Run Text="{Binding PlayerName, Mode=OneTime}" FontWeight="DemiBold" FontStyle="Italic"/>
@@ -50,44 +35,46 @@
 
         </TextBlock>
 
-        <!-- Row 2 :: Column 0 :: Statistics Title -->
-        <controls:LocLabel
-            Grid.Row="2"
-            Grid.Column="0"
-            Foreground="#d8dbde"
-            FontSize="22"
-            FontFamily="Open Sans"
-            FontWeight="DemiBold"
-            Margin="15, 0, 0, 0"
-            VerticalContentAlignment="Center"
-            LocKey="DashboardView_Statistics"/>
-        
-        <!-- Row 2 :: Column 1 :: Most Played Company Title -->
- 
+        <!-- Row 1 :: Column 0 :: Statistics -->
+        <Grid Grid.Row="1" Grid.Column="0">
 
-        <!-- Row 3 :: Column 0 :: Statistics Data -->
-        <Border Grid.Row="3" Grid.Column="0"
+            <Grid.RowDefinitions>
+                <RowDefinition  Height="36"/>
+                <RowDefinition  Height="auto"/>
+                <RowDefinition  Height="36"/>
+                <RowDefinition  Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Row 0 :: Column 0 :: Statistics Title -->
+            <controls:LocLabel Grid.Row="0"
+                               Grid.Column="0"
+                               Foreground="#d8dbde"
+                               FontSize="22"
+                               FontFamily="Open Sans"
+                               FontWeight="DemiBold"
+                               Margin="15, 0, 0, 0"
+                               VerticalContentAlignment="Center"
+                               LocKey="DashboardView_Statistics"/>
+
+            <!-- Row 1 :: Column 0 :: Statistics Data -->
+            <Border Grid.Row="1" Grid.Column="0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Margin="15, 0, 0, 0"
-                Width="200"
+                Width="275"
                 Background="{StaticResource BackgroundDarkBlueBrush}">
 
-            <TextBlock TextWrapping="Wrap"
+                <TextBlock TextWrapping="Wrap"
                        Foreground="White"
-                       FontSize="13"
-                       LineHeight="20"
+                       FontSize="16"
+                       LineHeight="26"
                        Margin="8, 5, 0, 5">
-                
-                <!-- Games Played -->
-                <InlineUIContainer>
-                    <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
-                        <TextBlock Text="Games Played:" />
-                        <TextBlock Text="{Binding TotalGamesPlayed, FallbackValue='N/A'}"
-                                   TextAlignment="Right" 
-                                   Margin="0, 0, 8, 0" />
-                    </Grid>
-                </InlineUIContainer>
                 
                 <!-- Wins -->
                 <InlineUIContainer>
@@ -171,7 +158,26 @@
                 
             </TextBlock>
 
-        </Border>
+            </Border>
+
+            <!-- Row 0 :: Column 1 :: Most Played Company Title -->
+            <controls:LocLabel Grid.Row="0"
+                               Grid.Column="1"
+                               Foreground="#d8dbde"
+                               FontSize="22"
+                               FontFamily="Open Sans"
+                               FontWeight="DemiBold"
+                               Margin="15, 0, 0, 0"
+                               VerticalContentAlignment="Center"
+                               LocKey="DashboardView_MostPlayedCompany" />
+
+            <!-- Row 1 :: Column 1 :: Most Played Company Data -->
+            <card:CompanyCard Grid.Row="1"
+                              Grid.Column="1"
+                              Margin="15, 0, 0, 0"
+                              Company="{Binding MostPlayedCompany}"/>
+
+        </Grid>
 
     </Grid>
 </UserControl>

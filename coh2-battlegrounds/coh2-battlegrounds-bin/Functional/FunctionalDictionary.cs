@@ -17,8 +17,8 @@ namespace Battlegrounds.Functional {
         /// <param name="dict">The dictionary instance to retrieve default value from.</param>
         /// <param name="key">The key of the element to try and get value of.</param>
         /// <returns>If value is not found, <see langword="default"/> value of <typeparamref name="V"/>; Otherwise the found value.</returns>
-        public static V GetValueOrDefault<U, V>(this IDictionary<U, V> dict, U key)
-            => dict.GetValueOrDefault(key, default);
+        public static V GetOrDefault<U, V>(this IDictionary<U, V> dict, U key)
+            => dict.GetOrDefault(key, default);
 
         /// <summary>
         /// Get value of element tied to <paramref name="key"/> or <paramref name="defaultValue"/> if not found in dictionary.
@@ -29,7 +29,7 @@ namespace Battlegrounds.Functional {
         /// <param name="key">The key of the element to try and get value of.</param>
         /// <param name="defaultValue">The default value to return if element is not found.</param>
         /// <returns>If value is not found, <paramref name="defaultValue"/>; Otherwise the found value.</returns>
-        public static V GetValueOrDefault<U, V>(this IDictionary<U, V> dict, U key, V defaultValue)
+        public static V GetOrDefault<U, V>(this IDictionary<U, V> dict, U key, V defaultValue)
             => dict.ContainsKey(key) ? dict[key] : defaultValue;
 
         /// <summary>

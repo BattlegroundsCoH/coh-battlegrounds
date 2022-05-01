@@ -96,11 +96,11 @@ internal abstract class BasePlayModel {
         var settings = this.m_handle.Settings;
 
         // Collect settings
-        string scenario = settings.GetValueOrDefault("selected_map", string.Empty);
-        string gamemode = settings.GetValueOrDefault("selected_wc", string.Empty);
-        string gamemodeValue = settings.GetValueOrDefault("selected_wco", string.Empty);
-        bool enableSupply = settings.GetValueOrDefault("selected_supply", "0") != "0";
-        bool enableWeather = settings.GetValueOrDefault("selected_daynight", "0") != "0";
+        string scenario = settings.GetOrDefault("selected_map", string.Empty);
+        string gamemode = settings.GetOrDefault("selected_wc", string.Empty);
+        string gamemodeValue = settings.GetOrDefault("selected_wco", string.Empty);
+        bool enableSupply = settings.GetOrDefault("selected_supply", "0") != "0";
+        bool enableWeather = settings.GetOrDefault("selected_daynight", "0") != "0";
 
         // Try get gamemode value
         if (!int.TryParse(gamemodeValue, out int gamemodeoption)) {

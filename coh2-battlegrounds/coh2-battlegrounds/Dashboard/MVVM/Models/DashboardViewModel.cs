@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 namespace BattlegroundsApp.Dashboard.MVVM.Models;
 
 public enum CompanyDataType {
+    Games,
     Wins,
     Losses,
     InfantryKills,
@@ -31,6 +32,11 @@ public class DashboardViewModel : ViewModelBase, IViewModel {
     /// The name of the currently "loged" in player
     /// </summary>
     private string m_playerName = BattlegroundsInstance.IsFirstRun ? "" : BattlegroundsInstance.Steam.User.Name;
+
+    /// <summary>
+    /// The number of games played sumerized
+    /// </summary>
+    private ulong m_totalGames;
 
     /// <summary>
     /// The number of wins sumerized
@@ -62,6 +68,9 @@ public class DashboardViewModel : ViewModelBase, IViewModel {
     /// </summary>
     private ulong m_totalVehicleLosses;
 
+    /// <summary>
+    /// The total win/loss ration 
+    /// </summary>
     private double m_winRate;
 
     /// <summary>
@@ -110,8 +119,11 @@ public class DashboardViewModel : ViewModelBase, IViewModel {
     /// The number of games played sumerized
     /// </summary>
     public ulong TotalGamesPlayed { 
-        get => this.TotalWins + this.TotalLosses;
+        get {
+            return this.m_totalGames;
+        }
         set {
+            this.m_totalGames = value;
             OnPropertyChanged(nameof(TotalGamesPlayed));
         }
     }
@@ -215,6 +227,7 @@ public class DashboardViewModel : ViewModelBase, IViewModel {
 
     private void OnPlayerCompaniesLoaded() {
 
+        this.TotalGamesPlayed = this.GetCompanyData<ulong>(CompanyDataType.Games);
         this.TotalWins = this.GetCompanyData<ulong>(CompanyDataType.Wins);
         this.TotalLosses = this.GetCompanyData<ulong>(CompanyDataType.Losses);
         this.TotalInfantryLosses = this.GetCompanyData<ulong>(CompanyDataType.InfantryLosses);
@@ -225,6 +238,7 @@ public class DashboardViewModel : ViewModelBase, IViewModel {
     }
 
     private T? GetCompanyData<T>(CompanyDataType type) => type switch {
+        CompanyDataType.Games or
         CompanyDataType.Wins or
         CompanyDataType.Losses or
         CompanyDataType.InfantryLosses or
@@ -236,6 +250,7 @@ public class DashboardViewModel : ViewModelBase, IViewModel {
 
     // TODO : Add returns for Infantry & Vehicle kills
     private ulong SumerizeData(CompanyDataType type) => type switch {
+        CompanyDataType.Games => PlayerCompanies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalMatchCount),
         CompanyDataType.Wins => PlayerCompanies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalMatchWinCount),
         CompanyDataType.Losses => PlayerCompanies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalMatchLossCount),
         CompanyDataType.InfantryLosses => PlayerCompanies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalInfantryLosses),
