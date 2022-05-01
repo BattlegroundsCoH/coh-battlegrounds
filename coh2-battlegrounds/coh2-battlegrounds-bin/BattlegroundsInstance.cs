@@ -18,6 +18,9 @@ namespace Battlegrounds;
 /// </summary>
 public static class BattlegroundsInstance {
 
+    // The path of the local settings file
+    private static readonly string PATH_LOCAL = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\local.json");
+
     /// <summary>
     /// Internal instance object
     /// </summary>
@@ -67,10 +70,22 @@ public static class BattlegroundsInstance {
             Trace.WriteLine($"Resolving paths (Local to: {Environment.CurrentDirectory})", nameof(BattlegroundsInstance));
 
             // Paths
+            string doc = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\");
             string installpath = $"{Environment.CurrentDirectory}\\";
             string binpath = $"{installpath}bg_common\\";
             string userpath = $"{installpath}usr\\";
-            string tmppath = $"{installpath}~tmp\\";
+            string tmppath = $"{doc}~tmp\\";
+
+            // Create documents directory if it does not exist
+            if (!Directory.Exists(doc)) {
+                Directory.CreateDirectory(doc);
+                Trace.WriteLine("Documents path missing - this may be an initial startup", nameof(BattlegroundsInstance));
+                this.Paths.Add(BattlegroundsPaths.DOCUMENTS_FOLDER, doc);
+            } else {
+                if (!this.Paths.ContainsKey(BattlegroundsPaths.DOCUMENTS_FOLDER)) {
+                    this.Paths.Add(BattlegroundsPaths.DOCUMENTS_FOLDER, doc);
+                }
+            }
 
             // Create data directory if it does not exist
             if (!Directory.Exists(binpath)) {
@@ -90,7 +105,7 @@ public static class BattlegroundsInstance {
             }
 
             // User folder
-            this.ResolveDirectory(BattlegroundsPaths.COMPANY_FOLDER, $"{userpath}companies\\");
+            this.ResolveDirectory(BattlegroundsPaths.COMPANY_FOLDER, $"{doc}companies\\");
             this.ResolveDirectory(BattlegroundsPaths.MOD_OTHER_FOLDER, $"{userpath}mods\\");
             this.ResolveDirectory(BattlegroundsPaths.PLUGIN_FOLDER, $"{userpath}plugins\\");
 
@@ -251,17 +266,32 @@ public static class BattlegroundsInstance {
             return;
         }
 
-        // Load instance data
-        bool hasLocal = File.Exists("local.json");
-        var instance = hasLocal.Then(() => JsonSerializer.Deserialize<InternalInstance?>(File.ReadAllText("local.json"))).Else(_ => null);
-        if (instance is null) {
+        // Grab documents path
+        string doc = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2");
+
+        // Check if directory exist
+        bool hasDoc = Directory.Exists(doc);
+        if (hasDoc && File.Exists(PATH_LOCAL)) {
+
+            // Load instance data
+            var instance = JsonSerializer.Deserialize<InternalInstance?>(File.ReadAllText(PATH_LOCAL));
+            if (instance is null) {
+                __instance = new InternalInstance();
+                __instance.ResolvePaths();
+                IsFirstRun = true;
+            } else {
+                IsFirstRun = false;
+                __instance = instance;
+                __instance.ResolvePaths();
+            }
+
+        } else {
+
+            // Yep, new instance
             __instance = new InternalInstance();
             __instance.ResolvePaths();
             IsFirstRun = true;
-        } else {
-            IsFirstRun = false;
-            __instance = instance;
-            __instance.ResolvePaths();
+
         }
 
         // Create locale manager
@@ -293,6 +323,6 @@ public static class BattlegroundsInstance {
     /// Save the currently stored data of this instance.
     /// </summary>
     public static void SaveInstance()
-        => File.WriteAllText("local.json", JsonSerializer.Serialize(__instance, new JsonSerializerOptions() { WriteIndented = true }));
+        => File.WriteAllText(PATH_LOCAL, JsonSerializer.Serialize(__instance, new JsonSerializerOptions() { WriteIndented = true }));
 
 }

@@ -150,6 +150,9 @@ public partial class App : Application {
                 // Load next
                 this.LoadNext();
 
+                // Create initial data
+                InitialDataCreator.Init();
+
                 // Save all changes
                 BattlegroundsInstance.SaveInstance();
 

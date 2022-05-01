@@ -11,12 +11,24 @@ using Battlegrounds.Verification;
 
 namespace BattlegroundsApp.LocalData;
 
+public delegate void LocalCompaniesLoadedHandler();
+
+/// <summary>
+/// Static utility class for handling local player companies.
+/// </summary>
 public static class PlayerCompanies {
 
-    public static event Action? PlayerCompaniesLoaded;
+    /// <summary>
+    /// 
+    /// </summary>
+    public static event LocalCompaniesLoadedHandler? PlayerCompaniesLoaded;
 
     private static readonly List<Company> __companies = new();
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public static bool HasCompanyForBothAlliances() {
         if (__companies.Count is 0) {
             LoadAll();
@@ -24,6 +36,9 @@ public static class PlayerCompanies {
         return __companies.Any(x => x.Army.IsAxis) && __companies.Any(x => x.Army.IsAllied);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static void LoadAll() {
 
         try {
