@@ -228,3 +228,4 @@ english:
  STARTUP_CONTINUE: "Continue"
  STARTUP_MESSAGE: ""
  STARTUP_USER: "Steam User: {0}"
+ DashboardView_MostPlayedCompany: "Most Played Company"
