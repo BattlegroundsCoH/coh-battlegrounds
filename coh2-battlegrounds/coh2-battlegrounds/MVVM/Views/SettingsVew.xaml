@@ -3,12 +3,247 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.MVVM.Views"
+             xmlns:local="clr-namespace:BattlegroundsApp.MVVM.Views" 
+             xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              mc:Ignorable="d" Background="#273441"
              d:DesignHeight="850" d:DesignWidth="1100">
-    <ScrollViewer>
-        <StackPanel>
-            
-        </StackPanel>
-    </ScrollViewer>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!-- Row 0 -->
+        <controls:LocLabel
+            Foreground="#d8dbde"
+            FontSize="32"
+            FontFamily="Open Sans"
+            FontWeight="Bold"
+            Margin="15, 0, 0, 0"
+            VerticalContentAlignment="Center"
+            LocKey="SettingsView_Title"/>
+
+        <!-- Row 1 -->
+        <ScrollViewer Grid.Row="1" Margin="0,32,0,0">
+            <Grid Margin="32,0,32,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="320"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="64"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.Resources>
+                    <Style x:Key="Header1" TargetType="Label">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="24"/>
+                        <Setter Property="FontFamily" Value="Open Sans"/>
+                        <Setter Property="FontWeight" Value="DemiBold"/>
+                    </Style>
+                    <Style x:Key="Header2" TargetType="Label">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="18"/>
+                        <Setter Property="FontFamily" Value="Open Sans"/>
+                    </Style>
+                    <Style x:Key="Header3" TargetType="Label">
+                        <Setter Property="Foreground" Value="DarkGray"/>
+                        <Setter Property="FontSize" Value="12"/>
+                        <Setter Property="FontFamily" Value="Open Sans"/>
+                    </Style>
+                </Grid.Resources>
+                <!-- App Settings -->
+                <controls:LocLabel LocKey="SettingsView_App"
+                                   Style="{StaticResource Header1}"
+                                   HorizontalAlignment="Center"
+                                   Grid.ColumnSpan="3"/>
+
+                <!-- Language settings -->
+                <controls:LocLabel LocKey="SettingsView_Language"
+                                   Style="{StaticResource Header2}"
+                                   HorizontalAlignment="Center"
+                                   Grid.ColumnSpan="3"
+                                   Grid.Row="1"/>
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal"
+                            Grid.Row="2"
+                            Grid.ColumnSpan="3"
+                            Margin="10">
+                    <Button Margin="2.5" Style="{StaticResource MainButtonStyle}"
+                            Command="{Binding LanguageButton}"
+                            CommandParameter="0">
+                        <Image Width="32" Height="24"
+                           Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/flags/unionjack.png"
+                           />
+                    </Button>
+                    <Button Margin="2.5" Style="{StaticResource MainButtonStyle}"
+                            IsEnabled="False"
+                            Command="{Binding LanguageButton}"
+                            CommandParameter="3">
+                        <Image Width="32" Height="24"
+                           Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/flags/spanish.png"
+                           />
+                    </Button>
+                    <Button Margin="2.5" Style="{StaticResource MainButtonStyle}"
+                            IsEnabled="False"
+                            Command="{Binding LanguageButton}"
+                            CommandParameter="1">
+                        <Image Width="32" Height="24"
+                           Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/flags/german.png"
+                           />
+                    </Button>
+                    <Button Margin="2.5" Style="{StaticResource MainButtonStyle}"
+                            IsEnabled="False"
+                            Command="{Binding LanguageButton}"
+                            CommandParameter="2">
+                        <Image Width="32" Height="24"
+                           Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/flags/french.png"
+                           />
+                    </Button>
+                    <Button Margin="2.5" Style="{StaticResource MainButtonStyle}"
+                            IsEnabled="False"
+                            Command="{Binding LanguageButton}"
+                            CommandParameter="4">
+                        <Image Width="32" Height="24"
+                           Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/flags/polish.png"
+                           />
+                    </Button>
+                </StackPanel>
+
+                <!-- Path Settings -->
+                <controls:LocLabel LocKey="SettingsView_Paths"
+                                   Style="{StaticResource Header2}"
+                                   HorizontalAlignment="Center"
+                                   Grid.ColumnSpan="3"
+                                   Grid.Row="3"/>
+
+                <!-- Steam Path -->
+                <controls:LocLabel LocKey="SettingsView_SteamPath"
+                                   Style="{StaticResource Header3}"
+                                   Grid.Row="4"/>
+                <TextBox Style="{StaticResource WaterMarkTextBox}"
+                         Tag="Path not set"
+                         Grid.Row="4"
+                         Grid.Column="1"/>
+                <Button Style="{StaticResource StandardBlueButton}"
+                        Content="..."
+                        Grid.Row="4"
+                        Grid.Column="2"/>
+                <Label Content="Detected User: CoDiEx"
+                       Style="{StaticResource Header3}"
+                       Grid.Column="1"
+                       HorizontalAlignment="Right"
+                       Grid.Row="5" Margin="0,0,0,10"/>
+                <Button Style="{StaticResource StandardBlueButton}"
+                        Grid.Column="3"
+                        Grid.Row="5"
+                        Content="(-)"
+                        Margin="15"/> <!-- Refresh data -->
+
+                <!-- CoH2 Path -->
+                <controls:LocLabel LocKey="SettingsView_CoHPath"
+                                   Style="{StaticResource Header3}"
+                                   Grid.Row="6"/>
+                <TextBox Style="{StaticResource WaterMarkTextBox}"
+                         Tag="Path not set"
+                         Grid.Row="6"
+                         Grid.Column="1"/>
+                <Button Style="{StaticResource StandardBlueButton}"
+                        Content="..."
+                        Grid.Row="6"
+                        Grid.Column="2"/>
+                <Label Content="Archive.exe found"
+                       Style="{StaticResource Header3}"
+                       Grid.Column="1"
+                       HorizontalAlignment="Right"
+                       Grid.Row="7"
+                       Visibility="Hidden"
+                       Height="28"/>
+                <!--TODO: Show if archive.exe is missing-->
+
+                <!-- Telemetry Settings -->
+                <controls:LocLabel LocKey="SettingsView_Telemetry"
+                                   Style="{StaticResource Header2}"
+                                   HorizontalAlignment="Center"
+                                   Grid.ColumnSpan="3"
+                                   Grid.Row="8"/>
+
+
+                <!-- Auto-Update -->
+                <controls:LocLabel LocKey="SettingsView_TmAutoUpdate"
+                                   Style="{StaticResource Header3}"
+                                   Grid.Row="9"/>
+                <CheckBox Grid.Row="9"
+                          Grid.Column="1"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Right"/>
+
+                <!-- Performance Report -->
+                <controls:LocLabel LocKey="SettingsView_TmPerformance"
+                                   Style="{StaticResource Header3}"
+                                   Grid.Row="10"/>
+                <CheckBox Grid.Row="10"
+                          Grid.Column="1"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Right"/>
+                
+                <!-- Autp-Workshop -->
+                <controls:LocLabel LocKey="SettingsView_TmAutoWorkshop"
+                                   Style="{StaticResource Header3}"
+                                   Grid.Row="11"/>
+                <CheckBox Grid.Row="11"
+                          Grid.Column="1"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Right"/>
+                
+                <!-- Auto-Report Scar -->
+                <controls:LocLabel LocKey="SettingsView_TmAutoReportScar"
+                                   Style="{StaticResource Header3}"
+                                   Grid.Row="12"/>
+                <CheckBox Grid.Row="12"
+                          Grid.Column="1"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Right"/>
+                
+                <!-- Chat Settings -->
+                <controls:LocLabel LocKey="SettingsView_ChatColours"
+                                   Style="{StaticResource Header2}"
+                                   HorizontalAlignment="Center"
+                                   Grid.ColumnSpan="3"
+                                   Grid.Row="19"/>
+
+                <!-- Ingame Settings -->
+                <controls:LocLabel LocKey="SettingsView_Ingame"
+                                   Style="{StaticResource Header1}"
+                                   HorizontalAlignment="Center"
+                                   Grid.ColumnSpan="3"
+                                   Grid.Row="20"/>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+    
 </UserControl>
