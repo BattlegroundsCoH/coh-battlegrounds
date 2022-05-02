@@ -42,27 +42,6 @@ public partial class MainWindow : Window {
 
     }
 
-    public void AllowGetSteamUser(Action<bool> callback) {
-
-        // Null check
-        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
-            callback.Invoke(false);
-            return;
-        }
-
-        // Lookup strings
-        string title = BattlegroundsInstance.Localize.GetString("MainWindow_YesNoDialog_No_Steam_User_Title");
-        string desc = BattlegroundsInstance.Localize.GetString("MainWindow_YesNoDialog_No_Steam_User_Message");
-
-        // Do modal
-        YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
-
-            callback.Invoke(resault is ModalDialogResult.Confirm);
-
-        }, title, desc);
-
-    }
-    
     protected override void OnContentRendered(EventArgs e) {
         base.OnContentRendered(e);
         if (!this.m_isReady) {
@@ -113,8 +92,11 @@ public partial class MainWindow : Window {
 
     private void OnAppClosing(object sender, CancelEventArgs e) {
 
+        // Grab obj
+        var target = this.RightContent.Content is FrameworkElement fe ? fe.DataContext : this.RightContent.Content;
+
         // Get current rhs
-        if (this.RightContent.Content is LobbyModel lobby) {
+        if (target is LobbyModel lobby) {
             e.Cancel = true;
             YesNoDialogViewModel.ShowModal(this.ModalView, (_, res) => {
                 if (res is ModalDialogResult.Confirm) {
@@ -123,7 +105,7 @@ public partial class MainWindow : Window {
                 }
             }, "Leave Lobby?", "Are you sure you want to leave the lobby?");
             return;
-        } else if (this.RightContent.Content is CompanyBuilderViewModel cb) {
+        } else if (target is CompanyBuilderViewModel cb) {
             if (cb.HasChanges) {
                 e.Cancel = true;
                 YesNoDialogViewModel.ShowModal(this.ModalView, (_, res) => {

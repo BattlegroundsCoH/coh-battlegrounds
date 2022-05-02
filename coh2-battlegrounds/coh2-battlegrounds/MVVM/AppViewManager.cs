@@ -93,7 +93,7 @@ public class AppViewManager {
         // Get old content
         var old = target switch {
             AppDisplayTarget.Left or AppDisplayTarget.Full => this.m_window.LeftContent.Content,
-            AppDisplayTarget.Right => this.m_window.RightContent.Content,
+            AppDisplayTarget.Right => this.m_window.RightContent.Content is FrameworkElement fe ? fe.DataContext : this.m_window.RightContent.Content,
             _ => throw new InvalidOperationException()
         };
 
