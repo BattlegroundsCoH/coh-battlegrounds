@@ -246,7 +246,7 @@ class Program {
             // Get output dir
             string jsonoutput = mod switch {
                 "vcoh" => Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\bg_common\\data"),
-                "mod_bg" => Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\usr\\mods\\mod_db"),
+                "mod_bg" => Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\bg_common\\data"),
                 _ => throw new NotSupportedException()
             };
 

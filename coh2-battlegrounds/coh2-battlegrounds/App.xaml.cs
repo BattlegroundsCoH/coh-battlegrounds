@@ -15,7 +15,6 @@ using Battlegrounds.Verification;
 using Battlegrounds.Functional;
 
 using BattlegroundsApp.LocalData;
-using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Resources;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
@@ -35,6 +34,7 @@ public partial class App : Application {
     private static ResourceHandler? __handler;
 
     private static LeftMenu? __lmenu;
+    private static SettingsViewModel? __settings;
     private static DashboardViewModel? __dashboard;
     private static LobbyBrowserViewModel? __lobbyBrowser;
     private static CompanyBrowserViewModel? __companyBrowser;
@@ -101,6 +101,7 @@ public partial class App : Application {
         // Create other views that are directly accessible from LHS
         __companyBrowser = __viewManager.CreateDisplayIfNotFound<CompanyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create company browser view model!");
         __lobbyBrowser = __viewManager.CreateDisplayIfNotFound<LobbyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create lobby browser view model!");
+        __settings = __viewManager.CreateDisplayIfNotFound<SettingsViewModel>(() => new()) ?? throw new Exception("Failed to create settings view model!");
 
         // Set as started
         IsStarted = true;

@@ -24,6 +24,11 @@
         <dashboardViews:DashboardView/>
     </DataTemplate>
 
+    <!-- New Setting-View Models -->
+    <DataTemplate DataType="{x:Type models:SettingsViewModel}">
+        <views:SettingsVew/>
+    </DataTemplate>
+
     <!-- New Lobby-View Models -->
     <DataTemplate DataType="{x:Type models:LeftMenu}">
         <views:LeftMenuView/>

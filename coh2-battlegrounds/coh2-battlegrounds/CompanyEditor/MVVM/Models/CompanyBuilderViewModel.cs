@@ -684,18 +684,33 @@ public class CompanyBuilderViewModel : IViewModel {
     }
 
     public void UnloadViewModel(OnModelClosed closeCallback, bool destroy) {
-        App.ViewManager.DestroyView(this);
+        
+        // Destroy if requested
+        if (destroy) {
+            App.ViewManager.DestroyView(this);
+        }
+        
+        // Check if any changes
         if (this.HasChanges) {
+
+            // If modal control not found, bail
             if (App.ViewManager.GetRightsideModalControl() is not ModalControl mc) {
                 closeCallback(false);
                 return;
             }
+
+            // Ask user to confirm change
             YesNoDialogViewModel.ShowModal(mc, (_, res) => {
                 closeCallback(res is ModalDialogResult.Cancel);
             }, "Unsaved Changes", "You have unsaved changes that will be lost if you leave the company builder. Are you sure you want to leave?");
+        
         } else {
+            
+            // Invoke callback now
             closeCallback(false);
+
         }
+
     }
 
     public void Swapback() {

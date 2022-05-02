@@ -6,135 +6,137 @@ using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
 using BattlegroundsApp.Utilities;
 
-namespace BattlegroundsApp.MVVM.Models {
-    
-    public class LeftMenuButton {
-        public ICommand? Click { get; init; }
-        public LocaleKey? Text { get; init; }
-        public LocaleKey? Tooltip { get; init; }
-        public bool Enabled { get; init; }
+namespace BattlegroundsApp.MVVM.Models;
+
+public class LeftMenuButton {
+    public ICommand? Click { get; init; }
+    public LocaleKey? Text { get; init; }
+    public LocaleKey? Tooltip { get; init; }
+    public bool Enabled { get; init; }
+}
+
+public class LeftMenu : IViewModel {
+
+    public LeftMenuButton Dashboard { get; }
+    public LeftMenuButton News { get; }
+    public LeftMenuButton CompanyBuilder { get; }
+    public LeftMenuButton Campaign { get; }
+    public LeftMenuButton MatchFinder { get; }
+    public LeftMenuButton Settings { get; }
+    public LeftMenuButton Exit { get; }
+
+    public bool KeepAlive => true;
+
+    public bool SingleInstanceOnly => true;
+
+    public LeftMenu() {
+
+        // Create dashboard
+        this.Dashboard = new() {
+            Click = new RelayCommand(this.DashboardButton),
+            Text = new("MainWindow_Dashboard"),
+            Enabled = true
+        };
+
+        // Create news
+        this.News = new() {
+            Click = new RelayCommand(this.NewsButton),
+            Text = new("MainWindow_News"),
+            Enabled = false
+        };
+        
+        // Create builder
+        this.CompanyBuilder = new() {
+            Click = new RelayCommand(this.BuilderButton),
+            Text = new("MainWindow_Company_Builder"),
+            Enabled = true
+        };
+        
+        // Create campaign
+        this.Campaign = new() {
+            Click = new RelayCommand(this.CampaignButton),
+            Text = new("MainWindow_Campaign"),
+            Enabled = false
+        };
+        
+        // Create match finder
+        this.MatchFinder = new() {
+            Click = new RelayCommand(this.MatchFinderButton),
+            Text = new("MainWindow_Game_Browser"),
+            Enabled = true
+        };
+        
+        // Create settings
+        this.Settings = new() {
+            Click = new RelayCommand(this.SettingsButton),
+            Text = new("MainWindow_Settings"),
+            Enabled = true
+        };
+        
+        // Create exit
+        this.Exit = new() {
+            Click = new RelayCommand(this.ExitButton),
+            Text = new("MainWindow_Exit"),
+            Enabled = true
+        };
+
     }
 
-    public class LeftMenu : IViewModel {
+    private void DashboardButton() {
 
-        public LeftMenuButton Dashboard { get; }
-        public LeftMenuButton News { get; }
-        public LeftMenuButton CompanyBuilder { get; }
-        public LeftMenuButton Campaign { get; }
-        public LeftMenuButton MatchFinder { get; }
-        public LeftMenuButton Settings { get; }
-        public LeftMenuButton Exit { get; }
+        App.ViewManager.UpdateDisplay<DashboardViewModel>(AppDisplayTarget.Right);
 
-        public bool KeepAlive => true;
+    }
 
-        public bool SingleInstanceOnly => true;
+    private void NewsButton() {
 
-        public LeftMenu() {
+    }
+    
+    private void BuilderButton() {
 
-            // Create dashboard
-            this.Dashboard = new() {
-                Click = new RelayCommand(this.DashboardButton),
-                Text = new("MainWindow_Dashboard"),
-                Enabled = true
-            };
+        // Get browser
+        App.ViewManager.UpdateDisplay<CompanyBrowserViewModel>(AppDisplayTarget.Right, browser => {
+            if (browser is CompanyBrowserViewModel vm) {
+                vm.UpdateCompanyList();
+            }
+        });
 
-            // Create news
-            this.News = new() {
-                Click = new RelayCommand(this.NewsButton),
-                Text = new("MainWindow_News"),
-                Enabled = false
-            };
-            
-            // Create builder
-            this.CompanyBuilder = new() {
-                Click = new RelayCommand(this.BuilderButton),
-                Text = new("MainWindow_Company_Builder"),
-                Enabled = true
-            };
-            
-            // Create campaign
-            this.Campaign = new() {
-                Click = new RelayCommand(this.CampaignButton),
-                Text = new("MainWindow_Campaign"),
-                Enabled = false
-            };
-            
-            // Create match finder
-            this.MatchFinder = new() {
-                Click = new RelayCommand(this.MatchFinderButton),
-                Text = new("MainWindow_Game_Browser"),
-                Enabled = true
-            };
-            
-            // Create settings
-            this.Settings = new() {
-                Click = new RelayCommand(this.SettingsButton),
-                Text = new("MainWindow_Settings"),
-                Enabled = false
-            };
-            
-            // Create exit
-            this.Exit = new() {
-                Click = new RelayCommand(this.ExitButton),
-                Text = new("MainWindow_Exit"),
-                Enabled = true
-            };
+    }
 
-        }
+    private void CampaignButton() {
 
-        private void DashboardButton() {
+    }
+    
+    private void MatchFinderButton() {
 
-            App.ViewManager.UpdateDisplay<DashboardViewModel>(AppDisplayTarget.Right);
+        // Set RHS to lobby browser
+        App.ViewManager.UpdateDisplay<LobbyBrowserViewModel>(AppDisplayTarget.Right, browser => {
+            if (browser is LobbyBrowserViewModel vm) {
+                vm.RefreshLobbies();
+            }
+        });
 
-        }
+    }
 
-        private void NewsButton() {
+    private void SettingsButton() {
 
-        }
-        
-        private void BuilderButton() {
+        // Set display
+        App.ViewManager.UpdateDisplay<SettingsViewModel>(AppDisplayTarget.Right);
 
-            // Get browser
-            App.ViewManager.UpdateDisplay<CompanyBrowserViewModel>(AppDisplayTarget.Right, browser => {
-                if (browser is CompanyBrowserViewModel vm) {
-                    vm.UpdateCompanyList();
-                }
-            });
+    }
 
-        }
+    private void ExitButton() {
 
-        private void CampaignButton() {
+        // Ask main window to close -> this will shut down the application.
+        Application.Current.MainWindow.Close();
 
-        }
-        
-        private void MatchFinderButton() {
+    }
 
-            // Set RHS to lobby browser
-            App.ViewManager.UpdateDisplay<LobbyBrowserViewModel>(AppDisplayTarget.Right, browser => {
-                if (browser is LobbyBrowserViewModel vm) {
-                    vm.RefreshLobbies();
-                }
-            });
+    public void UnloadViewModel(OnModelClosed closeCallback, bool destroy) => closeCallback(false);
 
-        }
-
-        private void SettingsButton() {
-
-        }
-
-        private void ExitButton() {
-
-            // Ask main window to close -> this will shut down the application.
-            Application.Current.MainWindow.Close();
-
-        }
-
-        public void UnloadViewModel(OnModelClosed closeCallback, bool destroy) => closeCallback(false);
-
-        public void Swapback() {
-            // TODO: Do stuff
-        }
-
+    public void Swapback() {
+        // TODO: Do stuff
     }
 
 }
+
