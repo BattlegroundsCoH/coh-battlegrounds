@@ -28,7 +28,8 @@ public class CompanyBuilder : IBuilder<Company> {
         Faction Faction,
         UnitBuilder[] Units,
         Ability[] Abilities,
-        Blueprint[] Items);
+        Blueprint[] Items,
+        bool AutoReinforce);
 
     public sealed record RemoveUnitAction(UnitBuilder Builder) : IEditAction<BuildableCompany> {
         public BuildableCompany Apply(BuildableCompany target) => target with {
@@ -94,6 +95,16 @@ public class CompanyBuilder : IBuilder<Company> {
         };
         public BuildableCompany Undo(BuildableCompany target) => target with {
             ModGuid = this.m_modGuid
+        };
+    }
+
+    public sealed record AutoReinforceAction(bool NewValue) : IEditAction<BuildableCompany> {
+        private bool m_oldValue;
+        public BuildableCompany Apply(BuildableCompany target) => target with {
+            AutoReinforce = this.NewValue.And(() => this.m_oldValue = target.AutoReinforce)
+        };
+        public BuildableCompany Undo(BuildableCompany target) => target with {
+            AutoReinforce = this.m_oldValue
         };
     }
 
@@ -340,6 +351,8 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <returns></returns>
     public CompanyBuilder RemoveEquipment(Blueprint equipment) => throw new NotImplementedException();
 
+    public CompanyBuilder SetAutoReinforce(bool enable) => this.ApplyAction(new AutoReinforceAction(enable));
+
     /// <summary>
     /// Undo the most recent change.
     /// </summary>
@@ -522,7 +535,9 @@ public class CompanyBuilder : IBuilder<Company> {
         var units = company.Units.Map(UnitBuilder.EditUnit);
 
         // Create buildable variant
-        var buildable = new BuildableCompany(company.Name, company.Type, company.TuningGUID, company.Army, units, company.Abilities.ToArray(), company.Inventory.ToArray());
+        var buildable = new BuildableCompany(company.Name, 
+            company.Type, company.TuningGUID, company.Army, 
+            units, company.Abilities.ToArray(), company.Inventory.ToArray(), company.AutoReplenish);
 
         // Return company buuilder instance
         return new CompanyBuilder(buildable) {
@@ -544,7 +559,7 @@ public class CompanyBuilder : IBuilder<Company> {
     public static CompanyBuilder NewCompany(string name, CompanyType type, CompanyAvailabilityType availabilityType, Faction faction, ModGuid modGuid) {
 
         // return new company builder 
-        return new CompanyBuilder(new(name, type, modGuid, faction, Array.Empty<UnitBuilder>(), Array.Empty<Ability>(), Array.Empty<Blueprint>())) {
+        return new CompanyBuilder(new(name, type, modGuid, faction, Array.Empty<UnitBuilder>(), Array.Empty<Ability>(), Array.Empty<Blueprint>(), false)) {
             AvailabilityType = availabilityType,
         };
 

@@ -22,6 +22,9 @@ public static class BattlegroundsInstance {
     // The path of the local settings file
     private static readonly string PATH_LOCAL = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\local.json");
 
+    // The BG version
+    public const string BG_VERSION = "alpha-v1.1.0";
+
     /// <summary>
     /// Internal instance object
     /// </summary>
