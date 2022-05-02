@@ -1,9 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 
-namespace BattlegroundsApp.Utilities;
+namespace Battlegrounds.Util;
 
 /// <summary>
 /// Class for logging information to <see cref="OUT_PATH"/>. Inherits from <see cref="TraceListener"/> (So use <see cref="Trace.WriteLine(object?)"/> or equivalent methods 
@@ -11,7 +11,7 @@ namespace BattlegroundsApp.Utilities;
 /// </summary>
 public sealed class Logger : TraceListener {
 
-    public const string OUT_PATH = "coh2-bg.log";
+    private static readonly string OUT_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\coh2-bg.log");
 
     private readonly StreamWriter? m_writer;
 
@@ -20,13 +20,6 @@ public sealed class Logger : TraceListener {
     /// </summary>
     public bool HasFile => this.m_writer is not null;
 
-    private static FileStream? Open() {
-        try {
-            return File.Open(OUT_PATH, FileMode.Append, FileAccess.Write, FileShare.Read);
-        } catch (IOException) {
-            return null;
-        }
-    }
 
     /// <summary>
     /// Initialsie a new <see cref="Logger"/> instance on <see cref="OUT_PATH"/>.
@@ -68,6 +61,15 @@ public sealed class Logger : TraceListener {
             this.m_writer.WriteLine($"\t---------------------------------------------------------");
             this.m_writer.Flush();
             this.m_writer.Close();
+        }
+    }
+
+    private static FileStream? Open() {
+        try {
+            return File.Open(OUT_PATH, FileMode.Append, FileAccess.Write, FileShare.Read);
+        } catch (IOException ioex) {
+            Trace.WriteLine(ioex, nameof(Logger)); // <-- will only be visible in VS
+            return null;
         }
     }
 

@@ -10,6 +10,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Steam;
+using Battlegrounds.Util;
 
 namespace Battlegrounds;
 
@@ -64,28 +65,30 @@ public static class BattlegroundsInstance {
         /// <summary>
         /// Resolve paths for internal use.
         /// </summary>
-        public void ResolvePaths() {
-
-            // Log
-            Trace.WriteLine($"Resolving paths (Local to: {Environment.CurrentDirectory})", nameof(BattlegroundsInstance));
+        public void ResolvePathsAndInitLog() {
 
             // Paths
             string doc = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\");
             string installpath = $"{Environment.CurrentDirectory}\\";
             string binpath = $"{installpath}bg_common\\";
-            string userpath = $"{installpath}usr\\";
+            string userpath = $"{doc}usr\\";
             string tmppath = $"{doc}~tmp\\";
 
             // Create documents directory if it does not exist
             if (!Directory.Exists(doc)) {
                 Directory.CreateDirectory(doc);
-                Trace.WriteLine("Documents path missing - this may be an initial startup", nameof(BattlegroundsInstance));
                 this.Paths.Add(BattlegroundsPaths.DOCUMENTS_FOLDER, doc);
             } else {
                 if (!this.Paths.ContainsKey(BattlegroundsPaths.DOCUMENTS_FOLDER)) {
                     this.Paths.Add(BattlegroundsPaths.DOCUMENTS_FOLDER, doc);
                 }
             }
+
+            // Create logger
+            __logger = new();
+
+            // Log
+            Trace.WriteLine($"Resolving paths (Local to: {Environment.CurrentDirectory})", nameof(BattlegroundsInstance));
 
             // Create data directory if it does not exist
             if (!Directory.Exists(binpath)) {
@@ -106,7 +109,9 @@ public static class BattlegroundsInstance {
 
             // User folder
             this.ResolveDirectory(BattlegroundsPaths.COMPANY_FOLDER, $"{doc}companies\\");
-            this.ResolveDirectory(BattlegroundsPaths.MOD_OTHER_FOLDER, $"{userpath}mods\\");
+            this.ResolveDirectory(BattlegroundsPaths.MOD_USER_FOLDER, $"{userpath}mods\\");
+            this.ResolveDirectory(BattlegroundsPaths.MOD_USER_DATABASE_FODLER, $"{userpath}mods\\mod_db\\");
+            this.ResolveDirectory(BattlegroundsPaths.MOD_USER_ICONS_FODLER, $"{userpath}mods\\map_icons\\");
             this.ResolveDirectory(BattlegroundsPaths.PLUGIN_FOLDER, $"{userpath}plugins\\");
 
             // Data folder
@@ -130,6 +135,7 @@ public static class BattlegroundsInstance {
             // Create tmp folder
             this.ResolveDirectory(BattlegroundsPaths.BUILD_FOLDER, $"{tmppath}bld\\");
             this.ResolveDirectory(BattlegroundsPaths.SESSION_FOLDER, $"{tmppath}ses\\");
+            this.ResolveDirectory(BattlegroundsPaths.EXTRACT_FOLDER, $"{tmppath}-extract\\");
 
         }
 
@@ -164,6 +170,7 @@ public static class BattlegroundsInstance {
 
     }
 
+    private static Logger? __logger;
     private static InternalInstance __instance;
     private static Localize __localeManagement;
     private static Random __rng;
@@ -219,6 +226,11 @@ public static class BattlegroundsInstance {
     /// Get the localize manager for the instance
     /// </summary>
     public static Localize Localize => __localeManagement;
+
+    /// <summary>
+    /// Get the activer logger instance
+    /// </summary>
+    public static Logger? Log => __logger;
 
     /// <summary>
     /// Set a specific path for the instance
@@ -277,19 +289,19 @@ public static class BattlegroundsInstance {
             var instance = JsonSerializer.Deserialize<InternalInstance?>(File.ReadAllText(PATH_LOCAL));
             if (instance is null) {
                 __instance = new InternalInstance();
-                __instance.ResolvePaths();
+                __instance.ResolvePathsAndInitLog();
                 IsFirstRun = true;
             } else {
                 IsFirstRun = false;
                 __instance = instance;
-                __instance.ResolvePaths();
+                __instance.ResolvePathsAndInitLog();
             }
 
         } else {
 
             // Yep, new instance
             __instance = new InternalInstance();
-            __instance.ResolvePaths();
+            __instance.ResolvePathsAndInitLog();
             IsFirstRun = true;
 
         }

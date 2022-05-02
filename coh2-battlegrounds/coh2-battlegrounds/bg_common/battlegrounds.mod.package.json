@@ -7,11 +7,11 @@
     "LocaleFiles": [
         {
             "Type": "Gamemode", 
-            "Path": "bg\\locale\\%LANG%\\%LANG%.gamemode.ucs"
+            "Path": "locale\\%LANG%.gamemode.ucs"
         },
         {
             "Type": "Tuning", 
-            "Path": "bg\\locale\\%LANG%\\%LANG%.tuning.ucs"
+            "Path": "locale\\%LANG%.tuning.ucs"
         }
     ],
     "Gamemodes": [

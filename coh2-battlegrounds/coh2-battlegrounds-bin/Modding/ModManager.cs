@@ -27,7 +27,8 @@ public static class ModManager {
         WinconditionList.CreateDatabase();
 
         // Get package files
-        string[] packageFiles = Directory.GetFiles(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_OTHER_FOLDER), "*.package.json");
+        string[] packageFiles = Directory.GetFiles(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_USER_FOLDER), "*.package.json")
+            .Append(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "battlegrounds.mod.package.json"));
 
         // TODO: Add support for plugins such that plugins handle mod creaton themselves.
         // If no plugin, we do completely default behaviour here.
@@ -44,6 +45,7 @@ public static class ModManager {
                     continue;
                 }
 
+                // Ensure no duplicate
                 if (__packages.Any(x => x.ID == package.ID)) {
                     Trace.WriteLine($"Failed to load mod package '{package.ID}' (Duplicate ID entry).", nameof(ModManager));
                     continue;
@@ -93,7 +95,7 @@ public static class ModManager {
 
                 // Log error and file
                 Trace.WriteLine($"Failed to read mod package '{packageName}'.", nameof(ModManager));
-                Trace.WriteLine($"{packageName} Error is --> {ex}", nameof(ModManager));
+                Trace.WriteLine($"{packageName} Error is: {ex}", nameof(ModManager));
 
             }
         }
@@ -133,4 +135,3 @@ public static class ModManager {
         => __packages.FirstOrDefault(x => x.TuningGUID == guid || x.GamemodeGUID == guid || x.AssetGUID == guid);
 
 }
-

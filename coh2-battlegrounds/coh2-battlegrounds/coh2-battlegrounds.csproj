@@ -798,47 +798,43 @@
     <None Update="checksum.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\companies\Default_German.json">
+    <None Update="bg_common\battlegrounds.mod.package.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\companies\Default_Soviet.json">
+    <None Update="bg_common\locale\english.gamemode.ucs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\battlegrounds.mod.package.json">
+    <None Update="bg_common\locale\english.tuning.ucs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\bg\locale\english\english.gamemode.ucs">
+    <None Update="bg_common\data\mod_bg-abp-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\bg\locale\english\english.tuning.ucs">
+    <None Update="bg_common\data\mod_bg-cbp-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\mod_db\mod_bg-abp-db.json">
+    <None Update="bg_common\data\mod_bg-ebp-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\mod_db\mod_bg-cbp-db.json">
+    <None Update="bg_common\data\mod_bg-ibp-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\mod_db\mod_bg-ebp-db.json">
+    <None Update="bg_common\data\mod_bg-sbp-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\mod_db\mod_bg-ibp-db.json">
+    <None Update="bg_common\data\mod_bg-ubp-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\mod_db\mod_bg-sbp-db.json">
+    <None Update="bg_common\data\mod_bg-wbp-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\mod_db\mod_bg-ubp-db.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="usr\mods\mod_db\mod_bg-wbp-db.json">
+    <None Update="plugins\README.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="bg_common\bg_wc\" />
-    <Folder Include="usr\companies\" />
   </ItemGroup>
 
 </Project>

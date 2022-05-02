@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Modding;
 
@@ -20,12 +21,11 @@ public static class LobbySettingsLookup {
 
         // Check scenario
         if (scenario is null) {
-            Trace.WriteLine($"Failed to set **null** scenario.", nameof(LobbySettingsLookup));
             return (BitmapSource?)MapNotFound;
         }
 
         // Get Path
-        string fullpath = Path.GetFullPath($"bg_common\\gfx\\map_icons\\{scenario.RelativeFilename}_map.tga");
+        string fullpath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, $"map_icons\\{scenario.RelativeFilename}_map.tga");
 
         // Check if file exists
         if (File.Exists(fullpath)) {
@@ -35,7 +35,7 @@ public static class LobbySettingsLookup {
                 Trace.WriteLine(bife, nameof(TryGetMapSource));
             }
         } else {
-            fullpath = Path.GetFullPath($"usr\\mods\\map_icons\\{scenario.RelativeFilename}_map.tga");
+            fullpath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_USER_ICONS_FODLER, $"{scenario.RelativeFilename}_map.tga");
             if (File.Exists(fullpath)) {
                 try {
                     return TgaImageSource.TargaBitmapSourceFromFile(fullpath);

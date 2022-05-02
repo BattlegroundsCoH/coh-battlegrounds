@@ -33,7 +33,6 @@ public partial class App : Application {
 
     private static AppViewManager? __viewManager;
     private static ResourceHandler? __handler;
-    private static Logger? __logger;
 
     private static LeftMenu? __lmenu;
     private static DashboardViewModel? __dashboard;
@@ -46,10 +45,10 @@ public partial class App : Application {
     public static AppViewManager ViewManager 
         => IsStarted ? __viewManager : throw new InvalidOperationException("Cannot get view manager before application window has initialised.");
 
-    [MemberNotNullWhen(true, nameof(__viewManager), nameof(__logger), nameof(__handler))]
+    [MemberNotNullWhen(true, nameof(__viewManager), nameof(__handler))]
     public static bool IsStarted { get; private set; }
 
-    [MemberNotNull(nameof(__viewManager), nameof(__logger), nameof(__handler))]
+    [MemberNotNull(nameof(__viewManager), nameof(__handler))]
     private void App_Startup(object sender, StartupEventArgs e) {
 
         // Check args
@@ -62,9 +61,6 @@ public partial class App : Application {
 #pragma warning restore CS8774 // Member must have a non-null value when exiting.
             }
         }
-
-        // Setup logger
-        __logger = new();
 
         // Attach fatal exception logger
         AppDomain.CurrentDomain.UnhandledException += this.OnUnhandledException;
@@ -201,14 +197,11 @@ public partial class App : Application {
             return;
         }
 
-        // Save all changes
-        BattlegroundsInstance.SaveInstance();
-
         // Close networking
         NetworkInterface.Shutdown();
 
-        // Save log
-        __logger.SaveAndClose(0);
+        // Save all changes
+        BattlegroundsInstance.SaveInstance();
 
         // Set started flag
         IsStarted = false;
@@ -273,7 +266,7 @@ public partial class App : Application {
         }
 
         // Close logger with exit code
-        __logger?.SaveAndClose(int.MaxValue);
+        BattlegroundsInstance.Log?.SaveAndClose(int.MaxValue);
 
     }
 

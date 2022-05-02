@@ -2,15 +2,9 @@
 using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Modding;
-using BattlegroundsApp.MVVM;
+using Battlegrounds.Modding.Content;
+
 using BattlegroundsApp.Resources;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
@@ -54,7 +48,7 @@ public class AbilitySlotViewModel {
 
     }
 
-    public void UpdateUnitData(ModPackage.FactionData.UnitAbility unitData) {
+    public void UpdateUnitData(FactionData.UnitAbility unitData) {
 
         // Get blueprint
         var sbp = BlueprintManager.FromBlueprintName<SquadBlueprint>(unitData.Blueprint);
