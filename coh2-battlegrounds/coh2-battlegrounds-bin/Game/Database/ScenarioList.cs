@@ -49,6 +49,14 @@ public static class ScenarioList {
 
     private static void HandleWorkshopFiles() {
 
+        // Bail if user has not asked to initiate this process
+        if (BattlegroundsInstance.OtherOptions.GetCastValueOrDefault(BattlegroundsInstance.OPT_AUTOWORKSHOP, false) is false) {
+            
+            // Bail
+            return;
+
+        }
+
         // Find path to workshop database
         string workshop_dbpath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_USER_DATABASE_FODLER, "workshop-map-db.json");
 

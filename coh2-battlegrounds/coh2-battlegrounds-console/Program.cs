@@ -170,7 +170,7 @@ class Program {
 
         public override void Execute(CommandArgumentList argumentList) {
             var watch = Stopwatch.StartNew();
-            var response = NetworkInterface.PingServer("194.37.80.249", 80);
+            var response = NetworkInterface.RemoteReleaseEndpoint.IsConnectable();
             watch.Stop();
             Console.WriteLine($"Server response: {response} - ping: {watch.ElapsedMilliseconds}ms");
         }

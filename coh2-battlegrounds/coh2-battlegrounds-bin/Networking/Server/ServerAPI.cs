@@ -211,6 +211,7 @@ public class ServerAPI {
 
     private readonly HttpClient m_client;
     private readonly string m_address;
+    private readonly int m_port;
     private ulong? m_lobbyGUID;
 
     /// <summary>
@@ -237,10 +238,12 @@ public class ServerAPI {
     /// Initialise a new server API client for targetted <paramref name="address"/>.
     /// </summary>
     /// <param name="address">The address of the API.</param>
+    /// <param name="port">The port to use when invokg the server API</param>
     /// <param name="safeMode">Should API calls cause exceptions or return default values.</param>
-    public ServerAPI(string address, bool safeMode = true) {
+    public ServerAPI(string address, int port, bool safeMode = true) {
         this.m_client = new HttpClient();
         this.m_address = address;
+        this.m_port = port;
         this.m_lobbyGUID = null;
         this.SafeMode = safeMode;
     }
@@ -264,7 +267,7 @@ public class ServerAPI {
         try {
 
             // Invoke API
-            var apiResponse = this.m_client.GET(this.m_address, "lobbies/getlobbies");
+            var apiResponse = this.m_client.GET(this.m_address, "lobbies/getlobbies", port: this.m_port);
 
             // Verify proper reply was given
             if (!apiResponse.Success) {
@@ -324,7 +327,7 @@ public class ServerAPI {
         try {
 
             // Invoke API
-            var apiResponse = this.m_client.GET(this.m_address, "client/public-info");
+            var apiResponse = this.m_client.GET(this.m_address, "client/public-info", port: this.m_port);
 
             // Verify proper reply was given
             if (!apiResponse.Success) {
@@ -357,7 +360,7 @@ public class ServerAPI {
         try {
 
             // Invoke API
-            var apiResponse = this.m_client.GET(this.m_address, "client/latest");
+            var apiResponse = this.m_client.GET(this.m_address, "client/latest", port: this.m_port);
 
             // Verify proper reply was given
             if (!apiResponse.Success) {
@@ -389,7 +392,7 @@ public class ServerAPI {
         var jsonContent = JsonSerializer.Serialize(matchResults);
 
         // Invoke API
-        var apiResponse = this.m_client.POST(this.m_address, $"lobbies/results?id={this.m_lobbyGUID}", new StringContent(jsonContent));
+        var apiResponse = this.m_client.POST(this.m_address, $"lobbies/results?id={this.m_lobbyGUID}", new StringContent(jsonContent), port: this.m_port);
 
         // Return result
         return apiResponse.Success;
@@ -404,7 +407,7 @@ public class ServerAPI {
     public ServerLobby? GetLobby(string lobbyGuid) {
 
         // Invoke API
-        var apiResponse = this.m_client.GET(this.m_address, $"lobbies/getlobby?id={lobbyGuid}");
+        var apiResponse = this.m_client.GET(this.m_address, $"lobbies/getlobby?id={lobbyGuid}", port: this.m_port);
 
         // Verify proper reply was given
         if (!apiResponse.Success) {
@@ -467,7 +470,7 @@ public class ServerAPI {
             return DownloadResult.DOWNLOAD_INVALIDPLAYER;
 
         // Invoke API
-        var response = this.m_client.GET(this.m_address, $"lobbies/company?id={lobbyGuid}&player={playerID}");
+        var response = this.m_client.GET(this.m_address, $"lobbies/company?id={lobbyGuid}&player={playerID}", port: this.m_port);
 
         // Verify proper reply was given
         if (!response.Success) {
@@ -505,7 +508,7 @@ public class ServerAPI {
     public bool PlayerHasCompany(string lobbyGuid, ulong playerID) {
 
         // Invoke API
-        var response = this.m_client.GET(this.m_address, $"lobbies/company?id={lobbyGuid}&player={playerID}&exists=yes");
+        var response = this.m_client.GET(this.m_address, $"lobbies/company?id={lobbyGuid}&player={playerID}&exists=yes", port: this.m_port);
 
         // Parse response
         if (response.Success) {
@@ -538,7 +541,7 @@ public class ServerAPI {
     /// <param name="playerID">The ID of the player who owns the desired company.</param>
     /// <returns>If company was deleted, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
     public bool DeleteCompany(string lobbyGuid, ulong playerID)
-        => this.m_client.DELETE(this.m_address, $"lobbies/company?id={lobbyGuid}&player={playerID}", 80);
+        => this.m_client.DELETE(this.m_address, $"lobbies/company?id={lobbyGuid}&player={playerID}", this.m_port);
 
     /// <summary>
     /// Delete the server company file.
@@ -588,7 +591,7 @@ public class ServerAPI {
             return DownloadResult.DOWNLOAD_INVALIDGUID;
 
         // Invoke API
-        var response = this.m_client.GET(this.m_address, $"lobbies/gamemode?id={lobbyGuid}");
+        var response = this.m_client.GET(this.m_address, $"lobbies/gamemode?id={lobbyGuid}", port: this.m_port);
         if (response.Success) {
 
             // Invoke callback
@@ -620,7 +623,7 @@ public class ServerAPI {
     public bool HasGamemode(string lobbyGuid) {
 
         // Invoke API
-        var response = this.m_client.GET(this.m_address, $"lobbies/gamemode?id={lobbyGuid}&exists=yes");
+        var response = this.m_client.GET(this.m_address, $"lobbies/gamemode?id={lobbyGuid}&exists=yes", port: this.m_port);
 
         // Parse response
         if (response.Success) {
@@ -670,7 +673,7 @@ public class ServerAPI {
                 string api = apirequest + $"&fresh={(init ? "yes" : "no")}&last={(done ? "yes" : "no")}";
 
                 // Do upload
-                var response = this.m_client.POST(this.m_address, api, new ByteArrayContent(chunk));
+                var response = this.m_client.POST(this.m_address, api, new ByteArrayContent(chunk), port: this.m_port);
                 if (!response.Success) { // TODO: Eval return code
                     uploadCallback?.Invoke(-1, -1);
                     return UploadResult.UPLOAD_ERROR_UNDEFINED;
@@ -718,7 +721,7 @@ public class ServerAPI {
 
             // Do socket connection
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(IPEndPoint.Parse($"{NetworkInterface.GetBestAddress()}:11000"));
+            socket.Connect(IPEndPoint.Parse(NetworkInterface.Endpoint.TcpStr));
 
             // Send
             socket.Send(GoMarshal.JsonMarshal(intro));

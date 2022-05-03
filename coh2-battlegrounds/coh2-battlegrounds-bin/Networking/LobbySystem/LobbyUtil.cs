@@ -48,7 +48,7 @@ public static class LobbyUtil {
             };
 
             // Establish connection
-            ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.GetBestAddress(), 11000, intro, out ulong lobbyID);
+            ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.Endpoint.RemoteIPAddress, NetworkInterface.Endpoint.Tcp, intro, out ulong lobbyID);
             if (connection is null) {
                 throw new ConnectionFailedException("Failed to establish TCP connection.");
             }
@@ -116,7 +116,7 @@ public static class LobbyUtil {
             };
 
             // Establish TCP connection
-            ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.GetBestAddress(), 11000, intro, out ulong lobbyID);
+            ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.Endpoint.RemoteIPAddress, NetworkInterface.Endpoint.Tcp, intro, out ulong lobbyID);
             if (connection is null) {
                 throw new ConnectionFailedException("Failed to establish TCP connection.");
             }

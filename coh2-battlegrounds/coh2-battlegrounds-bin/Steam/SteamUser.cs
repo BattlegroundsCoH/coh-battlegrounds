@@ -37,7 +37,7 @@ public sealed class SteamUser {
         try {
 
             using var client = new HttpClient();
-            string str = client.GetStringAsync($"https://steamidfinder.com/lookup/{this.ID}/").Result;
+            string str = client.GetStringAsync($"https://steamidfinder.com/lookup/{this.ID}/").Result; // TODO: Add timeout...
 
             const string lookfor = "name <code>";
             int pos = str.IndexOf(lookfor, StringComparison.InvariantCulture);

@@ -26,7 +26,7 @@ public partial class ErrorReporter : Window {
         try {
 
             // Create API instance
-            ServerAPI api = new("194.37.80.249", safeMode: true);
+            ServerAPI api = new("194.37.80.249", 80, safeMode: true);
 
             // Grab additional info
             var info = new TextRange(this.AdditionalInfo.Document.ContentStart, this.AdditionalInfo.Document.ContentEnd).Text;

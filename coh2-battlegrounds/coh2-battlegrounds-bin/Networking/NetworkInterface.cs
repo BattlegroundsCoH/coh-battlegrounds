@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
@@ -18,30 +17,14 @@ public static class NetworkInterface {
 
     private static readonly string __localServerAddr = File.Exists("network.test.txt") ? File.ReadAllText("network.test.txt") : "192.168.1.107";
 
+    private static readonly NetworkEndpoint LocalEndpoint = new(__localServerAddr, 80, 11000);
+    private static readonly NetworkEndpoint RemoteDebugEndpoint = new("194.37.80.249", 81, 5000);
+    public static readonly NetworkEndpoint RemoteReleaseEndpoint = new("194.37.80.249", 80, 11000);
+
     /// <summary>
     /// Get or set the amount of milliseconds to wait for a response (before resending a request)
     /// </summary>
     public static int TimeoutMilliseconds { get; set; } = 2000;
-
-    /// <summary>
-    /// Get or set the amount of resends to attempt for a response.
-    /// </summary>
-    public static int ResendAttempts { get; set; } = 5;
-
-    /// <summary>
-    /// Get or set the size of the receive buffer.
-    /// </summary>
-    public static int ReceiveBufferSize { get; set; } = 4096;
-
-    /// <summary>
-    /// Get or set the size of the send buffer.
-    /// </summary>
-    public static int SendBufferSize { get; set; } = 4096;
-
-    /// <summary>
-    /// Get or set if dispatching class should be logged.
-    /// </summary>
-    public static bool LogDispatchCalls { get; set; } = false;
 
     /// <summary>
     /// Get or set if API class should be logged.
@@ -64,13 +47,24 @@ public static class NetworkInterface {
     public static ulong SelfIdentifier { get; set; }
 
     /// <summary>
+    /// Get the endpoint information to use when making remote connections
+    /// </summary>
+    public static NetworkEndpoint Endpoint => __bestEndpoint;
+
+    /// <summary>
+    /// Get if a connection was established to <see cref="Endpoint"/>.
+    /// </summary>
+    public static bool HasServerConnection => __hasServerConnection;
+
+    /// <summary>
     /// Get the <see cref="ServerAPI"/>.
     /// </summary>
     public static ServerAPI? APIObject => __api;
 
     private static ServerAPI? __api;
+    private static NetworkEndpoint __bestEndpoint;
     private static List<IConnection> __connections = new();
-    private static string? __bestAddress;
+    private static bool __hasServerConnection;
 
     private static readonly object m_connlock = new();
 
@@ -80,8 +74,13 @@ public static class NetworkInterface {
     public static void Setup(bool debug = false) {
         __connections = new();
         Task.Run(() => {
-            string addr = GetBestAddress();
-            __api = new ServerAPI(debug ? "__localServerAddr" : addr);
+
+            // Decide best address
+            DecideBestAddress();
+
+            // Create API
+            __api = new ServerAPI(__bestEndpoint.RemoteIPAddress, __bestEndpoint.Http);
+
         });
     }
 
@@ -98,48 +97,27 @@ public static class NetworkInterface {
         }
     }
 
-    /// <summary>
-    /// Get the best server address available.
-    /// </summary>
-    /// <returns>The IP address of the best available address that can be connected to.</returns>
-    public static string GetBestAddress(int timeout = 600) {
-        if (__bestAddress is null) {
-            Trace.WriteLine("No best address specified - will attempt to find it.", nameof(NetworkInterface));
-            __bestAddress = "194.37.80.249";
-            if (AllowLocalServerInstance && HasLocalServer()) {
-                __bestAddress = "localhost";
-            } else {
-                try {
-                    __bestAddress = PingServer(LocalAddress, 80, timeout: timeout) ? LocalAddress : "194.37.80.249";
-                } catch (Exception e) {
-                    Trace.WriteLine(e, nameof(NetworkInterface));
-                }
-            }
-            Trace.WriteLine($"Using {__bestAddress} as connection address", nameof(NetworkInterface));
+    private static void DecideBestAddress(int timeout = 600) {
+#if DEBUG
+        // Try and connect to local server (if possible)
+        if (AllowLocalServerInstance && HasLocalServer() && LocalEndpoint.IsConnectable()) {
+            Trace.WriteLine("Picked locally running server as endpoint", nameof(NetworkInterface));
+            __bestEndpoint = LocalEndpoint;
+            __hasServerConnection = true;
+            return;
         }
-        return __bestAddress;
-    }
-
-    /// <summary>
-    /// Ping specified server at <paramref name="address"/> using <paramref name="port"/>.
-    /// </summary>
-    /// <param name="address">The addres to ping.</param>
-    /// <param name="port">The port to ping.</param>
-    /// <param name="timeout">The amount of milliseconds to wait before timing out the ping request.</param>
-    /// <returns>If a ping response was given, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
-    public static bool PingServer(string address, int port, int timeout = 200) {
-        try {
-            HttpClient client = new HttpClient() { Timeout = TimeSpan.FromMilliseconds(timeout) };
-            var request = new HttpRequestMessage {
-                RequestUri = new Uri($"http://{address}:{port}/api/ping"),
-                Method = HttpMethod.Get,
-            };
-            var response = client.Send(request);
-            return response.IsSuccessStatusCode;
-        } catch {
-            return false;
+        // Then try connect to debug server
+        if (RemoteDebugEndpoint.IsConnectable()) {
+            Trace.WriteLine("Picked remote debug server as endpoint", nameof(NetworkInterface));
+            __bestEndpoint = RemoteDebugEndpoint;
+            __hasServerConnection = true;
+            return;
         }
-
+#endif
+        // Set as release
+        __hasServerConnection = RemoteReleaseEndpoint.IsConnectable();
+        Trace.WriteLine($"Picked remote release server as endpoint (Connection = {__hasServerConnection}", nameof(NetworkInterface));
+        __bestEndpoint = RemoteReleaseEndpoint;
     }
 
     /// <summary>
@@ -147,7 +125,7 @@ public static class NetworkInterface {
     /// </summary>
     /// <returns><see langword="true"/> if there's a local server instance running; Otherwise <see langword="false"/>.</returns>
     public static bool HasLocalServer()
-        => Process.GetProcessesByName("bg-server").Length > 0;
+        => Process.GetProcessesByName("bgserver").Length > 0;
 
     /// <summary>
     /// Register a connection with the interface.
