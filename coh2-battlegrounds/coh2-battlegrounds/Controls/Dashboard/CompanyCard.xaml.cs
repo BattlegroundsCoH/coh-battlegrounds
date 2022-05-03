@@ -67,6 +67,11 @@ public partial class CompanyCard : UserControl {
 
         // Do nothing if company is null
         if (company is null) {
+            companyName.Text = "No Company Data";
+            winRateValue.Text = "N/A";
+            infantryKillsValue.Text = "N/A";
+            vehicleKillsValue.Text = "N/A";
+            killDeathRatioValue.Text = "N/A";
             return;
         }
 
@@ -80,7 +85,7 @@ public partial class CompanyCard : UserControl {
         typeIcon.Source = Icons.GetValueOrDefault(company.Type.ToString(), Icons[string.Empty]);
 
         // Set company data
-        winRateValue.Text = company.Statistics.WinRate.ToString();
+        winRateValue.Text = company.Statistics.WinRate is 0 ? "N/A" : company.Statistics.WinRate.ToString();
         infantryKillsValue.Text = "N/A"; // TODO : This data is not currently being tracked
         vehicleKillsValue.Text = "N/A"; // TODO : This data is not currently being tracked
         killDeathRatioValue.Text = "N/A"; // TODO : This data is not currently being tracked
