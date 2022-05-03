@@ -76,6 +76,10 @@
                         <Setter Property="FontSize" Value="12"/>
                         <Setter Property="FontFamily" Value="Open Sans"/>
                     </Style>
+                    <Style x:Key="TooltipText" TargetType="Label">
+                        <Setter Property="Foreground" Value="DarkGray"/>
+                        <Setter Property="FontFamily" Value="Open Sans"/>
+                    </Style>
                 </Grid.Resources>
                 <!-- App Settings -->
                 <controls:LocLabel LocKey="SettingsView_App"
@@ -148,21 +152,31 @@
                 <TextBox Style="{StaticResource WaterMarkTextBox}"
                          Tag="Path not set"
                          Grid.Row="4"
-                         Grid.Column="1"/>
+                         Grid.Column="1"
+                         IsReadOnly="True"
+                         Text="{Binding SteamPath}"/>
                 <Button Style="{StaticResource StandardBlueButton}"
                         Content="..."
                         Grid.Row="4"
-                        Grid.Column="2"/>
-                <Label Content="Detected User: CoDiEx"
+                        Grid.Column="2"
+                        Command="{Binding BrowseSteamButton}"/>
+                <Label Content="{Binding SteaUserContent}"
                        Style="{StaticResource Header3}"
                        Grid.Column="1"
                        HorizontalAlignment="Right"
-                       Grid.Row="5" Margin="0,0,0,10"/>
+                       Grid.Row="5" Margin="0,15,0,15"
+                       VerticalAlignment="Center"/>
+                <!-- Refresh data -->
                 <Button Style="{StaticResource StandardBlueButton}"
                         Grid.Column="3"
                         Grid.Row="5"
-                        Content="(-)"
-                        Margin="15"/> <!-- Refresh data -->
+                        Margin="15"
+                        Command="{Binding RefreshSteamButton}">
+                    <Image
+                        Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/refresh.png"
+                        Width="24"
+                        Height="24"/>
+                </Button>
 
                 <!-- CoH2 Path -->
                 <controls:LocLabel LocKey="SettingsView_CoHPath"
@@ -171,11 +185,14 @@
                 <TextBox Style="{StaticResource WaterMarkTextBox}"
                          Tag="Path not set"
                          Grid.Row="6"
-                         Grid.Column="1"/>
+                         Grid.Column="1"
+                         IsReadOnly="True"
+                         Text="{Binding CoHPath}"/>
                 <Button Style="{StaticResource StandardBlueButton}"
                         Content="..."
                         Grid.Row="6"
-                        Grid.Column="2"/>
+                        Grid.Column="2"
+                        Command="{Binding BrowseCoHButton}"/>
                 <Label Content="Archive.exe found"
                        Style="{StaticResource Header3}"
                        Grid.Column="1"
@@ -196,11 +213,20 @@
                 <!-- Auto-Update -->
                 <controls:LocLabel LocKey="SettingsView_TmAutoUpdate"
                                    Style="{StaticResource Header3}"
-                                   Grid.Row="9"/>
+                                   Grid.Row="9">
+                    <controls:LocLabel.ToolTip>
+                        <ToolTip>
+                            <controls:LocLabel LocKey="SettingsView_TmPerformance_tt"
+                                               Style="{StaticResource TooltipText}"/>
+                        </ToolTip>
+                    </controls:LocLabel.ToolTip>
+                </controls:LocLabel>
                 <CheckBox Grid.Row="9"
                           Grid.Column="1"
                           VerticalAlignment="Center"
-                          HorizontalAlignment="Right"/>
+                          HorizontalAlignment="Right"
+                          IsEnabled="False"
+                          IsChecked="{Binding AutoUpdate, Mode=TwoWay}"/>
 
                 <!-- Performance Report -->
                 <controls:LocLabel LocKey="SettingsView_TmPerformance"
@@ -209,7 +235,9 @@
                 <CheckBox Grid.Row="10"
                           Grid.Column="1"
                           VerticalAlignment="Center"
-                          HorizontalAlignment="Right"/>
+                          HorizontalAlignment="Right"
+                          IsEnabled="False"
+                          IsChecked="{Binding AutoCollectData, Mode=TwoWay}"/>
                 
                 <!-- Autp-Workshop -->
                 <controls:LocLabel LocKey="SettingsView_TmAutoWorkshop"
@@ -218,7 +246,8 @@
                 <CheckBox Grid.Row="11"
                           Grid.Column="1"
                           VerticalAlignment="Center"
-                          HorizontalAlignment="Right"/>
+                          HorizontalAlignment="Right"
+                          IsChecked="{Binding AutoCollectWorkshop, Mode=TwoWay}"/>
                 
                 <!-- Auto-Report Scar -->
                 <controls:LocLabel LocKey="SettingsView_TmAutoReportScar"
@@ -227,21 +256,37 @@
                 <CheckBox Grid.Row="12"
                           Grid.Column="1"
                           VerticalAlignment="Center"
-                          HorizontalAlignment="Right"/>
+                          HorizontalAlignment="Right"
+                          IsEnabled="False"
+                          IsChecked="{Binding AutoReportScarErrors, Mode=TwoWay}"/>
                 
-                <!-- Chat Settings -->
-                <controls:LocLabel LocKey="SettingsView_ChatColours"
-                                   Style="{StaticResource Header2}"
-                                   HorizontalAlignment="Center"
-                                   Grid.ColumnSpan="3"
-                                   Grid.Row="19"/>
-
                 <!-- Ingame Settings -->
                 <controls:LocLabel LocKey="SettingsView_Ingame"
                                    Style="{StaticResource Header1}"
                                    HorizontalAlignment="Center"
                                    Grid.ColumnSpan="3"
-                                   Grid.Row="20"/>
+                                   Grid.Row="13"/>
+                
+                <!-- Zoom Settings -->
+                <controls:LocLabel LocKey="SettingsView_Zoom"
+                                   Style="{StaticResource Header3}"
+                                   Grid.Row="14"/>
+                <Slider
+                    Grid.Row="14"
+                    Grid.Column="1"
+                    Minimum="0" Maximum="10"
+                    Value="{Binding ZoomSetting, Mode=TwoWay}"
+                    Style="{StaticResource BlueSlider}"/>
+
+                <Button
+                    Content="SettingsView_SaveSettings"
+                    Style="{StaticResource StandardGreenLocButton}"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Grid.Row="15"
+                    Margin="15"
+                    Width="196"/>
+
             </Grid>
         </ScrollViewer>
     </Grid>

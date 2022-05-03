@@ -746,4 +746,8 @@
         </Setter>
     </Style>
 
+    <Style x:Key="BlueSlider" TargetType="{x:Type Slider}">
+        
+    </Style>
+
 </ResourceDictionary>

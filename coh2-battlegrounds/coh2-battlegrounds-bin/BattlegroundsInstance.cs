@@ -25,6 +25,13 @@ public static class BattlegroundsInstance {
     // The BG version
     public const string BG_VERSION = "alpha-v1.1.0";
 
+    // ID of other settings
+    public const string OPT_ZOOM = "ingame_zoom";
+    public const string OPT_AUTOSCAR = "auto_scar";
+    public const string OPT_AUTOUPDATE = "auto_update";
+    public const string OPT_AUTODATA = "auto_data";
+    public const string OPT_AUTOWORKSHOP = "auto_workshop";
+
     /// <summary>
     /// Internal instance object
     /// </summary>
@@ -40,7 +47,7 @@ public static class BattlegroundsInstance {
 
         public int LastPlayedGamemodeSetting { get; set; }
 
-        public Dictionary<string, string> OtherOptions { get; set; }
+        public Dictionary<string, object> OtherOptions { get; set; }
 
         public SteamInstance SteamData { get; set; }
 
@@ -62,7 +69,13 @@ public static class BattlegroundsInstance {
             this.LastPlayedGamemode = "bg_vp";
             this.LastPlayedGamemodeSetting = 1;
             this.LastPlayedScenario = string.Empty;
-            this.OtherOptions = new();
+            this.OtherOptions = new() {
+                [OPT_AUTODATA] = false,
+                [OPT_AUTOSCAR] = false,
+                [OPT_AUTOUPDATE] = false,
+                [OPT_AUTOWORKSHOP] = true,
+                [OPT_ZOOM] = 0.0
+            };
         }
 
         /// <summary>
@@ -203,9 +216,9 @@ public static class BattlegroundsInstance {
     }
 
     /// <summary>
-    /// Get or set other last played options
+    /// Get or set the value of other options
     /// </summary>
-    public static Dictionary<string, string> OtherOptions {
+    public static Dictionary<string, object> OtherOptions {
         get => __instance.OtherOptions;
         set => __instance.OtherOptions = value;
     }
@@ -339,5 +352,7 @@ public static class BattlegroundsInstance {
     /// </summary>
     public static void SaveInstance()
         => File.WriteAllText(PATH_LOCAL, JsonSerializer.Serialize(__instance, new JsonSerializerOptions() { WriteIndented = true }));
+
+    public static void ChangeLanguage(LocaleLanguage lang) => __instance.Language = lang;
 
 }
