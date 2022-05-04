@@ -59,6 +59,7 @@ public partial class CompanyCard : UserControl {
 
     public CompanyCard() {
         InitializeComponent();
+        this.TrySetCompanyData();
     }
 
     private void TrySetCompanyData() => this.TrySetData(Company ?? null);
