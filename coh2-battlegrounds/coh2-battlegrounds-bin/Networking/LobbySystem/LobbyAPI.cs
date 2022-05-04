@@ -14,6 +14,7 @@ using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
 using static Battlegrounds.Networking.LobbySystem.LobbyAPIStructs;
+using Battlegrounds.Util;
 
 namespace Battlegrounds.Networking.LobbySystem;
 
@@ -856,13 +857,6 @@ public sealed class LobbyAPI {
     public void RespondPoll(string pollId, bool pollVote)
         => this.RemoteVoidCall("PollRespond", pollId, EncBool(pollVote));
 
-    private static T BitConvert<T>(byte[] raw, Func<byte[], int, T> func) {
-        if (BitConverter.IsLittleEndian) {
-            Array.Reverse(raw);
-        }
-        return func(raw, 0);
-    }
-
     private T? RemoteCall<T>(string method, params object[] args)
         => this.RemoteCallWithTime<T>(method, args);
 
@@ -887,7 +881,7 @@ public sealed class LobbyAPI {
                 // It feels nasty using 'dynamic'
                 return (T)(dynamic)(response.DotNetType switch {
                     nameof(Boolean) => response.Raw[0] == 1,
-                    nameof(UInt32) => BitConvert(response.Raw, BitConverter.ToUInt32),
+                    nameof(UInt32) => response.Raw.ConvertBigEndian(BitConverter.ToUInt32),
                     _ => throw new NotImplementedException($"Support for primitive response of type '{response.DotNetType}' not implemented.")
                 });
             } else {

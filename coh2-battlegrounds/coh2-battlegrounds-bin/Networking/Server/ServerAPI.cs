@@ -736,8 +736,12 @@ public class ServerAPI {
                 // Get flags
                 bool done = i == chunks - 1;
 
+                // Get chunk bytes
+                var chnkLen = BitConverter.GetBytes((ushort)chunk.Length);
+                var chkSum = BitConverter.GetBytes(checksum);
+
                 // Create header
-                var header = BitConverter.GetBytes((ushort)chunk.Length).Concat(BitConverter.GetBytes(checksum)).Append((byte)(done ? 1 : 0));
+                var header = chnkLen.ConvertBigEndian().Concat(chkSum.ConvertBigEndian()).Append((byte)(done ? 1 : 0));
                 var packet = header.Concat(chunk);
 
                 // Send
