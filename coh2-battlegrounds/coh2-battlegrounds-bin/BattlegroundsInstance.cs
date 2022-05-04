@@ -313,6 +313,19 @@ public static class BattlegroundsInstance {
                 __instance.ResolvePathsAndInitLog();
             }
 
+            // Fix settings
+            foreach (var (k,v) in __instance.OtherOptions) {
+                if (v is JsonElement je) {
+                    __instance.OtherOptions[k] = je.ValueKind switch {
+                        JsonValueKind.True => true,
+                        JsonValueKind.False => false,
+                        JsonValueKind.String => je.GetString() ?? string.Empty,
+                        JsonValueKind.Number => je.GetDouble(),
+                        _ => throw new Exception("Invalid JSON entry in options")
+                    };
+                }
+            }
+
         } else {
 
             // Yep, new instance

@@ -285,7 +285,8 @@
                     Grid.ColumnSpan="3"
                     Grid.Row="15"
                     Margin="15"
-                    Width="196"/>
+                    Width="196"
+                    Command="{Binding SaveButton}"/>
 
             </Grid>
         </ScrollViewer>

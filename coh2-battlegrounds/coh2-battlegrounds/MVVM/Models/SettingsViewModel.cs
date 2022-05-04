@@ -102,7 +102,10 @@ public class SettingsViewModel : IViewModel {
 
         // Restart if required
         if (requiresRestart) {
-            // TODO: ...
+
+            // Restart
+            App.Restart();
+
         }
 
     }

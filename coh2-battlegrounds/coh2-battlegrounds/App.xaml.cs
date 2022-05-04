@@ -117,6 +117,22 @@ public partial class App : Application {
 
     }
 
+    /// <summary>
+    /// Restarts the application.
+    /// </summary>
+    public static void Restart() {
+
+        // Close log
+        BattlegroundsInstance.Log?.SaveAndClose(0);
+
+        // Create new process
+        Process.Start("coh2-battlegrounds.exe");
+
+        // Close this
+        Environment.Exit(0);
+
+    }
+
     private static void VerifyIntegrity() {
 
         // Burn if checksum is not available
