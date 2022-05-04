@@ -452,6 +452,11 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
                 // Go back to browser view
                 App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
 
+                // Destroy chat
+                if (this.m_chatModel is not null) {
+                    App.ViewManager.DestroyView(this.m_chatModel);
+                }
+
             }, modalTitle, modalDesc);
 
         });
