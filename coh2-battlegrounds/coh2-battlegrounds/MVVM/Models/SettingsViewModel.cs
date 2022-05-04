@@ -3,6 +3,7 @@ using Battlegrounds.Locale;
 using Battlegrounds.Functional;
 
 using BattlegroundsApp.Utilities;
+using Microsoft.Win32;
 
 namespace BattlegroundsApp.MVVM.Models;
 
@@ -74,9 +75,28 @@ public class SettingsViewModel : ViewModelBase {
     private void SetLanguage(int langId)
         => this.m_selectedLang = (LocaleLanguage)langId;
 
-    private void BrowseSteam() { 
-    
+    private void BrowseSteam() {
 
+        // Create OFD
+        OpenFileDialog ofd = new() {
+            Title = "Select Steam Executable",
+            CheckPathExists = true,
+            CheckFileExists = true,
+            Filter = "Steam Executable (Steam.exe)|Steam.exe",
+            Multiselect = false
+        };
+
+        // Show it
+        if (ofd.ShowDialog() is true && Pathfinder.VerifySteamPath(ofd.FileName)) {
+
+            // Grab select file
+            this.SteamPath = ofd.FileName;
+            this.Notify(nameof(SteamPath));
+
+            // Refresh steam
+            this.RefreshSteam();
+
+        }
 
     }
 
@@ -103,6 +123,24 @@ public class SettingsViewModel : ViewModelBase {
 
     private void BrowseCoH() {
 
+        // Create OFD
+        OpenFileDialog ofd = new() {
+            Title = "Select Company of Heroes 2 Executable",
+            CheckPathExists = true,
+            CheckFileExists = true,
+            Filter = "Company of Heroes 2 Executable (RelicCoH2.exe)|RelicCoH2.exe",
+            Multiselect = false
+        };
+
+        // Show it
+        if (ofd.ShowDialog() is true && Pathfinder.VerifyCoHPath(ofd.FileName)) {
+
+            // Grab select file
+            this.CoHPath = ofd.FileName;
+            this.Notify(nameof(CoHPath));
+
+        }
+
     }
 
     private void SaveSettings() {
@@ -113,6 +151,10 @@ public class SettingsViewModel : ViewModelBase {
         BattlegroundsInstance.OtherOptions[BattlegroundsInstance.OPT_AUTOUPDATE] = this.AutoUpdate;
         BattlegroundsInstance.OtherOptions[BattlegroundsInstance.OPT_AUTOSCAR] = this.AutoReportScarErrors;
         BattlegroundsInstance.OtherOptions[BattlegroundsInstance.OPT_AUTOWORKSHOP] = this.AutoCollectWorkshop;
+
+        // Save paths
+        BattlegroundsInstance.SaveInstancePath(BattlegroundsPaths.STEAM_FOLDER, this.SteamPath);
+        BattlegroundsInstance.SaveInstancePath(BattlegroundsPaths.COH_FOLDER, this.CoHPath);
 
         // Check restart
         bool requiresRestart = BattlegroundsInstance.Localize.Language != this.m_selectedLang;
