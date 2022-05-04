@@ -6,35 +6,35 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace BattlegroundsApp.Utilities.Converters {
-    public class BoolToVisibilityConverter : IValueConverter {
+namespace BattlegroundsApp.Utilities.Converters;
 
-        public string Visibility { get; set; }
+public class BoolToVisibilityConverter : IValueConverter {
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+    public string Visibility { get; set; } = "Visible";
 
-            if (value is bool trueFalseValue) {
+    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture) {
 
-                if (trueFalseValue == true) {
+        if (value is bool trueFalseValue) {
 
-                    Visibility = "Visible";
-                    return Visibility;
+            if (trueFalseValue == true) {
 
-                } else {
+                Visibility = "Visible";
+                return Visibility;
 
-                    Visibility = "Hidden";
-                    return Visibility;
+            } else {
 
-                }
+                Visibility = "Hidden";
+                return Visibility;
 
             }
 
-            return null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-            return null;
-        }
-
+        return null;
     }
+
+    public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+        return null;
+    }
+
 }

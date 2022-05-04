@@ -25,9 +25,9 @@ public sealed class MultiplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFi
 
     public bool IsCancelled => this.m_isCancelled;
 
-    public IPlayStrategy? PlayObject => this.m_playStrategyResult;
+    public IPlayStrategy PlayObject => this.m_playStrategyResult ?? new NoPlayStrategy();
 
-    public IAnalyzedMatch? MatchAnalysis => this.m_analyzedMatch;
+    public IAnalyzedMatch MatchAnalysis => this.m_analyzedMatch ?? new NullAnalysis();
 
     public bool AnalysisSuccess => this.m_hasSuccessAnalysis;
 
@@ -110,7 +110,7 @@ public sealed class MultiplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFi
 
     }
 
-    private void StartupStrategy_StartupCancelled(IStartupStrategy sender, object caller, string reason) => this.m_isCancelled = true;
+    private void StartupStrategy_StartupCancelled(IStartupStrategy sender, object? caller, string reason) => this.m_isCancelled = true;
 
     public void Analyze(IAnalyzeStrategy strategy, IMatchData matchResults) {
 

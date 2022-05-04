@@ -16,25 +16,25 @@ public class SingleplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFinalize
     protected bool m_isStarted;
     protected bool m_isCancelled;
     protected bool m_hasSuccessAnalysis;
-    protected IPlayStrategy m_playStrategyResult;
+    protected IPlayStrategy? m_playStrategyResult;
     protected IAnalyzedMatch m_analyzedMatch;
 
     public bool HasStarted => this.m_isStarted;
 
     public bool IsCancelled => this.m_isCancelled;
 
-    public IPlayStrategy PlayObject => this.m_playStrategyResult;
+    public IPlayStrategy PlayObject => this.m_playStrategyResult ?? new NoPlayStrategy();
 
     public IAnalyzedMatch MatchAnalysis => this.m_analyzedMatch;
 
     public bool AnalysisSuccess => this.m_hasSuccessAnalysis;
 
-    public event AnalysisCancelledHandler AnalysisCancelled;
+    public event AnalysisCancelledHandler? AnalysisCancelled;
 
     public SingleplayerSession() {
         this.m_isCancelled = false;
         this.m_isStarted = false;
-        this.m_playStrategyResult = null;
+        this.m_analyzedMatch = new NullAnalysis();
     }
 
     public async void Startup(IStartupStrategy startupStrategy) {
@@ -95,7 +95,7 @@ public class SingleplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFinalize
 
     }
 
-    private void StartupStrategy_StartupCancelled(IStartupStrategy sender, object caller, string reason) => this.m_isCancelled = true;
+    private void StartupStrategy_StartupCancelled(IStartupStrategy sender, object? caller, string reason) => this.m_isCancelled = true;
 
     public void Analyze(IAnalyzeStrategy strategy, IMatchData matchResults) {
 
