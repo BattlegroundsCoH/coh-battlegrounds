@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 
@@ -66,6 +67,10 @@ public static class CoH2Launcher {
         // The processes
         Process? proc;
 
+        // Log start time
+        var start = DateTime.Now;
+        double sec;
+
         // While we havent found it and there are still attempts to make
         do {
 
@@ -77,13 +82,20 @@ public static class CoH2Launcher {
 
             // Increase attempts so it's not an endless loop
             attemps++;
+            
+            // Update amount of seconds
+            sec = (DateTime.Now - start).TotalSeconds;
 
-        } while (attemps < 1000 && proc is null);
+        } while (sec < 40 && proc is null);
 
         // None found?
         if (proc is null) {
+            Trace.WriteLine($"Failed to detect a running instance of RelicCoH2.exe after {sec:0.00}s", nameof(CoH2Launcher));
             return PROCESS_NOT_FOUND;
         }
+
+        // Log found
+        Trace.WriteLine($"Successfully detected a running instance of RelicCoH2.exe after {sec:0.00}s", nameof(CoH2Launcher));
 
         // Wait for exit
         proc.WaitForExit();
