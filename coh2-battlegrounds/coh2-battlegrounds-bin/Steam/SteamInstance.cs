@@ -1,9 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 
 namespace Battlegrounds.Steam;
 
@@ -19,7 +18,10 @@ public sealed class SteamInstance {
     /// <summary>
     /// Get the active <see cref="SteamUser"/> that is using this instance.
     /// </summary>
-    public SteamUser User => this.m_user ?? throw new Exception("No local steam user found!");
+    public SteamUser User {
+        get => this.m_user ?? throw new Exception("No local steam user found!");
+        set => this.m_user = value;
+    }
 
     /// <summary>
     /// Get if any <see cref="SteamUser"/> has been set.
@@ -78,38 +80,31 @@ public sealed class SteamInstance {
     /// Fetch the <see cref="SteamUser"/> from the local instance of the Steam client.
     /// </summary>
     /// <returns>The <see cref="SteamUser"/> using the machine or null if it was not possible.</returns>
-    public static SteamUser? FromLocalInstall() {
+    public static SteamUser? FromLocalInstall(string? steamInstall = "") {
 
         // Get install path
-        string steaminstall = Pathfinder.GetOrFindSteamPath().Replace("Steam.exe", "config\\loginusers.vdf");
-        Trace.WriteLine($"Fetching local user data: {steaminstall}", nameof(SteamUser));
+        steamInstall = (string.IsNullOrEmpty(steamInstall) ? Pathfinder.GetOrFindSteamPath() : steamInstall).Replace("Steam.exe", "config\\loginusers.vdf");
+        Trace.WriteLine($"Fetching local user data: {steamInstall}", nameof(SteamUser));
 
-        // Make sure the file exists
-        if (File.Exists(steaminstall)) {
+        // Get VDF
+        var vdf = Vdf.FromFile(steamInstall);
+        if (vdf is null) {
+            Trace.WriteLine($"Failed to parse local user data in {steamInstall}", nameof(SteamUser));
+            return null;
+        }
 
-            // Read all contents
-            string contents = File.ReadAllText(steaminstall);
+        // Grab users
+        var users = vdf.Table("users");
 
-            // Run regex match
-            var idCollection = Regex.Matches(contents, @"\""(?<id>\d+)\""\s*\{(?<body>(\s|\w|\d|\"")*)\}");
-
-            // Loop through matches
-            foreach (Match idMatch in idCollection) {
-
-                // Read ID
-                ulong id = ulong.Parse(idMatch.Groups["id"].Value);
-
-                // Read name and recent
-                Match name = Regex.Match(idMatch.Groups["body"].Value, @"\""PersonaName\""\s*\""(?<name>(\s|\w|\d)*)\""");
-                Match recent = Regex.Match(idMatch.Groups["body"].Value, @"\""(MostRecent|mostrecent)\""\s*\""(?<recent>1|0)\""");
-
-                // If recent, use that (Most likely the one running).
-                if (recent.Groups["recent"].Value.CompareTo("1") == 0) {
-                    return new SteamUser(id) { Name = name.Groups["name"].Value };
+        // Loop over each
+        foreach (var (k,v) in users) {
+            if (v is Dictionary<string, object> entries) {
+                if (entries.ContainsKey("MostRecent") && entries["MostRecent"] is "1") {
+                    ulong id = ulong.Parse(k);
+                    string name = (string)entries["PersonaName"];
+                    return new SteamUser(id) { Name = name };
                 }
-
             }
-
         }
 
         // Return null user

@@ -1,0 +1,440 @@
+{
+    "ID": "mod_bg",
+    "Name": "Battlegrounds Mod Pack",
+    "TuningGUID": "142b113740474c82a60b0a428bd553d5",
+    "GamemodeGUID": "6a0a13b89555402ca75b85dc30f5cb04",
+    "AssetGUID": "f0c3cb74008447268cad2804e3b9d565",
+    "LocaleFiles": [
+        {
+            "Type": "Gamemode", 
+            "Path": "locale\\%LANG%.gamemode.ucs"
+        },
+        {
+            "Type": "Tuning", 
+            "Path": "locale\\%LANG%.tuning.ucs"
+        }
+    ],
+    "Gamemodes": [
+        {
+            "ID": "bg_vp",
+            "Display": "32",
+            "DisplayDesc": "33",
+            "DefaultOption": 1,
+            "Files": [],
+            "Options":[
+                {
+                    "LocStr":"26",
+                    "Value":250
+                },
+                {
+                    "LocStr":"27",
+                    "Value":500
+                },
+                {
+                    "LocStr":"28",
+                    "Value":750
+                },
+                {
+                    "LocStr":"29",
+                    "Value":1000
+                }
+            ]
+        }
+    ],
+    "CustomOptions": [],
+    "FactionData": [
+        {
+            "Faction": "soviet",
+            "Drivers": [
+                {
+                    "Blueprint": "soviet_male_vehicle_2_crew_bg",
+                    "WhenType": "light_vehicle"
+                },
+                {
+                    "Blueprint": "soviet_male_vehicle_crew_bg",
+                    "WhenType": null
+                }
+            ],
+            "Abilities": [
+                {
+                    "Blueprint": "soviet_air_allied_air_supplies",
+                    "LockoutBlueprint": "soviet_air_allied_air_supplies_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_air_anti_tank_bomb_strike",
+                    "LockoutBlueprint": "soviet_air_anti_tank_bomb_strike_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_air_recon",
+                    "LockoutBlueprint": "soviet_air_recon_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_air_anti_tank_overwatch",
+                    "LockoutBlueprint": "soviet_air_anti_tank_overwatch_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_air_anti_tank_rockets",
+                    "LockoutBlueprint": "soviet_air_anti_tank_rockets_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_air_attack",
+                    "LockoutBlueprint": "soviet_air_attack_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_air_precision_bomb_strike",
+                    "LockoutBlueprint": "soviet_air_precision_bomb_strike_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                },
+                {
+                    "Blueprint": "soviet_air_supression_strafe",
+                    "LockoutBlueprint": "soviet_air_supression_strafe_unlock",
+                    "AbilityCategory": "AirSupport",
+                    "MaxUsePerMatch": 3
+                }
+            ],
+            "UnitAbilities": [
+                {
+                    "Blueprint": "katyusha_rocket_truck_bg",
+                    "Abilities": [
+                        {
+                            "Blueprint": "soviet_offmap_katyusha",
+                            "LockoutBlueprint": "soviet_offmap_katyusha_unlock",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        }
+                    ]
+                },
+                {
+                    "Blueprint": "hm-120_38_mortar_squad_bg",
+                    "Abilities":[
+                        {
+                            "Blueprint": "soviet_offmap_mortar",
+                            "LockoutBlueprint": "soviet_offmap_mortar_unlock",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        },
+                        {
+                            "Blueprint": "soviet_offmap_mortar_smoke",
+                            "LockoutBlueprint": "soviet_offmap_mortar_smoke_unlock",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        }
+                    ]
+                },
+                {
+                    "Blueprint": "pm-82_41_mortar_squad_bg",
+                    "Abilities":[
+                        {
+                            "Blueprint": "soviet_offmap_mortar",
+                            "LockoutBlueprint": "soviet_offmap_mortar_unlock",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        },
+                        {
+                            "Blueprint": "soviet_offmap_mortar_smoke",
+                            "LockoutBlueprint": "soviet_offmap_mortar_smoke_unlock",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        }
+                    ]
+                },
+                {
+                    "Blueprint": "m1937_152mm_ml_20_artillery_bg",
+                    "Abilities":[
+                        {
+                            "Blueprint": "soviet_offmap_ml_20",
+                            "LockoutBlueprint": "soviet_offmap_ml_20_unlock",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        },
+                        {
+                            "Blueprint": "soviet_offmap_ml_20_smoke",
+                            "LockoutBlueprint": "soviet_offmap_ml_20_smoke_unlock",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        }
+                    ]
+                },
+                {
+                    "Blueprint": "m1931_203mm_b-4_howitzer_artillery_bg",
+                    "Abilities":[
+                        {
+                            "Blueprint": "soviet_offmap_b4",
+                            "LockoutBlueprint": "soviet_offmap_b4_unlock",
+                            "AbilityCategory": "Artillery",
+                            "MaxUsePerMatch": -1,
+                            "RequireOffmap": true,
+                            "CanGrantVeterancy": true,
+                            "VeterancyExperienceGain": 10
+                        }
+                    ]
+                }
+            ],
+            "Transports": [
+                "m3a1_scout_car_squad_bg",
+                "m5_halftrack_squad_bg",
+                "zis_6_transport_truck_bg"
+            ],
+            "TowTransports": [
+                "m5_halftrack_squad_bg",
+                "zis_6_transport_truck_bg"
+            ],
+            "CanHaveParadropInCompanies": false,
+            "CanHaveGliderInCompanies": false
+        },
+      {
+        "Faction": "german",
+        "Drivers": [
+          {
+            "Blueprint": "german_vehicle_crew_bg",
+            "WhenType": "light_vehicle"
+          },
+          {
+            "Blueprint": "german_tank_crew_bg",
+            "WhenType": null
+          }
+        ],
+        "Abilities": [
+          {
+            "Blueprint": "german_aerial_superiority_close_air_support",
+            "LockoutBlueprint": "german_aerial_superiority_close_air_support_unlock",
+            "AbilityCategory": "AirSupport",
+            "MaxUsePerMatch": 3
+          },
+          {
+            "Blueprint": "german_aerial_superiority_strafing_run",
+            "LockoutBlueprint": "german_aerial_superiority_strafing_run_unlock",
+            "AbilityCategory": "AirSupport",
+            "MaxUsePerMatch": 3
+          },
+          {
+            "Blueprint": "german_air_dropped_medical_supplies",
+            "LockoutBlueprint": "german_air_dropped_medical_supplies_unlock",
+            "AbilityCategory": "AirSupport",
+            "MaxUsePerMatch": 3
+          },
+          {
+            "Blueprint": "german_air_dropped_supplies",
+            "LockoutBlueprint": "german_air_dropped_supplies_unlock",
+            "AbilityCategory": "AirSupport",
+            "MaxUsePerMatch": 3
+          },
+          {
+            "Blueprint": "german_air_recon",
+            "LockoutBlueprint": "german_air_recon_unlock",
+            "AbilityCategory": "AirSupport",
+            "MaxUsePerMatch": 3
+          },
+          {
+            "Blueprint": "german_bombing_run",
+            "LockoutBlueprint": "german_bombing_run_unlock",
+            "AbilityCategory": "AirSupport",
+            "MaxUsePerMatch": 3
+          },
+          {
+            "Blueprint": "german_close_air_support",
+            "LockoutBlueprint": "german_close_air_support_unlock",
+            "AbilityCategory": "AirSupport",
+            "MaxUsePerMatch": 3
+          },
+          {
+            "Blueprint": "german_fragmentation_bomb",
+            "LockoutBlueprint": "german_fragmentation_bomb_unlock",
+            "AbilityCategory": "AirSupport",
+            "MaxUsePerMatch": 3
+          },
+          {
+            "Blueprint": "german_incendiary_bombs",
+            "LockoutBlueprint": "german_incendiary_bombs_unlock",
+            "AbilityCategory": "AirSupport",
+            "MaxUsePerMatch": 3
+          },
+          {
+            "Blueprint": "german_smoke_bomb",
+            "LockoutBlueprint": "german_smoke_bomb_unlock",
+            "AbilityCategory": "AirSupport",
+            "MaxUsePerMatch": 3
+          },
+          {
+            "Blueprint": "german_strafing_run",
+            "LockoutBlueprint": "german_strafing_run_unlock",
+            "AbilityCategory": "AirSupport",
+            "MaxUsePerMatch": 3
+          },
+          {
+            "Blueprint": "german_strategic_bombing",
+            "LockoutBlueprint": "german_strategic_bombing_unlock",
+            "AbilityCategory": "AirSupport",
+            "MaxUsePerMatch": 3
+          },
+          {
+            "Blueprint": "german_light_support_artillery",
+            "LockoutBlueprint": "german_light_support_artillery_unlock",
+            "AbilityCategory": "Artillery",
+            "MaxUsePerMatch": 3
+          },
+          {
+            "Blueprint": "german_railway_gun_artillery",
+            "LockoutBlueprint": "german_railway_gun_artillery_unlock",
+            "AbilityCategory": "Artillery",
+            "MaxUsePerMatch": 3
+          },
+          {
+            "Blueprint": "german_sector_artillery",
+            "LockoutBlueprint": "german_sector_artillery_unlock",
+            "AbilityCategory": "Artillery",
+            "MaxUsePerMatch": 3
+          }
+        ],
+        "UnitAbilities": [
+          {
+            "Blueprint": "mortar_250_halftrack_squad_bg",
+            "Abilities": [
+              {
+                "Blueprint": "german_offmap_halftrack_incendiary_mortar_barrage",
+                "LockoutBlueprint": "german_offmap_halftrack_incendiary_mortar_barrage_unlock",
+                "AbilityCategory": "Artillery",
+                "MaxUsePerMatch": -1,
+                "RequireOffmap": true,
+                "CanGrantVeterancy": true,
+                "VeterancyExperienceGain": 10
+              },
+              {
+                "Blueprint": "german_offmap_halftrack_mortar_barrage",
+                "LockoutBlueprint": "german_offmap_halftrack_mortar_barrage_unlock",
+                "AbilityCategory": "Artillery",
+                "MaxUsePerMatch": -1,
+                "RequireOffmap": true,
+                "CanGrantVeterancy": true,
+                "VeterancyExperienceGain": 10
+              },
+              {
+                "Blueprint": "german_offmap_halftrack_smoke_barrage",
+                "LockoutBlueprint": "german_offmap_halftrack_smoke_barrage_unlock",
+                "AbilityCategory": "Artillery",
+                "MaxUsePerMatch": -1,
+                "RequireOffmap": true,
+                "CanGrantVeterancy": true,
+                "VeterancyExperienceGain": 10
+              }
+            ]
+          },
+          {
+            "Blueprint": "howitzer_105mm_le_fh18_artillery_bg",
+            "Abilities": [
+              {
+                "Blueprint": "german_offmap_howitzer_105mm_barrage",
+                "LockoutBlueprint": "german_offmap_howitzer_105mm_barrage_unlock",
+                "AbilityCategory": "Artillery",
+                "MaxUsePerMatch": -1,
+                "RequireOffmap": true,
+                "CanGrantVeterancy": true,
+                "VeterancyExperienceGain": 10
+              }
+            ]
+          },
+          {
+            "Blueprint": "mortar_team_81mm_bg",
+            "Abilities": [
+              {
+                "Blueprint": "german_offmap_mortar_team_incendiary_barrage",
+                "LockoutBlueprint": "german_offmap_mortar_team_incendiary_barrage_unlock",
+                "AbilityCategory": "Artillery",
+                "MaxUsePerMatch": -1,
+                "RequireOffmap": true,
+                "CanGrantVeterancy": true,
+                "VeterancyExperienceGain": 10
+              },
+              {
+                "Blueprint": "german_offmap_mortar_team_mortar_barrage",
+                "LockoutBlueprint": "german_offmap_mortar_team_mortar_barrage_unlock",
+                "AbilityCategory": "Artillery",
+                "MaxUsePerMatch": -1,
+                "RequireOffmap": true,
+                "CanGrantVeterancy": true,
+                "VeterancyExperienceGain": 10
+              },
+              {
+                "Blueprint": "german_offmap_mortar_team_smoke_barrage",
+                "LockoutBlueprint": "german_offmap_mortar_team_smoke_barrage_unlock",
+                "AbilityCategory": "Artillery",
+                "MaxUsePerMatch": -1,
+                "RequireOffmap": true,
+                "CanGrantVeterancy": true,
+                "VeterancyExperienceGain": 10
+              }
+            ]
+          },
+          {
+            "Blueprint": "panzerwerfer_squad_bg",
+            "Abilities": [
+              {
+                "Blueprint": "german_offmap_panzerwerfer_rocket_barrage",
+                "LockoutBlueprint": "german_offmap_panzerwerfer_rocket_barrage_unlock",
+                "AbilityCategory": "Artillery",
+                "MaxUsePerMatch": -1,
+                "RequireOffmap": true,
+                "CanGrantVeterancy": true,
+                "VeterancyExperienceGain": 10
+              }
+            ]
+          }
+        ],
+        "Transports": [
+          "opel_blitz_transport_squad_bg",
+          "sdkfz_250_halftrack_bg",
+          "sdkfz_251_halftrack_squad_bg"
+        ],
+        "TowTransports": [
+          "opel_blitz_transport_squad_bg",
+          "sdkfz_250_halftrack_bg",
+          "sdkfz_251_halftrack_squad_bg"
+        ],
+        "CanHaveGliderInCompanies": false,
+        "CanHaveParadropInCompanies": false
+      }
+    ],
+    "ParadropUnits": [],
+    "VerificationUpgrade": "bg_verify",
+    "Towing": {
+        "IsEnabled": true,
+        "IsTowed": "is_towed",
+        "IsTowing": "is_towing"
+    },
+    "AllowSupplySystem": true,
+    "AllowWeatherSystem": true
+}

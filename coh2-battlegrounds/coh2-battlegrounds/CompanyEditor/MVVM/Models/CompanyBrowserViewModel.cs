@@ -2,11 +2,9 @@
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
-using BattlegroundsApp.Dialogs.CreateCompany;
-using BattlegroundsApp.Dialogs.RenameCopyDialog;
-using BattlegroundsApp.Dialogs.YesNo;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
+using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Utilities;
 using System;
@@ -25,7 +23,7 @@ public class CompanyBrowserButton {
     public LocaleKey? Tooltip { get; init; }
 }
 
-public class CompanyBrowserViewModel : IViewModel {
+public class CompanyBrowserViewModel : ViewModelBase {
 
     public CompanyBrowserButton Create { get; }
 
@@ -57,9 +55,9 @@ public class CompanyBrowserViewModel : IViewModel {
 
     public Company? SelectedCompany { get; set; }
 
-    public bool SingleInstanceOnly => true;
+    public override bool SingleInstanceOnly => true;
 
-    public bool KeepAlive => true;
+    public override bool KeepAlive => true;
 
     public CompanyBrowserViewModel() {
 
@@ -126,7 +124,7 @@ public class CompanyBrowserViewModel : IViewModel {
         }
 
         // Do modal
-        Modals.Dialogs.MVVM.Models.CreateCompanyDialogViewModel.ShowModal(mControl, (vm, resault) => {
+        CreateCompanyDialogViewModel.ShowModal(mControl, (vm, resault) => {
             
             // Check return value
             if (resault is not ModalDialogResult.Confirm) {
@@ -162,19 +160,19 @@ public class CompanyBrowserViewModel : IViewModel {
         if (this.SelectedCompany is null)
             return;
 
-        if (RenameCopyDialogViewModel.ShowRenameDialog(new LocaleKey("CompanyView_RenameCopyDialog_Rename_Title"), out string companyName)
-            is RenameCopyDialogResult.Rename) {
+        //if (RenameCopyDialogViewModel.ShowRenameDialog(new LocaleKey("CompanyView_RenameCopyDialog_Rename_Title"), out string companyName)
+        //    is RenameCopyDialogResult.Rename) {
 
-            // Delete old company
-            PlayerCompanies.DeleteCompany(this.SelectedCompany);
+        //    // Delete old company
+        //    PlayerCompanies.DeleteCompany(this.SelectedCompany);
 
-            // Save new company
-            PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(companyName).Commit().Result);
+        //    // Save new company
+        //    PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(companyName).Commit().Result);
 
-            // Trigger refresh of company
-            UpdateCompanyList();
+        //    // Trigger refresh of company
+        //    UpdateCompanyList();
 
-        }
+        //}
 
     }
 
@@ -190,7 +188,7 @@ public class CompanyBrowserViewModel : IViewModel {
         }
 
         // Do modal
-        Modals.Dialogs.MVVM.Models.YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
+        YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
 
             // Check return value
             if (resault is not ModalDialogResult.Confirm) {
@@ -203,8 +201,6 @@ public class CompanyBrowserViewModel : IViewModel {
 
         }, "Delete Company", "This action can not be undone. Are you sure?");
 
-        PlayerCompanies.LoadAll();
-
     }
 
     public void CopyButton() {
@@ -213,15 +209,15 @@ public class CompanyBrowserViewModel : IViewModel {
         if (this.SelectedCompany is null)
             return;
 
-        if (RenameCopyDialogViewModel.ShowCopyDialog(new LocaleKey("CompanyView_RenameCopyDialog_Copy_Title"), out string companyName)
-            is RenameCopyDialogResult.Copy) {
+        //if (RenameCopyDialogViewModel.ShowCopyDialog(new LocaleKey("CompanyView_RenameCopyDialog_Copy_Title"), out string companyName)
+        //    is RenameCopyDialogResult.Copy) {
 
-            // 'edit' company but immediately commit and save result
-            PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(companyName).Commit().Result);
+        //    // 'edit' company but immediately commit and save result
+        //    PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(companyName).Commit().Result);
 
-            UpdateCompanyList();
+        //    UpdateCompanyList();
 
-        }
+        //}
 
     }
 
@@ -243,21 +239,15 @@ public class CompanyBrowserViewModel : IViewModel {
     public void UpdateCompanyList() {
 
         // Clear all companies
-        Companies.Clear();
+        this.Companies.Clear();
 
         // Locad companies
         PlayerCompanies.LoadAll();
 
         // Update companies
         foreach (var company in PlayerCompanies.GetAllCompanies()) {
-            Companies.Add(company);
+            this.Companies.Add(company);
         }
-
-    }
-
-    public void UnloadViewModel(OnModelClosed closeCallback, bool destroy) => closeCallback(false);
-
-    public void Swapback() {
 
     }
 

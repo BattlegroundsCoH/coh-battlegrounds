@@ -30,6 +30,7 @@ BG_EVENT_ONITEM = 5; -- On item picked up
 BG_EVENT_ONVICTORY = 6; -- On victory
 BG_EVENT_ONVERIFY = 7; -- On verify
 BG_EVENT_ONWITHDRAW = 8; -- On Withdraw
+BG_EVENT_DEBUG = 9; -- For debugging (print replacement)
 
 -- Number to Char mapper
 _bg_logs = {
@@ -41,7 +42,8 @@ _bg_logs = {
     [BG_EVENT_ONITEM] = "I",
     [BG_EVENT_ONVICTORY] = "V",
     [BG_EVENT_ONVERIFY] = "G",
-    [BG_EVENT_ONWITHDRAW] = "W"
+    [BG_EVENT_ONWITHDRAW] = "W",
+    [BG_EVENT_DEBUG] = "P"
 };
 
 ------------------------------------------------------------------------------------

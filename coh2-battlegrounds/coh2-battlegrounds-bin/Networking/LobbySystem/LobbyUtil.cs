@@ -5,149 +5,146 @@ using Battlegrounds.ErrorHandling.Networking;
 using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Server;
-using System.Diagnostics.CodeAnalysis;
 
-namespace Battlegrounds.Networking.LobbySystem {
+namespace Battlegrounds.Networking.LobbySystem;
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="isSuccess"></param>
+/// <param name="api"></param>
+public delegate void LobbyConnectCallback(bool isSuccess, LobbyAPI? api);
+
+/// <summary>
+/// 
+/// </summary>
+public static class LobbyUtil {
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="isSuccess"></param>
-    /// <param name="api"></param>
-    public delegate void LobbyConnectCallback(bool isSuccess, LobbyAPI? api);
+    /// <param name="serverAPI"></param>
+    /// <param name="lobbyName"></param>
+    /// <param name="lobbyPassword"></param>
+    /// <param name="onLobbyCreated"></param>
+    public static void HostLobby(ServerAPI serverAPI, string lobbyName, string lobbyPassword, LobbyConnectCallback onLobbyCreated) {
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public static class LobbyUtil {
+        // Get steam user
+        var steamUser = BattlegroundsInstance.Steam.User;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="serverAPI"></param>
-        /// <param name="lobbyName"></param>
-        /// <param name="lobbyPassword"></param>
-        /// <param name="onLobbyCreated"></param>
-        public static void HostLobby(ServerAPI serverAPI, string lobbyName, string lobbyPassword, LobbyConnectCallback onLobbyCreated) {
+        // Success flag
+        bool success = false;
 
-            // Get steam user
-            var steamUser = BattlegroundsInstance.Steam.User;
+        // Define handlers
+        LobbyAPI? handle = null;
 
-            // Success flag
-            bool success = false;
+        try {
 
-            // Define handlers
-            LobbyAPI? handle = null;
+            // Create intro
+            IntroMessage intro = new() { 
+                Type = 0, 
+                LobbyName = lobbyName, LobbyPassword = lobbyPassword, 
+                PlayerUID = steamUser.ID, PlayerName = steamUser.Name
+            };
 
-            try {
-
-                // Create intro
-                IntroMessage intro = new() { 
-                    Host = true, 
-                    LobbyName = lobbyName, LobbyPassword = lobbyPassword, 
-                    PlayerUID = steamUser.ID, PlayerName = steamUser.Name
-                };
-
-                // Establish connection
-                ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.GetBestAddress(), 11000, intro, out ulong lobbyID);
-                if (connection is null) {
-                    throw new ConnectionFailedException("Failed to establish TCP connection.");
-                }
-
-                // Set API
-                serverAPI.SetLobbyGuid(lobbyID);
-                
-                // Create handler
-                handle = new LobbyAPI(true, lobbyName, steamUser, connection, serverAPI);
-
-                // Set success flag
-                success = true;
-
-            } catch (ConnectionFailedException connex) {
-
-                // Log error
-                Trace.WriteLine(connex, $"{nameof(LobbyUtil)}::{nameof(HostLobby)}");
-
-                // Propogate -> Let GUI handle this
-                throw;
-
-            } catch (Exception ex) {
-
-                // Log error
-                Trace.WriteLine(ex, $"{nameof(LobbyUtil)}::{nameof(HostLobby)}");
-
-            } finally {
-
-                // Invoke creation
-                onLobbyCreated?.Invoke(success, handle);
-
+            // Establish connection
+            ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.Endpoint.RemoteIPAddress, NetworkInterface.Endpoint.Tcp, intro, out ulong lobbyID);
+            if (connection is null) {
+                throw new ConnectionFailedException("Failed to establish TCP connection.");
             }
+
+            // Set API
+            serverAPI.SetLobbyGuid(lobbyID);
+            
+            // Create handler
+            handle = new LobbyAPI(true, lobbyName, steamUser, connection, serverAPI);
+
+            // Set success flag
+            success = true;
+
+        } catch (ConnectionFailedException connex) {
+
+            // Log error
+            Trace.WriteLine(connex, $"{nameof(LobbyUtil)}::{nameof(HostLobby)}");
+
+            // Propogate -> Let GUI handle this
+            throw;
+
+        } catch (Exception ex) {
+
+            // Log error
+            Trace.WriteLine(ex, $"{nameof(LobbyUtil)}::{nameof(HostLobby)}");
+
+        } finally {
+
+            // Invoke creation
+            onLobbyCreated?.Invoke(success, handle);
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="serverAPI"></param>
-        /// <param name="lobbyData"></param>
-        /// <param name="password"></param>
-        /// <param name="onLobbyJoined"></param>
-        public static void JoinLobby(ServerAPI serverAPI, ServerLobby lobbyData, string password, LobbyConnectCallback onLobbyJoined) {
+    }
 
-            const string methoddb = $"{nameof(LobbyUtil)}::{nameof(JoinLobby)}";
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="serverAPI"></param>
+    /// <param name="lobbyData"></param>
+    /// <param name="password"></param>
+    /// <param name="onLobbyJoined"></param>
+    public static void JoinLobby(ServerAPI serverAPI, ServerLobby lobbyData, string password, LobbyConnectCallback onLobbyJoined) {
 
-            // Get steam user
-            var steamUser = BattlegroundsInstance.Steam.User;
+        const string methoddb = $"{nameof(LobbyUtil)}::{nameof(JoinLobby)}";
 
-            // Success flag
-            bool success = false;
+        // Get steam user
+        var steamUser = BattlegroundsInstance.Steam.User;
 
-            // Define handler
-            LobbyAPI? handle = null;
+        // Success flag
+        bool success = false;
 
-            try {
+        // Define handler
+        LobbyAPI? handle = null;
 
-                // Create intro
-                IntroMessage intro = new() {
-                    Host = false,
-                    LobbyUID = lobbyData.UID,
-                    LobbyPassword = password,
-                    PlayerName = steamUser.Name,
-                    PlayerUID = steamUser.ID
-                };
+        try {
 
-                // Establish TCP connection
-                ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.GetBestAddress(), 11000, intro, out ulong lobbyID);
-                if (connection is null) {
-                    throw new ConnectionFailedException("Failed to establish TCP connection.");
-                }
+            // Create intro
+            IntroMessage intro = new() {
+                Type = 1,
+                LobbyUID = lobbyData.UID,
+                LobbyPassword = password,
+                PlayerName = steamUser.Name,
+                PlayerUID = steamUser.ID
+            };
 
-                // Set API
-                serverAPI.SetLobbyGuid(lobbyID);
-
-                // Create handler
-                handle = new LobbyAPI(false, lobbyData.Name, steamUser, connection, serverAPI);
-
-                // Set success flag
-                success = true;
-                
-            } catch (ConnectionFailedException connex) {
-
-                // Log error
-                Trace.WriteLine(connex, methoddb);
-
-                // Propogate -> Let GUI handle this
-                throw;
-
-            } catch (Exception ex) {
-
-                // Log error
-                Trace.WriteLine(ex, methoddb);
-
-            } finally {
-                onLobbyJoined?.Invoke(success, handle);
+            // Establish TCP connection
+            ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.Endpoint.RemoteIPAddress, NetworkInterface.Endpoint.Tcp, intro, out ulong lobbyID);
+            if (connection is null) {
+                throw new ConnectionFailedException("Failed to establish TCP connection.");
             }
 
+            // Set API
+            serverAPI.SetLobbyGuid(lobbyID);
+
+            // Create handler
+            handle = new LobbyAPI(false, lobbyData.Name, steamUser, connection, serverAPI);
+
+            // Set success flag
+            success = true;
+            
+        } catch (ConnectionFailedException connex) {
+
+            // Log error
+            Trace.WriteLine(connex, methoddb);
+
+            // Propogate -> Let GUI handle this
+            throw;
+
+        } catch (Exception ex) {
+
+            // Log error
+            Trace.WriteLine(ex, methoddb);
+
+        } finally {
+            onLobbyJoined?.Invoke(success, handle);
         }
 
     }

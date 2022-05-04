@@ -51,6 +51,7 @@ public class Company : IChecksumItem {
     private readonly List<UpgradeBlueprint> m_upgrades;
     private readonly List<Ability> m_abilities;
     private CompanyStatistics m_companyStatistics;
+    private bool m_autoReplenish;
 
     /// <summary>
     /// Get the name of the company.
@@ -149,10 +150,17 @@ public class Company : IChecksumItem {
     public ulong Checksum => this.m_checksum;
 
     /// <summary>
+    /// Get if the company should automatically replace lost units
+    /// </summary>
+    [ChecksumProperty]
+    public bool AutoReplenish => this.m_autoReplenish;
+
+    /// <summary>
     /// New empty <see cref="Company"/> instance.
     /// </summary>
-    public Company(Faction faction) {
+    internal Company(Faction faction) {
         this.Army = faction;
+        this.Name = "Untitled Company";
         this.m_squads = new List<Squad>();
         this.m_inventory = new List<Blueprint>();
         this.m_modifiers = new List<Modifier>();
@@ -160,7 +168,7 @@ public class Company : IChecksumItem {
         this.m_abilities = new List<Ability>();
         this.m_companyType = CompanyType.Unspecified;
         this.m_companyStatistics = new CompanyStatistics();
-        this.m_lastEditVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        this.m_lastEditVersion = BattlegroundsInstance.BG_VERSION;
     }
 
     /// <summary>
@@ -181,9 +189,11 @@ public class Company : IChecksumItem {
     /// </summary>
     /// <param name="squadID">The index of the squad to get</param>
     /// <returns>The squad with squad id matching requested squad ID or null.</returns>
-    public Squad GetSquadByIndex(ushort squadID) {
-        Squad s = this.m_squads.FirstOrDefault(x => x.SquadID == squadID);
-        if (s is null) { s = this.m_squads.FirstOrDefault(x => x.Crew.SquadID == squadID)?.Crew; }
+    public Squad? GetSquadByIndex(ushort squadID) {
+        Squad? s = this.m_squads.FirstOrDefault(x => x.SquadID == squadID);
+        if (s is null) { 
+            return this.m_squads.FirstOrDefault(x => x.Crew is not null ? x.Crew.SquadID == squadID : false)?.Crew; 
+        }
         return s;
     }
 
@@ -212,8 +222,11 @@ public class Company : IChecksumItem {
     /// 
     /// </summary>
     /// <param name="blueprint"></param>
-    public void RemoveInventoryItem(Blueprint blueprint)
-        => this.m_inventory.Remove(this.m_inventory.FirstOrDefault(x => x.Name == blueprint.Name));
+    public void RemoveInventoryItem(Blueprint blueprint) {
+        if (this.m_inventory.FirstOrDefault(x => x.Name == blueprint.Name) is Blueprint bp) { // TODO: Write blueprint equals method such that it's not based on memory but name
+            this.m_inventory.Remove(bp);
+        }
+    }
 
     /// <summary>
     /// 
@@ -259,7 +272,7 @@ public class Company : IChecksumItem {
     /// 
     /// </summary>
     /// <returns></returns>
-    public bool VerifyAppVersion() => this.m_lastEditVersion.CompareTo(this.m_lastEditVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString()) == 0;
+    public bool VerifyAppVersion() => this.m_lastEditVersion is BattlegroundsInstance.BG_VERSION;
 
     public bool VerifyChecksum(ulong checksum)
         => this.m_checksum == checksum;
@@ -317,6 +330,12 @@ public class Company : IChecksumItem {
     /// </summary>
     /// <param name="version"></param>
     public void SetAppVersion(string version) => this.m_lastEditVersion = version;
+
+    /// <summary>
+    /// Set if the company should automatically replenish lost units.
+    /// </summary>
+    /// <param name="autoReinforce">Boolean flag setting if this behaviour is enabled or not.</param>
+    public void SetReinforcementsEnabled(bool autoReinforce) => this.m_autoReplenish = autoReinforce;
 
     /// <summary>
     /// Get all special unit abilities available in the company.

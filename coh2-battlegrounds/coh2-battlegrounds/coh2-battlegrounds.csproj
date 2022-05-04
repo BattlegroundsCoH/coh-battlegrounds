@@ -11,6 +11,8 @@
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <ApplicationIcon>coh2-battlegrounds.ico</ApplicationIcon>
+    <SignAssembly>False</SignAssembly>
+    <AssemblyOriginatorKeyFile>E:\coh2_battlegrounds\coh2-battlegrounds\keypair.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -56,6 +58,7 @@
     <None Remove="Resources\app\army_icons\FactionWEHRHighlighted.png" />
     <None Remove="Resources\app\checkmark.png" />
     <None Remove="Resources\app\checkmark_not.png" />
+    <None Remove="Resources\app\coh2-battlegrounds-logo.png" />
     <None Remove="Resources\app\company_types\ct_airborne.png" />
     <None Remove="Resources\app\company_types\ct_armoured.png" />
     <None Remove="Resources\app\company_types\ct_artillery.png" />
@@ -65,11 +68,17 @@
     <None Remove="Resources\app\company_types\ct_motorized.png" />
     <None Remove="Resources\app\company_types\ct_td.png" />
     <None Remove="Resources\app\company_types\ct_unspecified.png" />
+    <None Remove="Resources\app\flags\french.png" />
+    <None Remove="Resources\app\flags\german.png" />
+    <None Remove="Resources\app\flags\polish.png" />
+    <None Remove="Resources\app\flags\spanish.png" />
+    <None Remove="Resources\app\flags\unionjack.png" />
     <None Remove="Resources\app\icon_bkg.png" />
     <None Remove="Resources\app\LobbySettingMap.png" />
     <None Remove="Resources\app\logo_main.png" />
     <None Remove="Resources\app\padlock_locked.png" />
     <None Remove="Resources\app\padlock_open.png" />
+    <None Remove="Resources\app\refresh.png" />
     <None Remove="Resources\campaign\icon_attrition.png" />
     <None Remove="Resources\campaign\icon_unittype_air.png" />
     <None Remove="Resources\campaign\icon_unittype_arty.png" />
@@ -119,6 +128,7 @@
     <None Remove="Resources\ingame\vet\vstar_no.png" />
     <None Remove="Resources\ingame\vet\vstar_yes.png" />
     <None Remove="Resources\ingame\west_german.png" />
+    <None Remove="Resources\profanities.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -141,6 +151,7 @@
     <Resource Include="Resources\app\army_icons\FactionWEHRHighlighted.png" />
     <Resource Include="Resources\app\checkmark.png" />
     <Resource Include="Resources\app\checkmark_not.png" />
+    <Resource Include="Resources\app\coh2-battlegrounds-logo.png" />
     <Resource Include="Resources\app\company_types\ct_airborne.png" />
     <Resource Include="Resources\app\company_types\ct_armoured.png" />
     <Resource Include="Resources\app\company_types\ct_artillery.png" />
@@ -150,6 +161,11 @@
     <Resource Include="Resources\app\company_types\ct_motorized.png" />
     <Resource Include="Resources\app\company_types\ct_td.png" />
     <Resource Include="Resources\app\company_types\ct_unspecified.png" />
+    <Resource Include="Resources\app\flags\french.png" />
+    <Resource Include="Resources\app\flags\german.png" />
+    <Resource Include="Resources\app\flags\polish.png" />
+    <Resource Include="Resources\app\flags\spanish.png" />
+    <Resource Include="Resources\app\flags\unionjack.png" />
     <Resource Include="Resources\app\icon_bkg.png" />
     <Resource Include="Resources\app\LobbySettingMap.png" />
     <Resource Include="Resources\app\logo_main.png" />
@@ -158,7 +174,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SharpVectors" Version="1.7.6" />
+    <PackageReference Include="SharpVectors" Version="1.7.7" />
     <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
   </ItemGroup>
 
@@ -167,12 +183,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="coh2-battlegrounds-networking">
-      <HintPath>..\coh2-battlegrounds-networking.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
+    <Resource Include="Resources\app\refresh.png" />
     <Resource Include="Resources\campaign\icon_attrition.png" />
     <Resource Include="Resources\campaign\icon_unittype_air.png" />
     <Resource Include="Resources\campaign\icon_unittype_arty.png" />
@@ -221,6 +232,7 @@
     <Resource Include="Resources\ingame\vet\vstar_no.png" />
     <Resource Include="Resources\ingame\vet\vstar_yes.png" />
     <Resource Include="Resources\ingame\west_german.png" />
+    <Resource Include="Resources\profanities.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -788,47 +800,43 @@
     <None Update="checksum.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\companies\Default_German.json">
+    <None Update="bg_common\battlegrounds.mod.package.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\companies\Default_Soviet.json">
+    <None Update="bg_common\locale\english.gamemode.ucs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\battlegrounds.mod.package.json">
+    <None Update="bg_common\locale\english.tuning.ucs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\bg\locale\english\english.gamemode.ucs">
+    <None Update="bg_common\data\mod_bg-abp-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\bg\locale\english\english.tuning.ucs">
+    <None Update="bg_common\data\mod_bg-cbp-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\mod_db\mod_bg-abp-db.json">
+    <None Update="bg_common\data\mod_bg-ebp-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\mod_db\mod_bg-cbp-db.json">
+    <None Update="bg_common\data\mod_bg-ibp-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\mod_db\mod_bg-ebp-db.json">
+    <None Update="bg_common\data\mod_bg-sbp-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\mod_db\mod_bg-ibp-db.json">
+    <None Update="bg_common\data\mod_bg-ubp-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\mod_db\mod_bg-sbp-db.json">
+    <None Update="bg_common\data\mod_bg-wbp-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="usr\mods\mod_db\mod_bg-ubp-db.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="usr\mods\mod_db\mod_bg-wbp-db.json">
+    <None Update="plugins\README.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="bg_common\bg_wc\" />
-    <Folder Include="usr\companies\" />
   </ItemGroup>
 
 </Project>

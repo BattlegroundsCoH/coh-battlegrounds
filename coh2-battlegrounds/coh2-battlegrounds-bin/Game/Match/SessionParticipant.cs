@@ -12,7 +12,7 @@ namespace Battlegrounds.Game.Match {
     /// </summary>
     public readonly struct SessionParticipant : ISessionParticipant { // Maybe change to class, now that we implement an interface
 
-        private readonly Company m_company;
+        private readonly Company? m_company;
 
         /// <summary>
         /// The <see cref="SteamUser"/> profile of the human user.
@@ -32,12 +32,12 @@ namespace Battlegrounds.Game.Match {
         /// <summary>
         /// The <see cref="Company"/> used by the <see cref="SessionParticipant"/>.
         /// </summary>
-        public Company SelectedCompany => this.m_company;
+        public Company? SelectedCompany => this.m_company;
 
         /// <summary>
         /// The faction to be used by the <see cref="SessionParticipant"/>.
         /// </summary>
-        [JsonIgnore] public Faction ParticipantFaction => this.SelectedCompany.Army;
+        [JsonIgnore] public Faction ParticipantFaction => this.SelectedCompany?.Army ?? throw new Exception("Company undefined and faction is, therefore, unknown.");
 
         /// <summary>
         /// The <see cref="AIDifficulty"/> to use ingame.
@@ -66,7 +66,7 @@ namespace Battlegrounds.Game.Match {
         /// <param name="company"></param>
         /// <param name="tIndex"></param>
         /// <param name="pIndex"></param>
-        public SessionParticipant(string user, ulong id, Company company, ParticipantTeam tIndex, byte pTeamIndex, byte pIndex) {
+        public SessionParticipant(string user, ulong id, Company? company, ParticipantTeam tIndex, byte pTeamIndex, byte pIndex) {
 
             this.UserDisplayname = user;
             this.UserID = id;
@@ -77,7 +77,7 @@ namespace Battlegrounds.Game.Match {
             this.PlayerIndexOnTeam = pTeamIndex;
             this.PlayerIngameIndex = pIndex;
 
-            if (this.SelectedCompany != null) {
+            if (this.SelectedCompany is not null) {
                 this.TeamIndex = (this.SelectedCompany.Army.IsAllied) ? ParticipantTeam.TEAM_ALLIES : ParticipantTeam.TEAM_AXIS;
             }
 
@@ -91,7 +91,7 @@ namespace Battlegrounds.Game.Match {
         /// <param name="tIndex"></param>
         /// <param name="pIndex"></param>
         /// <exception cref="ArgumentException"/>
-        public SessionParticipant(AIDifficulty difficulty, Company company, ParticipantTeam tIndex, byte pTeamIndex, byte pIndex) {
+        public SessionParticipant(AIDifficulty difficulty, Company? company, ParticipantTeam tIndex, byte pTeamIndex, byte pIndex) {
 
             if (difficulty == AIDifficulty.Human)
                 throw new ArgumentException("Attempted to create AI participant with human settings!", nameof(difficulty));
@@ -114,7 +114,7 @@ namespace Battlegrounds.Game.Match {
             => this.IsHuman ? this.UserID : 0;
 
         public override string ToString()
-            => $"{this.GetName()} [{this.SelectedCompany.Name}]";
+            => $"{this.GetName()} [{this.SelectedCompany?.Name}]";
 
     }
 

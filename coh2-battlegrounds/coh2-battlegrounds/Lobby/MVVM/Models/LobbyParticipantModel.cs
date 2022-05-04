@@ -51,9 +51,9 @@ public class LobbyParticipantModel : LobbyModel {
         // Init dropdowns 
         this.MapDropdown = new(false, Visibility.Hidden, new(), (x,y) => { });
         this.GamemodeDropdown = new(false, Visibility.Hidden, new(), (x, y) => { });
-        this.GamemodeOptionDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = handle.Settings["selected_wco"] };
-        this.WeatherDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = (handle.Settings["selected_daynight"] is "1") ? "On" : "Off" };
-        this.SupplySystemDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = (handle.Settings["selected_supply"] is "1") ? "On" : "Off" };
+        this.GamemodeOptionDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = handle.Settings[LobbyAPI.SETTING_GAMEMODEOPTION] };
+        this.WeatherDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = (handle.Settings[LobbyAPI.SETTING_WEATHER] is "1") ? "On" : "Off" };
+        this.SupplySystemDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = (handle.Settings[LobbyAPI.SETTING_LOGISTICS] is "1") ? "On" : "Off" };
         this.ModPackageDropdown = new(false, Visibility.Hidden, new(), (x, y) => { });
 
         // Subscribe to lobby events
@@ -67,9 +67,9 @@ public class LobbyParticipantModel : LobbyModel {
         handle.OnPoll += this.OnPoll;
 
         // Trigger initial view
-        this.OnModPackageChange(handle.Settings["selected_tuning"]);
-        this.OnScenarioChange(handle.Settings["selected_map"]);
-        this.OnGamemodeChange(handle.Settings["selected_wc"]);
+        this.OnModPackageChange(handle.Settings[LobbyAPI.SETTING_MODPACK]);
+        this.OnScenarioChange(handle.Settings[LobbyAPI.SETTING_MAP]);
+        this.OnGamemodeChange(handle.Settings[LobbyAPI.SETTING_GAMEMODE]);
 
         // Inform others
         if (this.TryGetSelf() is LobbyAPIStructs.LobbySlot self && self.Occupant is not null) {
@@ -303,22 +303,22 @@ public class LobbyParticipantModel : LobbyModel {
     private void OnLobbyChange(LobbySettingsChangedEventArgs e) {
 
         switch (e.SettingsKey) {
-            case "selected_map":
+            case LobbyAPI.SETTING_MAP:
                 this.OnScenarioChange(e.SettingsValue);
                 break;
-            case "selected_wc":
+            case LobbyAPI.SETTING_GAMEMODE:
                 this.OnGamemodeChange(e.SettingsValue);
                 break;
-            case "selected_wco":
+            case LobbyAPI.SETTING_GAMEMODEOPTION:
                 this.OnGamemodeOptionChanage(e.SettingsValue);
                 break;
-            case "selected_daynight":
+            case LobbyAPI.SETTING_WEATHER:
                 this.OnWeatherSettingChange(e.SettingsValue);
                 break;
-            case "selected_supply":
+            case LobbyAPI.SETTING_LOGISTICS:
                 this.OnSupplySettingChange(e.SettingsValue);
                 break;
-            case "selected_tuning":
+            case LobbyAPI.SETTING_MODPACK:
                 this.OnModPackageChange(e.SettingsValue);
                 break;
             default:
@@ -332,38 +332,27 @@ public class LobbyParticipantModel : LobbyModel {
 
         Application.Current.Dispatcher.Invoke(() => {
 
+            // Check if valid
             if (ScenarioList.FromRelativeFilename(map) is not Scenario scenario) {
                 this.MapDropdown.LabelContent = map;
-                this.ScenarioPreview = this.TryGetMapSource(null);
+                this.ScenarioPreview = LobbySettingsLookup.TryGetMapSource(null);
                 this.NotifyProperty(nameof(ScenarioPreview));
                 return;
             }
 
-            this.MapDropdown.LabelContent = scenario.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(scenario.Name[1..], out uint key) ?
-                                            GameLocale.GetString(key) : scenario.Name;
+            // Set visuals
+            this.MapDropdown.LabelContent = LobbySettingsLookup.GetScenarioName(scenario, map);
+            this.ScenarioPreview = LobbySettingsLookup.TryGetMapSource(scenario);
 
-            this.ScenarioPreview = this.TryGetMapSource(scenario);
-
+            // Notify
             this.NotifyProperty(nameof(ScenarioPreview));
 
         });
 
     }
 
-    private void OnGamemodeChange(string gamemode) {
-
-        if (m_package is null) {
-            return;
-        }
-
-        if (WinconditionList.GetGamemodeByName(m_package.GamemodeGUID, gamemode) is not IGamemode wincondition) {
-            this.GamemodeDropdown.LabelContent = gamemode;
-            return;
-        }
-
-        this.GamemodeDropdown.LabelContent = wincondition.ToString() ?? "Unknown Wincondition";
-
-    }
+    private void OnGamemodeChange(string gamemode) 
+        => this.GamemodeDropdown.LabelContent = LobbySettingsLookup.GetGamemodeName(gamemode, this.m_package);
 
     private void OnGamemodeOptionChanage(string gamomodeOption) {
 

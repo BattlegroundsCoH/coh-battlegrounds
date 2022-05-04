@@ -7,27 +7,44 @@ using System.Diagnostics;
 namespace Battlegrounds;
 
 /// <summary>
-/// Pathfinder for finding the paths to relevant paths (eg. CoH2's documents folder)
+/// Pathfinder for finding the paths to relevant paths (eg. Steam install path and CoH2's install path)
 /// </summary>
 public static class Pathfinder {
 
+    // Registered paths for Steam
     private static string[] steampaths;
 
-    /// <summary>
-    /// Get the path of Steam
-    /// </summary>
-    public static string SteamPath { get; private set; }
+    // Paths we try to guess from.
+    private static readonly string[] autopaths = {
+        "Steam\\",
+        "SteamLibrary\\",
+        "Program Files\\SteamLibrary\\",
+        "Program Files (x86)\\SteamLibrary\\",
+        "Program Files\\Steam\\",
+        "Program Files (x86)\\Steam\\",
+        "Games\\Steam\\",
+    };
 
     /// <summary>
-    /// Get the path of CoH2
+    /// Get or set the path of Steam
     /// </summary>
-    public static string CoHPath { get; private set; }
+    public static string SteamPath { get; set; }
+
+    /// <summary>
+    /// Get or set the path of CoH2
+    /// </summary>
+    public static string CoHPath { get; set; }
 
     static Pathfinder() {
 
         steampaths = Array.Empty<string>();
-        SteamPath = string.Empty;
-        CoHPath = string.Empty;
+        try {
+            SteamPath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.STEAM_FOLDER);
+            CoHPath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COH_FOLDER);
+        } catch {
+            SteamPath = string.IsNullOrEmpty(SteamPath) ? string.Empty : SteamPath;
+            CoHPath = string.Empty;
+        }
 
     }
 
@@ -77,40 +94,35 @@ public static class Pathfinder {
     // Checks if there's a folder with the Steam DLL
     static bool DriveHasSteam(char c, out int t) {
 
-        // Collect bool flags
-        bool a = File.Exists($"{c}:\\Steam\\Steam.dll");
-        bool b = File.Exists($"{c}:\\SteamLibrary\\Steam.dll");
-        bool d = File.Exists($"{c}:\\Program Files\\SteamLibrary\\Steam.dll");
-        bool e = File.Exists($"{c}:\\Program Files (x86)\\SteamLibrary\\Steam.dll");
-        bool f = File.Exists($"{c}:\\Program Files\\Steam\\Steam.dll");
-        bool g = File.Exists($"{c}:\\Program Files (x86)\\Steam\\Steam.dll");
-
-        // Any flag
+        // Set default
         t = -1;
 
-        // Set
-        if (a) t = 0;
-        if (b) t = 1;
-        if (d) t = 2;
-        if (e) t = 3;
-        if (f) t = 4;
-        if (g) t = 5;
+        // Loop through and check
+        for (int i = 0; i < autopaths.Length; i++) {
+            if (File.Exists($"{c}:\\{autopaths[i]}Steam.dll")) {
+                t = i;
+                return true;
+            }
+        }
 
         // Return if any
-        return t != -1;
+        return false;
 
     }
 
-    static string GetSteamPath(char c, int t) {
-        string[] ex = {
-            $"{c}:\\Steam\\",
-            $"{c}:\\SteamLibrary\\",
-            $"{c}:\\Program Files\\SteamLibrary\\",
-            $"{c}:\\Program Files (x86)\\SteamLibrary\\",
-            $"{c}:\\Program Files\\Steam\\",
-            $"{c}:\\Program Files (x86)\\Steam\\",
-        };
-        return ex[t];
+    static string GetSteamPath(char c, int t) => $"{c}:\\{autopaths[t]}";
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public static bool VerifySteamPath(string path) {
+        if (path.ToLowerInvariant().EndsWith("steam.exe")) {
+            return File.Exists(path);
+        } else {
+            return File.Exists(Path.Combine(path, "Steam.exe"));
+        }
     }
 
     /// <summary>
@@ -141,6 +153,21 @@ public static class Pathfinder {
         // Return empty
         return CoHPath;
 
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cohpath"></param>
+    /// <returns></returns>
+    public static bool VerifyCoHPath(string cohpath) {
+        bool hasexe = cohpath.ToLowerInvariant().EndsWith("reliccoh2.exe");
+        bool basicVerify = hasexe ? File.Exists(cohpath) : File.Exists(Path.Combine(cohpath, "RelicCoH2.exe"));
+        if (!basicVerify) {
+            return false;
+        }
+        string steamcheck = hasexe ? (Path.GetDirectoryName(cohpath) ?? "") : cohpath;
+        return File.Exists(Path.GetFullPath(Path.Combine(steamcheck, "..\\..\\..\\Steam.dll")));
     }
 
 }

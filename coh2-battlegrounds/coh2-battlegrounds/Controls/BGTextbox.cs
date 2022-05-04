@@ -6,7 +6,7 @@ namespace BattlegroundsApp.Controls;
 
 public class BGTextbox : TextBox {
 
-    public event Action<object, KeyEventArgs> KeyDownEvent;
+    public new event Action<object, KeyEventArgs>? KeyDownEvent;
 
     protected override void OnKeyDown(KeyEventArgs e) {
         this.KeyDownEvent?.Invoke(this, e);

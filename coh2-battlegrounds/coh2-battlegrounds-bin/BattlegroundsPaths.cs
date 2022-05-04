@@ -21,6 +21,11 @@ public static class BattlegroundsPaths {
     public const string SESSION_FOLDER = "session_folder";
 
     /// <summary>
+    /// Path ID for the temporary extract folder
+    /// </summary>
+    public const string EXTRACT_FOLDER = "extract_folder";
+
+    /// <summary>
     /// Path ID of the art folder containing the shipped GFX data
     /// </summary>
     public const string MOD_ART_FOLDER = "art_folder";
@@ -28,7 +33,17 @@ public static class BattlegroundsPaths {
     /// <summary>
     /// Path ID for the user-generated mods
     /// </summary>
-    public const string MOD_OTHER_FOLDER = "mods_folder";
+    public const string MOD_USER_FOLDER = "mods_folder";
+
+    /// <summary>
+    /// Path ID for the user-generated mod(s) database
+    /// </summary>
+    public const string MOD_USER_DATABASE_FODLER = "mods_db_folder";
+
+    /// <summary>
+    /// Path ID for the user-generated icons folder
+    /// </summary>
+    public const string MOD_USER_ICONS_FODLER = "mods_ico_folder";
 
     /// <summary>
     /// Path ID for the plugin folder
@@ -49,5 +64,20 @@ public static class BattlegroundsPaths {
     /// Path ID for the locale folder
     /// </summary>
     public const string LOCALE_FOLDER = "locale_folder";
+
+    /// <summary>
+    /// Path ID for the steam folder
+    /// </summary>
+    public const string STEAM_FOLDER = "steam_folder";
+
+    /// <summary>
+    /// Path ID for the coh folder
+    /// </summary>
+    public const string COH_FOLDER = "coh_folder";
+
+    /// <summary>
+    /// Path ID for the documents folder
+    /// </summary>
+    public const string DOCUMENTS_FOLDER = "doc_folder";
 
 }

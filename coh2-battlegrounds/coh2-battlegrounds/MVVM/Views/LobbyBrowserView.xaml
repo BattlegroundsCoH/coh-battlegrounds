@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:BattlegroundsApp.MVVM.Views" 
              xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters" xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM" xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              mc:Ignorable="d" Background="#273441"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="850" d:DesignWidth="1100">
     <Grid>
 
         <Grid.Resources>
@@ -15,10 +15,11 @@
         </Grid.Resources>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="42"/>
+            <RowDefinition Height="48"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="52"/>
+            <RowDefinition Height="24"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -31,7 +32,7 @@
         <!-- Row 0 -->
         <controls:LocLabel
             Foreground="#d8dbde"
-            FontSize="28"
+            FontSize="32"
             FontFamily="Open Sans"
             FontWeight="Bold"
             Margin="15, 0, 0, 0"
@@ -39,7 +40,7 @@
             LocKey="GameBrowserView_Title"/>
 
         <!-- Row 1 -->
-        <Grid Grid.Row="1"
+        <Grid Grid.Row="2"
               Grid.Column="0"
               Grid.ColumnSpan="4">
             <Grid.ColumnDefinitions>
@@ -57,7 +58,7 @@
                   Grid.RowSpan="3"
                   Grid.Column="0" 
                   Grid.ColumnSpan="3"
-                  Margin="15, 7.5, 15, 2"
+                  Margin="15, 7.5, 15, 15"
                   ItemsSource="{Binding Lobbies}"
                   SelectedIndex="{Binding SelectedLobbyIndex, Mode=TwoWay}"
                   SelectedItem="{Binding SelectedLobby, Mode=TwoWay}"
@@ -65,7 +66,12 @@
                   Style="{StaticResource StandardBlueListViewStyle}"
                   ItemContainerStyle="{StaticResource StandardBlueListViewItem}"
                   SelectionChanged="GameLobbyList_SelectionChanged"
+                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <!--
+                    TODO: Implement scrollbar solution as
+                    the one for the company builder
+                -->
                 <ListView.Resources>
                     <Style x:Key="LobbyLabel" TargetType="{x:Type Label}">
                         <Setter Property="Foreground" Value="#d8dbde"/>
@@ -91,25 +97,25 @@
                         </GridViewColumn>
                         <GridViewColumn 
                             Header="{Binding GamemodeListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
-                            Width="194" 
-                            DisplayMemberBinding="{Binding TranslatedMode}"
+                            Width="172" 
+                            DisplayMemberBinding="{Binding Mode}"
                             HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <Label 
-                                        Content="{Binding TranslatedMode}"
+                                        Content="{Binding Mode}"
                                         Style="{StaticResource LobbyLabel}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn 
                             Header="{Binding StateListWiewHeader, Converter={StaticResource LocaleConvertor}}" 
-                            Width="125" 
+                            Width="124" 
                             HeaderContainerStyle="{StaticResource StandardBlueGridViewHeader}">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <controls:LocLabel 
-                                        LocKey="{Binding TranslatedState}"
+                                        LocKey="{Binding Status}"
                                         Style="{StaticResource LobbyLabel}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -133,7 +139,7 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <Label 
-                                        Content="{Binding HasPassword}"
+                                        Content="{Binding IsPasswrodProtected}"
                                         Style="{StaticResource LobbyLabel}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -150,8 +156,8 @@
               Margin="15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="194"/>
-                    <ColumnDefinition Width="125"/>
+                    <ColumnDefinition Width="172"/>
+                    <ColumnDefinition Width="124"/>
                     <ColumnDefinition Width="72"/>
                     <ColumnDefinition Width="72"/>
                 </Grid.ColumnDefinitions>
@@ -170,9 +176,137 @@
                 Visibility="{Binding InfoKeyVisible}"/>
         </Grid>
 
-        <!-- Row 2 -->
+        <Border Grid.Row="1" Grid.Column="0" Margin="15"
+                Grid.ColumnSpan="4" Height="294"
+                Background="{StaticResource BackgroundDarkBlueBrush}"
+                BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                BorderThickness="1.25">
+            <Grid>
+                <Grid Visibility="{Binding PreviewVisible}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="320"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="52"/>
+                        <RowDefinition Height="32"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.Resources>
+                        <DataTemplate x:Key="TeamSlotPreview">
+                            <Grid Grid.Row="2" Grid.Column="2" Height="32" 
+                      Margin="5" Visibility="{Binding SlotVisibility}"
+                      Background="{StaticResource BackgroundLightBlueBrush}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0"
+                                   Source="{Binding SlotImage}"
+                                   Width="32" Height="32"/>
+                                <Label Content="{Binding SlotTitle}" 
+                                   VerticalAlignment="Center"
+                           Foreground="White" FontFamily="Open Sans"
+                           Grid.Column="1"/>
+                            </Grid>
+                        </DataTemplate>
+                    </Grid.Resources>
+                    <Canvas Grid.Column="0" 
+                    Height="284"
+                    Width="308" 
+                    Grid.RowSpan="7"
+                        Margin="5">
+                        <Image 
+                    Canvas.Top="10"
+                    Canvas.Left="12"
+                    Width="280"
+                    Height="260"
+                    Stretch="Fill"
+                    Source="{Binding PreviewImage}"/>
+                        <Image
+                    Width="300"
+                    Canvas.Top="6"
+                    Canvas.Left="0"
+                    Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbySettingMap.png"/>
+                    </Canvas>
+                    <Label Content="{Binding PreviewTitle}"
+                   Grid.Row="0"
+                   Grid.Column="1"
+                   Grid.ColumnSpan="3"
+                   Foreground="White"
+                   FontSize="14"
+                   FontWeight="Bold"
+                   VerticalContentAlignment="Center"/>
+                    <Label Content="Settings"
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   Foreground="White"
+                   FontSize="12"
+                   FontWeight="Bold"
+                   VerticalContentAlignment="Center"/>
+                    <Label Content="Allies"
+                   Grid.Row="1"
+                   Grid.Column="2"
+                   Foreground="White"
+                   FontSize="12"
+                   FontWeight="Bold"
+                   VerticalContentAlignment="Center"
+                   HorizontalAlignment="Center"/>
+                    <Label Content="Axis"
+                   Grid.Row="1"
+                   Grid.Column="3"
+                   Foreground="White"
+                   FontSize="12"
+                   FontWeight="Bold"
+                   VerticalContentAlignment="Center"
+                   HorizontalAlignment="Center"/>
+                    <ItemsControl ItemsSource="{Binding PreviewSettings}"
+                          Grid.Column="1"
+                          Grid.Row="2"
+                          Grid.RowSpan="5">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="{Binding Key}" Grid.Column="0" Foreground="White" FontFamily="Open Sans"/>
+                                    <Label Content="{Binding Value}" Grid.Column="1" Foreground="White" FontFamily="Open Sans"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <ItemsControl ItemsSource="{Binding PreviewAllies}" 
+                              ItemTemplate="{StaticResource TeamSlotPreview}"
+                              Margin="5"
+                              Grid.Row="2"
+                              Grid.Column="2"/>
+                    <ItemsControl ItemsSource="{Binding PreviewAxis}" 
+                              ItemTemplate="{StaticResource TeamSlotPreview}"
+                              Margin="5"
+                              Grid.Row="2"
+                              Grid.Column="3"/>
+
+                </Grid>
+                <controls:LocLabel
+                        LocKey="GameBrowserView_NoneSelected"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Foreground="Gray"
+                    FontFamily="Open Sans"
+                    FontWeight="Bold"
+                    FontSize="16"
+                    Visibility="{Binding NoneVisible}"/>
+            </Grid>
+        </Border>
+        
+        <!-- Row 2 
         <Separator Grid.Row="2" Grid.ColumnSpan="4"
-                   Margin="15, 5, 15, 5"/>
+                   Margin="15, 5, 15, 5"/>-->
 
         <!-- Row 3 -->
         <Button x:Name="refreshLobbyListButton" 
@@ -197,7 +331,7 @@
         <Button x:Name="joinGameButton" 
                 Grid.Row="3" 
                 Grid.Column="3" 
-                Margin="5,5,8,8" 
+                Margin="5,5,15,8" 
                 Width="128"
                 Command="{Binding Join.Click}"
                 IsEnabled="{Binding Join.IsEnabled}"

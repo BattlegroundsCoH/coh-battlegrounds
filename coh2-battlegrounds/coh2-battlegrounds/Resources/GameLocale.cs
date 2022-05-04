@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using Battlegrounds.Functional;
@@ -13,8 +15,11 @@ namespace BattlegroundsApp.Resources {
     /// </summary>
     public static class GameLocale {
 
-        private static UcsFile LocaleFile;
-        private static Dictionary<ModGuid, UcsFile> ModLocales;
+        private readonly static UcsFile? LocaleFile;
+        private readonly static Dictionary<ModGuid, UcsFile> ModLocales;
+
+        [MemberNotNullWhen(true, nameof(LocaleFile))]
+        public static bool HasLoadedLocale => LocaleFile is not null;
 
         static GameLocale() {
 
@@ -28,6 +33,8 @@ namespace BattlegroundsApp.Resources {
             string localePath = Path.Combine(Battlegrounds.Pathfinder.GetOrFindCoHPath(), $"CoH2\\Locale\\{language}\\RelicCoH2.{language}.ucs");
             if (File.Exists(localePath)) {
                 LocaleFile = UcsFile.LoadFromFile(localePath);
+            } else {
+                Trace.WriteLine($"Failed to load locale file '{localePath}'", nameof(GameLocale));
             }
 
             // Create dictionary for mod locales
@@ -49,7 +56,7 @@ namespace BattlegroundsApp.Resources {
 
         }
 
-        public static string GetString(uint key) => LocaleFile[key];
+        public static string GetString(uint key) => HasLoadedLocale ? LocaleFile[key] : $"${key} No Range";
 
         public static string GetString(string locStr) {
             if (locStr.StartsWith("$")) {
@@ -60,7 +67,7 @@ namespace BattlegroundsApp.Resources {
                     if (uint.TryParse(numeric, out uint modLocID)) {
                         ModGuid guid = ModGuid.FromGuid(locStr[0..j]);
                         if (guid.IsValid) {
-                            return ModLocales.TryGetValue(guid, out UcsFile modUCS) ? modUCS[modLocID] : $"Unregistered GUID '{locStr[0..j]}'";
+                            return ModLocales.TryGetValue(guid, out UcsFile? modUCS) && modUCS is not null ? modUCS[modLocID] : $"Unregistered GUID '{locStr[0..j]}'";
                         }
                     } else {
                         return locStr;

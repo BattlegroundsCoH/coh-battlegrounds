@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 
@@ -20,18 +22,34 @@ public partial class ErrorReporter : Window {
         this.Close();
     }
 
-    private void Send_Click(object sender, RoutedEventArgs e) {
+    private async void Send_Click(object sender, RoutedEventArgs e) {
         try {
 
             // Create API instance
-            ServerAPI api = new("192.168.1.107", true);
+            ServerAPI api = new("194.37.80.249", 80, safeMode: true);
 
             // Grab additional info
             var info = new TextRange(this.AdditionalInfo.Document.ContentStart, this.AdditionalInfo.Document.ContentEnd).Text;
 
-            // Send along error
-            api.UplouadAppCrashReport(info, Path.GetFullPath("coh2-bg.log"), false);
+            // Show Sent
+            this.Cancel.IsEnabled = false;
+            this.Send.IsEnabled = false;
 
+            // Inform user
+            this.Send.Content = "Sending";
+
+            // Send along error
+            await Task.Run(() => api.UploadAppCrashReport(info, Path.GetFullPath("coh2-bg.log"), isScar: false));
+
+            // Update visually
+            this.Send.Content = "Sent (Closing)";
+            this.Cancel.IsEnabled = true;
+
+            // Wait a bit
+            await Task.Delay(1500);
+
+        } catch (Exception ex) {
+            File.WriteAllText("err-crash.txt", ex.ToString());
         } finally {
             this.Close();
         }

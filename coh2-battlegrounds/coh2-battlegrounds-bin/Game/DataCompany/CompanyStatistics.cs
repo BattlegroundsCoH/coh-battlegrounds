@@ -4,47 +4,46 @@ using System.Text.Json.Serialization;
 
 using Battlegrounds.Verification;
 
-namespace Battlegrounds.Game.DataCompany {
+namespace Battlegrounds.Game.DataCompany;
 
-    /// <summary>
-    /// Class representing the win and loss statistics of a company.
-    /// </summary>
-    public class CompanyStatistics : ICloneable, IChecksumPropertyItem {
+/// <summary>
+/// Class representing the win and loss statistics of a company.
+/// </summary>
+public class CompanyStatistics : ICloneable, IChecksumPropertyItem {
 
-        #region Win/Lose counts
+    #region Win/Lose counts
 
-        [ChecksumProperty]
-        public ulong TotalMatchCount { get; set; }
+    [ChecksumProperty]
+    public ulong TotalMatchCount { get; set; }
 
-        [ChecksumProperty]
-        public ulong TotalMatchLossCount { get; set; }
+    [ChecksumProperty]
+    public ulong TotalMatchLossCount { get; set; }
 
-        [ChecksumProperty]
-        public ulong TotalMatchWinCount { get; set; }
+    [ChecksumProperty]
+    public ulong TotalMatchWinCount { get; set; }
 
-        [JsonIgnore]
-        public double WinRate => this.TotalMatchCount > 0 ? this.TotalMatchWinCount / (double)this.TotalMatchCount : 0;
+    [JsonIgnore]
+    public double WinRate => this.TotalMatchCount > 0 ? this.TotalMatchWinCount / (double)this.TotalMatchCount : 0;
 
-        [JsonIgnore]
-        public double LossRate => this.TotalMatchCount > 0 ? this.TotalMatchLossCount / (double)this.TotalMatchCount : 0;
+    [JsonIgnore]
+    public double LossRate => this.TotalMatchCount > 0 ? this.TotalMatchLossCount / (double)this.TotalMatchCount : 0;
 
-        #endregion
+    #endregion
 
-        #region Unit loss counts
+    #region Unit loss counts
 
-        [ChecksumProperty]
-        public ulong TotalInfantryLosses { get; set; }
+    [ChecksumProperty]
+    public ulong TotalInfantryLosses { get; set; }
 
-        [ChecksumProperty]
-        public ulong TotalVehicleLosses { get; set; }
+    [ChecksumProperty]
+    public ulong TotalVehicleLosses { get; set; }
 
-        [JsonIgnore]
-        public ulong TotalLosses => this.TotalInfantryLosses + this.TotalVehicleLosses;
+    [JsonIgnore]
+    public ulong TotalLosses => this.TotalInfantryLosses + this.TotalVehicleLosses;
 
-        #endregion
+    #endregion
 
-        public object Clone() => JsonSerializer.Deserialize<CompanyStatistics>(JsonSerializer.Serialize(this));
-
-    }
+    public object Clone() => JsonSerializer.Deserialize<CompanyStatistics>(JsonSerializer.Serialize(this)) ?? throw new Exception("Expected company statistics but found **NULL**");
 
 }
+

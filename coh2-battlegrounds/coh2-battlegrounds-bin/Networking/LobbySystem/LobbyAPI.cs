@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
-
+using System.Threading;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -14,7 +14,7 @@ using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
 using static Battlegrounds.Networking.LobbySystem.LobbyAPIStructs;
-using System.Threading;
+using Battlegrounds.Util;
 
 namespace Battlegrounds.Networking.LobbySystem;
 
@@ -72,6 +72,13 @@ public record LobbyMatchInfoEventArgs(bool IsError, string Type, string Reason);
 /// Class for interacting with the lobby logic on the server.
 /// </summary>
 public sealed class LobbyAPI {
+
+    public const string SETTING_MAP = "selected_map";
+    public const string SETTING_GAMEMODE = "selected_wc";
+    public const string SETTING_GAMEMODEOPTION = "selected_wco";
+    public const string SETTING_WEATHER = "selected_daynight";
+    public const string SETTING_LOGISTICS = "selected_supply";
+    public const string SETTING_MODPACK = "selected_tuning";
 
     private static readonly TimeZoneInfo __thisTimezone = TimeZoneInfo.Local;
 
@@ -805,8 +812,18 @@ public sealed class LobbyAPI {
     /// <param name="contents">The .sga archive file contents.</param>
     /// <param name="callbackHandler">The callback that is triggered whenever a chunk is sent.</param>
     /// <returns><see langword="true"/> if file was uploaded; Otherwise <see langword="false"/>.</returns>
-    public bool UploadGamemodeFile(byte[] contents, UploadProgressCallbackHandler? callbackHandler)
-        => this.m_connection.SendFile(contents, 0, this.m_cidcntr++, callbackHandler);
+    public UploadResult UploadGamemodeFile(byte[] contents, UploadProgressCallbackHandler? callbackHandler)
+        => this.ServerHandle.UploadFile(1, this.Self.ID, this.ServerHandle.LobbyUID, contents, (a,b) => callbackHandler?.Invoke(a,b,a==-1));
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="contents"></param>
+    /// <param name="companyOwner"></param>
+    /// <param name="callbackHandler"></param>
+    /// <returns></returns>
+    public UploadResult UploadCompanyFile(byte[] contents, ulong companyOwner, UploadProgressCallbackHandler? callbackHandler)
+        => this.ServerHandle.UploadFile(0, companyOwner, this.ServerHandle.LobbyUID, contents, (a, b) => callbackHandler?.Invoke(a, b, a is -1));
 
     /// <summary>
     /// Conducts a simple yes/no poll across the server.
@@ -840,13 +857,6 @@ public sealed class LobbyAPI {
     public void RespondPoll(string pollId, bool pollVote)
         => this.RemoteVoidCall("PollRespond", pollId, EncBool(pollVote));
 
-    private static T BitConvert<T>(byte[] raw, Func<byte[], int, T> func) {
-        if (BitConverter.IsLittleEndian) {
-            Array.Reverse(raw);
-        }
-        return func(raw, 0);
-    }
-
     private T? RemoteCall<T>(string method, params object[] args)
         => this.RemoteCallWithTime<T>(method, args);
 
@@ -871,7 +881,7 @@ public sealed class LobbyAPI {
                 // It feels nasty using 'dynamic'
                 return (T)(dynamic)(response.DotNetType switch {
                     nameof(Boolean) => response.Raw[0] == 1,
-                    nameof(UInt32) => BitConvert(response.Raw, BitConverter.ToUInt32),
+                    nameof(UInt32) => response.Raw.ConvertBigEndian(BitConverter.ToUInt32),
                     _ => throw new NotImplementedException($"Support for primitive response of type '{response.DotNetType}' not implemented.")
                 });
             } else {

@@ -111,15 +111,12 @@ public class Session : ISession {
     public ISessionParticipant[] GetParticipants()
         => this.m_participants.Cast<ISessionParticipant>().ToArray();
 
-    public Company FindCompany(string playername, Faction faction)
-        => this.m_participants.FirstOrDefault(x => x.IsHuman && x.UserDisplayname.CompareTo(playername) == 0 && x.ParticipantFaction == faction).SelectedCompany;
-
     /// <summary>
     /// Get the player company associated with the given steam index.
     /// </summary>
     /// <param name="steamIndex">The index of the steam user.</param>
     /// <returns>The <see cref="Company"/> associated with the given steam user.</returns>
-    public Company GetPlayerCompany(ulong steamIndex)
+    public Company? GetPlayerCompany(ulong steamIndex)
         => this.m_participants.FirstOrDefault(x => x.UserID == steamIndex).SelectedCompany;
 
     /// <summary>
@@ -187,7 +184,10 @@ public class Session : ISession {
 
         // Collect the custom names
         for (int i = 0; i < session.Participants.Length; i++) {
-            var units = session.Participants[i].SelectedCompany.Units;
+            var comp = session.Participants[i].SelectedCompany;
+            if (comp is null)
+                continue;
+            var units = comp.Units;
             for (int j = 0; j < units.Length; j++) { 
                 if (!string.IsNullOrEmpty(units[j].CustomName)) {
                     session.m_customNames.Add(units[j].CustomName);

@@ -1,42 +1,40 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace BattlegroundsApp.Modals {
+namespace BattlegroundsApp.Modals;
+
+/// <summary>
+/// Abstract class with base implementation of a <see cref="Modal"/> dialog control.
+/// </summary>
+public abstract class Modal : UserControl {
+
+    private ModalControl? m_controller;
 
     /// <summary>
-    /// Abstract class with base implementation of a <see cref="Modal"/> dialog control.
+    /// Get the <see cref="Modals.ModalControl"/> instance in charge of handling the current <see cref="Modal"/> instance.
     /// </summary>
-    public abstract class Modal : UserControl {
+    public ModalControl? ModalControl => this.m_controller;
 
-        private ModalControl m_controller;
+    public Modal() : base() {
+        this.HorizontalAlignment = HorizontalAlignment.Center;
+        this.VerticalAlignment = VerticalAlignment.Center;
+    }
 
-        /// <summary>
-        /// Get the <see cref="Modals.ModalControl"/> instance in charge of handling the current <see cref="Modal"/> instance.
-        /// </summary>
-        public ModalControl ModalControl => this.m_controller;
+    public void DisplayModal(ModalControl modal) => this.m_controller = modal;
 
-        public Modal() : base() {
-            this.HorizontalAlignment = HorizontalAlignment.Center;
-            this.VerticalAlignment = VerticalAlignment.Center;
-        }
+    protected virtual void OnModalClosing(ModalCloseEventArgs closeArgs) {}
 
-        public void DisplayModal(ModalControl modal) => this.m_controller = modal;
+    public void CloseModal() {
 
-        protected virtual void OnModalClosing(ModalCloseEventArgs closeArgs) {}
+        // Create close args
+        ModalCloseEventArgs closeArgs = new();
+        this.OnModalClosing(closeArgs);
 
-        public void CloseModal() {
+        // Make sure we're supposed to cancel.
+        if (!closeArgs.Cancel) {
 
-            // Create close args
-            ModalCloseEventArgs closeArgs = new();
-            this.OnModalClosing(closeArgs);
-
-            // Make sure we're supposed to cancel.
-            if (!closeArgs.Cancel) {
-
-                // Trigger the modal close
-                this.ModalControl.CloseModal();
-
-            }
+            // Trigger the modal close
+            this.ModalControl?.CloseModal();
 
         }
 

@@ -8,125 +8,113 @@ using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using System.ComponentModel;
 using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
+using System.Windows;
+using System.Windows.Controls;
 
-namespace BattlegroundsApp {
+namespace BattlegroundsApp;
 
-    public delegate void OnWindowReady(MainWindow window);
+public delegate void OnWindowReady(MainWindow window);
 
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : CoreAppWindow {
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow : Window {
 
-        private AppDisplayState m_displayState;
-        private bool m_isReady;
+    private AppDisplayState m_displayState;
+    private bool m_isReady;
 
-        public AppDisplayState DisplayState => this.m_displayState;
+    public AppDisplayState DisplayState => this.m_displayState;
 
-        public event OnWindowReady? Ready;
+    public event OnWindowReady? Ready;
 
-        public MainWindow() {
+    public MainWindow() {
 
-            // Clear is ready
-            this.m_isReady = false;
+        // Clear is ready
+        this.m_isReady = false;
 
-            // Initialize components etc...
-            this.InitializeComponent();
+        // Initialize components etc...
+        this.InitializeComponent();
 
-            // Set self display state
-            this.m_displayState = AppDisplayState.LeftRight;
+        // Set self display state
+        this.m_displayState = AppDisplayState.LeftRight;
 
+        this.DataContext = new MainWindowViewModel(this);
+
+    }
+
+    protected override void OnContentRendered(EventArgs e) {
+        base.OnContentRendered(e);
+        if (!this.m_isReady) {
+            this.Ready?.Invoke(this);
+            this.m_isReady = true;
         }
+    }
 
-        // Hanlde view state change requests
-        public override bool StateChangeRequest(object request) {
-            return true;
-        }
+    public void SetLeftPanel(IViewModel? lhs) {
+        this.Dispatcher.Invoke(() => {
+            this.LeftContent.Content = null; // Trigger a clear before we set to lhs
+            this.LeftContent.Content = lhs;
+        });
+    }
 
-        // Get the request handler
-        public override StateChangeRequestHandler GetRequestHandler() => this.StateChangeRequest;
+    public void SetRightPanel(IViewModel? rhs) {
+        this.Dispatcher.Invoke(() => {
 
-        public void AllowGetSteamUser(Action<bool> callback) {
+            // Clear
+            this.RightContent.Content = null;
 
-            // Null check
-            if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
-                callback.Invoke(false);
+            // Bail if done
+            if (rhs is null) {
                 return;
             }
 
-            // Lookup strings
-            string title = BattlegroundsInstance.Localize.GetString("MainWindow_YesNoDialog_No_Steam_User_Title");
-            string desc = BattlegroundsInstance.Localize.GetString("MainWindow_YesNoDialog_No_Steam_User_Message");
+            // Grab view
+            if (App.TryFindDataTemplate(rhs.GetType()) is DataTemplate viewTemplate) {
 
-            // Do modal
-            YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
+                // Load view and set datacontext
+                var view = viewTemplate.LoadContent();
+                view.SetValue(DataContextProperty, rhs);
 
-                callback.Invoke(resault is ModalDialogResult.Confirm);
+                // Set content
+                this.RightContent.Content = view;
 
-            }, title, desc);
-
-        }
-        
-        protected override void OnContentRendered(EventArgs e) {
-            base.OnContentRendered(e);
-            if (!this.m_isReady) {
-                this.Ready?.Invoke(this);
-                this.m_isReady = true;
             }
-        }
 
-        public void SetLeftPanel(object? lhs) {
-            this.Dispatcher.Invoke(() => {
-                this.LeftContent.Content = null; // Trigger a clear before we set to lhs
-                this.LeftContent.Content = lhs;
-            });
-        }
+        });
+    }
 
-        public void SetRightPanel(object? rhs) {
-            this.Dispatcher.Invoke(() => {
-                this.RightContent.Content = null; // Trigger a clear before we set to rhs
-                this.RightContent.Content = rhs;
-            });
-        }
+    public void SetFull(IViewModel? full) {
+        this.Dispatcher.Invoke(() => {
+            this.LeftContent.Content = null; // Trigger a clear before we set to lhs
+            this.LeftContent.Content = full;
+        });
+    }
 
-        public void SetFull(object? full) {
-            this.Dispatcher.Invoke(() => {
-                this.LeftContent.Content = null; // Trigger a clear before we set to lhs
-                this.LeftContent.Content = full;
-            });
-        }
+    private void OnAppClosing(object sender, CancelEventArgs e) {
 
-        /// <summary>
-        /// Show or hide left-side panel. Use when additional space is required and it does not make sense to expose other data.
-        /// </summary>
-        /// <param name="show">Show the left-side panel</param>
-        [Obsolete]
-        public void ShowLeftPanel(bool show) {}
+        // Grab obj
+        var target = this.RightContent.Content is FrameworkElement fe ? fe.DataContext : this.RightContent.Content;
 
-        private void CoreAppWindow_Closing(object sender, CancelEventArgs e) {
-
-            // Get current rhs
-            if (this.RightContent.Content is LobbyModel lobby) {
+        // Get current rhs
+        if (target is LobbyModel lobby) {
+            e.Cancel = true;
+            YesNoDialogViewModel.ShowModal(this.ModalView, (_, res) => {
+                if (res is ModalDialogResult.Confirm) {
+                    this.RightContent.Content = null;
+                    Environment.Exit(0);
+                }
+            }, "Leave Lobby?", "Are you sure you want to leave the lobby?");
+            return;
+        } else if (target is CompanyBuilderViewModel cb) {
+            if (cb.HasChanges) {
                 e.Cancel = true;
                 YesNoDialogViewModel.ShowModal(this.ModalView, (_, res) => {
                     if (res is ModalDialogResult.Confirm) {
                         this.RightContent.Content = null;
                         Environment.Exit(0);
                     }
-                }, "Leave Lobby?", "Are you sure you want to leave the lobby?");
-                return;
-            } else if (this.RightContent.Content is CompanyBuilderViewModel cb) {
-                if (cb.HasChanges) {
-                    e.Cancel = true;
-                    YesNoDialogViewModel.ShowModal(this.ModalView, (_, res) => {
-                        if (res is ModalDialogResult.Confirm) {
-                            this.RightContent.Content = null;
-                            Environment.Exit(0);
-                        }
-                    }, "Unsaved Changes", "You have unsaved changes that will be lost if you exit now.");
-                }
+                }, "Unsaved Changes", "You have unsaved changes that will be lost if you exit now.");
             }
-
         }
 
     }

@@ -16,7 +16,6 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 
-using BattlegroundsApp.Controls.CompanyBuilderControls;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
@@ -35,9 +34,9 @@ public record CompanyBuilderButton2(ICommand Click, LocaleKey? Tooltip, Func<Vis
     }
 }
 
-public class CompanyBuilderViewModel : IViewModel {
+public class CompanyBuilderViewModel : ViewModelBase {
 
-    public bool KeepAlive => false;
+    public override bool KeepAlive => false;
 
     public CompanyBuilderButton Save { get; }
 
@@ -45,7 +44,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
     public CompanyBuilderButton2 Back { get; }
 
-    public bool SingleInstanceOnly => false; // This will allow us to override
+    public override bool SingleInstanceOnly => false; // This will allow us to override
 
     public bool HasChanges => this.Builder.IsChanged;
 
@@ -684,22 +683,33 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    public void UnloadViewModel(OnModelClosed closeCallback, bool destroy) {
-        App.ViewManager.DestroyView(this);
+    public override void UnloadViewModel(OnModelClosed closeCallback, bool destroy) {
+        
+        // Destroy if requested
+        if (destroy) {
+            App.ViewManager.DestroyView(this);
+        }
+        
+        // Check if any changes
         if (this.HasChanges) {
+
+            // If modal control not found, bail
             if (App.ViewManager.GetRightsideModalControl() is not ModalControl mc) {
                 closeCallback(false);
                 return;
             }
+
+            // Ask user to confirm change
             YesNoDialogViewModel.ShowModal(mc, (_, res) => {
                 closeCallback(res is ModalDialogResult.Cancel);
             }, "Unsaved Changes", "You have unsaved changes that will be lost if you leave the company builder. Are you sure you want to leave?");
+        
         } else {
+            
+            // Invoke callback now
             closeCallback(false);
-        }
-    }
 
-    public void Swapback() {
+        }
 
     }
 
