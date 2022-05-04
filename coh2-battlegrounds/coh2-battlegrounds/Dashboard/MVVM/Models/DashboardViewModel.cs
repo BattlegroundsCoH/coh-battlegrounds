@@ -2,13 +2,8 @@
 using Battlegrounds.Game.DataCompany;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.MVVM;
-using BattlegroundsApp.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BattlegroundsApp.Dashboard.MVVM.Models;
 
@@ -188,11 +183,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
     /// </summary>
     public double KillDeathRatio { 
         get {
-            try {
-                return (this.TotalInfantryKills + this.TotalVehicleKills) / (this.TotalInfantryLosses + this.TotalVehicleLosses);
-            } catch {
-                return 0;
-            }
+            return (this.TotalInfantryLosses + this.TotalVehicleLosses) > 0 ? (this.TotalInfantryKills + this.TotalVehicleKills) / (this.TotalInfantryLosses + this.TotalVehicleLosses) : 0;
         }
         set {
             OnPropertyChanged(nameof(KillDeathRatio));
