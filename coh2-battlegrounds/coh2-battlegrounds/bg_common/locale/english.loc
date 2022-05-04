@@ -65,6 +65,7 @@ english:
  GameBrowserView_Title: "Game Browser"
  GameBrowserView_NoLobbies: "No matches found"
  GameBrowserView_NoConnection: "No connection to server"
+ GameBrowserView_NoneSelected: "No lobby selected"
  GameLobbyConnectingView_Connecting: "Connecting ..."
  YesNoDialogView_Confirm: "Yes"
  YesNoDialogView_Cancel: "No"

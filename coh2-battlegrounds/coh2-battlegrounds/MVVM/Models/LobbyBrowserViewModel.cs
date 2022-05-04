@@ -117,6 +117,10 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
     public ObservableCollection<LobbySlotPreview> PreviewAxis { get; set; }
 
+    public Visibility PreviewVisible { get; set; } = Visibility.Collapsed;
+
+    public Visibility NoneVisible => this.PreviewVisible is Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+
     public LobbyBrowserViewModel() {
 
         // Create refresh
@@ -191,6 +195,11 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
             return;
         }
 
+        // Show
+        this.PreviewVisible = Visibility.Visible;
+        this.PropertyChanged?.Invoke(this, new(nameof(NoneVisible)));
+        this.PropertyChanged?.Invoke(this, new(nameof(PreviewVisible)));
+
         // Get selected
         var selected = this.Lobbies[this.SelectedLobbyIndex];
 
@@ -244,6 +253,11 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
     }
 
     private void ClearSelected() {
+
+        // Hide
+        this.PreviewVisible = Visibility.Collapsed;
+        this.PropertyChanged?.Invoke(this, new(nameof(NoneVisible)));
+        this.PropertyChanged?.Invoke(this, new(nameof(PreviewVisible)));
 
         // Give it a null
         this.PreviewImage = LobbySettingsLookup.TryGetMapSource(null);

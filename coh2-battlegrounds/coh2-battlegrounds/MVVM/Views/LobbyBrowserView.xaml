@@ -181,56 +181,57 @@
                 Background="{StaticResource BackgroundDarkBlueBrush}"
                 BorderBrush="{StaticResource BackgroundLightBlueBrush}"
                 BorderThickness="1.25">
-            <Grid >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="320"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="52"/>
-                    <RowDefinition Height="32"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid.Resources>
-                    <DataTemplate x:Key="TeamSlotPreview">
-                        <Grid Grid.Row="2" Grid.Column="2" Height="32" 
+            <Grid>
+                <Grid Visibility="{Binding PreviewVisible}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="320"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="52"/>
+                        <RowDefinition Height="32"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.Resources>
+                        <DataTemplate x:Key="TeamSlotPreview">
+                            <Grid Grid.Row="2" Grid.Column="2" Height="32" 
                       Margin="5" Visibility="{Binding SlotVisibility}"
                       Background="{StaticResource BackgroundLightBlueBrush}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="32"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Image Grid.Column="0"
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0"
                                    Source="{Binding SlotImage}"
                                    Width="32" Height="32"/>
-                            <Label Content="{Binding SlotTitle}" 
+                                <Label Content="{Binding SlotTitle}" 
                                    VerticalAlignment="Center"
                            Foreground="White" FontFamily="Open Sans"
                            Grid.Column="1"/>
-                        </Grid>
-                    </DataTemplate>
-                </Grid.Resources>
-                <Canvas Grid.Column="0" 
+                            </Grid>
+                        </DataTemplate>
+                    </Grid.Resources>
+                    <Canvas Grid.Column="0" 
                     Height="284"
                     Width="308" 
                     Grid.RowSpan="7"
                         Margin="5">
-                    <Image 
+                        <Image 
                     Canvas.Top="10"
                     Canvas.Left="12"
                     Width="280"
                     Height="260"
                     Stretch="Fill"
                     Source="{Binding PreviewImage}"/>
-                    <Image
+                        <Image
                     Width="300"
                     Canvas.Top="6"
                     Canvas.Left="0"
                     Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbySettingMap.png"/>
-                </Canvas>
-                <Label Content="{Binding PreviewTitle}"
+                    </Canvas>
+                    <Label Content="{Binding PreviewTitle}"
                    Grid.Row="0"
                    Grid.Column="1"
                    Grid.ColumnSpan="3"
@@ -238,14 +239,14 @@
                    FontSize="14"
                    FontWeight="Bold"
                    VerticalContentAlignment="Center"/>
-                <Label Content="Settings"
+                    <Label Content="Settings"
                    Grid.Row="1"
                    Grid.Column="1"
                    Foreground="White"
                    FontSize="12"
                    FontWeight="Bold"
                    VerticalContentAlignment="Center"/>
-                <Label Content="Allies"
+                    <Label Content="Allies"
                    Grid.Row="1"
                    Grid.Column="2"
                    Foreground="White"
@@ -253,7 +254,7 @@
                    FontWeight="Bold"
                    VerticalContentAlignment="Center"
                    HorizontalAlignment="Center"/>
-                <Label Content="Axis"
+                    <Label Content="Axis"
                    Grid.Row="1"
                    Grid.Column="3"
                    Foreground="White"
@@ -261,35 +262,45 @@
                    FontWeight="Bold"
                    VerticalContentAlignment="Center"
                    HorizontalAlignment="Center"/>
-                <ItemsControl ItemsSource="{Binding PreviewSettings}"
+                    <ItemsControl ItemsSource="{Binding PreviewSettings}"
                           Grid.Column="1"
                           Grid.Row="2"
                           Grid.RowSpan="5">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label Content="{Binding Key}" Grid.Column="0" Foreground="White" FontFamily="Open Sans"/>
-                                <Label Content="{Binding Value}" Grid.Column="1" Foreground="White" FontFamily="Open Sans"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="{Binding Key}" Grid.Column="0" Foreground="White" FontFamily="Open Sans"/>
+                                    <Label Content="{Binding Value}" Grid.Column="1" Foreground="White" FontFamily="Open Sans"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
-                <ItemsControl ItemsSource="{Binding PreviewAllies}" 
+                    <ItemsControl ItemsSource="{Binding PreviewAllies}" 
                               ItemTemplate="{StaticResource TeamSlotPreview}"
                               Margin="5"
                               Grid.Row="2"
                               Grid.Column="2"/>
-                <ItemsControl ItemsSource="{Binding PreviewAxis}" 
+                    <ItemsControl ItemsSource="{Binding PreviewAxis}" 
                               ItemTemplate="{StaticResource TeamSlotPreview}"
                               Margin="5"
                               Grid.Row="2"
                               Grid.Column="3"/>
 
+                </Grid>
+                <controls:LocLabel
+                        LocKey="GameBrowserView_NoneSelected"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Foreground="Gray"
+                    FontFamily="Open Sans"
+                    FontWeight="Bold"
+                    FontSize="16"
+                    Visibility="{Binding NoneVisible}"/>
             </Grid>
         </Border>
         
