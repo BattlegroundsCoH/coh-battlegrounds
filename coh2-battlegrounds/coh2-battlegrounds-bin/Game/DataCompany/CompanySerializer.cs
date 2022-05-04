@@ -156,7 +156,7 @@ public class CompanySerializer : JsonConverter<Company> {
 #if DEBUG
                     $" (0x{unverified.Checksum:X} - 0x{result.Checksum:X})";
 #else
-                    ""
+                    "";
 #endif
                 Trace.WriteLine($"Fatal - Company '{result.Name}' has been modified{dbstr}.", $"{nameof(CompanySerializer)}::{nameof(GetCompanyFromFile)}");
                 
