@@ -24,7 +24,7 @@ public enum CompanyDataType {
     Company
 }
 
-public class DashboardViewModel : ViewModelBase, IViewModel {
+public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
 
     #region Private member
 

@@ -128,7 +128,9 @@ public static class BattlegroundsInstance {
             this.ResolveDirectory(BattlegroundsPaths.MOD_USER_FOLDER, $"{userpath}mods\\");
             this.ResolveDirectory(BattlegroundsPaths.MOD_USER_DATABASE_FODLER, $"{userpath}mods\\mod_db\\");
             this.ResolveDirectory(BattlegroundsPaths.MOD_USER_ICONS_FODLER, $"{userpath}mods\\map_icons\\");
-            this.ResolveDirectory(BattlegroundsPaths.PLUGIN_FOLDER, $"{userpath}plugins\\");
+
+            // Plugin folder
+            this.ResolveDirectory(BattlegroundsPaths.PLUGIN_FOLDER, "plugins\\");
 
             // Data folder
             this.ResolveDirectory(BattlegroundsPaths.MOD_ART_FOLDER, $"{binpath}gfx\\");

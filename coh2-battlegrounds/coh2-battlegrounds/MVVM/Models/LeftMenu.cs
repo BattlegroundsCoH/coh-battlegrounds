@@ -15,7 +15,7 @@ public class LeftMenuButton {
     public bool Enabled { get; init; }
 }
 
-public class LeftMenu : IViewModel {
+public class LeftMenu : ViewModelBase {
 
     public LeftMenuButton Dashboard { get; }
     public LeftMenuButton News { get; }
@@ -25,9 +25,9 @@ public class LeftMenu : IViewModel {
     public LeftMenuButton Settings { get; }
     public LeftMenuButton Exit { get; }
 
-    public bool KeepAlive => true;
+    public override bool KeepAlive => true;
 
-    public bool SingleInstanceOnly => true;
+    public override bool SingleInstanceOnly => true;
 
     public LeftMenu() {
 
@@ -130,12 +130,6 @@ public class LeftMenu : IViewModel {
         // Ask main window to close -> this will shut down the application.
         Application.Current.MainWindow.Close();
 
-    }
-
-    public void UnloadViewModel(OnModelClosed closeCallback, bool destroy) => closeCallback(false);
-
-    public void Swapback() {
-        // TODO: Do stuff
     }
 
 }

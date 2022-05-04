@@ -1,19 +1,17 @@
 ﻿using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 
-namespace Battlegrounds.Game.Match.Analyze {
+namespace Battlegrounds.Game.Match.Analyze;
 
-    public class ItemStatus {
+public class ItemStatus {
 
-        public Player PlayerOwner { get; }
+    public Player PlayerOwner { get; }
 
-        public Blueprint Blueprint { get; }
+    public Blueprint Blueprint { get; }
 
-        public ItemStatus(Player player, Blueprint bp) {
-            this.PlayerOwner = player;
-            this.Blueprint = bp;
-        }
-
+    public ItemStatus(Player player, Blueprint bp) {
+        this.PlayerOwner = player;
+        this.Blueprint = bp;
     }
 
 }

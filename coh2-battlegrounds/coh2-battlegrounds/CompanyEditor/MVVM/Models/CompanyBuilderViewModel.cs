@@ -34,9 +34,9 @@ public record CompanyBuilderButton2(ICommand Click, LocaleKey? Tooltip, Func<Vis
     }
 }
 
-public class CompanyBuilderViewModel : IViewModel {
+public class CompanyBuilderViewModel : ViewModelBase {
 
-    public bool KeepAlive => false;
+    public override bool KeepAlive => false;
 
     public CompanyBuilderButton Save { get; }
 
@@ -44,7 +44,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
     public CompanyBuilderButton2 Back { get; }
 
-    public bool SingleInstanceOnly => false; // This will allow us to override
+    public override bool SingleInstanceOnly => false; // This will allow us to override
 
     public bool HasChanges => this.Builder.IsChanged;
 
@@ -683,7 +683,7 @@ public class CompanyBuilderViewModel : IViewModel {
 
     }
 
-    public void UnloadViewModel(OnModelClosed closeCallback, bool destroy) {
+    public override void UnloadViewModel(OnModelClosed closeCallback, bool destroy) {
         
         // Destroy if requested
         if (destroy) {
@@ -710,10 +710,6 @@ public class CompanyBuilderViewModel : IViewModel {
             closeCallback(false);
 
         }
-
-    }
-
-    public void Swapback() {
 
     }
 

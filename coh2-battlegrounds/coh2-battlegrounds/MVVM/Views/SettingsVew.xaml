@@ -160,7 +160,7 @@
                         Grid.Row="4"
                         Grid.Column="2"
                         Command="{Binding BrowseSteamButton}"/>
-                <Label Content="{Binding SteaUserContent}"
+                <Label Content="{Binding SteamUserContent}"
                        Style="{StaticResource Header3}"
                        Grid.Column="1"
                        HorizontalAlignment="Right"

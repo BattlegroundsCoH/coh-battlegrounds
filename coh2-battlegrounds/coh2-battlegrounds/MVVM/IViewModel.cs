@@ -1,4 +1,6 @@
-﻿namespace BattlegroundsApp.MVVM;
+﻿using System.ComponentModel;
+
+namespace BattlegroundsApp.MVVM;
 
 /// <summary>
 /// Delegate handler
@@ -8,7 +10,7 @@ public delegate void OnModelClosed(bool isCancelled);
 /// <summary>
 /// Interface for a displayable view model that can interact nicely with the <see cref="AppViewManager"/>.
 /// </summary>
-public interface IViewModel {
+public interface IViewModel : INotifyPropertyChanged {
 
     /// <summary>
     /// Get if only a single instance of the view model is allowed to axist.

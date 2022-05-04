@@ -23,7 +23,7 @@ public class CompanyBrowserButton {
     public LocaleKey? Tooltip { get; init; }
 }
 
-public class CompanyBrowserViewModel : IViewModel {
+public class CompanyBrowserViewModel : ViewModelBase {
 
     public CompanyBrowserButton Create { get; }
 
@@ -55,9 +55,9 @@ public class CompanyBrowserViewModel : IViewModel {
 
     public Company? SelectedCompany { get; set; }
 
-    public bool SingleInstanceOnly => true;
+    public override bool SingleInstanceOnly => true;
 
-    public bool KeepAlive => true;
+    public override bool KeepAlive => true;
 
     public CompanyBrowserViewModel() {
 
@@ -248,12 +248,6 @@ public class CompanyBrowserViewModel : IViewModel {
         foreach (var company in PlayerCompanies.GetAllCompanies()) {
             this.Companies.Add(company);
         }
-
-    }
-
-    public void UnloadViewModel(OnModelClosed closeCallback, bool destroy) => closeCallback(false);
-
-    public void Swapback() {
 
     }
 
