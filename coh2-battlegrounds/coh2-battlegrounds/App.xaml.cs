@@ -80,11 +80,6 @@ public partial class App : Application {
         // Load locale
         LoadLocale();
 
-        // Load
-        if (!BattlegroundsInstance.IsFirstRun) {
-            this.LoadNext();
-        }
-
         // Create window and hook into window events
         MainWindow window = new();
         window.Ready += this.MainWindow_Ready;
@@ -98,13 +93,13 @@ public partial class App : Application {
         __viewManager = new(window);
         __viewManager.SetDisplay(AppDisplayState.LeftRight, __lmenu, __dashboard);
 
-        // Create other views that are directly accessible from LHS
-        __companyBrowser = __viewManager.CreateDisplayIfNotFound<CompanyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create company browser view model!");
-        __lobbyBrowser = __viewManager.CreateDisplayIfNotFound<LobbyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create lobby browser view model!");
-        __settings = __viewManager.CreateDisplayIfNotFound<SettingsViewModel>(() => new()) ?? throw new Exception("Failed to create settings view model!");
-
         // Set as started
         IsStarted = true;
+
+        // Load
+        if (!BattlegroundsInstance.IsFirstRun) {
+            this.LoadNext();
+        }
 
         // Set main window and show
         this.MainWindow = window;
@@ -204,6 +199,16 @@ public partial class App : Application {
 
         // Load databases (async)
         DatabaseManager.LoadAllDatabases(OnDatabasesLoaded);
+
+        // Verify view manager
+        if (!IsStarted) {
+            return;
+        }
+
+        // Create other views that are directly accessible from LHS
+        __companyBrowser = __viewManager.CreateDisplayIfNotFound<CompanyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create company browser view model!");
+        __lobbyBrowser = __viewManager.CreateDisplayIfNotFound<LobbyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create lobby browser view model!");
+        __settings = __viewManager.CreateDisplayIfNotFound<SettingsViewModel>(() => new()) ?? throw new Exception("Failed to create settings view model!");
 
     }
 
