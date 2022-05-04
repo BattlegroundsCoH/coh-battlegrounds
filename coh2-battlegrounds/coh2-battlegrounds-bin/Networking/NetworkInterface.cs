@@ -18,7 +18,7 @@ public static class NetworkInterface {
     private static readonly string __localServerAddr = File.Exists("network.test.txt") ? File.ReadAllText("network.test.txt") : "192.168.1.107";
 
     private static readonly NetworkEndpoint LocalEndpoint = new(__localServerAddr, 80, 11000);
-    private static readonly NetworkEndpoint RemoteDebugEndpoint = new("194.37.80.249", 81, 5000);
+    private static readonly NetworkEndpoint RemoteDebugEndpoint = new("194.37.80.249", 5001, 5000);
     public static readonly NetworkEndpoint RemoteReleaseEndpoint = new("194.37.80.249", 80, 11000);
 
     /// <summary>
@@ -116,7 +116,7 @@ public static class NetworkInterface {
 #endif
         // Set as release
         __hasServerConnection = RemoteReleaseEndpoint.IsConnectable();
-        Trace.WriteLine($"Picked remote release server as endpoint (Connection = {__hasServerConnection}", nameof(NetworkInterface));
+        Trace.WriteLine($"Picked remote release server as endpoint (Connection = {__hasServerConnection})", nameof(NetworkInterface));
         __bestEndpoint = RemoteReleaseEndpoint;
     }
 

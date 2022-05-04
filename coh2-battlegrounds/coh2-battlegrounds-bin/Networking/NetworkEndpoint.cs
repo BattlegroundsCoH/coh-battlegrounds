@@ -61,7 +61,7 @@ public readonly struct NetworkEndpoint {
             var response = client.Send(request);
             return response.IsSuccessStatusCode;
         } catch (Exception e) {
-            Trace.WriteLine(e, nameof(NetworkEndpoint));
+            //Trace.WriteLine(e, nameof(NetworkEndpoint));
             return false;
         }
     }
