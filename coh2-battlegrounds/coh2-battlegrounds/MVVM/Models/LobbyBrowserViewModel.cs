@@ -10,6 +10,7 @@ using System.Windows.Media;
 
 using Battlegrounds;
 using Battlegrounds.Functional;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
@@ -39,16 +40,16 @@ public record LobbySettingPreview(string Key, string Value);
 
 public record LobbySlotPreview(ServerSlot Slot) {
     public string SlotTitle => this.Slot.State switch {
-        0 => "Open", // TODO: Localise
+        0 => BattlegroundsInstance.Localize.GetString("GameBrowserView_PreviewSlotOpen"),
         1 => this.Slot.Difficulty switch {
             0 => this.Slot.DisplayName,
-            1 => "",
-            2 => "",
-            3 => "",
-            4 => "",
+            1 => BattlegroundsInstance.Localize.GetEnum(AIDifficulty.AI_Easy),
+            2 => BattlegroundsInstance.Localize.GetEnum(AIDifficulty.AI_Standard),
+            3 => BattlegroundsInstance.Localize.GetEnum(AIDifficulty.AI_Hard),
+            4 => BattlegroundsInstance.Localize.GetEnum(AIDifficulty.AI_Expert),
             _ => throw new InvalidOperationException()
         },
-        2 => "Locked",
+        2 => BattlegroundsInstance.Localize.GetString("GameBrowserView_PreviewSlotLocked"),
         _ => ""
     };
     public ImageSource? SlotImage => this.Slot.State switch {

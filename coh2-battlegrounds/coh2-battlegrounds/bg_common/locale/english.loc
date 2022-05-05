@@ -66,6 +66,8 @@ english:
  GameBrowserView_NoLobbies: "No matches found"
  GameBrowserView_NoConnection: "No connection to server"
  GameBrowserView_NoneSelected: "No lobby selected"
+ GameBrowserView_PreviewSlotLocked: "Locked"
+ GameBrowserView_PreviewSlotOpen: "Open"
  GameLobbyConnectingView_Connecting: "Connecting ..."
  YesNoDialogView_Confirm: "Yes"
  YesNoDialogView_Cancel: "No"
