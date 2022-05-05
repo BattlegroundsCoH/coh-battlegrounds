@@ -12,73 +12,15 @@ using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
-
-using static Battlegrounds.Networking.LobbySystem.LobbyAPIStructs;
 using Battlegrounds.Util;
+using Battlegrounds.Networking.LobbySystem.json;
 
 namespace Battlegrounds.Networking.LobbySystem;
 
 /// <summary>
-/// Event handler for <see cref="LobbyAPI"/> events.
-/// </summary>
-public delegate void LobbyEventHandler();
-
-/// <summary>
-/// Event handler for <see cref="LobbyAPI"/> events with an argument object.
-/// </summary>
-/// <typeparam name="T">The argument object type.</typeparam>
-/// <param name="args">The arguments to pass aling to the handler.</param>
-public delegate void LobbyEventHandler<T>(T args);
-
-/// <summary>
-/// Event arguments to a startup cancelled event.
-/// </summary>
-/// <param name="CancelId">The ID of the user who cancelled the startup.</param>
-/// <param name="CancelName">The name of the user who cancelled the startup.</param>
-public record LobbyMatchStartupCancelledEventArgs(ulong CancelId, string CancelName);
-
-/// <summary>
-/// Event arguments to the settings changed event.
-/// </summary>
-/// <param name="SettingsKey">The setting that was changed.</param>
-/// <param name="SettingsValue">The new value of the setting.</param>
-public record LobbySettingsChangedEventArgs(string SettingsKey, string SettingsValue);
-
-/// <summary>
-/// Event arguments to the system message event.
-/// </summary>
-/// <param name="MemberId">The ID of the user who caused the message.</param>
-/// <param name="SystemMessage">The message to display.</param>
-/// <param name="SystemContext">The context of the system message.</param>
-public record LobbySystemMessageEventArgs(ulong MemberId, string SystemMessage, string SystemContext);
-
-/// <summary>
-/// Event arguments for the company changed event.
-/// </summary>
-/// <param name="TeamId">The team of the changed company.</param>
-/// <param name="SlotId">The slot of the changed company.</param>
-/// <param name="Company">The new company.</param>
-public record LobbyCompanyChangedEventArgs(int TeamId, int SlotId, LobbyCompany Company);
-
-/// <summary>
-/// Event arguments for match the event a match is halted.
-/// </summary>
-/// <param name="IsError">Flag marking whether the infor is an error or general information.</param>
-/// <param name="Type">The type of halt (Where in the match process we were halted, and the severity)</param>
-/// <param name="Reason">The reason given for the halt.</param>
-public record LobbyMatchInfoEventArgs(bool IsError, string Type, string Reason);
-
-/// <summary>
 /// Class for interacting with the lobby logic on the server.
 /// </summary>
-public sealed class LobbyAPI {
-
-    public const string SETTING_MAP = "selected_map";
-    public const string SETTING_GAMEMODE = "selected_wc";
-    public const string SETTING_GAMEMODEOPTION = "selected_wco";
-    public const string SETTING_WEATHER = "selected_daynight";
-    public const string SETTING_LOGISTICS = "selected_supply";
-    public const string SETTING_MODPACK = "selected_tuning";
+public sealed class OnlineLobbyHandle : ILobbyHandle {
 
     private static readonly TimeZoneInfo __thisTimezone = TimeZoneInfo.Local;
 
@@ -86,9 +28,9 @@ public sealed class LobbyAPI {
     private readonly bool m_isHost;
     private volatile uint m_cidcntr;
 
-    private LobbyTeam m_allies;
-    private LobbyTeam m_axis;
-    private LobbyTeam m_obs;
+    private ILobbyTeam m_allies;
+    private ILobbyTeam m_axis;
+    private ILobbyTeam m_obs;
     private readonly Dictionary<string, string> m_settings;
 
     /// <summary>
@@ -104,17 +46,17 @@ public sealed class LobbyAPI {
     /// <summary>
     /// Get the allied team.
     /// </summary>
-    public LobbyTeam Allies => this.m_allies;
+    public ILobbyTeam Allies => this.m_allies;
 
     /// <summary>
     /// Get the axis team.
     /// </summary>
-    public LobbyTeam Axis => this.m_axis;
+    public ILobbyTeam Axis => this.m_axis;
 
     /// <summary>
     /// Get the observer team.
     /// </summary>
-    public LobbyTeam Observers => this.m_obs;
+    public ILobbyTeam Observers => this.m_obs;
 
     /// <summary>
     /// Get (or set) the settings of the lobby.
@@ -134,7 +76,7 @@ public sealed class LobbyAPI {
     /// <summary>
     /// Event triggered when a lobby chat message is received.
     /// </summary>
-    public event LobbyEventHandler<LobbyMessage>? OnChatMessage;
+    public event LobbyEventHandler<ILobbyMessage>? OnChatMessage;
 
     /// <summary>
     /// Event triggered when the system announces a message.
@@ -144,12 +86,12 @@ public sealed class LobbyAPI {
     /// <summary>
     /// Event triggered when a lobby team instance is changed.
     /// </summary>
-    public event LobbyEventHandler<LobbyTeam>? OnLobbyTeamUpdate;
+    public event LobbyEventHandler<ILobbyTeam>? OnLobbyTeamUpdate;
 
     /// <summary>
     /// Event triggered when a lobby slot isntance is changed.
     /// </summary>
-    public event LobbyEventHandler<LobbySlot>? OnLobbySlotUpdate;
+    public event LobbyEventHandler<ILobbySlot>? OnLobbySlotUpdate;
 
     /// <summary>
     /// Event triggered when a lobby company is changed.
@@ -222,7 +164,7 @@ public sealed class LobbyAPI {
     public event LobbyEventHandler? OnLobbyMatchHalt;
 
     /// <summary>
-    /// Initialises a new <see cref="LobbyAPI"/> instance that is connected along a <see cref="ServerConnection"/> to a lobby.
+    /// Initialises a new <see cref="OnlineLobbyHandle"/> instance that is connected along a <see cref="ServerConnection"/> to a lobby.
     /// </summary>
     /// <param name="isHost">Flag marking if host. This is for local checking, the server verifies this independently.</param>
     /// <param name="title">The title of the lobby that was joined or hosted.</param>
@@ -230,7 +172,7 @@ public sealed class LobbyAPI {
     /// <param name="connection">The connection that connects the local machine to the server.</param>
     /// <param name="serverAPI">The API object that performs HTTP API calls to the server.</param>
     /// <exception cref="Exception"></exception>
-    public LobbyAPI(bool isHost, string title, SteamUser self, ServerConnection connection, ServerAPI serverAPI) {
+    public OnlineLobbyHandle(bool isHost, string title, SteamUser self, ServerConnection connection, ServerAPI serverAPI) {
 
         // Store ref to server handle
         this.ServerHandle = serverAPI;
@@ -263,7 +205,7 @@ public sealed class LobbyAPI {
 
             // Make pull lobby request
             ContentMessage? reply = this.m_connection.SendAndAwaitReply(msg);
-            if (reply is ContentMessage response && GoMarshal.JsonUnmarshal<LobbyRemote>(response.Raw) is LobbyRemote remoteLobby) {
+            if (reply is ContentMessage response && GoMarshal.JsonUnmarshal<JsonLobbyRemote>(response.Raw) is JsonLobbyRemote remoteLobby) {
 
                 // Make sure teams are valid
                 if (remoteLobby.Teams is null || remoteLobby.Teams.Any(x => x is null)) {
@@ -271,7 +213,7 @@ public sealed class LobbyAPI {
                 }
 
                 // Set API on team objects
-                remoteLobby.Teams.ForEach(x => x.SetAPI(this));
+                remoteLobby.Teams.ForEach(x => x.SetHandle(this));
 
                 // Create team data
                 this.m_allies = remoteLobby.Teams[0];
@@ -293,30 +235,23 @@ public sealed class LobbyAPI {
             Thread.Sleep(50);
 
             // Log
-            Trace.WriteLine("Resending request to get light-lobby version...", nameof(LobbyAPI));
+            Trace.WriteLine("Resending request to get light-lobby version...", nameof(OnlineLobbyHandle));
 
         }
 
         // Disconnect
-        this.Disconnect();
+        this.CloseHandle();
 
         // Throw exception -> Failed to fully connect.
         throw new Exception("Failed to retrieve light-lobby version.");
 
     }
 
-    private LobbyTeam? GetTeamInstanceByIndex(int tid) => tid switch {
-        0 => this.m_allies,
-        1 => this.m_axis,
-        2 => this.m_obs,
-        _ => throw new IndexOutOfRangeException($"Team ID '{tid}' is out of bounds.")
-    };
-
     private void OnMessage(uint cid, ulong sender, ContentMessage message) {
 
         // Check if error message and display it
         if (message.MessageType is ContentMessgeType.Error) {
-            Trace.WriteLine($"Received Error = {message.StrMsg} to CID({cid})", nameof(LobbyAPI));
+            Trace.WriteLine($"Received Error = {message.StrMsg} to CID({cid})", nameof(OnlineLobbyHandle));
             return;
         }
 
@@ -340,7 +275,7 @@ public sealed class LobbyAPI {
         switch (message.StrMsg) {
             case "Message":
 
-                if (GoMarshal.JsonUnmarshal<LobbyMessage>(message.Raw) is LobbyMessage lobbyMessage) {
+                if (GoMarshal.JsonUnmarshal<JsonLobbyMessage>(message.Raw) is JsonLobbyMessage lobbyMessage) {
 
                     // Get serverzone
                     var serverZone = TimeZoneInfo.FindSystemTimeZoneById(lobbyMessage.Timezone);
@@ -353,10 +288,8 @@ public sealed class LobbyAPI {
                         datetime = datetime.AddHours(1);
                     }
 
-                    lobbyMessage.Timestamp = $"{datetime.Hour:00}:{datetime.Minute:00}";
-
                     // Trigger event
-                    this.OnChatMessage?.Invoke(lobbyMessage);
+                    this.OnChatMessage?.Invoke(lobbyMessage with { Timestamp = $"{datetime.Hour:00}:{datetime.Minute:00}" });
 
                 }
 
@@ -370,29 +303,23 @@ public sealed class LobbyAPI {
                 bool parsed = int.TryParse(companyCall.Arguments[0], out int tid);
                 parsed &= int.TryParse(companyCall.Arguments[1], out int sid);
                 if (!parsed) {
-                    Trace.WriteLine($"Failed to parse '{companyCall.Arguments[0]}' or '{companyCall.Arguments[1]}' as integers", nameof(LobbyAPI));
+                    Trace.WriteLine($"Failed to parse '{companyCall.Arguments[0]}' or '{companyCall.Arguments[1]}' as integers", nameof(OnlineLobbyHandle));
                     return;
                 }
 
                 // Get strength
                 if (!float.TryParse(companyCall.Arguments[6], out float strength)) {
-                    Trace.WriteLine($"Failed to parse '{companyCall.Arguments[6]}' as float32", nameof(LobbyAPI));
+                    Trace.WriteLine($"Failed to parse '{companyCall.Arguments[6]}' as float32", nameof(OnlineLobbyHandle));
                     return;
                 }
 
-                // Create company
-                var company = new LobbyCompany() {
-                    API = this,
-                    IsAuto = companyCall.Arguments[2] == "1",
-                    IsNone = companyCall.Arguments[3] == "1",
-                    Name = companyCall.Arguments[4],
-                    Army = companyCall.Arguments[5],
-                    Strength = strength,
-                    Specialisation = companyCall.Arguments[7]
-                };
+                // Get bools
+                bool isAuto = companyCall.Arguments[2] == "1";
+                bool isNone = companyCall.Arguments[3] == "1";
 
-                // Set company API
-                company.SetAPI(this);
+                // Create company
+                var company = new JsonLobbyCompany(isAuto, isNone, companyCall.Arguments[4], companyCall.Arguments[5], strength, companyCall.Arguments[7]);
+                company.SetHandle(this);
 
                 // Invoke handler
                 this.OnLobbyCompanyUpdate?.Invoke(new(tid, sid, company));
@@ -401,10 +328,10 @@ public sealed class LobbyAPI {
             case "Notify.Team":
 
                 // Try get team
-                if (GoMarshal.JsonUnmarshal<LobbyTeam>(message.Raw) is LobbyTeam newTeam) {
+                if (GoMarshal.JsonUnmarshal<JsonLobbyTeam>(message.Raw) is JsonLobbyTeam newTeam) {
 
                     // Set API
-                    newTeam.SetAPI(this);
+                    newTeam.SetHandle(this);
 
                     // Refresh self teams
                     if (newTeam.TeamID == 0) {
@@ -424,10 +351,10 @@ public sealed class LobbyAPI {
             case "Notify.Slot":
 
                 // Try get slot
-                if (GoMarshal.JsonUnmarshal<LobbySlot>(message.Raw) is LobbySlot newSlot) {
+                if (GoMarshal.JsonUnmarshal<JsonLobbySlot>(message.Raw) is JsonLobbySlot newSlot) {
 
                     // Set API
-                    newSlot.SetAPI(this);
+                    newSlot.SetHandle(this);
 
                     // Update slot on team
                     switch (newSlot.TeamID) {
@@ -509,7 +436,7 @@ public sealed class LobbyAPI {
 
                 break;
             default:
-                Trace.WriteLine($"Unsupported API event: {message.StrMsg}", nameof(LobbyAPI));
+                Trace.WriteLine($"Unsupported API event: {message.StrMsg}", nameof(OnlineLobbyHandle));
                 break;
         }
 
@@ -525,7 +452,7 @@ public sealed class LobbyAPI {
     /// <summary>
     /// Disconnects the local machine from the lobby.
     /// </summary>
-    public void Disconnect() {
+    public void CloseHandle() {
         this.m_connection.Shutdown();
     }
 
@@ -545,7 +472,7 @@ public sealed class LobbyAPI {
     /// <param name="tid">The team ID to set company for. In the range 0 &#x2264; T &#x2264; 1</param>
     /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
     /// <param name="company">The company to set.</param>
-    public void SetCompany(int tid, int sid, LobbyCompany company) {
+    public void SetCompany(int tid, int sid, ILobbyCompany company) {
 
         // Convert to str
         string strength = company.Strength.ToString(CultureInfo.InvariantCulture);
@@ -587,7 +514,7 @@ public sealed class LobbyAPI {
     /// <param name="difficulty">The AI difficulty level (integer representation of <see cref="AIDifficulty"/>)</param>
     /// <param name="company">The company initially given to the AI.</param>
     /// <exception cref="InvokePermissionAccessDeniedException"></exception>
-    public void AddAI(int tid, int sid, int difficulty, LobbyCompany company) {
+    public void AddAI(int tid, int sid, int difficulty, ILobbyCompany company) {
     
         // Make sure we can
         if (!this.m_isHost) {
@@ -637,20 +564,17 @@ public sealed class LobbyAPI {
         => this.RemoteVoidCall("UnlockSlot", tid, sid);
 
     /// <summary>
-    /// Send a message along the (lobby) global chat.
+    /// 
     /// </summary>
-    /// <param name="mid">The ID of the member sending the chat message.</param>
-    /// <param name="msg">The message to send.</param>
-    public void GlobalChat(ulong mid, string msg)
-        => this.RemoteVoidCall("GlobalChat", mid, msg);
-
-    /// <summary>
-    /// Send a message along the designated team chat.
-    /// </summary>
-    /// <param name="mid">The ID of the member sending the chat message.</param>
-    /// <param name="msg">The message to send.</param>
-    public void TeamChat(ulong mid, string msg)
-        => this.RemoteVoidCall("TeamChat", mid, msg);
+    /// <param name="filter"></param>
+    /// <param name="mid"></param>
+    /// <param name="msg"></param>
+    /// <exception cref="IndexOutOfRangeException"></exception>
+    public void SendChatMessage(int filter, ulong mid, string msg) => this.RemoteVoidCall(filter switch {
+        0 => "GlobalChat",
+        1 => "TeamChat",
+        _ => throw new IndexOutOfRangeException()
+    }, mid, msg);
 
     /// <summary>
     /// Set the lobby setting.
@@ -834,7 +758,7 @@ public sealed class LobbyAPI {
     public LobbyPollResults ConductPoll(string pollType, double pollTime = 3) {
 
         // Conduct poll with expecnded time
-        if (this.RemoteCallWithTime<LobbyPoll>("PollInfo", new object[] { pollType }, TimeSpan.FromSeconds(pollTime + 1)) is LobbyPoll poll) {
+        if (this.RemoteCallWithTime<ILobbyPoll>("PollInfo", new object[] { pollType }, TimeSpan.FromSeconds(pollTime + 1)) is ILobbyPoll poll) {
 
             // Count yays
             byte y = (byte)poll.Responses.Aggregate(0, (a, b) => a + (b.Value ? 1 : 0));
@@ -886,8 +810,8 @@ public sealed class LobbyAPI {
                 });
             } else {
                 if (GoMarshal.JsonUnmarshal<T>(response.Raw) is T settings) {
-                    if (settings is IAPIObject apiobj) {
-                        apiobj.SetAPI(this);
+                    if (settings is IHandleObject handleObject) {
+                        handleObject.SetHandle(this);
                     }
                     return settings;
                 }

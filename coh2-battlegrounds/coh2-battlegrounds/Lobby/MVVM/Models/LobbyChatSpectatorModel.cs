@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Documents;
@@ -27,7 +26,7 @@ public class LobbyChannelModel {
     public override string ToString() => BattlegroundsInstance.Localize.GetString(this.Display);
 }
 
-public class LobbyChatSpectatorModel : IViewModel, INotifyPropertyChanged {
+public class LobbyChatSpectatorModel : ViewModelBase {
 
     public record ChatButton(string Title, RelayCommand Click);
     public record ChatFilterDropdown(ObservableCollection<LobbyChannelModel> Channels) {
@@ -42,16 +41,14 @@ public class LobbyChatSpectatorModel : IViewModel, INotifyPropertyChanged {
 
     private static readonly Func<string> LOCSTR_SEND = () => BattlegroundsInstance.Localize.GetString("LobbyChat_Send");
 
-    private readonly LobbyAPI m_handle;
+    private readonly ILobbyHandle m_handle;
     private readonly LocaleKey m_allFilter;
     private readonly LocaleKey m_teamFilter;
     private readonly FontFamily m_font = new FontFamily("Open Sans");
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public override bool SingleInstanceOnly => false;
 
-    public bool SingleInstanceOnly => false;
-
-    public bool KeepAlive => true;
+    public override bool KeepAlive => true;
 
     public Visibility SpectatorVisibility => this.Spectators.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
@@ -67,7 +64,7 @@ public class LobbyChatSpectatorModel : IViewModel, INotifyPropertyChanged {
 
     public string? MessageContent { get; set; }
 
-    public LobbyChatSpectatorModel(LobbyAPI lobbyHandler) {
+    public LobbyChatSpectatorModel(ILobbyHandle lobbyHandler) {
         
         // Set internal handler
         this.m_handle = lobbyHandler;
@@ -97,7 +94,7 @@ public class LobbyChatSpectatorModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    private void OnChatMessage(LobbyAPIStructs.LobbyMessage msg) {
+    private void OnChatMessage(ILobbyMessage msg) {
         
         // Convert lobby message colour to System.Colour
         var colour = (Color)ColorConverter.ConvertFromString(msg.Colour);
@@ -163,11 +160,11 @@ public class LobbyChatSpectatorModel : IViewModel, INotifyPropertyChanged {
         // Send using broker
         switch (this.SendFilter.CurrentIndex) {
             case 0: // All
-                this.m_handle.GlobalChat(this.m_handle.Self.ID, content);
+                this.m_handle.SendChatMessage(0, this.m_handle.Self.ID, content);
                 channel = "All";
                 break;
             case 1: // Team
-                this.m_handle.TeamChat(this.m_handle.Self.ID, content);
+                this.m_handle.SendChatMessage(1, this.m_handle.Self.ID, content);
                 channel = "Team";
                 break;
             default:
@@ -181,7 +178,7 @@ public class LobbyChatSpectatorModel : IViewModel, INotifyPropertyChanged {
         this.MessageContent = string.Empty;
 
         // Trigger refresh
-        this.PropertyChanged?.Invoke(this, new(nameof(this.MessageContent)));
+        this.Notify(nameof(this.MessageContent));
 
     }
 
@@ -230,11 +227,4 @@ public class LobbyChatSpectatorModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    public void UnloadViewModel(OnModelClosed closeCallback, bool destroy) => closeCallback(false);
-
-    public void Swapback() {
-
-    }
-
 }
-

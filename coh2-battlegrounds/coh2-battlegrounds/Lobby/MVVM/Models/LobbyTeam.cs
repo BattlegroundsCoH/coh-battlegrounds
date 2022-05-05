@@ -6,7 +6,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models;
 
 public class LobbyTeam {
 
-    private LobbyAPIStructs.LobbyTeam m_team;
+    private ILobbyTeam m_team;
 
     public LobbySlot Slot1 { get; }
 
@@ -16,11 +16,11 @@ public class LobbyTeam {
 
     public LobbySlot Slot4 { get; }
 
-    public LobbyAPIStructs.LobbyTeam Team => this.m_team;
+    public ILobbyTeam Team => this.m_team;
 
     public LobbyModel Lobby { get; }
 
-    public LobbyTeam(LobbyAPI lobbyAPI, LobbyAPIStructs.LobbyTeam lobbyTeam, LobbyModel model) {
+    public LobbyTeam(ILobbyHandle lobbyAPI, ILobbyTeam lobbyTeam, LobbyModel model) {
        
         // Set team isntance
         this.m_team = lobbyTeam;
@@ -46,7 +46,7 @@ public class LobbyTeam {
 
     }
 
-    public void OnTeamMemberCompanyUpdated(int sid, LobbyAPIStructs.LobbyCompany company) {
+    public void OnTeamMemberCompanyUpdated(int sid, ILobbyCompany company) {
         
         // Try set in slot
         this.Team.Slots[sid].TrySetCompany(company);
@@ -77,7 +77,7 @@ public class LobbyTeam {
 
     }
 
-    private void OnLobbyTeamUpdated(LobbyAPIStructs.LobbyTeam obj) {
+    private void OnLobbyTeamUpdated(ILobbyTeam obj) {
 
         // Only trigger on self
         if (obj.TeamID == this.Team.TeamID) {
@@ -116,7 +116,7 @@ public class LobbyTeam {
                 if (slots[i].Occupant is not LobbyAPIStructs.LobbyMember mem) {
                     continue; // Some werid err
                 }
-                flag1 |= mem.State is LobbyAPIStructs.LobbyMemberState.Waiting;
+                flag1 |= mem.State is LobbyMemberState.Waiting;
                 if (mem.Company?.IsNone ?? true) {
                     flag2 = false;
                 } else {

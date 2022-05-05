@@ -66,12 +66,12 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
     private static readonly LocaleKey _noConnection = new LocaleKey("GameBrowserView_NoConnection");
 
     private static readonly Dictionary<string, LocaleKey> _settingKeys = new() {
-        [LobbyAPI.SETTING_GAMEMODE] = new("LobbyView_SettingGamemode"),
-        [LobbyAPI.SETTING_GAMEMODEOPTION] = new("LobbyView_SettingOption"),
-        [LobbyAPI.SETTING_LOGISTICS] = new("LobbyView_SettingSupply"),
-        [LobbyAPI.SETTING_MAP] = new("LobbyView_SettingScenario"),
-        [LobbyAPI.SETTING_MODPACK] = new("LobbyView_SettingTuning"),
-        [LobbyAPI.SETTING_WEATHER] = new("LobbyView_SettingWeather")
+        [LobbyConstants.SETTING_GAMEMODE] = new("LobbyView_SettingGamemode"),
+        [LobbyConstants.SETTING_GAMEMODEOPTION] = new("LobbyView_SettingOption"),
+        [LobbyConstants.SETTING_LOGISTICS] = new("LobbyView_SettingSupply"),
+        [LobbyConstants.SETTING_MAP] = new("LobbyView_SettingScenario"),
+        [LobbyConstants.SETTING_MODPACK] = new("LobbyView_SettingTuning"),
+        [LobbyConstants.SETTING_WEATHER] = new("LobbyView_SettingWeather")
     };
 
     private DateTime m_lastRefresh;
@@ -209,7 +209,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         this.PropertyChanged?.Invoke(this, new(nameof(PreviewTitle)));
 
         // Read from settings
-        var scen = ScenarioList.FromRelativeFilename(selected.Settings[LobbyAPI.SETTING_MAP]);
+        var scen = ScenarioList.FromRelativeFilename(selected.Settings[LobbyConstants.SETTING_MAP]);
 
         // Set scenario
         this.PreviewImage = LobbySettingsLookup.TryGetMapSource(scen);
@@ -219,23 +219,23 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         this.PreviewSettings.Clear();
 
         // Grab mod package
-        var package = ModManager.GetPackage(selected.Settings.TryGetValue(LobbyAPI.SETTING_MODPACK, out string? s) ? s : string.Empty);
+        var package = ModManager.GetPackage(selected.Settings.TryGetValue(LobbyConstants.SETTING_MODPACK, out string? s) ? s : string.Empty);
 
         // Set settings
         foreach (var setting in selected.Settings) {
             if (_settingKeys.TryGetValue(setting.Key, out var keyloc) && keyloc is not null) {
                 bool show = setting.Key switch {
-                    LobbyAPI.SETTING_GAMEMODE => package is not null,
-                    LobbyAPI.SETTING_GAMEMODEOPTION => package is not null && setting.Key is not "",
+                    LobbyConstants.SETTING_GAMEMODE => package is not null,
+                    LobbyConstants.SETTING_GAMEMODEOPTION => package is not null && setting.Key is not "",
                     _ => true
                 };
                 if (show) {
                     string k = BattlegroundsInstance.Localize.GetString(keyloc);
                     string v = setting.Key switch {
-                        LobbyAPI.SETTING_MAP => LobbySettingsLookup.GetScenarioName(scen, setting.Value),
-                        LobbyAPI.SETTING_WEATHER or LobbyAPI.SETTING_LOGISTICS => setting.Value is "1" ? "On" : "Off",
-                        LobbyAPI.SETTING_MODPACK => package?.PackageName ?? setting.Value,
-                        LobbyAPI.SETTING_GAMEMODE => LobbySettingsLookup.GetGamemodeName(setting.Value, package),
+                        LobbyConstants.SETTING_MAP => LobbySettingsLookup.GetScenarioName(scen, setting.Value),
+                        LobbyConstants.SETTING_WEATHER or LobbyConstants.SETTING_LOGISTICS => setting.Value is "1" ? "On" : "Off",
+                        LobbyConstants.SETTING_MODPACK => package?.PackageName ?? setting.Value,
+                        LobbyConstants.SETTING_GAMEMODE => LobbySettingsLookup.GetGamemodeName(setting.Value, package),
                         _ => setting.Value
                     };
                     this.PreviewSettings.Add(new(k, v));
@@ -360,7 +360,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    private void HostLobbyResponse(bool isSuccess, LobbyAPI? lobby) {
+    private void HostLobbyResponse(bool isSuccess, ILobbyHandle? lobby) {
 
         // If lobby was created.
         if (isSuccess && lobby is not null) {
@@ -450,7 +450,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         }
     }
 
-    private void JoinLobbyResponse(bool joined, LobbyAPI? lobby) { 
+    private void JoinLobbyResponse(bool joined, ILobbyHandle? lobby) { 
         
         if (joined && lobby is not null) {
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 
@@ -10,6 +9,7 @@ using Battlegrounds;
 using Battlegrounds.Game;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.Networking.LobbySystem.json;
 
 using BattlegroundsApp.LocalData;
 
@@ -24,15 +24,15 @@ public abstract class LobbySlot : INotifyPropertyChanged {
     private static readonly Func<string> LOCSTR_SLOT_LOCKED = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Locked_Slot");
     private static readonly Func<string> LOCSTR_SLOT_JOINING = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Joining_Slot");
 
-    protected static readonly LobbyAPIStructs.LobbyCompany DummyCompany = new() { Army = "soviet", IsNone = true, Name = "None", Specialisation = "", Strength = 0 };
+    protected static readonly ILobbyCompany DummyCompany = new JsonLobbyCompany(false, false, "None", "soviet", 0.0f, "");
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected LobbyAPIStructs.LobbySlot m_slot;
+    protected ILobbySlot m_slot;
 
     private int m_selectedCompany;
 
-    public LobbyAPI Handle { get; }
+    public ILobbyHandle Handle { get; }
 
     public Visibility IsSlotVisible => this.Slot.State == 3 ? Visibility.Collapsed : Visibility.Visible;
 
@@ -42,11 +42,11 @@ public abstract class LobbySlot : INotifyPropertyChanged {
 
     public LobbyTeam Team { get; }
 
-    public LobbyAPIStructs.LobbySlot Slot => this.m_slot;
+    public ILobbySlot Slot => this.m_slot;
 
-    public ObservableCollection<LobbyAPIStructs.LobbyCompany> SelectableCompanies { get; }
+    public ObservableCollection<ILobbyCompany> SelectableCompanies { get; }
 
-    public LobbyAPIStructs.LobbyCompany SelectedCompany 
+    public ILobbyCompany SelectedCompany 
         => this.SelectedCompanyIndex >= 0 ? this.SelectableCompanies[this.SelectedCompanyIndex] : DummyCompany;
 
     public abstract LobbyContextMenu ContextMenu { get; }
@@ -77,11 +77,11 @@ public abstract class LobbySlot : INotifyPropertyChanged {
         }
     }
 
-    public LobbySlot(LobbyAPIStructs.LobbySlot teamSlot, LobbyTeam team) {
+    public LobbySlot(ILobbySlot teamSlot, LobbyTeam team) {
 
         // Set values
         this.Team = team;
-        this.Handle = teamSlot.API ?? throw new Exception("Expected valid API handle but got none!");
+        this.Handle = teamSlot.Handle;
         this.m_slot = teamSlot;
 
         // Check if self or AI, then set contents
@@ -90,12 +90,8 @@ public abstract class LobbySlot : INotifyPropertyChanged {
         // Do initial view
         this.RefreshCompanyInfo();
 
-        // Get API
-        if (teamSlot.API is LobbyAPI api) {
-            api.OnLobbySlotUpdate += this.OnLobbySlotUpdate;
-        } else {
-            Trace.WriteLine("Invalid lobby API given -- slot wont update properly!!!", nameof(LobbySlot));
-        }
+        // Subscribe to slot updates
+        this.Handle.OnLobbySlotUpdate += this.OnLobbySlotUpdate;
 
     }
 
@@ -133,18 +129,13 @@ public abstract class LobbySlot : INotifyPropertyChanged {
 
     }
 
-    protected LobbyAPIStructs.LobbyCompany FromCompany(Company x)
-        => new LobbyAPIStructs.LobbyCompany() {
-            API = Slot.API ?? throw new Exception("API should always be set on company!"),
-            Army = x.Army.Name,
-            IsAuto = false,
-            IsNone = false,
-            Name = x.Name,
-            Specialisation = x.Type.ToString(),
-            Strength = (float)x.Rating
-        };
+    protected ILobbyCompany FromCompany(Company x) {
+        var company = new JsonLobbyCompany(false, false, x.Name, x.Army.Name, (float)x.Rating, x.Type.ToString());
+        company.SetHandle(this.Handle);
+        return company;
+    }
 
-    public void OnLobbySlotUpdate(LobbyAPIStructs.LobbySlot args) {
+    public void OnLobbySlotUpdate(ILobbySlot args) {
         Application.Current.Dispatcher.Invoke(() => {
             if (args.TeamID == this.Team.Team.TeamID && args.SlotID == this.m_slot.SlotID) {
 
@@ -190,16 +181,15 @@ public abstract class LobbySlot : INotifyPropertyChanged {
 
     }
 
-    protected static string GetOccupantName(LobbyAPIStructs.LobbyMember mem) => mem.Role switch {
+    protected static string GetOccupantName(ILobbyMember mem) => mem.Role switch {
         3 => BattlegroundsInstance.Localize.GetEnum((AIDifficulty)mem.AILevel),
-        _ => mem.State is LobbyAPIStructs.LobbyMemberState.Joining ? LOCSTR_SLOT_JOINING() : mem.DisplayName
+        _ => mem.State is LobbyMemberState.Joining ? LOCSTR_SLOT_JOINING() : mem.DisplayName
     };
 
     protected abstract void OnLobbyCompanyChanged(int newValue);
 
-    public abstract void OnLobbyCompanyChanged(LobbyAPIStructs.LobbyCompany company);
+    public abstract void OnLobbyCompanyChanged(ILobbyCompany company);
 
     protected void NotifyProperty(PropertyChangedEventArgs e) => this.PropertyChanged?.Invoke(this, e);
 
 }
-

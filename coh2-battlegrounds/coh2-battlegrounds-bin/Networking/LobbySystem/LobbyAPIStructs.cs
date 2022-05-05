@@ -12,10 +12,10 @@ public static class LobbyAPIStructs {
     public interface IAPIObject {
 
         [JsonIgnore]
-        public LobbyAPI? API { get; set; }
+        public OnlineLobbyHandle? API { get; set; }
 
         [MemberNotNull(nameof(API))]
-        public void SetAPI(LobbyAPI api);
+        public void SetAPI(OnlineLobbyHandle api);
 
     }
 
@@ -26,19 +26,13 @@ public static class LobbyAPIStructs {
         public string Army { get; set; } = string.Empty;
         public float Strength { get; set; }
         public string Specialisation { get; set; } = string.Empty;
-        public LobbyAPI? API { get; set; }
+        public OnlineLobbyHandle? API { get; set; }
 
         [MemberNotNull(nameof(API))]
-        public void SetAPI(LobbyAPI api) {
+        public void SetAPI(OnlineLobbyHandle api) {
             this.API = api;
         }
 
-    }
-
-    public enum LobbyMemberState : byte {
-        Joining = 0,
-        Waiting = 1,
-        EditCompany = 2
     }
 
     public class LobbyMember : IAPIObject {
@@ -49,10 +43,10 @@ public static class LobbyAPIStructs {
         public byte AILevel { get; set; }
         public LobbyMemberState State { get; set; }
         public LobbyCompany? Company { get; set; }
-        public LobbyAPI? API { get; set; }
+        public OnlineLobbyHandle? API { get; set; }
 
         [MemberNotNull(nameof(API))]
-        public void SetAPI(LobbyAPI api) {
+        public void SetAPI(OnlineLobbyHandle api) {
             this.API = api;
             if (this.Company is not null) {
                 this.Company.API = api;
@@ -69,7 +63,7 @@ public static class LobbyAPIStructs {
         public LobbyMember? Occupant { get; set; }
 
         [JsonIgnore]
-        public LobbyAPI? API { get; set; }
+        public OnlineLobbyHandle? API { get; set; }
 
         [JsonIgnore]
         [MemberNotNullWhen(true, nameof(Occupant))]
@@ -100,7 +94,7 @@ public static class LobbyAPIStructs {
         }
 
         [MemberNotNull(nameof(API))]
-        public void SetAPI(LobbyAPI api) {
+        public void SetAPI(OnlineLobbyHandle api) {
             this.API = api;
             this.Occupant?.SetAPI(api);
         }
@@ -112,10 +106,10 @@ public static class LobbyAPIStructs {
         public LobbySlot[] Slots { get; set; } = new LobbySlot[4];
         public int TeamID { get; set; }
         public int Capacity { get; set; }
-        public LobbyAPI? API { get; set; }
+        public OnlineLobbyHandle? API { get; set; }
 
         [MemberNotNull(nameof(API))]
-        public void SetAPI(LobbyAPI api) {
+        public void SetAPI(OnlineLobbyHandle api) {
             this.API = api;
             for (int i = 0; i < this.Slots.Length; i++) {
                 this.Slots[i].SetAPI(api);
@@ -152,38 +146,4 @@ public static class LobbyAPIStructs {
         public Dictionary<string, string> Settings { get; set; } = new();
     }
 
-    public enum LobbyState {
-        None = 0,
-        InLobby = 1,
-        Starting = 2,
-        Playing = 3
-    }
-
-    public class LobbyPoll {
-        public Dictionary<ulong, bool> Responses { get; set; } = new();
-        public uint ResponseId { get; set; }
-        public string PollId { get; set; } = string.Empty;
-    }
-
-    public readonly struct LobbyPollResults {
-
-        public byte Yays { get; }
-
-        public byte Nays { get; }
-
-        public bool YayMajority => this.Yays > this.Nays;
-
-        public bool TimedOut { get; }
-
-        public LobbyPollResults(byte y, byte n, bool t) {
-            this.Yays = y;
-            this.Nays = n;
-            this.TimedOut = t;
-        }
-
-        public static implicit operator bool(LobbyPollResults results) => results.YayMajority;
-
-    }
-
 }
-

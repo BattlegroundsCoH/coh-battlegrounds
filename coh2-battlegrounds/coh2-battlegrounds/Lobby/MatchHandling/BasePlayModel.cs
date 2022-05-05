@@ -25,7 +25,7 @@ namespace BattlegroundsApp.Lobby.MatchHandling;
 internal abstract class BasePlayModel {
 
     // Load refs
-    protected readonly LobbyAPI m_handle;
+    protected readonly ILobbyHandle m_handle;
     protected readonly LobbyChatSpectatorModel m_chat;
 
     // The strategies to use
@@ -44,10 +44,10 @@ internal abstract class BasePlayModel {
     // handlers for cancel/error cases
     private PrepareCancelHandler? m_prepCancelHandler;
 
-    public BasePlayModel(LobbyAPI handler, LobbyChatSpectatorModel lobbyChat) {
+    public BasePlayModel(ILobbyHandle handle, LobbyChatSpectatorModel lobbyChat) {
 
         // Set base stuff
-        this.m_handle = handler;
+        this.m_handle = handle;
         this.m_chat = lobbyChat;
 
     }
@@ -149,7 +149,7 @@ internal abstract class BasePlayModel {
 
     }
 
-    protected SessionParticipant CreateParticipantFromLobbyMember(LobbyAPIStructs.LobbyMember participant, ParticipantTeam team, ValRef<byte> count, ValRef<byte> index) {
+    protected SessionParticipant CreateParticipantFromLobbyMember(ILobbyMember participant, ParticipantTeam team, ValRef<byte> count, ValRef<byte> index) {
         
         // Update indicies
         byte tIndex = index.Change(x => ++x);

@@ -17,9 +17,9 @@ public sealed class MultiplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFi
     private bool m_isStarted;
     private bool m_isCancelled;
     private bool m_hasSuccessAnalysis;
-    private readonly LobbyAPI m_lobby;
     private IPlayStrategy? m_playStrategyResult;
     private IAnalyzedMatch? m_analyzedMatch;
+    private readonly ILobbyHandle m_lobby;
 
     public bool HasStarted => this.m_isStarted;
 
@@ -33,7 +33,7 @@ public sealed class MultiplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFi
 
     public event AnalysisCancelledHandler? AnalysisCancelled;
 
-    public MultiplayerSession(LobbyAPI lobby) {
+    public MultiplayerSession(ILobbyHandle lobby) {
         this.m_isCancelled = false;
         this.m_isStarted = false;
         this.m_lobby = lobby;

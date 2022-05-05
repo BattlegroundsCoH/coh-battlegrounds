@@ -24,7 +24,7 @@ public class MultiplayerFinalizer : SingleplayerFinalizer {
         }
 
         // Get handler
-        if (synchronizeObject is not LobbyAPI handler) {
+        if (synchronizeObject is not OnlineLobbyHandle handler) {
             Trace.WriteLine("{Error} -- The synchronizeObject is NULL and changes will therefore not be saved anywhere!", nameof(MultiplayerFinalizer));
             return;
         }
@@ -61,7 +61,7 @@ public class MultiplayerFinalizer : SingleplayerFinalizer {
 
     }
 
-    private static void UploadResults(LobbyAPI api, ServerMatchResults matchResults, LobbyPlayerCompanyFile[] companyFiles) {
+    private static void UploadResults(OnlineLobbyHandle api, ServerMatchResults matchResults, LobbyPlayerCompanyFile[] companyFiles) {
 
         // Loop over the files and trigger appropriate events
         for (int i = 0; i < companyFiles.Length; i++) {

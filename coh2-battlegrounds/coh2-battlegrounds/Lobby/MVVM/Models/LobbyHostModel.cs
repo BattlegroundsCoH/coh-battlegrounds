@@ -45,7 +45,7 @@ public class LobbyHostModel : LobbyModel {
 
     public ImageSource? SelectedMatchScenario { get; set; }
 
-    public LobbyHostModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) : base(handle, allies, axis) {
+    public LobbyHostModel(ILobbyHandle handle, ILobbyTeam allies, ILobbyTeam axis) : base(handle, allies, axis) {
 
         // Init buttons
         this.StartMatchButton = new(new(() => this.m_isStarting.IfFalse().Then(this.BeginMatchSetup).Else(this.CancelMatch)), Visibility.Visible) { Title = LOCSTR_START() };
@@ -89,23 +89,23 @@ public class LobbyHostModel : LobbyModel {
         this.m_handle.OnLobbySlotUpdate += this.OnSlotUpdated;
 
         // Set lobby status
-        this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.InLobby);
+        this.m_handle.SetLobbyState(LobbyState.InLobby);
 
         // Inform others
         if (this.TryGetSelf() is LobbyAPIStructs.LobbySlot self && self.Occupant is not null) {
-            this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyAPIStructs.LobbyMemberState.Waiting);
+            this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.Waiting);
         }
 
     }
 
-    private async void OnSlotUpdated(LobbyAPIStructs.LobbySlot args) {
+    private async void OnSlotUpdated(ILobbySlot args) {
         await Task.Delay(100);
         Application.Current.Dispatcher.Invoke(() => {
             this.RefreshPlayability();
         });
     }
 
-    private async void OnTeamUpdated(LobbyAPIStructs.LobbyTeam args) {
+    private async void OnTeamUpdated(ILobbyTeam args) {
         await Task.Delay(100);
         Application.Current.Dispatcher.Invoke(() => {
             this.RefreshPlayability();
@@ -174,7 +174,7 @@ public class LobbyHostModel : LobbyModel {
             this.m_isStarting = true;
 
             // Set lobby status here
-            this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Starting);
+            this.m_handle.SetLobbyState(LobbyState.Starting);
 
             // Get play model
             var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, this.UploadGamemodeCallback);
@@ -189,7 +189,7 @@ public class LobbyHostModel : LobbyModel {
     private void BeginMatch(IPlayModel model) {
 
         // Set lobby status here
-        this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.Playing);
+        this.m_handle.SetLobbyState(LobbyState.Playing);
 
         // Play match
         model.Play(this.GameLaunching, this.EndMatch);
@@ -228,7 +228,7 @@ public class LobbyHostModel : LobbyModel {
     private void EndMatch(IPlayModel model) {
 
         // Set lobby status here
-        this.m_handle.SetLobbyState(LobbyAPIStructs.LobbyState.InLobby);
+        this.m_handle.SetLobbyState(LobbyState.InLobby);
 
         // Re-enable
         Application.Current.Dispatcher.Invoke(() => {
@@ -266,7 +266,7 @@ public class LobbyHostModel : LobbyModel {
         this.NotifyProperty(nameof(ScenarioPreview));
 
         // Update lobby
-        this.m_handle.SetLobbySetting(LobbyAPI.SETTING_MAP, scen.RelativeFilename);
+        this.m_handle.SetLobbySetting(LobbyConstants.SETTING_MAP, scen.RelativeFilename);
 
     }
 
@@ -285,7 +285,7 @@ public class LobbyHostModel : LobbyModel {
             this.GamemodeOptionDropdown.Visibility = Visibility.Hidden;
 
             // Set setting to empty (Hidden)
-            this.m_handle.SetLobbySetting(LobbyAPI.SETTING_GAMEMODEOPTION, string.Empty);
+            this.m_handle.SetLobbySetting(LobbyConstants.SETTING_GAMEMODEOPTION, string.Empty);
 
         } else {
 
@@ -303,7 +303,7 @@ public class LobbyHostModel : LobbyModel {
         }
 
         // Update lobby
-        this.m_handle.SetLobbySetting(LobbyAPI.SETTING_GAMEMODE, this.GamemodeDropdown.Items[newIndex].Name);
+        this.m_handle.SetLobbySetting(LobbyConstants.SETTING_GAMEMODE, this.GamemodeDropdown.Items[newIndex].Name);
 
     }
 
@@ -311,12 +311,12 @@ public class LobbyHostModel : LobbyModel {
 
         // Bail
         if (newIndex == -1) {
-            this.m_handle.SetLobbySetting(LobbyAPI.SETTING_GAMEMODEOPTION, string.Empty);
+            this.m_handle.SetLobbySetting(LobbyConstants.SETTING_GAMEMODEOPTION, string.Empty);
             return;
         }
         
         // Update lobby
-        this.m_handle.SetLobbySetting(LobbyAPI.SETTING_GAMEMODEOPTION, this.GamemodeOptionDropdown.Items[newIndex].Value.ToString(CultureInfo.InvariantCulture));
+        this.m_handle.SetLobbySetting(LobbyConstants.SETTING_GAMEMODEOPTION, this.GamemodeOptionDropdown.Items[newIndex].Value.ToString(CultureInfo.InvariantCulture));
 
     }
 
@@ -326,7 +326,7 @@ public class LobbyHostModel : LobbyModel {
         this.WeatherDropdown.LabelContent = this.WeatherDropdown.Items[newIndex].IsOn.ToString();
     
         // Update lobby
-        this.m_handle.SetLobbySetting(LobbyAPI.SETTING_WEATHER, this.WeatherDropdown.Items[newIndex].IsOn ? "1" : "0");
+        this.m_handle.SetLobbySetting(LobbyConstants.SETTING_WEATHER, this.WeatherDropdown.Items[newIndex].IsOn ? "1" : "0");
 
     }
 
@@ -336,7 +336,7 @@ public class LobbyHostModel : LobbyModel {
         this.SupplySystemDropdown.LabelContent = this.SupplySystemDropdown.Items[newIndex].IsOn.ToString();
 
         // Update lobby
-        this.m_handle.SetLobbySetting(LobbyAPI.SETTING_LOGISTICS, this.SupplySystemDropdown.Items[newIndex].IsOn ? "1" : "0");
+        this.m_handle.SetLobbySetting(LobbyConstants.SETTING_LOGISTICS, this.SupplySystemDropdown.Items[newIndex].IsOn ? "1" : "0");
 
     }
 
@@ -349,7 +349,7 @@ public class LobbyHostModel : LobbyModel {
         this.ModPackageDropdown.LabelContent = this.ModPackageDropdown.Items[newIndex].ModPackage.PackageName;
 
         // Update lobby
-        this.m_handle.SetLobbySetting(LobbyAPI.SETTING_MODPACK, this.ModPackageDropdown.Items[newIndex].ModPackage.ID);
+        this.m_handle.SetLobbySetting(LobbyConstants.SETTING_MODPACK, this.ModPackageDropdown.Items[newIndex].ModPackage.ID);
 
     }
 
@@ -383,4 +383,3 @@ public class LobbyHostModel : LobbyModel {
     }
 
 }
-
