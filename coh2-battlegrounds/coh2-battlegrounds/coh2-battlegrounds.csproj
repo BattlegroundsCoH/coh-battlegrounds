@@ -803,10 +803,10 @@
     <None Update="bg_common\battlegrounds.mod.package.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\locale\english.gamemode.ucs">
+    <None Update="bg_common\locale\english\english.gamemode.ucs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\locale\english.tuning.ucs">
+    <None Update="bg_common\locale\english\english.tuning.ucs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\data\mod_bg-abp-db.json">
