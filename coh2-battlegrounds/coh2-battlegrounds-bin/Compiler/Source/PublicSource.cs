@@ -44,14 +44,17 @@ namespace Battlegrounds.Compiler.Source {
 
             // Collect all locale files
             List<WinconditionSourceFile> files = new List<WinconditionSourceFile>();
-            string[] locFolders = Directory.GetDirectories(Path.GetFullPath("usr\\mods\\bg\\locale"));
+            string binpath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER);
+            string locpath = Path.Combine(binpath, "locale");
+            string[] locFolders = Directory.GetDirectories(Path.GetFullPath(locpath));
             string[] loc = locFolders.MapAndFlatten(x => Directory.GetFiles(x, "*.gamemode.ucs"));
             foreach (string file in loc) {
                 var fp = Path.GetFullPath(file);
-                files.Add(new WinconditionSourceFile(file[Path.GetFullPath("usr\\mods\\bg\\").Length..], File.ReadAllBytes(file)));
+                files.Add(new WinconditionSourceFile(file[Path.GetFullPath(binpath).Length..], File.ReadAllBytes(file)));
             }
 
             return files.ToArray();
+
         }
 
         public WinconditionSourceFile[] GetScarFiles() {
