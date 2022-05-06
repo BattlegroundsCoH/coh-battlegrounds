@@ -785,7 +785,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle {
         => this.RemoteCallWithTime<T>(method, args);
 
     private T? RemoteCallWithTime<T>(string method, object[] args, TimeSpan? waitTime = null) {
-        
+
         // Create message
         Message msg = new Message() {
             CID = this.m_cidcntr++,
@@ -809,11 +809,11 @@ public sealed class OnlineLobbyHandle : ILobbyHandle {
                     _ => throw new NotImplementedException($"Support for primitive response of type '{response.DotNetType}' not implemented.")
                 });
             } else {
-                if (GoMarshal.JsonUnmarshal<T>(response.Raw) is T settings) {
-                    if (settings is IHandleObject handleObject) {
+                if (GoMarshal.JsonUnmarshal<T>(response.Raw) is T content) {
+                    if (content is IHandleObject handleObject) {
                         handleObject.SetHandle(this);
                     }
-                    return settings;
+                    return content;
                 }
             }
         }
@@ -824,7 +824,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle {
     }
 
     private void RemoteVoidCall(string method, params object[] args) {
-        
+
         // Create message
         Message msg = new Message() {
             CID = this.m_cidcntr++,

@@ -113,7 +113,7 @@ public class LobbyTeam {
         // Loop over slots and check if any valid
         for (int i = 0; i < slots.Length; i++) {
             if (slots[i].IsOccupied) {
-                if (slots[i].Occupant is not LobbyAPIStructs.LobbyMember mem) {
+                if (slots[i].Occupant is not ILobbyMember mem) {
                     continue; // Some werid err
                 }
                 flag1 |= mem.State is LobbyMemberState.Waiting;

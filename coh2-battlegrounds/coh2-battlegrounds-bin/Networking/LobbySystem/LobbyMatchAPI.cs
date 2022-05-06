@@ -124,7 +124,7 @@ public class LobbyMatchAPI {
                 if (slot.IsSelf() || slot.IsAI())
                     continue;
 
-                if (team.Slots[i].Occupant is LobbyAPIStructs.LobbyMember member) {
+                if (team.Slots[i].Occupant is ILobbyMember member) {
                     companyCallback?.Invoke(this.GetPlayerCompany(member.MemberID));
                     count++;
                 }

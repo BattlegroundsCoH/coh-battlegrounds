@@ -7,6 +7,7 @@ namespace Battlegrounds.Networking.LobbySystem.json;
 public class JsonLobbyMember : ILobbyMember {
 
     private ILobbyHandle? m_handle;
+    private ILobbyCompany? m_company;
 
     public ulong MemberID { get; set; }
     
@@ -19,7 +20,7 @@ public class JsonLobbyMember : ILobbyMember {
     public LobbyMemberState State { get; }
 
     [JsonConverter(typeof(JsonLobbyCompanyConverter))]
-    public ILobbyCompany? Company { get; }
+    public ILobbyCompany? Company => this.m_company;
 
     [JsonIgnore]
     public ILobbyHandle Handle => this.m_handle ?? throw new InvalidOperationException();
@@ -31,12 +32,17 @@ public class JsonLobbyMember : ILobbyMember {
         this.Role = Role;
         this.AILevel = AILevel;
         this.State = State;
-        this.Company = Company;
+        this.m_company = Company;
     }
 
     public void SetHandle(ILobbyHandle handle) { 
         this.m_handle = handle; 
         this.Company?.SetHandle(handle);
+    }
+
+    public void ChangeCompany(ILobbyCompany? company) {
+        this.m_company = company;
+        this.Company?.SetHandle(this.Handle);
     }
 
 }

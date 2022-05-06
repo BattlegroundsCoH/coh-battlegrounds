@@ -70,7 +70,7 @@ public class LobbyParticipantModel : LobbyModel {
         this.OnGamemodeChange(handle.Settings[LobbyConstants.SETTING_GAMEMODE]);
 
         // Inform others
-        if (this.TryGetSelf() is LobbyAPIStructs.LobbySlot self && self.Occupant is not null) {
+        if (this.TryGetSelf() is ILobbySlot self && self.Occupant is not null) {
             this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.Waiting);
         }
 

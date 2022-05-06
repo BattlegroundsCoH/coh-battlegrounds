@@ -57,4 +57,10 @@ public interface ILobbyMember : IHandleObject {
     /// </summary>
     public ILobbyCompany? Company { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="company"></param>
+    public void ChangeCompany(ILobbyCompany? company);
+
 }

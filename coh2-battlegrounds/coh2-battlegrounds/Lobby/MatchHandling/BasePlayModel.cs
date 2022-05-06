@@ -165,7 +165,7 @@ internal abstract class BasePlayModel {
             return new SessionParticipant((AIDifficulty)participant.AILevel, c, team, tIndex, pIndex);
         } else {
             if (participant.MemberID == this.m_handle.Self.ID) {
-                if (participant.Company is not LobbyAPIStructs.LobbyCompany c) {
+                if (participant.Company is not ILobbyCompany c) {
                     throw new StartupException("Invalid startup company.");
                 }
                 this.m_selfCompany = PlayerCompanies.FromNameAndFaction(c.Name, Faction.FromName(participant.Company.Army));

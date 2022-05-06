@@ -46,7 +46,7 @@ public class LobbyParticipantSlotModel : LobbySlot {
 
             // Set self company
             if (this.m_slot.Occupant is ILobbyMember mem) {
-                //mem.Company = this.SelectedCompany;
+                mem.ChangeCompany(this.SelectedCompany);
             }
 
             // Trigger notify if only one selectable

@@ -218,7 +218,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public void Swapback() {
 
-        if (this.TryGetSelf() is LobbyAPIStructs.LobbySlot self && self.Occupant is not null) {
+        if (this.TryGetSelf() is ILobbySlot self && self.Occupant is not null) {
             Task.Run(() => this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.Waiting));
         }
 
@@ -238,7 +238,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, builder, false);
 
             // Inform others
-            if (this.TryGetSelf() is LobbyAPIStructs.LobbySlot self && self.Occupant is not null) {
+            if (this.TryGetSelf() is ILobbySlot self && self.Occupant is not null) {
                 Task.Run(() => this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.EditCompany));
             }
 
