@@ -56,8 +56,9 @@ public class SessionCompiler : ISessionCompiler {
         };
 
         // Prepare company data
+        int aiCounter = 1;
         Dictionary<string, Dictionary<string, object>> bg_companies = participants
-            .Select(x => this.GetCompany(x, session.Names))
+            .Map(x => this.GetCompany(x, session.Names, ref aiCounter))
             .ToDictionary();
 
         // Save to lua
@@ -68,7 +69,7 @@ public class SessionCompiler : ISessionCompiler {
             .Assignment("bg_db.towed_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowUpgrade));
 
         // Write the precompiled database
-        this.WritePrecompiledDatabase(sourceBuilder, participants.Select(x => x.SelectedCompany));
+        this.WritePrecompiledDatabase(sourceBuilder, participants.Map(x => x.SelectedCompany).NotNull());
 
         // Return built source code
         return sourceBuilder.GetSourceText();
@@ -78,12 +79,16 @@ public class SessionCompiler : ISessionCompiler {
     private static string GetBlueprintName(ModGuid guid, string blueprint)
         => $"{guid.GUID}:{blueprint}";
 
-    private static string GetCompanyUsername(ISessionParticipant participant)
-        => participant.IsHuman ? participant.GetName() : $"AIPlayer#{participant.PlayerIndexOnTeam-1}";
+    private static string GetCompanyUsername(ISessionParticipant participant, ref int aiIndexCount)
+        => participant.IsHuman ? participant.GetName() : $"AIPlayer#{aiIndexCount++}";
 
-    private KeyValuePair<string, Dictionary<string, object>> GetCompany(ISessionParticipant x, IList<string> customNames)
-        => this.m_companyCompiler is null ? throw new Exception("Company compiler instance is undefined!")
-        : new(GetCompanyUsername(x), this.m_companyCompiler.CompileToLua(x.SelectedCompany, !x.IsHuman, x.PlayerIndexOnTeam, customNames));
+    private KeyValuePair<string, Dictionary<string, object>> GetCompany(ISessionParticipant x, IList<string> customNames, ref int aiIndexCount) {
+        if (this.m_companyCompiler is null)
+            throw new Exception("Company compiler instance is undefined!");
+        if (x.SelectedCompany is null)
+            throw new Exception($"Expected company for participant '{x.PlayerIngameIndex}' but found none");
+        return new(GetCompanyUsername(x, ref aiIndexCount), this.m_companyCompiler.CompileToLua(x.SelectedCompany, !x.IsHuman, x.PlayerIndexOnTeam, customNames));
+    }
 
     protected virtual List<Dictionary<string, object>> GetTeam(string team, IEnumerable<ISessionParticipant> players) {
 
@@ -145,7 +150,7 @@ public class SessionCompiler : ISessionCompiler {
         var participants = session.GetParticipants();
 
         // Get the companies
-        var companies = participants.Select(x => x.SelectedCompany);
+        var companies = participants.Map(x => x.SelectedCompany).NotNull();
 
         // Get the sqauds
         var squads = companies.SelectMany(x => x.Units);
