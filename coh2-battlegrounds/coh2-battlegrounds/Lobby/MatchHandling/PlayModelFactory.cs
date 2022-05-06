@@ -11,8 +11,10 @@ internal static class PlayModelFactory {
 
     public static IPlayModel GetModel(ILobbyHandle handle, LobbyChatSpectatorModel lobbyChat, UploadProgressCallbackHandler? callbackHandler) {
 
-        // If local then
-        // TODO: Implement
+        // If local then return early with a singleplayer
+        if (handle is LocalLobbyHandle) {
+            return new SingleplayerModel(handle, lobbyChat);
+        }
 
         // If only one human -> single model
         uint humans = handle.GetPlayerCount(humansOnly: true);

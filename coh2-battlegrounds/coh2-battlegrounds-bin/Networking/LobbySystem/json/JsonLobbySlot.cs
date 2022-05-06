@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Battlegrounds.Networking.LobbySystem.json;
+namespace Battlegrounds.Networking.LobbySystem.Json;
 
 public class JsonLobbySlot : ILobbySlot {
 
@@ -11,7 +11,7 @@ public class JsonLobbySlot : ILobbySlot {
 
     public int SlotID { get; }
     public int TeamID { get; }
-    public byte State { get; }
+    public byte State { get; set; }
 
     [JsonConverter(typeof(JsonLobbyMemberConverter))]
     public ILobbyMember? Occupant { get; }
@@ -48,7 +48,7 @@ public class JsonLobbySlot : ILobbySlot {
 
     public void TrySetCompany(ILobbyCompany company) {
         if (this.IsOccupied) {
-            //this.Occupant.Company = company;
+            this.Occupant.ChangeCompany(company);
         }
     }
 

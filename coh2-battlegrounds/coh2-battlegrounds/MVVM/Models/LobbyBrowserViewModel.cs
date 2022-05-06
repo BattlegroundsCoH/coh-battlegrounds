@@ -84,6 +84,8 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
     public LobbyBrowserButton Host { get; }
 
+    public LobbyBrowserButton Local { get; }
+
     public ObservableCollection<ServerLobby> Lobbies { get; set; }
 
     public LocaleKey NameListWiewHeader { get; }
@@ -132,6 +134,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
         // Create host
         this.Host = new(new RelayCommand(this.HostButton), PlayerCompanies.HasCompanyForBothAlliances);
+        this.Local = new(new RelayCommand(LocalButton), PlayerCompanies.HasCompanyForBothAlliances);
 
         // Create double-click
         this.JoinLobbyDirectly = new EventCommand<MouseButtonEventArgs>(this.JoinLobby);
@@ -321,6 +324,32 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
     }
 
+    private static void LocalButton() {
+
+        // Null check
+        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+            return;
+        }
+
+        // Create dummy model
+        LocalLobbyHandle localHandle = new(BattlegroundsInstance.Steam.User);
+
+        // Create lobby models.
+        var lobbyModel = LobbyModel.CreateModelAsHost(localHandle);
+        if (lobbyModel is null) {
+            throw new Exception("BAAAAAAD : FIX ASAP");
+        }
+
+        // Create chat
+        LobbyChatSpectatorModel chatMode = new(localHandle);
+        lobbyModel.SetChatModel(chatMode);
+
+        // Display it
+        App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
+        App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
+
+    }
+
     public void HostButton() {
 
         // Null check
@@ -331,12 +360,6 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         // Ensure the interface object is set
         if (NetworkInterface.APIObject is null) {
             return;
-        }
-
-        // Ensure steam user is verified
-        if (!BattlegroundsInstance.Steam.HasVerifiedUser && !BattlegroundsInstance.Steam.GetSteamUser()) {
-            //Trace.WriteLine("Failed to verify steam user in attempt to join game.", nameof(LobbyBrowserViewModel));
-            //return;
         }
 
         // Show modal

@@ -13,14 +13,14 @@ using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 using Battlegrounds.Util;
-using Battlegrounds.Networking.LobbySystem.json;
+using Battlegrounds.Networking.LobbySystem.Json;
 
 namespace Battlegrounds.Networking.LobbySystem;
 
 /// <summary>
 /// Class for interacting with the lobby logic on the server.
 /// </summary>
-public sealed class OnlineLobbyHandle : ILobbyHandle {
+public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobbyMatchNotifier {
 
     private static readonly TimeZoneInfo __thisTimezone = TimeZoneInfo.Local;
 

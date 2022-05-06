@@ -716,7 +716,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\locale\english.loc">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\bg_wc\auxiliary_scripts\api_ui.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

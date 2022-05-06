@@ -195,11 +195,15 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         this.LobbyTitle = this.m_handle.Title;
         
         // Subscribe to common events
-        this.m_handle.OnLobbyConnectionLost += this.OnConnectionLost;
         this.m_handle.OnLobbyCompanyUpdate += this.OnCompanyUpdated;
-        this.m_handle.OnLobbyCancelStartup += this.OnMatchStartupCancelled;
-        this.m_handle.OnLobbyRequestCompany += this.OnCompanyRequested;
-        this.m_handle.OnLobbyCountdown += this.OnCountdownNotify;
+
+        // Subscribe to online events
+        if (this.m_handle is ILobbyMatchNotifier matchNotifier) {
+            matchNotifier.OnLobbyConnectionLost += this.OnConnectionLost;
+            matchNotifier.OnLobbyCancelStartup += this.OnMatchStartupCancelled;
+            matchNotifier.OnLobbyRequestCompany += this.OnCompanyRequested;
+            matchNotifier.OnLobbyCountdown += this.OnCountdownNotify;
+        }
 
     }
 

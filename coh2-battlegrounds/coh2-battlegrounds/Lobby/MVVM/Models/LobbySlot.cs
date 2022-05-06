@@ -9,7 +9,7 @@ using Battlegrounds;
 using Battlegrounds.Game;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Networking.LobbySystem;
-using Battlegrounds.Networking.LobbySystem.json;
+using Battlegrounds.Networking.LobbySystem.Json;
 
 using BattlegroundsApp.LocalData;
 

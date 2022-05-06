@@ -20,7 +20,7 @@ public interface ILobbySlot : IHandleObject {
     /// <summary>
     /// 
     /// </summary>
-    public byte State { get; }
+    public byte State { get; set; }
 
     /// <summary>
     /// 
@@ -50,5 +50,5 @@ public interface ILobbySlot : IHandleObject {
     /// </summary>
     /// <param name="company"></param>
     public void TrySetCompany(ILobbyCompany company);
-
+    
 }

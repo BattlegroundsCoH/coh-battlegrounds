@@ -68,8 +68,12 @@ public class LobbyChatSpectatorModel : ViewModelBase {
         
         // Set internal handler
         this.m_handle = lobbyHandler;
-        this.m_handle.OnChatMessage += this.OnChatMessage;
-        this.m_handle.OnSystemMessage += this.OnSystemMessage;
+
+        // Subscribe if chat notifier
+        if (lobbyHandler is ILobbyChatNotifier chatNotifier) {
+            chatNotifier.OnChatMessage += this.OnChatMessage;
+            chatNotifier.OnSystemMessage += this.OnSystemMessage;
+        }
 
         // Create locale keys
         this.m_allFilter = new("LobbyChat_FilterAll");

@@ -54,15 +54,19 @@ public class LobbyParticipantModel : LobbyModel {
         this.SupplySystemDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = (handle.Settings[LobbyConstants.SETTING_LOGISTICS] is "1") ? "On" : "Off" };
         this.ModPackageDropdown = new(false, Visibility.Hidden, new(), (x, y) => { });
 
-        // Subscribe to lobby events
+        // Subscribe to common lobby events
         handle.OnLobbySettingUpdate += this.OnLobbyChange;
-        handle.OnLobbyNotifyGamemode += this.OnGamemodeReleased;
-        handle.OnLobbyNotifyResults += this.OnResultsReleased;
-        handle.OnLobbyBeginMatch += this.OnMatchBegin;
-        handle.OnLobbyLaunchGame += this.OnLaunchGame;
-        handle.OnLobbyMatchError += this.OnMatchInfo;
-        handle.OnLobbyMatchInfo += this.OnMatchInfo;
-        handle.OnPoll += this.OnPoll;
+
+        // Subscribe to match specific events
+        if (handle is ILobbyMatchNotifier matchNotifier) {
+            matchNotifier.OnLobbyNotifyGamemode += this.OnGamemodeReleased;
+            matchNotifier.OnLobbyNotifyResults += this.OnResultsReleased;
+            matchNotifier.OnLobbyBeginMatch += this.OnMatchBegin;
+            matchNotifier.OnLobbyLaunchGame += this.OnLaunchGame;
+            matchNotifier.OnLobbyMatchError += this.OnMatchInfo;
+            matchNotifier.OnLobbyMatchInfo += this.OnMatchInfo;
+            matchNotifier.OnPoll += this.OnPoll;
+        }
 
         // Trigger initial view
         this.OnModPackageChange(handle.Settings[LobbyConstants.SETTING_MODPACK]);
