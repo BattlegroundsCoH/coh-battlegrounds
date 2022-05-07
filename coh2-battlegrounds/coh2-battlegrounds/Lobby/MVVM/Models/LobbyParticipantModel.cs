@@ -44,7 +44,7 @@ public class LobbyParticipantModel : LobbyModel {
     public LobbyParticipantModel(ILobbyHandle handle, ILobbyTeam allies, ILobbyTeam axis) : base(handle, allies, axis) {
 
         // Define start match buttnn
-        this.StartMatchButton = new(new(this.CancelMatch), Visibility.Hidden) { Title = LOCSTR_WAIT(), IsEnabled = false };
+        this.StartMatchButton = new(new(this.CancelMatch), Visibility.Hidden) { Title = LOCSTR_WAIT(), IsEnabled = false, NotificationVisible = Visibility.Hidden };
 
         // Init dropdowns 
         this.MapDropdown = new(false, Visibility.Hidden, new(), (x,y) => { });

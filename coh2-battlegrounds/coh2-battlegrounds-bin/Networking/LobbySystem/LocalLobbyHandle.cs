@@ -75,7 +75,7 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
     }
 
     public uint GetPlayerCount(bool humansOnly = false)
-        => this.m_allies.Slots.Concat(this.m_axis.Slots).Aggregate(0u, (a, b) => a + (b.IsOccupied && (humansOnly && b.IsAI() || !b.IsAI()) ? 1u : 0u));
+        => this.m_allies.Slots.Concat(this.m_axis.Slots).Aggregate(0u, (a, b) => a + (b.IsOccupied && (humansOnly && !b.IsAI() || !humansOnly) ? 1u : 0u));
 
     public void LockSlot(int tid, int sid) {
         if ((tid is LobbyConstants.TID_ALLIES ? this.m_allies : this.m_axis).Slots[sid] is LocalLobbySlot locSlot && !locSlot.IsOccupied) {
@@ -182,8 +182,8 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
         => this.m_allies.Slots.Count(x => x.IsOccupied) <= newCap && this.m_axis.Slots.Count(x => x.IsOccupied) <= newCap;
 
     public void UnlockSlot(int tid, int sid) {
-        if ((tid is LobbyConstants.TID_ALLIES ? this.m_allies : this.m_axis).Slots[sid] is LocalLobbySlot locSlot && !locSlot.IsOccupied) {
-            locSlot.State = LobbyConstants.STATE_LOCKED;
+        if ((tid is LobbyConstants.TID_ALLIES ? this.m_allies : this.m_axis).Slots[sid] is LocalLobbySlot locSlot) {
+            locSlot.State = LobbyConstants.STATE_OPEN;
             this.OnLobbySlotUpdate?.Invoke(locSlot);
         }
     }

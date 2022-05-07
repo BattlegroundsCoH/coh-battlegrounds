@@ -3,6 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.Game;
+
 namespace Battlegrounds.Networking.LobbySystem.Json;
 
 public class JsonLobbySlot : ILobbySlot {
@@ -41,7 +43,14 @@ public class JsonLobbySlot : ILobbySlot {
 
     public bool IsAI() {
         if (this.Occupant is ILobbyMember mem) {
-            return mem.Role == 3;
+            return mem.Role is LobbyConstants.ROLE_AI;
+        }
+        return false;
+    }
+
+    public bool IsAI(AIDifficulty min, AIDifficulty max) {
+        if (this.Occupant is ILobbyMember mem) {
+            return mem.Role is LobbyConstants.ROLE_AI && (byte)min <= mem.AILevel && mem.AILevel <= (byte)max;
         }
         return false;
     }

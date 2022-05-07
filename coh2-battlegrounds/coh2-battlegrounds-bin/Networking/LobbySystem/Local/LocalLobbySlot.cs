@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
+using Battlegrounds.Game;
+
 namespace Battlegrounds.Networking.LobbySystem.Local;
 
 public class LocalLobbySlot : ILobbySlot {
@@ -26,6 +28,13 @@ public class LocalLobbySlot : ILobbySlot {
     }
 
     public bool IsAI() => this.IsOccupied && this.Occupant.Role is LobbyConstants.ROLE_AI;
+
+    public bool IsAI(AIDifficulty min, AIDifficulty max) {
+        if (this.Occupant is ILobbyMember mem) {
+            return mem.Role == 3 && (byte)min <= mem.AILevel && mem.AILevel <= (byte)max;
+        }
+        return false;
+    }
 
     public bool IsSelf() => this.IsOccupied && this.Occupant.MemberID == this.Handle.Self.ID;
 

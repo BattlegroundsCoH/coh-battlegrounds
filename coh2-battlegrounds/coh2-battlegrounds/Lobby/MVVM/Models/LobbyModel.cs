@@ -37,6 +37,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public record LobbyMutButton(RelayCommand Click, Visibility Visible) : INotifyPropertyChanged {
         private bool m_isEnabled;
+        private Visibility m_iconVisible;
         private string? m_tooltip;
         private string? m_title;
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -59,6 +60,13 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             set {
                 this.m_title = value;
                 this.PropertyChanged?.Invoke(this, new(nameof(Title)));
+            }
+        }
+        public Visibility NotificationVisible {
+            get => this.m_iconVisible;
+            set {
+                this.m_iconVisible = value;
+                this.PropertyChanged?.Invoke(this, new(nameof(NotificationVisible)));
             }
         }
     }

@@ -159,6 +159,7 @@ english:
  LobbyView_StartMatchAlliesNoPlayers: "There are no players on the allied team."
  LobbyView_StartMatchAxisInvalid: "There is one or more players on the axis team with an invalid company selected."
  LobbyView_StartMatchAxisNoPlayers: "There are no players on the axis team."
+ LobbyView_PersistencyDisabled: "This match will not allow persistency. All AI players must have Hard or Expert level."
  LobbyView_SettingScenario: "MAP"
  LobbyView_SettingGamemode: "GAMEMODE"
  LobbyView_SettingOption: "SETTING"

@@ -10,6 +10,7 @@ using System.Windows.Media;
 
 using Battlegrounds;
 using Battlegrounds.Functional;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
@@ -24,6 +25,7 @@ public class LobbyHostModel : LobbyModel {
     private static readonly string __playabilityAlliesNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAlliesNoPlayers");
     private static readonly string __playabilityAxisInvalid = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisInvalid");
     private static readonly string __playabilityAxisNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisNoPlayers");
+    private static readonly string __playabilityNoticePersistency = BattlegroundsInstance.Localize.GetString("LobbyView_PersistencyDisabled");
 
     protected static readonly Func<int, string> LOCSTR_GAMEMODEUPLOAD = x => BattlegroundsInstance.Localize.GetString("LobbyView_UploadGamemode", x);
 
@@ -48,7 +50,10 @@ public class LobbyHostModel : LobbyModel {
     public LobbyHostModel(ILobbyHandle handle, ILobbyTeam allies, ILobbyTeam axis) : base(handle, allies, axis) {
 
         // Init buttons
-        this.StartMatchButton = new(new(() => this.m_isStarting.IfFalse().Then(this.BeginMatchSetup).Else(this.CancelMatch)), Visibility.Visible) { Title = LOCSTR_START() };
+        this.StartMatchButton = new(new(() => this.m_isStarting.IfFalse().Then(this.BeginMatchSetup).Else(this.CancelMatch)), Visibility.Visible) { 
+            Title = LOCSTR_START(),
+            NotificationVisible = Visibility.Hidden
+        };
 
         // Get scenario list
         var _scenlist = ScenarioList.GetList()
@@ -129,16 +134,28 @@ public class LobbyHostModel : LobbyModel {
 
         // If both playable
         if (allied && axis) {
+            var notVis = this.AllowsPersitency();
             this.StartMatchButton.IsEnabled = true;
-            this.StartMatchButton.Tooltip = null;
+            this.StartMatchButton.Tooltip = notVis ? null : __playabilityNoticePersistency;
+            this.StartMatchButton.NotificationVisible = !notVis ? Visibility.Visible : Visibility.Hidden;
         } else if (!allied) {
             this.StartMatchButton.IsEnabled = false;
-            this.StartMatchButton.Tooltip = x1 ? __playabilityAlliesNoPlayers : __playabilityAlliesInvalid;
+            this.StartMatchButton.Tooltip = x1 ? __playabilityAlliesInvalid : __playabilityAlliesNoPlayers;
+            this.StartMatchButton.NotificationVisible = Visibility.Visible;
         } else {
             this.StartMatchButton.IsEnabled = false;
-            this.StartMatchButton.Tooltip = x2 ? __playabilityAxisNoPlayers : __playabilityAxisInvalid;
+            this.StartMatchButton.Tooltip = x2 ? __playabilityAxisInvalid : __playabilityAxisNoPlayers;
+            this.StartMatchButton.NotificationVisible = Visibility.Visible;
         }
 
+    }
+
+    private bool AllowsPersitency() {
+        uint totalPlayers = this.m_handle.GetPlayerCount(false);
+        uint totalHumans = this.m_handle.GetPlayerCount(true);
+        uint totalAI = totalPlayers  - totalHumans;
+        int hardsum = this.m_handle.Allies.Slots.Count(x => x.IsAI(AIDifficulty.AI_Hard)) + this.m_handle.Axis.Slots.Count(x => x.IsAI(AIDifficulty.AI_Hard));
+        return hardsum == totalAI;
     }
 
     private void BeginMatchSetup() {

@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
+using Battlegrounds.Game;
+
 namespace Battlegrounds.Networking.LobbySystem;
 
 /// <summary>
@@ -44,6 +46,14 @@ public interface ILobbySlot : IHandleObject {
     /// </summary>
     /// <returns></returns>
     public bool IsAI();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="minDifficulty"></param>
+    /// <param name="maxDifficulty"></param>
+    /// <returns></returns>
+    public bool IsAI(AIDifficulty minDifficulty, AIDifficulty maxDifficulty = AIDifficulty.AI_Expert);
 
     /// <summary>
     /// 
