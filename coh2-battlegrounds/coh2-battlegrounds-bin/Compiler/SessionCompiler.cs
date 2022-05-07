@@ -12,6 +12,7 @@ using Battlegrounds.Modding;
 using Battlegrounds.Lua.Generator;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Gameplay.Supply;
+using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Compiler;
 
@@ -56,9 +57,9 @@ public class SessionCompiler : ISessionCompiler {
         };
 
         // Prepare company data
-        int aiCounter = 1;
+        Dictionary<string, int> aiCounters = new() { ["allies"] = 0, ["axis"] = 0 };
         Dictionary<string, Dictionary<string, object>> bg_companies = participants
-            .Map(x => this.GetCompany(x, session.Names, ref aiCounter))
+            .Map(x => this.GetCompany(x, session.Names, aiCounters))
             .ToDictionary();
 
         // Save to lua
@@ -79,15 +80,25 @@ public class SessionCompiler : ISessionCompiler {
     private static string GetBlueprintName(ModGuid guid, string blueprint)
         => $"{guid.GUID}:{blueprint}";
 
-    private static string GetCompanyUsername(ISessionParticipant participant, ref int aiIndexCount)
-        => participant.IsHuman ? participant.GetName() : $"AIPlayer#{aiIndexCount++}";
+    private static string GetCompanyUsername(ISessionParticipant participant, string team, Dictionary<string, int> aiIndexCount)
+        => participant.IsHuman ? participant.GetName() : $"AIPlayer#{team}:{aiIndexCount[team]++}";
 
-    private KeyValuePair<string, Dictionary<string, object>> GetCompany(ISessionParticipant x, IList<string> customNames, ref int aiIndexCount) {
+    private static string GetTeamString(Faction faction) => faction.IsAllied ? "allies" : "axis";
+
+    private KeyValuePair<string, Dictionary<string, object>> GetCompany(ISessionParticipant x, IList<string> customNames, Dictionary<string, int> aiIndexCount) {
+        
+        // Error if compiler is not found
         if (this.m_companyCompiler is null)
             throw new Exception("Company compiler instance is undefined!");
+
+        // Error if company is not valid
         if (x.SelectedCompany is null)
             throw new Exception($"Expected company for participant '{x.PlayerIngameIndex}' but found none");
-        return new(GetCompanyUsername(x, ref aiIndexCount), this.m_companyCompiler.CompileToLua(x.SelectedCompany, !x.IsHuman, x.PlayerIndexOnTeam, customNames));
+        
+        // Return company
+        string name = GetCompanyUsername(x, GetTeamString(x.SelectedCompany.Army), aiIndexCount);
+        return new(name, this.m_companyCompiler.CompileToLua(x.SelectedCompany, !x.IsHuman, x.PlayerIndexOnTeam, customNames));
+
     }
 
     protected virtual List<Dictionary<string, object>> GetTeam(string team, IEnumerable<ISessionParticipant> players) {
