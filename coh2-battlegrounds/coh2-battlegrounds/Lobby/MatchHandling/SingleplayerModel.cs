@@ -15,7 +15,7 @@ namespace BattlegroundsApp.Lobby.MatchHandling;
 
 internal class SingleplayerModel : BasePlayModel, IPlayModel {
 
-    public SingleplayerModel(LobbyAPI handler, LobbyChatSpectatorModel lobbyChat) : base(handler, lobbyChat) {
+    public SingleplayerModel(ILobbyHandle handler, LobbyChatSpectatorModel lobbyChat) : base(handler, lobbyChat) {
         
         // Startup strategy
         this.m_startupStrategy = new SingleplayerStartupStrategy {

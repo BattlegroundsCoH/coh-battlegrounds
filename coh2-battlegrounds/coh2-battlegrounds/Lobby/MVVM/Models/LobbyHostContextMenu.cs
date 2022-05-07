@@ -19,7 +19,7 @@ public class LobbyHostContextMenu : LobbyContextMenu {
 
     public override LobbyContextAction AddExpertAI { get; }
 
-    public LobbyHostContextMenu(LobbyAPI handle, LobbySlot slot) : base(handle, slot) {
+    public LobbyHostContextMenu(ILobbyHandle handle, LobbySlot slot) : base(handle, slot) {
 
         // Define captured check
         var ai_check = () => this.Slot.Slot.State != 3 && !this.Slot.Slot.IsOccupied;

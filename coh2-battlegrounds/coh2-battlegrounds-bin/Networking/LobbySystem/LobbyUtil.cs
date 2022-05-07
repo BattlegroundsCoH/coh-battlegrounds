@@ -11,13 +11,6 @@ namespace Battlegrounds.Networking.LobbySystem;
 /// <summary>
 /// 
 /// </summary>
-/// <param name="isSuccess"></param>
-/// <param name="api"></param>
-public delegate void LobbyConnectCallback(bool isSuccess, LobbyAPI? api);
-
-/// <summary>
-/// 
-/// </summary>
 public static class LobbyUtil {
 
     /// <summary>
@@ -36,7 +29,7 @@ public static class LobbyUtil {
         bool success = false;
 
         // Define handlers
-        LobbyAPI? handle = null;
+        OnlineLobbyHandle? handle = null;
 
         try {
 
@@ -57,7 +50,7 @@ public static class LobbyUtil {
             serverAPI.SetLobbyGuid(lobbyID);
             
             // Create handler
-            handle = new LobbyAPI(true, lobbyName, steamUser, connection, serverAPI);
+            handle = new OnlineLobbyHandle(true, lobbyName, steamUser, connection, serverAPI);
 
             // Set success flag
             success = true;
@@ -102,7 +95,7 @@ public static class LobbyUtil {
         bool success = false;
 
         // Define handler
-        LobbyAPI? handle = null;
+        OnlineLobbyHandle? handle = null;
 
         try {
 
@@ -125,7 +118,7 @@ public static class LobbyUtil {
             serverAPI.SetLobbyGuid(lobbyID);
 
             // Create handler
-            handle = new LobbyAPI(false, lobbyData.Name, steamUser, connection, serverAPI);
+            handle = new OnlineLobbyHandle(false, lobbyData.Name, steamUser, connection, serverAPI);
 
             // Set success flag
             success = true;

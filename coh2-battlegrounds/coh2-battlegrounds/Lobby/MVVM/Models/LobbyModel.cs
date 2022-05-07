@@ -37,6 +37,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public record LobbyMutButton(RelayCommand Click, Visibility Visible) : INotifyPropertyChanged {
         private bool m_isEnabled;
+        private Visibility m_iconVisible;
         private string? m_tooltip;
         private string? m_title;
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -59,6 +60,13 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             set {
                 this.m_title = value;
                 this.PropertyChanged?.Invoke(this, new(nameof(Title)));
+            }
+        }
+        public Visibility NotificationVisible {
+            get => this.m_iconVisible;
+            set {
+                this.m_iconVisible = value;
+                this.PropertyChanged?.Invoke(this, new(nameof(NotificationVisible)));
             }
         }
     }
@@ -138,7 +146,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     protected static readonly Func<string> LOCSTR_WAIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_WaitMatch");
     protected static readonly Func<string, string> LOCSTR_CANCEL = x => BattlegroundsInstance.Localize.GetString("LobbyView_CancelMatch", x);
 
-    protected readonly LobbyAPI m_handle;
+    protected readonly ILobbyHandle m_handle;
     protected LobbyChatSpectatorModel? m_chatModel;
 
     private bool m_hasLeft;
@@ -176,7 +184,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public LobbyTeam Axis { get; }
 
-    public LobbyModel(LobbyAPI api, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) {
+    public LobbyModel(ILobbyHandle api, ILobbyTeam allies, ILobbyTeam axis) {
 
         // Set basics
         this.m_handle = api;
@@ -195,11 +203,15 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         this.LobbyTitle = this.m_handle.Title;
         
         // Subscribe to common events
-        this.m_handle.OnLobbyConnectionLost += this.OnConnectionLost;
         this.m_handle.OnLobbyCompanyUpdate += this.OnCompanyUpdated;
-        this.m_handle.OnLobbyCancelStartup += this.OnMatchStartupCancelled;
-        this.m_handle.OnLobbyRequestCompany += this.OnCompanyRequested;
-        this.m_handle.OnLobbyCountdown += this.OnCountdownNotify;
+
+        // Subscribe to online events
+        if (this.m_handle is ILobbyMatchNotifier matchNotifier) {
+            matchNotifier.OnLobbyConnectionLost += this.OnConnectionLost;
+            matchNotifier.OnLobbyCancelStartup += this.OnMatchStartupCancelled;
+            matchNotifier.OnLobbyRequestCompany += this.OnCompanyRequested;
+            matchNotifier.OnLobbyCountdown += this.OnCountdownNotify;
+        }
 
     }
 
@@ -218,8 +230,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public void Swapback() {
 
-        if (this.TryGetSelf() is LobbyAPIStructs.LobbySlot self && self.Occupant is not null) {
-            Task.Run(() => this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyAPIStructs.LobbyMemberState.Waiting));
+        if (this.TryGetSelf() is ILobbySlot self && self.Occupant is not null) {
+            Task.Run(() => this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.Waiting));
         }
 
     }
@@ -238,8 +250,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, builder, false);
 
             // Inform others
-            if (this.TryGetSelf() is LobbyAPIStructs.LobbySlot self && self.Occupant is not null) {
-                Task.Run(() => this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyAPIStructs.LobbyMemberState.EditCompany));
+            if (this.TryGetSelf() is ILobbySlot self && self.Occupant is not null) {
+                Task.Run(() => this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.EditCompany));
             }
 
         }
@@ -300,7 +312,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             this.m_hasLeft = true;
 
             // Leave lobby
-            Task.Run(this.m_handle.Disconnect);
+            Task.Run(this.m_handle.CloseHandle);
 
             // Go back to browser view
             App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
@@ -314,7 +326,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    protected LobbyAPIStructs.LobbySlot? TryGetSelf() {
+    protected ILobbySlot? TryGetSelf() {
 
         // Get self
         var selfid = this.m_handle.Self.ID;
@@ -497,7 +509,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    public static LobbyModel? CreateModelAsHost(LobbyAPI handler) {
+    public static LobbyModel? CreateModelAsHost(ILobbyHandle handler) {
 
         // Check allies
         if (handler.Allies is null) {
@@ -517,7 +529,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    public static LobbyModel? CreateModelAsParticipant(LobbyAPI handler) {
+    public static LobbyModel? CreateModelAsParticipant(ILobbyHandle handler) {
 
         // Check allies
         if (handler.Allies is null) {

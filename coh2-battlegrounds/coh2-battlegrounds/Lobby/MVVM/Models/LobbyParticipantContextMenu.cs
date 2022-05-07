@@ -18,7 +18,7 @@ public class LobbyParticipantContextMenu : LobbyContextMenu {
 
     public override LobbyContextAction AddExpertAI { get; }
 
-    public LobbyParticipantContextMenu(LobbyAPI handle, LobbySlot slot) : base(handle, slot) {
+    public LobbyParticipantContextMenu(ILobbyHandle handle, LobbySlot slot) : base(handle, slot) {
 
         // Player actions
         this.KickPlayer = new("", new(() => { }), NeverTrue, NeverVisible);

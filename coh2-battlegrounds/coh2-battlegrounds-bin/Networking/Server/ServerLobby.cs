@@ -84,9 +84,9 @@ public readonly struct ServerLobby {
 	/// <summary>
 	/// 
 	/// </summary>
-	public string Mode => this.Settings[LobbyAPI.SETTING_GAMEMODEOPTION] is "" 
-		? $"{this.Settings[LobbyAPI.SETTING_MAP]}, {this.Settings[LobbyAPI.SETTING_GAMEMODE]}"
-		: $"{this.Settings[LobbyAPI.SETTING_MAP]}, {this.Settings[LobbyAPI.SETTING_GAMEMODE]} ({this.Settings[LobbyAPI.SETTING_GAMEMODEOPTION]})";
+	public string Mode => this.Settings[LobbyConstants.SETTING_GAMEMODEOPTION] is "" 
+		? $"{this.Settings[LobbyConstants.SETTING_MAP]}, {this.Settings[LobbyConstants.SETTING_GAMEMODE]}"
+		: $"{this.Settings[LobbyConstants.SETTING_MAP]}, {this.Settings[LobbyConstants.SETTING_GAMEMODE]} ({this.Settings[LobbyConstants.SETTING_GAMEMODEOPTION]})";
 
 	/// <summary>
 	/// 
@@ -114,9 +114,9 @@ public readonly struct ServerLobby {
 		// Create default settings
 		if (Settings is null || Settings.Count is 0) {
 			this.Settings = new() {
-				[LobbyAPI.SETTING_MAP] = "None",
-				[LobbyAPI.SETTING_GAMEMODEOPTION] = "",
-				[LobbyAPI.SETTING_GAMEMODE] = "None"
+				[LobbyConstants.SETTING_MAP] = "None",
+				[LobbyConstants.SETTING_GAMEMODEOPTION] = "",
+				[LobbyConstants.SETTING_GAMEMODE] = "None"
 			};
         } else {
 			this.Settings = Settings;

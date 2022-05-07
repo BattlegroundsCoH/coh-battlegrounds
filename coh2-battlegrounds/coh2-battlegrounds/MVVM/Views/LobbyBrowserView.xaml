@@ -27,6 +27,7 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
         <!-- Row 0 -->
@@ -42,7 +43,7 @@
         <!-- Row 1 -->
         <Grid Grid.Row="2"
               Grid.Column="0"
-              Grid.ColumnSpan="4">
+              Grid.ColumnSpan="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="128"/>
                 <ColumnDefinition/>
@@ -177,7 +178,7 @@
         </Grid>
 
         <Border Grid.Row="1" Grid.Column="0" Margin="15"
-                Grid.ColumnSpan="4" Height="294"
+                Grid.ColumnSpan="5" Height="294"
                 Background="{StaticResource BackgroundDarkBlueBrush}"
                 BorderBrush="{StaticResource BackgroundLightBlueBrush}"
                 BorderThickness="1.25">
@@ -328,9 +329,19 @@
                 IsEnabled="{Binding Host.IsEnabled}"
                 Content="GameBrowserView_Host_Game"/>
 
-        <Button x:Name="joinGameButton" 
+        <Button x:Name="hostLocalGameButton" 
                 Grid.Row="3" 
                 Grid.Column="3" 
+                Margin="5,5,5,8"
+                Width="128"
+                Command="{Binding Local.Click}"
+                Style="{StaticResource StandardBlueLocButton}"
+                IsEnabled="{Binding Local.IsEnabled}"
+                Content="GameBrowserView_Local_Game"/>
+
+        <Button x:Name="joinGameButton" 
+                Grid.Row="3" 
+                Grid.Column="4" 
                 Margin="5,5,15,8" 
                 Width="128"
                 Command="{Binding Join.Click}"

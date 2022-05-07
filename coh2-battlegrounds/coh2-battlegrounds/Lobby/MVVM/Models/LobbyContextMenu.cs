@@ -46,7 +46,7 @@ public abstract class LobbyContextMenu : INotifyPropertyChanged {
         }
     }
 
-    public LobbyAPI Handle { get; }
+    public ILobbyHandle Handle { get; }
     
     public LobbySlot Slot { get; }
 
@@ -77,7 +77,7 @@ public abstract class LobbyContextMenu : INotifyPropertyChanged {
 
     public int SlotId => this.Slot.Slot.SlotID;
 
-    public LobbyContextMenu(LobbyAPI handle, LobbySlot slot) {
+    public LobbyContextMenu(ILobbyHandle handle, LobbySlot slot) {
         
         // Set basics
         this.Handle = handle;
