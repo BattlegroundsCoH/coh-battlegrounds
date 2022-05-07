@@ -249,7 +249,7 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
     public UploadResult UploadGamemodeFile(byte[] contents, UploadProgressCallbackHandler? callbackHandler) => UploadResult.UPLOAD_SUCCESS;
 
     public LobbyPollResults ConductPoll(string pollType, double pollTime = 3)
-        => new(0, 0, false);
+        => new(1, 0, false);
 
     #endregion
 
