@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
+using Battlegrounds;
 using Battlegrounds.Game.Match.Analyze;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play.Factory;
@@ -75,7 +76,7 @@ internal class OnlineModel : BasePlayModel, IPlayModel {
     private void GameErrorHandler(string r, PlayOverHandler matchOver) {
 
         // Log error
-        this.m_chat.SystemMessage($"Match Error - {r}", Colors.Red);
+        this.m_chat.SystemMessage(BattlegroundsInstance.Localize.GetString("SystemMessage_MatchError", r), Colors.Red);
 
         // Notify participants of error
         this.m_handle.NotifyError("MatchError", r);
@@ -90,11 +91,11 @@ internal class OnlineModel : BasePlayModel, IPlayModel {
     private void GameCompleteHandler(IAnalyzedMatch match, PlayOverHandler handler) {
 
         // do stuff with match?
-        //if (match.IsFinalizableMatch) {
-        //    this.m_chat.SystemMessage("Match over - Invalid match.", Colors.DarkGray);
-        //} else {
-            this.m_chat.SystemMessage("Match over - Match saved.", Colors.DarkGray);
-        //}
+        if (match.IsFinalizableMatch) {
+            this.m_chat.SystemMessage(BattlegroundsInstance.Localize.GetString("SystemMessage_MatchSaved"), Colors.DarkGray);
+        } else {
+            this.m_chat.SystemMessage(BattlegroundsInstance.Localize.GetString("SystemMessage_MatchInvalid"), Colors.DarkGray);
+        }
 
         // Invoke over event in lobby model.
         Application.Current.Dispatcher.Invoke(() => {
