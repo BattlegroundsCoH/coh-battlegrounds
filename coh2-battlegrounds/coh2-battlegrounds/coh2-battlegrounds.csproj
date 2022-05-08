@@ -13,6 +13,14 @@
     <ApplicationIcon>coh2-battlegrounds.ico</ApplicationIcon>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>E:\coh2_battlegrounds\coh2-battlegrounds\keypair.snk</AssemblyOriginatorKeyFile>
+    <AssemblyVersion>1.1.1</AssemblyVersion>
+    <FileVersion>1.1.1</FileVersion>
+    <Version>1.1.1-alpha</Version>
+    <RepositoryUrl>https://github.com/JustCodiex/coh2-battlegrounds</RepositoryUrl>
+    <PackageProjectUrl>https://cohbattlegrounds.com/</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <Description>Company of Heroes 2: Battlegrounds Mod Launcher</Description>
+    <Product>Battlegrounds</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -50,6 +58,7 @@
     <None Remove="Resources\app\army_icons\FactionBRIT.png" />
     <None Remove="Resources\app\army_icons\FactionBRITHighlighted.png" />
     <None Remove="Resources\app\army_icons\FactionLOCKED.png" />
+    <None Remove="Resources\app\army_icons\FactionLOCKEDHighlighted.png" />
     <None Remove="Resources\app\army_icons\FactionOKW.png" />
     <None Remove="Resources\app\army_icons\FactionOKWHighlighted.png" />
     <None Remove="Resources\app\army_icons\FactionSOVIET.png" />
@@ -142,6 +151,7 @@
     <Resource Include="Resources\app\army_icons\FactionAEFHighlighted.png" />
     <Resource Include="Resources\app\army_icons\FactionBRIT.png" />
     <Resource Include="Resources\app\army_icons\FactionBRITHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionLOCKEDHighlighted.png" />
     <Resource Include="Resources\app\army_icons\FactionLOCKED.png" />
     <Resource Include="Resources\app\army_icons\FactionOKW.png" />
     <Resource Include="Resources\app\army_icons\FactionOKWHighlighted.png" />
@@ -714,7 +724,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\locale\english.loc">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\bg_wc\auxiliary_scripts\api_ui.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

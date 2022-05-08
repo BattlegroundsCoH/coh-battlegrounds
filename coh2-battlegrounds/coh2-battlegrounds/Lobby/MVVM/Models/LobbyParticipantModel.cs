@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+
 using Battlegrounds;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Database;
@@ -16,7 +16,6 @@ using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 
 using BattlegroundsApp.LocalData;
-using BattlegroundsApp.Resources;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
@@ -42,38 +41,41 @@ public class LobbyParticipantModel : LobbyModel {
 
     private readonly Func<string, string> LOCSTR_DOWNLOAD = x => BattlegroundsInstance.Localize.GetString("LobbyView_DownloadGamemode", x); 
 
-
-    public LobbyParticipantModel(LobbyAPI handle, LobbyAPIStructs.LobbyTeam allies, LobbyAPIStructs.LobbyTeam axis) : base(handle, allies, axis) {
+    public LobbyParticipantModel(ILobbyHandle handle, ILobbyTeam allies, ILobbyTeam axis) : base(handle, allies, axis) {
 
         // Define start match buttnn
-        this.StartMatchButton = new(new(this.CancelMatch), Visibility.Hidden) { Title = LOCSTR_WAIT(), IsEnabled = false };
+        this.StartMatchButton = new(new(this.CancelMatch), Visibility.Hidden) { Title = LOCSTR_WAIT(), IsEnabled = false, NotificationVisible = Visibility.Hidden };
 
         // Init dropdowns 
         this.MapDropdown = new(false, Visibility.Hidden, new(), (x,y) => { });
         this.GamemodeDropdown = new(false, Visibility.Hidden, new(), (x, y) => { });
-        this.GamemodeOptionDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = handle.Settings[LobbyAPI.SETTING_GAMEMODEOPTION] };
-        this.WeatherDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = (handle.Settings[LobbyAPI.SETTING_WEATHER] is "1") ? "On" : "Off" };
-        this.SupplySystemDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = (handle.Settings[LobbyAPI.SETTING_LOGISTICS] is "1") ? "On" : "Off" };
+        this.GamemodeOptionDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = handle.Settings[LobbyConstants.SETTING_GAMEMODEOPTION] };
+        this.WeatherDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = (handle.Settings[LobbyConstants.SETTING_WEATHER] is "1") ? "On" : "Off" };
+        this.SupplySystemDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = (handle.Settings[LobbyConstants.SETTING_LOGISTICS] is "1") ? "On" : "Off" };
         this.ModPackageDropdown = new(false, Visibility.Hidden, new(), (x, y) => { });
 
-        // Subscribe to lobby events
+        // Subscribe to common lobby events
         handle.OnLobbySettingUpdate += this.OnLobbyChange;
-        handle.OnLobbyNotifyGamemode += this.OnGamemodeReleased;
-        handle.OnLobbyNotifyResults += this.OnResultsReleased;
-        handle.OnLobbyBeginMatch += this.OnMatchBegin;
-        handle.OnLobbyLaunchGame += this.OnLaunchGame;
-        handle.OnLobbyMatchError += this.OnMatchInfo;
-        handle.OnLobbyMatchInfo += this.OnMatchInfo;
-        handle.OnPoll += this.OnPoll;
+
+        // Subscribe to match specific events
+        if (handle is ILobbyMatchNotifier matchNotifier) {
+            matchNotifier.OnLobbyNotifyGamemode += this.OnGamemodeReleased;
+            matchNotifier.OnLobbyNotifyResults += this.OnResultsReleased;
+            matchNotifier.OnLobbyBeginMatch += this.OnMatchBegin;
+            matchNotifier.OnLobbyLaunchGame += this.OnLaunchGame;
+            matchNotifier.OnLobbyMatchError += this.OnMatchInfo;
+            matchNotifier.OnLobbyMatchInfo += this.OnMatchInfo;
+            matchNotifier.OnPoll += this.OnPoll;
+        }
 
         // Trigger initial view
-        this.OnModPackageChange(handle.Settings[LobbyAPI.SETTING_MODPACK]);
-        this.OnScenarioChange(handle.Settings[LobbyAPI.SETTING_MAP]);
-        this.OnGamemodeChange(handle.Settings[LobbyAPI.SETTING_GAMEMODE]);
+        this.OnModPackageChange(handle.Settings[LobbyConstants.SETTING_MODPACK]);
+        this.OnScenarioChange(handle.Settings[LobbyConstants.SETTING_MAP]);
+        this.OnGamemodeChange(handle.Settings[LobbyConstants.SETTING_GAMEMODE]);
 
         // Inform others
-        if (this.TryGetSelf() is LobbyAPIStructs.LobbySlot self && self.Occupant is not null) {
-            this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyAPIStructs.LobbyMemberState.Waiting);
+        if (this.TryGetSelf() is ILobbySlot self && self.Occupant is not null) {
+            this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.Waiting);
         }
 
     }
@@ -303,22 +305,22 @@ public class LobbyParticipantModel : LobbyModel {
     private void OnLobbyChange(LobbySettingsChangedEventArgs e) {
 
         switch (e.SettingsKey) {
-            case LobbyAPI.SETTING_MAP:
+            case LobbyConstants.SETTING_MAP:
                 this.OnScenarioChange(e.SettingsValue);
                 break;
-            case LobbyAPI.SETTING_GAMEMODE:
+            case LobbyConstants.SETTING_GAMEMODE:
                 this.OnGamemodeChange(e.SettingsValue);
                 break;
-            case LobbyAPI.SETTING_GAMEMODEOPTION:
+            case LobbyConstants.SETTING_GAMEMODEOPTION:
                 this.OnGamemodeOptionChanage(e.SettingsValue);
                 break;
-            case LobbyAPI.SETTING_WEATHER:
+            case LobbyConstants.SETTING_WEATHER:
                 this.OnWeatherSettingChange(e.SettingsValue);
                 break;
-            case LobbyAPI.SETTING_LOGISTICS:
+            case LobbyConstants.SETTING_LOGISTICS:
                 this.OnSupplySettingChange(e.SettingsValue);
                 break;
-            case LobbyAPI.SETTING_MODPACK:
+            case LobbyConstants.SETTING_MODPACK:
                 this.OnModPackageChange(e.SettingsValue);
                 break;
             default:

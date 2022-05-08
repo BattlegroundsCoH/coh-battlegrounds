@@ -260,19 +260,18 @@ public class Localize {
         }
         if (this.m_allText.ContainsKey(key)) {
             return this.m_allText[key];
-        } else {
-            if (key.LocaleSource == UndefinedSource) {
-                if (this.m_allText.FirstOrDefault(x => x.Key.LocaleID == key.LocaleID) is KeyValuePair<LocaleKey, string> kvp) {
-                    if (kvp.Value != null) {
-                        return kvp.Value;
-                    } else {
-                        return $"LOC: {key.LocaleID}";
-                    }
+        }
+        if (key.LocaleSource == UndefinedSource) {
+            if (this.m_allText.FirstOrDefault(x => x.Key.LocaleID == key.LocaleID) is KeyValuePair<LocaleKey, string> kvp) {
+                if (kvp.Value is not null) {
+                    return kvp.Value;
+                } else {
+                    return $"LOC: {key.LocaleID}";
                 }
             }
-            Trace.WriteLine($"Undefined locale key '{key.LocaleID}'@{key.LocaleSource}. (Lang : {this.Language})", nameof(Localize));
-            return key.LocaleID;
         }
+        Trace.WriteLine($"Undefined locale key '{key.LocaleID}'@{key.LocaleSource}. (Lang : {this.Language})", nameof(Localize));
+        return key.LocaleID;
     }
 
     /// <summary>

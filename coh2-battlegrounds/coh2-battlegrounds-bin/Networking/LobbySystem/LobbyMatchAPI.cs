@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 
 using Battlegrounds.Networking.Server;
@@ -42,9 +41,9 @@ public delegate void PlayerCompanyCallback(LobbyPlayerCompanyFile playerCompanyF
 public class LobbyMatchAPI {
 
     private readonly ServerAPI m_api;
-    private readonly LobbyAPI m_lobby;
+    private readonly OnlineLobbyHandle m_lobby;
 
-    public LobbyMatchAPI(LobbyAPI api) {
+    public LobbyMatchAPI(OnlineLobbyHandle api) {
         
         // Set internal refs
         this.m_api = api.ServerHandle;
@@ -66,7 +65,7 @@ public class LobbyMatchAPI {
 
     public bool HasAllPlayerCompanies() {
 
-        bool All(LobbyAPIStructs.LobbyTeam team) {
+        bool All(ILobbyTeam team) {
 
             // Loop over team slots
             for (int i = 0; i < team.Slots.Length; i++) {
@@ -116,7 +115,7 @@ public class LobbyMatchAPI {
 
     public int CollectPlayerCompanies(PlayerCompanyCallback companyCallback) {
 
-        int CollectTeam(LobbyAPIStructs.LobbyTeam team) {
+        int CollectTeam(ILobbyTeam team) {
             int count = 0;
             for (int i = 0; i < team.Slots.Length; i++) {
 
@@ -124,7 +123,7 @@ public class LobbyMatchAPI {
                 if (slot.IsSelf() || slot.IsAI())
                     continue;
 
-                if (team.Slots[i].Occupant is LobbyAPIStructs.LobbyMember member) {
+                if (team.Slots[i].Occupant is ILobbyMember member) {
                     companyCallback?.Invoke(this.GetPlayerCompany(member.MemberID));
                     count++;
                 }

@@ -3,11 +3,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:BattlegroundsApp.Controls">
     <Style TargetType="{x:Type local:IconButton}">
+        <Setter Property="ToolTipService.ShowOnDisabled" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IconButton}">
-                    <Grid x:Name="GridContainer" 
-                          Background="{Binding Background, RelativeSource={RelativeSource AncestorType=local:IconButton}, Mode=TwoWay}">
+                    <Grid x:Name="GridContainer" Background="{Binding Background, RelativeSource={RelativeSource AncestorType=local:IconButton}}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
@@ -22,8 +22,11 @@
                                Grid.Column="1"
                                Margin="0,2,8,2"
                                VerticalAlignment="Center" 
-                               HorizontalAlignment="Center"/>
-                        <ContentPresenter Grid.Row="0" Grid.Column="0" Content="{TemplateBinding Content}"
+                               HorizontalAlignment="Center"
+                               Visibility="{Binding ImageVisibility, RelativeSource={RelativeSource AncestorType=local:IconButton}}"
+                               ToolTip="{Binding ImageTooltip, RelativeSource={RelativeSource AncestorType=local:IconButton}}"/>
+                        <ContentPresenter Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
+                                          Content="{Binding Content, RelativeSource={RelativeSource AncestorType=local:IconButton}}" 
                                           VerticalAlignment="Center" 
                                           HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType=local:IconButton}}"
                                           Margin="5,0,5,0"/>
@@ -31,6 +34,9 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="GridContainer" Property="Background" Value="{Binding HoverColour, RelativeSource={RelativeSource AncestorType=local:IconButton}}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="GridContainer" Property="Background" Value="{Binding DisabledColour, RelativeSource={RelativeSource AncestorType=local:IconButton}}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

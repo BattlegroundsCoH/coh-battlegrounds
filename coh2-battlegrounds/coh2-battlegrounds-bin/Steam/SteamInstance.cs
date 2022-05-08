@@ -99,7 +99,8 @@ public sealed class SteamInstance {
         // Loop over each
         foreach (var (k,v) in users) {
             if (v is Dictionary<string, object> entries) {
-                if (entries.ContainsKey("MostRecent") && entries["MostRecent"] is "1") {
+                object? obj = entries.ContainsKey("MostRecent") ? entries["MostRecent"] : (entries.ContainsKey("mostrecent") ? entries["mostrecent"] : null);
+                if (obj is "1") {
                     ulong id = ulong.Parse(k);
                     string name = (string)entries["PersonaName"];
                     return new SteamUser(id) { Name = name };
@@ -108,6 +109,7 @@ public sealed class SteamInstance {
         }
 
         // Return null user
+        Trace.WriteLine($"Failed to detect local user data in {steamInstall} (user len = {users?.Count ?? 0})", nameof(SteamUser));
         return null;
 
     }

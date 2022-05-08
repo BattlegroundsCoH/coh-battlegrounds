@@ -17,6 +17,9 @@
     <Color x:Key="BackgroundDarkRed">#873737</Color>
     <SolidColorBrush x:Key="BackgroundDarkRedBrush" Color="{StaticResource BackgroundDarkRed}" />
 
+    <Color x:Key="BackgroundDeepRed">#582222</Color>
+    <SolidColorBrush x:Key="BackgroundDeepRedBrush" Color="{StaticResource BackgroundDeepRed}" />
+
     <Color x:Key="BackgroundLightRed">#ad4a4a</Color>
     <SolidColorBrush x:Key="BackgroundLightRedBrush" Color="{StaticResource BackgroundLightRed}" />
 

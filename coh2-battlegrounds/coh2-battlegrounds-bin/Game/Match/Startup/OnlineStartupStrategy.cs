@@ -40,7 +40,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
     public override bool OnBegin(object caller) { // This can be cancelled by host as well by sending a self-message through the connection object.
 
         // Get managed lobby
-        if (caller is not LobbyAPI lobby) {
+        if (caller is not OnlineLobbyHandle lobby) {
             return false;
         }
 
@@ -52,7 +52,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
     public override bool OnPrepare(object caller) {
 
         // Get managed lobby
-        if (caller is not LobbyAPI lobby) {
+        if (caller is not OnlineLobbyHandle lobby) {
             return false;
         }
 
@@ -66,7 +66,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
     public override bool OnCollectCompanies(object caller) {
 
         // Get managed lobby
-        if (caller is not LobbyAPI lobby) {
+        if (caller is not OnlineLobbyHandle lobby) {
             return false;
         }
 
@@ -209,7 +209,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
     public override bool OnCompile(object caller) {
 
         // Get managed lobby
-        if (caller is not LobbyAPI lobby) {
+        if (caller is not OnlineLobbyHandle lobby) {
             return false;
         }
 
@@ -239,7 +239,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
 
     }
 
-    private bool UploadGamemode(LobbyAPI api) {
+    private bool UploadGamemode(OnlineLobbyHandle api) {
 
         // Get path to win condition
         string sgapath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\subscriptions\\coh2_battlegrounds_wincondition.sga";
@@ -282,7 +282,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
     public override bool OnWaitForStart(object caller) { // TODO: Wait for all players to notify they've downloaded and installed the gamemode.
 
         // Get lobby
-        if (caller is not LobbyAPI lobby) {
+        if (caller is not OnlineLobbyHandle lobby) {
             return false;
         }
 
@@ -297,7 +297,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
     public override bool OnWaitForAllToSignal(object caller) { // Wait for all players to signal they've launched
 
         // Get lobby
-        if (caller is not LobbyAPI lobby) {
+        if (caller is not OnlineLobbyHandle lobby) {
             return false;
         }
 
