@@ -94,17 +94,23 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
             return;
         }
 
+        // Clear old slot
+        var oldTeam = u is LobbyConstants.TID_ALLIES ? this.m_allies : this.m_axis;
+        if (oldTeam.Slots[v] is not LocalLobbySlot b) {
+            return;
+        }
+
+        // Grab occupant
+        var occupant = b.Occupant;
+
         // Get team and move to
         var team = tid is LobbyConstants.TID_ALLIES ? this.m_allies : this.m_axis;
         if (team.Slots[sid] is LocalLobbySlot a) {
-            a.SetOccupant(team.Slots[sid].Occupant);
+            a.SetOccupant(occupant);
         }
 
-        // Clear old slot
-        var oldTeam = u is LobbyConstants.TID_ALLIES ? this.m_allies : this.m_axis;
-        if (oldTeam.Slots[v] is LocalLobbySlot b) {
-            b.SetOccupant(null);
-        }
+        // Set occupant null
+        b.SetOccupant(null);
 
         // Update visually
         this.OnLobbyTeamUpdate?.Invoke(team);

@@ -13,9 +13,9 @@
     <ApplicationIcon>coh2-battlegrounds.ico</ApplicationIcon>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>E:\coh2_battlegrounds\coh2-battlegrounds\keypair.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>1.1.1</AssemblyVersion>
-    <FileVersion>1.1.1</FileVersion>
-    <Version>1.1.1-alpha</Version>
+    <AssemblyVersion>1.1.2</AssemblyVersion>
+    <FileVersion>1.1.2</FileVersion>
+    <Version>1.1.2-alpha</Version>
     <RepositoryUrl>https://github.com/JustCodiex/coh2-battlegrounds</RepositoryUrl>
     <PackageProjectUrl>https://cohbattlegrounds.com/</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
