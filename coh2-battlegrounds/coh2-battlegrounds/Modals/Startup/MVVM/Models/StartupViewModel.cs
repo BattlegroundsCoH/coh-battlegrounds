@@ -201,6 +201,9 @@ public class StartupViewModel : INotifyPropertyChanged {
             this.DetectedSteampath = ofd.FileName;
             this.PropertyChanged?.Invoke(this, new(nameof(DetectedSteampath)));
 
+            // Update steam path
+            Pathfinder.SteamPath = this.DetectedSteampath;
+
             // Verify
             this.ValidateSteam();
 
@@ -225,6 +228,9 @@ public class StartupViewModel : INotifyPropertyChanged {
             // Grab select file
             this.DetectedCoHpath = Path.GetDirectoryName(ofd.FileName) ?? ofd.FileName;
             this.PropertyChanged?.Invoke(this, new(nameof(DetectedCoHpath)));
+
+            // Update steam path
+            Pathfinder.CoHPath = this.DetectedCoHpath;
 
             // Verify
             this.ValidateCoH();
