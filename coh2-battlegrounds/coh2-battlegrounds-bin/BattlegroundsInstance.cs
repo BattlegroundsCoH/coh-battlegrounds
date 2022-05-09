@@ -23,7 +23,7 @@ public static class BattlegroundsInstance {
     private static readonly string PATH_LOCAL = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\local.json");
 
     // The BG version
-    public const string BG_VERSION = "alpha-v1.1.0";
+    public const string BG_VERSION = "v1.2.0-alpha";
 
     // ID of other settings
     public const string OPT_ZOOM = "ingame_zoom";

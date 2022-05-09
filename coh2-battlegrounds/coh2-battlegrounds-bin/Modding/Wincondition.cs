@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Battlegrounds.Game.DataSource;
 
@@ -86,6 +87,21 @@ public sealed class Wincondition : IGamemode {
     /// <summary>
     /// 
     /// </summary>
+    public bool RequireFixed { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool HasPlanning { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public Dictionary<string, object[]> PlannableEntities { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="name"></param>
     /// <param name="guid"></param>
     public Wincondition(string name, Guid guid) : this(name, ModGuid.FromGuid(guid)) { }
@@ -101,6 +117,7 @@ public sealed class Wincondition : IGamemode {
         this.DefaultOptionIndex = 0;
         this.DisplayName = UcsString.CreateLocString(name);
         this.Options = Array.Empty<IGamemodeOption>();
+        this.PlannableEntities = new();
     }
 
     public override string ToString() => this.DisplayName;

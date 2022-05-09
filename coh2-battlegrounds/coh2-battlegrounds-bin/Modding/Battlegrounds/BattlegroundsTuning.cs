@@ -1,4 +1,4 @@
-﻿namespace Battlegrounds.Modding;
+﻿namespace Battlegrounds.Modding.Battlegrounds;
 
 /// <summary>
 /// The battlegrounds tuning mod. Implements <see cref="ITuningMod"/>. This class cannot be inherited.

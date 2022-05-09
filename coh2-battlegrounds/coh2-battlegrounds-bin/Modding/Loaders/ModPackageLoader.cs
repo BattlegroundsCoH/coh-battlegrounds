@@ -19,7 +19,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
     public override ModPackage Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 
         // Lookup table to store values in temp
-        Dictionary<string, object?> __lookup = new();
+        Dictionary<string, object> __lookup = new();
 
         // Read data
         while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
@@ -37,7 +37,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
                 "LocaleFiles" => JsonSerializer.Deserialize<ModPackage.ModLocale[]>(ref reader),
                 "FactionData" => JsonSerializer.Deserialize<FactionData[]>(ref reader),
                 "CustomOptions" => JsonSerializer.Deserialize<ModPackage.CustomOptions[]>(ref reader),
-                "Gamemodes" => JsonSerializer.Deserialize<ModPackage.Gamemode[]>(ref reader),
+                "Gamemodes" => JsonSerializer.Deserialize<Gamemode[]>(ref reader),
                 "Towing" => ReadTowdata(ref reader),
                 _ => throw new NotImplementedException(prop)
             };
@@ -77,7 +77,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
             LocaleFiles = __lookup.GetCastValueOrDefault("LocaleFiles", Array.Empty<ModPackage.ModLocale>()),
             AllowSupplySystem = __lookup.GetCastValueOrDefault("AllowSupplySystem", false),
             AllowWeatherSystem = __lookup.GetCastValueOrDefault("AllowWeatherSystem", false),
-            Gamemodes = __lookup.GetCastValueOrDefault("Gamemodes", Array.Empty<ModPackage.Gamemode>())
+            Gamemodes = __lookup.GetCastValueOrDefault("Gamemodes", Array.Empty<Gamemode>())
         };
 
     }

@@ -1,4 +1,6 @@
-﻿using Battlegrounds.Game.DataSource;
+﻿using System.Collections.Generic;
+
+using Battlegrounds.Game.DataSource;
 
 namespace Battlegrounds.Modding;
 
@@ -53,5 +55,20 @@ public interface IGamemode {
     /// Get the short display description of the gamemode.
     /// </summary>
     UcsString DisplayShortDescription { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    bool RequireFixed { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    bool HasPlanning { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    Dictionary<string, object[]> PlannableEntities { get; }
 
 }
