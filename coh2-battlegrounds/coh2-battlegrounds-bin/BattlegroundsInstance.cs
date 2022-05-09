@@ -250,6 +250,16 @@ public static class BattlegroundsInstance {
     /// </summary>
     public static Logger? Log => __logger;
 
+#if DEBUG
+
+    /// <summary>
+    /// The battlegrounds debug instance for easy debug info. Not available in release mode and should always be
+    /// enclosed by a debug directive
+    /// </summary>
+    public static readonly BattlegroundsDebug Debug = new();
+
+#endif
+
     /// <summary>
     /// Set a specific path for the instance
     /// </summary>

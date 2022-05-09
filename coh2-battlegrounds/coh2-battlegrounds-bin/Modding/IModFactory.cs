@@ -2,10 +2,13 @@
 
 namespace Battlegrounds.Modding;
 
+/// <summary>
+/// Interface for a factory that generates specific mod instances for a <see cref="ModPackage"/>.
+/// </summary>
 public interface IModFactory {
 
     /// <summary>
-    /// 
+    /// Get the mod package the factory creates mod instances for.
     /// </summary>
     ModPackage Package { get; }
 

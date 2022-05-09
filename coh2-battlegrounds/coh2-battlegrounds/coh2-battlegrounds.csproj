@@ -735,9 +735,6 @@
     <None Update="bg_common\bg_wc\auxiliary_scripts\client_overrideui.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\bg_wc\auxiliary_scripts\session.scar">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="bg_common\bg_wc\auxiliary_scripts\shared_abilities.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
