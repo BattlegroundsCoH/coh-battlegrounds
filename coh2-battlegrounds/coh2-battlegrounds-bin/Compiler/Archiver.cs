@@ -16,10 +16,12 @@ public static class Archiver {
         => RunArchiver($" -a \"{arcfile}\" -e \"{outpath}\" -v ", output);
 
     private static string GetArchiverFilepath() {
-        string path = Pathfinder.GetOrFindCoHPath() + "Archive.exe";
+        string path = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COH_FOLDER, "Archive.exe");
         if (File.Exists(path)) {
+            Trace.WriteLine($"Using archiver @ {path}", nameof(Archiver));
             return path;
         } else {
+            Trace.WriteLine($"Acrhive file not found @ {path}", nameof(Archiver));
             return string.Empty;
         }
     }
