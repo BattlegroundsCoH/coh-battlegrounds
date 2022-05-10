@@ -7,85 +7,83 @@ using Battlegrounds;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Database;
 
-namespace coh2_battlegrounds_console {
+namespace coh2_battlegrounds_console;
 
-    public static class MapExtractor {
+public static class MapExtractor {
 
-        public static string? Output { get; set; }
+    public static string? Output { get; set; }
 
-        public static void Extract() {
+    public static void Extract() {
 
-            if (string.IsNullOrWhiteSpace(Output)) {
-                return;
+        if (string.IsNullOrWhiteSpace(Output)) {
+            return;
+        }
+
+        string path = Pathfinder.GetOrFindCoHPath();
+        string[] map_archives = {
+            $"{path}CoH2\\Archives\\MPScenarios.sga",
+            $"{path}CoH2\\Archives\\MPXP1Scenarios.sga",
+        };
+
+        string extract = Path.GetFullPath(Output);
+        if (Directory.Exists(extract)) {
+            Directory.Delete(extract, true);
+        }
+
+        _ = Directory.CreateDirectory(extract);
+
+        List<Scenario> scenarios = new();
+
+        foreach (string archive in map_archives) {
+
+            Console.WriteLine($"Extracting .sga '{archive}'");
+
+            if (!Archiver.Extract(archive, extract, Console.Out)) {
+                Console.WriteLine($"Failed to extract '{archive}'");
             }
 
-            string path = Pathfinder.GetOrFindCoHPath();
-            string[] map_archives = {
-                $"{path}CoH2\\Archives\\MPScenarios.sga",
-                $"{path}CoH2\\Archives\\MPXP1Scenarios.sga",
-            };
+            try {
 
-            string extract = Path.GetFullPath(Output);
-            if (Directory.Exists(extract)) {
-                Directory.Delete(extract, true);
-            }
+                string[] lookIn = {
+                    $"{extract}\\scenarios\\mp\\community\\",
+                    $"{extract}\\scenarios\\mp\\",
+                    $"{extract}\\scenarios\\pm\\community\\",
+                    $"{extract}\\scenarios\\pm\\",
+                };
 
-            _ = Directory.CreateDirectory(extract);
+                List<string> dirs = new();
 
-            List<Scenario> scenarios = new();
-
-            foreach (string archive in map_archives) {
-
-                Console.WriteLine($"Extracting .sga '{archive}'");
-
-                if (!Archiver.Extract(archive, extract, Console.Out)) {
-                    Console.WriteLine($"Failed to extract '{archive}'");
+                foreach (string look in lookIn) {
+                    if (Directory.Exists(look)) {
+                        dirs.AddRange(Directory.GetDirectories(look));
+                    }
                 }
 
-                try {
+                foreach (string dir in dirs) {
 
-                    string[] lookIn = {
-                        $"{extract}\\scenarios\\mp\\community\\",
-                        $"{extract}\\scenarios\\mp\\",
-                        $"{extract}\\scenarios\\pm\\community\\",
-                        $"{extract}\\scenarios\\pm\\",
-                    };
+                    // Log current file
+                    Console.WriteLine($"Parsing scenario folder: {dir}");
 
-                    List<string> dirs = new();
-
-                    foreach (string look in lookIn) {
-                        if (Directory.Exists(look)) {
-                            dirs.AddRange(Directory.GetDirectories(look));
+                    // Read and add scenario
+                    if (ScenarioList.GetScenarioFromDirectory(dir, Path.GetFileName(archive)) is Scenario scen) {
+                        if (scen.IsVisibleInLobby) {
+                            scenarios.Add(scen);
+                        } else {
+                            Console.WriteLine($"Skipping {scen.RelativeFilename} - NOT visible in lobby!");
                         }
                     }
 
-                    foreach (string dir in dirs) {
-
-                        // Log current file
-                        Console.WriteLine($"Parsing scenario folder: {dir}");
-
-                        // Read and add scenario
-                        if (ScenarioList.GetScenarioFromDirectory(dir, Path.GetFileName(archive)) is Scenario scen) {
-                            if (scen.IsVisibleInLobby) {
-                                scenarios.Add(scen);
-                            } else {
-                                Console.WriteLine($"Skipping {scen.RelativeFilename} - NOT visible in lobby!");
-                            }
-                        }
-
-                    }
-
-                } catch (Exception e) {
-                    Console.WriteLine($"Failed to read sga \"{archive}\" (Skipping, message = '{e.Message}')");
                 }
 
-
+            } catch (Exception e) {
+                Console.WriteLine($"Failed to read sga \"{archive}\" (Skipping, message = '{e.Message}')");
             }
 
-            // Save database
-            File.WriteAllText("vcoh-map-db.json", JsonSerializer.Serialize(scenarios));
 
         }
+
+        // Save database
+        File.WriteAllText("vcoh-map-db.json", JsonSerializer.Serialize(scenarios, options: new() { WriteIndented = true, IncludeFields = true }));
 
     }
 

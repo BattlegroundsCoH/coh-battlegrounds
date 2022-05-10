@@ -38,6 +38,44 @@ public sealed class Scenario {
     public const string INVALID_SGA = "INVALID SGA";
 
     /// <summary>
+    /// 
+    /// </summary>
+    public readonly struct PointPosition {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [JsonInclude]
+        public readonly GamePosition Position;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [JsonInclude]
+        public readonly ushort Owner;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [JsonInclude]
+        public readonly string EntityBlueprint;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="X"></param>
+        /// <param name="Y"></param>
+        /// <param name="Owner"></param>
+        /// <param name="EntityBlueprint"></param>
+        [JsonConstructor]
+        public PointPosition(GamePosition Position, ushort Owner, string EntityBlueprint) {
+            this.Position = Position;
+            this.Owner = Owner;
+            this.EntityBlueprint = EntityBlueprint;
+        }
+    }
+
+    /// <summary>
     /// The text-name for the <see cref="Scenario"/>.
     /// </summary>
     public string Name { get; set; }
@@ -80,7 +118,7 @@ public sealed class Scenario {
     /// <summary>
     /// Get if the <see cref="Scenario"/> is a workshop map.
     /// </summary>
-    public bool IsWorkshopMap => this.SgaName is not "MPScenarios" and not "MPXP1Scenarios";
+    public bool IsWorkshopMap => !(this.SgaName.ToLowerInvariant() is "mpscenarios" or "mpxp1scenarios");
 
     /// <summary>
     /// The <see cref="Wincondition"/> instances designed for this <see cref="Scenario"/>. Empty list means all <see cref="Wincondition"/> instances can be used.
@@ -93,6 +131,21 @@ public sealed class Scenario {
     [JsonIgnore]
     public bool HasValidInfoOrOptionsFile { get; }
 
+    /// <summary>
+    /// Get the point position information.
+    /// </summary>
+    public PointPosition[] Points { get; }
+
+    /// <summary>
+    /// Get the width and length of the world.
+    /// </summary>
+    public GamePosition WorldSize { get; }
+
+    /// <summary>
+    /// Get the width and height of the minimap
+    /// </summary>
+    public GamePosition MinimapSize { get; }
+
     public string ToJsonReference() => this.RelativeFilename;
 
     public Scenario() {
@@ -102,6 +155,9 @@ public sealed class Scenario {
         this.Name = "Unknwon";
         this.Description = "Undefined";
         this.RelativeFilename = "INVALID_FILENAME";
+        this.Points = Array.Empty<PointPosition>();
+        this.WorldSize = GamePosition.Naught;
+        this.MinimapSize = GamePosition.Naught;
     }
 
     /// <summary>
@@ -122,10 +178,12 @@ public sealed class Scenario {
             throw new ArgumentNullException(nameof(optionsfile), "Options filepath cannot be null");
         }
 
-        this.RelativeFilename = Path.GetFileNameWithoutExtension(infofile);
+        // Create basics
         this.Gamemodes = new();
         this.SgaName = string.Empty;
+        this.RelativeFilename = Path.GetFileNameWithoutExtension(infofile);
 
+        // Create lua reader
         LuaState scenarioState = new();
         LuaVM.DoFile(scenarioState, infofile);
         LuaVM.DoFile(scenarioState, optionsfile);
@@ -135,11 +193,13 @@ public sealed class Scenario {
             throw new Exception("Invalid scenario header 'HeaderInfo' not found!");
         }
 
+        // Read header
         this.Name = headerInfo["scenarioname"].Str();
         this.Description = headerInfo["scenariodescription"].Str();
         this.MaxPlayers = (byte)(headerInfo["maxplayers"] as LuaNumber ?? new LuaNumber(0));
 
-        int battlefront = (int)(LuaNumber)headerInfo["scenario_battlefront"].IfTrue(x => x is LuaNumber).ThenDo(x => x as LuaNumber).OrDefaultTo(() => new LuaNumber(2));
+        // Read battlefront
+        int battlefront = headerInfo["scenario_battlefront"] is LuaNumber bf ? (int)bf : 2;
         this.Theatre = battlefront == 2 ? ScenarioTheatre.EasternFront : battlefront == 5 ? ScenarioTheatre.WesternFront : ScenarioTheatre.SharedFront;
 
         // Get the skins table (apperantly both are accepted...)
@@ -147,12 +207,41 @@ public sealed class Scenario {
             skins = headerInfo["default_skin"] as LuaTable ?? new();
         }
 
+        // Read winter information
         this.IsWintermap = skins?.Contains("winter") ?? false;
+
+        // Read world size
+        this.WorldSize = ReadSize(headerInfo["mapsize"].As<LuaTable>());
+
+        // Read world points
+        this.Points = headerInfo["point_positions"].As<LuaTable>().ToArray().Map(x => (this.WorldSize, x.As<LuaTable>())).Map(ReadPoint);
+
+        // Read is visible
         this.IsVisibleInLobby = (scenarioState._G["visible_in_lobby"] as LuaBool)?.IsTrue ?? true;
 
+        // Read minimap size
+        if (scenarioState._G["minimap_size"] is LuaTable minimap) {
+            this.MinimapSize = ReadSize(minimap);
+        } else {
+            this.MinimapSize = new(768, 768);
+        }
+
+        // Mark as valid
         this.HasValidInfoOrOptionsFile = true;
 
     }
+
+    private static GamePosition ReadSize(LuaTable? table)
+        => table is null ? GamePosition.Naught : new(table[1].As<LuaNumber>().ToInt(), table[2].As<LuaNumber>().ToInt());
+
+    private static PointPosition ReadPoint((GamePosition ws, LuaTable table) _) {
+        double y = _.table["y"].As<LuaNumber>();
+        double x = _.table["x"].As<LuaNumber>();
+        ushort owner = (ushort)_.table["owner_id"].As<LuaNumber>().ToInt();
+        string ebp = _.table["ebp_name"].Str();
+        return new(GamePosition.WorldToScreenCoordinate(new(x, y), (int)_.ws.X, (int)_.ws.Y), owner, ebp);
+    }
+
     public override string ToString() => this.Name;
 
 }

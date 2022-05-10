@@ -38,7 +38,8 @@
             "LocStr": "29",
             "Value": 1000
           }
-        ]
+        ],
+        "HasVictoryPoints": true
       },
       {
         "ID": "bg_defence",

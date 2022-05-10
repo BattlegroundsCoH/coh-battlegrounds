@@ -178,6 +178,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public ImageSource? ScenarioPreview { get; set; }
 
+    public Scenario? Scenario { get; set; }
+
     public string LobbyTitle { get; }
 
     public LobbyTeam Allies { get; }

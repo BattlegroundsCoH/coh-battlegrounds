@@ -45,8 +45,6 @@ public class LobbyHostModel : LobbyModel {
 
     public override LobbyDropdown<ModPackageOption> ModPackageDropdown { get; }
 
-    public ImageSource? SelectedMatchScenario { get; set; }
-
     public LobbyHostModel(ILobbyHandle handle, ILobbyTeam allies, ILobbyTeam axis) : base(handle, allies, axis) {
 
         // Init buttons
@@ -270,17 +268,15 @@ public class LobbyHostModel : LobbyModel {
             return;
         }
 
+        // Update
+        this.Scenario = scen;
+        this.NotifyProperty(nameof(Scenario));
+
         // Update label
         this.MapDropdown.LabelContent = scen.Name;
 
-        // Try get image
-        this.ScenarioPreview = LobbySettingsLookup.TryGetMapSource(scen);
-
         // Update gamemode
         this.UpdateGamemodeAndOptionsSelection(scen);
-
-        // Notify change
-        this.NotifyProperty(nameof(ScenarioPreview));
 
         // Update lobby
         this.m_handle.SetLobbySetting(LobbyConstants.SETTING_MAP, scen.RelativeFilename);
