@@ -30,7 +30,8 @@ public class ResourceHandler {
         "upgrade_icons",
         "phase_icons",
         "deploy_icons",
-        "portraits"
+        "portraits",
+        "minimap_icons",
     };
     private static readonly string[] __iconResourceFiles = {
         "resources/ingame/ability_icons.dat",
@@ -40,6 +41,7 @@ public class ResourceHandler {
         "resources/ingame/upgrade_icons.dat",
         "resources/ingame/phase_icons.dat",
         "resources/ingame/deploy_icons.dat",
+        "resources/ingame/minimap_icons.dat",
         "resources/ingame/portraits.dat"
     };
 

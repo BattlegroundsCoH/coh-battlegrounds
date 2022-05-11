@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Globalization;
+using System.Linq;
 
 namespace CoH2XML2JSON {
 
@@ -60,7 +61,7 @@ namespace CoH2XML2JSON {
             return army;
         }
 
-        public static void GenericDatabase<T>(string dbname, string lookpath, BlueprintFactory<T> instanceCreator) where T : BP {
+        private static List<T> GenericDatabaseGet<T>(string dbname, string lookpath, BlueprintFactory<T> instanceCreator) where T : BP {
 
             // Get destination
             string fileName = Path.Combine(dirPath, dbname);
@@ -77,7 +78,7 @@ namespace CoH2XML2JSON {
 
                 // Make sure there's a folder to read
                 if (!Directory.Exists(searchDir)) {
-                    
+
                     Console.WriteLine($"INFO: \"{lookpath}\" folder not found - the database creaton will be skipped.");
 
                 } else {
@@ -98,18 +99,47 @@ namespace CoH2XML2JSON {
 
                     }
 
-                    File.WriteAllText(fileName, JsonSerializer.Serialize(bps.ToArray(), serializerOptions));
-                    Console.WriteLine($"Created database: {fileName}");
+                    // Return found values
+                    return bps;
 
                 }
             } catch (Exception e) {
-                
+
                 // Log error and wait for user to exit
                 Console.WriteLine(e.ToString());
                 Console.ReadLine();
 
             }
 
+            // Return something
+            return new();
+
+        }
+
+        public static void GenericDatabaseSave<T>(string dbname, IEnumerable<T> data) where T : BP {
+
+            // Get destination
+            string fileName = Path.Combine(dirPath, dbname);
+
+            // Write
+            File.WriteAllText(fileName, JsonSerializer.Serialize(data.ToArray(), serializerOptions));
+            Console.WriteLine($"Created database: {fileName}");
+
+
+        }
+
+        public static void GenericDatabase<T>(string dbname, string lookpath, BlueprintFactory<T> instanceCreator) where T : BP {
+
+            // Get
+            var bps = GenericDatabaseGet<T>(dbname, lookpath, instanceCreator);
+
+            // Save
+            GenericDatabaseSave<T>(dbname, bps);
+
+        }
+
+        public static void GenericDatabase<T>(string dbname, BlueprintFactory<T> instanceCreator, params string[] paths) where T : BP {
+            GenericDatabaseSave(dbname, paths.Aggregate((IEnumerable<T>)(new List<T>()), (a, b) => a.Concat(GenericDatabaseGet<T>(dbname, b, instanceCreator))));
         }
 
         public class LastUse {
@@ -191,11 +221,11 @@ namespace CoH2XML2JSON {
             File.WriteAllText("last.json", JsonSerializer.Serialize(lu));
 
             GenericDatabase($"{modname}-abp-db.json", "abilities", (doc, path, name) => new ABP(doc, modguid, name) { Army = GetFactionFromPath(path) });
-            GenericDatabase($"{modname}-ebp-db.json", "ebps\\races", (doc, path, name) => {
+            GenericDatabase($"{modname}-ebp-db.json", (doc, path, name) => {
                 var ebp = new EBP(doc, modguid, name) { Army = GetFactionFromPath(path) };
                 entities.Add(ebp);
                 return ebp;
-            });
+            }, "ebps\\races", "ebps\\gameplay");
             GenericDatabase($"{modname}-sbp-db.json", "sbps\\races", (doc, path, name) => new SBP(doc, modguid, name, entities) { Army = GetFactionFromPath(path) });
             GenericDatabase($"{modname}-cbp-db.json", "critical", (doc, path, name) => new Critical(doc, modguid, name));
             GenericDatabase($"{modname}-ibp-db.json", "slot_item", (doc, path, name) => new SlotItem(doc, modguid, name) { Army = GetFactionFromPath(path) });

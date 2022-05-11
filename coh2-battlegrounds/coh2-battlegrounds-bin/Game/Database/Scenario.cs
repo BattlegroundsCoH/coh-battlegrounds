@@ -134,17 +134,17 @@ public sealed class Scenario {
     /// <summary>
     /// Get the point position information.
     /// </summary>
-    public PointPosition[] Points { get; }
+    public PointPosition[] Points { get; set; }
 
     /// <summary>
     /// Get the width and length of the world.
     /// </summary>
-    public GamePosition WorldSize { get; }
+    public GamePosition WorldSize { get; set; }
 
     /// <summary>
     /// Get the width and height of the minimap
     /// </summary>
-    public GamePosition MinimapSize { get; }
+    public GamePosition MinimapSize { get; set; }
 
     public string ToJsonReference() => this.RelativeFilename;
 

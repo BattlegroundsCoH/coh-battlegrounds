@@ -20,10 +20,38 @@
                 <ScaleTransform ScaleY="-1"/>
             </Image.RenderTransform>
         </Image>
+        <Canvas 
+            Canvas.Top="10"
+            Canvas.Left="16"
+            Width="348"
+            Height="322"
+            x:Name="ScenarioCanvas"
+            ClipToBounds="True">
+        </Canvas>
         <Image
             Width="372"
             Canvas.Top="6"
             Canvas.Left="0"
             Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbySettingMap.png"/>
+        <Button 
+            Height="36"
+            Canvas.Right="12"
+            Canvas.Top="14"
+            Style="{StaticResource MainButtonStyle}"
+            x:Name="PrepareDefenceButton"
+            ToolTip="Hello World">
+            <Grid>
+                <Rectangle Width="32" Height="32"
+                           Fill="Orange">
+                    <Rectangle.Effect>
+                        <BlurEffect Radius="20"/>
+                    </Rectangle.Effect>
+                </Rectangle>
+                <Image
+                Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbyMapDefence.png">
+                </Image>
+            </Grid>
+            
+        </Button>
     </Canvas>
 </UserControl>

@@ -7,32 +7,39 @@ namespace Battlegrounds.Game;
 /// </summary>
 public struct GamePosition {
 
-    private readonly double[] m_xyz;
+    private double m_x;
+    private double m_y;
+    private double m_z;
 
     /// <summary>
     /// The X-coordinate
     /// </summary>
-    public double X { get => m_xyz[0]; set => m_xyz[0] = value; }
+    public double X {
+        get => this.m_x; set => this.m_x = value; 
+    }
 
     /// <summary>
     /// The Y-coordinate
     /// </summary>
-    public double Y { get => m_xyz[1]; set => m_xyz[1] = value; }
+    public double Y {
+        get => this.m_y; set => this.m_y = value;
+    }
 
     /// <summary>
     /// The Z-coordinate
     /// </summary>
-    public double Z { get => m_xyz[2]; set => m_xyz[2] = value; }
+    public double Z {
+        get => this.m_z; set => this.m_z = value;
+    }
 
     /// <summary>
     /// New instance of a <see cref="GamePosition"/> using only the two first coordinates (XY) - a 2D position
     /// </summary>
     /// <param name="x">The X-coordinate</param>
     /// <param name="y">The Y-coordinate</param>
-    public GamePosition(double x, double y) {
-        this.m_xyz = new double[3];
-        this.X = x;
-        this.Y = y;
+    public GamePosition(double x, double y) : this() {
+        this.m_x = x;
+        this.m_y = y;
     }
 
     /// <summary>
@@ -42,7 +49,7 @@ public struct GamePosition {
     /// <param name="y"></param>
     /// <param name="z"></param>
     public GamePosition(double x, double y, double z) : this(x, y) {
-        this.m_xyz[2] = z;
+        this.m_z = z;
     }
 
     /// <summary>
@@ -50,6 +57,28 @@ public struct GamePosition {
     /// </summary>
     /// <returns>A string that represents the current object.</returns>
     public override string ToString() => $"({X}, {Y}, {Z})";
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void Deconstruct(out double x, out double y) {
+        x = this.m_x;
+        y = this.m_y;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="z"></param>
+    public void Deconstruct(out double x, out double y, out double z) {
+        x = this.m_x;
+        y = this.m_y;
+        z = this.m_z;
+    }
 
     /// <summary>
     /// The game position at (0, 0, 0)

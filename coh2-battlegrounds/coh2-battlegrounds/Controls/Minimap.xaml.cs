@@ -15,7 +15,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 
 using BattlegroundsApp.Lobby;
 
@@ -45,6 +47,22 @@ public partial class Minimap : UserControl {
         }
     }
 
+    public static readonly DependencyProperty PlanCommandProperty =
+        DependencyProperty.Register(nameof(PlanCommand), typeof(ICommand), typeof(Minimap));
+
+    public ICommand? PlanCommand {
+        get => this.GetValue(PlanCommandProperty) as ICommand;
+        set => this.SetValue(PlanCommandProperty, value);
+    }
+
+    public static readonly DependencyProperty IsDisplayOnlyProperty =
+        DependencyProperty.Register(nameof(IsDisplayOnly), typeof(bool), typeof(Minimap), new PropertyMetadata(true));
+
+    public bool IsDisplayOnly {
+        get => (bool)this.GetValue(IsDisplayOnlyProperty);
+        set => this.SetValue(IsDisplayOnlyProperty, value);
+    }
+
     #endregion
 
     #region Callbacks
@@ -68,8 +86,41 @@ public partial class Minimap : UserControl {
 
     private void SetDisplay(Scenario? scenario) {
 
+        // Clear existing
+        this.ScenarioCanvas.Children.Clear();
+
         // Try get display image
         this.ScenarioDisplay.Source = LobbySettingsLookup.TryGetMapSource(scenario);
+
+        // Now bail if no scenario was set
+        if (scenario is null) {
+            return;
+        }
+
+        // Grab points
+        var points = scenario.Points.Map(x => (x.Position, x.Owner switch {
+            >= 1000 and < 1008 => (ushort)(x.Owner - 1000),
+            _ => x.Owner
+        }, BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint)));
+
+
+        // Display basic information
+        this.TryShowPositions(scenario, points);
+
+        // TODO: Add display elements
+
+        // Return if display only
+        if (this.IsDisplayOnly) {
+            return;
+        }
+
+    }
+
+    private void TryShowPositions(Scenario scen, (GamePosition pos, ushort owner, EntityBlueprint ebp)[] pointData) {
+
+        // Pick from points
+
+
 
     }
 
