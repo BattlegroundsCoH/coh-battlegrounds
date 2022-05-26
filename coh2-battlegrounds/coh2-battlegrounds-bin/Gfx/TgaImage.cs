@@ -1,4 +1,6 @@
-﻿namespace Battlegrounds.Gfx;
+﻿using System;
+
+namespace Battlegrounds.Gfx;
 
 public enum TgaImageDatatype : byte {
     NO_IMAGE_DATA = 0,
@@ -46,5 +48,11 @@ public class TgaImage {
     }
 
     public byte[] GetPixelData() => this.m_pixelData;
+
+    public unsafe IntPtr GetPixelPtr() {
+        fixed (byte* p = this.m_pixelData) {
+            return new(p);
+        }
+    }
 
 }
