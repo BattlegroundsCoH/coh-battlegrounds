@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Gfx;
 
 namespace coh2_battlegrounds_console;
+
 public static class Minimapper {
 
     public static unsafe void Map(Scenario scenario) {

@@ -118,21 +118,13 @@ public partial class Minimap : UserControl {
 
     private void TryShowPositions(Scenario scen, (GamePosition pos, ushort owner, EntityBlueprint ebp)[] pointData) {
 
-        // Grab something
-        var trans = Brushes.DarkOrchid.Clone();
-        trans.Opacity = 0.25;
+        // Get scale
+        var xs = this.ScenarioCanvas.Width / (scen.TerrainSize.X) * 2;
+        var ys = this.ScenarioCanvas.Height / (scen.TerrainSize.Y) * 2;
 
-        double scaleX = 1.0 / scen.TerrainSize.X;
-        double scaleXX = 1.0 / this.ScenarioCanvas.Width;
-
-        // Try create a rectangle
-        Rectangle rect = new() {
-            Width = ( this.ScenarioCanvas.Width / scen.PlayableSize.X) * this.ScenarioCanvas.Width,
-            Height = (this.ScenarioCanvas.Height / scen.PlayableSize.Y) * this.ScenarioCanvas.Height,
-            Fill = trans
-        };
-
-        this.ScenarioCanvas.Children.Add(rect);
+        // Get origin
+        var ox = (this.ScenarioCanvas.Width * 0.5);
+        var oy = (this.ScenarioCanvas.Height * 0.5);
 
         // Pick from points
         for (int i = 0; i < pointData.Length; i++) { 
@@ -149,14 +141,9 @@ public partial class Minimap : UserControl {
                 // Add to canvas group
                 this.ScenarioCanvas.Children.Add(img);
 
-                double u = scen.MinimapSize.X / this.ScenarioCanvas.Width;
-                double ws = 1.0 / scen.TerrainSize.X;
-                double x = (pointData[i].pos.X + scen.TerrainSize.X * 0.5 ) * ws;
-
-                // Translate pos to screen
-                //var (x, y) = GamePosition.WorldToScreenCoordinate(pointData[i].pos, scen.TerrainSize.ToTuple2(), scen.PlayableSize.ToTuple2());
-                double xpos = (this.ScenarioCanvas.Width * x);
-                double ypos = this.ScenarioCanvas.Height * 0.5;
+                // Define position
+                double xpos = pointData[i].pos.X * xs + ox;
+                double ypos = -pointData[i].pos.Y * ys + oy;
 
                 // Display
                 img.SetValue(Canvas.LeftProperty, xpos);
