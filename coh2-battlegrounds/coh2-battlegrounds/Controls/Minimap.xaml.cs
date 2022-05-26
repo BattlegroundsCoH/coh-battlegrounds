@@ -118,38 +118,48 @@ public partial class Minimap : UserControl {
 
     private void TryShowPositions(Scenario scen, (GamePosition pos, ushort owner, EntityBlueprint ebp)[] pointData) {
 
-        // Get scale
-        var xs = this.ScenarioCanvas.Width / (scen.TerrainSize.X) * 2;
-        var ys = this.ScenarioCanvas.Height / (scen.TerrainSize.Y) * 2;
+        // Get world to minimap scale
+        var xs = this.ScenarioDisplay.Source.Width / (scen.TerrainSize.X);
+        var ys = this.ScenarioDisplay.Source.Height / (scen.TerrainSize.Y);
 
         // Get origin
-        var ox = (this.ScenarioCanvas.Width * 0.5);
-        var oy = (this.ScenarioCanvas.Height * 0.5);
+        var ox = (this.ScenarioDisplay.Source.Width * 0.5);
+        var oy = (this.ScenarioDisplay.Source.Height * 0.5);
 
         // Pick from points
-        for (int i = 0; i < pointData.Length; i++) { 
-            if (pointData[i].ebp.Name is "starting_position_shared_territory") {
+        for (int i = 0; i < pointData.Length; i++) {
 
-                // Add
-                Image img = new() {
-                    Width = 24,
-                    Height = 24,
-                    Source = App.ResourceHandler.GetIcon("minimap_icons", $"Icons_minimap_mm_starting_point_{pointData[i].owner + 1}"),
-                    RenderTransformOrigin = new(0.5, 0.5)
-                };
+            // Grab ico
+            string ico = pointData[i].ebp.Name switch {
+                "starting_position_shared_territory" => $"Icons_minimap_mm_starting_point_{pointData[i].owner + 1}",
+                "victory_point" => "Icons_minimap_mm_victory_point",
+                _ => string.Empty
+            };
 
-                // Add to canvas group
-                this.ScenarioCanvas.Children.Add(img);
-
-                // Define position
-                double xpos = pointData[i].pos.X * xs + ox;
-                double ypos = -pointData[i].pos.Y * ys + oy;
-
-                // Display
-                img.SetValue(Canvas.LeftProperty, xpos);
-                img.SetValue(Canvas.TopProperty, ypos);
-
+            // Bail if no icon is defined
+            if (string.IsNullOrEmpty(ico)) {
+                continue;
             }
+
+            // Define position
+            double xpos = pointData[i].pos.X * xs + ox;
+            double ypos = -pointData[i].pos.Y * ys + oy;
+
+            // Create image
+            Image img = new() {
+                Width = 24,
+                Height = 24,
+                Source = App.ResourceHandler.GetIcon("minimap_icons", ico),
+                RenderTransformOrigin = new(0.5, 0.5)
+            };
+
+            // Add to canvas group
+            this.ScenarioCanvas.Children.Add(img);
+
+            // Display
+            img.SetValue(Canvas.LeftProperty, xpos * (this.ScenarioCanvas.Width / this.ScenarioDisplay.Source.Width));
+            img.SetValue(Canvas.TopProperty, ypos * (this.ScenarioCanvas.Height / this.ScenarioDisplay.Source.Height));
+
         }
 
     }

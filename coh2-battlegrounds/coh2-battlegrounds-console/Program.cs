@@ -69,7 +69,7 @@ class Program {
         public GfxCompile() : base("gfxdir", "Compiles directory gfx content into a gfx data file.", DIR, OUT, VER, REG) { }
 
         public override void Execute(CommandArgumentList argumentList) 
-            => GfxFolderCompiler.Compile(argumentList.GetValue(DIR), argumentList.GetValue(OUT));
+            => GfxFolderCompiler.Compile(argumentList.GetValue(DIR), argumentList.GetValue(OUT), version: argumentList.GetValue(VER));
 
     }
 

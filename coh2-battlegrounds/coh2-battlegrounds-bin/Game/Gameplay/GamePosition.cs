@@ -91,33 +91,4 @@ public struct GamePosition {
     /// </summary>
     public static readonly GamePosition Naught = new GamePosition(0.0f, 0.0f, 0.0f);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="worldCoord"></param>
-    /// <param name="worldWidth"></param>
-    /// <param name="worldHeight"></param>
-    /// <returns></returns>
-    public static GamePosition WorldToScreenCoordinate(GamePosition worldCoord, (double w, double h) world, (double w, double h) play) {
-        double wu = 1.0 / world.w;
-        double hu = 1.0 / world.h;
-        double ww = (play.w / 2.0);
-        double hh = (play.h / 2.0);
-        double x = worldCoord.X + ww;
-        double y = worldCoord.Y + hh ;
-        return new GamePosition(x * wu, y * hu);
-    }
-    //    => new(worldCoord.X + (worldWidth / 2.0), worldCoord.Y + (worldHeight / 2.0));
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="screenCoord"></param>
-    /// <param name="worldWidth"></param>
-    /// <param name="worldHeight"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public static GamePosition FromScreenToWorldCoordinate(GamePosition screenCoord, int worldWidth, int worldHeight)
-        => throw new NotImplementedException();
-
 }
