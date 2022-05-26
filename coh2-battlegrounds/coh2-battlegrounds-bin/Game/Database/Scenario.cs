@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Game.DataSource;
 using Battlegrounds.Lua;
+using Battlegrounds.Util;
 
 namespace Battlegrounds.Game.Database;
 
@@ -129,7 +132,7 @@ public sealed class Scenario {
     /// Get if the scenario has a valid info or options file.
     /// </summary>
     [JsonIgnore]
-    public bool HasValidInfoOrOptionsFile { get; }
+    public bool HasValidInfoOrOptionsFile { get; private set; }
 
     /// <summary>
     /// Get the point position information.
@@ -137,16 +140,19 @@ public sealed class Scenario {
     public PointPosition[] Points { get; set; }
 
     /// <summary>
-    /// Get the width and length of the world.
+    /// Get the width and length of the playable world.
     /// </summary>
-    public GamePosition WorldSize { get; set; }
+    public GamePosition PlayableSize { get; set; }
 
     /// <summary>
-    /// Get the width and height of the minimap
+    /// Get or set the width and length of the terrain.
+    /// </summary>
+    public GamePosition TerrainSize { get; set; }
+
+    /// <summary>
+    /// Get or set the width and length of the terrain.
     /// </summary>
     public GamePosition MinimapSize { get; set; }
-
-    public string ToJsonReference() => this.RelativeFilename;
 
     public Scenario() {
         this.SgaName = INVALID_SGA;
@@ -156,32 +162,34 @@ public sealed class Scenario {
         this.Description = "Undefined";
         this.RelativeFilename = "INVALID_FILENAME";
         this.Points = Array.Empty<PointPosition>();
-        this.WorldSize = GamePosition.Naught;
+        this.PlayableSize = GamePosition.Naught;
+        this.TerrainSize = GamePosition.Naught;
         this.MinimapSize = GamePosition.Naught;
     }
 
     /// <summary>
     /// New <see cref="Scenario"/> instance with data from either an infor or options file.
     /// </summary>
+    /// <param name="laofile">The path to the lao file containing terrain information.</param>
     /// <param name="infofile">The path to the info file.</param>
     /// <param name="optionsfile">The path to the options file</param>
     /// <exception cref="ArgumentNullException"/>
-    public Scenario(string infofile, string optionsfile) {
+    public static Scenario? ReadScenario(string? laofile, string? infofile, string? optionsfile, string sganame) {
 
-        // Make sure infofile is not null
-        if (infofile is null) {
-            throw new ArgumentNullException(nameof(infofile), "Info filepath cannot be null");
+        // Make sure lao file is not null
+        if (string.IsNullOrEmpty(laofile)) {
+            return null;
         }
 
-        // Make sure optionsfile is not null
-        if (optionsfile is null) {
-            throw new ArgumentNullException(nameof(optionsfile), "Options filepath cannot be null");
+        // Make sure info file is not null
+        if (string.IsNullOrEmpty(infofile)) {
+            return null;
         }
 
-        // Create basics
-        this.Gamemodes = new();
-        this.SgaName = string.Empty;
-        this.RelativeFilename = Path.GetFileNameWithoutExtension(infofile);
+        // Make sure options file is not null
+        if (string.IsNullOrEmpty(optionsfile)) {
+            return null;
+        }
 
         // Create lua reader
         LuaState scenarioState = new();
@@ -190,17 +198,23 @@ public sealed class Scenario {
 
         // Get header info (and if false, bail)
         if (scenarioState._G["HeaderInfo"] is not LuaTable headerInfo) {
-            throw new Exception("Invalid scenario header 'HeaderInfo' not found!");
+            return null;
         }
 
-        // Read header
-        this.Name = headerInfo["scenarioname"].Str();
-        this.Description = headerInfo["scenariodescription"].Str();
-        this.MaxPlayers = (byte)(headerInfo["maxplayers"] as LuaNumber ?? new LuaNumber(0));
+        // Create scenario with basics
+        var scen = new Scenario {
+            // Create basics
+            Gamemodes = new(),
+            SgaName = sganame,
+            RelativeFilename = Path.GetFileNameWithoutExtension(infofile),
+            Name = headerInfo["scenarioname"].Str(),
+            Description = headerInfo["scenariodescription"].Str(),
+            MaxPlayers = (byte)(headerInfo["maxplayers"] as LuaNumber ?? new LuaNumber(0))
+        };
 
         // Read battlefront
         int battlefront = headerInfo["scenario_battlefront"] is LuaNumber bf ? (int)bf : 2;
-        this.Theatre = battlefront == 2 ? ScenarioTheatre.EasternFront : battlefront == 5 ? ScenarioTheatre.WesternFront : ScenarioTheatre.SharedFront;
+        scen.Theatre = battlefront == 2 ? ScenarioTheatre.EasternFront : battlefront == 5 ? ScenarioTheatre.WesternFront : ScenarioTheatre.SharedFront;
 
         // Get the skins table (apperantly both are accepted...)
         if (headerInfo["default_skins"] is not LuaTable skins) {
@@ -208,26 +222,49 @@ public sealed class Scenario {
         }
 
         // Read winter information
-        this.IsWintermap = skins?.Contains("winter") ?? false;
+        scen.IsWintermap = skins?.Contains("winter") ?? false;
 
         // Read world size
-        this.WorldSize = ReadSize(headerInfo["mapsize"].As<LuaTable>());
+        scen.PlayableSize = ReadSize(headerInfo["mapsize"].As<LuaTable>());
 
         // Read world points
-        this.Points = headerInfo["point_positions"].As<LuaTable>().ToArray().Map(x => (this.WorldSize, x.As<LuaTable>())).Map(ReadPoint);
+        scen.Points = headerInfo["point_positions"].As<LuaTable>().ToArray().Map(x => (scen.PlayableSize, x.As<LuaTable>())).Map(ReadPoint);
 
         // Read is visible
-        this.IsVisibleInLobby = (scenarioState._G["visible_in_lobby"] as LuaBool)?.IsTrue ?? true;
+        scen.IsVisibleInLobby = (scenarioState._G["visible_in_lobby"] as LuaBool)?.IsTrue ?? true;
 
         // Read minimap size
         if (scenarioState._G["minimap_size"] is LuaTable minimap) {
-            this.MinimapSize = ReadSize(minimap);
+            scen.MinimapSize = ReadSize(minimap);
         } else {
-            this.MinimapSize = new(768, 768);
+            scen.MinimapSize = new(768, 768);
         }
 
         // Mark as valid
-        this.HasValidInfoOrOptionsFile = true;
+        scen.HasValidInfoOrOptionsFile = true;
+        
+        try {
+
+            // Try open
+            using var fs = File.OpenRead(laofile);
+            using var br = new BinaryReader(fs);
+
+            // Skip first 12 bytes
+            br.Skip(12);
+
+            // Read with
+            int terrainWidth = br.ReadInt32();
+            int terrainLength = br.ReadInt32();
+
+            // Store
+            scen.TerrainSize = new(terrainWidth, terrainLength);
+
+        } catch (Exception e) {
+            Trace.WriteLine($"Error while reading scenario information: {e}", nameof(Scenario));
+        }
+
+        // Return
+        return scen;
 
     }
 
@@ -239,10 +276,9 @@ public sealed class Scenario {
         double x = _.table["x"].As<LuaNumber>();
         ushort owner = (ushort)_.table["owner_id"].As<LuaNumber>().ToInt();
         string ebp = _.table["ebp_name"].Str();
-        return new(GamePosition.WorldToScreenCoordinate(new(x, y), (int)_.ws.X, (int)_.ws.Y), owner, ebp);
+        return new(new (x,y), owner, ebp);
     }
 
     public override string ToString() => this.Name;
 
 }
-

@@ -43,7 +43,7 @@ public partial class Minimap : UserControl {
         get => this.GetValue(ScenarioProperty) as Scenario;
         set {
             this.SetValue(ScenarioProperty, value);
-            this.SetDisplay(value);
+            this.Dispatcher.Invoke(() => this.SetDisplay(value));
         }
     }
 
@@ -84,7 +84,7 @@ public partial class Minimap : UserControl {
         this.InitializeComponent();
     }
 
-    private void SetDisplay(Scenario? scenario) {
+    private async void SetDisplay(Scenario? scenario) {
 
         // Clear existing
         this.ScenarioCanvas.Children.Clear();
@@ -98,14 +98,14 @@ public partial class Minimap : UserControl {
         }
 
         // Grab points
-        var points = scenario.Points.Map(x => (x.Position, x.Owner switch {
+        var points = await Task.Run(() => scenario.Points.Map(x => (x.Position, x.Owner switch {
             >= 1000 and < 1008 => (ushort)(x.Owner - 1000),
-            _ => x.Owner
-        }, BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint)));
+            _ => ushort.MaxValue
+        }, BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint))));
 
 
         // Display basic information
-        this.TryShowPositions(scenario, points);
+        await this.Dispatcher.BeginInvoke(() => this.TryShowPositions(scenario, points));
 
         // TODO: Add display elements
 
@@ -118,9 +118,52 @@ public partial class Minimap : UserControl {
 
     private void TryShowPositions(Scenario scen, (GamePosition pos, ushort owner, EntityBlueprint ebp)[] pointData) {
 
+        // Grab something
+        var trans = Brushes.DarkOrchid.Clone();
+        trans.Opacity = 0.25;
+
+        double scaleX = 1.0 / scen.TerrainSize.X;
+        double scaleXX = 1.0 / this.ScenarioCanvas.Width;
+
+        // Try create a rectangle
+        Rectangle rect = new() {
+            Width = ( this.ScenarioCanvas.Width / scen.PlayableSize.X) * this.ScenarioCanvas.Width,
+            Height = (this.ScenarioCanvas.Height / scen.PlayableSize.Y) * this.ScenarioCanvas.Height,
+            Fill = trans
+        };
+
+        this.ScenarioCanvas.Children.Add(rect);
+
         // Pick from points
+        for (int i = 0; i < pointData.Length; i++) { 
+            if (pointData[i].ebp.Name is "starting_position_shared_territory") {
 
+                // Add
+                Image img = new() {
+                    Width = 24,
+                    Height = 24,
+                    Source = App.ResourceHandler.GetIcon("minimap_icons", $"Icons_minimap_mm_starting_point_{pointData[i].owner + 1}"),
+                    RenderTransformOrigin = new(0.5, 0.5)
+                };
 
+                // Add to canvas group
+                this.ScenarioCanvas.Children.Add(img);
+
+                double u = scen.MinimapSize.X / this.ScenarioCanvas.Width;
+                double ws = 1.0 / scen.TerrainSize.X;
+                double x = (pointData[i].pos.X + scen.TerrainSize.X * 0.5 ) * ws;
+
+                // Translate pos to screen
+                //var (x, y) = GamePosition.WorldToScreenCoordinate(pointData[i].pos, scen.TerrainSize.ToTuple2(), scen.PlayableSize.ToTuple2());
+                double xpos = (this.ScenarioCanvas.Width * x);
+                double ypos = this.ScenarioCanvas.Height * 0.5;
+
+                // Display
+                img.SetValue(Canvas.LeftProperty, xpos);
+                img.SetValue(Canvas.TopProperty, ypos);
+
+            }
+        }
 
     }
 

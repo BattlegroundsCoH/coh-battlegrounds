@@ -99,9 +99,16 @@ class Program {
 
         public static readonly Argument<string> PATH = new Argument<string>("-o", "Specifies output directory.", "archive_maps");
 
-        public MapExtract() : base("coh2-extract-maps", "Verifies the integrity of a gfx file.", PATH) { }
+        public static readonly Argument<bool> TEST = new Argument<bool>("-t", "Specifies if the testmap should be read instead", false);
+
+        public MapExtract() : base("coh2-extract-maps", "Verifies the integrity of a gfx file.", PATH, TEST) { }
 
         public override void Execute(CommandArgumentList argumentList) {
+
+            if (argumentList.GetValue(TEST)) {
+                MapExtractor.ReadTestmap();
+                return;
+            }
 
             MapExtractor.Output = argumentList.GetValue(PATH);
             MapExtractor.Extract();
@@ -310,6 +317,31 @@ class Program {
 
     }
 
+    class MinimapperCommand : Command {
+
+        public static readonly Argument<string> SCENARIO = new Argument<string>("-s", "Specifies the scenario to map", "2p_coh2_resistance");
+
+        public MinimapperCommand() : base("mini", "Basic minimap position translator functionality testing", SCENARIO) {}
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            // Load BG
+            LoadBGAndProceed();
+
+            // Get scenario
+            string s = argumentList.GetValue(SCENARIO);
+            if (!ScenarioList.TryFindScenario(s, out Scenario? scen) && scen is null) {
+                Console.WriteLine("Failed to find scenario " + s);
+                return;
+            }
+
+            // Invoke mapper
+            Minimapper.Map(scen);
+
+        }
+
+    }
+
     class Repl : Command {
 
         public Repl() : base("repl", "The program will enter a repl mode and allow for various inputs.") { }
@@ -364,6 +396,7 @@ class Program {
         flags.RegisterCommand<CampaignCompile>();
         flags.RegisterCommand<ReplayAnalysis>();
         flags.RegisterCommand<ServerCheck>();
+        flags.RegisterCommand<MinimapperCommand>();
         flags.RegisterCommand<Repl>();
 #if DEBUG
         flags.RegisterCommand<Update>();

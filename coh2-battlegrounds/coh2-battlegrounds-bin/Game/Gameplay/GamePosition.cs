@@ -56,7 +56,13 @@ public struct GamePosition {
     /// Returns a string that represents the current object.
     /// </summary>
     /// <returns>A string that represents the current object.</returns>
-    public override string ToString() => $"({X}, {Y}, {Z})";
+    public override string ToString() => $"({this.X}, {this.Y}, {this.Z})";
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public (double w, double h) ToTuple2() => (this.X, this.Y);
 
     /// <summary>
     /// 
@@ -92,8 +98,16 @@ public struct GamePosition {
     /// <param name="worldWidth"></param>
     /// <param name="worldHeight"></param>
     /// <returns></returns>
-    public static GamePosition WorldToScreenCoordinate(GamePosition worldCoord, int worldWidth, int worldHeight)
-        => new(worldCoord.X + (worldWidth / 2), worldCoord.Y + (worldHeight / 2));
+    public static GamePosition WorldToScreenCoordinate(GamePosition worldCoord, (double w, double h) world, (double w, double h) play) {
+        double wu = 1.0 / world.w;
+        double hu = 1.0 / world.h;
+        double ww = (play.w / 2.0);
+        double hh = (play.h / 2.0);
+        double x = worldCoord.X + ww;
+        double y = worldCoord.Y + hh ;
+        return new GamePosition(x * wu, y * hu);
+    }
+    //    => new(worldCoord.X + (worldWidth / 2.0), worldCoord.Y + (worldHeight / 2.0));
 
     /// <summary>
     /// 

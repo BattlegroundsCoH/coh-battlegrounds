@@ -87,4 +87,11 @@ public static class MapExtractor {
 
     }
 
+    public static void ReadTestmap() {
+
+        var initpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games\\company of heroes 2\\mods\\scenarios\\bg_testmap");
+        var scen = Scenario.ReadScenario(Path.Combine(initpath, "bg_testmap_lao.dds"), Path.Combine(initpath, "bg_testmap.info"), Path.Combine(initpath, "bg_testmap.options"), "");
+
+    }
+
 }
