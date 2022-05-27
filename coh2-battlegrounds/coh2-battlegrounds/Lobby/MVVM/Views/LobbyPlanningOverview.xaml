@@ -15,9 +15,9 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="256"/>
+            <ColumnDefinition Width="320"/>
             <ColumnDefinition/>
-            <ColumnDefinition Width="210"/>
+            <ColumnDefinition Width="320"/>
         </Grid.ColumnDefinitions>
 
         <Label 
@@ -75,10 +75,24 @@
             Grid.Column="0">
             <StackPanel>
                 <Label
-                    Content="Planning"/>
-                <ItemsControl/>
+                    Content="Planning"
+                    Foreground="White"/>
+                <ItemsControl
+                    ItemsSource="{Binding PlanningActions}"/>
+                <Separator/>
                 <Label
-                    Content="Defence Structures"/>
+                    Content="Defence Structures"
+                    Foreground="White"/>
+                <ItemsControl
+                    ItemsSource="{Binding DefenceStructures}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </StackPanel>
         </ScrollViewer>
     </Grid>

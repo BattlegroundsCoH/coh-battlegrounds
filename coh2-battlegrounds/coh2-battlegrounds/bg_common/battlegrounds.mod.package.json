@@ -72,8 +72,18 @@
         "FixedPosition": true,
         "Planning": true,
         "PlanningEntities": {
-          "soviet": [],
-          "german": []
+          "soviet": [
+            {
+              "EntityBlueprint": "",
+              "IsDirectional": true,
+              "IsLinePlacement": false,
+              "MaxPlacement": -1,
+              "PreGarrisonUnitTypes": []
+            }
+          ],
+          "german": [
+
+          ]
         }
       }
     ],
