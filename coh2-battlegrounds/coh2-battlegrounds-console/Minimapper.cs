@@ -25,8 +25,8 @@ public static class Minimapper {
         using var g = Graphics.FromImage(bmp);
         g.Clear(Color.Transparent);
 
-        var xs = bmp.Width / (scenario.TerrainSize.X) * 2;
-        var ys = bmp.Height / (scenario.TerrainSize.Y) * 2;
+        var xs = (bmp.Width / scenario.TerrainSize.X) * 2;
+        var ys = (bmp.Height / scenario.TerrainSize.Y) * 2;
 
         var ox = (bmp.Width * 0.5);
         var oy = (bmp.Height * 0.5);
@@ -46,7 +46,7 @@ public static class Minimapper {
 
                 g.DrawRectangle(new Pen(new SolidBrush(Color.Yellow), 2.5f), (float)x, (float)y, 5, 5);
 
-            }else {
+            } else {
 
                 g.DrawRectangle(new Pen(new SolidBrush(Color.Blue), 2.5f), (float)x, (float)y, 5, 5);
 

@@ -18,7 +18,12 @@ public enum LobbyMemberState : byte {
     /// <summary>
     /// 
     /// </summary>
-    EditCompany = 2
+    EditCompany = 2,
+
+    /// <summary>
+    /// 
+    /// </summary>
+    Planning = 3,
 
 }
 

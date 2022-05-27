@@ -1,0 +1,85 @@
+﻿<UserControl  
+    x:Class="BattlegroundsApp.Lobby.MVVM.Views.LobbyPlanningOverview"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views" xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
+    mc:Ignorable="d" Background="#273441"
+    d:DesignHeight="850" d:DesignWidth="1100">
+    <Grid 
+        Width="auto"
+        Height="auto">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="72"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="256"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="210"/>
+        </Grid.ColumnDefinitions>
+
+        <Label 
+            Content="{Binding LobbyTitle}"
+            FontSize="28"
+            Foreground="#ffffff"
+            FontFamily="Open Sans"
+            FontWeight="SemiBold"
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"/>
+
+        <Button
+            Grid.Column="2"
+            Grid.Row="0"
+            Style="{StaticResource StandardRedButton}"
+            Content="ReturnToLobby"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Width="196"
+            Height="36"
+            Margin="16"
+            Command="{Binding ReturnLobbyCommand}"/>
+        <Border
+            Width="684"
+            Height="684"
+            HorizontalAlignment="Right"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Grid.Row="1"
+            Margin="16"
+            BorderBrush="{StaticResource BackgroundLightGrayBrush}"
+            BorderThickness="2">
+            <Grid Margin="2"
+                    Width="680"
+                    Height="680">
+                <Canvas
+                    Width="680"
+                    Height="680">
+                    <Image                    
+                        Width="680"
+                        Height="680"
+                        Stretch="Fill"
+                        RenderTransformOrigin="0.5,0.5"
+                        Source="{Binding ScenarioPreview}">
+                        <Image.RenderTransform>
+                            <ScaleTransform ScaleY="-1"/>
+                        </Image.RenderTransform>
+                    </Image>
+                </Canvas>
+            </Grid>
+        </Border>
+        <ScrollViewer
+            Grid.Row="1"
+            Grid.Column="0">
+            <StackPanel>
+                <Label
+                    Content="Planning"/>
+                <ItemsControl/>
+                <Label
+                    Content="Defence Structures"/>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

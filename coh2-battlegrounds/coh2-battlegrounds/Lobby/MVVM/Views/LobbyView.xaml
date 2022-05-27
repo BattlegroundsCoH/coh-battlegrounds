@@ -157,33 +157,12 @@
                     ImageWidth="20"
                     ImageHeight="18"/>
 
-            <!-- Lots of hard-coded sizing - Be careful when editing this -->
-            <!--<Canvas Grid.Column="0"
-                  Grid.Row="1"
-                  Grid.ColumnSpan="3">
-                <Image 
-                    Canvas.Top="10"
-                    Canvas.Left="16"
-                    Width="348"
-                    Height="322"
-                    Stretch="Fill"
-                    RenderTransformOrigin="0.5,0.5"
-                    Source="{Binding ScenarioPreview}">
-                    <Image.RenderTransform>
-                        <ScaleTransform ScaleY="-1"/>
-                    </Image.RenderTransform>
-                </Image>
-                <Image
-                    Width="372"
-                    Canvas.Top="6"
-                    Canvas.Left="0"
-                    Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbySettingMap.png"/>
-            </Canvas>-->
             <controls:Minimap
                 Grid.Column="0"
                 Grid.Row="1"
                 Grid.ColumnSpan="3"
                 IsDisplayOnly="False"
+                PlanCommand="{Binding PlanCommand}"
                 Scenario="{Binding Scenario}"/>
 
             <!-- Options -->

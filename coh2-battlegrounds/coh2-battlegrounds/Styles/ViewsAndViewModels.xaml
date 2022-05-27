@@ -103,5 +103,8 @@
     <DataTemplate DataType="{x:Type lobbymodels:LobbyParticipantSlotModel}">
         <lobbyviews:LobbyPlayerSlot/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type lobbymodels:LobbyPlanningOverviewModel}">
+        <lobbyviews:LobbyPlanningOverview/>
+    </DataTemplate>
 
 </ResourceDictionary>

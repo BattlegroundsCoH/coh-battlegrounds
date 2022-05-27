@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
@@ -48,7 +37,7 @@ public partial class Minimap : UserControl {
     }
 
     public static readonly DependencyProperty PlanCommandProperty =
-        DependencyProperty.Register(nameof(PlanCommand), typeof(ICommand), typeof(Minimap));
+        DependencyProperty.Register(nameof(PlanCommand), typeof(ICommand), typeof(Minimap), new PropertyMetadata(null, PlanCommandChanged));
 
     public ICommand? PlanCommand {
         get => this.GetValue(PlanCommandProperty) as ICommand;
@@ -75,6 +64,17 @@ public partial class Minimap : UserControl {
 
         // Update
         m.Scenario = scen;
+
+    }
+
+    private static void PlanCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+
+        // Get minimap and new scenario
+        Minimap m = (Minimap)d;
+        ICommand? cmd = e.NewValue as ICommand;
+
+        // Update
+        m.PlanCommand = cmd;
 
     }
 
@@ -119,12 +119,16 @@ public partial class Minimap : UserControl {
     private void TryShowPositions(Scenario scen, (GamePosition pos, ushort owner, EntityBlueprint ebp)[] pointData) {
 
         // Get world to minimap scale
-        var xs = this.ScenarioDisplay.Source.Width / (scen.TerrainSize.X);
-        var ys = this.ScenarioDisplay.Source.Height / (scen.TerrainSize.Y);
+        var xs = this.ScenarioDisplay.Source.Width / (scen.TerrainSize.X) * 1.3;
+        var ys = this.ScenarioDisplay.Source.Height / (scen.TerrainSize.Y) * 1.3;
 
         // Get origin
-        var ox = (this.ScenarioDisplay.Source.Width * 0.5);
-        var oy = (this.ScenarioDisplay.Source.Height * 0.5);
+        var ox = this.ScenarioDisplay.Source.Width * 0.5;
+        var oy = this.ScenarioDisplay.Source.Height * 0.5;
+
+        // Compute scale
+        var mx = (this.ScenarioCanvas.Width / this.ScenarioDisplay.Source.Width);
+        var my = (this.ScenarioCanvas.Height / this.ScenarioDisplay.Source.Height);
 
         // Pick from points
         for (int i = 0; i < pointData.Length; i++) {
@@ -157,11 +161,13 @@ public partial class Minimap : UserControl {
             this.ScenarioCanvas.Children.Add(img);
 
             // Display
-            img.SetValue(Canvas.LeftProperty, xpos * (this.ScenarioCanvas.Width / this.ScenarioDisplay.Source.Width));
-            img.SetValue(Canvas.TopProperty, ypos * (this.ScenarioCanvas.Height / this.ScenarioDisplay.Source.Height));
+            img.SetValue(Canvas.LeftProperty, xpos * mx);
+            img.SetValue(Canvas.TopProperty, ypos * my);
 
         }
 
     }
+
+    private void PrepareDefenceButton_Click(object sender, RoutedEventArgs e) => this.PlanCommand?.Execute(null);
 
 }

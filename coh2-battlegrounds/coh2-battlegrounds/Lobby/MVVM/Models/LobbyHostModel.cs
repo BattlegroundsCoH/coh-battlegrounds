@@ -45,6 +45,8 @@ public class LobbyHostModel : LobbyModel {
 
     public override LobbyDropdown<ModPackageOption> ModPackageDropdown { get; }
 
+    public override ModPackage ModPackage => this.m_package ?? throw new Exception("No Mod Package Defined");
+
     public LobbyHostModel(ILobbyHandle handle, ILobbyTeam allies, ILobbyTeam axis) : base(handle, allies, axis) {
 
         // Init buttons
@@ -95,7 +97,7 @@ public class LobbyHostModel : LobbyModel {
         this.m_handle.SetLobbyState(LobbyState.InLobby);
 
         // Inform others
-        if (this.TryGetSelf() is ILobbySlot self && self.Occupant is not null) {
+        if (this.GetSelf() is ILobbySlot self && self.Occupant is not null) {
             this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.Waiting);
         }
 

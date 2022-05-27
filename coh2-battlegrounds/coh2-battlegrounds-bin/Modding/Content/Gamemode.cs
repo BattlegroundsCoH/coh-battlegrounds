@@ -18,15 +18,6 @@ public readonly struct Gamemode {
         }
     }
 
-    public readonly struct GamemodePlanningEntity {
-        public string EBP { get; }
-        [JsonConstructor]
-        public GamemodePlanningEntity(string EBP) {
-            this.EBP = EBP;
-        }
-
-    }
-
     public string ID { get; }
 
     public string Display { get; }
@@ -43,11 +34,11 @@ public readonly struct Gamemode {
 
     public bool Planning { get; }
 
-    public Dictionary<string, GamemodePlanningEntity[]> PlanningEntities { get; }
+    public Dictionary<string, FactionDefence[]> PlanningEntities { get; }
 
     [JsonConstructor]
     public Gamemode(string ID, string Display, string DisplayDesc, int DefaultOption, string[] Files, GamemodeOption[] Options, 
-        bool FixedPosition, bool Planning, Dictionary<string, GamemodePlanningEntity[]>? PlanningEntities) {
+        bool FixedPosition, bool Planning, Dictionary<string, FactionDefence[]>? PlanningEntities) {
 
         this.ID = ID;
         this.Display = Display;

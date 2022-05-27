@@ -39,6 +39,7 @@
             Canvas.Top="14"
             Style="{StaticResource MainButtonStyle}"
             x:Name="PrepareDefenceButton"
+            Click="PrepareDefenceButton_Click"
             ToolTip="Hello World">
             <Grid>
                 <Rectangle Width="32" Height="32"

@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 using Battlegrounds;
@@ -176,6 +177,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public abstract LobbyDropdown<ModPackageOption> ModPackageDropdown { get; }
 
+    public abstract ModPackage ModPackage { get; }
+
     public ImageSource? ScenarioPreview { get; set; }
 
     public Scenario? Scenario { get; set; }
@@ -185,6 +188,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     public LobbyTeam Allies { get; }
 
     public LobbyTeam Axis { get; }
+
+    public ICommand PlanCommand { get; }
 
     public LobbyModel(ILobbyHandle api, ILobbyTeam allies, ILobbyTeam axis) {
 
@@ -200,6 +205,9 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
         // Create edit company button (always behaves the same)
         this.EditCompanyButton = new(LOCSTR_EDIT(), false, new(this.EditCompany), Visibility.Visible, "");
+
+        // Create plan match button (always the same behaviour)
+        this.PlanCommand = new RelayCommand(this.PlanMatch);
 
         // Set title
         this.LobbyTitle = this.m_handle.Title;
@@ -232,7 +240,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public void Swapback() {
 
-        if (this.TryGetSelf() is ILobbySlot self && self.Occupant is not null) {
+        if (this.GetSelf() is ILobbySlot self && self.Occupant is not null) {
             Task.Run(() => this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.Waiting));
         }
 
@@ -252,7 +260,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, builder, false);
 
             // Inform others
-            if (this.TryGetSelf() is ILobbySlot self && self.Occupant is not null) {
+            if (this.GetSelf() is ILobbySlot self && self.Occupant is not null) {
                 Task.Run(() => this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.EditCompany));
             }
 
@@ -289,6 +297,21 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
                 this.StartMatchButton.Title = LOCSTR_CANCEL(second.ToString());
             }
         });
+    }
+
+    protected void PlanMatch() {
+
+        // Create match planner
+        var planner = new LobbyPlanningOverviewModel(this);
+
+        // Set RHS
+        App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, planner, false);
+
+        // Inform others
+        if (this.GetSelf() is ILobbySlot self && self.Occupant is not null) {
+            Task.Run(() => this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.Planning));
+        }
+
     }
 
     protected void LeaveLobby() {
@@ -328,7 +351,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    protected ILobbySlot? TryGetSelf() {
+    public ILobbySlot? GetSelf() {
 
         // Get self
         var selfid = this.m_handle.Self.ID;
@@ -338,7 +361,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     protected Company? TryGetSelectedCompany(out ulong selfid) {
 
-        var self = TryGetSelf();
+        var self = GetSelf();
         if (self is not null && self.Occupant is not null) {
 
             // Set selfid

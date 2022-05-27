@@ -39,6 +39,8 @@ public class LobbyParticipantModel : LobbyModel {
 
     public override LobbyDropdown<ModPackageOption> ModPackageDropdown { get; }
 
+    public override ModPackage ModPackage => this.m_package ?? throw new Exception("No Mod Package Defined");
+
     private readonly Func<string, string> LOCSTR_DOWNLOAD = x => BattlegroundsInstance.Localize.GetString("LobbyView_DownloadGamemode", x); 
 
     public LobbyParticipantModel(ILobbyHandle handle, ILobbyTeam allies, ILobbyTeam axis) : base(handle, allies, axis) {
@@ -74,7 +76,7 @@ public class LobbyParticipantModel : LobbyModel {
         this.OnGamemodeChange(handle.Settings[LobbyConstants.SETTING_GAMEMODE]);
 
         // Inform others
-        if (this.TryGetSelf() is ILobbySlot self && self.Occupant is not null) {
+        if (this.GetSelf() is ILobbySlot self && self.Occupant is not null) {
             this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.Waiting);
         }
 

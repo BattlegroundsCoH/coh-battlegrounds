@@ -301,9 +301,9 @@ public class SquadBlueprintConverter : JsonConverter<SquadBlueprint> {
                 "Entities" => LoadoutExtension.FromJson(ref reader),
                 "Veterancy" => VeterancyExtension.FromJson(ref reader),
                 "PBGID" => reader.GetUInt64(),
-                "Name" => reader.GetString(),
-                "Army" => reader.GetString(),
-                "ModGUID" => reader.GetString(),
+                "Name" => reader.GetString() ?? string.Empty,
+                "Army" => reader.GetString() ?? string.Empty,
+                "ModGUID" => reader.GetString() ?? string.Empty,
                 "IsSyncWeapon" => reader.GetBoolean(),
                 "Abilities" => reader.GetStringArray(),
                 "Types" => reader.GetStringArray(),
@@ -317,8 +317,8 @@ public class SquadBlueprintConverter : JsonConverter<SquadBlueprint> {
                 _ => throw new NotImplementedException(prop)
             };
         }
-        Faction fac = __lookup.GetCastValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetCastValueOrDefault("Army", "NULL"));
-        ModGuid modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
+        Faction? fac = Faction.TryGetFromName(__lookup.GetCastValueOrDefault("Army", "NULL"));
+        ModGuid modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid((string)__lookup["ModGUID"]) : ModGuid.BaseGame;
         BlueprintUID pbgid = new BlueprintUID(__lookup.GetCastValueOrDefault("PBGID", 0ul), modguid);
         return new(__lookup.GetCastValueOrDefault("Name", string.Empty),
             pbgid,
