@@ -74,15 +74,49 @@
         "PlanningEntities": {
           "soviet": [
             {
-              "EntityBlueprint": "",
+              "EntityBlueprint": "barbed_wire_fence_bg",
+              "IsDirectional": false,
+              "IsLinePlacement": true,
+              "MaxPlacement": -1,
+              "PreGarrisonUnitTypes": []
+            },
+            {
+              "EntityBlueprint": "barbed_wire_field_bg",
               "IsDirectional": true,
               "IsLinePlacement": false,
               "MaxPlacement": -1,
               "PreGarrisonUnitTypes": []
+            },
+            {
+              "EntityBlueprint": "machine_gun_nest_bg",
+              "IsDirectional": true,
+              "IsLinePlacement": false,
+              "MaxPlacement": 8,
+              "PreGarrisonUnitTypes": []
+            },
+            {
+              "EntityBlueprint": "soviet_mine_bg",
+              "IsDirectional": false,
+              "IsLinePlacement": true,
+              "MaxPlacement": 32,
+              "PreGarrisonUnitTypes": []
+            },
+            {
+              "EntityBlueprint": "tanktrap_bg",
+              "IsDirectional": false,
+              "IsLinePlacement": true,
+              "MaxPlacement": 16,
+              "PreGarrisonUnitTypes": []
             }
           ],
           "german": [
-
+            {
+              "EntityBlueprint": "barbed_wire_fence_bg",
+              "IsDirectional": false,
+              "IsLinePlacement": true,
+              "MaxPlacement": -1,
+              "PreGarrisonUnitTypes": []
+            }
           ]
         }
       }

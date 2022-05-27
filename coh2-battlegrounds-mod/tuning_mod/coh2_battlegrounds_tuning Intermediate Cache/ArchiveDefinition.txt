@@ -135,6 +135,11 @@ TOCStart name="attrib" alias="attrib" path="" relativeroot="attrib"
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\abilities\german_artillery.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\abilities\german_paradrop.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\buildings\base_building\hq\german_hq_mp.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\buildings\defensive_structure\concrete_bunker_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\buildings\defensive_structure\makeshift_bunker_mp.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\buildings\defensive_structure\mine_field_mine_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\buildings\defensive_structure\slit_trench_german_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\buildings\defensive_structure\tank_trap_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\grenadiers\assault_grenadiers_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\grenadiers\grenadiers_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\german\soldiers\officer\artillery_officer_bg.rgd
@@ -185,6 +190,12 @@ TOCStart name="attrib" alias="attrib" path="" relativeroot="attrib"
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\abilities\soviet_air_support.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\abilities\soviet_artillery.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\abilities\soviet_paradrop.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\buildings\defensive_structures\barbed_wire_fence_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\buildings\defensive_structures\barbed_wire_field_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\buildings\defensive_structures\machine_gun_nest_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\buildings\defensive_structures\soviet_mine_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\buildings\defensive_structures\tanktrap_bg.rgd
+	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\buildings\defensive_structures\wire_field_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\soldiers\combat_engineer\combat_engineer_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\soldiers\combat_engineer\sapper_soldier_bg.rgd
 	E:\coh2_battlegrounds\coh2-battlegrounds-mod\tuning_mod\coh2_battlegrounds_tuning Intermediate Cache\Intermediate Files\attrib\attrib\ebps\races\soviet\soldiers\commander_troops\guard_troops_bg.rgd
