@@ -52,7 +52,6 @@ public sealed class SteamInstance {
     public SteamInstance(SteamUser User) {
         this.m_user = User;
         this.m_isVerified = false;
-        Trace.WriteLine($"Found steam user '{User.Name}' ({User.ID}) as local user in local data (Unverified).", nameof(SteamInstance));
     }
 
     /// <summary>
