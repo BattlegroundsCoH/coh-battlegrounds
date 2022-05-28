@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Battlegrounds.Steam;
 
@@ -12,10 +13,15 @@ namespace Battlegrounds.Steam;
 [JsonConverter(typeof(SteamUserJsonConverter))]
 public sealed class SteamUser {
 
+    private string m_displayName;
+
     /// <summary>
     /// The display name of a <see cref="SteamUser"/>. (Not the actual account name!)
     /// </summary>
-    public string Name { get; set; }
+    public string Name {
+        get => string.IsNullOrEmpty(this.m_displayName) ? this.UpdateName() : this.m_displayName;
+        set => this.m_displayName = value;
+    }
 
     /// <summary>
     /// The <see cref="ulong"/> user ID.
@@ -24,38 +30,18 @@ public sealed class SteamUser {
 
     internal SteamUser(ulong steamUID) {
         this.ID = steamUID;
-        this.Name = "";
+        this.m_displayName = "";
     }
 
     /// <summary>
     /// Update the name of the steam user
     /// </summary>
-    public bool UpdateName() {
-
-        // https://steamidfinder.com/lookup/76561198003529969/ ==> Will give the needed information
-
-        try {
-
-            using var client = new HttpClient();
-            string str = client.GetStringAsync($"https://steamidfinder.com/lookup/{this.ID}/").Result; // TODO: Add timeout...
-
-            const string lookfor = "name <code>";
-            int pos = str.IndexOf(lookfor, StringComparison.InvariantCulture);
-
-            if (pos is -1) {
-                this.Name = "Steam name unknown!";
-                return false;
-            }
-
-            int len = str.IndexOf('<', pos + lookfor.Length + 1) - (pos + lookfor.Length);
-            this.Name = str.Substring(pos + lookfor.Length, len);
-            return true;
-
-        } catch (Exception e) {
-            Trace.WriteLine(e, nameof(SteamUser));
-            return false;
+    private string UpdateName() {
+        var user = SteamInstance.FromLocalInstall();
+        if (user is not null) {
+            return this.Name = user.Name;
         }
-
+        return "Steam User Not Found";
     }
 
     /// <summary>
@@ -64,32 +50,11 @@ public sealed class SteamUser {
     /// <returns>A string that represents the current object.</returns>
     public override string ToString() => this.Name;
 
-    /// <summary>
-    /// Find a user by their steam 64-bit ID.
-    /// </summary>
-    /// <param name="id">The unique steam ID to use when retrieving basic user data.</param>
-    /// <returns>The <see cref="SteamUser"/> with steam ID.</returns>
-    /// <exception cref="ArgumentException"/>
-    public static SteamUser FromID(ulong id) {
-
-        // Create the user
-        SteamUser user = new(id);
-
-        // Update the user name (and make sure there's no problems fetching the name)
-        if (!user.UpdateName()) {
-            throw new ArgumentException($"Invalid steam user ID: {id}");
-        }
-
-        // Return user
-        return user;
-
-    }
-
 }
 
 public class SteamUserJsonConverter : JsonConverter<SteamUser> {
 
-    public override SteamUser Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => SteamUser.FromID(reader.GetUInt64());
+    public override SteamUser Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => new(reader.GetUInt64());
 
     public override void Write(Utf8JsonWriter writer, SteamUser value, JsonSerializerOptions options) => writer.WriteNumberValue(value.ID);
 
