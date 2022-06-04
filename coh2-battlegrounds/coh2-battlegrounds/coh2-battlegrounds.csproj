@@ -111,6 +111,8 @@
     <None Remove="Resources\ingame\application\app_logo2.png" />
     <None Remove="Resources\ingame\british.png" />
     <None Remove="Resources\ingame\deploy_icons.dat" />
+    <None Remove="Resources\ingame\entity_icons.dat" />
+    <None Remove="Resources\ingame\entity_symbols.dat" />
     <None Remove="Resources\ingame\german.png" />
     <None Remove="Resources\ingame\item_icons.dat" />
     <None Remove="Resources\ingame\minimap_icons.dat" />
@@ -221,6 +223,8 @@
     <Resource Include="Resources\ingame\application\app_logo2.png" />
     <Resource Include="Resources\ingame\british.png" />
     <Resource Include="Resources\ingame\deploy_icons.dat" />
+    <Resource Include="Resources\ingame\entity_icons.dat" />
+    <Resource Include="Resources\ingame\entity_symbols.dat" />
     <Resource Include="Resources\ingame\german.png" />
     <Resource Include="Resources\ingame\item_icons.dat" />
     <Resource Include="Resources\ingame\minimap_icons.dat" />

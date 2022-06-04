@@ -6,7 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views" xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
     mc:Ignorable="d" Background="#273441"
-    d:DesignHeight="850" d:DesignWidth="1100">
+    d:DesignHeight="850" d:DesignWidth="1100"
+    MouseRightButtonUp="UserControl_MouseRightButtonUp">
     <Grid 
         Width="auto"
         Height="auto">
@@ -56,7 +57,10 @@
                     Height="680">
                 <Canvas
                     Width="680"
-                    Height="680">
+                    Height="680"
+                    x:Name="PlanningCanvas"
+                    MouseLeftButtonUp="PlanningCanvas_MouseLeftButtonUp"
+                    MouseMove="PlanningCanvas_MouseMove">
                     <Image                    
                         Width="680"
                         Height="680"
@@ -85,10 +89,21 @@
                     Foreground="White"/>
                 <ItemsControl
                     ItemsSource="{Binding DefenceStructures}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid>
-                                
+                                <Button
+                                    Command="{Binding Click}">
+                                    <Image
+                                        Width="64"
+                                        Height="64"
+                                        Source="{Binding Icon}"/>
+                                </Button>
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

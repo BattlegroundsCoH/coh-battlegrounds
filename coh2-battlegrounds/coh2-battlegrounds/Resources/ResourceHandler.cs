@@ -32,9 +32,13 @@ public class ResourceHandler {
         "deploy_icons",
         "portraits",
         "minimap_icons",
+        "entity_icons",
+        "entity_symbols"
     };
     private static readonly string[] __iconResourceFiles = {
         "resources/ingame/ability_icons.dat",
+        "resources/ingame/entity_icons.dat",
+        "resources/ingame/entity_symbols.dat",
         "resources/ingame/item_icons.dat",
         "resources/ingame/symbol_icons.dat",
         "resources/ingame/unit_icons.dat",

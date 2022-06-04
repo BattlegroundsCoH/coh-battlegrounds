@@ -10,8 +10,10 @@ using System.Windows.Media;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
 
+using BattlegroundsApp.Lobby.Planning;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Utilities;
 
@@ -21,9 +23,10 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     public record LobbyPlanningAction(string Icon);
 
-    public record LobbyPlanningDefence(ImageSource? Icon, string Name);
+    public record LobbyPlanningDefence(ImageSource? Icon, string Name, RelayCommand Click);
 
     private readonly LobbyModel m_lobby;
+    private readonly LobbyPlanningContextHandler m_planningContext;
 
     public override bool SingleInstanceOnly => true;
 
@@ -39,10 +42,15 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     public ObservableCollection<LobbyPlanningAction> PlanningActions { get; }
 
+    public LobbyPlanningContextHandler ContextHandler => this.m_planningContext;
+
     public LobbyPlanningOverviewModel(LobbyModel lobbyModel) {
 
         // Set lobby
         this.m_lobby = lobbyModel;
+
+        // Set planning context handler
+        this.m_planningContext = new();
 
         // Set return command
         this.ReturnLobbyCommand = new(() => App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, this.m_lobby));
@@ -77,14 +85,18 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
             // Add entities
             for (int i = 0; i < defData.Length; i++) {
 
+                // Grab copy of defence element
+                var data = defData[i];
+
                 // Grab EBP
-                var ebp = BlueprintManager.FromBlueprintName<EntityBlueprint>(defData[i].EntityBlueprint);
+                var ebp = BlueprintManager.FromBlueprintName<EntityBlueprint>(data.EntityBlueprint);
 
                 // Create display data from mod data
-                var data = new LobbyPlanningDefence(App.ResourceHandler.GetIcon("entity_icons", ebp.UI.Icon), ebp.UI.ScreenName);
+                var handler = () => this.m_planningContext.PickPlaceElement(ebp, data);
+                var planData = new LobbyPlanningDefence(App.ResourceHandler.GetIcon("entity_icons", ebp.UI.Icon), ebp.UI.ScreenName, new(handler));
 
                 // Add
-                this.DefenceStructures.Add(data);
+                this.DefenceStructures.Add(planData);
 
             }
 
