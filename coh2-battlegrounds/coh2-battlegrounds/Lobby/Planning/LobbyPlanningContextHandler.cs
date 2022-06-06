@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 using Battlegrounds.Game.Database;
@@ -15,13 +11,18 @@ public class LobbyPlanningContextHandler {
 
     private (EntityBlueprint e, FactionDefence d)? m_currentPlacement;
 
+    [MemberNotNullWhen(true, nameof(PlaceElementData), nameof(PlaceElementBlueprint))]
     public bool HasPlaceElement {
         get => this.m_currentPlacement is not null;
         set => this.m_currentPlacement = value is false ? null : this.m_currentPlacement;
     }
 
     public bool RequiresSecond
-        => this.m_currentPlacement.HasValue ? this.m_currentPlacement.Value.d.IsLinePlacement || this.m_currentPlacement.Value.d.IsDirectional : false;
+        => this.m_currentPlacement.HasValue && (this.m_currentPlacement.Value.d.IsLinePlacement || this.m_currentPlacement.Value.d.IsDirectional);
+
+    public FactionDefence? PlaceElementData => this.m_currentPlacement.HasValue ? this.m_currentPlacement.Value.d : null;
+
+    public EntityBlueprint? PlaceElementBlueprint => this.m_currentPlacement.HasValue ? this.m_currentPlacement.Value.e : null;
 
     public ObservableCollection<LobbyPlanningObject> Elements { get; }
 
