@@ -177,8 +177,6 @@ public partial class LobbyPlanningOverview : UserControl {
                 this.m_lineHelpers.ForEach(this.PlanningCanvas.Children.Remove);
                 this.m_lineHelpers.Clear();
 
-                // Create uvector
-
                 // Create
                 for (int i = 0; i < lineCount; i++) {
 

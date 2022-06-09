@@ -8,6 +8,14 @@
     mc:Ignorable="d" Background="#273441"
     d:DesignHeight="850" d:DesignWidth="1100"
     MouseRightButtonUp="UserControl_MouseRightButtonUp">
+    <UserControl.Resources>
+        <ResourceDictionary x:Name="LobbyUI">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
+                <ResourceDictionary x:Name="LobbyArt" Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbyArt.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid 
         Width="auto"
         Height="auto">
@@ -31,17 +39,20 @@
             Grid.Column="0"
             Grid.ColumnSpan="2"/>
 
-        <Button
-            Grid.Column="2"
+        <controls:IconButton 
+            Grid.Column="2" 
             Grid.Row="0"
-            Style="{StaticResource StandardRedButton}"
-            Content="ReturnToLobby"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            Width="196"
-            Height="36"
-            Margin="16"
-            Command="{Binding ReturnLobbyCommand}"/>
+            Margin="8,0,2,2"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            Content="Return To Lobby"
+            Background="{StaticResource BackgroundDeepRedBrush}"
+            Foreground="#FFFFFF"
+            HoverColour="#a23333"
+            ImageSource="{StaticResource ExitLobbyIconDrawingImage}"
+            ImageWidth="20"
+            ImageHeight="18"/>
+        
         <Border
             Width="684"
             Height="684"

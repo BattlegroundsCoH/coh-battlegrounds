@@ -187,17 +187,32 @@ public class LobbyHostModel : LobbyModel {
                 return;
             }
 
-            // Set starting flag
-            this.m_isStarting = true;
+            // Get gamemode and check if it has planning, 
+            var gamemode = this.m_package.Gamemodes[this.GamemodeDropdown.Selected];
 
-            // Set lobby status here
-            this.m_handle.SetLobbyState(LobbyState.Starting);
+            // Decide what to do, based on planning
+            if (gamemode.Planning) {
 
-            // Get play model
-            var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, this.UploadGamemodeCallback);
+                // TODO: Inform others we're entering the planning phase
 
-            // prepare
-            play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
+                // Begin plan match
+                Application.Current.Dispatcher.Invoke(this.PlanMatch);
+
+            } else {
+
+                // Set starting flag
+                this.m_isStarting = true;
+
+                // Set lobby status here
+                this.m_handle.SetLobbyState(LobbyState.Starting);
+
+                // Get play model
+                var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, this.UploadGamemodeCallback);
+
+                // prepare
+                play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
+
+            }
 
         });
 

@@ -36,14 +36,6 @@ public partial class Minimap : UserControl {
         }
     }
 
-    public static readonly DependencyProperty PlanCommandProperty =
-        DependencyProperty.Register(nameof(PlanCommand), typeof(ICommand), typeof(Minimap), new PropertyMetadata(null, PlanCommandChanged));
-
-    public ICommand? PlanCommand {
-        get => this.GetValue(PlanCommandProperty) as ICommand;
-        set => this.SetValue(PlanCommandProperty, value);
-    }
-
     public static readonly DependencyProperty IsDisplayOnlyProperty =
         DependencyProperty.Register(nameof(IsDisplayOnly), typeof(bool), typeof(Minimap), new PropertyMetadata(true));
 
@@ -64,17 +56,6 @@ public partial class Minimap : UserControl {
 
         // Update
         m.Scenario = scen;
-
-    }
-
-    private static void PlanCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-
-        // Get minimap and new scenario
-        Minimap m = (Minimap)d;
-        ICommand? cmd = e.NewValue as ICommand;
-
-        // Update
-        m.PlanCommand = cmd;
 
     }
 
@@ -167,7 +148,5 @@ public partial class Minimap : UserControl {
         }
 
     }
-
-    private void PrepareDefenceButton_Click(object sender, RoutedEventArgs e) => this.PlanCommand?.Execute(null);
 
 }

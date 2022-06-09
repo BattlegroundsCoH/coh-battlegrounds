@@ -33,7 +33,7 @@
             Canvas.Top="6"
             Canvas.Left="0"
             Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbySettingMap.png"/>
-        <Button 
+        <!--<Button 
             Height="36"
             Canvas.Right="12"
             Canvas.Top="14"
@@ -53,6 +53,6 @@
                 </Image>
             </Grid>
             
-        </Button>
+        </Button>-->
     </Canvas>
 </UserControl>

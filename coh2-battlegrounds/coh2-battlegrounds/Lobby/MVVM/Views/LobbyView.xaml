@@ -162,7 +162,6 @@
                 Grid.Row="1"
                 Grid.ColumnSpan="3"
                 IsDisplayOnly="False"
-                PlanCommand="{Binding PlanCommand}"
                 Scenario="{Binding Scenario}"/>
 
             <!-- Options -->
