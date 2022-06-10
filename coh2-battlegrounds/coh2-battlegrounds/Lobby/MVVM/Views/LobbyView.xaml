@@ -157,6 +157,7 @@
                     ImageWidth="20"
                     ImageHeight="18"/>
 
+            <!-- Row 1 -->
             <controls:Minimap
                 Grid.Column="0"
                 Grid.Row="1"
@@ -164,26 +165,22 @@
                 IsDisplayOnly="False"
                 Scenario="{Binding Scenario}"/>
 
-            <!-- Options -->
-            <StackPanel Grid.Column="1"
-                        Grid.Row="2">
-                <controls:LocLabel LocKey="LobbyView_SettingScenario" 
-                                   Style="{StaticResource SettingLabel}"/>
-                <Separator Style="{StaticResource SettingSeperator}"/>
-            </StackPanel>
-            <Grid Grid.Column="2"
-                  Grid.Row="2">
-                <ComboBox Height="32"
-                          VerticalAlignment="Top"
-                          ItemsSource="{Binding MapDropdown.Items}"
-                          SelectedIndex="{Binding MapDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding MapDropdown.Visibility}"
-                          IsEnabled="{Binding MapDropdown.IsEnabled}"
-                          Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding MapDropdown.LabelVisibility}"
-                       Content="{Binding MapDropdown.LabelContent}"
-                       Style="{StaticResource SettingValue}"/>
-            </Grid>
+            <!-- Row 2 - Options -->
+            <ScrollViewer
+                Grid.Row="2"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Margin="2">
+                <StackPanel>
+                    <ItemsControl
+                        ItemsSource="{Binding MapSetting}"/>
+                    <ItemsControl
+                        ItemsSource="{Binding GamemodeSettings}"/>
+                    <ItemsControl
+                        ItemsSource="{Binding AuxSettings}"/>
+                </StackPanel>
+            </ScrollViewer>
+            
 
             <StackPanel Grid.Column="1"
                         Grid.Row="3">

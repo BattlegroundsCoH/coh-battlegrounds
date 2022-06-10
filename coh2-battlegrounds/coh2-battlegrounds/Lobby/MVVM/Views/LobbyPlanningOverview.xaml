@@ -21,7 +21,9 @@
         Height="auto">
         <Grid.RowDefinitions>
             <RowDefinition Height="72"/>
+            <RowDefinition Height="72"/>
             <RowDefinition/>
+            <RowDefinition Height="64"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="320"/>
@@ -43,6 +45,7 @@
             Grid.Column="2" 
             Grid.Row="0"
             Margin="8,0,2,2"
+            Height="36"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
             Content="Return To Lobby"
@@ -54,27 +57,27 @@
             ImageHeight="18"/>
         
         <Border
-            Width="684"
-            Height="684"
-            HorizontalAlignment="Right"
+            Width="580"
+            Height="580"
+            HorizontalAlignment="Center"
             Grid.Column="1"
             Grid.ColumnSpan="2"
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="16"
             BorderBrush="{StaticResource BackgroundLightGrayBrush}"
-            BorderThickness="2">
+            BorderThickness="3">
             <Grid Margin="2"
-                    Width="680"
-                    Height="680">
+                    Width="576"
+                    Height="576">
                 <Canvas
-                    Width="680"
-                    Height="680"
+                    Width="576"
+                    Height="576"
                     x:Name="PlanningCanvas"
                     MouseLeftButtonUp="PlanningCanvas_MouseLeftButtonUp"
                     MouseMove="PlanningCanvas_MouseMove">
                     <Image                    
-                        Width="680"
-                        Height="680"
+                        Width="576"
+                        Height="576"
                         Stretch="Fill"
                         RenderTransformOrigin="0.5,0.5"
                         Source="{Binding ScenarioPreview}">
@@ -86,17 +89,17 @@
             </Grid>
         </Border>
         <ScrollViewer
-            Grid.Row="1"
+            Grid.Row="2"
             Grid.Column="0">
             <StackPanel>
                 <Label
-                    Content="Planning"
+                    Content="Objectives"
                     Foreground="White"/>
                 <ItemsControl
                     ItemsSource="{Binding PlanningActions}"/>
                 <Separator/>
                 <Label
-                    Content="Defence Structures"
+                    Content="Defences"
                     Foreground="White"/>
                 <ItemsControl
                     ItemsSource="{Binding DefenceStructures}">
@@ -119,7 +122,52 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                <Separator/>
+                <!-- Change contents to name of company -->
+                <Label
+                    Content="{Binding UnitCapacity}"
+                    Foreground="White"/>
+                <controls:LocLabel 
+                    x:Name="ContentSite"
+                    Foreground="White"
+                    LocKey="LobbyPlanning_Deployments"
+                    Arguments="{Binding UnitCapacity}"
+                    FontSize="12"/>
+                <ItemsControl
+                    ItemsSource="{Binding PreplacableUnits}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Button
+                                    Command="{Binding Click}">
+                                    <Image
+                                        Width="16"
+                                        Height="16"
+                                        Source="{Binding Symbol}"/>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </StackPanel>
         </ScrollViewer>
+
+        <controls:IconButton 
+            Grid.Column="2" 
+            Grid.Row="3"
+            Margin="12"
+            Height="36"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            Content="Start Match"
+            Background="{StaticResource BackgroundDarkBlueBrush}"
+            Foreground="#FFFFFF"
+            HoverColour="#a23333"/>
+
     </Grid>
 </UserControl>

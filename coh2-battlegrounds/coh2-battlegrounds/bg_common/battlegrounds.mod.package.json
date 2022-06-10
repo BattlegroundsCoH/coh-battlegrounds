@@ -69,6 +69,26 @@
             "Value": 1000
           }
         ],
+        "AdditionalOptions": {
+          "Time": {
+            "Type": "Slider",
+            "Title": "Time",
+            "Desc": "The time the attackers have to defeat the defending team",
+            "Value": "%V min.",
+            "Min": 20,
+            "Max": 90,
+            "Step": 10
+          },
+          "Support": {
+            "Type": "Checkbox",
+            "Title": "AI-Support",
+            "Desc": "Enable basic AI units to aid the assault"
+          }
+        },
+        "TeamNames": {
+          "1": "Attackers",
+          "2": "Defenders"
+        },
         "FixedPosition": true,
         "Planning": true,
         "PlanningEntities": {
@@ -82,7 +102,7 @@
             },
             {
               "EntityBlueprint": "barbed_wire_field_bg",
-              "IsDirectional": true,
+              "IsDirectional": false,
               "IsLinePlacement": false,
               "MaxPlacement": -1,
               "PreGarrisonUnitTypes": []

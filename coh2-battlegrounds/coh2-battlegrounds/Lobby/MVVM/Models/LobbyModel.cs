@@ -22,6 +22,7 @@ using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
+using BattlegroundsApp.Lobby.MVVM.Views;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
@@ -165,17 +166,17 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public abstract LobbyMutButton StartMatchButton { get; }
 
-    public abstract LobbyDropdown<ScenOp> MapDropdown { get; }
+    public abstract LobbySetting<ScenOp> MapDropdown { get; }
 
-    public abstract LobbyDropdown<IGamemode> GamemodeDropdown { get; }
+    public abstract LobbySetting<IGamemode> GamemodeDropdown { get; }
 
-    public abstract LobbyDropdown<IGamemodeOption> GamemodeOptionDropdown { get; }
+    public abstract LobbySetting<IGamemodeOption> GamemodeOptionDropdown { get; }
 
-    public abstract LobbyDropdown<OnOffOption> WeatherDropdown { get; }
+    public abstract LobbySetting<OnOffOption> WeatherDropdown { get; }
 
-    public abstract LobbyDropdown<OnOffOption> SupplySystemDropdown { get; }
+    public abstract LobbySetting<OnOffOption> SupplySystemDropdown { get; }
 
-    public abstract LobbyDropdown<ModPackageOption> ModPackageDropdown { get; }
+    public abstract LobbySetting<ModPackageOption> ModPackageDropdown { get; }
 
     public abstract ModPackage ModPackage { get; }
 
@@ -189,7 +190,11 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public LobbyTeam Axis { get; }
 
-    public ICommand PlanCommand { get; }
+    public ObservableCollection<LobbySetting> MapSetting { get; }
+
+    public ObservableCollection<LobbySetting> GamemodeSettings { get; }
+
+    public ObservableCollection<LobbySetting> AuxSettings { get; }
 
     public LobbyModel(ILobbyHandle api, ILobbyTeam allies, ILobbyTeam axis) {
 
@@ -206,9 +211,6 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         // Create edit company button (always behaves the same)
         this.EditCompanyButton = new(LOCSTR_EDIT(), false, new(this.EditCompany), Visibility.Visible, "");
 
-        // Create plan match button (always the same behaviour)
-        this.PlanCommand = new RelayCommand(this.PlanMatch);
-
         // Set title
         this.LobbyTitle = this.m_handle.Title;
         
@@ -222,6 +224,11 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             matchNotifier.OnLobbyRequestCompany += this.OnCompanyRequested;
             matchNotifier.OnLobbyCountdown += this.OnCountdownNotify;
         }
+
+        // Create settings container
+        this.MapSetting = new();
+        this.GamemodeSettings = new();
+        this.AuxSettings = new();
 
     }
 
@@ -301,8 +308,14 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     protected void PlanMatch() {
 
+        // Bail if chat for some reason is null
+        if (this.m_chatModel is null) {
+            Trace.WriteLine("Chat model was null!", nameof(LobbyModel));
+            return;
+        }
+
         // Create match planner
-        var planner = new LobbyPlanningOverviewModel(this);
+        var planner = new LobbyPlanningOverviewModel(new(this, this.m_chatModel, this.m_handle));
 
         // Set RHS
         App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, planner, false);
@@ -359,7 +372,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    protected Company? TryGetSelectedCompany(out ulong selfid) {
+    internal Company? TryGetSelectedCompany(out ulong selfid) {
 
         var self = GetSelf();
         if (self is not null && self.Occupant is not null) {

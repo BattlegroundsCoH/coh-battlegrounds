@@ -15,11 +15,15 @@ public class LobbyPlanningObject {
 
     public Point? VisualPointEnd { get; set; }
 
-    public EntityBlueprint? Blueprint { get; }
+    public Blueprint Blueprint { get; }
+
+    public bool IsEntity => this.Blueprint is EntityBlueprint;
+
+    public bool IsSquad => this.Blueprint is SquadBlueprint;
 
     public ulong Owner { get; }
 
-    public LobbyPlanningObject(ulong owner, EntityBlueprint blueprint, Point start, Point? end = null) {
+    public LobbyPlanningObject(ulong owner, Blueprint blueprint, Point start, Point? end = null) {
         this.Owner = owner;
         this.Blueprint = blueprint;
         this.VisualPosStart = start;

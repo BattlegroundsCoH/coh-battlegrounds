@@ -16,6 +16,7 @@ using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 
 using BattlegroundsApp.Lobby.MatchHandling;
+using BattlegroundsApp.Lobby.MVVM.Views;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
@@ -33,17 +34,17 @@ public class LobbyHostModel : LobbyModel {
 
     public override LobbyMutButton StartMatchButton { get; }
 
-    public override LobbyDropdown<ScenOp> MapDropdown { get; }
+    public override LobbySetting<ScenOp> MapDropdown { get; }
 
-    public override LobbyDropdown<IGamemode> GamemodeDropdown { get; }
+    public override LobbySetting<IGamemode> GamemodeDropdown { get; }
 
-    public override LobbyDropdown<IGamemodeOption> GamemodeOptionDropdown { get; }
+    public override LobbySetting<IGamemodeOption> GamemodeOptionDropdown { get; }
 
-    public override LobbyDropdown<OnOffOption> WeatherDropdown { get; }
+    public override LobbySetting<OnOffOption> WeatherDropdown { get; }
 
-    public override LobbyDropdown<OnOffOption> SupplySystemDropdown { get; }
+    public override LobbySetting<OnOffOption> SupplySystemDropdown { get; }
 
-    public override LobbyDropdown<ModPackageOption> ModPackageDropdown { get; }
+    public override LobbySetting<ModPackageOption> ModPackageDropdown { get; }
 
     public override ModPackage ModPackage => this.m_package ?? throw new Exception("No Mod Package Defined");
 
@@ -66,7 +67,7 @@ public class LobbyHostModel : LobbyModel {
         ModManager.EachPackage(x => tunlist.Add(new ModPackageOption(x)));
 
         // Init mod package dropdown
-        this.ModPackageDropdown = new(true, Visibility.Visible, new(tunlist), this.ModPackageSelectionChanged);
+        this.ModPackageDropdown = LobbySetting<ModPackageOption>.NewDropdown("LobbyView_SettingTuning", new(tunlist), this.ModPackageSelectionChanged);
 
         // Set default package
         this.m_package = this.ModPackageDropdown.Items[0].ModPackage;
@@ -75,11 +76,18 @@ public class LobbyHostModel : LobbyModel {
         ObservableCollection<OnOffOption> onOfflist = new(new[] { new OnOffOption(true), new OnOffOption(false) });
 
         // Init dropdowns 
-        this.MapDropdown = new(true, Visibility.Visible, new(scenlist), this.MapSelectionChanged);
-        this.GamemodeDropdown = new(true, Visibility.Visible, new(), this.GamemodeSelectionChanged);
-        this.GamemodeOptionDropdown = new(true, Visibility.Visible, new(), this.GamemodeOptionSelectionChanged);
-        this.WeatherDropdown = new(true, Visibility.Visible, onOfflist, this.WeatherSelectionChanged);
-        this.SupplySystemDropdown = new(true, Visibility.Visible, onOfflist, this.SupplySystemSelectionChanged);
+        this.MapDropdown = LobbySetting<ScenOp>.NewDropdown("LobbyView_SettingScenario", new(scenlist), this.MapSelectionChanged);
+        this.GamemodeDropdown = LobbySetting<IGamemode>.NewDropdown("LobbyView_SettingGamemode", new(), this.GamemodeSelectionChanged);
+        this.GamemodeOptionDropdown = LobbySetting<IGamemodeOption>.NewDropdown("LobbyView_SettingOption", new(), this.GamemodeOptionSelectionChanged);
+        this.WeatherDropdown = LobbySetting<OnOffOption>.NewDropdown("LobbyView_SettingWeather", onOfflist, this.WeatherSelectionChanged);
+        this.SupplySystemDropdown = LobbySetting<OnOffOption>.NewDropdown("LobbyView_SettingSupply", onOfflist, this.SupplySystemSelectionChanged);
+
+        // Add dropdowns
+        this.MapSetting.Add(this.MapDropdown);
+        this.MapSetting.Add(this.GamemodeDropdown);
+        this.GamemodeSettings.Add(this.GamemodeOptionDropdown);
+        this.AuxSettings.Add(this.WeatherDropdown);
+        this.AuxSettings.Add(this.SupplySystemDropdown);
 
         // Set dropdown index, cascade effect
         this.MapDropdown.Selected = 0;
@@ -218,7 +226,7 @@ public class LobbyHostModel : LobbyModel {
 
     }
 
-    private void BeginMatch(IPlayModel model) {
+    internal void BeginMatch(IPlayModel model) {
 
         // Set lobby status here
         this.m_handle.SetLobbyState(LobbyState.Playing);
@@ -228,7 +236,7 @@ public class LobbyHostModel : LobbyModel {
 
     }
 
-    private void UploadGamemodeCallback(int curr, int exp, bool cancelled) {
+    internal void UploadGamemodeCallback(int curr, int exp, bool cancelled) {
 
         // Calculate percentage
         int p = Math.Min(100, (int)(curr / (double)exp * 100.0));
@@ -257,7 +265,7 @@ public class LobbyHostModel : LobbyModel {
 
     }
 
-    private void EndMatch(IPlayModel model) {
+    internal void EndMatch(IPlayModel model) {
 
         // Set lobby status here
         this.m_handle.SetLobbyState(LobbyState.InLobby);
@@ -288,9 +296,6 @@ public class LobbyHostModel : LobbyModel {
         // Update
         this.Scenario = scen;
         this.NotifyProperty(nameof(Scenario));
-
-        // Update label
-        this.MapDropdown.LabelContent = scen.Name;
 
         // Update gamemode
         this.UpdateGamemodeAndOptionsSelection(scen);
@@ -324,8 +329,6 @@ public class LobbyHostModel : LobbyModel {
 
             // TODO: Set gamemode option that was last selected
             this.GamemodeOptionDropdown.Selected = 0;
-            // Update label
-            this.GamemodeOptionDropdown.LabelContent = this.GamemodeOptionDropdown.Items[0].Title;
 
             // Set visibility to visible
             this.GamemodeOptionDropdown.Visibility = Visibility.Visible;
@@ -352,18 +355,12 @@ public class LobbyHostModel : LobbyModel {
 
     private void WeatherSelectionChanged(int newIndex, int oldIndex) {
 
-        // Update label
-        this.WeatherDropdown.LabelContent = this.WeatherDropdown.Items[newIndex].IsOn.ToString();
-    
         // Update lobby
         this.m_handle.SetLobbySetting(LobbyConstants.SETTING_WEATHER, this.WeatherDropdown.Items[newIndex].IsOn ? "1" : "0");
 
     }
 
     private void SupplySystemSelectionChanged(int newIndex, int oldIndex) {
-
-        // Update label
-        this.SupplySystemDropdown.LabelContent = this.SupplySystemDropdown.Items[newIndex].IsOn.ToString();
 
         // Update lobby
         this.m_handle.SetLobbySetting(LobbyConstants.SETTING_LOGISTICS, this.SupplySystemDropdown.Items[newIndex].IsOn ? "1" : "0");
@@ -374,9 +371,6 @@ public class LobbyHostModel : LobbyModel {
 
         // Set package
         this.m_package = this.ModPackageDropdown.Items[newIndex].ModPackage;
-
-        // Update label
-        this.ModPackageDropdown.LabelContent = this.ModPackageDropdown.Items[newIndex].ModPackage.PackageName;
 
         // Update lobby
         this.m_handle.SetLobbySetting(LobbyConstants.SETTING_MODPACK, this.ModPackageDropdown.Items[newIndex].ModPackage.ID);
@@ -404,9 +398,6 @@ public class LobbyHostModel : LobbyModel {
 
             // TODO: Set gamemode that was last selected
             this.GamemodeDropdown.Selected = 0;
-
-            // Update label
-            this.GamemodeDropdown.LabelContent = this.GamemodeDropdown.Items[0].Name;
 
         }
 

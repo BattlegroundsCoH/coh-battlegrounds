@@ -15,6 +15,7 @@ using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 
+using BattlegroundsApp.Lobby.MVVM.Views;
 using BattlegroundsApp.LocalData;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
@@ -27,17 +28,17 @@ public class LobbyParticipantModel : LobbyModel {
 
     public override LobbyMutButton StartMatchButton { get; }
 
-    public override LobbyDropdown<ScenOp> MapDropdown { get; }
+    public override LobbySetting<ScenOp> MapDropdown { get; }
 
-    public override LobbyDropdown<IGamemode> GamemodeDropdown { get; }
+    public override LobbySetting<IGamemode> GamemodeDropdown { get; }
 
-    public override LobbyDropdown<IGamemodeOption> GamemodeOptionDropdown { get; }
+    public override LobbySetting<IGamemodeOption> GamemodeOptionDropdown { get; }
 
-    public override LobbyDropdown<OnOffOption> WeatherDropdown { get; }
+    public override LobbySetting<OnOffOption> WeatherDropdown { get; }
 
-    public override LobbyDropdown<OnOffOption> SupplySystemDropdown { get; }
+    public override LobbySetting<OnOffOption> SupplySystemDropdown { get; }
 
-    public override LobbyDropdown<ModPackageOption> ModPackageDropdown { get; }
+    public override LobbySetting<ModPackageOption> ModPackageDropdown { get; }
 
     public override ModPackage ModPackage => this.m_package ?? throw new Exception("No Mod Package Defined");
 
@@ -49,12 +50,19 @@ public class LobbyParticipantModel : LobbyModel {
         this.StartMatchButton = new(new(this.CancelMatch), Visibility.Hidden) { Title = LOCSTR_WAIT(), IsEnabled = false, NotificationVisible = Visibility.Hidden };
 
         // Init dropdowns 
-        this.MapDropdown = new(false, Visibility.Hidden, new(), (x,y) => { });
-        this.GamemodeDropdown = new(false, Visibility.Hidden, new(), (x, y) => { });
-        this.GamemodeOptionDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = handle.Settings[LobbyConstants.SETTING_GAMEMODEOPTION] };
-        this.WeatherDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = (handle.Settings[LobbyConstants.SETTING_WEATHER] is "1") ? "On" : "Off" };
-        this.SupplySystemDropdown = new(false, Visibility.Hidden, new(), (x, y) => { }) { LabelContent = (handle.Settings[LobbyConstants.SETTING_LOGISTICS] is "1") ? "On" : "Off" };
-        this.ModPackageDropdown = new(false, Visibility.Hidden, new(), (x, y) => { });
+        this.MapDropdown = LobbySetting<ScenOp>.NewValue("LobbyView_SettingScenario", string.Empty);
+        this.GamemodeDropdown = LobbySetting<IGamemode>.NewValue("LobbyView_SettingGamemode", string.Empty);
+        this.GamemodeOptionDropdown = LobbySetting<IGamemodeOption>.NewValue("LobbyView_SettingOption", handle.Settings[LobbyConstants.SETTING_GAMEMODEOPTION]);
+        this.WeatherDropdown = LobbySetting<OnOffOption>.NewValue("LobbyView_SettingWeather", handle.Settings[LobbyConstants.SETTING_WEATHER] is "1" ? "On" : "Off");
+        this.SupplySystemDropdown = LobbySetting<OnOffOption>.NewValue("LobbyView_SettingSupply", handle.Settings[LobbyConstants.SETTING_LOGISTICS] is "1" ? "On" : "Off");
+        this.ModPackageDropdown = LobbySetting<ModPackageOption>.NewValue("LobbyView_SettingTuning", string.Empty);
+
+        // Add dropdowns
+        this.MapSetting.Add(this.MapDropdown);
+        this.MapSetting.Add(this.GamemodeDropdown);
+        this.GamemodeSettings.Add(this.GamemodeOptionDropdown);
+        this.AuxSettings.Add(this.WeatherDropdown);
+        this.AuxSettings.Add(this.SupplySystemDropdown);
 
         // Subscribe to common lobby events
         handle.OnLobbySettingUpdate += this.OnLobbyChange;
@@ -292,10 +300,6 @@ public class LobbyParticipantModel : LobbyModel {
             this.m_handle.RespondPoll("ready_check", this.IsReady());
 
         } else if (pollType is "gamomode_check") { // ignored for now
-
-            // Respond with download flag
-            //this.m_handle.RespondPoll("gamemode_check", this.m_hasDownloadedGamemode);
-
         } else {
 
             Trace.WriteLine($"OnPoll has recieved {pollType} that doesn't match anything.");
@@ -317,10 +321,10 @@ public class LobbyParticipantModel : LobbyModel {
                 this.OnGamemodeOptionChanage(e.SettingsValue);
                 break;
             case LobbyConstants.SETTING_WEATHER:
-                this.OnWeatherSettingChange(e.SettingsValue);
+                this.WeatherDropdown.Label = (e.SettingsValue is "1") ? "On" : "Off";
                 break;
             case LobbyConstants.SETTING_LOGISTICS:
-                this.OnSupplySettingChange(e.SettingsValue);
+                this.SupplySystemDropdown.Label = (e.SettingsValue is "1") ? "On" : "Off";
                 break;
             case LobbyConstants.SETTING_MODPACK:
                 this.OnModPackageChange(e.SettingsValue);
@@ -338,14 +342,14 @@ public class LobbyParticipantModel : LobbyModel {
 
             // Check if valid
             if (ScenarioList.FromRelativeFilename(map) is not Scenario scenario) {
-                this.MapDropdown.LabelContent = map;
+                this.MapDropdown.Label = map;
                 this.ScenarioPreview = LobbySettingsLookup.TryGetMapSource(null);
                 this.NotifyProperty(nameof(ScenarioPreview));
                 return;
             }
 
             // Set visuals
-            this.MapDropdown.LabelContent = LobbySettingsLookup.GetScenarioName(scenario, map);
+            this.MapDropdown.Label = LobbySettingsLookup.GetScenarioName(scenario, map);
             this.ScenarioPreview = LobbySettingsLookup.TryGetMapSource(scenario);
 
             // Notify
@@ -356,36 +360,24 @@ public class LobbyParticipantModel : LobbyModel {
     }
 
     private void OnGamemodeChange(string gamemode) 
-        => this.GamemodeDropdown.LabelContent = LobbySettingsLookup.GetGamemodeName(gamemode, this.m_package);
+        => this.GamemodeDropdown.Label = LobbySettingsLookup.GetGamemodeName(gamemode, this.m_package);
 
     private void OnGamemodeOptionChanage(string gamomodeOption) {
 
         // TODO: Lookup the option and set its string properly
-        this.GamemodeOptionDropdown.LabelContent = gamomodeOption;
+        this.GamemodeOptionDropdown.Label = gamomodeOption;
 
-    }
-
-    private void OnWeatherSettingChange(string weatherSetting) { 
-        
-        this.WeatherDropdown.LabelContent = (weatherSetting is "1") ? "On" : "Off";
-
-    }
-
-    private void OnSupplySettingChange(string supplySetting) { 
-
-        this.SupplySystemDropdown.LabelContent = (supplySetting is "1") ? "On" : "Off";
-    
     }
 
     private void OnModPackageChange(string modPackage) {
 
         if (ModManager.GetPackage(modPackage) is not ModPackage tunning) {
-            this.ModPackageDropdown.LabelContent = modPackage;
+            this.ModPackageDropdown.Label = modPackage;
             return;
         }
 
         this.m_package = tunning;
-        this.ModPackageDropdown.LabelContent = tunning.PackageName;
+        this.ModPackageDropdown.Label = tunning.PackageName;
     
     }
 

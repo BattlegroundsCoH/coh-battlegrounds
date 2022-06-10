@@ -7,9 +7,20 @@ using BattlegroundsApp.Lobby.MVVM.Models;
 
 namespace BattlegroundsApp.Lobby.MatchHandling;
 
+/// <summary>
+/// Factory for constructing a <see cref="IPlayModel"/> instance based on <see cref="ILobbyHandle"/> state.
+/// </summary>
 internal static class PlayModelFactory {
 
-    public static IPlayModel GetModel(ILobbyHandle handle, LobbyChatSpectatorModel lobbyChat, UploadProgressCallbackHandler? callbackHandler) {
+    /// <summary>
+    /// Get a <see cref="IPlayModel"/> for the <paramref name="handle"/> state.
+    /// </summary>
+    /// <param name="handle">The handle to retrieve basic information from.</param>
+    /// <param name="lobbyChat">The chat instance used by the <see cref="IPlayModel"/>.</param>
+    /// <param name="callbackHandler">Handler for reporting on upload progress.</param>
+    /// <returns>A <see cref="IPlayModel"/> instance</returns>
+    /// <exception cref="Exception"></exception>
+    internal static IPlayModel GetModel(ILobbyHandle handle, LobbyChatSpectatorModel lobbyChat, UploadProgressCallbackHandler? callbackHandler) {
 
         // If local then return early with a singleplayer
         if (handle is LocalLobbyHandle) {

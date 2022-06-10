@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Battlegrounds.Game.Database;
@@ -56,34 +48,72 @@ public partial class LobbyPlanningOverview : UserControl {
         var clickPos = e.GetPosition(this.PlanningCanvas);
 
         if (this.ContextHandler.RequiresSecond) {
+            
             if (this.m_points.Count is 0) {
                 this.m_points.Push(clickPos);
-                var marker = this.PlaceInitial(this.ContextHandler.PlaceElementBlueprint, clickPos);
+                var marker = this.CreateSelectedMarker(clickPos);
                 this.m_planningHelper = marker;
                 this.PlanningCanvas.Children.Add(marker.Element);
+
             } else {
-                
+
                 // Place
                 this.ContextHandler.PlaceElement(this.m_points.Pop(), clickPos);
-                
+
                 // Clear
                 this.m_points.Clear();
                 this.m_planningHelper = null;
 
             }
+
         } else {
+
+            // Show it
+            this.PlanningCanvas.Children.Add(this.CreateSelectedMarker(clickPos).Element);
+
+            // Place
             this.ContextHandler.PlaceElement(clickPos);
+
         }        
 
     }
 
-    private HelperElement PlaceInitial(EntityBlueprint ebp, Point p) {
+    private HelperElement CreateSelectedMarker(Point p) {
+        if (this.ContextHandler.PlaceElementBlueprint is not null) {
+            return CreateEntityMarker(this.ContextHandler.PlaceElementBlueprint, p);
+        } else if (this.ContextHandler.PlaceElementSquadBlueprint is not null) {
+            return CreateSquadMarker(this.ContextHandler.PlaceElementSquadBlueprint, p);
+        }
+        return CreateMarker(p);
+    }
+
+    private static HelperElement CreateEntityMarker(EntityBlueprint ebp, Point p) {
 
         // Grab blueprint
         var sym = App.ResourceHandler.GetIcon("entity_symbols", ebp.UI.Symbol);
         if (sym is null) {
-            return this.CreateMarker(p);
+            return CreateMarker(p);
         }
+
+        // Create marker
+        return CreateSomeMarker(sym, p);
+
+    }
+
+    private static HelperElement CreateSquadMarker(SquadBlueprint sbp, Point p) {
+
+        // Grab blueprint
+        var sym = App.ResourceHandler.GetIcon("symbol_icons", sbp.UI.Symbol);
+        if (sym is null) {
+            return CreateMarker(p);
+        }
+
+        // Create marker
+        return CreateSomeMarker(sym, p);
+
+    }
+
+    private static HelperElement CreateSomeMarker(ImageSource sym, Point p) {
 
         // Create transform data
         var offset = new Vector(0.5 * sym.Width, 0.5 * sym.Height);
@@ -93,9 +123,9 @@ public partial class LobbyPlanningOverview : UserControl {
         // Create image marker
         var marker = new Image() {
             Source = sym,
-            Width=sym.Width,
-            Height=sym.Height,
-            RenderTransformOrigin = new(0.5,0.5),
+            Width = sym.Width,
+            Height = sym.Height,
+            RenderTransformOrigin = new(0.5, 0.5),
             RenderTransform = new TransformGroup() {
                 Children = {
                     rotate, translate
@@ -108,7 +138,7 @@ public partial class LobbyPlanningOverview : UserControl {
 
     }
 
-    private HelperElement CreateMarker(Point p) {
+    private static HelperElement CreateMarker(Point p) {
 
         // Create translate
         var translate = new TranslateTransform(p.X - 0.5 * 30, p.Y - 0.5 * 25);
@@ -135,7 +165,7 @@ public partial class LobbyPlanningOverview : UserControl {
     private void PlanningCanvas_MouseMove(object sender, MouseEventArgs e) {
 
         // If no place element, bail
-        if (!this.ContextHandler.HasPlaceElement) {
+        if (!this.ContextHandler.HasEntityPlacement) {
             return;
         }
 
@@ -184,7 +214,7 @@ public partial class LobbyPlanningOverview : UserControl {
                     var v3 = Vectors.Interpolate(v0, v1, i * stepSize);
 
                     // Create helper
-                    var helper = this.PlaceInitial(this.ContextHandler.PlaceElementBlueprint, v3.ToPoint());
+                    var helper = CreateEntityMarker(this.ContextHandler.PlaceElementBlueprint, v3.ToPoint());
                     helper.Rotation.Angle = angle;
                     helper.Element.MouseLeftButtonUp += this.PlanningCanvas_MouseLeftButtonUp;
                     helper.Element.MouseRightButtonUp += this.UserControl_MouseRightButtonUp;
