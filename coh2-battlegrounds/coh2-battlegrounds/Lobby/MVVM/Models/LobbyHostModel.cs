@@ -320,6 +320,9 @@ public class LobbyHostModel : LobbyModel {
         // Clear options
         this.GamemodeSettings.Clear();
 
+        // Update team names
+        this.m_handle.SetTeamRoles(gamemode.TeamName1 ?? "Team_Allies", gamemode.TeamName2 ?? "Team_Axis");
+
         // Hide options
         if (options is null || options.Length is 0) {
 
@@ -344,15 +347,17 @@ public class LobbyHostModel : LobbyModel {
                 var custom = gamemode.AuxiliaryOptions[i];
 
                 // Create handler
-                var handler = (int a, int b) => this.GamemodeAuxOptionSelectionchanged(a,b,custom.Name);
+                SettingChanged handler = (int a, int b) => this.GamemodeAuxOptionSelectionchanged(a,b,custom.Name);
 
                 // Grab name
                 var name = custom.Title.ToString();
 
                 // Create control
                 var settingControl = custom.OptionInputType switch {
-                    AuxiliaryOptionType.Dropdown => (LobbySetting)LobbySetting<IGamemodeOption>.NewDropdown(name, new(custom.Options), handler),
-                    AuxiliaryOptionType.Slider => LobbySetting<int>.NewSlider(name, custom.GetNumber("min"), custom.GetNumber("max"), custom.GetNumber("step"), custom.Format),
+                    AuxiliaryOptionType.Dropdown => 
+                        (LobbySetting)LobbySetting<IGamemodeOption>.NewDropdown(name, new(custom.Options), handler, custom.GetNumber("def")),
+                    AuxiliaryOptionType.Slider => 
+                        LobbySetting<int>.NewSlider(name, custom.GetNumber("min"), custom.GetNumber("max"), custom.GetNumber("step"), custom.Format, handler),
                     _ => throw new Exception()
                 };
 
@@ -371,7 +376,7 @@ public class LobbyHostModel : LobbyModel {
 
     }
 
-    private void GamemodeAuxOptionSelectionchanged(int newIndex, int oldIndex, string option)
+    private void GamemodeAuxOptionSelectionchanged(int newIndex, int _, string option)
         => this.m_handle.SetLobbySetting(option, newIndex.ToString());
 
     private void GamemodeOptionSelectionChanged(int newIndex, int oldIndex) {
@@ -407,7 +412,7 @@ public class LobbyHostModel : LobbyModel {
         this.m_package = this.ModPackageDropdown.Items[newIndex].ModPackage;
 
         // Update lobby
-        this.m_handle.SetLobbySetting(LobbyConstants.SETTING_MODPACK, this.ModPackageDropdown.Items[newIndex].ModPackage.ID);
+        this.m_handle.SetLobbySetting(LobbyConstants.SETTING_MODPACK, this.m_package.ID);
 
     }
 
@@ -428,7 +433,7 @@ public class LobbyHostModel : LobbyModel {
 
             // Clear current gamemode selection
             this.GamemodeDropdown.Items.Clear();
-            gamemodes.ForEach(x => this.GamemodeDropdown.Items.Add(x));
+            gamemodes.ForEach(this.GamemodeDropdown.Items.Add);
 
             // TODO: Set gamemode that was last selected
             this.GamemodeDropdown.Selected = 0;

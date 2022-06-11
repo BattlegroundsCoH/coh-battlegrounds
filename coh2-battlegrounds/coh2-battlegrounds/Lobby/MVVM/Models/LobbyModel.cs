@@ -528,7 +528,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    protected void NotifyProperty(string property) => this.PropertyChanged?.Invoke(this, new(property));
+    public void NotifyProperty(string property) => this.PropertyChanged?.Invoke(this, new(property));
 
     protected bool IsReady() {
         

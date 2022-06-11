@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
+using Battlegrounds;
+
 namespace BattlegroundsApp.Lobby.MVVM.Views;
+
+public delegate void SettingChanged(int newIndex, int oldIndex);
 
 /// <summary>
 /// Interaction logic for LobbySetting.xaml
@@ -21,10 +24,16 @@ public partial class LobbySetting : UserControl {
         set => this.ParticipantValue.Content = value;
     }
 
-    public Action<int,int>? UpdateIndex { get; set; }
+    public string Format {
+        get;
+        private set;
+    }
+
+    public SettingChanged? UpdateIndex { get; set; }
 
     public LobbySetting() {
         this.InitializeComponent();
+        this.Format = string.Empty;
     }
 
     public void ShowDropdown() {
@@ -68,6 +77,19 @@ public partial class LobbySetting : UserControl {
 
     }
 
+    private void SliderValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+
+        // Cast to int
+        int num = (int)e.NewValue;
+
+        // Report value
+        this.UpdateIndex?.Invoke(num, -1);
+        
+        // Update text value
+        this.SliderTextValue.Content = BattlegroundsInstance.Localize.GetString(this.Format, num);
+
+    }
+
 }
 
 public class LobbySetting<T> : LobbySetting {
@@ -79,7 +101,7 @@ public class LobbySetting<T> : LobbySetting {
         this.DropdownOptions.ItemsSource = this.Items;
     }
 
-    public static LobbySetting<T> NewDropdown(string settingName, ObservableCollection<T> options, Action<int, int> changedCallback) {
+    public static LobbySetting<T> NewDropdown(string settingName, ObservableCollection<T> options, SettingChanged? changedCallback = null, int defaultIndex = -2) {
         var setting = new LobbySetting<T>() {
             Items = options,
             UpdateIndex = changedCallback
@@ -87,11 +109,16 @@ public class LobbySetting<T> : LobbySetting {
         setting.SettingName.LocKey = settingName;
         setting.DropdownOptions.ItemsSource = setting.Items;
         setting.ShowDropdown();
+        if (defaultIndex != -2) {
+            setting.DropdownOptions.SelectedIndex = defaultIndex;
+        }
         return setting;
     }
 
-    public static LobbySetting<T> NewSlider(string settingName, int min, int max, int step, string format) {
-        var setting = new LobbySetting<T>();
+    public static LobbySetting<T> NewSlider(string settingName, int min, int max, int step, string format, SettingChanged? changedCallback = null) {
+        var setting = new LobbySetting<T>() {
+            UpdateIndex = changedCallback
+        };
         setting.SettingName.LocKey = settingName;
         setting.ShowSlider(min, max, step, format);
         return setting;

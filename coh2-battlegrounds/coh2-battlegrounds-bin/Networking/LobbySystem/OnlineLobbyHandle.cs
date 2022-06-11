@@ -623,6 +623,18 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
         return true;
     }
 
+    public void SetTeamRoles(string team1, string team2) {
+        throw new NotImplementedException();
+    }
+
+    public void SwapTeamRoles() {
+        throw new NotImplementedException();
+    }
+
+    public bool AreTeamRolesSwapped() {
+        throw new NotImplementedException();
+    }
+
     /// <summary>
     /// Start the match following the startup grace period.
     /// </summary>

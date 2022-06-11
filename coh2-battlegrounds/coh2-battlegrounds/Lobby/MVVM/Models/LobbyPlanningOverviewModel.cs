@@ -33,6 +33,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     private readonly LobbyPlanningOverviewModelInput m_data;
     private readonly LobbyPlanningContextHandler m_planningContext;
+    private readonly bool m_isDefending;
 
     public override bool SingleInstanceOnly => true;
 
@@ -93,10 +94,10 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         var defData = gamemode.PlanningEntities[factionStr];
 
         // Grab if defender
-        var isDefender = true; // TODO: Implement proper check
+        this.m_isDefending = this.m_data.Handle.AreTeamRolesSwapped() ? self.TeamID is 1 : self.TeamID is 0;
 
         // If defender
-        if (isDefender) {
+        if (this.m_isDefending) {
 
             // Add entities
             for (int i = 0; i < defData.Length; i++) {

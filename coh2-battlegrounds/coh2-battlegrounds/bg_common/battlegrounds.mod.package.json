@@ -74,7 +74,7 @@
             "Type": "Slider",
             "Title": "Time",
             "Desc": "The time the attackers have to defeat the defending team",
-            "Value": "%V min.",
+            "Value": "{0} min.",
             "Default": 30,
             "Min": 20,
             "Max": 90,
@@ -90,8 +90,8 @@
           }
         },
         "TeamNames": {
-          "1": "Attackers",
-          "2": "Defenders"
+          "1": "Team_Attackers",
+          "2": "Team_Defenders"
         },
         "FixedPosition": true,
         "Planning": true,

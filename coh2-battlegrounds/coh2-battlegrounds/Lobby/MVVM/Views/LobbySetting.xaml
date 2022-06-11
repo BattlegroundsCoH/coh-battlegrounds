@@ -52,16 +52,18 @@
         <DockPanel 
             Grid.Column="1" 
             LastChildFill="True"
-            VerticalAlignment="Center"
             x:Name="SliderContainer">
             <Label
                 x:Name="SliderTextValue"
                 DockPanel.Dock="Right"
+                VerticalAlignment="Center"
                 Width="64"/>
             <Slider
                 x:Name="SliderValue"
                 IsSnapToTickEnabled="True"
-                Style="{StaticResource BlueSlider}"/>
+                Height="32"
+                Style="{StaticResource BlueSlider}"
+                ValueChanged="SliderValue_ValueChanged"/>
         </DockPanel>
         <Label
             x:Name="ParticipantValue"

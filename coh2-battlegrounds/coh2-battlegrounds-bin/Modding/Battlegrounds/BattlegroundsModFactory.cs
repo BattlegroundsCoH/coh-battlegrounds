@@ -55,8 +55,8 @@ public sealed class BattlegroundsModFactory : IModFactory {
             DisplayShortDescription = desc,
             HasPlanning = gamemode.Planning,
             RequireFixed = gamemode.FixedPosition,
-            TeamName1 = gamemode.TeamNames.GetOrDefault("1", string.Empty),
-            TeamName2 = gamemode.TeamNames.GetOrDefault("2", string.Empty)
+            TeamName1 = gamemode.TeamNames?.GetOrDefault("1", string.Empty) ?? string.Empty,
+            TeamName2 = gamemode.TeamNames?.GetOrDefault("2", string.Empty) ?? string.Empty
         };
 
     }

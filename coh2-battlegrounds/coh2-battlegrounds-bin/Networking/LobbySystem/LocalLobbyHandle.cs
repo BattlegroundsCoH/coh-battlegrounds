@@ -15,6 +15,8 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
     private readonly LocalLobbyTeam m_axis;
     private readonly LocalLobbyTeam m_obs;
 
+    private bool m_areRolesReversed;
+
     public string Title => $"{this.Self.Name}'s Lobby";
 
     public bool IsHost => true;
@@ -194,6 +196,26 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
         }
     }
 
+    public void SetTeamRoles(string team1, string team2) {
+        
+        // Set roles
+        this.m_allies.SetRole(team1);
+        this.m_axis.SetRole(team2);
+        
+        // Update visually and all that
+        this.OnLobbyTeamUpdate?.Invoke(this.m_allies);
+        this.OnLobbyTeamUpdate?.Invoke(this.m_axis);
+
+    }
+
+    public void SwapTeamRoles() {
+        this.m_areRolesReversed = !this.m_areRolesReversed;
+    }
+
+    public bool AreTeamRolesSwapped() {
+        return this.m_areRolesReversed;
+    }
+
     #region Nop calls
 
     public void CloseHandle() {
@@ -254,8 +276,7 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
 
     public UploadResult UploadGamemodeFile(byte[] contents, UploadProgressCallbackHandler? callbackHandler) => UploadResult.UPLOAD_SUCCESS;
 
-    public LobbyPollResults ConductPoll(string pollType, double pollTime = 3)
-        => new(1, 0, false);
+    public LobbyPollResults ConductPoll(string pollType, double pollTime = 3) => new(1, 0, false);
 
     #endregion
 
