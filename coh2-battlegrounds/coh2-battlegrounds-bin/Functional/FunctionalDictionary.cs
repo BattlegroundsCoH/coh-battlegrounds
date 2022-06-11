@@ -55,4 +55,23 @@ public static class FunctionalDictionaryExtensions {
         return obj;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="K"></typeparam>
+    /// <typeparam name="V"></typeparam>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="dic"></param>
+    /// <param name="func"></param>
+    /// <returns></returns>
+    public static T[] Map<K,V,T>(this IDictionary<K,V> dic, Func<K,V,T> func) {
+        var mapped = new T[dic.Count];
+        var itt = dic.GetEnumerator();
+        int i = 0;
+        while (itt.MoveNext()) {
+            mapped[i++] = func(itt.Current.Key, itt.Current.Value);
+        }
+        return mapped;
+    }
+
 }

@@ -25,19 +25,19 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
         while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
             string prop = reader.ReadProperty();
             __lookup[prop] = prop switch {
-                "ID" => reader.GetString()?.ToLowerInvariant(),
-                "Name" => reader.GetString(),
-                "TuningGUID" => reader.GetString(),
-                "GamemodeGUID" => reader.GetString(),
-                "AssetGUID" => reader.GetString(),
+                "ID" => reader.GetString()?.ToLowerInvariant() ?? string.Empty,
+                "Name" => reader.GetString() ?? string.Empty,
+                "TuningGUID" => reader.GetString() ?? string.Empty,
+                "GamemodeGUID" => reader.GetString() ?? string.Empty,
+                "AssetGUID" => reader.GetString() ?? string.Empty,
                 "ParadropUnits" => reader.GetStringArray(),
-                "VerificationUpgrade" => reader.GetString(),
+                "VerificationUpgrade" => reader.GetString() ?? string.Empty,
                 "AllowSupplySystem" => reader.GetBoolean(),
                 "AllowWeatherSystem" => reader.GetBoolean(),
-                "LocaleFiles" => JsonSerializer.Deserialize<ModPackage.ModLocale[]>(ref reader),
-                "FactionData" => JsonSerializer.Deserialize<FactionData[]>(ref reader),
-                "CustomOptions" => JsonSerializer.Deserialize<ModPackage.CustomOptions[]>(ref reader),
-                "Gamemodes" => JsonSerializer.Deserialize<Gamemode[]>(ref reader),
+                "LocaleFiles" => JsonSerializer.Deserialize<ModPackage.ModLocale[]>(ref reader) ?? Array.Empty<ModPackage.ModLocale>(),
+                "FactionData" => JsonSerializer.Deserialize<FactionData[]>(ref reader) ?? Array.Empty<FactionData>(),
+                "CustomOptions" => JsonSerializer.Deserialize<ModPackage.CustomOptions[]>(ref reader) ?? Array.Empty<ModPackage.CustomOptions>(),
+                "Gamemodes" => JsonSerializer.Deserialize<Gamemode[]>(ref reader) ?? Array.Empty<Gamemode>(),
                 "Towing" => ReadTowdata(ref reader),
                 _ => throw new NotImplementedException(prop)
             };
@@ -62,7 +62,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
         }
 
         // Return mod package
-        return new ModPackage() {
+        return new() {
             ID = packageID,
             PackageName = __lookup.GetCastValueOrDefault("Name", packageID),
             TuningGUID = tuningGUID,

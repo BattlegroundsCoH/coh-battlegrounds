@@ -75,6 +75,7 @@
             "Title": "Time",
             "Desc": "The time the attackers have to defeat the defending team",
             "Value": "%V min.",
+            "Default": 30,
             "Min": 20,
             "Max": 90,
             "Step": 10
@@ -82,7 +83,10 @@
           "Support": {
             "Type": "Checkbox",
             "Title": "AI-Support",
-            "Desc": "Enable basic AI units to aid the assault"
+            "Desc": "Enable basic AI units to aid the assault",
+            "Default": 1,
+            "Yes": 1,
+            "No": 0
           }
         },
         "TeamNames": {

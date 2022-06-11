@@ -88,6 +88,7 @@ public class LobbyHostModel : LobbyModel {
         this.GamemodeSettings.Add(this.GamemodeOptionDropdown);
         this.AuxSettings.Add(this.WeatherDropdown);
         this.AuxSettings.Add(this.SupplySystemDropdown);
+        this.AuxSettings.Add(this.ModPackageDropdown);
 
         // Set dropdown index, cascade effect
         this.MapDropdown.Selected = 0;
@@ -307,17 +308,20 @@ public class LobbyHostModel : LobbyModel {
 
     private void GamemodeSelectionChanged(int newIndex, int oldIndex) {
 
+        // Grab gamemode
+        var gamemode = this.GamemodeDropdown.Items[newIndex];
+
         // Get gamemode options
-        var options = this.GamemodeDropdown.Items[newIndex].Options;
+        var options = gamemode.Options;
 
         // Clear available options
         this.GamemodeOptionDropdown.Items.Clear();
 
+        // Clear options
+        this.GamemodeSettings.Clear();
+
         // Hide options
         if (options is null || options.Length is 0) {
-
-            // Set visibility to hidden
-            this.GamemodeOptionDropdown.Visibility = Visibility.Hidden;
 
             // Set setting to empty (Hidden)
             this.m_handle.SetLobbySetting(LobbyConstants.SETTING_GAMEMODEOPTION, string.Empty);
@@ -325,20 +329,50 @@ public class LobbyHostModel : LobbyModel {
         } else {
 
             // Update options
-            _ = options.ForEach(x => this.GamemodeOptionDropdown.Items.Add(x));
+            options.ForEach(this.GamemodeOptionDropdown.Items.Add);
 
             // TODO: Set gamemode option that was last selected
             this.GamemodeOptionDropdown.Selected = 0;
 
             // Set visibility to visible
-            this.GamemodeOptionDropdown.Visibility = Visibility.Visible;
+            this.GamemodeSettings.Add(this.GamemodeOptionDropdown);
+
+            // Add aux operations
+            for (int i = 0; i < gamemode.AuxiliaryOptions.Length; i++) {
+
+                // Grab option
+                var custom = gamemode.AuxiliaryOptions[i];
+
+                // Create handler
+                var handler = (int a, int b) => this.GamemodeAuxOptionSelectionchanged(a,b,custom.Name);
+
+                // Grab name
+                var name = custom.Title.ToString();
+
+                // Create control
+                var settingControl = custom.OptionInputType switch {
+                    AuxiliaryOptionType.Dropdown => (LobbySetting)LobbySetting<IGamemodeOption>.NewDropdown(name, new(custom.Options), handler),
+                    AuxiliaryOptionType.Slider => LobbySetting<int>.NewSlider(name, custom.GetNumber("min"), custom.GetNumber("max"), custom.GetNumber("step"), custom.Format),
+                    _ => throw new Exception()
+                };
+
+                // Add
+                this.GamemodeSettings.Add(settingControl);
+
+            }
 
         }
 
         // Update lobby
         this.m_handle.SetLobbySetting(LobbyConstants.SETTING_GAMEMODE, this.GamemodeDropdown.Items[newIndex].Name);
 
+        // Update options
+        this.NotifyProperty(nameof(ShowScrollbarForSettings));
+
     }
+
+    private void GamemodeAuxOptionSelectionchanged(int newIndex, int oldIndex, string option)
+        => this.m_handle.SetLobbySetting(option, newIndex.ToString());
 
     private void GamemodeOptionSelectionChanged(int newIndex, int oldIndex) {
 

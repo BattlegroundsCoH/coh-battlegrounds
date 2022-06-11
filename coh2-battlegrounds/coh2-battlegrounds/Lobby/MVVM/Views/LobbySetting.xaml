@@ -7,8 +7,8 @@
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls" 
              xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="38" d:DesignWidth="800">
-    <Grid>
+             d:DesignHeight="32" d:DesignWidth="800">
+    <Grid Height="36">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="180"/>
             <ColumnDefinition/>
@@ -19,23 +19,23 @@
             <converters:ArrayIndexer x:Key="ArrayIndexer"/>
             <Style x:Key="SettingLabel" TargetType="Label">
                 <Setter Property="Foreground" Value="#747c84"/>
-                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontSize" Value="12"/>
                 <Setter Property="FontFamily" Value="Open Sans"/>
             </Style>
             <Style x:Key="SettingValue" TargetType="Label">
                 <Setter Property="Foreground" Value="#747c84"/>
-                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontSize" Value="12"/>
                 <Setter Property="FontFamily" Value="Open Sans"/>
             </Style>
             <Style x:Key="SettingSeperator" TargetType="Separator">
                 <Setter Property="Background" Value="#4e5963"/>
-                <Setter Property="Margin" Value="4"/>
                 <Setter Property="Width" Value="64"/>
                 <Setter Property="HorizontalAlignment" Value="Left"/>
-                <Setter Property="Margin" Value="0,6,0,0"/>
+                <Setter Property="Margin" Value="6,0,0,0"/>
             </Style>
         </Grid.Resources>
-        <StackPanel
+        <StackPanel            
+            VerticalAlignment="Center"
             Grid.Column="0">
             <controls:LocLabel 
                 x:Name="SettingName"
@@ -45,11 +45,14 @@
         </StackPanel>
         <ComboBox
             Grid.Column="1"
+            Height="32"
+            VerticalAlignment="Center"
             x:Name="DropdownOptions"
             Style="{StaticResource StandardBlueDropdown}"/>
         <DockPanel 
             Grid.Column="1" 
             LastChildFill="True"
+            VerticalAlignment="Center"
             x:Name="SliderContainer">
             <Label
                 x:Name="SliderTextValue"

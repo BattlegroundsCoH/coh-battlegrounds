@@ -166,11 +166,12 @@
                 Scenario="{Binding Scenario}"/>
 
             <!-- Row 2 - Options -->
-            <ScrollViewer
+            <controls:ScrollViewerOnDemand
                 Grid.Row="2"
+                Grid.RowSpan="6"
                 Grid.Column="1"
                 Grid.ColumnSpan="2"
-                Margin="2">
+                IsScrollbarVisible="{Binding ShowScrollbarForSettings}">
                 <StackPanel>
                     <ItemsControl
                         ItemsSource="{Binding MapSetting}"/>
@@ -179,119 +180,7 @@
                     <ItemsControl
                         ItemsSource="{Binding AuxSettings}"/>
                 </StackPanel>
-            </ScrollViewer>
-            
-
-            <StackPanel Grid.Column="1"
-                        Grid.Row="3">
-                <controls:LocLabel LocKey="LobbyView_SettingGamemode" 
-                       Style="{StaticResource SettingLabel}"/>
-                <Separator Style="{StaticResource SettingSeperator}"/>
-            </StackPanel>
-            <Grid Grid.Column="2"
-                  Grid.Row="3">
-                <ComboBox Height="32"
-                          VerticalAlignment="Top"
-                          ItemsSource="{Binding GamemodeDropdown.Items}"
-                          SelectedIndex="{Binding GamemodeDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding GamemodeDropdown.Visibility}"
-                          IsEnabled="{Binding GamemodeDropdown.IsEnabled}"
-                          Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding GamemodeDropdown.LabelVisibility}"
-                       Content="{Binding GamemodeDropdown.LabelContent}"
-                       Style="{StaticResource SettingValue}"/>
-            </Grid>
-
-            <StackPanel Grid.Column="1"
-                        Grid.Row="4">
-                <controls:LocLabel LocKey="LobbyView_SettingOption" 
-                       Style="{StaticResource SettingLabel}"/>
-                <Separator Style="{StaticResource SettingSeperator}"/>
-            </StackPanel>
-            <Grid Grid.Column="2"
-                  Grid.Row="4">
-                <ComboBox Height="32"
-                          VerticalAlignment="Top"
-                          ItemsSource="{Binding GamemodeOptionDropdown.Items}"
-                          SelectedIndex="{Binding GamemodeOptionDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding GamemodeOptionDropdown.Visibility}"
-                          IsEnabled="{Binding GamemodeOptionDropdown.IsEnabled}"
-                          Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding GamemodeOptionDropdown.LabelVisibility}"
-                       Content="{Binding GamemodeOptionDropdown.LabelContent}"
-                       Style="{StaticResource SettingValue}"/>
-            </Grid>
-
-            <StackPanel Grid.Column="1"
-                        Grid.Row="5">
-                <controls:LocLabel LocKey="LobbyView_SettingWeather"
-                       Style="{StaticResource SettingLabel}"/>
-                <Separator Style="{StaticResource SettingSeperator}"/>
-            </StackPanel>
-            <Grid Grid.Column="2"
-                  Grid.Row="5">
-                <ComboBox Height="32"
-                          VerticalAlignment="Top"
-                          ItemsSource="{Binding WeatherDropdown.Items}"
-                          SelectedIndex="{Binding WeatherDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding WeatherDropdown.Visibility}"
-                          IsEnabled="{Binding WeatherDropdown.IsEnabled}"
-                          Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding WeatherDropdown.LabelVisibility}"
-                       Content="{Binding WeatherDropdown.LabelContent}"
-                       Style="{StaticResource SettingValue}"/>
-            </Grid>
-
-            <StackPanel Grid.Column="1"
-                        Grid.Row="6">
-                <controls:LocLabel LocKey="LobbyView_SettingSupply" 
-                                   Style="{StaticResource SettingLabel}"/>
-                <Separator Style="{StaticResource SettingSeperator}"/>
-            </StackPanel>
-            <Grid Grid.Column="2"
-                  Grid.Row="6">
-                <ComboBox Height="32"
-                          VerticalAlignment="Top"
-                          ItemsSource="{Binding SupplySystemDropdown.Items}"
-                          SelectedIndex="{Binding SupplySystemDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding SupplySystemDropdown.Visibility}"
-                          IsEnabled="{Binding SupplySystemDropdown.IsEnabled}"
-                          Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding SupplySystemDropdown.LabelVisibility}"
-                       Content="{Binding SupplySystemDropdown.LabelContent}"
-                       Style="{StaticResource SettingValue}"/>
-            </Grid>
-
-            <StackPanel Grid.Column="1"
-                        Grid.Row="7">
-                <controls:LocLabel LocKey="LobbyView_SettingTuning" 
-                       Style="{StaticResource SettingLabel}"/>
-                <Separator Style="{StaticResource SettingSeperator}"/>
-            </StackPanel>
-            <Grid Grid.Column="2"
-                  Grid.Row="7">
-                <ComboBox Height="32"
-                          VerticalAlignment="Top"
-                          ItemsSource="{Binding ModPackageDropdown.Items}"
-                          SelectedIndex="{Binding ModPackageDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding ModPackageDropdown.Visibility}"
-                          IsEnabled="{Binding ModPackageDropdown.IsEnabled}"
-                          Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding ModPackageDropdown.LabelVisibility}"
-                       Content="{Binding ModPackageDropdown.LabelContent}"
-                       Style="{StaticResource SettingValue}"/>
-            </Grid>
-
-            <!--
-            <Button Grid.Column="1" 
-                    Grid.Row="9"
-                    Grid.ColumnSpan="2"
-                    Content="{Binding StartMatchButton.Title}"
-                    Command="{Binding StartMatchButton.Click}"
-                    IsEnabled="{Binding StartMatchButton.IsEnabled}"
-                    ToolTip="{Binding StartMatchButton.Tooltip}"
-                    Style="{StaticResource StandardBlueButton}"/>
-            -->
+            </controls:ScrollViewerOnDemand>
 
             <controls:IconButton 
                 Grid.Column="1" 

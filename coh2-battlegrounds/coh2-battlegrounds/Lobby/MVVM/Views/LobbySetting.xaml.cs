@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Controls.Primitives;
 
 namespace BattlegroundsApp.Lobby.MVVM.Views;
 
@@ -38,13 +27,20 @@ public partial class LobbySetting : UserControl {
         this.InitializeComponent();
     }
 
-    public void ShowDropdown(object[] options) {
+    public void ShowDropdown() {
 
         // Set visibilities
         this.DropdownOptions.Visibility = Visibility.Visible;
         this.SliderContainer.Visibility = Visibility.Collapsed;
         this.ParticipantValue.Visibility = Visibility.Collapsed;
 
+        // Register dropdown
+        this.DropdownOptions.SelectionChanged += this.DropdownOptions_SelectionChanged;
+
+    }
+
+    private void DropdownOptions_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        this.UpdateIndex?.Invoke(this.Selected, -1);
     }
 
     public void ShowSlider(int min, int max, int step, string format) {
@@ -53,6 +49,12 @@ public partial class LobbySetting : UserControl {
         this.DropdownOptions.Visibility = Visibility.Collapsed;
         this.SliderContainer.Visibility = Visibility.Visible;
         this.ParticipantValue.Visibility = Visibility.Collapsed;
+
+        // Set slider
+        this.SliderValue.Minimum = min;
+        this.SliderValue.Maximum = max;
+        this.SliderValue.TickFrequency = step;
+        this.SliderValue.TickPlacement = TickPlacement.None;
 
     }
 
@@ -84,6 +86,7 @@ public class LobbySetting<T> : LobbySetting {
         };
         setting.SettingName.LocKey = settingName;
         setting.DropdownOptions.ItemsSource = setting.Items;
+        setting.ShowDropdown();
         return setting;
     }
 
