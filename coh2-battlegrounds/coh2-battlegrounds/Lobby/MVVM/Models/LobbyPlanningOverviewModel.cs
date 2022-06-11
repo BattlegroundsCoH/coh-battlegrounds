@@ -31,6 +31,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     public record LobbyPlanningDefence(ImageSource? Icon, string Name, RelayCommand Click);
 
+    private readonly ILobbyPlanningHandle m_planHandle;
     private readonly LobbyPlanningOverviewModelInput m_data;
     private readonly LobbyPlanningContextHandler m_planningContext;
     private readonly bool m_isDefending;
@@ -62,8 +63,16 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         // Set handles
         this.m_data = input;
 
+        // Error if plan handle does not exist
+        if (this.m_data.Handle.PlanningHandle is not ILobbyPlanningHandle pHandle) {
+            throw new Exception("Failed to create planning overview model because no planning handle was created by lobby!");
+        }
+
+        // Grab handle
+        this.m_planHandle = pHandle;
+
         // Set planning context handler
-        this.m_planningContext = new();
+        this.m_planningContext = new(this.m_planHandle, input.Scenario);
 
         // Set return command
         this.ReturnLobbyCommand = new(() => App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, this.m_data.Model));
@@ -94,7 +103,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         var defData = gamemode.PlanningEntities[factionStr];
 
         // Grab if defender
-        this.m_isDefending = this.m_data.Handle.AreTeamRolesSwapped() ? self.TeamID is 1 : self.TeamID is 0;
+        this.m_isDefending = this.m_planHandle.IsDefender;
 
         // If defender
         if (this.m_isDefending) {

@@ -11,6 +11,8 @@ namespace BattlegroundsApp.Lobby.Planning;
 
 public class LobbyPlanningObject {
 
+    public int ObjectId { get; }
+
     public Point VisualPosStart { get; set; }
 
     public Point? VisualPointEnd { get; set; }
@@ -23,7 +25,8 @@ public class LobbyPlanningObject {
 
     public ulong Owner { get; }
 
-    public LobbyPlanningObject(ulong owner, Blueprint blueprint, Point start, Point? end = null) {
+    public LobbyPlanningObject(int id, ulong owner, Blueprint blueprint, Point start, Point? end = null) {
+        this.ObjectId = id;
         this.Owner = owner;
         this.Blueprint = blueprint;
         this.VisualPosStart = start;

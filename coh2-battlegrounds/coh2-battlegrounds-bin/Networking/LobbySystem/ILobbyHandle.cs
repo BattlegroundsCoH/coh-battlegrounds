@@ -42,6 +42,11 @@ public interface ILobbyHandle {
     ILobbyTeam Observers { get; }
 
     /// <summary>
+    /// Get the handle to the planning instance.
+    /// </summary>
+    ILobbyPlanningHandle? PlanningHandle { get; }
+
+    /// <summary>
     /// Get the settings of the lobby.
     /// </summary>
     Dictionary<string, string> Settings { get; }
@@ -77,6 +82,12 @@ public interface ILobbyHandle {
     /// <param name="humansOnly"></param>
     /// <returns></returns>
     uint GetPlayerCount(bool humansOnly = false);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    byte GetSelfTeam();
 
     /// <summary>
     /// 

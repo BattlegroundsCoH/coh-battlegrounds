@@ -5,7 +5,6 @@ using System.IO;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Game.DataSource;
 using Battlegrounds.Lua;
 using Battlegrounds.Util;
 
@@ -121,7 +120,7 @@ public sealed class Scenario {
     /// <summary>
     /// Get if the <see cref="Scenario"/> is a workshop map.
     /// </summary>
-    public bool IsWorkshopMap => !(this.SgaName.ToLowerInvariant() is "mpscenarios" or "mpxp1scenarios");
+    public bool IsWorkshopMap => !(this.SgaName.ToLower() is "mpscenarios" or "mpxp1scenarios");
 
     /// <summary>
     /// The <see cref="Wincondition"/> instances designed for this <see cref="Scenario"/>. Empty list means all <see cref="Wincondition"/> instances can be used.
@@ -277,6 +276,36 @@ public sealed class Scenario {
         ushort owner = (ushort)_.table["owner_id"].As<LuaNumber>().ToInt();
         string ebp = _.table["ebp_name"].Str();
         return new(new (x,y), owner, ebp);
+    }
+
+    public GamePosition ToMinimapPosition(int minimapWidth, int minimapHeight, GamePosition worldPos) {
+
+        // Bring into standard coordinate system
+        double x = worldPos.X + this.PlayableSize.X * .5;
+        double y = worldPos.Y + this.PlayableSize.Y * .5;
+
+        // Calculate u,v coords
+        double u = x / this.PlayableSize.X;
+        double v = y / this.PlayableSize.Y;
+
+        // Return position
+        return new(u * minimapWidth, v * minimapHeight);
+
+    }
+
+    public GamePosition FromMinimapPosition(int minimapWidth, int minimapHeight, double x, double y) {
+
+        // Calculate u,v coords
+        double u = x / minimapWidth;
+        double v = y / minimapHeight;
+
+        // Get into world coords
+        double _x = u * this.PlayableSize.X;
+        double _y = v * this.PlayableSize.Y;
+
+        // Return position in CoH2 world coordinates
+        return new(_x - this.PlayableSize.X * .5, _y - this.PlayableSize.Y * .5);
+
     }
 
     public override string ToString() => this.Name;

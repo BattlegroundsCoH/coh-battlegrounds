@@ -74,6 +74,11 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     public SteamUser Self { get; }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public ILobbyPlanningHandle? PlanningHandle => throw new NotImplementedException();
+
+    /// <summary>
     /// Event triggered when a lobby chat message is received.
     /// </summary>
     public event LobbyEventHandler<ILobbyMessage>? OnChatMessage;
@@ -463,6 +468,16 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// <returns>The mount of players, and if the <paramref name="humansOnly"/> flag is not set, also the amount of AI players.</returns>
     public uint GetPlayerCount(bool humansOnly = false)
         => this.RemoteCall<uint>("GetPlayerCount", EncBool(humansOnly));
+
+    public byte GetSelfTeam() {
+        if (this.Allies.GetSlotOfMember(this.Self.ID) is null) {
+            if (this.Axis.GetSlotOfMember(this.Self.ID) is null) {
+                return LobbyConstants.TID_OBS;
+            }
+            return LobbyConstants.TID_AXIS;
+        }
+        return LobbyConstants.TID_ALLIES;
+    }
 
     private static string EncBool(bool b) => b ? "1" : "0";
 

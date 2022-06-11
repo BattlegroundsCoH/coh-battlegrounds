@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Text.Json.Serialization;
 
 namespace Battlegrounds.Game; 
 
@@ -15,21 +15,24 @@ public struct GamePosition {
     /// The X-coordinate
     /// </summary>
     public double X {
-        get => this.m_x; set => this.m_x = value; 
+        get => this.m_x; 
+        set => this.m_x = value; 
     }
 
     /// <summary>
     /// The Y-coordinate
     /// </summary>
     public double Y {
-        get => this.m_y; set => this.m_y = value;
+        get => this.m_y; 
+        set => this.m_y = value;
     }
 
     /// <summary>
     /// The Z-coordinate
     /// </summary>
     public double Z {
-        get => this.m_z; set => this.m_z = value;
+        get => this.m_z; 
+        set => this.m_z = value;
     }
 
     /// <summary>
@@ -48,8 +51,9 @@ public struct GamePosition {
     /// <param name="x"></param>
     /// <param name="y"></param>
     /// <param name="z"></param>
-    public GamePosition(double x, double y, double z) : this(x, y) {
-        this.m_z = z;
+    [JsonConstructor]
+    public GamePosition(double X, double Y, double Z) : this(X, Y) {
+        this.m_z = Z;
     }
 
     /// <summary>

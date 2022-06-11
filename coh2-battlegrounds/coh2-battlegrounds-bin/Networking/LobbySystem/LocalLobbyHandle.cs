@@ -14,6 +14,7 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
     private readonly LocalLobbyTeam m_allies;
     private readonly LocalLobbyTeam m_axis;
     private readonly LocalLobbyTeam m_obs;
+    private readonly ILobbyPlanningHandle m_planner;
 
     private bool m_areRolesReversed;
 
@@ -30,6 +31,8 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
     public ILobbyTeam Observers => this.m_obs;
 
     public Dictionary<string, string> Settings { get; }
+
+    public ILobbyPlanningHandle? PlanningHandle => this.m_planner;
 
     public event LobbyEventHandler<ILobbyTeam>? OnLobbyTeamUpdate;
     public event LobbyEventHandler<ILobbySlot>? OnLobbySlotUpdate;
@@ -57,6 +60,9 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
         var self = new LocalLobbyMember(this, user.Name, user.ID, LobbyConstants.ROLE_HOST, 0, LobbyMemberState.Waiting);
         (this.m_allies.Slots[0] as LocalLobbySlot)?.SetOccupant(self);
 
+        // Create planner
+        this.m_planner = new LocalLobbyPlanner(this);
+
     }
 
     public void AddAI(int tid, int sid, int difficulty, ILobbyCompany company) {
@@ -78,6 +84,16 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
 
     public uint GetPlayerCount(bool humansOnly = false)
         => this.m_allies.Slots.Concat(this.m_axis.Slots).Aggregate(0u, (a, b) => a + (b.IsOccupied && (humansOnly && !b.IsAI() || !humansOnly) ? 1u : 0u));
+
+    public byte GetSelfTeam() {
+        if (this.Allies.GetSlotOfMember(this.Self.ID) is null) {
+            if (this.Axis.GetSlotOfMember(this.Self.ID) is null) {
+                return LobbyConstants.TID_OBS;
+            }
+            return LobbyConstants.TID_AXIS;
+        }
+        return LobbyConstants.TID_ALLIES;
+    }
 
     public void LockSlot(int tid, int sid) {
         if ((tid is LobbyConstants.TID_ALLIES ? this.m_allies : this.m_axis).Slots[sid] is LocalLobbySlot locSlot && !locSlot.IsOccupied) {
