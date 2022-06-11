@@ -52,7 +52,6 @@ public sealed class SteamInstance {
     public SteamInstance(SteamUser User) {
         this.m_user = User;
         this.m_isVerified = false;
-        Trace.WriteLine($"Found steam user '{User.Name}' ({User.ID}) as local user in local data (Unverified).", nameof(SteamInstance));
     }
 
     /// <summary>
@@ -83,7 +82,11 @@ public sealed class SteamInstance {
     public static SteamUser? FromLocalInstall(string? steamInstall = "") {
 
         // Get install path
-        steamInstall = (string.IsNullOrEmpty(steamInstall) ? Pathfinder.GetOrFindSteamPath() : steamInstall).Replace("Steam.exe", "config\\loginusers.vdf");
+        steamInstall = (string.IsNullOrEmpty(steamInstall) ? Pathfinder.GetOrFindSteamPath() : steamInstall)
+            .Replace("Steam.exe", "steam.exe")
+            .Replace("steam.exe", "config\\loginusers.vdf");
+
+        // Log from where
         Trace.WriteLine($"Fetching local user data: {steamInstall}", nameof(SteamUser));
 
         // Get VDF
