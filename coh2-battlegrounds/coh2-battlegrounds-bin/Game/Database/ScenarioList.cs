@@ -12,6 +12,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Lua.Debugging;
+using Battlegrounds.Util;
 
 namespace Battlegrounds.Game.Database;
 
@@ -208,8 +209,10 @@ public static class ScenarioList {
                 }
 
                 // Find the index of the minimap
-                int minimapFile = scenarioFiles.IndexOf(x => x.EndsWith("_preview.tga", false, CultureInfo.InvariantCulture))
-                    .IfTrue(x => x == -1).Then(x => scenarioFiles.IndexOf(x => x.EndsWith("_mm.tga", false, CultureInfo.InvariantCulture)));
+                int minimapFile = scenarioFiles.IndexOf(x => x.EndsWithAny("_mm_high.tga", "_mm_low.tga"));
+                if (minimapFile is -1) {
+                    minimapFile = scenarioFiles.IndexOf(x => x.EndsWithAny("_mm.tga", "_preview.tga"));
+                }
 
                 // Make sure it's a valid index
                 if (minimapFile != -1) {
