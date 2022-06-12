@@ -46,7 +46,9 @@
         "Display": "36",
         "DisplayDesc": "37",
         "DefaultOption": 1,
-        "Files": [],
+        "Files": [
+          "Battlegrounds:bg_common.bg_wc.coh2_battlegrounds_defence"
+        ],
         "Options": [
           {
             "LocStr": "103",

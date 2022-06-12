@@ -256,6 +256,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="bg_common\bg_wc\coh2_battlegrounds_defence.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\campaigns\sov_ost_stalingrad.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -850,10 +853,6 @@
     <None Update="plugins\README.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="bg_common\bg_wc\" />
   </ItemGroup>
 
 </Project>

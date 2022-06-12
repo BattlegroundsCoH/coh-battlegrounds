@@ -1,0 +1,58 @@
+﻿------------------------------------------------------------------------------------
+-- Point and Time check
+------------------------------------------------------------------------------------
+
+function BattlegroundsDefence_InitGamemode()
+
+	-- Grab points
+	local defender_points = Setup_GetWinConditionOption();
+
+	-- Grab time (Defined in .json package)
+	local defend_time = bg_settings.options.Time;
+
+end
+
+------------------------------------------------------------------------------------
+-- Spawn Defences
+------------------------------------------------------------------------------------
+
+function BattlegroundsDefence_InitDefence()
+
+end
+
+------------------------------------------------------------------------------------
+-- Objectives Check
+------------------------------------------------------------------------------------
+
+function BattlegroundsDefence_InitObjectives()
+
+end
+
+------------------------------------------------------------------------------------
+-- AI Stuff
+------------------------------------------------------------------------------------
+
+function BattlegroundsDefence_InitAI()
+
+	-- Invoke AI wave init if enabled (Defined in .json package)
+	if bg_settings.options.Support then
+		BattlegroundsDefence_InitAIWaves();
+	end
+
+end
+
+function BattlegroundsDefence_InitAIWaves()
+
+end
+
+------------------------------------------------------------------------------------
+-- Hook
+------------------------------------------------------------------------------------
+bg_wchook = {
+	init = {
+		BattlegroundsDefence_InitGamemode,
+		BattlegroundsDefence_InitDefence,
+		BattlegroundsDefence_InitObjectives,
+		BattlegroundsDefence_InitAI
+	}
+}
