@@ -33,6 +33,8 @@ public class NullSession : ISession {
 
     public IList<string> Names => new List<string>();
 
+    public bool HasPlanning => false;
+
     public NullSession() { this.AllowPersistency = false; }
 
     public NullSession(bool allowPersistency) { this.AllowPersistency = allowPersistency; }
@@ -50,4 +52,17 @@ public class NullSession : ISession {
     }
 
     public ISessionParticipant[] GetParticipants() => throw new NotSupportedException();
+
+    public ISessionPlanEntity[] GetPlanEntities() {
+        throw new NotSupportedException();
+    }
+
+    public ISessionPlanSquad[] GetPlanSquads() {
+        throw new NotSupportedException();
+    }
+
+    public ISessionPlanGoal[] GetPlanGoals() {
+        throw new NotSupportedException();
+    }
+
 }

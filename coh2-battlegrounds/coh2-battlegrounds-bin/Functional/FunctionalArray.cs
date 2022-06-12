@@ -58,6 +58,21 @@ public static class FunctionalArray {
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="U"></typeparam>
+    /// <typeparam name="V"></typeparam>
+    /// <param name="array"></param>
+    /// <returns></returns>
+    public static V[] MapType<U,V>(this U[] array) where V : U where U : notnull {
+        V[] result = new V[array.Length];
+        for (int i = 0; i < array.Length; i++) {
+            result[i] = (V)array[i];
+        }
+        return result;
+    }
+
+    /// <summary>
     /// Takes all values in input array and returns a new array consisting of all non-null values from input.
     /// </summary>
     /// <typeparam name="V">The element type in array-</typeparam>

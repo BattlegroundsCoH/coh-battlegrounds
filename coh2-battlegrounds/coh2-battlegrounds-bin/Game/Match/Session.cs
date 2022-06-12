@@ -22,6 +22,9 @@ public class Session : ISession {
 
     private SessionParticipant[] m_participants;
     private readonly List<string> m_customNames;
+    private readonly ISessionPlanEntity[] m_planEntities;
+    private readonly ISessionPlanGoal[] m_planGoals;
+    private readonly ISessionPlanSquad[] m_planSquads;
 
     /// <summary>
     /// Get an array of participating players in the <see cref="Session"/>. This should only contain <see cref="SessionParticipant"/> instances for players and AI (not observers).
@@ -68,7 +71,13 @@ public class Session : ISession {
     /// <summary>
     /// Get if the session allows for persistency.
     /// </summary>
-    [JsonIgnore] public bool AllowPersistency => this.m_participants.All(x => x.Difficulty.AllowsPersistency());
+    [JsonIgnore] 
+    public bool AllowPersistency => this.m_participants.All(x => x.Difficulty.AllowsPersistency());
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool HasPlanning => this.Gamemode.HasPlanning;
 
     /// <summary>
     /// 
@@ -76,7 +85,7 @@ public class Session : ISession {
     /// <param name="scenario"></param>
     /// <param name="gamemode"></param>
     /// <param name="tuning"></param>
-    private Session(Scenario scenario, IGamemode gamemode, ITuningMod tuning) {
+    private Session(Scenario scenario, IGamemode gamemode, ITuningMod tuning, ISessionPlanEntity[] planEntities, ISessionPlanGoal[] planGoals, ISessionPlanSquad[] planSquads) {
 
         // Set public
         this.Settings = new Dictionary<string, object>();
@@ -84,10 +93,13 @@ public class Session : ISession {
         this.Scenario = scenario;
         this.Gamemode = gamemode;
         this.TuningMod = tuning;
-        
+
         // Init private fields
         this.m_participants = Array.Empty<SessionParticipant>();
         this.m_customNames = new();
+        this.m_planEntities = planEntities;
+        this.m_planGoals = planGoals;
+        this.m_planSquads = planSquads;
 
     }
 
@@ -129,8 +141,13 @@ public class Session : ISession {
     /// <returns>New <see cref="Session"/> with the given data.</returns>
     public static Session CreateSession(SessionInfo sessionInfo) {
 
+        // Cast to interface
+        var e = sessionInfo.Entities.Map(x => (ISessionPlanEntity)x);
+        var s = sessionInfo.Squads.Map(x => (ISessionPlanSquad)x);
+        var g = sessionInfo.Goals.Map(x => (ISessionPlanGoal)x);
+
         // Create the session
-        Session session = new Session(sessionInfo.SelectedScenario, sessionInfo.SelectedGamemode, sessionInfo.SelectedTuningMod);
+        Session session = new Session(sessionInfo.SelectedScenario, sessionInfo.SelectedGamemode, sessionInfo.SelectedTuningMod, e, g, s);
 
         // defaults
         var defDif = sessionInfo.DefaultDifficulty;
@@ -224,6 +241,12 @@ public class Session : ISession {
         }
     }
 
+    public ISessionPlanEntity[] GetPlanEntities() => this.m_planEntities;
+
+    public ISessionPlanSquad[] GetPlanSquads() => this.m_planSquads;
+
+    public ISessionPlanGoal[] GetPlanGoals() => this.m_planGoals;
+
     private static int GetPlayerCount(bool fillAI, int alliesCount, int axisCount, out int alliesAI, out int axisAI) {
 
         // The allies and axis AI to fill
@@ -304,4 +327,3 @@ public class Session : ISession {
     }
 
 }
-

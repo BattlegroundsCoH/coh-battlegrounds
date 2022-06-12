@@ -5,7 +5,7 @@ namespace Battlegrounds.Game.Match;
 /// <summary>
 /// Readonly struct representing a planned entity.
 /// </summary>
-public readonly struct SessionPlanEntityInfo {
+public readonly struct SessionPlanEntityInfo : ISessionPlanEntity {
 
     /// <summary>
     /// Get or initialise the ID of the team owner. -1 = World Owned.
@@ -40,7 +40,7 @@ public readonly struct SessionPlanEntityInfo {
 
 }
 
-public readonly struct SessionPlanSquadInfo {
+public readonly struct SessionPlanSquadInfo : ISessionPlanSquad {
 
     /// <summary>
     /// Get or initialise the ID of the team owner.
@@ -69,6 +69,6 @@ public readonly struct SessionPlanSquadInfo {
 
 }
 
-public readonly struct SessionPlanGoalInfo {
+public readonly struct SessionPlanGoalInfo : ISessionPlanGoal {
 
 }

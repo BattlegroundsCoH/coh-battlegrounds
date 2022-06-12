@@ -69,6 +69,11 @@ public class SessionCompiler : ISessionCompiler {
             .Assignment("bg_db.towing_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowingUpgrade))
             .Assignment("bg_db.towed_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowUpgrade));
 
+        // If any planning data
+        if (session.HasPlanning) {
+            sourceBuilder.Assignment("bg_plandata", GetPlanning(session));
+        }
+
         // Write the precompiled database
         this.WritePrecompiledDatabase(sourceBuilder, participants.Map(x => x.SelectedCompany).NotNull());
 
@@ -122,6 +127,58 @@ public class SessionCompiler : ISessionCompiler {
 
     }
 
+    protected virtual Dictionary<string, object> GetPlanning(ISession session) {
+
+        // Create containers
+        var entityList = new List<object>();
+        var squadList = new List<object>();
+        var goalList = new List<object>();
+
+        // Grab data
+        var entities = session.GetPlanEntities();
+        var squads = session.GetPlanSquads();
+        var goals = session.GetPlanGoals();
+
+        // Loop over entities
+        for (int i = 0; i < entities.Length; i++) {
+            var entity = new Dictionary<string, object>() {
+                ["team"] = entities[i].TeamOwner,
+                ["player"] = entities[i].TeamMemberOwner,
+                ["ebp"] = entities[i].Blueprint.Name,
+                ["pos"] = entities[i].Spawn,
+                ["mode"] = entities[i].Lookat is null ? "place" : (entities[i].IsDirectional ? "lookat" : "line"),
+            };
+            if (entities[i].Lookat is GamePosition lookat) {
+                entity["target"] = lookat;
+            }
+            entityList.Add(entity);
+        }
+
+        // Loop over entities
+        for (int i = 0; i < squads.Length; i++) {
+            var squad = new Dictionary<string, object>() {
+                ["team"] = squads[i].TeamOwner,
+                ["player"] = squads[i].TeamMemberOwner,
+                ["sid"] = squads[i].SpawnId,
+                ["pos"] = squads[i].Spawn,
+            };
+            if (squads[i].Lookat is GamePosition lookat) {
+                squad["target"] = lookat;
+            }
+            squadList.Add(squad);
+        }
+
+        // TODO: Goals
+
+        // Return plan data
+        return new() {
+            ["entities"] = entityList,
+            ["squads"] = squadList,
+            ["objectives"] = goalList
+        };
+
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -147,7 +204,7 @@ public class SessionCompiler : ISessionCompiler {
             };
 
             // Write DB
-            _ = lua.Assignment($"bg_db.slot_items[\"{ibp.GetScarName()}\"]", ibpData);
+            lua.Assignment($"bg_db.slot_items[\"{ibp.GetScarName()}\"]", ibpData);
 
         }
 
