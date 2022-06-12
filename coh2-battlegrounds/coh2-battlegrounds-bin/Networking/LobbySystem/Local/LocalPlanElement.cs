@@ -31,7 +31,7 @@ public class LocalPlanElement : ILobbyPlanElement {
     /// <summary>
     /// 
     /// </summary>
-    public GamePosition LookatPosition { get; }
+    public GamePosition? LookatPosition { get; }
 
     /// <summary>
     /// 
@@ -66,7 +66,7 @@ public class LocalPlanElement : ILobbyPlanElement {
         this.ElementId = eid;
         this.ElementOwnerId = owner;
         this.SpawnPosition = spawn;
-        this.LookatPosition = lookat ?? GamePosition.Naught;
+        this.LookatPosition = lookat;
         this.Blueprint = blueprint;
         this.CompanyId = ushort.MaxValue;
         this.IsEntity = true;
@@ -87,7 +87,7 @@ public class LocalPlanElement : ILobbyPlanElement {
         this.ElementId = eid;
         this.ElementOwnerId = owner;
         this.SpawnPosition = spawn;
-        this.LookatPosition = lookat ?? GamePosition.Naught;
+        this.LookatPosition = lookat;
         this.Blueprint = blueprint;
         this.CompanyId = companyId;
         this.IsDirectional = lookat is not null;

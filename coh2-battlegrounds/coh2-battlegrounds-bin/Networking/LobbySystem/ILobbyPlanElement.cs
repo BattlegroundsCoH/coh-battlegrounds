@@ -25,7 +25,7 @@ public interface ILobbyPlanElement {
     /// <summary>
     /// 
     /// </summary>
-    GamePosition LookatPosition { get; }
+    GamePosition? LookatPosition { get; }
 
     /// <summary>
     /// 

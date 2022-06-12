@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 using Battlegrounds.Game.Database;
 using Battlegrounds.Modding;
@@ -66,5 +67,29 @@ public struct SessionInfo {
     /// Get or set if the supply system should be enabled.
     /// </summary>
     public bool EnableSupply { get; set; }
+
+    /// <summary>
+    /// Get or set the additional options to give to the session
+    /// </summary>
+    [NotNull]
+    public Dictionary<string, int> AdditionalOptions { get; set; }
+
+    /// <summary>
+    /// Get or set the array of goals that must be accomplished throughout the session.
+    /// </summary>
+    [NotNull]
+    public SessionPlanGoalInfo[] Goals { get; set; }
+
+    /// <summary>
+    /// Get or set the array of entities to spawn at the start of the session.
+    /// </summary>
+    [NotNull]
+    public SessionPlanEntityInfo[] Entities { get; set; }
+
+    /// <summary>
+    /// Get or set array of squads to spawn at the start of the session.
+    /// </summary>
+    [NotNull]
+    public SessionPlanSquadInfo[] Squads { get; set; }
 
 }

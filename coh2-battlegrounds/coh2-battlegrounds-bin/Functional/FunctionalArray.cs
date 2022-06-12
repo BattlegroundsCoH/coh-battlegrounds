@@ -10,21 +10,6 @@ namespace Battlegrounds.Functional;
 public static class FunctionalArray {
 
     /// <summary>
-    /// Loop through each element in an array and execute a function that can mutate the element.
-    /// </summary>
-    /// <typeparam name="T">The type the array is of.</typeparam>
-    /// <param name="array">The array to run method on.</param>
-    /// <param name="func">The function to run on each element.</param>
-    /// <returns>A new array consisting of the elements returned through the given function.</returns>
-    public static T[] ForEach<T>(this T[] array, Func<T, T> func) {
-        T[] t = new T[array.Length];
-        for (int i = 0; i < array.Length; i++) {
-            t[i] = func(array[i]);
-        }
-        return t;
-    }
-
-    /// <summary>
     /// Loop through each element in an array and execute a function that cannot mutate the element.
     /// </summary>
     /// <typeparam name="T">The type the array is of.</typeparam>
@@ -197,7 +182,7 @@ public static class FunctionalArray {
     /// <param name="max">Largest index in array to pick from.</param>
     /// <returns>A uniformly picked element from <paramref name="array"/>.</returns>
     public static T Random<T>(this T[] array, int min = 0, int max = int.MaxValue)
-        => Random(array, BattlegroundsInstance.RNG);
+        => Random(array, BattlegroundsInstance.RNG, min, max);
 
     /// <summary>
     /// Pick a random element from array.
@@ -242,7 +227,7 @@ public static class FunctionalArray {
             return array;
         var before = array[0..i];
         var after = array[(i+1)..];
-        return before.Concat(after).ToArray();
+        return before.Concat(after);
     }
 
     /// <summary>
@@ -262,5 +247,33 @@ public static class FunctionalArray {
         return state;
     }
 
-}
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="K"></typeparam>
+    /// <typeparam name="V"></typeparam>
+    /// <param name="array"></param>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static Dictionary<K,V> ToLookup<T,K,V>(this T[] array, Func<T,K> key, Func<T,V> value) where K : notnull {
+        var dict = new Dictionary<K,V>();
+        for (int i = 0; i < array.Length; i++) {
+            dict.Add(key(array[i]), value(array[i]));
+        }
+        return dict;
+    }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="K"></typeparam>
+    /// <typeparam name="V"></typeparam>
+    /// <param name="array"></param>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public static Dictionary<K, V> ToLookup<K, V>(this V[] array, Func<V, K> key) where K : notnull
+        => array.ToLookup(key, x => x);
+
+}

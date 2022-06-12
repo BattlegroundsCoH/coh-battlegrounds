@@ -90,5 +90,16 @@ public static class FunctionalGeneric {
         return dummy.GetEnumerator();
     }
 
+    public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> enumerable) {
+        List<T> notnulls = new();
+        var itt = enumerable.GetEnumerator();
+        while (itt.MoveNext()) {
+            if (itt.Current is not null) {
+                notnulls.Add(itt.Current);
+            }
+        }
+        return notnulls;
+    }
+
 }
 

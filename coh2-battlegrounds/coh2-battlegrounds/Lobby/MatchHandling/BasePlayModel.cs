@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Media;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
@@ -44,6 +46,11 @@ internal abstract class BasePlayModel {
     // handlers for cancel/error cases
     private PrepareCancelHandler? m_prepCancelHandler;
 
+    /// <summary>
+    /// Initialise a <see cref="BasePlayModel"/> instance.
+    /// </summary>
+    /// <param name="handle">The lobby handle to create play instance for.</param>
+    /// <param name="lobbyChat">The chat instance to use when communicating progress.</param>
     public BasePlayModel(ILobbyHandle handle, LobbyChatSpectatorModel lobbyChat) {
 
         // Set base stuff
@@ -104,7 +111,7 @@ internal abstract class BasePlayModel {
 
         // Try get gamemode value
         if (!int.TryParse(gamemodeValue, out int gamemodeoption)) {
-            Trace.WriteLine($"Failed to convert gamemode option {gamemodeoption} into an integer value.", nameof(SingleplayerModel));
+            Trace.WriteLine($"Failed to convert gamemode option {gamemodeoption} into an integer value.", nameof(BasePlayModel));
             gamemodeoption = 0;
         }
 
@@ -133,18 +140,63 @@ internal abstract class BasePlayModel {
             throw new StartupException($"Failed to fetch scenario {scenario} from scenario list.");
         }
 
+        // Grab gamemode
+        var gamemodeInstance = WinconditionList.GetGamemodeByName(package.GamemodeGUID, gamemode);
+        if (gamemodeInstance is null) {
+            throw new StartupException($"Failed to find gamemode with name '{gamemode}' from wincondition list (mod package = {package.ID}).");
+        }
+
+        // Grab tuning
+        var tuningInstance = ModManager.GetMod<ITuningMod>(package.TuningGUID);
+        if (tuningInstance is null) {
+            throw new StartupException($"Failed to fetch tuning mod.");
+        }
+
+        // Create plan containers
+        SessionPlanEntityInfo[] sessionEntities;
+        SessionPlanGoalInfo[] sessionGoals;
+        SessionPlanSquadInfo[] sessionSquads;
+
+        // Create plan info
+        if (gamemodeInstance.HasPlanning && this.m_handle.PlanningHandle is not null) {
+
+            // Union participants and map by index
+            var participants = allies.Concat(axis).ToLookup(x => x.GetID());
+
+            // Grab elements
+            var elements = this.m_handle.PlanningHandle.GetPlanningElements(0).Concat(this.m_handle.PlanningHandle.GetPlanningElements(1));
+
+            // For now, just init goals to be empty
+            sessionGoals = Array.Empty<SessionPlanGoalInfo>();
+
+            // Invoke helper functions
+            sessionEntities = CreatePlanningEntities(participants, elements);
+            sessionSquads = CreatePlanningSquads(participants, elements);
+
+        } else {
+            
+            // Init empty data
+            sessionEntities = Array.Empty<SessionPlanEntityInfo>();
+            sessionGoals = Array.Empty<SessionPlanGoalInfo>();
+            sessionSquads = Array.Empty<SessionPlanSquadInfo>();
+
+        }
+
         // Create info data
         this.m_info = new() {
             FillAI = false,
             SelectedScenario = scen,
-            SelectedGamemode = WinconditionList.GetGamemodeByName(package.GamemodeGUID, gamemode),
+            SelectedGamemode = gamemodeInstance,
             SelectedGamemodeOption = gamemodeoption,
             IsOptionValue = true,
-            SelectedTuningMod = ModManager.GetMod<ITuningMod>(package.TuningGUID) ?? throw new StartupException($"Failed to fetch tuning mod."),
+            SelectedTuningMod = tuningInstance,
             Allies = allies,
             Axis = axis,
             EnableDayNightCycle = enableWeather,
-            EnableSupply = enableSupply
+            EnableSupply = enableSupply,
+            Squads = sessionSquads,
+            Goals = sessionGoals,
+            Entities = sessionEntities
         };
 
     }
@@ -175,6 +227,67 @@ internal abstract class BasePlayModel {
 
     }
 
+    protected static SessionPlanEntityInfo[] CreatePlanningEntities(Dictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements) {
+
+        // Grab planning entities
+        var planEntities = planElements.Filter(x => x.IsEntity);
+
+        // Create array
+        var entities = new SessionPlanEntityInfo[planEntities.Length];
+
+        // Loop over all entities
+        for (int i = 0; i < planEntities.Length; i++) {
+
+            // Get participant
+            var p = participants[planEntities[i].ElementOwnerId];
+
+            // Create entity
+            entities[i] = new() {
+                TeamOwner = (int)p.TeamIndex,
+                TeamMemberOwner = p.PlayerIndexOnTeam,
+                Blueprint = BlueprintManager.FromBlueprintName<EntityBlueprint>(planEntities[i].Blueprint),
+                Spawn = planEntities[i].SpawnPosition,
+                Lookat = planEntities[i].LookatPosition,
+                IsDirectional = planEntities[i].IsDirectional
+            };
+
+        }
+
+        // Return
+        return entities;
+
+    }
+
+    protected static SessionPlanSquadInfo[] CreatePlanningSquads(Dictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements) {
+
+        // Grab planning squads
+        var planSquads = planElements.Filter(x => !x.IsEntity);
+
+        // Create array
+        var squads = new SessionPlanSquadInfo[planSquads.Length];
+
+        // Loop over all entities
+        for (int i = 0; i < planSquads.Length; i++) {
+
+            // Get participant
+            var p = participants[planSquads[i].ElementOwnerId];
+
+            // Create squad
+            squads[i] = new() {
+                TeamOwner = (int)p.TeamIndex,
+                TeamMemberOwner = p.PlayerIndexOnTeam,
+                SpawnId = planSquads[i].CompanyId,
+                Spawn = planSquads[i].SpawnPosition,
+                Lookat = planSquads[i].LookatPosition
+            };
+
+        }
+
+        // Return
+        return squads;
+
+    }
+
     protected void HandleStartupCancel(IStartupStrategy sender, object? caller, string reason) {
         this.m_chat.SystemMessage(reason, Colors.Red);
         this.m_handle.NotifyError("startup", reason);
@@ -197,12 +310,12 @@ internal abstract class BasePlayModel {
         } catch (ChecksumViolationException checksumViolation) {
 
             // Log checksum violation
-            Trace.WriteLine(checksumViolation, nameof(SingleplayerModel));
+            Trace.WriteLine(checksumViolation, nameof(BasePlayModel));
 
         } catch (OperationCanceledException cancelledException) {
 
             // Log checksum violation
-            Trace.WriteLine(cancelledException, nameof(SingleplayerModel));
+            Trace.WriteLine(cancelledException, nameof(BasePlayModel));
 
         }
 
