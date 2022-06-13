@@ -47,7 +47,7 @@
         "DisplayDesc": "37",
         "DefaultOption": 1,
         "Files": [
-          "Battlegrounds:bg_common.bg_wc.coh2_battlegrounds_defence"
+          "Gamemode:bg_common.bg_wc.coh2_battlegrounds_defence;coh2_battlegrounds_defence.scar"
         ],
         "Options": [
           {

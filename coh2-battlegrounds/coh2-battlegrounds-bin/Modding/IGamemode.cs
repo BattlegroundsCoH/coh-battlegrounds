@@ -111,6 +111,11 @@ public interface IGamemode {
     IGamemodeAuxiliaryOption[] AuxiliaryOptions { get; }
 
     /// <summary>
+    /// Get the array of additional files to include when compiling
+    /// </summary>
+    string[] IncludeFiles { get; }
+
+    /// <summary>
     /// Get the index of the default option.
     /// </summary>
     int DefaultOptionIndex { get; }

@@ -186,6 +186,11 @@ public sealed class Wincondition : IGamemode {
     public string? TeamName2 { get; init; }
 
     /// <summary>
+    /// Get or initialise the include files
+    /// </summary>
+    public string[] IncludeFiles { get; init; }
+
+    /// <summary>
     /// Initialise a new <see cref="Wincondition"/> instance.
     /// </summary>
     /// <param name="name">The name of the wincondition.</param>
@@ -197,6 +202,7 @@ public sealed class Wincondition : IGamemode {
         this.DisplayName = UcsString.CreateLocString(name);
         this.Options = Array.Empty<IGamemodeOption>();
         this.AuxiliaryOptions = Array.Empty<IGamemodeAuxiliaryOption>();
+        this.IncludeFiles = Array.Empty<string>();
         this.PlannableEntities = new();
     }
 

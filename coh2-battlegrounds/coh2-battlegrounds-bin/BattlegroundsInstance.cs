@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 
 using Battlegrounds.Functional;
@@ -122,6 +123,9 @@ public static class BattlegroundsInstance {
                 Directory.CreateDirectory(userpath);
                 Trace.WriteLine("User path missing - this may cause errors", nameof(BattlegroundsInstance));
             }
+
+            // Install folder
+            this.ResolveDirectory(BattlegroundsPaths.INSTALL_FOLDER, installpath);
 
             // User folder
             this.ResolveDirectory(BattlegroundsPaths.COMPANY_FOLDER, $"{doc}companies\\");
@@ -281,6 +285,47 @@ public static class BattlegroundsInstance {
     /// <exception cref="ArgumentException"/>
     public static string GetRelativePath(string pathId, string appendPath = "")
         => Path.Combine(__instance.GetPath(pathId), appendPath);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="extension"></param>
+    /// <returns></returns>
+    public static string GetRelativeVirtualPath(string path, string extension = "") {
+
+        // Grab relative
+        string relative = path.IndexOf(':') is int rel && rel is not -1 ? path[..rel] : string.Empty switch {
+            "Gamemode" => GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "bg_wc"),
+            _ => GetRelativePath(BattlegroundsPaths.INSTALL_FOLDER)
+        };
+
+        // Cut last
+        if (relative[^1] is '\\') {
+            relative = relative[..^2];
+        }
+
+        // Create path
+        StringBuilder pathBuilder = new(relative);
+
+        // Split
+        var dotted = path.Split('.');
+
+        // Create path from dots
+        for (int i = 0; i < dotted.Length; i++) {
+            pathBuilder.Append('\\');
+            pathBuilder.Append(dotted[i]);
+        }
+
+        // If an extension is desired, we add it
+        if (!string.IsNullOrEmpty(extension)) {
+            pathBuilder.Append(extension);
+        }
+
+        // Return path
+        return pathBuilder.ToString();
+
+    }
 
     /// <summary>
     /// Static constructor
