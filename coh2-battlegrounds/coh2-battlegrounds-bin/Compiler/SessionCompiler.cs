@@ -56,6 +56,12 @@ public class SessionCompiler : ISessionCompiler {
             },
         };
 
+        // If there's a specific team order, write it out
+        if (session.TeamOrder is not TeamMode.Any) {
+            bg_settings["team_first"] = session.TeamOrder is TeamMode.Fixed ? 1 : 2;
+            bg_settings["team_second"] = session.TeamOrder is TeamMode.Fixed ? 2 : 1;
+        }
+
         // Prepare company data
         Dictionary<string, int> aiCounters = new() { ["allies"] = 0, ["axis"] = 0 };
         Dictionary<string, Dictionary<string, object>> bg_companies = participants
@@ -148,6 +154,7 @@ public class SessionCompiler : ISessionCompiler {
                 ["pos"] = entities[i].Spawn,
                 ["mode"] = entities[i].Lookat is null ? "place" : (entities[i].IsDirectional ? "lookat" : "line"),
             };
+            // TODO: Add width field
             if (entities[i].Lookat is GamePosition lookat) {
                 entity["target"] = lookat;
             }

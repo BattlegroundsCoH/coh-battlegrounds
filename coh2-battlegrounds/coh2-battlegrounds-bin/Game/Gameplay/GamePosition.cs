@@ -1,5 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
+using Battlegrounds.Lua.Generator.RuntimeServices;
+
 namespace Battlegrounds.Game; 
 
 /// <summary>
@@ -14,6 +16,7 @@ public struct GamePosition {
     /// <summary>
     /// The X-coordinate
     /// </summary>
+    [LuaName("x")]
     public double X {
         get => this.m_x; 
         set => this.m_x = value; 
@@ -22,6 +25,7 @@ public struct GamePosition {
     /// <summary>
     /// The Y-coordinate
     /// </summary>
+    [LuaName("y")]
     public double Y {
         get => this.m_y; 
         set => this.m_y = value;
@@ -30,6 +34,7 @@ public struct GamePosition {
     /// <summary>
     /// The Z-coordinate
     /// </summary>
+    [LuaName("z")]
     public double Z {
         get => this.m_z; 
         set => this.m_z = value;

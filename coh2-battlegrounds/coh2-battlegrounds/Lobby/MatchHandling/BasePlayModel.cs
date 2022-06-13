@@ -182,6 +182,17 @@ internal abstract class BasePlayModel {
 
         }
 
+        // Create container for additional settings
+        var additionalSettings = new Dictionary<string, int>();
+
+        // Add custom settings
+        for (int i = 0; i < gamemodeInstance.AuxiliaryOptions.Length; i++) {
+            string optionKey = gamemodeInstance.AuxiliaryOptions[i].Name;
+            if (int.TryParse(this.m_handle.Settings[optionKey], out int v)) {
+                additionalSettings[optionKey] = v;
+            }
+        }
+
         // Create info data
         this.m_info = new() {
             FillAI = false,
@@ -196,7 +207,10 @@ internal abstract class BasePlayModel {
             EnableSupply = enableSupply,
             Squads = sessionSquads,
             Goals = sessionGoals,
-            Entities = sessionEntities
+            Entities = sessionEntities,
+            IsFixedTeamOrder = gamemodeInstance.RequireFixed,
+            ReverseTeamOrder = this.m_handle.AreTeamRolesSwapped(),
+            AdditionalOptions = additionalSettings
         };
 
     }

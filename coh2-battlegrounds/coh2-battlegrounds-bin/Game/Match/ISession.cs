@@ -7,6 +7,12 @@ using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Match;
 
+public enum TeamMode {
+    Any,
+    Fixed,
+    FixedReverse
+}
+
 /// <summary>
 /// Interface for session data for a session to be played.
 /// </summary>
@@ -23,9 +29,14 @@ public interface ISession {
     bool AllowPersistency { get; }
 
     /// <summary>
-    /// 
+    /// Get if the session includes planning data.
     /// </summary>
     bool HasPlanning { get; }
+
+    /// <summary>
+    /// Get if the session has a fixed order.
+    /// </summary>
+    TeamMode TeamOrder { get; }
 
     /// <summary>
     /// Get the scenario to be played.

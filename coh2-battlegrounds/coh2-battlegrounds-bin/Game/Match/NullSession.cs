@@ -35,6 +35,8 @@ public class NullSession : ISession {
 
     public bool HasPlanning => false;
 
+    public TeamMode TeamOrder => TeamMode.Any;
+
     public NullSession() { this.AllowPersistency = false; }
 
     public NullSession(bool allowPersistency) { this.AllowPersistency = allowPersistency; }

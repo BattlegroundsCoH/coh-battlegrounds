@@ -445,7 +445,7 @@ function BG_PhaseUpdate()
 end
 
 function BG_OnEnterNewPhase()
-    if _bg_custom.phase_current == 2 then -- Could do more messages here (Within context of the player's sitution)
+    if _bg_custom.phase_current == 2 then -- Could do more messages here (Within context of the player's situation)
         Util_MissionTitle(BG_LocString(16), 3, 8, 2 );
     else
         Util_MissionTitle(BG_LocString(17), 3, 8, 2 );

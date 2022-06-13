@@ -79,6 +79,8 @@ public class Session : ISession {
     /// </summary>
     public bool HasPlanning => this.Gamemode.HasPlanning;
 
+    public TeamMode TeamOrder { get; private set; }
+
     /// <summary>
     /// 
     /// </summary>
@@ -199,11 +201,20 @@ public class Session : ISession {
             session.AddSetting("sypply_system", true);
         }
 
+        // Add other optional settings
+        foreach (var (k,v) in sessionInfo.AdditionalOptions) {
+            session.AddSetting(k, v);
+        }
+
         // Collect the custom names
         for (int i = 0; i < session.Participants.Length; i++) {
+            
+            // Grab company
             var comp = session.Participants[i].SelectedCompany;
             if (comp is null)
                 continue;
+            
+            // Collect custom names from units
             var units = comp.Units;
             for (int j = 0; j < units.Length; j++) { 
                 if (!string.IsNullOrEmpty(units[j].CustomName)) {
@@ -211,6 +222,13 @@ public class Session : ISession {
                 }
             }
 
+        }
+
+        // Register order info
+        if (sessionInfo.IsFixedTeamOrder) {
+            session.TeamOrder = sessionInfo.ReverseTeamOrder ? TeamMode.FixedReverse : TeamMode.Fixed;
+        } else {
+            session.TeamOrder = TeamMode.Any;
         }
 
         // Return the new session

@@ -4,11 +4,141 @@
 
 function BattlegroundsDefence_InitGamemode()
 
-	-- Grab points
-	local defender_points = Setup_GetWinConditionOption();
+	-- Init settings
+	DefenceSettingsData = {
 
-	-- Grab time (Defined in .json package)
-	local defend_time = bg_settings.options.Time;
+		-- Grab points
+		MaxPoints = Setup_GetWinConditionOption(),
+		DefenderPoints = Setup_GetWinConditionOption(),
+
+		-- Create counter Id
+		Counter = 333,
+
+		-- Create teritory group
+		Sectors = {}
+
+	}
+
+	-- Define teams
+	BattlegroundsDefence_DefineTeams()
+
+	-- Init sectors
+	BattlegroundsDefence_InitSectors()
+
+	-- Set points
+	WinWarning_SetMaxTickers(DefenceSettingsData.DefenderPoints, DefenceSettingsData.MaxPoints - DefenceSettingsData.DefenderPoints)
+
+	-- Start timer
+	Timer_Start(DefenceSettingsData.Counter, bg_settings.gameoptions.Time)
+
+	-- Add interval to update points
+	Rule_AddInterval(BattlegroundsDefence_UpdatePoints, 1);
+	Rule_AddInterval(BattlegroundsDefence_CheckTime, 5);
+
+end
+
+function BattlegroundsDefence_DefineTeams()
+	-- Define team map
+	__BGDefenceTeams = {{}, {}}
+	-- Loop over all players and assign
+	local t1 = 0
+	local t2 = 0
+	for i = 1, World_GetPlayerCount() do
+		local p = World_GetPlayerAt(i)
+		local tid = Player_GetTeam(p)
+		if tid == bg_settings.team_first then
+			__BGDefenceTeams[tid][t1] = p
+			t1 = t1 + 1
+		elseif tid == bg_settings.team_second then
+			__BGDefenceTeams[tid][t2] = p
+			t2 = t2 + 1
+		end
+	end
+end
+
+function BattlegroundsDefence_InitSectors()
+
+	-- Get first player of the defending team
+	local defender = __BGDefenceTeams[bg_settings.team_second][1]
+
+	-- Loop over stategic points
+	for i=0, World_GetNumEntities()-1 do
+		local entity = World_GetEntity(i)
+
+		-- Collect point if strategic point
+		if Entity_IsStrategicPoint(entity) then
+
+			-- Insert into list of sectors
+			table.insert(DefenceSettingsData.Sectors, entity)
+			
+			-- Capture by defender
+			Entity_InstantCaptureStrategicPoint(entity, defender)
+
+		end
+	end
+
+end
+
+function BattlegroundsDefence_UpdatePoints()
+
+	-- Get first player of the defending and attacking teams
+	local attacker = __BGDefenceTeams[bg_settings.team_first][1]
+	local defender = __BGDefenceTeams[bg_settings.team_second][1]
+
+	-- Create counts
+	local counts = { 0, 0 }
+
+	-- Collect status
+	for i=1, #DefenceSettingsData.Sectors do
+		if Entity_IsStrategicPointCapturedBy(DefenceSettingsData.Sectors[i], defender) then
+			counts[bg_settings.team_second] = counts[bg_settings.team_second] + 1
+		elseif Entity_IsStrategicPointCapturedBy(DefenceSettingsData.Sectors[i], attacker) then
+			counts[bg_settings.team_first] = counts[bg_settings.team_first] + 1
+		end
+	end
+
+	-- Check
+	local defenderPenalty = counts[bg_settings.team_second] - (#DefenceSettingsData.Sectors - counts[bg_settings.team_first])
+	if defenderPenalty < 0 then
+		defenderPenalty = 0
+	elseif defenderPenalty > 5 then
+		defenderPenalty = 5
+	end
+
+	-- Update points
+	DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - defenderPenalty
+	if DefenceSettingsData.DefenderPoints <= 0 then
+
+		-- Set to 0
+		DefenceSettingsData.DefenderPoints = 0
+
+		-- Set winner to attacking team
+		BG_WorldSetTeamWin(Player_GetTeam(__BGDefenceTeams[bg_settings.team_first][1]))
+
+	end
+
+	-- Update visually
+	WinWarning_SetMaxTickers(DefenceSettingsData.DefenderPoints, DefenceSettingsData.MaxPoints - DefenceSettingsData.DefenderPoints)
+
+end
+
+function BattlegroundsDefence_CheckTime()
+
+	-- Check timer
+	if Timer_GetRemaining(DefenceSettingsData.Counter) <= 0 then
+
+		-- Remove rules
+		Rule_Remove(BattlegroundsDefence_UpdatePoints)
+		Rule_RemoveMe();
+
+		-- Pick winner
+		if DefenceSettingsData.DefenderPoints < DefenceSettingsData.MaxPoints / 2 then -- defenders have less than half, so attackers win
+			BG_WorldSetTeamWin(Player_GetTeam(__BGDefenceTeams[bg_settings.team_first][1]))
+		else -- defenders have more than half, so defenders win
+			BG_WorldSetTeamWin(Player_GetTeam(__BGDefenceTeams[bg_settings.team_second][1]))
+		end
+
+	end
 
 end
 
@@ -18,6 +148,110 @@ end
 
 function BattlegroundsDefence_InitDefence()
 
+	-- Grab defence data and spawn it in
+	local defence_entities = bg_plandata.entities;
+	for i=1, #defence_entities do
+
+		-- Grab owner and ebp
+		local owner = BattlegroundsDefence_SolveOwner(defence_entities[i].team, defence_entities[i].player)
+		local ebp = BP_GetEntityBlueprint(defence_entities[i].ebp)
+
+		-- Grab positions
+		local pos = Util_GetPosition(pos.x, pos.y, pos.z)
+		local lookat = Util_GetPosition(lookat.x, lookat.y, lookat.z)
+
+		if defence_entities[i].mode == "place" then
+			Entity_Spawn(BattlegroundsDefence_CreateEntity(ebp, owner, pos, pos))
+		elseif defence_entities[i].mode == "lookat" then
+			Entity_Spawn(BattlegroundsDefence_CreateEntity(ebp, owner, pos, pos))
+		elseif defence_entities[i].mode == "line" then
+			BattlegroundsDefence_SpawnLine(owner, ebp, pos, lookat, defence_entities[i].width)
+		end
+	end
+
+	-- Grab defence unit data and call them in
+	local defence_squads = bg_plandata.squads;
+	for i=1, #defence_squads do
+		local owner = BattlegroundsDefence_SolveOwner(defence_squads[i].team, defence_squads[i].player)
+		local squad = BG_DeploySquad(owner, defence_squads[i].sid, true)
+		if squad then
+			BattlegroundsDefence_SetupSquad(squad, defence_squads[i].pos, defence_squads[i].target)
+		end
+	end
+
+end
+
+function BattlegroundsDefence_SolveOwner(team, indexOnTeam)
+	return __BGDefenceTeams[team+1][indexOnTeam]
+end
+
+function BattlegroundsDefence_CreateEntity(bp, owner, pos, lookat)
+	if owner == nil then
+		return Entity_CreateENV(bp, pos, lookat)
+	else
+		return Entity_Create(bp, owner, pos, lookat)
+	end
+end
+
+function BattlegroundsDefence_SpawnLine(owner, bp, startpos, endpos, width)
+
+	-- Grab positions
+	startpos = Util_GetPosition(startpos.x, startpos.y, startpos.z)
+	endpos = Util_GetPosition(endpos.x, endpos.y, endpos.z)
+
+	-- Grab distance
+	local dist = Util_GetDistance(startpos, endpos)
+
+	-- Grab amount to spawn
+	local count = math.floor(dist / width)
+
+	-- Loop over
+	for i=1, count do
+
+		-- Grab pos
+		local pos = Util_GetPositionFromAtoB(startpos, endpos, i / count)
+		local lookat = Util_GetPositionFromAtoB(startpos, endpos, i / count + 0.1)
+		lookat = Util_GetPosition(0,0,0) -- TODO: Properly get pos
+
+		-- Create entity
+		local entity = BattlegroundsDefence_CreateEntity(bp, owner, pos, lookat)
+
+		-- Grab nearest spawnable position
+		local bestpos = World_GetSpawnablePosition(pos, entity)
+
+		-- Update position (Maybe check if too far away then bail)
+		Entity_SetPosition(entity, bestpos)
+
+	end
+
+end
+
+function BattlegroundsDefence_SetupSquad(squad, pos, lookat)
+
+	-- Grab positions
+	pos = Util_GetPosition(pos.x, pos.y, pos.z)
+	lookat = Util_GetPosition(lookat.x, lookat.y, lookat.z) and lookat
+
+	-- Try garrison
+	local sg_temp = SGroup_FromSquad(squad)
+	local garrisonId = nil
+
+	-- Try spawn in garrison if infantry
+	if Squad_IsInfantrySquad(squad) then
+		garrisonId = Util_GarrisonNearbyBuilding(sg_temp, pos, 7.5, false)
+	end
+
+	-- If not garrisoned, warp to pos and look at target (if any)
+	if garrisonId == nil then
+		Squad_WarpToPos(squad, pos)
+		if lookat ~= nil then
+			Squad_FacePosition(squad, lookat)
+			if Squad_GetSyncWeapon(squad) ~= nil then
+				Cmd_InstantSetupTeamWeapon(sg_temp)
+			end
+		end
+	end
+
 end
 
 ------------------------------------------------------------------------------------
@@ -25,7 +259,7 @@ end
 ------------------------------------------------------------------------------------
 
 function BattlegroundsDefence_InitObjectives()
-
+	-- TODO: Implement
 end
 
 ------------------------------------------------------------------------------------
@@ -35,7 +269,7 @@ end
 function BattlegroundsDefence_InitAI()
 
 	-- Invoke AI wave init if enabled (Defined in .json package)
-	if bg_settings.options.Support then
+	if bg_settings.gameoptions.Support then
 		BattlegroundsDefence_InitAIWaves();
 	end
 

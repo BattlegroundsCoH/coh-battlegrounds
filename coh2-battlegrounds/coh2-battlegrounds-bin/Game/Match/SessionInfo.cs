@@ -32,6 +32,16 @@ public struct SessionInfo {
     public bool IsOptionValue { get; set; }
 
     /// <summary>
+    /// Get or set if the order of the teams is fixed.
+    /// </summary>
+    public bool IsFixedTeamOrder { get; set; }
+
+    /// <summary>
+    /// Get or set if the team order is reversed.
+    /// </summary>
+    public bool ReverseTeamOrder { get; set; }
+
+    /// <summary>
     /// The selected scenario.
     /// </summary>
     public Scenario SelectedScenario { get; set; }

@@ -108,7 +108,7 @@ function BG_GetTempCrewPtr(playerData, squadID)
     end
 end
 
-function BG_DeploySquad(player, unit_id)
+function BG_DeploySquad(player, unit_id, ignoreTransport)
 
     -- Get the player reference id
     local playerRefID = BG_GetPlayerID(player);
@@ -118,7 +118,7 @@ function BG_DeploySquad(player, unit_id)
 
     -- Not a valid unit to spawn
     if unit_data == nil then
-        return;
+        return false;
     end
 
     -- Make sure we don't spawn in something twice
@@ -129,7 +129,7 @@ function BG_DeploySquad(player, unit_id)
         local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
 
         -- Call in the unit
-        local squad, crewSquad, transportSquad = BG_CallInUnit(unit_data, player, gotopos, spawnfrom);
+        local squad, crewSquad, transportSquad = BG_CallInUnit(unit_data, player, gotopos, spawnfrom, ignoreTransport);
 
         -- Register the unit
         _bg_playerData[playerRefID].deployed[Squad_GetGameID(squad)] = unit_data.company_id;
@@ -169,15 +169,26 @@ function BG_DeploySquad(player, unit_id)
             BG_RefreshCompanyView();
         end
 
+        -- Return unit
+        return squad
+
     end
+    
+    -- Return fail
+    return false;
 
 end
 
-function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
+function BG_CallInUnit(unit_data, player, gotopos, spawnfrom, ignoreTransport)
 
     -- Don't call in unit if the match has stopped
     if _bg_matchStopped == true then
         return;
+    end
+
+    -- Handle default case for ignore transport
+    if ignoreTransport == nil then
+        ignoreTransport = false
     end
 
     -- Create the squad
@@ -188,10 +199,10 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom)
     local transportSquad = nil;
 
     -- Was a transport method specified?
-    if unit_data.transport ~= nil then
+    if unit_data.transport ~= nil and not ignoreTransport then
 
         -- One of the 'deploy with land transport' methods
-        if (unit_data.transport.mode == 1 or unit_data.transport.mode == 2)  then
+        if unit_data.transport.mode == 1 or unit_data.transport.mode == 2 then
 
             -- Create transport squad
             transportSquad = Squad_CreateAndSpawnToward(BP_GetSquadBlueprint(unit_data.transport.sbp), player, 0, spawnfrom, gotopos );
