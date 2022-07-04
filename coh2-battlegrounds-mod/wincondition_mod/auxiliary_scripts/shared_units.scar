@@ -5,6 +5,8 @@ function BG_SolveNewUnit(playerData, sid)
     local squad = sid
     if scartype(sid) == ST_NUMBER then
         squad = Squad_FromWorldID(sid);
+    else -- we're straight up being given a squad in sid, so we must correct sid to be a number
+        sid = Squad_GetGameID(squad)
     end
 
     -- Is this squad not one we've deployed?

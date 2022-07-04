@@ -16,14 +16,14 @@ public class LobbyParticipantSlotModel : LobbySlot {
     public override Visibility IsCompanySelectorVisible 
         => (this.Slot.IsSelf() && this.SelectableCompanies.Count > 1) ? Visibility.Visible : Visibility.Collapsed;
 
-    public LobbyParticipantSlotModel(LobbyAPIStructs.LobbySlot teamSlot, LobbyTeam team) : base(teamSlot, team) {
-        this.ContextMenu = new LobbyParticipantContextMenu(teamSlot.API ?? throw new Exception("Expected valid lobbyAPI isntance!"), this);
+    public LobbyParticipantSlotModel(ILobbySlot teamSlot, LobbyTeam team) : base(teamSlot, team) {
+        this.ContextMenu = new LobbyParticipantContextMenu(teamSlot.Handle ?? throw new Exception("Expected valid lobbyAPI isntance!"), this);
     }
 
     protected override void RefreshCompanyView() {
 
         // Bail if slot API handle is invalid for some reason
-        if (this.Slot.API is null) {
+        if (this.Slot.Handle is null) {
             return;
         }
 
@@ -45,8 +45,8 @@ public class LobbyParticipantSlotModel : LobbySlot {
             this.SelectedCompanyIndex = 0;
 
             // Set self company
-            if (this.m_slot.Occupant is LobbyAPIStructs.LobbyMember mem) {
-                mem.Company = this.SelectedCompany;
+            if (this.m_slot.Occupant is ILobbyMember mem) {
+                mem.ChangeCompany(this.SelectedCompany);
             }
 
             // Trigger notify if only one selectable
@@ -59,18 +59,12 @@ public class LobbyParticipantSlotModel : LobbySlot {
     }
 
     protected override void OnLobbyCompanyChanged(int newValue) {
-        if (this.Slot.API is null) {
-            return;
-        }
         if (this.IsSelf) {
             this.SetCompany();
         }
     }
 
-    public override void OnLobbyCompanyChanged(LobbyAPIStructs.LobbyCompany company) {
-        if (this.Slot.API is null) {
-            return;
-        }
+    public override void OnLobbyCompanyChanged(ILobbyCompany company) {
         if (this.IsSelf) {
             return;
         }

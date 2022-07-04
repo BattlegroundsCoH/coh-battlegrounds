@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 
+using Battlegrounds;
 using Battlegrounds.Game.Match.Analyze;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Play.Factory;
@@ -15,7 +16,7 @@ namespace BattlegroundsApp.Lobby.MatchHandling;
 
 internal class SingleplayerModel : BasePlayModel, IPlayModel {
 
-    public SingleplayerModel(LobbyAPI handler, LobbyChatSpectatorModel lobbyChat) : base(handler, lobbyChat) {
+    public SingleplayerModel(ILobbyHandle handler, LobbyChatSpectatorModel lobbyChat) : base(handler, lobbyChat) {
         
         // Startup strategy
         this.m_startupStrategy = new SingleplayerStartupStrategy {
@@ -56,6 +57,9 @@ internal class SingleplayerModel : BasePlayModel, IPlayModel {
         this.m_controller.Complete += m => GameCompleteHandler(m, matchOver);
         this.m_controller.Error += (_, r) => GameErrorHandler(r, matchOver);
 
+        // Invoke startup handler
+        startupHandler?.Invoke();
+
         // Begin match
         this.m_controller.Control();
 
@@ -64,7 +68,7 @@ internal class SingleplayerModel : BasePlayModel, IPlayModel {
     private void GameErrorHandler(string r, PlayOverHandler matchOver) {
 
         // Log error
-        this.m_chat.SystemMessage($"Match Error - {r}", Colors.Red);
+        this.m_chat.SystemMessage(BattlegroundsInstance.Localize.GetString("SystemMessage_MatchError", r), Colors.Red);
 
         // Invoke over event in lobby model.
         Application.Current.Dispatcher.Invoke(() => {
@@ -76,8 +80,11 @@ internal class SingleplayerModel : BasePlayModel, IPlayModel {
     private void GameCompleteHandler(IAnalyzedMatch match, PlayOverHandler handler) {
 
         // do stuff with match?
-        //if (match.IsFinalizableMatch) {
-        this.m_chat.SystemMessage("Match over - Match saved.", Colors.DarkGray);
+        if (match.IsFinalizableMatch) {
+            this.m_chat.SystemMessage(BattlegroundsInstance.Localize.GetString("SystemMessage_MatchSaved"), Colors.DarkGray);
+        } else {
+            this.m_chat.SystemMessage(BattlegroundsInstance.Localize.GetString("SystemMessage_MatchInvalid"), Colors.DarkGray);
+        }
 
         // Invoke over event in lobby model.
         Application.Current.Dispatcher.Invoke(() => {

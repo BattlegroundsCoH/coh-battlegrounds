@@ -46,9 +46,6 @@ public static class WinconditionCompiler {
             return false;
         }
 
-        // Try grab mod package
-        //var modPackage = ModManager.GetPackageFromGuid(wincondition.Guid);
-
         // Get the files
         var scarFiles = source.GetScarFiles().Union(includeFiles.Where(x => x.Path.EndsWith(".scar", StringComparison.InvariantCulture)));
         var winFiles = source.GetWinFiles();

@@ -13,6 +13,14 @@
     <ApplicationIcon>coh2-battlegrounds.ico</ApplicationIcon>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>E:\coh2_battlegrounds\coh2-battlegrounds\keypair.snk</AssemblyOriginatorKeyFile>
+    <AssemblyVersion>1.1.3</AssemblyVersion>
+    <FileVersion>1.1.3</FileVersion>
+    <Version>1.1.3-alpha</Version>
+    <RepositoryUrl>https://github.com/JustCodiex/coh2-battlegrounds</RepositoryUrl>
+    <PackageProjectUrl>https://cohbattlegrounds.com/</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <Description>Company of Heroes 2: Battlegrounds Mod Launcher</Description>
+    <Product>Battlegrounds</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -716,7 +724,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\locale\english.loc">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\bg_wc\auxiliary_scripts\api_ui.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

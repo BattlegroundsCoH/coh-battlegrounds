@@ -48,8 +48,8 @@ function BG_LoadSessionData()
             BGAI_RegisterAIPlayer(k, player);
             k = k + 1;
         end
-        BG_SpawnAbilityEntities(player, race);
-        Player_SetPopCapOverride(player, 260);
+        --BG_SpawnAbilityEntities(player, race);
+        Player_SetPopCapOverride(player, 128);
     end
 
     -- Fix towing upgrade
@@ -162,14 +162,6 @@ function BG_PrepareMapdata()
         Entity_Spawn(eid);
     end
 
-    for i = 0, World_GetNumEntities() - 1 do
-        local entity = World_GetEntity(i);
-        local ebp = Entity_GetBlueprint(entity);
-        if Entity_IsVehicle(entity) and not Entity_IsBuilding(entity) then
-            --Entity_SetRecrewable(entity, bg_isDebugMap); -- Set crewable if debug map OTHERWISE, set to false
-        end
-    end
-
 end
 
 function BG_LoadCompanies()
@@ -181,8 +173,6 @@ function BG_LoadCompanies()
 
     -- Run through all players and set this up
     for i = 1, #_bg_playerData do
-
-        -- TODO: Remake this so it's based on the found steam ID
 
         -- Make sure the player is valid
         if bg_companies[_bg_playerData[i].name] == nil then
@@ -217,7 +207,7 @@ function BG_LoadAIData()
         local side = ai.teamStr;
 
         for k,v in pairs(bg_companies) do
-            if k == "AIPlayer#" ..tostring(counters[side]) then
+            if k == "AIPlayer#" ..side ..":" ..tostring(counters[side]) then
                 ai.company = v;
                 ai.steamID = counters[side];
                 ai.ttype = side;

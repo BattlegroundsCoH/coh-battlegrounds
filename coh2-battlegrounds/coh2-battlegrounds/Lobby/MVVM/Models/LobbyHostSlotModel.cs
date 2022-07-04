@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -19,16 +18,11 @@ public class LobbyHostSlotModel : LobbySlot {
 
     public override LobbyContextMenu ContextMenu { get; }
 
-    public LobbyHostSlotModel(LobbyAPIStructs.LobbySlot teamSlot, LobbyTeam team) : base(teamSlot, team) {
-        this.ContextMenu = new LobbyHostContextMenu(teamSlot.API ?? throw new Exception("Expected lobby API instance but found none!"), this);
+    public LobbyHostSlotModel(ILobbySlot teamSlot, LobbyTeam team) : base(teamSlot, team) {
+        this.ContextMenu = new LobbyHostContextMenu(teamSlot.Handle ?? throw new Exception("Expected lobby API instance but found none!"), this);
     }
 
     protected override void RefreshCompanyView() {
-
-        // Bail if slot API handle is invalid for some reason
-        if (this.Slot.API is null) {
-            return;
-        }
 
         // Populate
         if (this.IsControllable) {
@@ -57,18 +51,12 @@ public class LobbyHostSlotModel : LobbySlot {
     }
 
     protected override void OnLobbyCompanyChanged(int newValue) {
-        if (this.Slot.API is null) {
-            return;
-        }
         if (this.IsControllable && newValue >= 0) {
             this.SetCompany();
         }
     }
 
-    public override void OnLobbyCompanyChanged(LobbyAPIStructs.LobbyCompany company) {
-        if (this.Slot.API is null) {
-            return;
-        }
+    public override void OnLobbyCompanyChanged(ILobbyCompany company) {
         if (this.IsControllable) { // if set by us, ignore this
             return;
         }

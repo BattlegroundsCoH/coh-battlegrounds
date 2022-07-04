@@ -28,9 +28,14 @@ public class MainWindowViewModel : ViewModelBase {
     private int m_windowRadius = 10;
 
     /// <summary>
+    /// The application version
+    /// </summary>
+    private string m_version;
+
+    /// <summary>
     /// The window title
     /// </summary>
-    public string Title { get; } = "Company of Heroes 2: Battlegrounds Mod Launcher";
+    public string Title { get; set; }
 
     /// <summary>
     /// Minimum width of the window
@@ -121,6 +126,13 @@ public class MainWindowViewModel : ViewModelBase {
     /// </summary>
     /// <param name="window"></param>
     public MainWindowViewModel(Window window) {
+
+        // Get version
+        System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+        System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+        this.m_version = fvi.FileVersion;
+
+        this.Title = $"Company of Heroes 2: Battlegrounds Mod Launcher | v{this.m_version}";
 
         this.m_window = window;
 

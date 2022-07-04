@@ -194,7 +194,7 @@ namespace Battlegrounds.Game.Database {
                         "mortar" => WeaponExplosiveType.Mortar,
                         _ => WeaponExplosiveType.Invalid
                     },
-                    "CallbackType" => reader.GetString().Map(GetCallbackType),
+                    "CallbackType" => GetCallbackType(reader.GetString() ?? string.Empty),
                     _ => throw new NotImplementedException(prop)
                 };
             }

@@ -137,7 +137,7 @@
                     HorizontalContentAlignment="Center"
                     Content="{Binding EditCompanyButton.Title}"
                     Command="{Binding EditCompanyButton.Click}"
-                    Background="#334252"
+                    Background="{StaticResource BackgroundLightBlueBrush}"
                     Foreground="#FFFFFF"
                     HoverColour="#536375"
                     ImageSource="{StaticResource EditCompanyIconDrawingImage}"
@@ -150,7 +150,7 @@
                     HorizontalContentAlignment="Center"
                     Content="{Binding ExitButton.Title}"
                     Command="{Binding ExitButton.Click}"
-                    Background="#582222"
+                    Background="{StaticResource BackgroundDeepRedBrush}"
                     Foreground="#FFFFFF"
                     HoverColour="#a23333"
                     ImageSource="{StaticResource ExitLobbyIconDrawingImage}"
@@ -296,6 +296,7 @@
                        Style="{StaticResource SettingValue}"/>
             </Grid>
 
+            <!--
             <Button Grid.Column="1" 
                     Grid.Row="9"
                     Grid.ColumnSpan="2"
@@ -304,6 +305,31 @@
                     IsEnabled="{Binding StartMatchButton.IsEnabled}"
                     ToolTip="{Binding StartMatchButton.Tooltip}"
                     Style="{StaticResource StandardBlueButton}"/>
+            -->
+
+            <controls:IconButton 
+                Grid.Column="1" 
+                Grid.Row="9"
+                Grid.ColumnSpan="2"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center"
+                Content="{Binding StartMatchButton.Title}"
+                Command="{Binding StartMatchButton.Click}"
+                IsEnabled="{Binding StartMatchButton.IsEnabled}"
+                ToolTip="{Binding StartMatchButton.Tooltip}"
+                Background="{StaticResource BackgroundLightBlueBrush}"
+                Foreground="#FFFFFF"
+                HoverColour="#536375"
+                ImageSource="{StaticResource ExclamationDrawingImage}"
+                ImageWidth="32"
+                ImageHeight="18"
+                ImageVisibility="{Binding StartMatchButton.NotificationVisible}">
+                <controls:IconButton.ImageTooltip>
+                    <Border>
+                        <Label Content="{Binding StartMatchButton.Tooltip}"/>
+                    </Border>
+                </controls:IconButton.ImageTooltip>
+            </controls:IconButton>
 
         </Grid>
 

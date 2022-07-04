@@ -537,3 +537,7 @@ function Battlegrounds_LogEvent(msgtype, type, value, player)
     _bg_logid = _bg_logid + 1;
     Game_SendMessage(msgtype, str);
 end
+
+function DebugBg(msg)
+    Battlegrounds_LogEvent(_bg_message_type_no_actions_required, BG_EVENT_DEBUG, msg)
+end
