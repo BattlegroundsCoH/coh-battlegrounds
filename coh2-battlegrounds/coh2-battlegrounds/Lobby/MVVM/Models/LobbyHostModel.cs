@@ -187,6 +187,9 @@ public class LobbyHostModel : LobbyModel {
             return;
         }
 
+        // Grab gamemode
+        var gamemode = this.m_package.Gamemodes[this.GamemodeDropdown.Selected];
+
         // Do on a worker thread
         Task.Run(() => {
 
@@ -195,9 +198,6 @@ public class LobbyHostModel : LobbyModel {
                 Trace.WriteLine("Someone didn't report back positively!", nameof(LobbyHostModel));
                 return;
             }
-
-            // Get gamemode and check if it has planning, 
-            var gamemode = this.m_package.Gamemodes[this.GamemodeDropdown.Selected];
 
             // Decide what to do, based on planning
             if (gamemode.Planning) {
