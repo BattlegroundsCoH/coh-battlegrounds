@@ -36,9 +36,10 @@
             </Grid.ColumnDefinitions>
 
             <ContentControl Name="LeftContent" 
-                        Grid.Row="0" Grid.Column="0"
-                        Content="{Binding}">
-            </ContentControl>
+                            Grid.Row="0" Grid.Column="0"
+                            Content="{Binding}"
+                            Style="{StaticResource ResponsiveContentControl}"/>
+
 
             <modals:ModalControl Grid.Row="0" Grid.Column="1" 
                                  Grid.RowSpan="8"
@@ -48,7 +49,10 @@
                                  ModalMaskColour="Black">
 
                 <ContentControl Name="RightContent"                         
-                        Content="{Binding}" Background="#273441"/>
+                                Content="{Binding}" 
+                                Background="#273441"
+                                Style="{StaticResource ResponsiveContentControl}"/>
+                
             </modals:ModalControl>
 
         </Grid>
