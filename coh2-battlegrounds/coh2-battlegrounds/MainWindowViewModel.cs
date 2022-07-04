@@ -25,7 +25,7 @@ public class MainWindowViewModel : ViewModelBase {
     /// <summary>
     /// The radius of the edges of the window
     /// </summary>
-    private int m_windowRadius = 10;
+    private int m_windowRadius = 0;
 
     /// <summary>
     /// The application version
