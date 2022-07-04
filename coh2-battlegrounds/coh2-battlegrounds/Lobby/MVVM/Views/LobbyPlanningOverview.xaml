@@ -185,6 +185,11 @@
                             <ScaleTransform ScaleY="-1"/>
                         </Image.RenderTransform>
                     </Image>
+                    <Canvas 
+                        Width="512"
+                        Height="512"
+                        x:Name="ScenarioCanvas"
+                        ClipToBounds="True"/>
                 </Canvas>
             </Grid>
         </Border>

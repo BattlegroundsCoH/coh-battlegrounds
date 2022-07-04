@@ -36,6 +36,8 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     public record LobbyPlanningParticipantDisplay(ImageSource? ArmyIcon, string Name, string CompanyName, int Row, int Column);
 
+    public record LobbyPlanningMinimapItem(EntityBlueprint EntityBlueprint, ushort Owner, GamePosition WorldPos, Scenario Scenario);
+
     private readonly ILobbyPlanningHandle m_planHandle;
     private readonly LobbyPlanningOverviewModelInput m_data;
     private readonly LobbyPlanningContextHandler m_planningContext;
@@ -67,6 +69,8 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     public ObservableCollection<LobbyPlanningParticipantDisplay> Defenders { get; }
 
+    public TaggedObservableCollection<LobbyPlanningMinimapItem> MinimapItems { get; }
+
     public LobbyPlanningOverviewModel(LobbyPlanningOverviewModelInput input) {
 
         // Set handles
@@ -90,6 +94,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         // Create Lists
         this.DefenceStructures = new();
         this.PlanningActions = new();
+        this.MinimapItems = new();
         this.Attackers = new();
         this.Defenders = new();
 
@@ -168,6 +173,9 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
         }
 
+        // Finally, display world elements
+        App.Current.Dispatcher.Invoke(this.DisplayWorldElements);
+
     }
 
     private void SetupTeams(ILobbyHandle handle) {
@@ -218,6 +226,19 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         } else {
             return new LobbyPlanningParticipantDisplay(null, occupant.DisplayName, string.Empty, row, col);
         }
+
+    }
+
+    private async void DisplayWorldElements() {
+        
+        // Grab points
+        var points = await Task.Run(() => this.m_data.Scenario.Points.Map(x => (x.Position, x.Owner switch {
+            >= 1000 and < 1008 => (ushort)(x.Owner - 1000),
+            _ => ushort.MaxValue
+        }, BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint))));
+
+        // Display basic information
+        points.Map(x => new LobbyPlanningMinimapItem(x.Item3, x.Item2, x.Position, this.m_data.Scenario)).ForEach(this.MinimapItems.Add);
 
     }
 

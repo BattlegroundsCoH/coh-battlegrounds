@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
+using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 
 using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.Lobby.Planning;
 using BattlegroundsApp.Utilities;
+
+using static BattlegroundsApp.Lobby.MVVM.Models.LobbyPlanningOverviewModel;
 
 namespace BattlegroundsApp.Lobby.MVVM.Views;
 
@@ -36,6 +40,16 @@ public partial class LobbyPlanningOverview : UserControl {
         // Create lists
         this.m_points = new();
         this.m_lineHelpers = new();
+
+        // Grab context
+        this.DataContextChanged += (a, b) => {
+            if (b.NewValue is LobbyPlanningOverviewModel lpm) {
+                lpm.MinimapItems.CollectionChanged += this.MinimapItems_CollectionChanged;
+                if (b.OldValue is LobbyPlanningOverviewModel lpmold) {
+                    lpmold.MinimapItems.CollectionChanged -= this.MinimapItems_CollectionChanged;
+                }
+            }
+        };
 
     }
 
@@ -245,6 +259,59 @@ public partial class LobbyPlanningOverview : UserControl {
         if (this.m_lineHelpers.Count > 0) {
             this.m_lineHelpers.ForEach(this.PlanningCanvas.Children.Remove);
             this.m_lineHelpers.Clear();
+        }
+
+    }
+
+    private void MinimapItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
+
+        if (e.Action is NotifyCollectionChangedAction.Remove && e.OldItems is not null) {
+            foreach (object o in e.OldItems) {
+                if (o is LobbyPlanningMinimapItem mini) {
+                    foreach (Image c in this.ScenarioCanvas.Children) {
+                        if (c.Tag.Equals(mini)) {
+                            this.ScenarioCanvas.Children.Remove(c);
+                            break;
+                        }
+                    }
+                }
+            }
+        } else if (e.Action is NotifyCollectionChangedAction.Add && e.NewItems is not null) {
+
+            foreach (LobbyPlanningMinimapItem item in e.NewItems) {
+
+                // Grab ico
+                string ico = item.EntityBlueprint.Name switch {
+                    "starting_position_shared_territory" => $"Icons_minimap_mm_starting_point_{item.Owner + 1}",
+                    "victory_point" => "Icons_minimap_mm_victory_point",
+                    _ => string.Empty
+                };
+
+                // Bail if no icon is defined
+                if (string.IsNullOrEmpty(ico)) {
+                    continue;
+                }
+
+                // Calculate position
+                var pos = item.Scenario.ToMinimapPosition(this.ScenarioCanvas.Width, this.ScenarioCanvas.Height, item.WorldPos);
+
+                // Create image
+                Image img = new() {
+                    Width = 24,
+                    Height = 24,
+                    Source = App.ResourceHandler.GetIcon("minimap_icons", ico),
+                    RenderTransformOrigin = new(0.5, 0.5)
+                };
+
+                // Add to canvas group
+                this.ScenarioCanvas.Children.Add(img);
+
+                // Display
+                img.SetValue(Canvas.LeftProperty, pos.X - 12);
+                img.SetValue(Canvas.BottomProperty, pos.Y - 12);
+
+            }
+
         }
 
     }
