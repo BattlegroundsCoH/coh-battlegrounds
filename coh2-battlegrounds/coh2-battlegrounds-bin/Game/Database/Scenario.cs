@@ -278,7 +278,7 @@ public sealed class Scenario {
         return new(new (x,y), owner, ebp);
     }
 
-    public GamePosition ToMinimapPosition(int minimapWidth, int minimapHeight, GamePosition worldPos) {
+    public GamePosition ToMinimapPosition(double minimapWidth, double minimapHeight, GamePosition worldPos) {
 
         // Bring into standard coordinate system
         double x = worldPos.X + this.PlayableSize.X * .5;
@@ -293,7 +293,7 @@ public sealed class Scenario {
 
     }
 
-    public GamePosition FromMinimapPosition(int minimapWidth, int minimapHeight, double x, double y) {
+    public GamePosition FromMinimapPosition(double minimapWidth, double minimapHeight, double x, double y) {
 
         // Calculate u,v coords
         double u = x / minimapWidth;
@@ -307,6 +307,9 @@ public sealed class Scenario {
         return new(_x - this.PlayableSize.X * .5, _y - this.PlayableSize.Y * .5);
 
     }
+
+    public GamePosition FromMinimapPosition(double minimapWidth, double minimapHeight, GamePosition minipos)
+        => this.FromMinimapPosition(minimapWidth, minimapHeight, minipos.X, minipos.Y);
 
     public override string ToString() => this.Name;
 

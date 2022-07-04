@@ -18,17 +18,17 @@
     </UserControl.Resources>
     <Grid 
         Width="auto"
-        Height="auto">
+        Height="auto"
+        Margin="32">
         <Grid.RowDefinitions>
-            <RowDefinition Height="72"/>
+            <RowDefinition Height="64"/>
             <RowDefinition Height="72"/>
             <RowDefinition/>
             <RowDefinition Height="64"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="320"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="320"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="552"/>
         </Grid.ColumnDefinitions>
 
         <Label 
@@ -38,14 +38,15 @@
             FontFamily="Open Sans"
             FontWeight="SemiBold"
             Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"/>
+            Grid.Column="0"/>
 
         <controls:IconButton 
             Grid.Column="2" 
             Grid.Row="0"
             Margin="8,0,2,2"
             Height="36"
+            Width="320"
+            HorizontalAlignment="Right"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
             Content="Return To Lobby"
@@ -55,29 +56,128 @@
             ImageSource="{StaticResource ExitLobbyIconDrawingImage}"
             ImageWidth="20"
             ImageHeight="18"/>
+
+        <Grid
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+            <Grid.Resources>
+                <DataTemplate x:Key="TeamGridElement">
+                    <Border
+                        BorderThickness="1"
+                        BorderBrush="Transparent">
+                        <Grid Background="{StaticResource BackgroundDarkBlueBrush}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="32"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{Binding ArmyIcon}"
+                               Grid.Column="0"
+                               VerticalAlignment="Center"/>
+                            <Label Content="{Binding Name}"
+                               Grid.Column="1"
+                               VerticalAlignment="Center"
+                               Foreground="White"
+                               FontFamily="Open Sans"/>
+                            <Label Content="{Binding CompanyName}"
+                               Grid.Column="2"
+                               VerticalAlignment="Center"
+                               Foreground="White"
+                               FontFamily="Open Sans"
+                               HorizontalAlignment="Right"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+                <ItemsPanelTemplate x:Key="TeamGrid">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition  Width="48"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="32"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="48"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label 
+                Content="VS"
+                Foreground="White"
+                FontSize="18"
+                Grid.Column="2"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                VerticalAlignment="Center"/>
+            <ItemsControl
+                Grid.Column="1"
+                Margin="5,0,5,0"
+                ItemsSource="{Binding Attackers}"
+                ItemTemplate="{StaticResource TeamGridElement}"
+                ItemsPanel="{StaticResource TeamGrid}">
+                <ItemsControl.ItemContainerStyle>
+                    <Style>
+                        <Setter Property="Grid.Row" Value="{Binding Row}"/>
+                        <Setter Property="Grid.Column" Value="{Binding Column}"/>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+            <ItemsControl
+                Grid.Column="3"
+                Margin="5,0,5,0"
+                ItemsSource="{Binding Defenders}"
+                ItemTemplate="{StaticResource TeamGridElement}"
+                ItemsPanel="{StaticResource TeamGrid}">
+                <ItemsControl.ItemContainerStyle>
+                    <Style>
+                        <Setter Property="Grid.Row" Value="{Binding Row}"/>
+                        <Setter Property="Grid.Column" Value="{Binding Column}"/>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+
+        </Grid>
         
         <Border
-            Width="580"
-            Height="580"
-            HorizontalAlignment="Center"
+            Width="518"
+            Height="518"
+            HorizontalAlignment="Right"
             Grid.Column="1"
-            Grid.ColumnSpan="2"
             Grid.Row="2"
-            Margin="16"
+            Margin="0,0,16,0"
             BorderBrush="{StaticResource BackgroundLightGrayBrush}"
             BorderThickness="3">
-            <Grid Margin="2"
-                    Width="576"
-                    Height="576">
+            <Grid 
+                Margin="2"
+                Width="512"
+                Height="512">
                 <Canvas
-                    Width="576"
-                    Height="576"
+                    Width="512"
+                    Height="512"
                     x:Name="PlanningCanvas"
                     MouseLeftButtonUp="PlanningCanvas_MouseLeftButtonUp"
                     MouseMove="PlanningCanvas_MouseMove">
+                    <Rectangle
+                        Width="512"
+                        Height="512"
+                        Fill="Black"
+                        Opacity="0.65"
+                        ClipToBounds="True"
+                        />
                     <Image                    
-                        Width="576"
-                        Height="576"
+                        Width="512"
+                        Height="512"
                         Stretch="Fill"
                         RenderTransformOrigin="0.5,0.5"
                         Source="{Binding ScenarioPreview}">
@@ -91,21 +191,24 @@
         <ScrollViewer
             Grid.Row="2"
             Grid.Column="0">
-            <StackPanel>
+            <StackPanel
+                x:Name="ElementsPanel">
                 <Label
                     Content="Objectives"
                     Foreground="White"/>
                 <ItemsControl
+                    Width="{Binding ElementName=ElementsPanel, Path=Width}"
                     ItemsSource="{Binding PlanningActions}"/>
                 <Separator/>
                 <Label
                     Content="Defences"
                     Foreground="White"/>
                 <ItemsControl
+                    Width="{Binding ElementName=ElementsPanel, Path=Width}"
                     ItemsSource="{Binding DefenceStructures}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"/>
+                            <WrapPanel/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -124,9 +227,6 @@
                 </ItemsControl>
                 <Separator/>
                 <!-- Change contents to name of company -->
-                <Label
-                    Content="{Binding UnitCapacity}"
-                    Foreground="White"/>
                 <controls:LocLabel 
                     x:Name="ContentSite"
                     Foreground="White"
@@ -134,20 +234,22 @@
                     Arguments="{Binding UnitCapacity}"
                     FontSize="12"/>
                 <ItemsControl
+                    Width="{Binding ElementName=ElementsPanel, Path=Width}"
                     ItemsSource="{Binding PreplacableUnits}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"/>
+                            <WrapPanel/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Button
+                                    Style="{StaticResource MainButtonStyle}"
                                     Command="{Binding Click}">
                                     <Image
-                                        Width="16"
-                                        Height="16"
+                                        Width="36"
+                                        Height="36"
                                         Source="{Binding Symbol}"/>
                                 </Button>
                             </Grid>
@@ -162,6 +264,8 @@
             Grid.Row="3"
             Margin="12"
             Height="36"
+            Width="320"
+            HorizontalAlignment="Right"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
             Content="Start Match"

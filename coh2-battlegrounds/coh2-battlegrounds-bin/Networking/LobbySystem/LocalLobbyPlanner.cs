@@ -23,12 +23,12 @@ public class LocalLobbyPlanner : ILobbyPlanningHandle {
     /// <summary>
     /// 
     /// </summary>
-    public bool IsDefender => this.Handle.AreTeamRolesSwapped() ? this.m_selfTeam is 1 : this.m_selfTeam is 0;
+    public bool IsDefender => this.Handle.AreTeamRolesSwapped() ? this.m_selfTeam is 0 : this.m_selfTeam is 1;
 
     /// <summary>
     /// 
     /// </summary>
-    public bool IsAttacker => this.Handle.AreTeamRolesSwapped() ? this.m_selfTeam is 0 : this.m_selfTeam is 1;
+    public bool IsAttacker => !this.IsDefender;
 
     /// <summary>
     /// 

@@ -7,11 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
+using Battlegrounds.Functional;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.Util;
 
 using BattlegroundsApp.Lobby.MatchHandling;
 using BattlegroundsApp.Lobby.Planning;
@@ -30,6 +33,8 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
     public record LobbyPlanningAction(string Icon);
 
     public record LobbyPlanningDefence(ImageSource? Icon, string Name, RelayCommand Click);
+
+    public record LobbyPlanningParticipantDisplay(ImageSource? ArmyIcon, string Name, string CompanyName, int Row, int Column);
 
     private readonly ILobbyPlanningHandle m_planHandle;
     private readonly LobbyPlanningOverviewModelInput m_data;
@@ -58,6 +63,10 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     public LobbyPlanningContextHandler ContextHandler => this.m_planningContext;
 
+    public ObservableCollection<LobbyPlanningParticipantDisplay> Attackers { get; }
+
+    public ObservableCollection<LobbyPlanningParticipantDisplay> Defenders { get; }
+
     public LobbyPlanningOverviewModel(LobbyPlanningOverviewModelInput input) {
 
         // Set handles
@@ -81,9 +90,14 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         // Create Lists
         this.DefenceStructures = new();
         this.PlanningActions = new();
+        this.Attackers = new();
+        this.Defenders = new();
+
+        // Init teams
+        this.SetupTeams(this.m_data.Handle);
 
         // Create capacity
-        this.UnitCapacity = new(10, () => this.PreplacableUnits.Count);
+        this.UnitCapacity = new(10, () =>  this.PreplacableUnits.Picked);
 
         // Grab self
         if (this.m_data.Model.GetSelf() is not ILobbySlot self) {
@@ -140,8 +154,11 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
                 // Create place handler
                 var handler = () => this.m_planningContext.PickPlaceElement(unit.SBP, unit.SquadID);
 
+                // Grab icon
+                var ico = App.ResourceHandler.GetIcon("unit_icons", unit.SBP.UI.Icon);
+
                 // Add
-                this.PreplacableUnits.Register(new(unit.SquadID, null, unit.GetName(), unit.VeterancyRank, new(handler)));
+                this.PreplacableUnits.Register(new(unit.SquadID, ico, unit.GetName(), unit.VeterancyRank, new(handler)));
 
             }
 
@@ -149,6 +166,57 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
             // TODO:
 
+        }
+
+    }
+
+    private void SetupTeams(ILobbyHandle handle) {
+
+        // Grab allies
+        var allies = handle.Allies;
+
+        // Grab axis
+        var axis = handle.Axis;
+
+        // Grab proper setups
+        var attackers = handle.AreTeamRolesSwapped() ? axis : allies;
+        var defenders = handle.AreTeamRolesSwapped() ? allies : axis;
+
+        // Map attackers
+        (ValRef<int> i, ValRef<int> j) = (0,0);
+        attackers.Slots.Filter(x => x.IsOccupied)
+            .MapNotNull(x => x.Occupant).Map(x => OccupantToDisplay(x, i, j)).ForEach(this.Attackers.Add);
+
+        // Map defenders
+        (i, j) = (0, 0);
+        defenders.Slots.Filter(x => x.IsOccupied)
+            .MapNotNull(x => x.Occupant).Map(x => OccupantToDisplay(x, i, j)).ForEach(this.Defenders.Add);
+
+    }
+
+    private static LobbyPlanningParticipantDisplay OccupantToDisplay(ILobbyMember occupant, ValRef<int> i, ValRef<int> j) {
+
+        // Compute row and column
+        int row = i.GetAndChange(x => x + 1);
+        int col = j.GetAndChange(x => i > 1 ? x + 1 : x);
+        if (j != col) {
+            i.Value = 0;
+        }
+
+        // Grab name
+        string name = occupant.AILevel switch {
+            1 => AIDifficulty.AI_Easy.GetIngameDisplayName(),
+            2 => AIDifficulty.AI_Standard.GetIngameDisplayName(),
+            3 => AIDifficulty.AI_Hard.GetIngameDisplayName(),
+            4 => AIDifficulty.AI_Expert.GetIngameDisplayName(),
+            _ => occupant.DisplayName
+        };
+
+        // Make sure we have a valid company to get remaining data from
+        if (occupant.Company is ILobbyCompany company) {
+            return new LobbyPlanningParticipantDisplay(LobbyVisualsLookup.FactionIcons[company.Army], name, company.Name, row, col);
+        } else {
+            return new LobbyPlanningParticipantDisplay(null, occupant.DisplayName, string.Empty, row, col);
         }
 
     }

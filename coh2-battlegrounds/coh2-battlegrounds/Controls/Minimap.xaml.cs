@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
@@ -99,18 +98,6 @@ public partial class Minimap : UserControl {
 
     private void TryShowPositions(Scenario scen, (GamePosition pos, ushort owner, EntityBlueprint ebp)[] pointData) {
 
-        // Get world to minimap scale
-        var xs = this.ScenarioDisplay.Source.Width / (scen.TerrainSize.X) * 1.3;
-        var ys = this.ScenarioDisplay.Source.Height / (scen.TerrainSize.Y) * 1.3;
-
-        // Get origin
-        var ox = this.ScenarioDisplay.Source.Width * 0.5;
-        var oy = this.ScenarioDisplay.Source.Height * 0.5;
-
-        // Compute scale
-        var mx = (this.ScenarioCanvas.Width / this.ScenarioDisplay.Source.Width);
-        var my = (this.ScenarioCanvas.Height / this.ScenarioDisplay.Source.Height);
-
         // Pick from points
         for (int i = 0; i < pointData.Length; i++) {
 
@@ -126,9 +113,8 @@ public partial class Minimap : UserControl {
                 continue;
             }
 
-            // Define position
-            double xpos = pointData[i].pos.X * xs + ox;
-            double ypos = -pointData[i].pos.Y * ys + oy;
+            // Calculate position
+            var pos = scen.ToMinimapPosition(this.ScenarioDisplay.Width, this.ScenarioDisplay.Height, pointData[i].pos);
 
             // Create image
             Image img = new() {
@@ -142,8 +128,8 @@ public partial class Minimap : UserControl {
             this.ScenarioCanvas.Children.Add(img);
 
             // Display
-            img.SetValue(Canvas.LeftProperty, xpos * mx);
-            img.SetValue(Canvas.TopProperty, ypos * my);
+            img.SetValue(Canvas.LeftProperty, pos.X - 12);
+            img.SetValue(Canvas.BottomProperty, pos.Y - 12);
 
         }
 

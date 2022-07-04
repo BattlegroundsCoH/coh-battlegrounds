@@ -177,6 +177,7 @@ english:
  LobbyChat_Send: "Send"
  LobbyChat_FilterAll: "To: All"
  LobbyChat_FilterTeam: "To: Team"
+ LobbyPlanning_Deployments: "Initial Deployments ({0}/{1})"
  CompanyBuilder_Units: "Units ({0}/{1})"
  CompanyBuilder_Abilities: "Abilities ({0}/{1})"
  CompanyBuilder_Storage: "Storage ({0}/{1})"

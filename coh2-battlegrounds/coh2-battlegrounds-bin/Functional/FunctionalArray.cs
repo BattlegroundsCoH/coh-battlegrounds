@@ -58,6 +58,20 @@ public static class FunctionalArray {
     }
 
     /// <summary>
+    /// Maps an array of type <typeparamref name="U"/> into an array of type <typeparamref name="V"/> through a mapping function.
+    /// </summary>
+    /// <remarks>
+    /// Enforces all mapped elements are not <see langword="null"/>.
+    /// </remarks>
+    /// <typeparam name="U">The original type of the array.</typeparam>
+    /// <typeparam name="V">The new type of the array.</typeparam>
+    /// <param name="array">The array to map over.</param>
+    /// <param name="func">The map funcion to map a single element from <typeparamref name="U"/> to <typeparamref name="V"/>.</param>
+    /// <returns>An array consisting of elements of type <typeparamref name="V"/>.</returns>
+    public static V[] MapNotNull<U, V>(this U[] array, Func<U, V?> func) where V : notnull
+        => array.Map(func).NotNull();
+
+    /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="U"></typeparam>
