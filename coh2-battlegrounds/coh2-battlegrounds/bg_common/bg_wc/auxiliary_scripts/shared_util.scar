@@ -546,15 +546,18 @@ end
 -- Battlegrounds debug functions
 ------------------------------------------------------------
 local bg_debuglines = {}
+local bg_debugid = "bg_db_printid"
 bgdebug = function(msg)
+    msg = tostring(msg)
     if #bg_debuglines > 30 then
-        bg_debuglines = { tostring(msg) }
+        bg_debuglines = { msg } -- Clear and just show our message
     else
-        table.insert(bg_debuglines, tostring(msg))
+        table.insert(bg_debuglines, msg)
     end
-    local display = bg_debuglines[1]
-    for i = 2, #display do
-        display = "\n"..bg_debuglines[i]
+    local display = "Debug Log:"
+    for _, v in pairs(bg_debuglines) do
+        display = display .. "\n" .. v
     end
-    PrintOnScreen(display)
+    PrintOnScreen_Remove(bg_debugid)
+    PrintOnScreen_Add(display, bg_debugid)
 end

@@ -32,13 +32,14 @@ function BattlegroundsDefence_InitGamemode()
 	BattlegroundsDefence_InitSectors()
 
 	-- Set points
-	WinWarning_SetMaxTickers(DefenceSettingsData.DefenderPoints, DefenceSettingsData.MaxPoints - DefenceSettingsData.DefenderPoints)
+	WinWarning_SetMaxTickers(DefenceSettingsData.MaxPoints, DefenceSettingsData.DefenderPoints)
+	WinWarning_SetTickers(DefenceSettingsData.MaxPoints - DefenceSettingsData.DefenderPoints, DefenceSettingsData.DefenderPoints)
 
 	-- Start timer
-	Timer_Start(DefenceSettingsData.Counter, bg_settings.gameoptions.Time)
+	Timer_Start(DefenceSettingsData.Counter, bg_settings.gameoptions.Time * 60)
 
 	-- Add interval to update points
-	Rule_AddInterval(BattlegroundsDefence_UpdatePoints, 1);
+	Rule_AddInterval(BattlegroundsDefence_UpdatePoints, 3);
 	Rule_AddInterval(BattlegroundsDefence_CheckTime, 5);
 
 end
@@ -53,7 +54,7 @@ function BattlegroundsDefence_InitSectors()
 		local entity = World_GetEntity(i)
 
 		-- Collect point if strategic point
-		if Entity_IsStrategicPoint(entity) and BP_GetName(Entity_GetBlueprint(entity)) ~= "starting_position_shared_territory" then
+		if Entity_IsStrategicPoint(entity) and BP_GetName(Entity_GetBlueprint(entity)) ~= "starting_territory_team" then
 
 			-- Insert into list of sectors
 			table.insert(DefenceSettingsData.Sectors, entity)
@@ -76,21 +77,25 @@ function BattlegroundsDefence_UpdatePoints()
 	local counts = { 0, 0 }
 
 	-- Collect status
-	for i=1, #DefenceSettingsData.Sectors do
-		if Entity_IsStrategicPointCapturedBy(DefenceSettingsData.Sectors[i], defender) then
-			counts[bg_settings.team_second] = counts[bg_settings.team_second] + 1
-		elseif Entity_IsStrategicPointCapturedBy(DefenceSettingsData.Sectors[i], attacker) then
-			counts[bg_settings.team_first] = counts[bg_settings.team_first] + 1
+	for _, v in pairs(DefenceSettingsData.Sectors) do
+		if Entity_IsStrategicPointCapturedBy(v, defender) then
+			counts[2] = counts[2] + 1
+		elseif Entity_IsStrategicPointCapturedBy(v, attacker) then
+			counts[1] = counts[1] + 1
 		end
 	end
 
-	-- Check
-	local defenderPenalty = counts[bg_settings.team_second] - (#DefenceSettingsData.Sectors - counts[bg_settings.team_first])
+	-- Calculate penalty and cap penalty
+	local inplay = counts[1] + counts[2]
+	local defenderPenalty = math.floor((counts[1] / counts[2] * inplay) / 3)
 	if defenderPenalty < 0 then
 		defenderPenalty = 0
-	elseif defenderPenalty > 5 then
-		defenderPenalty = 5
+	elseif defenderPenalty > 3 then
+		defenderPenalty = 3
 	end
+
+	-- Log
+	bgdebug("points: " .. counts[1] .. " vs " ..counts[2] .. " penality = " ..defenderPenalty)
 
 	-- Update points
 	DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - defenderPenalty
@@ -100,12 +105,24 @@ function BattlegroundsDefence_UpdatePoints()
 		DefenceSettingsData.DefenderPoints = 0
 
 		-- Set winner to attacking team
-		BG_WorldSetTeamWin(Player_GetTeam(__BGDefenceTeams[1][1]))
+		World_SetTeamWin(Player_GetTeam(__BGDefenceTeams[1][1]))
 
 	end
 
+	-- Grab points
+	local team1Tickers = DefenceSettingsData.MaxPoints - DefenceSettingsData.DefenderPoints
+	local team2Tickers = DefenceSettingsData.DefenderPoints
+
+	-- Log
+	bgdebug("tickers: " .. team1Tickers .. " vs " ..team2Tickers)
+
 	-- Update visually
-	WinWarning_SetMaxTickers(DefenceSettingsData.DefenderPoints, DefenceSettingsData.MaxPoints - DefenceSettingsData.DefenderPoints)
+	WinWarning_SetTickers(team1Tickers, team2Tickers)
+	WinWarning_SetCritical(false, 100 * team2Tickers / DefenceSettingsData.MaxPoints <= 20)
+
+	-- Sync
+	Misc_SyncCheckVariable("Team 1 Tickers", team1Tickers)
+	Misc_SyncCheckVariable("Team 2 Tickers", team2Tickers)
 
 end
 
@@ -120,9 +137,9 @@ function BattlegroundsDefence_CheckTime()
 
 		-- Pick winner
 		if DefenceSettingsData.DefenderPoints < DefenceSettingsData.MaxPoints / 2 then -- defenders have less than half, so attackers win
-			BG_WorldSetTeamWin(Player_GetTeam(__BGDefenceTeams[1][1]))
+			World_SetTeamWin(Player_GetTeam(__BGDefenceTeams[1][1]))
 		else -- defenders have more than half, so defenders win
-			BG_WorldSetTeamWin(Player_GetTeam(__BGDefenceTeams[2][1]))
+			World_SetTeamWin(Player_GetTeam(__BGDefenceTeams[2][1]))
 		end
 
 	end
@@ -169,7 +186,7 @@ function BattlegroundsDefence_InitDefence()
 end
 
 function BattlegroundsDefence_SolveOwner(team, indexOnTeam)
-	return __BGDefenceTeams[team+1][indexOnTeam]
+	return __BGDefenceTeams[team][indexOnTeam]
 end
 
 function BattlegroundsDefence_CreateEntity(bp, owner, pos, lookat)

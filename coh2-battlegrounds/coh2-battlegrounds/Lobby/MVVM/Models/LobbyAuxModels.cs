@@ -12,6 +12,7 @@ public static class LobbyAuxModels {
     public record LobbyMutButton(RelayCommand Click, Visibility Visible) : INotifyPropertyChanged {
         private bool m_isEnabled;
         private Visibility m_iconVisible;
+        private Visibility m_visible;
         private string? m_tooltip;
         private string? m_title;
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -34,6 +35,13 @@ public static class LobbyAuxModels {
             set {
                 this.m_title = value;
                 this.PropertyChanged?.Invoke(this, new(nameof(Title)));
+            }
+        }
+        public Visibility Visibility {
+            get => this.m_visible;
+            set {
+                this.m_visible = value;
+                this.PropertyChanged?.Invoke(this, new(nameof(Visibility)));
             }
         }
         public Visibility NotificationVisible {

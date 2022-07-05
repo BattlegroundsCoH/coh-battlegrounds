@@ -127,6 +127,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public LobbyButton EditCompanyButton { get; }
 
+    public abstract LobbyMutButton SwapRoles { get; }
+
     public abstract LobbyMutButton StartMatchButton { get; }
 
     public abstract LobbySetting<ScenOp> MapDropdown { get; }

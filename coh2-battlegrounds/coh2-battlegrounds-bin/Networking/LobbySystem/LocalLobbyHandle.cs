@@ -225,7 +225,19 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
     }
 
     public void SwapTeamRoles() {
+        
+        // Grab flag
         this.m_areRolesReversed = !this.m_areRolesReversed;
+
+        // Set new roles
+        var tmp = this.m_allies.TeamRole;
+        this.m_allies.SetRole(this.m_axis.TeamRole);
+        this.m_axis.SetRole(tmp);
+
+        // Notify changes
+        this.OnLobbyTeamUpdate?.Invoke(this.m_allies);
+        this.OnLobbyTeamUpdate?.Invoke(this.m_axis);
+
     }
 
     public bool AreTeamRolesSwapped() {

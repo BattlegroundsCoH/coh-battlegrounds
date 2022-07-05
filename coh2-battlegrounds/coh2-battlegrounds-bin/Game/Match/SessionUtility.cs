@@ -176,5 +176,4 @@ public static class SessionUtility {
     public static bool HasPlayback()
         => File.Exists(ReplayMatchData.LATEST_REPLAY_FILE);
 
-
 }

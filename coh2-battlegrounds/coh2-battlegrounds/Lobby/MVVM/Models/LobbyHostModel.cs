@@ -33,6 +33,8 @@ public class LobbyHostModel : LobbyModel {
 
     private ModPackage? m_package;
 
+    public override LobbyMutButton SwapRoles { get; }
+
     public override LobbyMutButton StartMatchButton { get; }
 
     public override LobbySetting<ScenOp> MapDropdown { get; }
@@ -56,6 +58,7 @@ public class LobbyHostModel : LobbyModel {
             Title = LOCSTR_START(),
             NotificationVisible = Visibility.Hidden
         };
+        this.SwapRoles = new(new(this.SwapTeamRoles), Visibility.Collapsed);
 
         // Get scenario list
         var _scenlist = ScenarioList.GetList()
@@ -324,6 +327,9 @@ public class LobbyHostModel : LobbyModel {
         // Update team names
         this.m_handle.SetTeamRoles(gamemode.TeamName1 ?? "Team_Allies", gamemode.TeamName2 ?? "Team_Axis");
 
+        // If gamemode has fixed positions, allow us to swap
+        this.SwapRoles.Visibility = gamemode.RequireFixed ? Visibility.Visible : Visibility.Collapsed;
+
         // Hide options
         if (options is null || options.Length is 0) {
 
@@ -440,6 +446,13 @@ public class LobbyHostModel : LobbyModel {
             this.GamemodeDropdown.Selected = 0;
 
         }
+
+    }
+
+    private void SwapTeamRoles() {
+
+        // Swap roles in handle
+        this.m_handle.SwapTeamRoles();
 
     }
 

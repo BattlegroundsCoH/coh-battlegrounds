@@ -28,6 +28,8 @@ public class LobbyParticipantModel : LobbyModel {
 
     private ModPackage? m_package;
 
+    public override LobbyMutButton SwapRoles { get; }
+
     public override LobbyMutButton StartMatchButton { get; }
 
     public override LobbySetting<ScenOp> MapDropdown { get; }
@@ -50,6 +52,7 @@ public class LobbyParticipantModel : LobbyModel {
 
         // Define start match buttnn
         this.StartMatchButton = new(new(this.CancelMatch), Visibility.Hidden) { Title = LOCSTR_WAIT(), IsEnabled = false, NotificationVisible = Visibility.Hidden };
+        this.SwapRoles = new(new(() => { }), Visibility.Collapsed);
 
         // Init dropdowns 
         this.MapDropdown = LobbySetting<ScenOp>.NewValue("LobbyView_SettingScenario", string.Empty);

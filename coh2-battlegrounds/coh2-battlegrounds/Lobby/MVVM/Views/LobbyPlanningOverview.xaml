@@ -199,17 +199,17 @@
             Grid.Column="0">
             <StackPanel
                 x:Name="ElementsPanel">
-                <Label
-                    Content="Objectives"
+                <controls:LocLabel
+                    LocKey="LobbyPlanning_Objectives"
                     Foreground="White"
                     Visibility="{Binding IsPlanningVisible}"/>
                 <ItemsControl
                     Width="{Binding ElementName=ElementsPanel, Path=Width}"
                     ItemsSource="{Binding PlanningActions}"
                     Visibility="{Binding IsPlanningVisible}"/>
-                <Label
+                <controls:LocLabel
                     Visibility="{Binding IsDefencesVisible}"
-                    Content="Defences"
+                    LocKey="LobbyPlanning_Defences"
                     Foreground="White"/>
                 <ItemsControl
                     Visibility="{Binding IsDefencesVisible}"
