@@ -58,8 +58,8 @@ public class SessionCompiler : ISessionCompiler {
 
         // If there's a specific team order, write it out
         if (session.TeamOrder is not TeamMode.Any) {
-            bg_settings["team_first"] = session.TeamOrder is TeamMode.Fixed ? 1 : 2;
-            bg_settings["team_second"] = session.TeamOrder is TeamMode.Fixed ? 2 : 1;
+            bg_settings["team_first"] = session.TeamOrder is TeamMode.Fixed ? 0 : 1;
+            bg_settings["team_second"] = session.TeamOrder is TeamMode.Fixed ? 1 : 0;
         }
 
         // Prepare company data

@@ -541,3 +541,20 @@ end
 function DebugBg(msg)
     Battlegrounds_LogEvent(_bg_message_type_no_actions_required, BG_EVENT_DEBUG, msg)
 end
+
+------------------------------------------------------------
+-- Battlegrounds debug functions
+------------------------------------------------------------
+local bg_debuglines = {}
+bgdebug = function(msg)
+    if #bg_debuglines > 30 then
+        bg_debuglines = { tostring(msg) }
+    else
+        table.insert(bg_debuglines, tostring(msg))
+    end
+    local display = bg_debuglines[1]
+    for i = 2, #display do
+        display = "\n"..bg_debuglines[i]
+    end
+    PrintOnScreen(display)
+end

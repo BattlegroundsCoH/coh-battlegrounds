@@ -20,7 +20,13 @@ function BattlegroundsDefence_InitGamemode()
 	}
 
 	-- Define teams
-	BattlegroundsDefence_DefineTeams()
+	__BGDefenceTeams = {
+		Team_GetPlayers(bg_settings.team_first), 
+		Team_GetPlayers(bg_settings.team_second)
+	}
+
+	-- Log amount of players on each team
+	bgdebug(#__BGDefenceTeams[1] .. " and " ..#__BGDefenceTeams[2])
 
 	-- Init sectors
 	BattlegroundsDefence_InitSectors()
@@ -37,36 +43,17 @@ function BattlegroundsDefence_InitGamemode()
 
 end
 
-function BattlegroundsDefence_DefineTeams()
-	-- Define team map
-	__BGDefenceTeams = {{}, {}}
-	-- Loop over all players and assign
-	local t1 = 0
-	local t2 = 0
-	for i = 1, World_GetPlayerCount() do
-		local p = World_GetPlayerAt(i)
-		local tid = Player_GetTeam(p)
-		if tid == bg_settings.team_first then
-			__BGDefenceTeams[tid][t1] = p
-			t1 = t1 + 1
-		elseif tid == bg_settings.team_second then
-			__BGDefenceTeams[tid][t2] = p
-			t2 = t2 + 1
-		end
-	end
-end
-
 function BattlegroundsDefence_InitSectors()
 
 	-- Get first player of the defending team
-	local defender = __BGDefenceTeams[bg_settings.team_second][1]
+	local defender = __BGDefenceTeams[2][1]
 
 	-- Loop over stategic points
 	for i=0, World_GetNumEntities()-1 do
 		local entity = World_GetEntity(i)
 
 		-- Collect point if strategic point
-		if Entity_IsStrategicPoint(entity) then
+		if Entity_IsStrategicPoint(entity) and BP_GetName(Entity_GetBlueprint(entity)) ~= "starting_position_shared_territory" then
 
 			-- Insert into list of sectors
 			table.insert(DefenceSettingsData.Sectors, entity)
@@ -82,8 +69,8 @@ end
 function BattlegroundsDefence_UpdatePoints()
 
 	-- Get first player of the defending and attacking teams
-	local attacker = __BGDefenceTeams[bg_settings.team_first][1]
-	local defender = __BGDefenceTeams[bg_settings.team_second][1]
+	local attacker = __BGDefenceTeams[1][1]
+	local defender = __BGDefenceTeams[2][1]
 
 	-- Create counts
 	local counts = { 0, 0 }
@@ -113,7 +100,7 @@ function BattlegroundsDefence_UpdatePoints()
 		DefenceSettingsData.DefenderPoints = 0
 
 		-- Set winner to attacking team
-		BG_WorldSetTeamWin(Player_GetTeam(__BGDefenceTeams[bg_settings.team_first][1]))
+		BG_WorldSetTeamWin(Player_GetTeam(__BGDefenceTeams[1][1]))
 
 	end
 
@@ -133,9 +120,9 @@ function BattlegroundsDefence_CheckTime()
 
 		-- Pick winner
 		if DefenceSettingsData.DefenderPoints < DefenceSettingsData.MaxPoints / 2 then -- defenders have less than half, so attackers win
-			BG_WorldSetTeamWin(Player_GetTeam(__BGDefenceTeams[bg_settings.team_first][1]))
+			BG_WorldSetTeamWin(Player_GetTeam(__BGDefenceTeams[1][1]))
 		else -- defenders have more than half, so defenders win
-			BG_WorldSetTeamWin(Player_GetTeam(__BGDefenceTeams[bg_settings.team_second][1]))
+			BG_WorldSetTeamWin(Player_GetTeam(__BGDefenceTeams[2][1]))
 		end
 
 	end
