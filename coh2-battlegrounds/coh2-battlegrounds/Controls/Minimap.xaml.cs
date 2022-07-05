@@ -100,38 +100,46 @@ public partial class Minimap : UserControl {
 
         // Pick from points
         for (int i = 0; i < pointData.Length; i++) {
-
-            // Grab ico
-            string ico = pointData[i].ebp.Name switch {
-                "starting_position_shared_territory" => $"Icons_minimap_mm_starting_point_{pointData[i].owner + 1}",
-                "victory_point" => "Icons_minimap_mm_victory_point",
-                _ => string.Empty
-            };
-
-            // Bail if no icon is defined
-            if (string.IsNullOrEmpty(ico)) {
-                continue;
-            }
-
-            // Calculate position
-            var pos = scen.ToMinimapPosition(this.ScenarioDisplay.Width, this.ScenarioDisplay.Height, pointData[i].pos);
-
-            // Create image
-            Image img = new() {
-                Width = 24,
-                Height = 24,
-                Source = App.ResourceHandler.GetIcon("minimap_icons", ico),
-                RenderTransformOrigin = new(0.5, 0.5)
-            };
-
-            // Add to canvas group
-            this.ScenarioCanvas.Children.Add(img);
-
-            // Display
-            img.SetValue(Canvas.LeftProperty, pos.X - 12);
-            img.SetValue(Canvas.BottomProperty, pos.Y - 12);
-
+            var p = pointData[i].pos;
+            var o = pointData[i].owner;
+            var e = pointData[i].ebp;
+            AddMinimapItem(this.ScenarioCanvas, this.ScenarioDisplay.Width, this.ScenarioDisplay.Height, scen, p, o, e);
         }
+
+    }
+
+    public static void AddMinimapItem(Canvas canvas, double width, double height, Scenario scenario, GamePosition pos, ushort owner, EntityBlueprint ebp) {
+
+        // Grab ico
+        string ico = ebp.Name switch {
+            "starting_position_shared_territory" => $"Icons_minimap_mm_starting_point_{owner + 1}",
+            "victory_point" => "Icons_minimap_mm_victory_point",
+            _ => string.Empty
+        };
+
+        // Bail if no icon is defined
+        if (string.IsNullOrEmpty(ico)) {
+            return;
+        }
+
+        // Calculate position
+        var p = scenario.ToMinimapPosition(width, height, pos);
+
+        // Create image
+        Image img = new() {
+            Width = 24,
+            Height = 24,
+            Source = App.ResourceHandler.GetIcon("minimap_icons", ico),
+            RenderTransformOrigin = new(0.5, 0.5)
+        };
+
+        // Add to canvas group
+        canvas.Children.Add(img);
+
+        // Display
+        img.SetValue(Canvas.LeftProperty, p.X - 12);
+        img.SetValue(Canvas.BottomProperty, p.Y - 12);
+
 
     }
 

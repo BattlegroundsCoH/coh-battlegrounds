@@ -50,6 +50,7 @@
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
             Content="Return To Lobby"
+            Command="{Binding ReturnLobbyCommand}"
             Background="{StaticResource BackgroundDeepRedBrush}"
             Foreground="#FFFFFF"
             HoverColour="#a23333"
@@ -273,10 +274,13 @@
             HorizontalAlignment="Right"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
-            Content="Start Match"
+            Content="{Binding StartMatchButton.Title}"
+            ToolTip="{Binding StartMatchButton.Tooltip}"
+            IsEnabled="{Binding StartMatchButton.IsEnabled}"
+            Command="{Binding BeginMatchCommand}"
             Background="{StaticResource BackgroundDarkBlueBrush}"
             Foreground="#FFFFFF"
-            HoverColour="#a23333"/>
+            HoverColour="{StaticResource BackgroundBlueBrush}"/>
 
     </Grid>
 </UserControl>

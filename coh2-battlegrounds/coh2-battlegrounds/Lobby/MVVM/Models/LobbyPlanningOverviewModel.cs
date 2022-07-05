@@ -21,6 +21,8 @@ using BattlegroundsApp.Lobby.Planning;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Utilities;
 
+using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
+
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
 public record LobbyPlanningOverviewModelInput(LobbyModel Model, LobbyChatSpectatorModel Chat, ILobbyHandle Handle) {
@@ -54,6 +56,8 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
     public RelayCommand ReturnLobbyCommand { get; }
 
     public RelayCommand BeginMatchCommand { get; }
+
+    public LobbyMutButton StartMatchButton => this.m_data.Model.StartMatchButton;
 
     public ObservableCollection<LobbyPlanningDefence> DefenceStructures { get; }
 

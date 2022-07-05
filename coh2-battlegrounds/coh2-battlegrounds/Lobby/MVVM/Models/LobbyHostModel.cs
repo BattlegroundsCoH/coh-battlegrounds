@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
 
 using Battlegrounds;
 using Battlegrounds.Functional;
@@ -17,6 +16,8 @@ using Battlegrounds.Networking.LobbySystem;
 
 using BattlegroundsApp.Lobby.MatchHandling;
 using BattlegroundsApp.Lobby.MVVM.Views;
+
+using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 

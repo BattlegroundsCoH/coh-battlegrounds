@@ -18,6 +18,8 @@ using Battlegrounds.Networking.Server;
 using BattlegroundsApp.Lobby.MVVM.Views;
 using BattlegroundsApp.LocalData;
 
+using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
+
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
 public class LobbyParticipantModel : LobbyModel {
