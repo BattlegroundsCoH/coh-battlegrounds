@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 using Battlegrounds.Functional;
@@ -16,6 +17,7 @@ using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Util;
 
+using BattlegroundsApp.Controls;
 using BattlegroundsApp.Lobby.MatchHandling;
 using BattlegroundsApp.Lobby.Planning;
 using BattlegroundsApp.MVVM;
@@ -39,6 +41,18 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
     public record LobbyPlanningParticipantDisplay(ImageSource? ArmyIcon, string Name, string CompanyName, int Row, int Column);
 
     public record LobbyPlanningMinimapItem(EntityBlueprint EntityBlueprint, ushort Owner, GamePosition WorldPos, Scenario Scenario);
+
+    public class LobbyPlanningCompanyDisplay : ILocLabelArgumentsObject {
+        public event ObjectChangedEventHandler? ObjectChanged;
+        public string Name { get; }
+        public CapacityValue Cap { get; }
+        public LobbyPlanningCompanyDisplay(string CompanyName, CapacityValue Cap) {
+            this.Name = CompanyName;
+            this.Cap = Cap;
+            this.Cap.ObjectChanged += (a, b) => this.ObjectChanged?.Invoke(a, b);
+        }
+        public object[] ToArgs() => this.Cap.ToArgs().Prepend(this.Name);
+    }
 
     private readonly ILobbyPlanningHandle m_planHandle;
     private readonly LobbyPlanningOverviewModelInput m_data;
@@ -65,7 +79,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     public Pool<LobbyPlanningUnit> PreplacableUnits => this.ContextHandler.PreplacableUnits;
 
-    public CapacityValue UnitCapacity { get; }
+    public LobbyPlanningCompanyDisplay PlanningDisplay { get; } = new("", new(0,0));
 
     public LobbyPlanningContextHandler ContextHandler => this.m_planningContext;
 
@@ -74,6 +88,12 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
     public ObservableCollection<LobbyPlanningParticipantDisplay> Defenders { get; }
 
     public TaggedObservableCollection<LobbyPlanningMinimapItem> MinimapItems { get; }
+
+    public Visibility IsUnitsVisible => this.m_planHandle.IsDefender ? Visibility.Visible : Visibility.Collapsed;
+
+    public Visibility IsDefencesVisible => this.m_planHandle.IsDefender ? Visibility.Visible : Visibility.Collapsed;
+
+    public Visibility IsPlanningVisible => this.m_planHandle.IsAttacker ? Visibility.Visible : Visibility.Collapsed;
 
     public LobbyPlanningOverviewModel(LobbyPlanningOverviewModelInput input) {
 
@@ -105,13 +125,13 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         // Init teams
         this.SetupTeams(this.m_data.Handle);
 
-        // Create capacity
-        this.UnitCapacity = new(10, () =>  this.PreplacableUnits.Picked);
-
         // Grab self
         if (this.m_data.Model.GetSelf() is not ILobbySlot self) {
             return;
         }
+
+        // Create capacity
+        this.PlanningDisplay = new(self.Occupant?.Company?.Name ?? string.Empty, new(10, () => this.PreplacableUnits.Picked));
 
         // Get faction str
         var factionStr = self.Occupant?.Company?.Army ?? string.Empty;

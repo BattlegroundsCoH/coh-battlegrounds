@@ -201,15 +201,18 @@
                 x:Name="ElementsPanel">
                 <Label
                     Content="Objectives"
-                    Foreground="White"/>
+                    Foreground="White"
+                    Visibility="{Binding IsPlanningVisible}"/>
                 <ItemsControl
                     Width="{Binding ElementName=ElementsPanel, Path=Width}"
-                    ItemsSource="{Binding PlanningActions}"/>
-                <Separator/>
+                    ItemsSource="{Binding PlanningActions}"
+                    Visibility="{Binding IsPlanningVisible}"/>
                 <Label
+                    Visibility="{Binding IsDefencesVisible}"
                     Content="Defences"
                     Foreground="White"/>
                 <ItemsControl
+                    Visibility="{Binding IsDefencesVisible}"
                     Width="{Binding ElementName=ElementsPanel, Path=Width}"
                     ItemsSource="{Binding DefenceStructures}">
                     <ItemsControl.ItemsPanel>
@@ -231,17 +234,20 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <Separator/>
+                <Separator
+                    Visibility="{Binding IsDefencesVisible}"/>
                 <!-- Change contents to name of company -->
                 <controls:LocLabel 
                     x:Name="ContentSite"
                     Foreground="White"
                     LocKey="LobbyPlanning_Deployments"
-                    Arguments="{Binding UnitCapacity}"
+                    Arguments="{Binding PlanningDisplay}"
+                    Visibility="{Binding IsUnitsVisible}"
                     FontSize="12"/>
                 <ItemsControl
                     Width="{Binding ElementName=ElementsPanel, Path=Width}"
-                    ItemsSource="{Binding PreplacableUnits}">
+                    ItemsSource="{Binding PreplacableUnits}"
+                    Visibility="{Binding IsUnitsVisible}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel/>

@@ -189,6 +189,20 @@ public static class FunctionalArray {
     }
 
     /// <summary>
+    /// Prepends <paramref name="element"/> to the beginning of the <paramref name="array"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the array.</typeparam>
+    /// <param name="array">The source array to prepend element to.</param>
+    /// <param name="element">The elemend to prepend.</param>
+    /// <returns>A copy of <paramref name="array"/> with <paramref name="element"/> as the first element.</returns>
+    public static T[] Prepend<T>(this T[] array, T element) {
+        T[] buffer = new T[array.Length + 1];
+        buffer[0] = element;
+        Array.Copy(array, 0, buffer, 1, array.Length);
+        return buffer;
+    }
+
+    /// <summary>
     /// Concatenate two arrays.
     /// </summary>
     /// <typeparam name="T">The type of the array.</typeparam>

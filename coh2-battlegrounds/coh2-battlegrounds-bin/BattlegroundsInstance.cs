@@ -287,15 +287,16 @@ public static class BattlegroundsInstance {
         => Path.Combine(__instance.GetPath(pathId), appendPath);
 
     /// <summary>
-    /// 
+    /// Get the relative path based on virtual path.
     /// </summary>
-    /// <param name="path"></param>
-    /// <param name="extension"></param>
-    /// <returns></returns>
+    /// <param name="path">The path to construct absolute path from</param>
+    /// <param name="extension">Optional extension to append.</param>
+    /// <returns>The absolute path to the virtual path.</returns>
     public static string GetRelativeVirtualPath(string path, string extension = "") {
 
         // Grab relative
-        string relative = path.IndexOf(':') is int rel && rel is not -1 ? path[..rel] : string.Empty switch {
+        int rel = path.IndexOf(':');
+        string relative = (rel is not -1 ? path[..rel] : string.Empty) switch {
             "Gamemode" => GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "bg_wc"),
             _ => GetRelativePath(BattlegroundsPaths.INSTALL_FOLDER)
         };
@@ -309,7 +310,7 @@ public static class BattlegroundsInstance {
         StringBuilder pathBuilder = new(relative);
 
         // Split
-        var dotted = path.Split('.');
+        var dotted = (rel is not -1 ? path[(rel+1)..] : path).Split('.');
 
         // Create path from dots
         for (int i = 0; i < dotted.Length; i++) {
