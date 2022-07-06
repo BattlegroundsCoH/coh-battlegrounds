@@ -113,9 +113,20 @@ public partial class Minimap : UserControl {
         // Grab ico
         string ico = ebp.Name switch {
             "starting_position_shared_territory" => $"Icons_minimap_mm_starting_point_{owner + 1}",
-            "victory_point" => "Icons_minimap_mm_victory_point",
+            "victory_point" => "Icons_resources_minimap_icon_victory",
+            "territory_munitions_point_mp" => "Icons_minimap_mm_ammo_point",
+            "territory_fuel_point_mp" => "Icons_minimap_mm_fuel_point_secured",
+            "territory_point_mp" or "territory_point_low" => "Icons_minimap_mm_territory_point",
             _ => string.Empty
         };
+
+        // Grab size
+        double size = ebp.Name switch {
+            "territory_fuel_point_mp" => 18,
+            "territory_point_mp" or "territory_point_low" => 16,
+            _ => 24
+        };
+        double size2 = size / 2;
 
         // Bail if no icon is defined
         if (string.IsNullOrEmpty(ico)) {
@@ -127,8 +138,8 @@ public partial class Minimap : UserControl {
 
         // Create image
         Image img = new() {
-            Width = 24,
-            Height = 24,
+            Width = size,
+            Height = size,
             Source = App.ResourceHandler.GetIcon("minimap_icons", ico),
             RenderTransformOrigin = new(0.5, 0.5)
         };
@@ -137,8 +148,8 @@ public partial class Minimap : UserControl {
         canvas.Children.Add(img);
 
         // Display
-        img.SetValue(Canvas.LeftProperty, p.X - 12);
-        img.SetValue(Canvas.BottomProperty, p.Y - 12);
+        img.SetValue(Canvas.LeftProperty, p.X - size2);
+        img.SetValue(Canvas.BottomProperty, p.Y - size2);
 
 
     }
