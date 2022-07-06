@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Networking.LobbySystem.Local;
 
@@ -29,6 +30,15 @@ public class LocalLobbyPlanner : ILobbyPlanningHandle {
     /// 
     /// </summary>
     public bool IsAttacker => !this.IsDefender;
+
+    /// <summary>
+    /// Get the size of the team the local machine is one
+    /// </summary>
+    public int TeamSize => (this.m_selfTeam switch {
+        0 => this.Handle.Allies,
+        1 => this.Handle.Axis,
+        _ => this.Handle.Observers
+    }).Slots.Filter(x => x.IsOccupied).Length;
 
     /// <summary>
     /// 
@@ -85,6 +95,27 @@ public class LocalLobbyPlanner : ILobbyPlanningHandle {
 
         // Add element
         this.m_elements.Add(new LocalPlanElement(id, owner, blueprint, origin, lookat, directional));
+
+        // Return ID
+        return id;
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="owner"></param>
+    /// <param name="objectiveType"></param>
+    /// <param name="objectiveOrder"></param>
+    /// <param name="objectivePosition"></param>
+    /// <returns></returns>
+    public int CreatePlanningObjective(ulong owner, PlanningObjectiveType objectiveType, int objectiveOrder, GamePosition objectivePosition) {
+
+        // Grab new id and increment counter
+        int id = this.m_elementCounter++;
+
+        // Add element
+        this.m_elements.Add(new LocalPlanElement(id, owner, objectiveType, objectiveOrder, objectivePosition));
 
         // Return ID
         return id;

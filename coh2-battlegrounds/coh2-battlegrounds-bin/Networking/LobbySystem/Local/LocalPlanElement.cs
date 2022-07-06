@@ -56,6 +56,16 @@ public class LocalPlanElement : ILobbyPlanElement {
     /// <summary>
     /// 
     /// </summary>
+    public PlanningObjectiveType ObjectiveType { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public int ObjectiveOrder { get; private set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="eid"></param>
     /// <param name="owner"></param>
     /// <param name="blueprint"></param>
@@ -92,5 +102,22 @@ public class LocalPlanElement : ILobbyPlanElement {
         this.CompanyId = companyId;
         this.IsDirectional = lookat is not null;
     }
+
+    public LocalPlanElement(int eid, ulong owner, PlanningObjectiveType objectiveType, int objectiveOrder, GamePosition objectivePos) {
+        this.ElementId = eid;
+        this.ElementOwnerId = owner;
+        this.SpawnPosition = objectivePos;
+        this.LookatPosition = null;
+        this.Blueprint = string.Empty;
+        this.ObjectiveOrder = objectiveOrder;
+        this.ObjectiveType = objectiveType;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="order"></param>
+    public void SetObjectiveOrder(int order)
+        => this.ObjectiveOrder = order;
 
 }

@@ -34,7 +34,18 @@ public record LobbyPlanningOverviewModelInput(LobbyModel Model, LobbyChatSpectat
 
 public class LobbyPlanningOverviewModel : ViewModelBase {
 
-    public record LobbyPlanningAction(string Icon);
+    public record LobbyPlanningAction(PlanningObjectiveType ObjectiveType, RelayCommand Click) {
+        public ImageSource? Icon => this.ObjectiveType switch {
+            PlanningObjectiveType.OT_Attack => null,
+            _ => null
+        };
+        public string Name => this.ObjectiveType switch {
+            PlanningObjectiveType.OT_Attack => "Attack Objective",
+            PlanningObjectiveType.OT_Defend => "Defend Objective",
+            PlanningObjectiveType.OT_Support => "Support Objective",
+            _ => string.Empty
+        };
+    }
 
     public record LobbyPlanningDefence(ImageSource? Icon, string Name, RelayCommand Click);
 
@@ -193,7 +204,14 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
         } else {
 
-            // TODO:
+            // Create basic objective types
+            this.PlanningActions.Add(new(PlanningObjectiveType.OT_Attack, new(() => this.m_planningContext.PickPlaceElement(PlanningObjectiveType.OT_Attack))));
+            this.PlanningActions.Add(new(PlanningObjectiveType.OT_Defend, new(() => this.m_planningContext.PickPlaceElement(PlanningObjectiveType.OT_Defend))));
+
+            // If more than one team member, add support objective
+            if (pHandle.TeamSize > 1) {
+                this.PlanningActions.Add(new(PlanningObjectiveType.OT_Support, new(() => this.m_planningContext.PickPlaceElement(PlanningObjectiveType.OT_Support))));
+            }
 
         }
 

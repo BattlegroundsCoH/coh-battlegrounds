@@ -224,6 +224,7 @@
                         <DataTemplate>
                             <Grid>
                                 <Button
+                                    Style="{StaticResource UnitEntityIconButton}"
                                     Command="{Binding Click}">
                                     <Image
                                         Width="64"
@@ -257,7 +258,7 @@
                         <DataTemplate>
                             <Grid>
                                 <Button
-                                    Style="{StaticResource MainButtonStyle}"
+                                    Style="{StaticResource UnitEntityIconButton}"
                                     Command="{Binding Click}">
                                     <Image
                                         Width="36"
@@ -284,9 +285,9 @@
             ToolTip="{Binding StartMatchButton.Tooltip}"
             IsEnabled="{Binding StartMatchButton.IsEnabled}"
             Command="{Binding BeginMatchCommand}"
-            Background="{StaticResource BackgroundDarkBlueBrush}"
+            Background="{StaticResource BackgroundLightBlueBrush}"
             Foreground="#FFFFFF"
-            HoverColour="{StaticResource BackgroundBlueBrush}"/>
+            HoverColour="{StaticResource BackgroundLightGrayBrush}"/>
 
     </Grid>
 </UserControl>

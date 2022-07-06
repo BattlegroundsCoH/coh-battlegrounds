@@ -81,6 +81,10 @@ public class LobbyPlanningContextHandler {
         this.m_currentPlacement = (null, sbp, null, cid);
     }
 
+    public void PickPlaceElement(PlanningObjectiveType objectiveType) {
+
+    }
+
     public void PlaceElement(Point point, Point? other = null) {
 
         // Grab self
