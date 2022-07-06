@@ -125,9 +125,15 @@ public static class SessionUtility {
     public static bool GotFatalScarError() {
 
         if (File.Exists(LogFilePath)) {
-            if (File.ReadAllText(LogFilePath).Contains("GameObj::OnFatalScarError:")) {
-                return true;
+            try {
+                if (File.ReadAllText(LogFilePath).Contains("GameObj::OnFatalScarError:")) {
+                    return true;
+                }
+            } catch (IOException iox) {
+                Trace.WriteLine($"Error reading warnings.log when checking for scar error: {iox.Message}", nameof(SessionUtility));
+                return false; // ASSUME false - may change to true if this branch is hit more in that case.
             }
+
         }
 
         return false;
