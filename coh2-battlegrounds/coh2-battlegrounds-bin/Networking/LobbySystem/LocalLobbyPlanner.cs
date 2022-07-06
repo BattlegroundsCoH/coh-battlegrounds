@@ -139,4 +139,12 @@ public class LocalLobbyPlanner : ILobbyPlanningHandle {
             this.m_elements.Remove(e);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="planElementId"></param>
+    /// <returns></returns>
+    public ILobbyPlanElement? GetPlanElement(int planElementId)
+        => this.m_elements.Find(x => x.ElementId == planElementId);
+
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Media;
@@ -21,6 +22,7 @@ public class LobbyPlanningContextHandler {
     private record SquadPlacement(SquadBlueprint Sbp, ushort Cid) : PlacementCase();
     private record ObjectivePlacement(PlanningObjectiveType ObjectiveType) : PlacementCase();
 
+    private readonly List<int> m_objectiveElements;
     private readonly ILobbyPlanningHandle m_handle;
     private readonly Scenario m_scenario;
     private PlacementCase? m_currentPlacement;
@@ -74,6 +76,9 @@ public class LobbyPlanningContextHandler {
         this.Elements = new();
         this.PreplacableUnits = new();
 
+        // Init fields
+        this.m_objectiveElements = new();
+
     }
 
     public void PickPlaceElement(EntityBlueprint ebp, FactionDefence defence) {
@@ -122,7 +127,10 @@ public class LobbyPlanningContextHandler {
         } else if (this.m_currentPlacement is ObjectivePlacement op) {
 
             // Grab index
-            i = this.m_handle.CreatePlanningObjective(self, op.ObjectiveType, 0, spawn);
+            i = this.m_handle.CreatePlanningObjective(self, op.ObjectiveType, this.m_objectiveElements.Count, spawn);
+
+            // Add to objective list
+            this.m_objectiveElements.Add(i);
 
             // Reset placement data
             this.m_currentPlacement = null;
@@ -134,8 +142,13 @@ public class LobbyPlanningContextHandler {
     }
 
     public void RemoveElement(int elemId) {
-        // TODO: Remove more
         this.m_handle.RemovePlanElement(elemId);
+        if (this.m_objectiveElements.IndexOf(elemId) is int i && i >= 0) {
+            this.m_objectiveElements.RemoveAt(i);
+            for (int j = i; j < this.m_objectiveElements.Count; j++) {
+                this.m_handle.GetPlanElement(this.m_objectiveElements[j])?.SetObjectiveOrder(j);
+            }
+        }
     }
 
 }

@@ -62,7 +62,7 @@ public interface ILobbyPlanningHandle {
     /// <summary>
     /// Remove a planning
     /// </summary>
-    /// <param name="planElementId"></param>
+    /// <param name="planElementId">The id of the plan element to remove.</param>
     void RemovePlanElement(int planElementId);
 
     /// <summary>
@@ -71,5 +71,12 @@ public interface ILobbyPlanningHandle {
     /// <param name="teamIndex">The index of the team to retrieve planning elements from.</param>
     /// <returns>Array of plan elements.</returns>
     ILobbyPlanElement[] GetPlanningElements(byte teamIndex);
+
+    /// <summary>
+    /// Get the plan element given by the specified element id.
+    /// </summary>
+    /// <param name="planElementId">The id of the plan element to fetch.</param>
+    /// <returns>If found, the plan element; Otherwise null.</returns>
+    ILobbyPlanElement? GetPlanElement(int planElementId);
 
 }
