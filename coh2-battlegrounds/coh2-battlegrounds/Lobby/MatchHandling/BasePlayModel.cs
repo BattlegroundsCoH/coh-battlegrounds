@@ -166,10 +166,8 @@ internal abstract class BasePlayModel {
             // Grab elements
             var elements = this.m_handle.PlanningHandle.GetPlanningElements(0).Concat(this.m_handle.PlanningHandle.GetPlanningElements(1));
 
-            // For now, just init goals to be empty
-            sessionGoals = Array.Empty<SessionPlanGoalInfo>();
-
             // Invoke helper functions
+            sessionGoals = CreatePlanningGoals(participants, elements);
             sessionEntities = CreatePlanningEntities(participants, elements);
             sessionSquads = CreatePlanningSquads(participants, elements);
 
@@ -244,7 +242,7 @@ internal abstract class BasePlayModel {
     protected static SessionPlanEntityInfo[] CreatePlanningEntities(Dictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements) {
 
         // Grab planning entities
-        var planEntities = planElements.Filter(x => x.IsEntity);
+        var planEntities = planElements.Filter(x => x.IsEntity && x.ObjectiveType is PlanningObjectiveType.None);
 
         // Create array
         var entities = new SessionPlanEntityInfo[planEntities.Length];
@@ -275,12 +273,12 @@ internal abstract class BasePlayModel {
     protected static SessionPlanSquadInfo[] CreatePlanningSquads(Dictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements) {
 
         // Grab planning squads
-        var planSquads = planElements.Filter(x => !x.IsEntity);
+        var planSquads = planElements.Filter(x => !x.IsEntity && x.ObjectiveType is PlanningObjectiveType.None);
 
         // Create array
         var squads = new SessionPlanSquadInfo[planSquads.Length];
 
-        // Loop over all entities
+        // Loop over all squads
         for (int i = 0; i < planSquads.Length; i++) {
 
             // Get participant
@@ -299,6 +297,36 @@ internal abstract class BasePlayModel {
 
         // Return
         return squads;
+
+    }
+
+    protected static SessionPlanGoalInfo[] CreatePlanningGoals(Dictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements) {
+
+        // Grab all goals
+        var planGoals = planElements.Filter(x => x.ObjectiveType is not PlanningObjectiveType.None);
+
+        // Create goals array
+        var goals = new SessionPlanGoalInfo[planGoals.Length];
+
+        // Loop over all goals
+        for (int i = 0; i < planGoals.Length; i++) {
+
+            // get participant
+            var p = participants[planGoals[i].ElementOwnerId];
+
+            // Create goal
+            goals[i] = new() {
+                ObjectiveTeam = (byte)p.TeamIndex,
+                ObjectivePlayer = p.PlayerIndexOnTeam,
+                ObjectiveType = (byte)planGoals[i].ObjectiveType,
+                ObjectiveIndex = (byte)planGoals[i].ObjectiveOrder,
+                ObjectivePosition = planGoals[i].SpawnPosition
+            };
+
+        }
+
+        // Return goals
+        return goals;
 
     }
 

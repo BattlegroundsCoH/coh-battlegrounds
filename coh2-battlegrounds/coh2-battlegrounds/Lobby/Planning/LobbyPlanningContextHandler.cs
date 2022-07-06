@@ -54,7 +54,7 @@ public class LobbyPlanningContextHandler {
         }
     }
 
-    public bool IsLinePlacement => this.m_currentPlacement is EntityPlacement e ? e.Def.IsLinePlacement : false;
+    public bool IsLinePlacement => this.m_currentPlacement is EntityPlacement e && e.Def.IsLinePlacement;
 
     public EntityBlueprint? PlaceElementBlueprint => this.m_currentPlacement is EntityPlacement e ?  e.Ebp : null;
 

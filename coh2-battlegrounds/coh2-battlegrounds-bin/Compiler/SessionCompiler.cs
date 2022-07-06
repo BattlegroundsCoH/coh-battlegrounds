@@ -81,7 +81,7 @@ public class SessionCompiler : ISessionCompiler {
         }
 
         // Write the precompiled database
-        this.WritePrecompiledDatabase(sourceBuilder, participants.Map(x => x.SelectedCompany).NotNull());
+        this.WritePrecompiledDatabase(sourceBuilder, participants.MapNotNull(x => x.SelectedCompany));
 
         // Return built source code
         return sourceBuilder.GetSourceText();
@@ -136,9 +136,9 @@ public class SessionCompiler : ISessionCompiler {
     protected virtual Dictionary<string, object> GetPlanning(ISession session) {
 
         // Create containers
-        var entityList = new List<object>();
-        var squadList = new List<object>();
-        var goalList = new List<object>();
+        var entityList = new List<Dictionary<string, object>>();
+        var squadList = new List<Dictionary<string, object>>();
+        var goalList = new List<Dictionary<string, object>>();
 
         // Grab data
         var entities = session.GetPlanEntities();
@@ -175,7 +175,17 @@ public class SessionCompiler : ISessionCompiler {
             squadList.Add(squad);
         }
 
-        // TODO: Goals
+        // Loop over goals
+        for (int i = 0; i < goals.Length; i++) {
+            var goal = new Dictionary<string, object>() {
+                ["team"] = goals[i].ObjectiveTeam,
+                ["player"] = goals[i].ObjectivePlayer,
+                ["order"] = goals[i].ObjectiveIndex,
+                ["type"] = goals[i].ObjectiveType,
+                ["pos"] = goals[i].ObjectivePosition
+            };
+            goalList.Add(goal);
+        }
 
         // Return plan data
         return new() {

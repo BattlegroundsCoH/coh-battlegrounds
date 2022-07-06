@@ -40,6 +40,9 @@ public readonly struct SessionPlanEntityInfo : ISessionPlanEntity {
 
 }
 
+/// <summary>
+/// Readonly struct representing a planned squad.
+/// </summary>
 public readonly struct SessionPlanSquadInfo : ISessionPlanSquad {
 
     /// <summary>
@@ -69,6 +72,34 @@ public readonly struct SessionPlanSquadInfo : ISessionPlanSquad {
 
 }
 
+/// <summary>
+/// Readonly struct representing a plannged goal.
+/// </summary>
 public readonly struct SessionPlanGoalInfo : ISessionPlanGoal {
+
+    /// <summary>
+    /// Get or initialise the team this goal is for.
+    /// </summary>
+    public byte ObjectiveTeam { get; init; }
+
+    /// <summary>
+    /// Get or initialise the player this objective is for.
+    /// </summary>
+    public byte ObjectivePlayer { get; init; }
+
+    /// <summary>
+    /// Get or initialise the type of objective (1 = attack, 2 = defend, 3 = support)
+    /// </summary>
+    public byte ObjectiveType { get; init; }
+
+    /// <summary>
+    /// Get or initialise the index of the objective (local to user)
+    /// </summary>
+    public byte ObjectiveIndex { get; init; }
+
+    /// <summary>
+    /// Get or initialise the position of the objective
+    /// </summary>
+    public GamePosition ObjectivePosition { get; init; }
 
 }
