@@ -64,6 +64,7 @@ public partial class LobbyPlanningOverview : UserControl {
         if (this.ContextHandler.RequiresSecond) {
             
             if (this.m_points.Count is 0) {
+
                 this.m_points.Push(clickPos);
                 var marker = this.CreateSelectedMarker(clickPos);
                 this.m_planningHelper = marker;
@@ -71,8 +72,16 @@ public partial class LobbyPlanningOverview : UserControl {
 
             } else {
 
+                // Grab element
+                var placeElement = this.m_points.Pop();
+
                 // Place
-                this.ContextHandler.PlaceElement(this.m_points.Pop(), clickPos);
+                int placedId = this.ContextHandler.PlaceElement(placeElement, clickPos);
+
+                // Subscribe to right click
+                if (this.m_planningHelper is not null) {
+                    RegisterRemoveEvent(this.m_planningHelper.Element, placedId);
+                }
 
                 // Clear
                 this.m_points.Clear();
@@ -82,15 +91,26 @@ public partial class LobbyPlanningOverview : UserControl {
 
         } else {
 
+            // Grab element
+            var placeElement = this.CreateSelectedMarker(clickPos).Element;
+
             // Show it
-            this.PlanningCanvas.Children.Add(this.CreateSelectedMarker(clickPos).Element);
+            this.PlanningCanvas.Children.Add(placeElement);
 
             // Place
-            this.ContextHandler.PlaceElement(clickPos);
+            int placedId = this.ContextHandler.PlaceElement(clickPos);
+
+            // Subscribe to right click
+            RegisterRemoveEvent(placeElement, placedId);
 
         }        
 
     }
+
+    private void RegisterRemoveEvent(UIElement e, int index) => e.MouseRightButtonUp += (a, b) => {
+        this.ContextHandler.RemoveElement(index);
+        this.PlanningCanvas.Children.Remove((UIElement)a);
+    };
 
     private HelperElement CreateSelectedMarker(Point p) {
         if (this.ContextHandler.PlaceElementBlueprint is not null) {
@@ -179,7 +199,7 @@ public partial class LobbyPlanningOverview : UserControl {
     private void PlanningCanvas_MouseMove(object sender, MouseEventArgs e) {
 
         // If no place element, bail
-        if (!this.ContextHandler.HasEntityPlacement) {
+        if (!(this.ContextHandler.HasEntityPlacement || this.ContextHandler.HasSquadPlacement)) {
             return;
         }
 
@@ -192,22 +212,22 @@ public partial class LobbyPlanningOverview : UserControl {
             // Calc pos
             var v0 = Vectors.FromTransform(this.m_planningHelper.Translation) + this.m_planningHelper.OffsetVector;
 
-            // Grab placement data
-            var data = this.ContextHandler.PlaceElementData;
+            // Get if line
+            var isln = this.ContextHandler.IsLinePlacement;
 
             // Compute angle
             var v1 = Vectors.FromPoint(p);
             var v2 = v1 - v0;
 
             // Grab the angle
-            var modAngle = data.Value.IsLinePlacement ? 0.0 : 90.0;
+            var modAngle = isln ? 0.0 : 90.0;
             var angle = Math.Atan2(v2.Y, v2.X) * 57.29578 + modAngle;
 
             // Set angle
             this.m_planningHelper.Rotation.Angle = angle;
 
             // Do line placement
-            if (data.Value.IsLinePlacement) {
+            if (this.ContextHandler.PlaceElementBlueprint is EntityBlueprint ebp && isln) {
 
                 // Calculate distance
                 var dist = v1.Length;
@@ -228,7 +248,7 @@ public partial class LobbyPlanningOverview : UserControl {
                     var v3 = Vectors.Interpolate(v0, v1, i * stepSize);
 
                     // Create helper
-                    var helper = CreateEntityMarker(this.ContextHandler.PlaceElementBlueprint, v3.ToPoint());
+                    var helper = CreateEntityMarker(ebp, v3.ToPoint());
                     helper.Rotation.Angle = angle;
                     helper.Element.MouseLeftButtonUp += this.PlanningCanvas_MouseLeftButtonUp;
                     helper.Element.MouseRightButtonUp += this.UserControl_MouseRightButtonUp;

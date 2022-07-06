@@ -16,46 +16,49 @@ public record LobbyPlanningUnit(ushort CompanyId, ImageSource? Symbol, string Na
 
 public class LobbyPlanningContextHandler {
 
+    private abstract record PlacementCase();
+    private record EntityPlacement(EntityBlueprint Ebp, FactionDefence Def) : PlacementCase();
+    private record SquadPlacement(SquadBlueprint Sbp, ushort Cid) : PlacementCase();
+    private record ObjectivePlacement(PlanningObjectiveType ObjectiveType) : PlacementCase();
+
     private readonly ILobbyPlanningHandle m_handle;
     private readonly Scenario m_scenario;
-    private (EntityBlueprint? e, SquadBlueprint? s, FactionDefence? d, ushort i)? m_currentPlacement;
+    private PlacementCase? m_currentPlacement;
 
-    [MemberNotNullWhen(true, nameof(PlaceElementData))]
     public bool HasPlaceElement {
         get => this.m_currentPlacement is not null;
         set => this.m_currentPlacement = value is false ? null : this.m_currentPlacement;
     }
 
-    [MemberNotNullWhen(true, nameof(PlaceElementData), nameof(PlaceElementBlueprint))]
-    public bool HasEntityPlacement {
-        get => this.m_currentPlacement.HasValue && this.m_currentPlacement.Value.e is not null;
-    }
+    [MemberNotNullWhen(true, nameof(PlaceElementBlueprint))]
+    public bool HasEntityPlacement => this.m_currentPlacement is EntityPlacement;
 
     [MemberNotNullWhen(true, nameof(PlaceElementSquadBlueprint))]
-    public bool HasSquadPlacement {
-        get => this.m_currentPlacement.HasValue && this.m_currentPlacement.Value.s is not null;
-    }
+    public bool HasSquadPlacement => this.m_currentPlacement is SquadPlacement;
+
+    [MemberNotNullWhen(true, nameof(PlaceElementSquadBlueprint))]
+    public bool HasObjectivePlacement => this.m_currentPlacement is ObjectivePlacement;
 
     public Pool<LobbyPlanningUnit> PreplacableUnits { get; }
 
     public bool RequiresSecond {
         get {
-            if (this.HasEntityPlacement) {
-                return this.m_currentPlacement.HasValue && (PlaceElementData.Value.IsLinePlacement || PlaceElementData.Value.IsDirectional);
-            } else if (this.HasSquadPlacement) {
-                return this.PlaceElementSquadBlueprint.IsTeamWeapon;
+            if (this.m_currentPlacement is EntityPlacement e) {
+                return e.Def.IsLinePlacement || e.Def.IsDirectional;
+            } else if (this.m_currentPlacement is SquadPlacement s) {
+                return s.Sbp.IsTeamWeapon;
             }
             return false;
         }
     }
 
-    public FactionDefence? PlaceElementData => this.m_currentPlacement.HasValue ? this.m_currentPlacement.Value.d : null;
+    public bool IsLinePlacement => this.m_currentPlacement is EntityPlacement e ? e.Def.IsLinePlacement : false;
 
-    public EntityBlueprint? PlaceElementBlueprint => this.m_currentPlacement.HasValue ? this.m_currentPlacement.Value.e : null;
+    public EntityBlueprint? PlaceElementBlueprint => this.m_currentPlacement is EntityPlacement e ?  e.Ebp : null;
 
-    public SquadBlueprint? PlaceElementSquadBlueprint => this.m_currentPlacement.HasValue ? this.m_currentPlacement.Value.s : null;
+    public SquadBlueprint? PlaceElementSquadBlueprint => this.m_currentPlacement is SquadPlacement s ? s.Sbp : null;
 
-    public ushort PlaceElementSquadId => this.m_currentPlacement.HasValue ? this.m_currentPlacement.Value.i : ushort.MinValue;
+    public ushort PlaceElementSquadId => this.m_currentPlacement is SquadPlacement s ? s.Cid : ushort.MinValue;
 
     public ObservableCollection<LobbyPlanningObject> Elements { get; }
 
@@ -74,18 +77,18 @@ public class LobbyPlanningContextHandler {
     }
 
     public void PickPlaceElement(EntityBlueprint ebp, FactionDefence defence) {
-        this.m_currentPlacement = (ebp, null, defence, ushort.MaxValue);
+        this.m_currentPlacement = new EntityPlacement(ebp, defence);
     }
 
     public void PickPlaceElement(SquadBlueprint sbp, ushort cid) {
-        this.m_currentPlacement = (null, sbp, null, cid);
+        this.m_currentPlacement = new SquadPlacement(sbp, cid);
     }
 
     public void PickPlaceElement(PlanningObjectiveType objectiveType) {
-
+        this.m_currentPlacement = new ObjectivePlacement(objectiveType);
     }
 
-    public void PlaceElement(Point point, Point? other = null) {
+    public int PlaceElement(Point point, Point? other = null) {
 
         // Grab self
         var self = this.m_handle.Handle.Self.ID;
@@ -94,32 +97,45 @@ public class LobbyPlanningContextHandler {
         GamePosition spawn = this.m_scenario.FromMinimapPosition(768, 768, point.X, point.Y);
         GamePosition? lookat = other is null ? null : this.m_scenario.FromMinimapPosition(768, 768, other.Value.X, other.Value.Y);
 
-        // Decide what to do
-        if (this.HasEntityPlacement) {
+        // Define placed index
+        int i = -1;
 
-            var e = this.PlaceElementBlueprint;
-            var d = this.PlaceElementData.Value;
+        // Decide what to do
+        if (this.m_currentPlacement is EntityPlacement ep) {
 
             // Grab index
-            int i = this.m_handle.CreatePlanningStructure(self, e.Name, d.IsDirectional, spawn, lookat);
+            i = this.m_handle.CreatePlanningStructure(self, ep.Ebp.Name, ep.Def.IsDirectional, spawn, lookat);
 
-            this.Elements.Add(new(i, self, e, point, other));
+            this.Elements.Add(new(i, self, ep.Ebp, point, other));
             this.m_currentPlacement = null;
 
-        } else if (this.HasSquadPlacement) {
-
-            var s = this.PlaceElementSquadBlueprint;
+        } else if (this.m_currentPlacement is SquadPlacement sp) {
 
             this.PreplacableUnits.Pick(x => x.CompanyId == this.PlaceElementSquadId);
 
             // Grab index
-            int i = this.m_handle.CreatePlanningSquad(self, s.Name, this.PlaceElementSquadId, spawn, lookat);
+            i = this.m_handle.CreatePlanningSquad(self, sp.Sbp.Name, this.PlaceElementSquadId, spawn, lookat);
 
-            this.Elements.Add(new(i, self, s, point, other));
+            this.Elements.Add(new(i, self, sp.Sbp, point, other));
+            this.m_currentPlacement = null;
+
+        } else if (this.m_currentPlacement is ObjectivePlacement op) {
+
+            // Grab index
+            i = this.m_handle.CreatePlanningObjective(self, op.ObjectiveType, 0, spawn);
+
+            // Reset placement data
             this.m_currentPlacement = null;
 
         }
 
+        return i;
+
+    }
+
+    public void RemoveElement(int elemId) {
+        // TODO: Remove more
+        this.m_handle.RemovePlanElement(elemId);
     }
 
 }

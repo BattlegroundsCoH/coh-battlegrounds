@@ -35,8 +35,11 @@ public record LobbyPlanningOverviewModelInput(LobbyModel Model, LobbyChatSpectat
 public class LobbyPlanningOverviewModel : ViewModelBase {
 
     public record LobbyPlanningAction(PlanningObjectiveType ObjectiveType, RelayCommand Click) {
+
         public ImageSource? Icon => this.ObjectiveType switch {
-            PlanningObjectiveType.OT_Attack => null,
+            PlanningObjectiveType.OT_Attack => LobbyVisualsLookup.ObjectiveTypes[0],
+            PlanningObjectiveType.OT_Defend => LobbyVisualsLookup.ObjectiveTypes[1],
+            PlanningObjectiveType.OT_Support => LobbyVisualsLookup.ObjectiveTypes[2],
             _ => null
         };
         public string Name => this.ObjectiveType switch {
