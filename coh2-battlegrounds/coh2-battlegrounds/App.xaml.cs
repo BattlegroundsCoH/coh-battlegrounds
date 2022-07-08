@@ -303,7 +303,7 @@ public partial class App : Application {
 
         // Loop through basic entry
         foreach (DictionaryEntry res in dictionary) {
-            if (res.Value is DataTemplate template && (template.DataType?.Equals(type) ?? false)) {
+            if (res.Value is DataTemplate template && template.DataType.Equals(type)) {
                 return template;
             }
         }

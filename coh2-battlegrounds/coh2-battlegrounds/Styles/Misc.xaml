@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
-                    xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters">
+                    xmlns:controls="clr-namespace:BattlegroundsApp.Controls">
 
     <Style x:Key="StandardBlueDropdownScrollbarButton" TargetType="{x:Type RepeatButton}">
         <Setter Property="Template">
@@ -865,25 +864,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
-
-    <Style x:Key="ResponsiveContentControl" TargetType="{x:Type ContentControl}">
-        
-        <!-- Default Layout -->
-        <Setter Property="ContentTemplate" Value="{StaticResource LaptopLayout}" />
-
-        <Style.Triggers>
-            
-            <!-- Desktop Layout | width > 1400px -->
-            <DataTrigger Binding="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Converter={x:Static converters:IsGreaterThanConverer.Instance}, ConverterParameter=1400}"
-                                     Value="True">
-
-                <Setter Property="ContentTemplate" Value="{StaticResource DesktopLayout}" />
-
-            </DataTrigger>
-
-        </Style.Triggers>
-
     </Style>
 
 </ResourceDictionary>
