@@ -3,6 +3,7 @@ using System.Linq;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Networking.Communication.Connections;
+using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.LobbySystem.Local;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
@@ -305,6 +306,8 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
     public UploadResult UploadGamemodeFile(byte[] contents, UploadProgressCallbackHandler? callbackHandler) => UploadResult.UPLOAD_SUCCESS;
 
     public LobbyPollResults ConductPoll(string pollType, double pollTime = 3) => new(1, 0, false);
+
+    public void Subscribe(string to, LobbyEventHandler<ContentMessage> eventHandler) {}
 
     #endregion
 

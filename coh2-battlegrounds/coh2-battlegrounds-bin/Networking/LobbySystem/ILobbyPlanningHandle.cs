@@ -28,6 +28,21 @@ public interface ILobbyPlanningHandle {
     int TeamSize { get; }
 
     /// <summary>
+    /// Get the index of the team of the local player
+    /// </summary>
+    byte Team { get; }
+
+    /// <summary>
+    /// Event triggered when a plan element is added remotely.
+    /// </summary>
+    event LobbyEventHandler<ILobbyPlanElement>? PlanElementAdded;
+
+    /// <summary>
+    /// Event triggered when a plan element is removed remotely.
+    /// </summary>
+    event LobbyEventHandler<int>? PlanElementRemoved;
+
+    /// <summary>
     /// Create a new planning structure for the specified owner.
     /// </summary>
     /// <param name="owner">The Steam Id of the owner.</param>
@@ -78,5 +93,10 @@ public interface ILobbyPlanningHandle {
     /// <param name="planElementId">The id of the plan element to fetch.</param>
     /// <returns>If found, the plan element; Otherwise null.</returns>
     ILobbyPlanElement? GetPlanElement(int planElementId);
+
+    /// <summary>
+    /// Clear all plan elements
+    /// </summary>
+    void ClearPlan();
 
 }

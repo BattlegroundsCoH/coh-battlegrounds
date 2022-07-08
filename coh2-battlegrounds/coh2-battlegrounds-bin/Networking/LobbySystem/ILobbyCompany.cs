@@ -3,7 +3,7 @@
 /// <summary>
 /// 
 /// </summary>
-public interface ILobbyCompany : IHandleObject {
+public interface ILobbyCompany : IHandleObject<ILobbyHandle> {
 
     /// <summary>
     /// 

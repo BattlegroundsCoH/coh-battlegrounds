@@ -13,8 +13,17 @@ namespace Battlegrounds.Networking.LobbySystem;
 public class LocalLobbyPlanner : ILobbyPlanningHandle {
 
     private readonly List<ILobbyPlanElement> m_elements;
-    private readonly int m_selfTeam;
     private int m_elementCounter;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public event LobbyEventHandler<ILobbyPlanElement>? PlanElementAdded;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public event LobbyEventHandler<int>? PlanElementRemoved;
 
     /// <summary>
     /// 
@@ -24,7 +33,7 @@ public class LocalLobbyPlanner : ILobbyPlanningHandle {
     /// <summary>
     /// 
     /// </summary>
-    public bool IsDefender => this.Handle.AreTeamRolesSwapped() ? this.m_selfTeam is 0 : this.m_selfTeam is 1;
+    public bool IsDefender => this.Handle.AreTeamRolesSwapped() ? this.Team is 0 : this.Team is 1;
 
     /// <summary>
     /// 
@@ -32,9 +41,14 @@ public class LocalLobbyPlanner : ILobbyPlanningHandle {
     public bool IsAttacker => !this.IsDefender;
 
     /// <summary>
+    /// 
+    /// </summary>
+    public byte Team => this.Handle.GetSelfTeam();
+
+    /// <summary>
     /// Get the size of the team the local machine is one
     /// </summary>
-    public int TeamSize => (this.m_selfTeam switch {
+    public int TeamSize => (this.Team switch {
         0 => this.Handle.Allies,
         1 => this.Handle.Axis,
         _ => this.Handle.Observers
@@ -51,9 +65,6 @@ public class LocalLobbyPlanner : ILobbyPlanningHandle {
         
         // Create list for elements
         this.m_elements = new();
-
-        // Grab self
-        this.m_selfTeam = handle.GetSelfTeam();
 
     }
 
@@ -146,5 +157,13 @@ public class LocalLobbyPlanner : ILobbyPlanningHandle {
     /// <returns></returns>
     public ILobbyPlanElement? GetPlanElement(int planElementId)
         => this.m_elements.Find(x => x.ElementId == planElementId);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void ClearPlan() {
+        this.m_elements.ForEach(x => this.PlanElementRemoved?.Invoke(x.ElementId));
+        this.m_elements.Clear();
+    }
 
 }

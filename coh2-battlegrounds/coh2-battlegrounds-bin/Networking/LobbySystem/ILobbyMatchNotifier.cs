@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Battlegrounds.Networking.Server;
+﻿using Battlegrounds.Networking.Server;
 
 namespace Battlegrounds.Networking.LobbySystem;
+
 public interface ILobbyMatchNotifier {
 
     /// <summary>

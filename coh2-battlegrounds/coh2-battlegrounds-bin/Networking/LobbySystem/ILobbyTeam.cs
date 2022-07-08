@@ -3,7 +3,7 @@
 /// <summary>
 /// Interface for representing a team in a lobby.
 /// </summary>
-public interface ILobbyTeam : IHandleObject {
+public interface ILobbyTeam : IHandleObject<ILobbyHandle> {
 
     /// <summary>
     /// Get the slots of the team.

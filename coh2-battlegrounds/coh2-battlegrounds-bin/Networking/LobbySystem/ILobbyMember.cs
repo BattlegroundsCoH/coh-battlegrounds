@@ -30,7 +30,7 @@ public enum LobbyMemberState : byte {
 /// <summary>
 /// 
 /// </summary>
-public interface ILobbyMember : IHandleObject {
+public interface ILobbyMember : IHandleObject<ILobbyHandle> {
 
     /// <summary>
     /// 

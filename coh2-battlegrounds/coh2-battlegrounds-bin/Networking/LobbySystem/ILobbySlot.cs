@@ -7,7 +7,7 @@ namespace Battlegrounds.Networking.LobbySystem;
 /// <summary>
 /// 
 /// </summary>
-public interface ILobbySlot : IHandleObject {
+public interface ILobbySlot : IHandleObject<ILobbyHandle> {
 
     /// <summary>
     /// 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using Battlegrounds.Networking.Communication.Connections;
+using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
@@ -273,5 +274,12 @@ public interface ILobbyHandle {
     /// <param name="pollId"></param>
     /// <param name="pollVote"></param>
     void RespondPoll(string pollId, bool pollVote);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="to"></param>
+    /// <param name="eventHandler"></param>
+    void Subscribe(string to, LobbyEventHandler<ContentMessage> eventHandler);
 
 }
