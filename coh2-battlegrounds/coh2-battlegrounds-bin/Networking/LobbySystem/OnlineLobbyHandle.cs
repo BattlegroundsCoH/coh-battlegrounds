@@ -650,17 +650,31 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
         return true;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="team1"></param>
+    /// <param name="team2"></param>
     public void SetTeamRoles(string team1, string team2) {
-        throw new NotImplementedException();
+        if (this.IsHost) {
+            this.m_remote.Call("SetTeamRoles", team1, team2);
+        }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public void SwapTeamRoles() {
-        throw new NotImplementedException();
+        if (this.m_isHost) {
+            this.m_remote.Call("SwapTeamRoles");
+        }
     }
 
-    public bool AreTeamRolesSwapped() {
-        throw new NotImplementedException();
-    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public bool AreTeamRolesSwapped() => this.m_remote.Call<bool>("AreTeamRolesSwapped");
 
     /// <summary>
     /// Start the match following the startup grace period.
