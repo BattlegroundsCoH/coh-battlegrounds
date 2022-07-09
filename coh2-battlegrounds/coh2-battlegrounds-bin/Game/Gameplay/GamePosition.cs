@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Globalization;
+using System.Text.Json.Serialization;
 
 using Battlegrounds.Lua.Generator.RuntimeServices;
 
@@ -65,7 +66,8 @@ public struct GamePosition {
     /// Returns a string that represents the current object.
     /// </summary>
     /// <returns>A string that represents the current object.</returns>
-    public override string ToString() => $"({this.X}, {this.Y}, {this.Z})";
+    public override string ToString() 
+        => $"({this.X.ToString(CultureInfo.InvariantCulture)}, {this.Y.ToString(CultureInfo.InvariantCulture)}, {this.Z.ToString(CultureInfo.InvariantCulture)})";
 
     /// <summary>
     /// 
