@@ -262,8 +262,270 @@ end
 -- Objectives Check
 ------------------------------------------------------------------------------------
 
+-- Battlegrounds Objective Types
+BG_OT_ATTACK = 1 -- Attack position (capture)
+BG_OT_DEFEND = 2 -- Defend position (hold for 3 minutes)
+BG_OT_SUPPORT = 3 --  Support position (provide support for another player for 3 minutes)
+
 function BattlegroundsDefence_InitObjectives()
-	-- TODO: Implement
+	
+	-- Bail if no objectives are defined
+	if #bg_plandata.objectives == 0 then
+		return
+	end
+
+	-- Create main objective
+	OBJ_DefenceMain = {
+		SetupUI = function() end,
+		OnStart = function() end,
+		OnComplete = function()	end,
+		OnFail = function() end,
+		IsComplete = function() return false end,
+		Title = BG_LocString(110),
+		Type = OT_Primary,
+	}
+
+	-- Register main objective
+	Objective_Register(OBJ_DefenceMain)
+
+	-- Create objective order
+	OBJ_DefenceAllAssault = {}
+
+	-- Loop over all objectives and queue
+	for _, v in pairs(bg_plandata.objectives) do
+		
+		-- Grab owner
+		local owner = BattlegroundsDefence_SolveOwner(v.team, v.player)
+		local ownerid = Player_GetID(owner)
+
+		-- Init container
+		if OBJ_DefenceAllAssault[ownerid] == nil then
+			OBJ_DefenceAllAssault[ownerid] = {
+				objectives = {},
+				current = 1
+			}
+		end
+
+		-- Insert objective
+		OBJ_DefenceAllAssault[ownerid].objectives[v.order + 1] = BattlegroundsDefence_CreateObjective(v.type, v.pos)
+
+		-- Register objective
+		Objective_Register(OBJ_DefenceAllAssault[ownerid].objectives[v.order + 1])
+
+	end
+
+	-- Begin objectives delayed
+	Rule_AddOneShot(BattlegroundsDefence_DelayedStartObjectives, 30);
+
+end
+
+function BattlegroundsDefence_DelayedStartObjectives()
+
+	-- Loop over all objectives and start them
+	for k,v in pairs(OBJ_DefenceAllAssault) do
+		BattlegroundsDefence_StartObjective(k, v.objectives[1])
+	end
+
+	-- Add check every 10s
+	Rule_AddInterval(BattlegroundsDefence_CheckObjectives, 10)
+
+end
+
+function BattlegroundsDefence_CreateObjective(objectiveType, objectivePosition)
+	local obj = {
+		SetupUI = function() end,
+		OnStart = function() end,
+		OnComplete = function()	end,
+		OnFail = function() end,
+		IsComplete = function() return false end,
+		Type = OT_Primary,
+		Parent = OBJ_DefenceMain,
+	}
+	local pos = World_GetNearestInteractablePoint(World_Pos(objectivePosition.x, objectivePosition.y, objectivePosition.z))
+	if objectiveType == BG_OT_ATTACK then
+
+		-- Loop over points in range
+		local targetPoints = {}
+		for _, v in pairs(DefenceSettingsData.Sectors)  do
+			if Util_GetDistance(pos, Entity_GetPosition(v)) < 35 then
+				table.insert(targetPoints, v)
+			end
+		end
+
+		-- Capture points if any; otherwise it's a clear objective
+		if #targetPoints > 0 then
+			obj.targets = targetPoints
+			obj.__oncheck = BattlegroundsDefence_CheckCapture
+			obj.__oncomplete = function (self)
+				DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - 10 * #self.targets
+			end
+			obj.OnStart = function ()
+				Objective_SetCounter(obj, 0, #obj.targets)
+				obj.targetsui = {}
+				for k, v in ipairs(obj.targets) do
+					obj.targetsui[k] = Objective_AddUIElements(obj, Entity_GetPosition(v), true, BG_LocString(114), true)
+				end
+			end
+		else -- Else, clear the area
+			obj.attackpos = pos
+			obj.__oncheck = BattlegroundsDefence_CheckCleared
+			obj.__oncomplete = function (self)
+				DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - 5
+			end
+			obj.OnStart = function ()
+				Objective_AddUIElements(obj, pos, true, BG_LocString(114), true)
+			end
+		end
+
+		-- Set title
+		obj.Title = BG_LocString(111)
+
+	elseif objectiveType == BG_OT_DEFEND then
+
+		obj.defendpos = pos
+		obj.__oncheck = BattlegroundsDefence_CheckIsDefended
+		obj.__oncomplete = function (self)
+			DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - 10
+		end
+		obj.__onstart = function(self)
+			self.starttime = World_GetGameTime()
+			self.endtime = World_GetGameTime() + 3 * 60
+		end
+		obj.OnStart = function ()
+			Objective_StartTimer(obj, COUNT_DOWN, 3*60, 60);
+		end
+		obj.Title = BG_LocString(112)
+
+	elseif objectiveType == BG_OT_SUPPORT then
+
+		obj.defendpos = pos
+		obj.__oncheck = BattlegroundsDefence_CheckIsSupported
+		obj.__oncomplete = function (self)
+			DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - 5
+		end
+		obj.__onstart = function(self)
+			self.starttime = World_GetGameTime()
+			self.endtime = World_GetGameTime() + 3 * 60
+		end
+		obj.Title = BG_LocString(113)
+
+	else
+		fatal("Expected objective type value in interval 0 < type < 4 but got " .. tostring(objectiveType));
+	end
+	return obj
+end
+
+function BattlegroundsDefence_StartObjective(playerid, obj)
+
+	-- Run triggers
+	if obj.__onstart ~= nil then
+		obj:__onstart() -- For global triggers
+	end
+	if obj.__onstartdefenders ~= nil then
+		BattlegroundsDefence_TriggerDefender(obj, __onstartdefenders) -- Trigger to invoke enemy team (UI notifiers)
+	end
+
+	-- Start the objective visually on the local machine
+	if Player_GetID(Game_GetLocalPlayer()) == playerid then
+		Objective_Start(obj)
+	end
+
+end
+
+function BattlegroundsDefence_CheckObjectives()
+
+	-- Loop over all objectives and check them them
+	for k,v in pairs(OBJ_DefenceAllAssault) do
+
+		-- Make sure we have an objective
+		if v.objectives[v.current] ~= nil then
+
+			-- Check if complete
+			if v.objectives[v.current]:__oncheck(k) then
+
+				-- Trigger on complete
+				v.objectives[v.current]:__oncomplete()
+
+				-- Complete visually for local player
+				if k == Player_GetID(Game_GetLocalPlayer()) then
+					Objective_Complete(v.objectives[v.current], true);
+				end
+
+				-- Go to next
+				v.current = v.current + 1
+
+				-- Start it if defined
+				if v.objectives[v.current] ~= nil then
+					BattlegroundsDefence_StartObjective(k, v.objectives[v.current])
+				end
+
+			end
+
+		end
+
+	end
+
+end
+
+function BattlegroundsDefence_TriggerDefender(obj, func)
+	for i=1, World_GetPlayerCount() do
+		local p = World_GetPlayerAt(i)
+		if Player_GetTeam(p) == bg_settings.team_second and p == Game_GetLocalPlayer() then
+			func(obj)
+		end
+	end
+end
+
+function BattlegroundsDefence_CheckCapture(obj, playerid)
+
+	-- Grab player and define how many have been captured
+	local player = Player_FromId(playerid)
+	local captured = 0
+
+	-- Loop over points
+	for _, v in pairs(obj.targets) do
+		if Entity_IsStrategicPointCapturedBy(v, player) then
+			captured = captured + 1
+		end
+	end
+
+	-- Update visually
+	if playerid == Player_GetID(Game_GetLocalPlayer()) then
+		Objective_SetCounter(obj, captured, #obj.targets)
+	end
+
+	-- Return if we have captured the amount expected
+	return captured == #obj.targets
+
+end
+
+function BattlegroundsDefence_CheckCleared(obj, playerid)
+	
+	-- Define sg and eg temps
+	local sg_temp = SGroup_CreateIfNotFound("sg_temp_chckclear")
+	local eg_temp = EGroup_CreateIfNotFound("eg_temp_chckclear");
+
+	-- Grab team
+	local attackers = Player_GetTeam(__BGDefenceTeams[1][1]);
+	local defenders = Player_GetTeam(__BGDefenceTeams[2][1]);
+
+	-- Grab units
+	Team_GetAllEntitiesNearMarker(defenders, eg_temp, obj.attackpos, 30);
+	Team_GetAllSquadsNearMarker(defenders, sg_temp, obj.attackpos, 30);
+
+	-- Return if player can see position and has cleared all
+	return Team_CanSee(attackers, obj.attackpos, ANY) and SGroup_Count(sg_temp) == 0 and EGroup_Count(eg_temp) == 0
+
+end
+
+function BattlegroundsDefence_CheckIsDefended(obj, playerid)
+	-- TODO: Proper defence checks...
+	return World_GetGameTime() > obj.endtime
+end
+
+function BattlegroundsDefence_CheckIsSupported(obj, playerid)
+	-- TODO: More support checks
+	return World_GetGameTime() > obj.endtime
 end
 
 ------------------------------------------------------------------------------------
