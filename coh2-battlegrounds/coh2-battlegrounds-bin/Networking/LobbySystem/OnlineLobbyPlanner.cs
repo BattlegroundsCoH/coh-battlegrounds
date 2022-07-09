@@ -65,10 +65,10 @@ public sealed class OnlineLobbyPlanner : ILobbyPlanningHandle {
     private void OnElementRemove(ContentMessage msg) {
 
         // Grab element id
-        int elemId = msg.Raw.ConvertBigEndian(BitConverter.ToInt32);
+        uint elemId = msg.Raw.ConvertBigEndian(BitConverter.ToUInt32);
 
         // Notify
-        this.PlanElementRemoved?.Invoke(elemId);
+        this.PlanElementRemoved?.Invoke((int)elemId);
 
     }
 
@@ -95,17 +95,17 @@ public sealed class OnlineLobbyPlanner : ILobbyPlanningHandle {
     }
 
     public int CreatePlanningObjective(ulong owner, PlanningObjectiveType objectiveType, int objectiveOrder, GamePosition objectivePosition)
-        => this.m_remote.Call<int>("CreatePlanningObjective", owner, (byte)objectiveOrder, objectiveOrder, objectivePosition);
+        => (int)this.m_remote.Call<uint>("CreatePlanningObjective", owner, (byte)objectiveOrder, objectiveOrder, objectivePosition);
 
-    public int CreatePlanningSquad(ulong owner, string blueprint, ushort companyId, GamePosition spawn, GamePosition? lookat = null) => lookat switch {
-        GamePosition look => this.m_remote.Call<int>("CreatePlanningSquadLookat", owner, blueprint, companyId, spawn, look),
-        _ => this.m_remote.Call<int>("CreatePlanningSquad", owner, blueprint, companyId, spawn)
-    };
+    public int CreatePlanningSquad(ulong owner, string blueprint, ushort companyId, GamePosition spawn, GamePosition? lookat = null) => (int)(lookat switch {
+        GamePosition look => this.m_remote.Call<uint>("CreatePlanningSquad", owner, blueprint, companyId, spawn, look),
+        _ => this.m_remote.Call<uint>("CreatePlanningSquad", owner, blueprint, companyId, spawn)
+    });
 
-    public int CreatePlanningStructure(ulong owner, string blueprint, bool directional, GamePosition origin, GamePosition? lookat = null) => lookat switch {
-        GamePosition look => this.m_remote.Call<int>("CreatePlanningStructureLookat", owner, blueprint, directional, origin, look),
-        _ => this.m_remote.Call<int>("CreatePlanningStructure", owner, blueprint, directional, origin)
-    };
+    public int CreatePlanningStructure(ulong owner, string blueprint, bool directional, GamePosition origin, GamePosition? lookat = null) => (int)(lookat switch {
+        GamePosition look => this.m_remote.Call<uint>("CreatePlanningStructure", owner, blueprint, directional ? 1 : 0, origin, look),
+        _ => this.m_remote.Call<uint>("CreatePlanningStructure", owner, blueprint, directional ? 1 : 0, origin)
+    });
 
     public ILobbyPlanElement? GetPlanElement(int planElementId) => this.m_remote.Call<ILobbyPlanElement>("GetPlanElement", planElementId);
 
