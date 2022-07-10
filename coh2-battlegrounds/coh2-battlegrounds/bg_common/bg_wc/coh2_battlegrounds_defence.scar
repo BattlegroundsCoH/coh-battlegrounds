@@ -636,8 +636,12 @@ function BattlegroundsDefence_SpawnAIUnit(player, group, blueprint, target)
 	local pos = Player_GetStartingPosition(player)
 	local squad = Squad_CreateAndSpawnToward(blueprint, player, 0, pos, target)
 
-	-- Add to group
+	-- Make not selectable
+	Misc_SetSquadSelectable(squad, false);
+
+	-- Add to group and hide decorators
 	SGroup_Add(group, squad)
+	SGroup_EnableUIDecorator(group, false);
 
 	-- Attack move (queue)
 	Cmd_AttackMove( group, target, true, nil, 9.5);
