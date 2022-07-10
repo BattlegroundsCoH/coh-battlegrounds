@@ -242,7 +242,13 @@ public interface ILobbyHandle {
     /// <param name="errorType"></param>
     /// <param name="errorMessage"></param>
     void NotifyError(string errorType, string errorMessage);
-    
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="screen"></param>
+    void NotifyScreen(string screen);
+
     /// <summary>
     /// 
     /// </summary>

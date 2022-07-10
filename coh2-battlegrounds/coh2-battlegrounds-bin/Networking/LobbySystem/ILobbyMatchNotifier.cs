@@ -60,8 +60,13 @@ public interface ILobbyMatchNotifier {
     public event LobbyEventHandler<string>? OnPoll;
 
     /// <summary>
-    /// Event triggered when the host has sent a lobby halt message
+    /// Event triggered when the host has sent a lobby halt message.
     /// </summary>
     public event LobbyEventHandler? OnLobbyMatchHalt;
+
+    /// <summary>
+    /// Event triggered when the host wants to change the current screen.
+    /// </summary>
+    event LobbyEventHandler<string>? OnLobbyScreen;
 
 }

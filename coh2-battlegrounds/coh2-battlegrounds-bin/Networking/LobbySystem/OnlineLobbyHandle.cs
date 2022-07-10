@@ -167,9 +167,14 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     public event LobbyEventHandler<string>? OnPoll;
 
     /// <summary>
-    /// Event triggered when the host has sent a lobby halt message
+    /// Event triggered when the host has sent a lobby halt message.
     /// </summary>
     public event LobbyEventHandler? OnLobbyMatchHalt;
+
+    /// <summary>
+    /// Event triggered when the host has sent a screen update message.
+    /// </summary>
+    public event LobbyEventHandler<string>? OnLobbyScreen;
 
     /// <summary>
     /// Initialises a new <see cref="OnlineLobbyHandle"/> instance that is connected along a <see cref="ServerConnection"/> to a lobby.
@@ -446,6 +451,15 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
 
                 // Invoke event
                 this.OnPoll?.Invoke(new(pollCall.Arguments[0]));
+
+                break;
+            case "Notify.Screen":
+
+                // Get call
+                var screenUpdate = GoMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
+
+                // Invoke event
+                this.OnLobbyScreen?.Invoke(new(screenUpdate.Arguments[0]));
 
                 break;
             default:
@@ -781,6 +795,16 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
         // Send but ignore response
         this.m_connection.SendMessage(msg);
 
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="screen"></param>
+    public void NotifyScreen(string screen) {
+        if (this.m_isHost) {
+            this.m_remote.Call("ScreenChange", screen);
+        }
     }
 
     /// <summary>

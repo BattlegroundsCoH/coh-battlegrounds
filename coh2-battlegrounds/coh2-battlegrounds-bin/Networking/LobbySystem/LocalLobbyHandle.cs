@@ -309,6 +309,10 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
 
     public void Subscribe(string to, LobbyEventHandler<ContentMessage> eventHandler) {}
 
+    public void NotifyScreen(string screen) {
+        // Do nothing
+    }
+
     #endregion
 
 }

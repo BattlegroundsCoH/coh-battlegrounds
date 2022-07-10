@@ -81,6 +81,7 @@ public class LobbyParticipantModel : LobbyModel {
             matchNotifier.OnLobbyMatchError += this.OnMatchInfo;
             matchNotifier.OnLobbyMatchInfo += this.OnMatchInfo;
             matchNotifier.OnPoll += this.OnPoll;
+            matchNotifier.OnLobbyScreen += this.OnScreenChange;
         }
 
         // Trigger initial view
@@ -93,6 +94,17 @@ public class LobbyParticipantModel : LobbyModel {
             this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.Waiting);
         }
 
+    }
+
+    private void OnScreenChange(string args) {
+        switch (args) {
+            case "planning":
+                this.PlanMatch();
+                break;
+            default:
+                Trace.WriteLine($"Unknown screen change '{args}'", nameof(LobbyParticipantModel));
+                break;
+        }
     }
 
     private void OnMatchBegin() {

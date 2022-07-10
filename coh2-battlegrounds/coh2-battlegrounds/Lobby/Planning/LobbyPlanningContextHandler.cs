@@ -142,6 +142,7 @@ public class LobbyPlanningContextHandler {
     }
 
     public void RemoveElement(int elemId) {
+        this.RemoveElementVisuals(elemId);
         this.m_handle.RemovePlanElement(elemId);
         if (this.m_objectiveElements.IndexOf(elemId) is int i && i >= 0) {
             this.m_objectiveElements.RemoveAt(i);
@@ -149,6 +150,14 @@ public class LobbyPlanningContextHandler {
                 this.m_handle.GetPlanElement(this.m_objectiveElements[j])?.SetObjectiveOrder(j);
             }
         }
+    }
+
+    public void RemoveElementVisuals(int elemId) {
+
+    }
+
+    public void AddElementVisuals(ILobbyPlanElement planElement) {
+
     }
 
 }

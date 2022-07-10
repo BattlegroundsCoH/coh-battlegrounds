@@ -206,7 +206,8 @@ public class LobbyHostModel : LobbyModel {
             // Decide what to do, based on planning
             if (gamemode.Planning) {
 
-                // TODO: Inform others we're entering the planning phase
+                // Inform others we're entering the planning phase
+                this.m_handle.NotifyScreen("planning");
 
                 // Begin plan match
                 Application.Current.Dispatcher.Invoke(this.PlanMatch);

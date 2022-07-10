@@ -70,7 +70,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
     private readonly LobbyPlanningContextHandler m_planningContext;
     private readonly bool m_isDefending;
 
-    public override bool SingleInstanceOnly => true;
+    public override bool SingleInstanceOnly => false;
 
     public override bool KeepAlive => false;
 
@@ -215,6 +215,10 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
         }
 
+        // Subscribe to remote events
+        this.m_planHandle.PlanElementAdded += this.PlanElementAdded;
+        this.m_planHandle.PlanElementRemoved += this.PlanElementRemoved;
+
         // Finally, display world elements
         App.Current.Dispatcher.Invoke(this.DisplayWorldElements);
 
@@ -300,5 +304,11 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         }
 
     }
+
+    private void PlanElementRemoved(int elementId) 
+        => this.m_planningContext.RemoveElementVisuals(elementId);
+
+    private void PlanElementAdded(ILobbyPlanElement planElement)
+        => this.m_planningContext.AddElementVisuals(planElement);
 
 }
