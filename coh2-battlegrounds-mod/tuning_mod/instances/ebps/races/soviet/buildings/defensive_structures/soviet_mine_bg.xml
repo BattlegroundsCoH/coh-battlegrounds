@@ -340,7 +340,7 @@
 			<bool name="has_speech_code" value="True" />
 			<locstring name="help_text" value="2140002" />
 			<string name="hotkey_name" value="M" />
-			<icon name="icon_name" value="Icons_abilities_ability_soviet_tm35_mines" />
+			<icon name="icon_name" value="Icons_abilities_ability_soviet_anti_personnel_mines" />
 			<enum name="kill_type" value="" />
 			<float name="minimap_color_a" value="255" />
 			<float name="minimap_color_b" value="255" />

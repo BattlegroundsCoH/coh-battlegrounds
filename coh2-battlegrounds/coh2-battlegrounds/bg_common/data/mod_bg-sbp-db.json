@@ -353,7 +353,7 @@
       "heavy_vehicle_icon"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -408,7 +408,7 @@
       "heavy_vehicle_icon"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -585,7 +585,7 @@
       "heavy_vehicle"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -596,10 +596,10 @@
     "Name": "panther_command_squad_bg",
     "Army": "german",
     "Display": {
-      "LocaleName": "11007009",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:78",
       "LocaleDescriptionLong": "11007023",
       "LocaleDescriptionShort": "11009051",
-      "Icon": "Icons_vehicles_vehicle_german_panther",
+      "Icon": "Icons_vehicles_vehicle_west_german_panther_command_tank",
       "Symbol": "Icons_symbols_vehicle_german_panther_symbol",
       "Portrait": "Icons_portraits_vehicle_german_panther_s_portrait"
     },
@@ -641,7 +641,7 @@
       "heavy_vehicle_icon"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -697,7 +697,7 @@
       "heavy_vehicle_icon"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -750,7 +750,7 @@
       "vehicle"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -807,7 +807,7 @@
       "panzer_command_tank"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -862,7 +862,7 @@
       "heavy_vehicle"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -917,7 +917,7 @@
       "heavy_vehicle"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -970,7 +970,7 @@
       "vehicle"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -1023,7 +1023,7 @@
       "vehicle"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -1076,7 +1076,7 @@
       "vehicle"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -1129,7 +1129,7 @@
       "vehicle"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -1184,7 +1184,7 @@
       "vehicle"
     ],
     "SlotPickupCapacity": 6,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -1239,7 +1239,7 @@
       "vehicle"
     ],
     "SlotPickupCapacity": 6,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -1293,7 +1293,7 @@
       "heavy_vehicle"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -1347,7 +1347,7 @@
       "heavy_vehicle"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -1358,10 +1358,10 @@
     "Name": "tiger_command_squad_bg",
     "Army": "german",
     "Display": {
-      "LocaleName": "2092402",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:77",
       "LocaleDescriptionLong": "2092401",
       "LocaleDescriptionShort": "11009054",
-      "Icon": "Icons_vehicles_vehicle_german_tiger",
+      "Icon": "Icons_commander_tiger_ace_call_in",
       "Symbol": "Icons_symbols_vehicle_german_tiger_symbol",
       "Portrait": "Icons_portraits_vehicle_german_tiger_s_portrait"
     },
@@ -1403,7 +1403,7 @@
       "heavy_vehicle_icon"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -1459,7 +1459,7 @@
       "heavy_vehicle_icon"
     ],
     "SlotPickupCapacity": 2,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "vehicles_optics"
     ]
@@ -3094,7 +3094,7 @@
     ],
     "SlotPickupCapacity": 2,
     "CanPickupItems": true,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "assault_grenadier_veteran_squad_leader_mp"
     ]
@@ -3162,7 +3162,7 @@
     ],
     "SlotPickupCapacity": 2,
     "CanPickupItems": true,
-    "UpgradeCapacity": -1
+    "UpgradeCapacity": 1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3412,7 +3412,7 @@
     ],
     "SlotPickupCapacity": 2,
     "CanPickupItems": true,
-    "UpgradeCapacity": -1,
+    "UpgradeCapacity": 1,
     "Upgrades": [
       "light_infantry_panzergren_package",
       "ambush_camou_package",
@@ -3487,7 +3487,7 @@
     ],
     "SlotPickupCapacity": 2,
     "CanPickupItems": true,
-    "UpgradeCapacity": -1
+    "UpgradeCapacity": 1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",

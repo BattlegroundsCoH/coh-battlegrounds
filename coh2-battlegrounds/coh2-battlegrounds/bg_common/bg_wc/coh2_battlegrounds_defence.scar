@@ -531,6 +531,28 @@ end
 ------------------------------------------------------------------------------------
 -- AI Stuff
 ------------------------------------------------------------------------------------
+g_aidefenceunits = { -- just gonna use vanilla units for now, may change later
+	["soviet"] = {
+		infantry = "conscript_squad_mp",
+		tank = "t_34_85_squad_mp"
+	},
+	["german"] = {
+		infantry = "ostruppen_squad_mp",
+		tank = "panzer_iv_squad_mp"
+	},
+	["west_german"] = {
+		infantry = "volksgrenadier_squad_mp",
+		tank = "panzer_iv_squad_mp"
+	},
+	["aef"] =  {
+		infantry = "riflemen_squad_mp",
+		tank = "m4a3_sherman_squad_mp"
+	},
+	["british"] = {
+		infantry = "tommy_squad_mp",
+		tank = "cromwell_mk4_75mm_squad_mp"
+	}
+}
 
 function BattlegroundsDefence_InitAI()
 
@@ -542,6 +564,83 @@ function BattlegroundsDefence_InitAI()
 end
 
 function BattlegroundsDefence_InitAIWaves()
+
+	-- Grab attacking team
+	local attackers = __BGDefenceTeams[1];
+
+	-- Init table
+	__BGAISupport = {}
+	for i, v in ipairs(attackers) do
+		__BGAISupport[i] = {
+			player = v,
+			sgroup = SGroup_CreateIfNotFound("sg_bgaidef" .. tostring(i))
+		};
+	end
+
+	-- Do interval
+	Rule_AddInterval(BattlegroundsDefence_SpawnWave, 7);
+
+end
+
+-- Wave spawner
+function BattlegroundsDefence_SpawnWave()
+
+	-- Calculate how many units the AI can field for a player
+	local maxcap = 5;
+	if World_GetGameTime() > 15 * 60 then
+		maxcap = 7;
+	end
+
+	-- Loop over players and spawn them in
+	for _, v in pairs(__BGAISupport) do
+		local target = BattlegroundsDefence_AIGetRandomTarget(v.player)
+		if SGroup_Count(v.sgroup) < maxcap then
+
+			-- Determine blueprint
+			local bp = g_aidefenceunits[Player_GetRaceName(v.player)].infantry
+			if World_GetRand(1,100) < 25 then
+				bp = g_aidefenceunits[Player_GetRaceName(v.player)].tank
+			end
+
+			-- Spawn
+			BattlegroundsDefence_SpawnAIUnit(v.player, v.sgroup, BP_GetSquadBlueprint(bp), target)
+
+		end
+		local foreach = function(gid, it, sid)
+			if (not Squad_IsMoving(sid)) and (not Squad_IsUnderAttack(sid, 5)) then
+				Cmd_AttackMove( v.sgroup, target, true, nil, 9.5);
+			end
+		end
+		SGroup_ForEach(v.sgroup, foreach)
+	end
+
+end
+
+function BattlegroundsDefence_AIGetRandomTarget(player)
+	local available = {}
+	for _, v in pairs(DefenceSettingsData.Sectors) do
+		if not Entity_IsStrategicPointCapturedBy(v, player) then
+			table.insert(available, v)
+		end
+	end
+	if #available > 0 then
+		return available[World_GetRand(1, #available)]
+	else
+		return Player_GetStartingPosition(Player_FindFirstEnemyPlayer(player))
+	end
+end
+
+function BattlegroundsDefence_SpawnAIUnit(player, group, blueprint, target)
+
+	-- Spawn
+	local pos = Player_GetStartingPosition(player)
+	local squad = Squad_CreateAndSpawnToward(blueprint, player, 0, pos, target)
+
+	-- Add to group
+	SGroup_Add(group, squad)
+
+	-- Attack move (queue)
+	Cmd_AttackMove( group, target, true, nil, 9.5);
 
 end
 
