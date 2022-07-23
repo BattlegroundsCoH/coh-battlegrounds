@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 
 using Battlegrounds.Game.Database;
+using Battlegrounds.Networking.LobbySystem;
 
 using BattlegroundsApp.Controls;
 using BattlegroundsApp.Lobby.MVVM.Models;
@@ -23,7 +24,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Views;
 /// </summary>
 public partial class LobbyPlanningOverview : UserControl {
 
-    private record HelperElement(UIElement Element, TranslateTransform Translation, RotateTransform Rotation, Vector OffsetVector);
+    private record HelperElement(FrameworkElement Element, TranslateTransform Translation, RotateTransform Rotation, Vector OffsetVector, int ElementId);
 
     private readonly Stack<Point> m_points;
     private readonly List<UIElement> m_lineHelpers;
@@ -48,6 +49,7 @@ public partial class LobbyPlanningOverview : UserControl {
                 if (b.OldValue is LobbyPlanningOverviewModel lpmold) {
                     lpmold.MinimapItems.CollectionChanged -= this.MinimapItems_CollectionChanged;
                 }
+                lpm.ContextHandler.Elements.CollectionChanged += this.Elements_CollectionChanged;
             }
         };
 
@@ -76,12 +78,7 @@ public partial class LobbyPlanningOverview : UserControl {
                 var placeElement = this.m_points.Pop();
 
                 // Place
-                int placedId = this.ContextHandler.PlaceElement(placeElement, clickPos);
-
-                // Subscribe to right click
-                if (this.m_planningHelper is not null) {
-                    RegisterRemoveEvent(this.m_planningHelper.Element, placedId);
-                }
+                this.ContextHandler.PlaceElement(placeElement, clickPos);
 
                 // Clear
                 this.m_points.Clear();
@@ -90,27 +87,13 @@ public partial class LobbyPlanningOverview : UserControl {
             }
 
         } else {
-
-            // Grab element
-            var placeElement = this.CreateSelectedMarker(clickPos).Element;
-
-            // Show it
-            this.PlanningCanvas.Children.Add(placeElement);
-
-            // Place
-            int placedId = this.ContextHandler.PlaceElement(clickPos);
-
-            // Subscribe to right click
-            RegisterRemoveEvent(placeElement, placedId);
+            
+            // Place the element
+            this.ContextHandler.PlaceElement(clickPos);
 
         }        
 
     }
-
-    private void RegisterRemoveEvent(UIElement e, int index) => e.MouseRightButtonUp += (a, b) => {
-        this.ContextHandler.RemoveElement(index);
-        this.PlanningCanvas.Children.Remove((UIElement)a);
-    };
 
     private HelperElement CreateSelectedMarker(Point p) {
         if (this.ContextHandler.PlaceElementBlueprint is not null) {
@@ -118,7 +101,7 @@ public partial class LobbyPlanningOverview : UserControl {
         } else if (this.ContextHandler.PlaceElementSquadBlueprint is not null) {
             return CreateSquadMarker(this.ContextHandler.PlaceElementSquadBlueprint, p);
         }
-        return CreateMarker(p);
+        return CreateObjectiveMarker(this.ContextHandler.PlaceElemtObjectiveType, p);
     }
 
     private static HelperElement CreateEntityMarker(EntityBlueprint ebp, Point p) {
@@ -138,6 +121,24 @@ public partial class LobbyPlanningOverview : UserControl {
 
         // Grab blueprint
         var sym = App.ResourceHandler.GetIcon("symbol_icons", sbp.UI.Symbol);
+        if (sym is null) {
+            return CreateMarker(p);
+        }
+
+        // Create marker
+        return CreateSomeMarker(sym, p);
+
+    }
+
+    private static HelperElement CreateObjectiveMarker(PlanningObjectiveType objectiveType, Point p) {
+
+        // Grab blueprint
+        ImageSource? sym = objectiveType switch {
+            PlanningObjectiveType.OT_Attack => null,
+            PlanningObjectiveType.OT_Defend => null,
+            PlanningObjectiveType.OT_Support => null,
+            _ => null
+        };
         if (sym is null) {
             return CreateMarker(p);
         }
@@ -168,7 +169,7 @@ public partial class LobbyPlanningOverview : UserControl {
         };
 
         // Return new marker
-        return new(marker, translate, rotate, offset);
+        return new(marker, translate, rotate, offset, -1);
 
     }
 
@@ -192,7 +193,7 @@ public partial class LobbyPlanningOverview : UserControl {
         };
 
         // Return marker
-        return new(marker, translate, rotate, new(30,25));
+        return new(marker, translate, rotate, new(30,25), -1);
 
     }
 
@@ -209,59 +210,83 @@ public partial class LobbyPlanningOverview : UserControl {
         // If helper, rotate if directional
         if (this.m_planningHelper is not null) {
 
-            // Calc pos
+            // Calc vectors
             var v0 = Vectors.FromTransform(this.m_planningHelper.Translation) + this.m_planningHelper.OffsetVector;
+            var v1 = Vectors.FromPoint(p);
 
             // Get if line
             var isln = this.ContextHandler.IsLinePlacement;
 
-            // Compute angle
-            var v1 = Vectors.FromPoint(p);
-            var v2 = v1 - v0;
-
-            // Grab the angle
-            var modAngle = isln ? 0.0 : 90.0;
-            var angle = Math.Atan2(v2.Y, v2.X) * 57.29578 + modAngle;
-
-            // Set angle
-            this.m_planningHelper.Rotation.Angle = angle;
+            // Lookat point
+            var angle = Lookat(this.m_planningHelper.Rotation, v0, v1, isln ? 0.0 : 90.0);
 
             // Do line placement
             if (this.ContextHandler.PlaceElementBlueprint is EntityBlueprint ebp && isln) {
-
-                // Calculate distance
-                var dist = v1.Length;
-
-                // Get amount of fillers
-                var w = this.m_planningHelper.OffsetVector.X * 2.0;
-                var lineCount = (int)Math.Max(0, dist / w) / 2;
-                var stepSize = 1.0 / lineCount;
 
                 // Clear
                 this.m_lineHelpers.ForEach(this.PlanningCanvas.Children.Remove);
                 this.m_lineHelpers.Clear();
 
-                // Create
-                for (int i = 0; i < lineCount; i++) {
-
-                    // Calculate helper position
-                    var v3 = Vectors.Interpolate(v0, v1, i * stepSize);
-
-                    // Create helper
-                    var helper = CreateEntityMarker(ebp, v3.ToPoint());
-                    helper.Rotation.Angle = angle;
-                    helper.Element.MouseLeftButtonUp += this.PlanningCanvas_MouseLeftButtonUp;
-                    helper.Element.MouseRightButtonUp += this.UserControl_MouseRightButtonUp;
-
-                    // Add
-                    this.m_lineHelpers.Add(helper.Element);
-                    this.PlanningCanvas.Children.Add(helper.Element);
-
-                }
+                // Get display elements
+                LineTo(angle, ebp, v0, v1, this.m_planningHelper.OffsetVector).ForEach(x => {
+                    this.m_lineHelpers.Add(x.Element);
+                    this.PlanningCanvas.Children.Add(x.Element);
+                    x.Element.MouseLeftButtonUp += this.PlanningCanvas_MouseLeftButtonUp;
+                    x.Element.MouseRightButtonUp += this.UserControl_MouseRightButtonUp;
+                });
 
             }
 
         } 
+
+    }
+
+    private static double Lookat(RotateTransform rotateTransform, Vector origin, Vector lookat, double modAngle = 90.0) {
+
+        // Compute angle
+        var dir = lookat - origin;
+
+        // Grab the angle
+        var angle = Math.Atan2(dir.Y, dir.X) * 57.29578 + modAngle; // Magic number ==> Constant from radians to degrees
+
+        // Set angle
+        rotateTransform.Angle = angle;
+
+        // Return the angle
+        return angle;
+
+    }
+
+    private static List<HelperElement> LineTo(double angle, EntityBlueprint ebp, Vector origin, Vector target, Vector offset) {
+
+        // Create container
+        var ls = new List<HelperElement>();
+
+        // Calculate distance
+        var dist = (origin - target).Length;
+
+        // Get amount of fillers
+        var w = offset.X * 2.0;
+        var lineCount = (int)Math.Max(0, dist / w) / 2;
+        var stepSize = 1.0 / lineCount;
+
+        // Create
+        for (int i = 0; i < lineCount; i++) {
+
+            // Calculate helper position
+            var v = Vectors.Interpolate(origin, target, i * stepSize);
+
+            // Create helper
+            var helper = CreateEntityMarker(ebp, v.ToPoint());
+            helper.Rotation.Angle = angle;
+
+            // Add
+            ls.Add(helper);
+
+        }
+
+        // Return elements
+        return ls;
 
     }
 
@@ -305,5 +330,131 @@ public partial class LobbyPlanningOverview : UserControl {
         }
 
     }
+
+    private void Elements_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
+
+        // Is add event
+        if (e.Action is NotifyCollectionChangedAction.Add) {
+
+            // Bail if no new items
+            if (e.NewItems is null) {
+                return;
+            }
+
+            // Loop over added items
+            foreach (LobbyPlanningObject planningObject in e.NewItems) {
+
+                // Create container for helpers
+                List<HelperElement> markers = new();
+
+                // Determine what element to visually add
+                if (planningObject.IsSquad) {
+
+                    // Get squad blueprint
+                    var sbp = (SquadBlueprint)planningObject.Blueprint;
+
+                    // Grab marker
+                    var marker = CreateSquadMarker(sbp, planningObject.VisualPosStart);
+                    marker.Element.Tag = marker;
+
+                    // Lookat at target
+                    if (planningObject.VisualPointEnd is Point lookat) {
+                        Lookat(marker.Rotation, Vectors.FromTransform(marker.Translation) + marker.OffsetVector, Vectors.FromPoint(lookat));
+                    }
+
+                    // Add element
+                    this.PlanningCanvas.Children.Add(marker.Element);
+
+                    // Add to markers
+                    markers.Add(marker);
+
+                } else if (planningObject.IsEntity) {
+
+                    // Get ebp
+                    var ebp = (EntityBlueprint)planningObject.Blueprint;
+
+                    // Grab marker
+                    var marker = CreateEntityMarker(ebp, planningObject.VisualPosStart);
+                    marker.Element.Tag = marker;
+
+                    // Lookat at target
+                    if (planningObject.VisualPointEnd is Point lookat) {
+                        var v0 = Vectors.FromTransform(marker.Translation) + marker.OffsetVector;
+                        var v1 = Vectors.FromPoint(lookat);
+                        var angle = Lookat(marker.Rotation, v0, v1, planningObject.IsLine ? 0 : 90.0);
+                        if (planningObject.IsLine) {
+                            LineTo(angle, ebp, v0, v1, marker.OffsetVector).ForEach(x => {
+                                this.PlanningCanvas.Children.Add(x.Element);
+                                markers.Add(x);
+                            });
+                        }
+                    }
+
+                    // Add element
+                    this.PlanningCanvas.Children.Add(marker.Element);
+
+                    // Add to markers
+                    markers.Add(marker);
+
+                } else {
+
+                    // Grab marker
+                    var marker = CreateObjectiveMarker(planningObject.ObjectiveType, planningObject.VisualPosStart);
+                    marker.Element.Tag = marker;
+
+                    // Add element
+                    this.PlanningCanvas.Children.Add(marker.Element);
+
+                    // Add to markers
+                    markers.Add(marker);
+
+                }
+
+                // Register remove event on self elements
+                if (planningObject.Owner == this.ContextHandler.SelfId) {
+                    foreach (HelperElement helper in markers) {
+                        this.RegisterRemoveEvent(helper.Element, planningObject.ObjectId);
+                    }
+                }
+
+            }
+
+        } else if (e.Action is NotifyCollectionChangedAction.Remove) { // else if remove event
+
+            // Bail if no old items
+            if (e.OldItems is null) {
+                return;
+            }
+
+            // Loop over removed items
+            foreach (LobbyPlanningObject planningObject in e.OldItems) {
+
+                // Loop over canvas elements and remove all with id == planingObject.id
+                var removeElements = Select(this.PlanningCanvas.Children, 
+                    x => x is FrameworkElement fe && (fe.Tag is HelperElement h && h.ElementId == planningObject.ObjectId));
+
+                // Remove range
+                removeElements.ForEach(this.PlanningCanvas.Children.Remove);
+
+            }
+
+        }
+
+    }
+
+    private static List<UIElement> Select(UIElementCollection collection, Predicate<UIElement> predicate) {
+        var ls = new List<UIElement>();
+        foreach (UIElement c in collection) {
+            if (predicate(c)) {
+                ls.Add(c);
+            }
+        }
+        return ls;
+    }
+
+    private void RegisterRemoveEvent(UIElement e, int index) => e.MouseRightButtonUp += (a, b) => {
+        this.ContextHandler.RemoveElement(index);
+        this.PlanningCanvas.Children.Remove((UIElement)a);
+    };
 
 }

@@ -10,29 +10,29 @@ using Battlegrounds.Util;
 namespace Battlegrounds.Networking.LobbySystem;
 
 /// <summary>
-/// 
+/// Class representing a planning instance for an online lobby. Implements <see cref="ILobbyPlanningHandle"/>.
 /// </summary>
 public sealed class OnlineLobbyPlanner : ILobbyPlanningHandle {
 
     private readonly RemoteCall<ILobbyHandle> m_remote;
 
     /// <summary>
-    /// 
+    /// Get the <see cref="ILobbyHandle"/> associated with this planning instnace.
     /// </summary>
     public ILobbyHandle Handle { get; }
 
     /// <summary>
-    /// 
+    /// Get if the local player is a defender.
     /// </summary>
     public bool IsDefender => this.Handle.AreTeamRolesSwapped() ? this.Team is 0 : this.Team is 1;
 
     /// <summary>
-    /// 
+    /// Get if the local player is an attacker.
     /// </summary>
     public bool IsAttacker => !this.IsDefender;
 
     /// <summary>
-    /// 
+    /// Get the size of the team of the local player.
     /// </summary>
     public int TeamSize => (this.Team switch {
         0 => this.Handle.Allies,
@@ -41,13 +41,18 @@ public sealed class OnlineLobbyPlanner : ILobbyPlanningHandle {
     }).Slots.Filter(x => x.IsOccupied).Length;
 
     /// <summary>
-    /// 
+    /// Get the index of the local player's team.
     /// </summary>
     public byte Team => this.Handle.GetSelfTeam();
 
     public event LobbyEventHandler<ILobbyPlanElement>? PlanElementAdded;
     public event LobbyEventHandler<int>? PlanElementRemoved;
 
+    /// <summary>
+    /// Initialise a new <see cref="OnlineLobbyPlanner"/> instance associated with the <paramref name="handle"/>.
+    /// </summary>
+    /// <param name="handle">The handle to the active lobby instance.</param>
+    /// <param name="remote">The remote calling instance that handles remote calls to the server.</param>
     internal OnlineLobbyPlanner(ILobbyHandle handle, RemoteCall<ILobbyHandle> remote) {
 
         // Set handle

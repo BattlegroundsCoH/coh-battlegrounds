@@ -6,6 +6,7 @@ using System.Windows.Media;
 
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
 
@@ -60,9 +61,13 @@ public class LobbyPlanningContextHandler {
 
     public SquadBlueprint? PlaceElementSquadBlueprint => this.m_currentPlacement is SquadPlacement s ? s.Sbp : null;
 
+    public PlanningObjectiveType PlaceElemtObjectiveType => this.m_currentPlacement is ObjectivePlacement o ? o.ObjectiveType : PlanningObjectiveType.None;
+
     public ushort PlaceElementSquadId => this.m_currentPlacement is SquadPlacement s ? s.Cid : ushort.MinValue;
 
     public ObservableCollection<LobbyPlanningObject> Elements { get; }
+
+    public ulong SelfId => this.m_handle.Handle.Self.ID;
 
     public LobbyPlanningContextHandler(ILobbyPlanningHandle handle, Scenario scenario) {
 
@@ -111,7 +116,7 @@ public class LobbyPlanningContextHandler {
             // Grab index
             i = this.m_handle.CreatePlanningStructure(self, ep.Ebp.Name, ep.Def.IsDirectional, spawn, lookat);
 
-            this.Elements.Add(new(i, self, ep.Ebp, point, other));
+            this.Elements.Add(new(i, self, ep.Ebp, point, other, ep.Def.IsLinePlacement));
             this.m_currentPlacement = null;
 
         } else if (this.m_currentPlacement is SquadPlacement sp) {
@@ -135,6 +140,9 @@ public class LobbyPlanningContextHandler {
             // Reset placement data
             this.m_currentPlacement = null;
 
+            // Add element
+            this.Elements.Add(new(i, self, point, op.ObjectiveType, this.m_objectiveElements.Count));
+
         }
 
         return i;
@@ -153,11 +161,44 @@ public class LobbyPlanningContextHandler {
     }
 
     public void RemoveElementVisuals(int elemId) {
-
+        for (int i = 0; i < this.Elements.Count; i++) {
+            if (this.Elements[i].ObjectId == elemId) {
+                this.Elements.RemoveAt(i);
+                break;
+            }
+        }
     }
 
     public void AddElementVisuals(ILobbyPlanElement planElement) {
+        if (planElement.ObjectiveType is not PlanningObjectiveType.None) {
 
+            // objective
+            var spawn = this.m_scenario.ToMinimapPosition(768, 768, planElement.SpawnPosition);
+
+            // Add element
+            this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, spawn.ToPoint(), planElement.ObjectiveType, planElement.ObjectiveOrder));
+
+        } else if (planElement.IsEntity) {
+            
+            // entity
+            var ebp = BlueprintManager.FromBlueprintName<EntityBlueprint>(planElement.Blueprint);
+            var spawn = this.m_scenario.ToMinimapPosition(768, 768, planElement.SpawnPosition);
+            Point? lookat = planElement.LookatPosition is GamePosition p ? this.m_scenario.ToMinimapPosition(768, 768, p).ToPoint() : null;
+        
+            // Add element
+            this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, ebp, spawn.ToPoint(), lookat));
+        
+        } else {
+            
+            // squad
+            var sbp = BlueprintManager.FromBlueprintName<SquadBlueprint>(planElement.Blueprint);
+            var spawn = this.m_scenario.ToMinimapPosition(768, 768, planElement.SpawnPosition);
+            Point? lookat = planElement.LookatPosition is GamePosition p ? this.m_scenario.ToMinimapPosition(768, 768, p).ToPoint() : null;
+            
+            // Add element
+            this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, sbp, spawn.ToPoint(), lookat));
+
+        }
     }
 
 }

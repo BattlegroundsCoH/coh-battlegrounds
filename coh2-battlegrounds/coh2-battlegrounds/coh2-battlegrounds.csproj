@@ -146,7 +146,7 @@
 
   <ItemGroup>
     <Content Include="coh2-battlegrounds.ico">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

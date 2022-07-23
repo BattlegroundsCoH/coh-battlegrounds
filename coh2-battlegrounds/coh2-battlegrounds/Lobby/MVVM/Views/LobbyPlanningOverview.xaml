@@ -245,7 +245,7 @@
                         <DataTemplate>
                             <Grid>
                                 <Button
-                                    Style="{StaticResource UnitEntityIconButton}"
+                                    Style="{StaticResource EntityIconButton2}"
                                     Command="{Binding Click}">
                                     <Image
                                         Width="64"
