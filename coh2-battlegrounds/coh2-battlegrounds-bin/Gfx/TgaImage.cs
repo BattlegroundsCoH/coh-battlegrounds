@@ -1,4 +1,6 @@
-﻿namespace Battlegrounds.Gfx;
+﻿using System.Runtime.CompilerServices;
+
+namespace Battlegrounds.Gfx;
 
 /// <summary>
 /// Enum representing the embedding of the image pixel data.
@@ -114,5 +116,46 @@ public sealed class TgaImage {
     /// </summary>
     /// <returns>A byte array containing the parsed RGB(A) data.</returns>
     public byte[] GetPixelData() => this.m_pixelData;
+
+    public TgaPixel GetPixel(int x, int y) {
+        int _x = x * (this.Is32Bit ? 4 : 3);
+        int _y = y * this.Stride;
+        int blue = _y + _x;
+        int green = _y + _x + 1;
+        int red = _y + _x + 2;
+        if (this.Is32Bit) {
+            return new TgaPixel(this.m_pixelData[red], this.m_pixelData[green], this.m_pixelData[blue], this.m_pixelData[red+1]);
+        } else {
+            return new TgaPixel(this.m_pixelData[red], this.m_pixelData[green], this.m_pixelData[blue]);
+        }
+    }
+
+    public unsafe TgaPixel[,] ToPixelMap() {
+
+        // Create pixel map
+        var pixelMap = new TgaPixel[this.Width, this.Height];
+
+        // Get bytes per pixel
+        int bpp = this.BIP / 8;
+
+        // Loop over
+        fixed (byte* pData = this.m_pixelData) {
+            for (int y = 0; y < this.Height; y++) {
+                int _y = y * this.Stride;
+                for (int x = 0; x < this.Width; x++) {
+                    int _x = x * bpp;
+                    if (this.Is32Bit) {
+                        pixelMap[x, y] = Unsafe.ReadUnaligned<TgaPixel>(pData + _y + _x);
+                    } else {
+                        pixelMap[x, y] = Unsafe.ReadUnaligned<TgaPixelRGB>(pData + _y + _x);
+                    }
+                }
+            }
+        }
+
+        // Return
+        return pixelMap;
+
+    }
 
 }

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
 
 using Battlegrounds;
+using Battlegrounds.AI.Lobby;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
@@ -342,6 +345,56 @@ class Program {
 
     }
 
+    class CreateInstaller : Command {
+
+        public CreateInstaller() : base("mki", "Makes an installer file (Zips the release build folder and attempts to compile the Rust installer).") { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+        }
+
+    }
+
+    class AIDefenceTester : Command {
+
+        public static readonly Argument<string> MM_FILE = new Argument<string>("-mm", "Specifies the path to the minimap", "2p_coh2_resistance_map.tga");
+
+        public AIDefenceTester() : base("aidef", "Invokes the AI defence minimap analysis tool.", MM_FILE) { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            // Grab minimap
+            string mm = argumentList.GetValue(MM_FILE);
+
+            // Create AI map analyser
+            var analyser = new AIMapAnalyser(mm);
+            if (!analyser.Analyze(out var data)) {
+                Console.WriteLine("Failed to analyse minimap file: " + mm);
+            }
+
+            using var bmp = new Bitmap(data.GetLength(0), data.GetLength(1), PixelFormat.Format32bppArgb);
+
+            for (int y = 0; y < bmp.Height; y++) {
+                for (int x = 0;  x < bmp.Width; x++) {
+                    bmp.SetPixel(x, y, Color.FromArgb(data[x, y].R, data[x, y].G, data[x, y].B));
+                }
+            }
+
+            using var g = Graphics.FromImage(bmp);
+            foreach (var n in analyser.Nodes) {
+                g.DrawEllipse(new Pen(Brushes.Red), new Rectangle(n.X, n.Y, 3, 3));
+            }
+            foreach (var e in analyser.Edges) {
+                g.DrawLine(new Pen(Brushes.Orange), new Point(e.First.X, e.First.Y), new Point(e.Second.X, e.Second.Y));
+            }
+
+            g.Save();
+            bmp.Save("ai_test.png");
+
+        }
+
+    }
+
     class Repl : Command {
 
         public Repl() : base("repl", "The program will enter a repl mode and allow for various inputs.") { }
@@ -397,6 +450,8 @@ class Program {
         flags.RegisterCommand<ReplayAnalysis>();
         flags.RegisterCommand<ServerCheck>();
         flags.RegisterCommand<MinimapperCommand>();
+        flags.RegisterCommand<CreateInstaller>();
+        flags.RegisterCommand<AIDefenceTester>();
         flags.RegisterCommand<Repl>();
 #if DEBUG
         flags.RegisterCommand<Update>();

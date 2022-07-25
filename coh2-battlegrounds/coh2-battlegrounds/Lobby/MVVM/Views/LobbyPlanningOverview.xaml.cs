@@ -133,7 +133,7 @@ public partial class LobbyPlanningOverview : UserControl {
     private static HelperElement CreateObjectiveMarker(PlanningObjectiveType objectiveType, Point p) {
 
         // Grab blueprint
-        ImageSource? sym = objectiveType switch {
+        ImageSource? sym = objectiveType switch { // TODO: Get icons
             PlanningObjectiveType.OT_Attack => null,
             PlanningObjectiveType.OT_Defend => null,
             PlanningObjectiveType.OT_Support => null,

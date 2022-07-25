@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -35,7 +33,7 @@ public sealed class TgaImageSource : ICloneable {
         var format = targa.Is32Bit ? PixelFormats.Bgra32 : PixelFormats.Bgr24;
 
         // Create image and then return it
-        return BitmapSource.Create(targa.Width, targa.Height, 96, 96, format, null, targa.GetPixelData(), targa.Stride);
+        return BitmapSource.Create(targa.Width, targa.Height, targa.DPIX, targa.DPIY, format, null, targa.GetPixelData(), targa.Stride);
 
     }
 
@@ -50,4 +48,3 @@ public sealed class TgaImageSource : ICloneable {
     }
 
 }
-

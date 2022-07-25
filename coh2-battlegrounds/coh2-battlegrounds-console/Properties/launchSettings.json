@@ -3,6 +3,10 @@
     "coh2-battlegrounds-console": {
       "commandName": "Project",
       "commandLineArgs": "repl"
+    },
+    "AITest": {
+      "commandName": "Project",
+      "commandLineArgs": "aidef"
     }
   }
 }

@@ -2,10 +2,22 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 
+using Battlegrounds.ErrorHandling.IO;
+
 namespace Battlegrounds.Gfx;
 
+/// <summary>
+/// Static utility class for reading the pixel data for <see cref="TgaImage"/> files.
+/// </summary>
 public static class TgaPixelReader {
 
+    /// <summary>
+    /// Reads a <see cref="TgaImage"/> file from the specified <paramref name="targaSourcePath"/>.
+    /// </summary>
+    /// <param name="targaSourcePath">The relative path of the targa file to read.</param>
+    /// <returns>A <see cref="TgaImage"/> instance.</returns>
+    /// <exception cref="FileNotFoundException"></exception>
+    /// <exception cref="InvalidFileContentsException"></exception>
     public static TgaImage ReadTarga(string targaSourcePath) {
 
         // Make sure the file exists
@@ -43,7 +55,7 @@ public static class TgaPixelReader {
 
         } catch (Exception e) {
 
-            throw new BadImageFormatException("Failed to read tga header.", e);
+            throw new InvalidFileContentsException("Failed to read tga header.", e);
 
         }
 
@@ -56,19 +68,24 @@ public static class TgaPixelReader {
         // Make sure the flag is valid
         bool IsValidFlag = (Flags & 0xC0) == 0;
 
+        // Get if v/h flipped (5th bit == 0 then flipped verticallly according to: https://gamedev.net/forums/topic/63834-why-does-my-tga-appear-upside-down/ )
+        int origoFlag = (Flags & 0x30) >> 0x04;
+        bool IsHorizontallyFlipped = origoFlag is 0x01 or 0x03;
+        bool IsVerticallyFlipped = origoFlag is 0x00 or 0x01;
+
         // Verify header details
         if (!IsValidDataType) {
-            throw new BadImageFormatException($"Unexpected tga file format '{DataType}'. Please save the .tga file in a different format!");
+            throw new InvalidFileContentsException($"Unexpected tga file format '{DataType}'. Please save the .tga file in a different format!");
         }
 
         // Verify header details
         if (!IsValidBPP) {
-            throw new BadImageFormatException($"Unexpected tga file format '{BitsPerPixel}' is not a valid BPP. Please save the .tga file with either 24 or 32 bits per pixel!");
+            throw new InvalidFileContentsException($"Unexpected tga file format '{BitsPerPixel}' is not a valid BPP. Please save the .tga file with either 24 or 32 bits per pixel!");
         }
 
         // Verify header details
         if (!IsValidFlag) {
-            throw new BadImageFormatException($"Unexpected tga file flag '{Flags}'. Please save the .tga file in a different format!");
+            throw new InvalidFileContentsException($"Unexpected tga file flag '{Flags}'. Please save the .tga file in a different format!");
         }
 
         // 32 bits per pixel?
@@ -129,6 +146,37 @@ public static class TgaPixelReader {
 
         }
 
+        // If flipped horizontally, undo
+        if (IsHorizontallyFlipped) {
+            /*byte[] tmp = new byte[imageBuffer.Length];
+            unsafe {
+                fixed (byte* hflip = tmp) {
+                    fixed (byte* pBuffer = imageBuffer) {
+                        for (int i = 0; i < Width; i++) {
+
+                        }
+                    }
+                }
+            }*/
+        }
+
+        // If flipped vertically, undo
+        if (IsVerticallyFlipped) {
+            byte[] tmp = new byte[imageBuffer.Length];
+            uint stride = (uint)((Width * BitsPerPixel) / 8);
+            unsafe {
+                fixed (byte* hflip = tmp) {
+                    fixed (byte* pBuffer = imageBuffer) {
+                        for (int y = 0; y < Height; y++) {
+                            Unsafe.CopyBlock(hflip + (y * stride), pBuffer + ((Height - 1 - y) * stride), stride);
+                        }
+                    }
+                }
+            }
+            imageBuffer = tmp;
+        }
+
+        // Return image
         return new TgaImage(Width, Height, 96, 96, imageBuffer, DataType, BitsPerPixel);
 
     }
