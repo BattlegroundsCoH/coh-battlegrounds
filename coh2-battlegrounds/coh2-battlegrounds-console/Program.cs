@@ -357,19 +357,26 @@ class Program {
 
     class AIDefenceTester : Command {
 
-        public static readonly Argument<string> MM_FILE = new Argument<string>("-mm", "Specifies the path to the minimap", "2p_coh2_resistance_map.tga");
+        public static readonly Argument<string> SCENARIO = new Argument<string>("-s", "Specifies the scenario to map", "2p_coh2_resistance");
 
-        public AIDefenceTester() : base("aidef", "Invokes the AI defence minimap analysis tool.", MM_FILE) { }
+        public AIDefenceTester() : base("aidef", "Invokes the AI defence minimap analysis tool.", SCENARIO) { }
 
         public override void Execute(CommandArgumentList argumentList) {
 
-            // Grab minimap
-            string mm = argumentList.GetValue(MM_FILE);
+            // Load BG
+            LoadBGAndProceed();
+            
+            // Get scenario
+            string s = argumentList.GetValue(SCENARIO);
+            if (!ScenarioList.TryFindScenario(s, out Scenario? scen) && scen is null) {
+                Console.WriteLine("Failed to find scenario " + s);
+                return;
+            }
 
             // Create AI map analyser
-            var analyser = new AIMapAnalyser(mm);
+            var analyser = new AIMapAnalyser(scen);
             if (!analyser.Analyze(out var data)) {
-                Console.WriteLine("Failed to analyse minimap file: " + mm);
+                Console.WriteLine("Failed to analyse scenario file: " + scen.Name);
             }
 
             using var bmp = new Bitmap(data.GetLength(0), data.GetLength(1), PixelFormat.Format32bppArgb);
@@ -382,10 +389,10 @@ class Program {
 
             using var g = Graphics.FromImage(bmp);
             foreach (var n in analyser.Nodes) {
-                g.DrawEllipse(new Pen(Brushes.Red), new Rectangle(n.X, n.Y, 3, 3));
+               // g.DrawEllipse(new Pen(Brushes.Red), new Rectangle(n.X - 1, n.Y - 1, 2, 2));
             }
             foreach (var e in analyser.Edges) {
-                g.DrawLine(new Pen(Brushes.Orange), new Point(e.First.X, e.First.Y), new Point(e.Second.X, e.Second.Y));
+                g.DrawLine(new Pen(Brushes.DarkGreen, 1.5f), new Point(e.First.X, e.First.Y), new Point(e.Second.X, e.Second.Y));
             }
 
             g.Save();

@@ -40,6 +40,12 @@ public readonly struct TgaPixel {
     public bool WithinTolerance(TgaPixel p, int r=4,int g=4, int b = 4) {
         return Math.Abs(p.R - this.R) <= r && Math.Abs(p.G - this.G) <= g && Math.Abs(p.B - this.B) <= b;
     }
+    public float AverageDifference(TgaPixel p) {
+        int r = this.R;
+        int g = this.G;
+        int b = this.B;
+        return (Math.Abs(r - p.R) + Math.Abs(g - p.G) + Math.Abs(b - p.B)) / 3f;
+    }
     public bool WithinTolerance(TgaPixel p, int tolerance) => this.WithinTolerance(p, tolerance, tolerance, tolerance);
     public override int GetHashCode() {
         return HashCode.Combine(this.R, this.G, this.B, this.A);
