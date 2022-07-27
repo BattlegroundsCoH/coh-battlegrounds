@@ -1,23 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+
+using Battlegrounds.Game;
 
 namespace Battlegrounds.AI.Lobby;
 
 public class AIMapAnalysis {
 
+    public enum StrategicValueType {
+        Crossroads,
+        Fuel,
+        Munitions,
+        VictoryPoint,
+        Resource
+    }
+
     public record RoadConnection(int First, int Second);
 
-    public Vector2[] Nodes { get; init; }
+    public record StrategicValue(GamePosition Position, StrategicValueType Type, float Weight);
+
+    public GamePosition[] Nodes { get; init; }
+
+    public StrategicValue[] StrategicPositions { get; init; }
 
     public RoadConnection[] Roads { get; init; }
 
-    public AIMapAnalysis(Vector2[] nodes, RoadConnection[] connections) {
+    public AIMapAnalysis() {
+        this.Nodes = Array.Empty<GamePosition>();
+        this.StrategicPositions = Array.Empty<StrategicValue>();
+        this.Roads = Array.Empty<RoadConnection>();
+    }
+
+    public AIMapAnalysis(GamePosition[] nodes,  RoadConnection[] connections, StrategicValue[] strategicPositions) {
         this.Nodes = nodes;
         this.Roads = connections;
+        this.StrategicPositions = strategicPositions;
     }
 
 }

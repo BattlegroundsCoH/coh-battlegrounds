@@ -9,6 +9,7 @@ using System.Windows.Shapes;
 
 using Battlegrounds.Game.Database;
 using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.Util;
 
 using BattlegroundsApp.Controls;
 using BattlegroundsApp.Lobby.MVVM.Models;
@@ -247,7 +248,7 @@ public partial class LobbyPlanningOverview : UserControl {
         var dir = lookat - origin;
 
         // Grab the angle
-        var angle = Math.Atan2(dir.Y, dir.X) * 57.29578 + modAngle; // Magic number ==> Constant from radians to degrees
+        var angle = Math.Atan2(dir.Y, dir.X) * Numerics.RAD2DEG + modAngle; // Magic number ==> Constant from radians to degrees
 
         // Set angle
         rotateTransform.Angle = angle;

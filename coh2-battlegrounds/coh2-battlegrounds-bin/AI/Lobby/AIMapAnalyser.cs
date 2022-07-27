@@ -5,6 +5,8 @@ using System.Linq;
 using System.Numerics;
 
 using Battlegrounds.ErrorHandling;
+using Battlegrounds.Functional;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Gfx;
 
@@ -24,6 +26,8 @@ public class AIMapAnalyser {
         public override bool Equals(object? obj) {
             if (obj is Node n) {
                 return n.X == this.X && n.Y == this.Y;
+            } else if (obj is GamePosition gp) {
+                return gp.X == this.X && gp.Y == this.Y;
             }
             return false;
         }
@@ -35,10 +39,10 @@ public class AIMapAnalyser {
 
     public record Subdivision(int Left, int Right, int Top, int Bottom, List<Node> Nodes);
 
-    public record Edge(Node First, Node Second) {
+    public record Edge(Node A, Node B) {
         public bool SameEdge(Edge other) {
-            return (other.First.Equals(this.First) && other.Second.Equals(this.Second))
-                || (other.First.Equals(this.Second) && other.Second.Equals(this.First)); 
+            return (other.A.Equals(this.A) && other.B.Equals(this.B))
+                || (other.A.Equals(this.B) && other.B.Equals(this.A)); 
         }
     }
 
@@ -62,7 +66,7 @@ public class AIMapAnalyser {
         this.m_nodes = new();
     }
 
-    public bool Analyze(out TgaPixel[,] pixelmap) {
+    public AIMapAnalysis? Analyze(out TgaPixel[,] pixelmap, int subDivisions, int searchRadius) {
 
         // Grab file
         var mapFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, $"map_icons\\{this.m_scenario.RelativeFilename}_map.tga");
@@ -71,15 +75,13 @@ public class AIMapAnalyser {
         this.m_tga = TryForget.Try(() => TgaPixelReader.ReadTarga(mapFile), null);
         if (this.m_tga is null) {
             pixelmap = new TgaPixel[0,0];
-            return false;
+            return null;
         }
 
         // Grab as pixel map
         pixelmap = this.m_tga.ToPixelMap().Resize(this.m_tga.Width / 4, this.m_tga.Height / 4); // Convert to pixel map and resize so we can loop over fewer elements
-
-        // Create radius
-        var searchRadius = 3;
-        var subDivisions = 8;
+        int width = pixelmap.GetLength(0);
+        int height = pixelmap.GetLength(1);
 
         // Subdivide scatter points
         this.Subdivide(pixelmap, subDivisions, searchRadius);
@@ -90,8 +92,64 @@ public class AIMapAnalyser {
         // Connect grids
         this.ConnectGrids(searchRadius);
 
+        // TODO: Node smoothen -> Merge nodes within some radius into one
+
+        // Smooth edges (Do last so we don't accidentally cut useful connections)
+        SmoothEdges(this.m_edges);
+
         // Return success
-        return this.m_edges.Count > 0;
+        if (this.m_edges.Count is 0) {
+            
+            // Return null -> nothing of value
+            return null;
+
+        } else {
+
+            // Grab all nodes as game positons
+            var gNodes = this.Nodes.ToArray().Map(x => this.m_scenario.FromMinimapPosition(width, height, x.X, x.Y));
+
+            // Grab all edges
+            var gEdges = this.Edges.ToArray().Map(e => {
+                int i = this.Nodes.FindIndex(x => e.A.X == x.X && e.A.Y == x.Y);
+                int j = this.Nodes.FindIndex(x => e.B.X == x.X && e.B.Y == x.Y);
+                return new AIMapAnalysis.RoadConnection(i, j);
+            });
+
+            // Grab all important crossroads
+            var gChokePoints = gNodes.Mapi((i, x) => {
+                int eCount = gEdges.Filter(y => y.First == i || y.Second == i).Length;
+                if (eCount >= 2) {
+                    return new AIMapAnalysis.StrategicValue(x, AIMapAnalysis.StrategicValueType.Crossroads, eCount - 2);
+                } else {
+                    return null;
+                }
+            }).NotNull();
+
+            // Grab strategic points
+            var gStratPoints = this.m_scenario.Points
+                .Filter(x => x.EntityBlueprint is "victory_point" or "territory_munitions_point_mp" or "territory_fuel_point_mp" or "territory_point_mp")
+                .Map(x => new AIMapAnalysis.StrategicValue(x.Position, x.EntityBlueprint switch {
+                    "victory_point" => AIMapAnalysis.StrategicValueType.VictoryPoint,
+                    "territory_fuel_point_mp" => AIMapAnalysis.StrategicValueType.Fuel,
+                    "territory_munitions_point_mp" => AIMapAnalysis.StrategicValueType.Munitions,
+                    "territory_point_mp" => AIMapAnalysis.StrategicValueType.Resource,
+                    _ => AIMapAnalysis.StrategicValueType.Crossroads,
+                }, x.EntityBlueprint switch {
+                    "victory_point" => 1f,
+                    "territory_fuel_point_mp" => .9f,
+                    "territory_munitions_point_mp" => .8f,
+                    "territory_point_mp" => .4f,
+                    _ => 0f
+                }));
+
+            // Return analysis
+            return new() {
+                Nodes = gNodes,
+                Roads = gEdges,
+                StrategicPositions = gChokePoints.Concat(gStratPoints),
+            };
+
+        }
 
     }
 
@@ -229,12 +287,9 @@ public class AIMapAnalyser {
                 var sub = this.m_grid[j, i];
                 var edges = FindEdges(sub.Nodes, searchRadius);
 
-                // Smooth path
-                SmoothEdges(edges);
-
                 // Remove nodes with no connection
                 for (int k = 0; k < sub.Nodes.Count; k++) {
-                    if (!edges.Exists(x => x.First.Equals(sub.Nodes[k]) || x.Second.Equals(sub.Nodes[k]))) {
+                    if (!edges.Exists(x => x.A.Equals(sub.Nodes[k]) || x.B.Equals(sub.Nodes[k]))) {
                         sub.Nodes.RemoveAt(k--);
                     }
                 }
@@ -257,17 +312,20 @@ public class AIMapAnalyser {
             var e = edges[k];
 
             // While there exists an edge coming from the outgoing edge
-            while (edges.Find(x => x.First.Equals(e.Second)) is Edge outEdge) {
+            while (edges.Find(x => x.A.Equals(e.B)) is Edge outEdge) {
 
                 // Compute direction vectors
-                var v1 = Vector2.Normalize(new Vector2(e.Second.X - e.First.X, e.Second.Y - e.First.Y)); // look at connection node
-                var v2 = Vector2.Normalize(new Vector2(outEdge.Second.X - e.First.X, outEdge.Second.Y - e.First.Y)); // look at end node
+                var v1 = Vector2.Normalize(new Vector2(e.B.X - e.A.X, e.B.Y - e.A.Y)); // look at connection node
+                var v2 = Vector2.Normalize(new Vector2(outEdge.B.X - e.A.X, outEdge.B.Y - e.A.Y)); // look at end node
 
                 // Take the dot product
                 var dot = Vector2.Dot(v1, v2);
-                if (dot < 0.4) {
-                    edges[k] = e with { Second = outEdge.Second };
+                if (dot <= 0.8) {
+                    edges[k] = e with { B = outEdge.B };
                     edges.Remove(outEdge);
+                    if (k >= edges.Count) {
+                        break;
+                    }
                 } else {
                     break; // "valid" edge
                 }
@@ -297,7 +355,7 @@ public class AIMapAnalyser {
                 var dx = nodes[u].X - nodes[v].X;
                 var dy = nodes[u].Y - nodes[v].Y;
                 var dis = Math.Sqrt(dx * dx + dy * dy);
-                if (dis < (searchRadius * 2) && dis < nearestNeighbourDistance) {
+                if (dis <= (searchRadius * 2) && dis < nearestNeighbourDistance) {
                     nearestNeighbour = v;
                     nearestNeighbourDistance = dis;
                 }
@@ -339,9 +397,6 @@ public class AIMapAnalyser {
 
                     // Find edges
                     var edges = FindEdges(nodes, searchRadius * 2).Where(x => !this.m_edges.Contains(x)).ToList();
-
-                    // Smooth
-                    SmoothEdges(edges);
 
                     // Add new found connecting edges
                     this.m_edges.AddRange(edges);

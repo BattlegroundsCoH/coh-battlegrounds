@@ -58,6 +58,22 @@ public static class FunctionalArray {
     }
 
     /// <summary>
+    /// Maps an array of type <typeparamref name="U"/> into an array of type <typeparamref name="V"/> through a mapping function where the index of the element is given.
+    /// </summary>
+    /// <typeparam name="U">The original type of the array.</typeparam>
+    /// <typeparam name="V">The new type of the array.</typeparam>
+    /// <param name="array">The array to map over.</param>
+    /// <param name="func">The map funcion to map a single element from <typeparamref name="U"/> to <typeparamref name="V"/>. With the index.</param>
+    /// <returns>An array consisting of elements of type <typeparamref name="V"/>.</returns>
+    public static V[] Mapi<U, V>(this U[] array, Func<int, U, V> func) {
+        V[] result = new V[array.Length];
+        for (int i = 0; i < array.Length; i++) {
+            result[i] = func(i, array[i]);
+        }
+        return result;
+    }
+
+    /// <summary>
     /// Maps an array of type <typeparamref name="U"/> into an array of type <typeparamref name="V"/> through a mapping function.
     /// </summary>
     /// <remarks>

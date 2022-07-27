@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Battlegrounds.Gfx;
 
@@ -117,19 +118,46 @@ public sealed class TgaImage {
     /// <returns>A byte array containing the parsed RGB(A) data.</returns>
     public byte[] GetPixelData() => this.m_pixelData;
 
+    /// <summary>
+    /// Get the pixel at (<paramref name="x"/>,<paramref name="y"/>).
+    /// </summary>
+    /// <param name="x">The x-position of the pixel.</param>
+    /// <param name="y">The y-position of the pixel.</param>
+    /// <returns>The pixel found at (<paramref name="x"/>,<paramref name="y"/>).</returns>
+    /// <exception cref="ArgumentOutOfRangeException"/>
+    /// <exception cref="IndexOutOfRangeException"/>
     public TgaPixel GetPixel(int x, int y) {
+
+        // Verify X-coordinate
+        if (x < 0 || x > this.Width)
+            throw new ArgumentOutOfRangeException(nameof(x), $"Invalid X-position {x}. Must be greater than 0 and less than {this.Width}.");
+
+        // Verify Y-coordinate
+        if (y < 0 || y > this.Height)
+            throw new ArgumentOutOfRangeException(nameof(y), $"Invalid Y-position {y}. Must be greater than 0 and less than {this.Height}.");
+
+        // Compute byte position in bytemap
         int _x = x * (this.Is32Bit ? 4 : 3);
         int _y = y * this.Stride;
+        
+        // Compute RGB positions
         int blue = _y + _x;
         int green = _y + _x + 1;
         int red = _y + _x + 2;
+        
+        // Return pixel (if 32-bit also include the alpha channel, which follows the red channel)
         if (this.Is32Bit) {
             return new TgaPixel(this.m_pixelData[red], this.m_pixelData[green], this.m_pixelData[blue], this.m_pixelData[red+1]);
         } else {
             return new TgaPixel(this.m_pixelData[red], this.m_pixelData[green], this.m_pixelData[blue]);
         }
+
     }
 
+    /// <summary>
+    /// Get a <see cref="TgaPixel"/>[,] map from the internal byte representation.
+    /// </summary>
+    /// <returns>A <see cref="TgaPixel"/>[,] map representing the <see cref="TgaImage"/>.</returns>
     public unsafe TgaPixel[,] ToPixelMap() {
 
         // Create pixel map
