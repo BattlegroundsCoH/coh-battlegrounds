@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Game.DataCompany;
+﻿using Battlegrounds.AI;
+using Battlegrounds.Game.DataCompany;
 
 namespace Battlegrounds.Game.Match;
 

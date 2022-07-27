@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 
 using Battlegrounds;
+using Battlegrounds.AI;
 using Battlegrounds.Functional;
-using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;

@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Battlegrounds.Game;
+using Battlegrounds.AI;
 
 namespace Battlegrounds.Networking.LobbySystem.Json;
 

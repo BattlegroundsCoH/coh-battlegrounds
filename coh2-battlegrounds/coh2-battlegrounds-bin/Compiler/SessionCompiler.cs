@@ -13,6 +13,7 @@ using Battlegrounds.Lua.Generator;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Gameplay.Supply;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.AI;
 
 namespace Battlegrounds.Compiler;
 

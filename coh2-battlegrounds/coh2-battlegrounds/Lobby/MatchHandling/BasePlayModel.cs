@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Media;
 
+using Battlegrounds.AI;
+using Battlegrounds.AI.Lobby;
 using Battlegrounds.Functional;
-using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
@@ -157,11 +158,15 @@ internal abstract class BasePlayModel {
         SessionPlanGoalInfo[] sessionGoals;
         SessionPlanSquadInfo[] sessionSquads;
 
+        // Grab reverse flag
+        var revflag = this.m_handle.AreTeamRolesSwapped();
+
         // Create plan info
         if (gamemodeInstance.HasPlanning && this.m_handle.PlanningHandle is not null) {
 
             // Union participants and map by index
-            var participants = allies.Concat(axis).ToLookup(x => x.GetID());
+            var allParticipants = allies.Concat(axis);
+            var participants = allParticipants.ToLookup(x => x.GetID());
 
             // Grab elements
             var elements = this.m_handle.PlanningHandle.GetPlanningElements(0).Concat(this.m_handle.PlanningHandle.GetPlanningElements(1));
@@ -170,6 +175,9 @@ internal abstract class BasePlayModel {
             sessionGoals = CreatePlanningGoals(participants, elements);
             sessionEntities = CreatePlanningEntities(participants, elements);
             sessionSquads = CreatePlanningSquads(participants, elements);
+
+            // Determine if there's need for AI planning
+            CreateAIPlans(scen, revflag ? allies : axis, (byte)(revflag ? 0 : 1), ref sessionSquads, ref sessionEntities, sessionGoals);
 
         } else {
             
@@ -207,7 +215,7 @@ internal abstract class BasePlayModel {
             Goals = sessionGoals,
             Entities = sessionEntities,
             IsFixedTeamOrder = gamemodeInstance.RequireFixed,
-            ReverseTeamOrder = this.m_handle.AreTeamRolesSwapped(),
+            ReverseTeamOrder = revflag,
             AdditionalOptions = additionalSettings
         };
 
@@ -327,6 +335,65 @@ internal abstract class BasePlayModel {
 
         // Return goals
         return goals;
+
+    }
+
+    protected static void CreateAIPlans(Scenario scenario, SessionParticipant[] defenders, byte tid,
+        ref SessionPlanSquadInfo[] units, ref SessionPlanEntityInfo[] structures, SessionPlanGoalInfo[] goals) {
+
+        // Grab allies AIs
+        var aiDefenders = defenders.Filter(x => !x.IsHuman);
+
+        // Ensure there's AI
+        if (aiDefenders.Length is 0) {
+            return;
+        }
+
+        // Try grab analysis
+        var analysis = AIDatabase.GetMapAnalysis(scenario.RelativeFilename);
+
+        // Create planner
+        var aiplan = new AIDefencePlanner(analysis, aiDefenders.Length);
+        aiplan.SetDefenceGoals(goals.Filter(x => x.ObjectiveType is 1).Map(x => x.ObjectivePosition));
+        aiplan.SetHumanDefences(
+            units.Map(x => (x.Spawn, x.Lookat)),
+            structures.Map(x => (x.Blueprint, x.Spawn, x.Lookat))
+        );
+        aiplan.Subdivide(scenario, tid, aiDefenders.Map(x => x.PlayerIndexOnTeam));
+
+        // Loop over defending ai players and place defences
+        for (byte i = 0; i < aiDefenders.Length; i++) {
+
+            // Grab company
+            var company = aiDefenders[i].SelectedCompany ?? throw new Exception("Failed to generate defence plan for unknown company.");
+
+            // Create plan for defender
+            aiplan.CreateDefencePlan(tid, i, company, scenario);
+
+        }
+
+        // Extract squads
+        units = units.Concat(aiplan.GetSquads().Map(x => {
+            return new SessionPlanSquadInfo() {
+                TeamOwner = tid,
+                TeamMemberOwner = x.AIIndex,
+                SpawnId = x.PlanElement.CompanyId,
+                Spawn = x.PlanElement.SpawnPosition,
+                Lookat = x.PlanElement.LookatPosition
+            };
+        }));
+
+        // Extract entities
+        structures = structures.Concat(aiplan.GetEntities().Map(x => {
+            return new SessionPlanEntityInfo() {
+                TeamOwner = tid,
+                TeamMemberOwner = x.AIIndex,
+                Blueprint = BlueprintManager.FromBlueprintName<EntityBlueprint>(x.PlanElement.Blueprint),
+                Spawn = x.PlanElement.SpawnPosition,
+                Lookat = x.PlanElement.LookatPosition,
+                IsDirectional = x.PlanElement.IsDirectional
+            };
+        }));
 
     }
 

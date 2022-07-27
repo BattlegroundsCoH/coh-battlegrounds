@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
@@ -376,11 +377,21 @@ class Program {
                 // Grab all scenarios
                 var scenarios = ScenarioList.GetList();
 
+                // Create required instances
+                var ls = new Dictionary<string, AIMapAnalysis>();
+                var sync = new object();
+
                 // Time it
                 var stop = Stopwatch.StartNew();
 
                 // Loop over
-                Parallel.ForEach(scenarios, DoScenario);
+                Parallel.ForEach(scenarios, x => {
+                    if (DoScenario(x) is AIMapAnalysis a) {
+                        lock (sync) {
+                            ls[x.RelativeFilename] = a;
+                        }
+                    }
+                });
 
                 // Halt
                 stop.Stop();
@@ -388,6 +399,8 @@ class Program {
                 // Log
                 Console.WriteLine($"Finished processing {scenarios.Count} scenarios in {stop.Elapsed.TotalSeconds}s");
                 Thread.Sleep(5000);
+
+                File.WriteAllText($"vcoh-aimap-db.json", JsonSerializer.Serialize(ls, new JsonSerializerOptions() { WriteIndented = true }));
 
             } else {
 
@@ -406,7 +419,7 @@ class Program {
         }
 
         [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "Will always run on Windows")]
-        private static void DoScenario(Scenario scen) {
+        private static AIMapAnalysis? DoScenario(Scenario scen) {
 
             // Log
             Console.WriteLine($"Doing Analysis on: {scen.RelativeFilename}.");
@@ -415,7 +428,7 @@ class Program {
             var analyser = new AIMapAnalyser(scen);
             if (analyser.Analyze(out var data, 8, 3) is not AIMapAnalysis analysis) {
                 Console.WriteLine("Failed to analyse scenario file: " + scen.Name);
-                return;
+                return null;
             }
 
             // Grab bitmap
@@ -450,7 +463,9 @@ class Program {
             }
 
             bmp.Save($"ai_tests\\{scen.RelativeFilename}.png");
-            File.WriteAllText($"ai_tests\\{scen.RelativeFilename}.json", JsonSerializer.Serialize(analysis, new JsonSerializerOptions() { WriteIndented = true }));
+
+            // Return
+            return analysis;
 
         }
 

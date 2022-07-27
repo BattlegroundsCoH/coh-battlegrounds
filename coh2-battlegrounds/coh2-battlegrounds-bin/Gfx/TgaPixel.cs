@@ -104,8 +104,6 @@ public readonly struct TgaPixel {
         return (Math.Abs(r - p.R) + Math.Abs(g - p.G) + Math.Abs(b - p.B)) / 3f;
     }
 
-    public bool WithinTolerance(TgaPixel p, int tolerance) => this.WithinTolerance(p, tolerance, tolerance, tolerance);
-    
     public override int GetHashCode() {
         return HashCode.Combine(this.R, this.G, this.B, this.A);
     }

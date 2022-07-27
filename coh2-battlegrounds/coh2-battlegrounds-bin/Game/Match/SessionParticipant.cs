@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Steam;
 using Battlegrounds.Game.DataCompany;
+using Battlegrounds.AI;
 
 namespace Battlegrounds.Game.Match;
 

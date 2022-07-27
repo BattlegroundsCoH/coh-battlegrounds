@@ -74,4 +74,22 @@ public static class FunctionalDictionaryExtensions {
         return mapped;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="K"></typeparam>
+    /// <typeparam name="V"></typeparam>
+    /// <param name="dic"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public static bool Exists<K,V>(this IDictionary<K,V> dic, Predicate<KeyValuePair<K,V>> predicate) {
+        var itt = dic.GetEnumerator();
+        while (itt.MoveNext()) {
+            if (predicate(itt.Current)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

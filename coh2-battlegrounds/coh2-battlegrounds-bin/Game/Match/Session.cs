@@ -11,6 +11,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 
 using static Battlegrounds.Game.Match.ParticipantTeam;
+using Battlegrounds.AI;
 
 namespace Battlegrounds.Game.Match;
 

@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 
 using Battlegrounds;
-using Battlegrounds.Game;
+using Battlegrounds.AI;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.LobbySystem.Json;

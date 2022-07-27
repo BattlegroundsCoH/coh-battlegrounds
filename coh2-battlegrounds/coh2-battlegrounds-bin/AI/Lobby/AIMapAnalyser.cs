@@ -46,8 +46,6 @@ public class AIMapAnalyser {
         }
     }
 
-    private static readonly Random __rand = new(1944); // "Deterministic random generator"
-   
     private static readonly TgaPixel RoadPixelColour = new TgaPixel(142, 142, 124);
 
     private readonly Scenario m_scenario;
@@ -418,127 +416,6 @@ public class AIMapAnalyser {
             }
         }
         return divs;
-    }
-
-    private Stack<Node> SimplifyPath(Stack<Node> path) {
-
-        // Prepare queue
-        Queue<Node> queue = new ();
-
-        // Get first element and add to queue
-        var current = path.Pop();
-        queue.Enqueue(current);
-
-        // Pop until no more path elements
-        while (path.Count > 0) {
-
-            // Get next
-            var next = path.Pop();
-
-            // Check if there's a bend
-            int dx = Math.Abs(current.X - next.X);
-            int dy = Math.Abs(current.Y - next.Y);
-            if ((dx == 0 && dy != 0) || (dx != 0 && dy == 0)) {
-                if (path.Count is 0) {
-                    queue.Enqueue(next);
-                }
-                continue;
-            }
-
-            // Add
-            queue.Enqueue(next);
-            current = next;
-
-        }
-
-        return new(queue);
-
-    }
-
-    private static bool GetPath(Node start, Node end, TgaPixel[,] tgaPixels, out Stack<Node> path) { // DFS
-
-        // Create stack
-        var stack = new Stack<Node>();
-        var visited = new HashSet<Node>();
-
-        // Init
-        visited.Add(start);
-        stack.Push(start);
-
-        // Flag if found
-        bool found = false;
-
-        // While node to consider
-        while (stack.Count > 0) {
-
-            // Pop
-            var cur = stack.Pop();
-
-            // Halt if destination
-            if (cur.X == end.X && cur.Y == end.Y) {
-                end.Parent = cur;
-                found = true;
-                break;
-            }
-
-            // Get neighbours
-            var neighbours = GetNeighbours(cur, tgaPixels, visited);
-            for (int i = 0; i < neighbours.Count; i++) {
-                neighbours[i].Parent = cur;
-                visited.Add(neighbours[i]);
-                stack.Push(neighbours[i]);
-            }
-
-        }
-
-        // Create stack for backtracked path
-        path = new();
-
-        // If found, backtrack
-        if (found) {
-            var backtrack = end;
-            path.Push(end);
-            while (backtrack.Parent is not null) {
-                path.Push(backtrack.Parent);
-                backtrack = backtrack.Parent;
-            }
-        }
-
-        // Return false ==> no path found
-        return found;
-
-    }
-
-    private static List<Node> GetNeighbours(Node current, TgaPixel[,] tgaPixels, HashSet<Node> visited) {
-
-        // Container for neighbours
-        var neighbours = new List<Node>();
-
-        // Cap min/max x
-        int minx = Math.Max(0, current.X - 1);
-        int maxx = Math.Min(tgaPixels.GetLength(0), current.X + 1);
-
-        // Cap min/max y
-        int miny = Math.Max(0, current.Y - 1);
-        int maxy = Math.Min(tgaPixels.GetLength(1), current.Y + 1);
-
-        // Loop
-        for (int y = miny; y < maxy; y++) {
-            for (int x = minx; x < maxx; x++) {
-                var p = tgaPixels[x, y];
-                var d = p.DistanceTo(current.Pixel);
-                if (p.WithinTolerance(current.Pixel, tolerance:8)) {
-                    var n = new Node(x, y, p);
-                    if (visited.Add(n)) {
-                        neighbours.Add(n);
-                    }
-                }
-            }
-        }
-
-        // Return neighbours
-        return neighbours;
-
     }
 
 }

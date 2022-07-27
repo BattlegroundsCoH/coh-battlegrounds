@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-using Battlegrounds.Game;
+using Battlegrounds.AI;
 
 namespace Battlegrounds.Networking.LobbySystem;
 

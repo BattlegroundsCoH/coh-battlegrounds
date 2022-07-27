@@ -9,8 +9,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using Battlegrounds;
+using Battlegrounds.AI;
 using Battlegrounds.Functional;
-using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;

@@ -74,7 +74,7 @@ public static class BattlegroundsInstance {
                 [OPT_AUTODATA] = false,
                 [OPT_AUTOSCAR] = false,
                 [OPT_AUTOUPDATE] = false,
-                [OPT_AUTOWORKSHOP] = true,
+                [OPT_AUTOWORKSHOP] = false, // Don't do this automatically --> it makes the error log look annoying
                 [OPT_ZOOM] = 0.0
             };
         }

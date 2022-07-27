@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
+using Battlegrounds.AI;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Modding;
 
