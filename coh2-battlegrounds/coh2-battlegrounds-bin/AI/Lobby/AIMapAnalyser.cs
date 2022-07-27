@@ -118,7 +118,7 @@ public class AIMapAnalyser {
             // Grab all important crossroads
             var gChokePoints = gNodes.Mapi((i, x) => {
                 int eCount = gEdges.Filter(y => y.First == i || y.Second == i).Length;
-                if (eCount >= 2) {
+                if (eCount > 3) {
                     return new AIMapAnalysis.StrategicValue(x, AIMapAnalysis.StrategicValueType.Crossroads, eCount - 2);
                 } else {
                     return null;
@@ -306,28 +306,27 @@ public class AIMapAnalyser {
     private static void SmoothEdges(List<Edge> edges) {
 
         // Loop over edges end smooth them out
-        for (int k = 0; k < edges.Count; k++) {
+        for (int i = 0; i < edges.Count; i++) {
 
             // Grab edge
-            var e = edges[k];
+            var e = edges[i];
 
-            // While there exists an edge coming from the outgoing edge
-            while (edges.Find(x => x.A.Equals(e.B)) is Edge outEdge) {
+            // Pick edges from remaining
+            for (int j = i + 1; j < edges.Count; j++) {
+
+                // Is connect to e?
+                if (!edges[j].A.Equals(e.B))
+                    continue;
 
                 // Compute direction vectors
                 var v1 = Vector2.Normalize(new Vector2(e.B.X - e.A.X, e.B.Y - e.A.Y)); // look at connection node
-                var v2 = Vector2.Normalize(new Vector2(outEdge.B.X - e.A.X, outEdge.B.Y - e.A.Y)); // look at end node
+                var v2 = Vector2.Normalize(new Vector2(edges[j].B.X - e.A.X, edges[j].B.Y - e.A.Y)); // look at end node
 
                 // Take the dot product
                 var dot = Vector2.Dot(v1, v2);
                 if (dot <= 0.8) {
-                    edges[k] = e with { B = outEdge.B };
-                    edges.Remove(outEdge);
-                    if (k >= edges.Count) {
-                        break;
-                    }
-                } else {
-                    break; // "valid" edge
+                    edges[i] = e with { B = edges[j].B };
+                    edges.RemoveAt(j--);
                 }
 
             }
