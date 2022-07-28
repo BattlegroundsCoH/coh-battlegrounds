@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Numerics;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Lua.Generator.RuntimeServices;
@@ -110,5 +111,13 @@ public struct GamePosition {
     /// <returns>The squared distance between the two points.</returns>
     public readonly double SquareDistance(GamePosition other)
         => (this.m_x - other.m_x).Square() + (this.m_y - other.m_y).Square() + (this.m_z - other.m_z).Square();
+
+    public static GamePosition operator *(GamePosition a, double b)
+        => new(a.m_x * b, a.m_y * b, a.m_z * b);
+
+    public static GamePosition operator +(GamePosition a, GamePosition b)
+        => new(a.m_x + b.m_x, a.m_y + b.m_y, a.m_z + b.m_z);
+
+    public GamePosition Interpolate(GamePosition y, double t) => this * t + y * (1 - t);
 
 }

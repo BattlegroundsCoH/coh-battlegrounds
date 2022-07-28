@@ -342,6 +342,9 @@ public static class FunctionalArray {
     /// <param name="array">The array to find smallest index in.</param>
     /// <returns>The index with the smallest instance in the array.</returns>
     public static int ArgMin<T>(this T[] array) where T : IComparable<T> {
+        if (array.Length is 0) {
+            return -1;
+        }
         int j = 0;
         for (int i = 1; i < array.Length; i++) {
             if (array[i].CompareTo(array[j]) < 0) {
@@ -360,6 +363,9 @@ public static class FunctionalArray {
     /// <param name="min">The selector function.</param>
     /// <returns>The index with the smallest instance in the array.</returns>
     public static int ArgMin<U, V>(this U[] array, Func<U, V> min) where V : IComparable<V> {
+        if (array.Length is 0) {
+            return -1;
+        }
         int j = 0;
         V v = min(array[0]);
         for (int i = 1; i < array.Length; i++) {
@@ -403,6 +409,9 @@ public static class FunctionalArray {
     /// <param name="max">The selector function.</param>
     /// <returns>The index with the largest instance in the array.</returns>
     public static int ArgMax<U, V>(this U[] array, Func<U, V> max) where V : IComparable<V> {
+        if (array.Length is 0) {
+            return -1;
+        }
         int j = 0;
         V v = max(array[0]);
         for (int i = 1; i < array.Length; i++) {
@@ -422,6 +431,9 @@ public static class FunctionalArray {
     /// <param name="array">The array to find largest index for.</param>
     /// <returns>The index with the largest instance in the array.</returns>
     public static int ArgMax<T>(this T[] array) where T : IComparable<T> {
+        if (array.Length is 0) {
+            return -1;
+        }
         int j = 0;
         for (int i = 1; i < array.Length; i++) {
             if (array[i].CompareTo(array[j]) > 0) {
