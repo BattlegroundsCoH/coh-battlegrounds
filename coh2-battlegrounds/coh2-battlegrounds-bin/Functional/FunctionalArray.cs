@@ -307,16 +307,16 @@ public static class FunctionalArray {
     }
 
     /// <summary>
-    /// 
+    /// Map an array into a <see cref="IDictionary{TKey, TValue}"/> instance.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <typeparam name="K"></typeparam>
-    /// <typeparam name="V"></typeparam>
-    /// <param name="array"></param>
-    /// <param name="key"></param>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    public static Dictionary<K,V> ToLookup<T,K,V>(this T[] array, Func<T,K> key, Func<T,V> value) where K : notnull {
+    /// <typeparam name="T">The array type.</typeparam>
+    /// <typeparam name="K">The lookup type.</typeparam>
+    /// <typeparam name="V">The value type.</typeparam>
+    /// <param name="array">The array to map into a dictionary.</param>
+    /// <param name="key">The key mapper function.</param>
+    /// <param name="value">The value mapper function.</param>
+    /// <returns>A <see cref="IDictionary{TKey, TValue}"/> instance with all array entries mapped according to <paramref name="key"/> and <paramref name="value"/> functions.</returns>
+    public static IDictionary<K,V> ToLookup<T,K,V>(this T[] array, Func<T,K> key, Func<T,V> value) where K : notnull {
         var dict = new Dictionary<K,V>();
         for (int i = 0; i < array.Length; i++) {
             dict.Add(key(array[i]), value(array[i]));
@@ -325,14 +325,148 @@ public static class FunctionalArray {
     }
 
     /// <summary>
-    /// 
+    /// Map an array into a <see cref="IDictionary{TKey, TValue}"/> instance where a value member defines the lookup.
     /// </summary>
-    /// <typeparam name="K"></typeparam>
-    /// <typeparam name="V"></typeparam>
-    /// <param name="array"></param>
-    /// <param name="key"></param>
-    /// <returns></returns>
-    public static Dictionary<K, V> ToLookup<K, V>(this V[] array, Func<V, K> key) where K : notnull
+    /// <typeparam name="K">The lookup type.</typeparam>
+    /// <typeparam name="V">The value type.</typeparam>
+    /// <param name="array">The array to map into a dictionary.</param>
+    /// <param name="key">The key mapper function.</param>
+    /// <returns>A <see cref="IDictionary{TKey, TValue}"/> instance with all array entries indexed according to <paramref name="key"/> function.</returns>
+    public static IDictionary<K, V> ToLookup<K, V>(this V[] array, Func<V, K> key) where K : notnull
         => array.ToLookup(key, x => x);
+
+    /// <summary>
+    /// Finds the index with the smallest value.
+    /// </summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="array">The array to find smallest index in.</param>
+    /// <returns>The index with the smallest instance in the array.</returns>
+    public static int ArgMin<T>(this T[] array) where T : IComparable<T> {
+        int j = 0;
+        for (int i = 1; i < array.Length; i++) {
+            if (array[i].CompareTo(array[j]) < 0) {
+                j = i;
+            }
+        }
+        return j;
+    }
+
+    /// <summary>
+    /// Finds the index with the smallest value.
+    /// </summary>
+    /// <typeparam name="U">The value type.</typeparam>
+    /// <typeparam name="V">The minimum value type.</typeparam>
+    /// <param name="array">The array to find smallest index in.</param>
+    /// <param name="min">The selector function.</param>
+    /// <returns>The index with the smallest instance in the array.</returns>
+    public static int ArgMin<U, V>(this U[] array, Func<U, V> min) where V : IComparable<V> {
+        int j = 0;
+        V v = min(array[0]);
+        for (int i = 1; i < array.Length; i++) {
+            var a = min(array[i]);
+            if (a.CompareTo(v) < 0) {
+                v = a;
+                j = i;
+            }
+        }
+        return j;
+    }
+
+    /// <summary>
+    /// Finds the instance with the smallest value.
+    /// </summary>
+    /// <typeparam name="U">The value type.</typeparam>
+    /// <typeparam name="V">The minimum value type.</typeparam>
+    /// <param name="array">The array to find smallest instance in.</param>
+    /// <param name="min">The selector function.</param>
+    /// <returns>The instance with the smallest instance in the array.</returns>
+    public static U Min<U, V>(this U[] array, Func<U, V> min) where V : IComparable<V>
+        => array[ArgMin(array, min)];
+
+    /// <summary>
+    /// Finds the smallest value.
+    /// </summary>
+    /// <typeparam name="U">The value type.</typeparam>
+    /// <typeparam name="V">The minimum value type.</typeparam>
+    /// <param name="array">The array to find smallest value in.</param>
+    /// <param name="min">The selector function.</param>
+    /// <returns>The smallest in the array.</returns>
+    public static V MinValue<U, V>(this U[] array, Func<U, V> min) where V : IComparable<V>
+        => min(array.Min(min));
+
+    /// <summary>
+    /// Finds the index of the largest value.
+    /// </summary>
+    /// <typeparam name="U">The value type.</typeparam>
+    /// <typeparam name="V">The maximum value type.</typeparam>
+    /// <param name="array">The array to find largest index for.</param>
+    /// <param name="max">The selector function.</param>
+    /// <returns>The index with the largest instance in the array.</returns>
+    public static int ArgMax<U, V>(this U[] array, Func<U, V> max) where V : IComparable<V> {
+        int j = 0;
+        V v = max(array[0]);
+        for (int i = 1; i < array.Length; i++) {
+            var a = max(array[i]);
+            if (a.CompareTo(v) > 0) {
+                v = a;
+                j = i;
+            }
+        }
+        return j;
+    }
+
+    /// <summary>
+    /// Finds the index of the largest value.
+    /// </summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="array">The array to find largest index for.</param>
+    /// <returns>The index with the largest instance in the array.</returns>
+    public static int ArgMax<T>(this T[] array) where T : IComparable<T> {
+        int j = 0;
+        for (int i = 1; i < array.Length; i++) {
+            if (array[i].CompareTo(array[j]) > 0) {
+                j = i;
+            }
+        }
+        return j;
+    }
+
+    /// <summary>
+    /// Finds the instance with the largest value.
+    /// </summary>
+    /// <typeparam name="U">The value type.</typeparam>
+    /// <typeparam name="V">The maximum value type.</typeparam>
+    /// <param name="array">The array to find largest instance in.</param>
+    /// <param name="max">The selector function.</param>
+    /// <returns>The instance with the largest instance in the array.</returns>
+    public static U Max<U, V>(this U[] array, Func<U, V> max) where V : IComparable<V>
+        => array[ArgMax(array, max)];
+
+    /// <summary>
+    /// Finds the largest value.
+    /// </summary>
+    /// <typeparam name="U">The value type.</typeparam>
+    /// <typeparam name="V">The maximum value type.</typeparam>
+    /// <param name="array">The array to find largest value in.</param>
+    /// <param name="max">The selector function.</param>
+    /// <returns>The largest in the array.</returns>
+    public static V MaxValue<U, V>(this U[] array, Func<U, V> max) where V : IComparable<V>
+        => max(array.Max(max));
+
+    /// <summary>
+    /// Get the first matching instance or the <paramref name="defaultValue"/>.
+    /// </summary>
+    /// <typeparam name="T">The array instance type.</typeparam>
+    /// <param name="array">The array to find element in.</param>
+    /// <param name="predicate">The predicate to test.</param>
+    /// <param name="defaultValue">The default value to return if no value is found.</param>
+    /// <returns>The first <paramref name="predicate"/> matching instance. If none, <paramref name="defaultValue"/> is returned.</returns>
+    public static T FirstOrDefault<T>(this T[] array, Predicate<T> predicate, T defaultValue) {
+        for (int i = 0; i < array.Length; i++) {
+            if (predicate(array[i]))
+                return array[i];
+        }
+        return defaultValue;
+    }
 
 }

@@ -41,7 +41,7 @@ public static class ModManager {
             try {
 
                 // Read the mod package
-                ModPackage? package = JsonSerializer.Deserialize<ModPackage>(File.ReadAllText(packageFilepath));
+                ModPackage? package = JsonSerializer.Deserialize<ModPackage>(File.OpenRead(packageFilepath));
                 if (package is null) {
                     Trace.WriteLine($"Failed to load mod package '{packageFilepath}' (Error reading file).", nameof(ModManager));
                     continue;
@@ -121,6 +121,14 @@ public static class ModManager {
     /// <returns>The <see cref="ModPackage"/> associated with <paramref name="packageID"/>.</returns>
     public static ModPackage? GetPackage(string packageID)
         => __packages.FirstOrDefault(x => x.ID == packageID);
+
+    /// <summary>
+    /// Get package from its <paramref name="packageID"/>.
+    /// </summary>
+    /// <param name="packageID">The ID to use to identify the <see cref="ModPackage"/>.</param>
+    /// <returns>The <see cref="ModPackage"/> associated with <paramref name="packageID"/>.</returns>
+    public static ModPackage GetPackageOrError(string packageID)
+        => __packages.FirstOrDefault(x => x.ID == packageID) ?? throw new Exception($"Package '{packageID}' not found.");
 
     /// <summary>
     /// Iterate over each <see cref="ModPackage"/> in the system.

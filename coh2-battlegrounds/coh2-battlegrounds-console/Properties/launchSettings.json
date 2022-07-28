@@ -6,7 +6,7 @@
     },
     "AITest": {
       "commandName": "Project",
-      "commandLineArgs": "aidef -a"
+      "commandLineArgs": "aipdef"
     }
   }
 }

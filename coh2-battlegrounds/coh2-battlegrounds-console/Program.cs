@@ -10,7 +10,9 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Battlegrounds;
+using Battlegrounds.AI;
 using Battlegrounds.AI.Lobby;
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
@@ -471,6 +473,45 @@ class Program {
 
     }
 
+    class AIDefencePlannerTest : Command {
+
+        public AIDefencePlannerTest() : base("aipdef", "Runs a test on AI defence planner code") { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            // Load BG
+            LoadBGAndProceed();
+
+            // Grab the two default companies
+            //var sov = CreateSovietCompany();
+            var ger = CreateGermanCompany();
+
+            // Load AI database
+            AIDatabase.LoadAIDatabase();
+
+            // Grab scenario
+            if (!ScenarioList.TryFindScenario("2p_coh2_resistance", out Scenario? scen) && scen is null) {
+                Console.WriteLine("Failed to find scenario '2p_coh2_resistance'");
+                return;
+            }
+
+            // Get gamode instance
+            var mode = ModManager.GetPackageOrError("mod_bg").Gamemodes.FirstOrDefault(x => x.ID == "bg_defence", new());
+
+            // Grab analysis
+            var analysis = AIDatabase.GetMapAnalysis("2p_coh2_resistance");
+
+            // Create planner
+            var planner = new AIDefencePlanner(analysis, mode);
+            planner.Subdivide(scen, 1, new byte[] { 0 });
+
+            // Create plan
+            planner.CreateDefencePlan(1, 0, ger, scen);
+
+        }
+
+    }
+
     class Repl : Command {
 
         public Repl() : base("repl", "The program will enter a repl mode and allow for various inputs.") { }
@@ -528,6 +569,7 @@ class Program {
         flags.RegisterCommand<MinimapperCommand>();
         flags.RegisterCommand<CreateInstaller>();
         flags.RegisterCommand<AIDefenceAnalyser>();
+        flags.RegisterCommand<AIDefencePlannerTest>();
         flags.RegisterCommand<Repl>();
 #if DEBUG
         flags.RegisterCommand<Update>();
@@ -735,7 +777,7 @@ class Program {
         var g = tuningMod.Guid;
 
         // Create a dummy company
-        CompanyBuilder bld = CompanyBuilder.NewCompany("", CompanyType.Mechanized, CompanyAvailabilityType.MultiplayerOnly, Faction.Wehrmacht, g);
+        CompanyBuilder bld = CompanyBuilder.NewCompany("69th Panzer Kompanie", CompanyType.Mechanized, CompanyAvailabilityType.MultiplayerOnly, Faction.Wehrmacht, g);
 
         // Grab blueprints
         var pioneers = BlueprintManager.FromBlueprintName<SquadBlueprint>("pioneer_squad_bg");

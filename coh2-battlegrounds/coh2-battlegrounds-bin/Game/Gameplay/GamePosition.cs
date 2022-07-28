@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Lua.Generator.RuntimeServices;
+using Battlegrounds.Util;
 
 namespace Battlegrounds.Game; 
 
@@ -101,5 +102,13 @@ public struct GamePosition {
     /// The game position at (0, 0, 0)
     /// </summary>
     public static readonly GamePosition Naught = new GamePosition(0.0f, 0.0f, 0.0f);
+
+    /// <summary>
+    /// Compute the squared distance between this point and <paramref name="other"/>.
+    /// </summary>
+    /// <param name="other">The other point to compute squared distance to.</param>
+    /// <returns>The squared distance between the two points.</returns>
+    public readonly double SquareDistance(GamePosition other)
+        => (this.m_x - other.m_x).Square() + (this.m_y - other.m_y).Square() + (this.m_z - other.m_z).Square();
 
 }

@@ -20,7 +20,7 @@ namespace Battlegrounds.Game.Database.Extensions {
 
         private Rank[] m_ranks;
 
-        public float MaxExperience => this.m_ranks.Length > 0 ? this.m_ranks.Max(x => x.ExperienceRequired) : 1.0f;
+        public float MaxExperience => this.m_ranks.Length > 0 ? this.m_ranks.MaxValue(x => x.ExperienceRequired) : 1.0f;
 
         public int MaxRank => this.m_ranks.Length;
 

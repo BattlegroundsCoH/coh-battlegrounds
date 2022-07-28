@@ -104,35 +104,40 @@
               "IsDirectional": false,
               "IsLinePlacement": true,
               "MaxPlacement": -1,
-              "PreGarrisonUnitTypes": []
+              "PreGarrisonUnitTypes": [],
+              "PlacementType": 2
             },
             {
               "EntityBlueprint": "barbed_wire_field_bg",
               "IsDirectional": false,
               "IsLinePlacement": false,
               "MaxPlacement": -1,
-              "PreGarrisonUnitTypes": []
+              "PreGarrisonUnitTypes": [],
+              "PlacementType": 0
             },
             {
               "EntityBlueprint": "machine_gun_nest_bg",
               "IsDirectional": true,
               "IsLinePlacement": false,
               "MaxPlacement": 8,
-              "PreGarrisonUnitTypes": []
+              "PreGarrisonUnitTypes": [],
+              "PlacementType": 1
             },
             {
               "EntityBlueprint": "soviet_mine_bg",
               "IsDirectional": false,
               "IsLinePlacement": true,
               "MaxPlacement": 32,
-              "PreGarrisonUnitTypes": []
+              "PreGarrisonUnitTypes": [],
+              "PlacementType": 3
             },
             {
               "EntityBlueprint": "tanktrap_bg",
               "IsDirectional": false,
               "IsLinePlacement": true,
               "MaxPlacement": 16,
-              "PreGarrisonUnitTypes": []
+              "PreGarrisonUnitTypes": [],
+              "PlacementType": 2
             }
           ],
           "german": [
@@ -141,42 +146,48 @@
               "IsDirectional": true,
               "IsLinePlacement": false,
               "MaxPlacement": 2,
-              "PreGarrisonUnitTypes": []
+              "PreGarrisonUnitTypes": [],
+              "PlacementType": 1
             },
             {
               "EntityBlueprint": "makeshift_bunker_mp",
               "IsDirectional": true,
               "IsLinePlacement": false,
               "MaxPlacement": 4,
-              "PreGarrisonUnitTypes": []
+              "PreGarrisonUnitTypes": [],
+              "PlacementType": 1
             },
             {
               "EntityBlueprint": "mine_field_mine_bg",
               "IsDirectional": false,
               "IsLinePlacement": true,
               "MaxPlacement": 16,
-              "PreGarrisonUnitTypes": []
+              "PreGarrisonUnitTypes": [],
+              "PlacementType": 3
             },
             {
               "EntityBlueprint": "slit_trench_german_bg",
               "IsDirectional": false,
               "IsLinePlacement": false,
               "MaxPlacement": 8,
-              "PreGarrisonUnitTypes": []
+              "PreGarrisonUnitTypes": [],
+              "PlacementType": 1
             },
             {
               "EntityBlueprint": "tank_trap_bg",
               "IsDirectional": false,
               "IsLinePlacement": true,
               "MaxPlacement": 16,
-              "PreGarrisonUnitTypes": []
+              "PreGarrisonUnitTypes": [],
+              "PlacementType": 2
             },
             {
               "EntityBlueprint": "barbed_wire_fence_bg",
               "IsDirectional": false,
               "IsLinePlacement": true,
               "MaxPlacement": -1,
-              "PreGarrisonUnitTypes": []
+              "PreGarrisonUnitTypes": [],
+              "PlacementType": 2
             }
           ]
         }

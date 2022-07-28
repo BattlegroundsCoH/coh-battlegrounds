@@ -16,6 +16,7 @@ using Battlegrounds.Game.Match.Composite;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Util;
 using Battlegrounds.Verification;
@@ -176,8 +177,11 @@ internal abstract class BasePlayModel {
             sessionEntities = CreatePlanningEntities(participants, elements);
             sessionSquads = CreatePlanningSquads(participants, elements);
 
+            // Get gamode instance
+            var mode = package.Gamemodes.FirstOrDefault(x => x.ID == gamemodeInstance.Name, new());
+
             // Determine if there's need for AI planning
-            CreateAIPlans(scen, revflag ? allies : axis, (byte)(revflag ? 0 : 1), ref sessionSquads, ref sessionEntities, sessionGoals);
+            CreateAIPlans(scen, revflag ? allies : axis, (byte)(revflag ? 0 : 1), ref sessionSquads, ref sessionEntities, sessionGoals, mode);
 
         } else {
             
@@ -247,7 +251,7 @@ internal abstract class BasePlayModel {
 
     }
 
-    protected static SessionPlanEntityInfo[] CreatePlanningEntities(Dictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements) {
+    protected static SessionPlanEntityInfo[] CreatePlanningEntities(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements) {
 
         // Grab planning entities
         var planEntities = planElements.Filter(x => x.IsEntity && x.ObjectiveType is PlanningObjectiveType.None);
@@ -278,7 +282,7 @@ internal abstract class BasePlayModel {
 
     }
 
-    protected static SessionPlanSquadInfo[] CreatePlanningSquads(Dictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements) {
+    protected static SessionPlanSquadInfo[] CreatePlanningSquads(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements) {
 
         // Grab planning squads
         var planSquads = planElements.Filter(x => !x.IsEntity && x.ObjectiveType is PlanningObjectiveType.None);
@@ -308,7 +312,7 @@ internal abstract class BasePlayModel {
 
     }
 
-    protected static SessionPlanGoalInfo[] CreatePlanningGoals(Dictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements) {
+    protected static SessionPlanGoalInfo[] CreatePlanningGoals(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements) {
 
         // Grab all goals
         var planGoals = planElements.Filter(x => x.ObjectiveType is not PlanningObjectiveType.None);
@@ -339,7 +343,7 @@ internal abstract class BasePlayModel {
     }
 
     protected static void CreateAIPlans(Scenario scenario, SessionParticipant[] defenders, byte tid,
-        ref SessionPlanSquadInfo[] units, ref SessionPlanEntityInfo[] structures, SessionPlanGoalInfo[] goals) {
+        ref SessionPlanSquadInfo[] units, ref SessionPlanEntityInfo[] structures, SessionPlanGoalInfo[] goals, Gamemode gamemode) {
 
         // Grab allies AIs
         var aiDefenders = defenders.Filter(x => !x.IsHuman);
@@ -353,7 +357,7 @@ internal abstract class BasePlayModel {
         var analysis = AIDatabase.GetMapAnalysis(scenario.RelativeFilename);
 
         // Create planner
-        var aiplan = new AIDefencePlanner(analysis, aiDefenders.Length);
+        var aiplan = new AIDefencePlanner(analysis, gamemode);
         aiplan.SetDefenceGoals(goals.Filter(x => x.ObjectiveType is 1).Map(x => x.ObjectivePosition));
         aiplan.SetHumanDefences(
             units.Map(x => (x.Spawn, x.Lookat)),
