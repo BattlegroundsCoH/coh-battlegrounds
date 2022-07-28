@@ -45,7 +45,12 @@ function BGSupplyUI_Refresh()
     if size == 0 then -- None
         BGSupplyUI_HideAll();
     elseif size == 1 then -- Single
-        BGSupplyUI_ShowSingleUnit(SGroup_GetSpawnedSquadAt(_bg_uitarget.selectionGroup, 1));
+        local r, s = pcall(SGroup_GetSpawnedSquadAt, _bg_uitarget.selectionGroup, 1)
+        if r then
+            BGSupplyUI_ShowSingleUnit(s);
+        else
+            BGSupplyUI_HideAll();
+        end
     else -- Multiselect
         BGSupplyUI_HideAll(); -- The solution for now
     end
