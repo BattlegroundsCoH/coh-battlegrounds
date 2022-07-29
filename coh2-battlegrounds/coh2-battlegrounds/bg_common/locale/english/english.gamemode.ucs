@@ -111,3 +111,7 @@
 112 Defend Position
 113 Support Position
 114 Clear Area
+115	Time
+116	The time the attackers have to defeat the defending team
+117	AI-Support
+118	Enable basic AI units to aid the assault

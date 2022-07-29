@@ -57,6 +57,9 @@
                 x:Name="SliderTextValue"
                 DockPanel.Dock="Right"
                 VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                HorizontalContentAlignment="Right"
+                Style="{StaticResource SettingValue}"
                 Width="64"/>
             <Slider
                 x:Name="SliderValue"

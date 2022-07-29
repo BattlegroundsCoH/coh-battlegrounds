@@ -24,9 +24,9 @@
             x:Name="ScenarioDisplay"
             RenderTransformOrigin="0.5,0.5"
             Source="{Binding ScenarioPreview}">
-            <Image.RenderTransform>
+            <!--<Image.RenderTransform>
                 <ScaleTransform ScaleY="-1"/>
-            </Image.RenderTransform>
+            </Image.RenderTransform>-->
         </Image>
         <Canvas 
             Canvas.Top="10"

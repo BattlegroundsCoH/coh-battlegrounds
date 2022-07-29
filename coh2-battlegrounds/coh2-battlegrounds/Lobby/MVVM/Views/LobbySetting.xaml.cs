@@ -5,6 +5,8 @@ using System.Windows.Controls.Primitives;
 
 using Battlegrounds;
 
+using StringOrKey = Battlegrounds.Functional.Either<string, Battlegrounds.Locale.LocaleKey>;
+
 namespace BattlegroundsApp.Lobby.MVVM.Views;
 
 public delegate void SettingChanged(int newIndex, int oldIndex);
@@ -65,6 +67,12 @@ public partial class LobbySetting : UserControl {
         this.SliderValue.TickFrequency = step;
         this.SliderValue.TickPlacement = TickPlacement.None;
 
+        // Set format str
+        this.Format = format;
+
+        // Update text value
+        this.SliderTextValue.Content = string.Format(format, min);
+
     }
 
     public void ShowValue() {
@@ -86,7 +94,7 @@ public partial class LobbySetting : UserControl {
         this.UpdateIndex?.Invoke(num, -1);
         
         // Update text value
-        this.SliderTextValue.Content = BattlegroundsInstance.Localize.GetString(this.Format, num);
+        this.SliderTextValue.Content = string.Format(this.Format, num);
 
     }
 
@@ -101,7 +109,7 @@ public class LobbySetting<T> : LobbySetting {
         this.DropdownOptions.ItemsSource = this.Items;
     }
 
-    public static LobbySetting<T> NewDropdown(string settingName, ObservableCollection<T> options, SettingChanged? changedCallback = null, int defaultIndex = -2) {
+    public static LobbySetting<T> NewDropdown(StringOrKey settingName, ObservableCollection<T> options, SettingChanged? changedCallback = null, int defaultIndex = -2) {
         var setting = new LobbySetting<T>() {
             Items = options,
             UpdateIndex = changedCallback
@@ -115,7 +123,7 @@ public class LobbySetting<T> : LobbySetting {
         return setting;
     }
 
-    public static LobbySetting<T> NewSlider(string settingName, int min, int max, int step, string format, SettingChanged? changedCallback = null) {
+    public static LobbySetting<T> NewSlider(StringOrKey settingName, int min, int max, int step, string format, SettingChanged? changedCallback = null) {
         var setting = new LobbySetting<T>() {
             UpdateIndex = changedCallback
         };
@@ -124,7 +132,7 @@ public class LobbySetting<T> : LobbySetting {
         return setting;
     }
 
-    public static LobbySetting<T> NewValue(string settingName, string value) {
+    public static LobbySetting<T> NewValue(StringOrKey settingName, string value) {
         var setting = new LobbySetting<T>();
         setting.SettingName.LocKey = settingName;
         setting.ShowValue();

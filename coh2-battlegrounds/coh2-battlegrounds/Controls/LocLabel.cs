@@ -6,6 +6,7 @@ using System.Windows.Data;
 using System.Windows.Markup;
 
 using Battlegrounds;
+using Battlegrounds.Functional;
 using Battlegrounds.Locale;
 
 using BattlegroundsApp.MVVM;
@@ -45,7 +46,7 @@ public class LocLabel : Label {
     public object? LocKey {
         get => this.GetValue(LocKeyProperty);
         set {
-            this.SetValue(LocKeyProperty, value);
+            this.SetCurrentValue(LocKeyProperty, value);
             if (value is null) {
                 this.Content = string.Empty;
                 return;
@@ -144,6 +145,7 @@ public class LocLabel : Label {
             string str = value switch {
                 string s => loc.GetString(s, this.GetArgs()),
                 LocaleKey k => loc.GetString(k, this.GetArgs()),
+                Either<string, LocaleKey> sk => loc.GetString(sk.SecondOption(new LocaleKey(sk.FirstOption("NotFound"))), this.GetArgs()),
                 _ => loc.Converters.ContainsKey(value.GetType()) ? loc.GetObjectAsString(value) : (value.ToString() ?? string.Empty)
             };
             if (this.UpperCaseAll) {

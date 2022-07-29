@@ -74,8 +74,8 @@
         "AdditionalOptions": {
           "Time": {
             "Type": "Slider",
-            "Title": "Time",
-            "Desc": "The time the attackers have to defeat the defending team",
+            "Title": "115",
+            "Desc": "116",
             "Value": "{0} min.",
             "Default": 30,
             "Min": 20,
@@ -84,11 +84,11 @@
           },
           "Support": {
             "Type": "Checkbox",
-            "Title": "AI-Support",
-            "Desc": "Enable basic AI units to aid the assault",
+            "Title": "117",
+            "Desc": "118",
             "Default": 1,
-            "Yes": 1,
-            "No": 0
+            "Yes": 109,
+            "No": 108
           }
         },
         "TeamNames": {

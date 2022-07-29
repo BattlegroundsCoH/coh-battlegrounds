@@ -18,6 +18,15 @@ namespace Battlegrounds.Locale;
 public record LocaleKey(string LocaleID, string LocaleSource = Localize.UndefinedSource);
 
 /// <summary>
+/// Represents a locale key with text content directly defined.
+/// </summary>
+/// <remarks>
+/// This should only be used when mixing UCS localisation and BG localisation when GUI expects BG localisation but value comes from UCS.
+/// </remarks>
+/// <param name="Content">The actual string contents to display, ignoring t he lookup value.</param>
+public record LocaleValueKey(string Content) : LocaleKey("$$$");
+
+/// <summary>
 /// Enum representation of supported languages.
 /// </summary>
 public enum LocaleLanguage {
@@ -255,6 +264,9 @@ public class Localize {
     /// <param name="key">The <see cref="LocaleKey"/> to use when locating the string.</param>
     /// <returns>The UTF-16 encoded string sought after if present in system. Otherwise <paramref name="key"/>.LocaleID is returned.</returns>
     public string GetString(LocaleKey key) {
+        if (key is LocaleValueKey v) {
+            return v.Content;
+        }
         if (string.IsNullOrEmpty(key.LocaleID)) {
             return string.Empty;
         }

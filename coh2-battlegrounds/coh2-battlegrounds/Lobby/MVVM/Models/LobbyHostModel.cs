@@ -11,6 +11,7 @@ using Battlegrounds;
 using Battlegrounds.AI;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 
@@ -357,8 +358,8 @@ public class LobbyHostModel : LobbyModel {
                 // Create handler
                 SettingChanged handler = (int a, int b) => this.GamemodeAuxOptionSelectionchanged(a,b,custom.Name);
 
-                // Grab name
-                var name = custom.Title.ToString();
+                // Grab name and convert it to a direct LocaleValueKey --> Only do this when merging UCS and BGLOC stuff.
+                var name = new LocaleValueKey(custom.Title.ToString().ToUpperInvariant());
 
                 // Create control
                 var settingControl = custom.OptionInputType switch {
