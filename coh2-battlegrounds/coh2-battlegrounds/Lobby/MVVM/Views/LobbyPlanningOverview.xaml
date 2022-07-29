@@ -120,7 +120,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Label
-                    Content="{Binding Team1Name}"
+                    Content="Attackers"
                     Grid.Column="1"
                     Grid.Row="0"
                     Foreground="White"
@@ -128,7 +128,7 @@
                     FontWeight="DemiBold"
                     HorizontalAlignment="Center"/>
                 <Label
-                    Content="{Binding Team2Name}"
+                    Content="Defenders"
                     Grid.Column="3"
                     Grid.Row="0"
                     Foreground="White"
@@ -294,15 +294,36 @@
                                     Style="{StaticResource EntityIconButton2}"
                                     Command="{Binding Click}">
                                     <Image
-                                        Width="64"
-                                        Height="64"
+                                        Width="36"
+                                        Height="36"
                                         Source="{Binding Icon}"/>
                                 </Button>
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                <!-- TOOD: Localise -->
+                <TextBlock 
+                    Margin="0,8"
+                    FontStyle="Italic"
+                    TextWrapping="WrapWithOverflow"
+                    Foreground="{StaticResource ForegroundWhiteBrush}"                    
+                    Visibility="{Binding IsDefencesVisible}">
+                    Defences can be placed on the minimap by clicking one of the above defences
+                    and Left-Clicking on the minimap. Some defences can be oriented in a direction
+                    and some are placed as a line, requiring a second Left-Click to finish the
+                    placement.
+                    <LineBreak/>
+                    <LineBreak/>
+                    Defences placed on a building will spawn next to the building. Defences placed
+                    outside the playable area will spawn at the closest valid point. Defences placed
+                    inside the attacking team's base territory are moved to outside the territory.
+                    <LineBreak/>
+                    <LineBreak/>
+                    To remove a defence placement, Right-Click it.
+                </TextBlock>
                 <Separator
+                    Margin="0,8,0,0"
                     Visibility="{Binding IsDefencesVisible}"/>
                 <controls:LocLabel 
                     x:Name="ContentSite"
@@ -336,6 +357,25 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                <!-- TOOD: Localise -->
+                <TextBlock 
+                    Margin="0,8"
+                    FontStyle="Italic"
+                    TextWrapping="WrapWithOverflow"
+                    Foreground="{StaticResource ForegroundWhiteBrush}"                    
+                    Visibility="{Binding IsDefencesVisible}">
+                    Up to 10 company units can be placed on the minimap by clicking one of the above units
+                    and Left-Clicking on the minimap. Team weapons can be oriented in a direction, 
+                    requiring a second Left-Click to finish the placement.
+                    <LineBreak/>
+                    <LineBreak/>
+                    Units placed on a building will spawn garrison the building. Units placed
+                    outside the playable area will spawn at the closest valid point. Units placed
+                    inside the attacking team's base territory are moved to outside the territory.
+                    <LineBreak/>
+                    <LineBreak/>
+                    To remove a unit placement, Right-Click it.
+                </TextBlock>
             </StackPanel>
         </ScrollViewer>
 

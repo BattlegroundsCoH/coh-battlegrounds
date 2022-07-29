@@ -77,10 +77,6 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     public string LobbyTitle => this.m_data.Model.LobbyTitle;
 
-    public string Team1Name => this.m_data.Model.Allies.Title;
-
-    public string Team2Name => this.m_data.Model.Axis.Title;
-
     public ImageSource? ScenarioPreview => LobbySettingsLookup.TryGetMapSource(this.m_data.Scenario);
 
     public RelayCommand ReturnLobbyCommand { get; }

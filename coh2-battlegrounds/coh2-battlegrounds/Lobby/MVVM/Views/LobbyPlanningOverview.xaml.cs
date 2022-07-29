@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -264,11 +265,11 @@ public partial class LobbyPlanningOverview : UserControl {
         var ls = new List<HelperElement>();
 
         // Calculate distance
-        var dist = (origin - target).Length;
+        var dist = Vectors.Distance(origin, target);
 
         // Get amount of fillers
-        var w = offset.X * 2.0;
-        var lineCount = (int)Math.Max(0, dist / w) / 2;
+        var w = offset.X * 1.5;
+        var lineCount = (int)(dist / w);
         var stepSize = 1.0 / lineCount;
 
         // Create
