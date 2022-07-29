@@ -123,6 +123,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public bool KeepAlive => true;
 
+    public bool IsLocal => this.m_handle is not OnlineLobbyHandle;
+
     public LobbyButton ExitButton { get; }
 
     public LobbyButton EditCompanyButton { get; }
@@ -161,7 +163,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public ObservableCollection<LobbySetting> AuxSettings { get; }
 
-    public bool ShowScrollbarForSettings => this.GamemodeSettings.Count + this.AuxSettings.Count > 4;
+    public bool ShowScrollbarForSettings => this.GamemodeSettings.Count + this.AuxSettings.Count >= 4;
 
     public LobbyModel(ILobbyHandle api, ILobbyTeam allies, ILobbyTeam axis) {
 

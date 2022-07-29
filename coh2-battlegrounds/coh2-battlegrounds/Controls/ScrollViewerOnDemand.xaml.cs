@@ -18,7 +18,7 @@ public partial class ScrollViewerOnDemand : UserControl {
     public new object Content {
         get => this.GetValue(ContentProperty);
         set {
-            this.SetValue(ContentProperty, value);
+            this.SetCurrentValue(ContentProperty, value);
             this.__ScrollBar.Content = value;
             this.__DefPresenter.Content = value;
         }
@@ -26,12 +26,18 @@ public partial class ScrollViewerOnDemand : UserControl {
 
     public static readonly DependencyProperty IsScrollbarVisibleProperty =
         DependencyProperty.Register(nameof(IsScrollbarVisible), typeof(bool), typeof(ScrollViewerOnDemand),
-            new FrameworkPropertyMetadata(true, (a, b) => a.Cast<ScrollViewerOnDemand>(x => x.IsScrollbarVisible = (bool)b.NewValue)));
+            new FrameworkPropertyMetadata(false, OnScrollbarVisiblePropertyChanged));
+
+    private static void OnScrollbarVisiblePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs eventArgs) {
+        if (obj is ScrollViewerOnDemand vdm) {
+            vdm.IsScrollbarVisible = (bool)eventArgs.NewValue;
+        }
+    }
 
     public bool IsScrollbarVisible {
-        get => (bool)this.GetValue(IsMouseCapturedProperty);
+        get => (bool)this.GetValue(IsScrollbarVisibleProperty);
         set {
-            this.SetValue(IsScrollbarVisibleProperty, value);
+            this.SetCurrentValue(IsScrollbarVisibleProperty, value);
             if (value) {
                 this.__ScrollBar.Visibility = Visibility.Visible;
                 this.__DefPresenter.Visibility = Visibility.Collapsed;

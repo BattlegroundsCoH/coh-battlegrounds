@@ -194,7 +194,7 @@ public class LobbyHostModel : LobbyModel {
         // Grab gamemode
         var gamemode = this.m_package.Gamemodes[this.GamemodeDropdown.Selected];
 
-        // Do on a worker thread
+        // Do on a worker thread (especially needed now that AI planning is added -- which can take ~1-3s to generate *some* plan).
         Task.Run(() => {
 
             // Get status from other participants

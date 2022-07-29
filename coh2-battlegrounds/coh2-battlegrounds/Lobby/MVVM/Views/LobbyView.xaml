@@ -61,7 +61,7 @@
         <Grid Grid.Row="1" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="328"/>
-                <RowDefinition Height="24"/>
+                <RowDefinition Height="32"/>
                 <RowDefinition Height="328"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -103,12 +103,14 @@
             <!-- Swap -->
             <Button
                 Grid.Row="1"
-                Width="24"
-                Height="24"
-                Content="/\\/"
+                Width="32"
+                Height="32"
                 HorizontalAlignment="Center"
                 Command="{Binding SwapRoles.Click}"
-                Visibility="{Binding SwapRoles.Visibility}"/>
+                Visibility="{Binding SwapRoles.Visibility}"
+                Style="{StaticResource Hoverless}">
+                <Image Source="{StaticResource SwapDrawingImage}"/>
+            </Button>
 
             <!-- Axis -->
             <Grid Grid.Row="2">
@@ -147,13 +149,9 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="38"/>
                 <RowDefinition Height="356"/>
-                <RowDefinition Height="38"/>
-                <RowDefinition Height="38"/>
-                <RowDefinition Height="38"/>
-                <RowDefinition Height="38"/>
-                <RowDefinition Height="38"/>
-                <RowDefinition Height="38"/>
+                <RowDefinition Height="8"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="8"/>
                 <RowDefinition Height="38"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -199,12 +197,12 @@
                 Scenario="{Binding Scenario}"/>
 
             <!-- Row 2 - Options -->
-            <controls:ScrollViewerOnDemand
-                Grid.Row="2"
-                Grid.RowSpan="6"
+            <ScrollViewer
+                Grid.Row="3"
                 Grid.Column="1"
                 Grid.ColumnSpan="2"
-                IsScrollbarVisible="{Binding ShowScrollbarForSettings}">
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
                 <StackPanel>
                     <ItemsControl
                         ItemsSource="{Binding MapSetting}"/>
@@ -213,11 +211,11 @@
                     <ItemsControl
                         ItemsSource="{Binding AuxSettings}"/>
                 </StackPanel>
-            </controls:ScrollViewerOnDemand>
+            </ScrollViewer>
 
             <controls:IconButton 
                 Grid.Column="1" 
-                Grid.Row="9"
+                Grid.Row="5"
                 Grid.ColumnSpan="2"
                 VerticalContentAlignment="Center"
                 HorizontalContentAlignment="Center"
