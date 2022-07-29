@@ -42,9 +42,9 @@ public static class LobbyVisualsLookup {
     /// Readonly array of objective type icons.
     /// </summary>
     public static readonly ImageSource[] ObjectiveTypes = new[] {
-        new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/campaign/obj_main.png")),
-        new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/campaign/obj_secondary.png")),
-        new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/campaign/obj_star.png")),
+        new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/objective_icons/ot_attack.png")),
+        new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/objective_icons/ot_defend.png")),
+        new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/objective_icons/ot_support.png")),
     };
 
 }

@@ -86,6 +86,9 @@
     <None Remove="Resources\app\LobbyMapDefence.png" />
     <None Remove="Resources\app\LobbySettingMap.png" />
     <None Remove="Resources\app\logo_main.png" />
+    <None Remove="Resources\app\objective_icons\ot_attack.png" />
+    <None Remove="Resources\app\objective_icons\ot_defend.png" />
+    <None Remove="Resources\app\objective_icons\ot_support.png" />
     <None Remove="Resources\app\padlock_locked.png" />
     <None Remove="Resources\app\padlock_open.png" />
     <None Remove="Resources\app\refresh.png" />
@@ -186,6 +189,9 @@
     </Resource>
     <Resource Include="Resources\app\LobbySettingMap.png" />
     <Resource Include="Resources\app\logo_main.png" />
+    <Resource Include="Resources\app\objective_icons\ot_attack.png" />
+    <Resource Include="Resources\app\objective_icons\ot_defend.png" />
+    <Resource Include="Resources\app\objective_icons\ot_support.png" />
     <Resource Include="Resources\app\padlock_locked.png" />
     <Resource Include="Resources\app\padlock_open.png" />
   </ItemGroup>

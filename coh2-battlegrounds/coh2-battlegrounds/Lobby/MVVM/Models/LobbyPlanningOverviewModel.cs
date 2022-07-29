@@ -77,6 +77,10 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     public string LobbyTitle => this.m_data.Model.LobbyTitle;
 
+    public string Team1Name => this.m_data.Model.Allies.Title;
+
+    public string Team2Name => this.m_data.Model.Axis.Title;
+
     public ImageSource? ScenarioPreview => LobbySettingsLookup.TryGetMapSource(this.m_data.Scenario);
 
     public RelayCommand ReturnLobbyCommand { get; }
@@ -240,16 +244,16 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         // Map attackers
         (ValRef<int> i, ValRef<int> j) = (0,0);
         attackers.Slots.Filter(x => x.IsOccupied)
-            .MapNotNull(x => x.Occupant).Map(x => OccupantToDisplay(x, i, j)).ForEach(this.Attackers.Add);
+            .MapNotNull(x => x.Occupant).Map(x => OccupantToDisplay(x, i, j, false)).ForEach(this.Attackers.Add);
 
         // Map defenders
         (i, j) = (0, 0);
         defenders.Slots.Filter(x => x.IsOccupied)
-            .MapNotNull(x => x.Occupant).Map(x => OccupantToDisplay(x, i, j)).ForEach(this.Defenders.Add);
+            .MapNotNull(x => x.Occupant).Map(x => OccupantToDisplay(x, i, j, true)).ForEach(this.Defenders.Add);
 
     }
 
-    private static LobbyPlanningParticipantDisplay OccupantToDisplay(ILobbyMember occupant, ValRef<int> i, ValRef<int> j) {
+    private static LobbyPlanningParticipantDisplay OccupantToDisplay(ILobbyMember occupant, ValRef<int> i, ValRef<int> j, bool columInverse) {
 
         // Compute row and column
         int row = i.GetAndChange(x => x + 1);
@@ -267,11 +271,14 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
             _ => occupant.DisplayName
         };
 
+        // Invert if requested
+        int c = columInverse ? (1 - col) : col;
+
         // Make sure we have a valid company to get remaining data from
         if (occupant.Company is ILobbyCompany company) {
-            return new LobbyPlanningParticipantDisplay(LobbyVisualsLookup.FactionIcons[company.Army], name, company.Name, row, col);
+            return new LobbyPlanningParticipantDisplay(LobbyVisualsLookup.FactionIcons[company.Army], name, company.Name, row, c);
         } else {
-            return new LobbyPlanningParticipantDisplay(null, occupant.DisplayName, string.Empty, row, col);
+            return new LobbyPlanningParticipantDisplay(null, occupant.DisplayName, string.Empty, row, c);
         }
 
     }

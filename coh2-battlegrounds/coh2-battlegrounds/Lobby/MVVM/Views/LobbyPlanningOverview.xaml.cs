@@ -114,7 +114,7 @@ public partial class LobbyPlanningOverview : UserControl {
         }
 
         // Create marker
-        return CreateSomeMarker(sym, p);
+        return CreateSomeMarker(sym, p, sym.Width, sym.Height);
 
     }
 
@@ -127,17 +127,17 @@ public partial class LobbyPlanningOverview : UserControl {
         }
 
         // Create marker
-        return CreateSomeMarker(sym, p);
+        return CreateSomeMarker(sym, p, sym.Width, sym.Height);
 
     }
 
     private static HelperElement CreateObjectiveMarker(PlanningObjectiveType objectiveType, Point p) {
 
         // Grab blueprint
-        ImageSource? sym = objectiveType switch { // TODO: Get icons
-            PlanningObjectiveType.OT_Attack => null,
-            PlanningObjectiveType.OT_Defend => null,
-            PlanningObjectiveType.OT_Support => null,
+        ImageSource? sym = objectiveType switch {
+            PlanningObjectiveType.OT_Attack => LobbyVisualsLookup.ObjectiveTypes[0],
+            PlanningObjectiveType.OT_Defend => LobbyVisualsLookup.ObjectiveTypes[1],
+            PlanningObjectiveType.OT_Support => LobbyVisualsLookup.ObjectiveTypes[2],
             _ => null
         };
         if (sym is null) {
@@ -145,22 +145,22 @@ public partial class LobbyPlanningOverview : UserControl {
         }
 
         // Create marker
-        return CreateSomeMarker(sym, p);
+        return CreateSomeMarker(sym, p, 28, 28);
 
     }
 
-    private static HelperElement CreateSomeMarker(ImageSource sym, Point p) {
+    private static HelperElement CreateSomeMarker(ImageSource sym, Point p, double w, double h) {
 
         // Create transform data
-        var offset = new Vector(0.5 * sym.Width, 0.5 * sym.Height);
+        var offset = new Vector(0.5 * w, 0.5 * h);
         var translate = new TranslateTransform(p.X - offset.X, p.Y - offset.Y);
         var rotate = new RotateTransform();
 
         // Create image marker
         var marker = new Image() {
             Source = sym,
-            Width = sym.Width,
-            Height = sym.Height,
+            Width = w,
+            Height = h,
             RenderTransformOrigin = new(0.5, 0.5),
             RenderTransform = new TransformGroup() {
                 Children = {

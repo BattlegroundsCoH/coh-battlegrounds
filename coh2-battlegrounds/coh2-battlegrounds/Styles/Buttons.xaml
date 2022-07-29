@@ -322,14 +322,16 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border
+                        x:Name="__BKG"
                         Background="{StaticResource BackgroundLightBlueBrush}"
-                        BorderBrush="White"
-                        BorderThickness="2">
+                        BorderBrush="#767676"
+                        Padding="4"
+                        BorderThickness="0.6">
                         <ContentPresenter/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{StaticResource BackgroundLightGrayBrush}"/>
+                            <Setter TargetName="__BKG" Property="Background" Value="{StaticResource BackgroundLightGrayBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
