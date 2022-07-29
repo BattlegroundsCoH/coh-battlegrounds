@@ -92,6 +92,17 @@
                                     FontStyle="Italic"   
                                     FontFamily="Open Sans"
                                     HorizontalAlignment="Right"/>
+                                <Image
+                                    Source="{Binding SpawnPosIcon}"
+                                    Width="16"
+                                    Height="16"
+                                    ClipToBounds="False"
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Left">
+                                    <Image.RenderTransform>
+                                        <TranslateTransform X="-8" Y="18"/>
+                                    </Image.RenderTransform>
+                                </Image>
                             </Grid>
                         </Border>
                     </DataTemplate>

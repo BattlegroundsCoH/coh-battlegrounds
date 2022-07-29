@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,7 +51,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     public record LobbyPlanningDefence(ImageSource? Icon, string Name, RelayCommand Click);
 
-    public record LobbyPlanningParticipantDisplay(ImageSource? ArmyIcon, string Name, string CompanyName, int Row, int Column);
+    public record LobbyPlanningParticipantDisplay(ImageSource? ArmyIcon, string Name, string CompanyName, int Row, int Column, ImageSource? SpawnPosIcon);
 
     public record LobbyPlanningMinimapItem(EntityBlueprint EntityBlueprint, ushort Owner, GamePosition WorldPos, Scenario Scenario);
 
@@ -237,19 +238,32 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         var attackers = handle.AreTeamRolesSwapped() ? axis : allies;
         var defenders = handle.AreTeamRolesSwapped() ? allies : axis;
 
+        // Compute index
+        var posIndex = new Dictionary<ILobbyMember, int>();
+        for (int k = 0; k < allies.Slots.Length; k++) {
+            if (allies.Slots[k].Occupant is { } mem) {
+                posIndex[mem] = k;
+            }
+        }
+        for (int k = 0; k < axis.Slots.Length; k++) {
+            if (axis.Slots[k].Occupant is { } mem) {
+                posIndex[mem] = k + allies.Capacity;
+            }
+        }
+
         // Map attackers
         (ValRef<int> i, ValRef<int> j) = (0,0);
         attackers.Slots.Filter(x => x.IsOccupied)
-            .MapNotNull(x => x.Occupant).Map(x => OccupantToDisplay(x, i, j, false)).ForEach(this.Attackers.Add);
+            .MapNotNull(x => x.Occupant).Map(x => OccupantToDisplay(x, i, j, false, posIndex[x])).ForEach(this.Attackers.Add);
 
         // Map defenders
         (i, j) = (0, 0);
         defenders.Slots.Filter(x => x.IsOccupied)
-            .MapNotNull(x => x.Occupant).Map(x => OccupantToDisplay(x, i, j, true)).ForEach(this.Defenders.Add);
+            .MapNotNull(x => x.Occupant).Map(x => OccupantToDisplay(x, i, j, true, posIndex[x])).ForEach(this.Defenders.Add);
 
     }
 
-    private static LobbyPlanningParticipantDisplay OccupantToDisplay(ILobbyMember occupant, ValRef<int> i, ValRef<int> j, bool columInverse) {
+    private static LobbyPlanningParticipantDisplay OccupantToDisplay(ILobbyMember occupant, ValRef<int> i, ValRef<int> j, bool columInverse, int pid) {
 
         // Compute row and column
         int row = i.GetAndChange(x => x + 1);
@@ -270,11 +284,14 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         // Invert if requested
         int c = columInverse ? (1 - col) : col;
 
+        // Get pos icon
+        var p = App.ResourceHandler.GetIcon("minimap_icons", $"Icons_minimap_mm_starting_point_{pid+1}");
+
         // Make sure we have a valid company to get remaining data from
         if (occupant.Company is ILobbyCompany company) {
-            return new LobbyPlanningParticipantDisplay(LobbyVisualsLookup.FactionIcons[company.Army], name, company.Name, row, c);
+            return new LobbyPlanningParticipantDisplay(LobbyVisualsLookup.FactionIcons[company.Army], name, company.Name, row, c, p);
         } else {
-            return new LobbyPlanningParticipantDisplay(null, occupant.DisplayName, string.Empty, row, c);
+            return new LobbyPlanningParticipantDisplay(null, occupant.DisplayName, string.Empty, row, c, p);
         }
 
     }
