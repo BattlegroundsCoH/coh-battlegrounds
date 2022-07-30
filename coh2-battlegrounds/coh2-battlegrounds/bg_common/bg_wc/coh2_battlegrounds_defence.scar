@@ -42,6 +42,28 @@ function BattlegroundsDefence_InitGamemode()
 	Rule_AddInterval(BattlegroundsDefence_UpdatePoints, 3);
 	Rule_AddInterval(BattlegroundsDefence_CheckTime, 5);
 
+	-- Grant additional resources to the attacking team.
+	for _, p in pairs(__BGDefenceTeams[1]) do
+		Player_AddResource(p, RT_Manpower, 240);
+		Player_AddResource(p, RT_Munition, 120);
+		Player_AddResource(p, RT_Fuel, 90);
+	end
+
+	-- Limit defending team supply
+	for _, p in pairs(__BGDefenceTeams[2]) do
+
+		-- Reset --> Too bad if no structures have been preplaced
+		Player_SetResource(p, RT_Manpower, 0);
+		Player_SetResource(p, RT_Munition, 0);
+		Player_SetResource(p, RT_Fuel, 0);
+
+		-- Modify resource rate so it's slightly lower than normal (They do start out with all points afterall...)
+		Modify_PlayerResourceRate(p, RT_Manpower, 0.7, MUT_Multiplication);
+		Modify_PlayerResourceRate(p, RT_Munition, 0.8, MUT_Multiplication);
+		Modify_PlayerResourceRate(p, RT_Fuel, 0.6, MUT_Multiplication);
+
+	end
+
 end
 
 function BattlegroundsDefence_InitSectors()
@@ -159,7 +181,6 @@ function BattlegroundsDefence_InitDefence()
 
 		-- Log
 		if owner == nil then
-			bgdebug("cannot find owner " .. entity.team .. "@" .. entity.player);
 			return
 		end
 

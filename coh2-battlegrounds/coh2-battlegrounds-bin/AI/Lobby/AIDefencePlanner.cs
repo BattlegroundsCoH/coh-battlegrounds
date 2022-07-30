@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
@@ -212,7 +209,7 @@ public class AIDefencePlanner {
                 int k = PickNode(strat, nodes);
 
                 // Get nearest strat and attacking pos
-                var t1 = strat.Min(x => x.Position.SquareDistance(nodes[k]) * (-x.Weight));
+                var t1 = strat.Min(x => x.Position.SquareDistance(nodes[k]) * (5 - x.Weight));
                 var t2 = startAttackers.Min(x => x.SquareDistance(nodes[k]));
 
                 // Compute angles
@@ -278,8 +275,8 @@ public class AIDefencePlanner {
                             LookatPosition = Translate(mid, dir, 3.0f),
                             IsEntity = true
                         }));
-                        roads.RemoveAt(k);
                         nodes.Remove(this.m_nodes[roads[k].First]);
+                        roads.RemoveAt(k);
                     }
                 }
             }
@@ -296,7 +293,7 @@ public class AIDefencePlanner {
             if (k != -1) {
 
                 // Get nearest strat and attacking pos
-                var t1 = strat.Min(x => x.Position.SquareDistance(nodes[k]) * (-x.Weight));
+                var t1 = strat.Min(x => x.Position.SquareDistance(nodes[k]) * (5 - x.Weight));
                 var t2 = startAttackers.Min(x => x.SquareDistance(nodes[k]));
 
                 // Compute angles
@@ -335,7 +332,7 @@ public class AIDefencePlanner {
         for (int i = 0; i < strategics.Length; i++) {
             var j = strategics[i];
             for (int k = 0; k < nodes.Count; k++) {
-                scores[k] += (float)nodes[k].SquareDistance(j.Position) * (-j.Weight);
+                scores[k] += (float)nodes[k].SquareDistance(j.Position) * (5 - j.Weight);
             }
         }
 
