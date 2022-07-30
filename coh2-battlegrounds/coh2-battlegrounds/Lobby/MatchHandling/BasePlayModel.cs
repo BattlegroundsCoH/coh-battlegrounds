@@ -181,7 +181,7 @@ internal abstract class BasePlayModel {
             var mode = package.Gamemodes.FirstOrDefault(x => x.ID == gamemodeInstance.Name, new());
 
             // Determine if there's need for AI planning
-            CreateAIPlans(scen, revflag ? allies : axis, (byte)(revflag ? 0 : 1), ref sessionSquads, ref sessionEntities, sessionGoals, mode);
+            this.CreateAIPlans(scen, revflag ? allies : axis, (byte)(revflag ? 0 : 1), ref sessionSquads, ref sessionEntities, sessionGoals, mode);
 
         } else {
             
@@ -342,7 +342,7 @@ internal abstract class BasePlayModel {
 
     }
 
-    protected static void CreateAIPlans(Scenario scenario, SessionParticipant[] defenders, byte tid,
+    protected void CreateAIPlans(Scenario scenario, SessionParticipant[] defenders, byte tid,
         ref SessionPlanSquadInfo[] units, ref SessionPlanEntityInfo[] structures, SessionPlanGoalInfo[] goals, Gamemode gamemode) {
 
         // Grab allies AIs
@@ -352,6 +352,9 @@ internal abstract class BasePlayModel {
         if (aiDefenders.Length is 0) {
             return;
         }
+
+        // Notify user the AI defence is being generated.
+        this.ShowStartupInformation("Generating AI-Defence Plan");
 
         // Try grab analysis
         var analysis = AIDatabase.GetMapAnalysis(scenario.RelativeFilename);
@@ -380,7 +383,7 @@ internal abstract class BasePlayModel {
         units = units.Concat(aiplan.GetSquads().Map(x => {
             return new SessionPlanSquadInfo() {
                 TeamOwner = tid,
-                TeamMemberOwner = x.AIIndex,
+                TeamMemberOwner = x.AIIndex + 1,
                 SpawnId = x.PlanElement.CompanyId,
                 Spawn = x.PlanElement.SpawnPosition,
                 Lookat = x.PlanElement.LookatPosition
@@ -391,7 +394,7 @@ internal abstract class BasePlayModel {
         structures = structures.Concat(aiplan.GetEntities().Map(x => {
             return new SessionPlanEntityInfo() {
                 TeamOwner = tid,
-                TeamMemberOwner = x.AIIndex,
+                TeamMemberOwner = x.AIIndex + 1,
                 Blueprint = BlueprintManager.FromBlueprintName<EntityBlueprint>(x.PlanElement.Blueprint),
                 Spawn = x.PlanElement.SpawnPosition,
                 Lookat = x.PlanElement.LookatPosition,
@@ -407,7 +410,10 @@ internal abstract class BasePlayModel {
         this.m_prepCancelHandler?.Invoke(this);
     }
 
-    protected void HandleStartupInformation(IStartupStrategy sender, object? caller, string message) {
+    protected void HandleStartupInformation(IStartupStrategy sender, object? caller, string message)
+        => this.ShowStartupInformation(message);
+
+    private void ShowStartupInformation(string message) {
         this.m_chat.SystemMessage(message, Colors.DarkGray);
         this.m_handle.NotifyMatch("startup", message);
     }

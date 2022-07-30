@@ -109,6 +109,16 @@ function BGAI_GetAIPlayerID(player)
     return -1;
 end
 
+function BGAI_GetAIUnit(player, unit_id)
+    local i = BGAI_GetAIPlayerID(player);
+    for _, unit in pairs(_bg_aiData[i].company.units) do
+        if unit.company_id == unit_id then
+            return unit;
+        end
+    end
+    return nil
+end
+
 function BGAI_EvalAllInitial()
     for i=1, #_bg_aiData do
         BGAI_EvalProduction(i);

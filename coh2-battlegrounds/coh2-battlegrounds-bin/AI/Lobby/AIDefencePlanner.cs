@@ -99,7 +99,10 @@ public class AIDefencePlanner {
         var tpos = scenario.Points.Filter(x => x.EntityBlueprint is "starting_position_shared_territory");
 
         // Grab start positions
-        var dpos = tpos.Filter(x => indices.Any(y => (y + offset) == (x.Owner - 1000)));
+        var dpos = tpos.Filter(x => {
+            int pid = x.Owner - 1000;
+            return tid is 0 ? pid < teamSize : (pid >= teamSize);
+        });
         var apos = tpos.Filter(x => {
             int pid = x.Owner - 1000;
             return tid is 0 ? (pid >= teamSize) : pid < teamSize;
@@ -121,7 +124,7 @@ public class AIDefencePlanner {
             for (int i = 0; i < this.m_analysis.Nodes.Length; i++) {
 
                 // Grab pos
-                var pos = this.m_analysis.Nodes[i];
+                var pos = this.m_analysis.Nodes[i].RandomOffset(10);
 
                 // Ignore this node if close to a point "covered" by human ally
                 if (this.m_ignorePositions.Any(x => x.SquareDistance(pos) < 30))
@@ -145,7 +148,7 @@ public class AIDefencePlanner {
             for (int i = 0; i < this.m_analysis.StrategicPositions.Length; i++) {
 
                 // Grab position
-                var pos = this.m_analysis.StrategicPositions[i].Position;
+                var pos = this.m_analysis.StrategicPositions[i].Position.RandomOffset(10);
 
                 // Ignore this node if close to a point "covered" by human ally
                 if (this.m_ignorePositions.Any(x => x.SquareDistance(pos) < 30))
@@ -226,6 +229,9 @@ public class AIDefencePlanner {
                     IsDirectional = true
                 }));
 
+                // Remove node from consideration
+                nodes.RemoveAt(k);
+
             }
         }
 
@@ -246,6 +252,7 @@ public class AIDefencePlanner {
                             IsEntity = true
                         }));
                         roads.RemoveAt(k);
+                        nodes.Remove(this.m_nodes[roads[k].First]);
                     }
 
                 }
@@ -272,6 +279,7 @@ public class AIDefencePlanner {
                             IsEntity = true
                         }));
                         roads.RemoveAt(k);
+                        nodes.Remove(this.m_nodes[roads[k].First]);
                     }
                 }
             }
@@ -280,7 +288,8 @@ public class AIDefencePlanner {
 
         // Try place units
         var units = company.Units.Filter(x => x.SBP.IsTeamWeapon);
-        for (int i = 0; i < Math.Min(units.Length, 12); i++) {
+        int place = units.Length > 0 ? BattlegroundsInstance.RNG.Next(Math.Min(units.Length, 10)) : 0;
+        for (int i = 0; i < place; i++) {
             if (roads.Count is 0)
                 break;
             int k = PickNode(strat, nodes);
@@ -297,7 +306,7 @@ public class AIDefencePlanner {
 
                 // If small angle, look at target; otherwise at start point
                 this.m_placeSquads.Add(new(indexOnTeam, new JsonPlanElement() {
-                    SpawnPosition = nodes[k],
+                    SpawnPosition = nodes[k].RandomOffset(15),
                     LookatPosition = angle < 45 ? t1.Position : t2,
                     IsEntity = false,
                     IsDirectional = true,

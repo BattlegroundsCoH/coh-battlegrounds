@@ -21,12 +21,12 @@ function BattlegroundsDefence_InitGamemode()
 
 	-- Define teams
 	__BGDefenceTeams = {
-		Team_GetPlayers(bg_settings.team_first), 
+		Team_GetPlayers(bg_settings.team_first),
 		Team_GetPlayers(bg_settings.team_second)
 	}
 
-	-- Log amount of players on each team
-	bgdebug(#__BGDefenceTeams[1] .. " and " ..#__BGDefenceTeams[2])
+	-- While debugging
+	FOW_RevealAll();
 
 	-- Init sectors
 	BattlegroundsDefence_InitSectors()
@@ -49,12 +49,16 @@ function BattlegroundsDefence_InitSectors()
 	-- Get first player of the defending team
 	local defender = __BGDefenceTeams[2][1]
 
+	-- Grab ignore ebp
+	local ignore_ter = BP_GetEntityBlueprint("142b113740474c82a60b0a428bd553d5:territory_point_invisible_command");
+
 	-- Loop over stategic points
 	for i=0, World_GetNumEntities()-1 do
-		local entity = World_GetEntity(i)
+		local entity = World_GetEntity(i);
+		local ebp = Entity_GetBlueprint(entity);
 
 		-- Collect point if strategic point
-		if Entity_IsStrategicPoint(entity) and BP_GetName(Entity_GetBlueprint(entity)) ~= "starting_territory_team" then
+		if Entity_IsStrategicPoint(entity) and ebp ~= ignore_ter then
 
 			-- Insert into list of sectors
 			table.insert(DefenceSettingsData.Sectors, entity)
@@ -94,9 +98,6 @@ function BattlegroundsDefence_UpdatePoints()
 		defenderPenalty = 3
 	end
 
-	-- Log
-	bgdebug("points: " .. counts[1] .. " vs " ..counts[2] .. " penality = " ..defenderPenalty)
-
 	-- Update points
 	DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - defenderPenalty
 	if DefenceSettingsData.DefenderPoints <= 0 then
@@ -112,9 +113,6 @@ function BattlegroundsDefence_UpdatePoints()
 	-- Grab points
 	local team1Tickers = DefenceSettingsData.MaxPoints - DefenceSettingsData.DefenderPoints
 	local team2Tickers = DefenceSettingsData.DefenderPoints
-
-	-- Log
-	bgdebug("tickers: " .. team1Tickers .. " vs " ..team2Tickers)
 
 	-- Update visually
 	WinWarning_SetTickers(team1Tickers, team2Tickers)
@@ -153,33 +151,55 @@ end
 function BattlegroundsDefence_InitDefence()
 
 	-- Grab defence data and spawn it in
-	local defence_entities = bg_plandata.entities;
-	for i=1, #defence_entities do
+	for _, entity in pairs(bg_plandata.entities) do
 
 		-- Grab owner and ebp
-		local owner = BattlegroundsDefence_SolveOwner(defence_entities[i].team, defence_entities[i].player)
-		local ebp = BP_GetEntityBlueprint(defence_entities[i].ebp)
+		local owner = BattlegroundsDefence_SolveOwner(entity.team, entity.player)
+		local ebp = BP_GetEntityBlueprint(entity.ebp)
+
+		-- Log
+		if owner == nil then
+			bgdebug("cannot find owner " .. entity.team .. "@" .. entity.player);
+			return
+		end
 
 		-- Grab positions
-		local pos = Util_GetPosition(pos.x, pos.y, pos.z)
-		local lookat = Util_GetPosition(lookat.x, lookat.y, lookat.z)
-
-		if defence_entities[i].mode == "place" then
-			Entity_Spawn(BattlegroundsDefence_CreateEntity(ebp, owner, pos, pos))
-		elseif defence_entities[i].mode == "lookat" then
-			Entity_Spawn(BattlegroundsDefence_CreateEntity(ebp, owner, pos, pos))
-		elseif defence_entities[i].mode == "line" then
-			BattlegroundsDefence_SpawnLine(owner, ebp, pos, lookat, defence_entities[i].width)
+		local pos = World_GetNearestInteractablePoint(World_Pos(entity.pos.x, entity.pos.y, entity.pos.z))
+		local lookat = pos
+		if entity.lookat ~= nil then
+			lookat = World_GetNearestInteractablePoint(World_Pos(entity.lookat.x, entity.lookat.y, entity.lookat.z))
 		end
+
+		-- Determine placement mode
+		if entity.mode ~= "line" then
+			Util_CreateEntities(owner, nil, ebp, pos, 1, lookat);
+		else
+			BattlegroundsDefence_SpawnLine(owner, ebp, pos, lookat, entity.width)
+		end
+
 	end
 
 	-- Grab defence unit data and call them in
-	local defence_squads = bg_plandata.squads;
-	for i=1, #defence_squads do
-		local owner = BattlegroundsDefence_SolveOwner(defence_squads[i].team, defence_squads[i].player)
-		local squad = BG_DeploySquad(owner, defence_squads[i].sid, true)
-		if squad then
-			BattlegroundsDefence_SetupSquad(squad, defence_squads[i].pos, defence_squads[i].target)
+	for _, squad in pairs(bg_plandata.squads) do
+		local owner = BattlegroundsDefence_SolveOwner(squad.team, squad.player)
+		-- Grab positions
+		squad.pos = World_GetNearestInteractablePoint(World_Pos(squad.pos.x, squad.pos.y, squad.pos.z))
+		if squad.target ~= nil then
+			squad.target = World_GetNearestInteractablePoint(World_Pos(squad.target.x, squad.target.y, squad.target.z))
+		else
+			squad.target = Player_GetNearestMapEntry(Player_FindFirstEnemyPlayer(owner), squad.pos)
+		end
+		if AI_IsAIPlayer(owner) then
+			local aiunit = BGAI_GetAIUnit(owner, squad.sid);
+			if aiunit ~= nil then
+				local bgsquad = BG_CallInUnit(aiunit, owner,  squad.target, Player_GetNearestMapEntry(owner, squad.pos), true);
+				BattlegroundsDefence_SetupSquad(bgsquad, squad.pos, squad.target)
+			end
+		else
+			local bgsquad = BG_DeploySquad(owner, squad.sid, true)
+			if bgsquad then
+				BattlegroundsDefence_SetupSquad(bgsquad, squad.pos, squad.target)
+			end
 		end
 	end
 
@@ -200,8 +220,8 @@ end
 function BattlegroundsDefence_SpawnLine(owner, bp, startpos, endpos, width)
 
 	-- Grab positions
-	startpos = Util_GetPosition(startpos.x, startpos.y, startpos.z)
-	endpos = Util_GetPosition(endpos.x, endpos.y, endpos.z)
+	startpos = World_Pos(startpos.x, startpos.y, startpos.z)
+	endpos = World_Pos(endpos.x, endpos.y, endpos.z)
 
 	-- Grab distance
 	local dist = Util_GetDistance(startpos, endpos)
@@ -215,16 +235,18 @@ function BattlegroundsDefence_SpawnLine(owner, bp, startpos, endpos, width)
 		-- Grab pos
 		local pos = Util_GetPositionFromAtoB(startpos, endpos, i / count)
 		local lookat = Util_GetPositionFromAtoB(startpos, endpos, i / count + 0.1)
-		lookat = Util_GetPosition(0,0,0) -- TODO: Properly get pos
+		lookat = World_Pos(0,0,0) -- TODO: Properly get pos
 
 		-- Create entity
 		local entity = BattlegroundsDefence_CreateEntity(bp, owner, pos, lookat)
 
-		-- Grab nearest spawnable position
-		local bestpos = World_GetSpawnablePosition(pos, entity)
+		-- Spawn
+		Entity_Spawn(entity);
 
-		-- Update position (Maybe check if too far away then bail)
-		Entity_SetPosition(entity, bestpos)
+		-- Force construct
+		if (Entity_IsBuilding(entity) == true) then
+			Entity_ForceConstruct(entity)
+		end
 
 	end
 
@@ -232,17 +254,13 @@ end
 
 function BattlegroundsDefence_SetupSquad(squad, pos, lookat)
 
-	-- Grab positions
-	pos = Util_GetPosition(pos.x, pos.y, pos.z)
-	lookat = Util_GetPosition(lookat.x, lookat.y, lookat.z) and lookat
-
 	-- Try garrison
 	local sg_temp = SGroup_FromSquad(squad)
 	local garrisonId = nil
 
 	-- Try spawn in garrison if infantry
 	if Squad_IsInfantrySquad(squad) then
-		garrisonId = Util_GarrisonNearbyBuilding(sg_temp, pos, 7.5, false)
+		garrisonId = Util_GarrisonNearbyBuilding(sg_temp, pos, 10, false)
 	end
 
 	-- If not garrisoned, warp to pos and look at target (if any)
@@ -557,7 +575,7 @@ g_aidefenceunits = { -- just gonna use vanilla units for now, may change later
 function BattlegroundsDefence_InitAI()
 
 	-- Invoke AI wave init if enabled (Defined in .json package)
-	if bg_settings.gameoptions.Support then
+	if bg_settings.gameoptions.Support == 1 then
 		BattlegroundsDefence_InitAIWaves();
 	end
 

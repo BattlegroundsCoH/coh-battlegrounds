@@ -149,15 +149,16 @@ public class SessionCompiler : ISessionCompiler {
         // Loop over entities
         for (int i = 0; i < entities.Length; i++) {
             var entity = new Dictionary<string, object>() {
-                ["team"] = entities[i].TeamOwner,
+                ["team"] = entities[i].TeamOwner + 1,
                 ["player"] = entities[i].TeamMemberOwner,
-                ["ebp"] = entities[i].Blueprint.Name,
-                ["pos"] = entities[i].Spawn,
+                ["ebp"] = entities[i].Blueprint.GetScarName(),
+                ["pos"] = entities[i].Spawn.SwapYZ(),
                 ["mode"] = entities[i].Lookat is null ? "place" : (entities[i].IsDirectional ? "lookat" : "line"),
+                ["width"] = 4, // TODO: Grab properly
             };
-            // TODO: Add width field
+            
             if (entities[i].Lookat is GamePosition lookat) {
-                entity["target"] = lookat;
+                entity["target"] = lookat.SwapYZ();
             }
             entityList.Add(entity);
         }
@@ -165,13 +166,13 @@ public class SessionCompiler : ISessionCompiler {
         // Loop over entities
         for (int i = 0; i < squads.Length; i++) {
             var squad = new Dictionary<string, object>() {
-                ["team"] = squads[i].TeamOwner,
+                ["team"] = squads[i].TeamOwner + 1,
                 ["player"] = squads[i].TeamMemberOwner,
                 ["sid"] = squads[i].SpawnId,
-                ["pos"] = squads[i].Spawn,
+                ["pos"] = squads[i].Spawn.SwapYZ(),
             };
             if (squads[i].Lookat is GamePosition lookat) {
-                squad["target"] = lookat;
+                squad["target"] = lookat.SwapYZ();
             }
             squadList.Add(squad);
         }
@@ -179,11 +180,11 @@ public class SessionCompiler : ISessionCompiler {
         // Loop over goals
         for (int i = 0; i < goals.Length; i++) {
             var goal = new Dictionary<string, object>() {
-                ["team"] = goals[i].ObjectiveTeam,
+                ["team"] = goals[i].ObjectiveTeam + 1,
                 ["player"] = goals[i].ObjectivePlayer,
                 ["order"] = goals[i].ObjectiveIndex,
                 ["type"] = goals[i].ObjectiveType,
-                ["pos"] = goals[i].ObjectivePosition
+                ["pos"] = goals[i].ObjectivePosition.SwapYZ()
             };
             goalList.Add(goal);
         }

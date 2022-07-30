@@ -112,13 +112,16 @@ function BG_DeploySquad(player, unit_id, ignoreTransport)
 
     -- Get the player reference id
     local playerRefID = BG_GetPlayerID(player);
+    if playerRefID == -1 then
+        return false, "failed to fetch player ID";
+    end
 
     -- Get unit data
     local unit_data = BG_FindSquadInCompany(playerRefID, unit_id);
 
     -- Not a valid unit to spawn
     if unit_data == nil then
-        return false;
+        return false, "failed to fetch squad " .. unit_id .. " in company";
     end
 
     -- Make sure we don't spawn in something twice
@@ -175,7 +178,7 @@ function BG_DeploySquad(player, unit_id, ignoreTransport)
     end
     
     -- Return fail
-    return false;
+    return false, "unit already spawned";
 
 end
 
