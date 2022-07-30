@@ -14,6 +14,9 @@ function BattlegroundsDefence_InitGamemode()
 		-- Create counter Id
 		Counter = 333,
 
+		-- Define wait time
+		Time = bg_settings.gameoptions.Time * 60,
+
 		-- Create teritory group
 		Sectors = {}
 
@@ -36,11 +39,11 @@ function BattlegroundsDefence_InitGamemode()
 	WinWarning_SetTickers(DefenceSettingsData.MaxPoints - DefenceSettingsData.DefenderPoints, DefenceSettingsData.DefenderPoints)
 
 	-- Start timer
-	Timer_Start(DefenceSettingsData.Counter, bg_settings.gameoptions.Time * 60)
+	Timer_Start(DefenceSettingsData.Counter, DefenceSettingsData.Time)
 
 	-- Add interval to update points
 	Rule_AddInterval(BattlegroundsDefence_UpdatePoints, 3);
-	Rule_AddInterval(BattlegroundsDefence_CheckTime, 5);
+	Rule_AddInterval(BattlegroundsDefence_CheckTime, 1);
 
 	-- Grant additional resources to the attacking team.
 	for _, p in pairs(__BGDefenceTeams[1]) do
@@ -148,8 +151,18 @@ end
 
 function BattlegroundsDefence_CheckTime()
 
+	-- Grab time
+	local t = Timer_GetRemaining(DefenceSettingsData.Counter);
+	local tStr = Loc_FormatTime(t, false, false)
+
+	-- Update time
+	Obj_ShowProgress(BG_LocStringFormat(119, tStr), t / DefenceSettingsData.Time);
+
+	-- Set blinking if less than 20% of the time remaining
+	Obj_SetProgressBlinking(t / DefenceSettingsData.Time < 0.2);
+
 	-- Check timer
-	if Timer_GetRemaining(DefenceSettingsData.Counter) <= 0 then
+	if t <= 0 then
 
 		-- Remove rules
 		Rule_Remove(BattlegroundsDefence_UpdatePoints)

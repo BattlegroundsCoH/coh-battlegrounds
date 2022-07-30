@@ -3,22 +3,22 @@ _bg_AISettings = {
         [1] = {
             smart_thinking = 4,
             trigger_callin = 9,
-            max_deployed = 12, -- max deployed at a time
+            max_deployed = 10, -- max deployed at a time
         },
         [2] = {
             smart_thinking = 3,
             trigger_callin = 7,
-            max_deployed = 14,
+            max_deployed = 12,
         },
         [3] = {
             smart_thinking = 2,
-            trigger_callin = 4,
-            max_deployed = 20,
+            trigger_callin = 6,
+            max_deployed = 15,
         },
         [4] = {
             smart_thinking = 1,
-            trigger_callin = 3,
-            max_deployed = 24,
+            trigger_callin = 5,
+            max_deployed = 18,
         }
     },
     modifiers = {
@@ -41,14 +41,14 @@ _bg_AISettings = {
             call_mod = 1.2,
             manpower_income = 1.4,
             munitions_income = 1.8,
-            fuel_income = 2.2,
+            fuel_income = 1.5,
         },
         [4] = {
-            aggressive_factor = 3.25,
+            aggressive_factor = 2.75,
             call_mod = 0.9,
             manpower_income = 1.6,
             munitions_income = 2.2,
-            fuel_income = 2.2,
+            fuel_income = 1.7,
         }
     }
 };

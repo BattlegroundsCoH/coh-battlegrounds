@@ -309,7 +309,7 @@ end
 
 function BG_LocStringFormat(locID, arg1, arg2, arg3, arg4)
     if arg2 == nil then
-        return Loc_FormatText("$" .. _bg_guid .. ":" .. locID, arg1)[1];
+        return Loc_FormatText("$" .. _bg_guid .. ":" .. locID, arg1);
     elseif arg3 == nil then
         return Loc_FormatText("$" .. _bg_guid .. ":" .. locID, arg1, arg2)[1];
     elseif arg4 == nil then
