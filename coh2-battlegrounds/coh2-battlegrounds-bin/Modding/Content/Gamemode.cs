@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
+
+using Battlegrounds.ErrorHandling.CommonExceptions;
 
 namespace Battlegrounds.Modding.Content;
 
@@ -102,6 +105,25 @@ public readonly struct Gamemode {
         this.Planning = Planning;
         this.PlanningEntities = PlanningEntities ?? new();
 
+    }
+
+    /// <summary>
+    /// Get the planning entity with <paramref name="blueprint"/>.
+    /// </summary>
+    /// <remarks>
+    /// Will return first blueprint match. If entities are shared between factions, the first matching occurance is returned.
+    /// </remarks>
+    /// <param name="blueprint">The blueprint to use to identify the entity.</param>
+    /// <returns>The <see cref="FactionDefence"/> instance matching the <paramref name="blueprint"/>.</returns>
+    /// <exception cref="ObjectNotFoundException"></exception>
+    public FactionDefence GetPlanningEntity(string blueprint) {
+        foreach (var (army, defs) in this.PlanningEntities) {
+            int i = Array.FindIndex(defs, x => x.EntityBlueprint == blueprint);
+            if (i != -1) {
+                return defs[i];
+            }
+        }
+        throw new ObjectNotFoundException($"Failed to find defence entity with blueprint '{blueprint}'.");
     }
 
 }

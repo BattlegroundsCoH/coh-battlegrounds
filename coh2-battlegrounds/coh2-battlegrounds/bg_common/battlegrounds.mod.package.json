@@ -105,7 +105,8 @@
               "IsLinePlacement": true,
               "MaxPlacement": -1,
               "PreGarrisonUnitTypes": [],
-              "PlacementType": 2
+              "PlacementType": 2,
+              "Width": 4
             },
             {
               "EntityBlueprint": "barbed_wire_field_bg",
@@ -129,7 +130,8 @@
               "IsLinePlacement": true,
               "MaxPlacement": 32,
               "PreGarrisonUnitTypes": [],
-              "PlacementType": 3
+              "PlacementType": 3,
+              "Width": 3
             },
             {
               "EntityBlueprint": "tanktrap_bg",
@@ -137,7 +139,8 @@
               "IsLinePlacement": true,
               "MaxPlacement": 16,
               "PreGarrisonUnitTypes": [],
-              "PlacementType": 2
+              "PlacementType": 2,
+              "Width": 2
             }
           ],
           "german": [
@@ -163,7 +166,8 @@
               "IsLinePlacement": true,
               "MaxPlacement": 16,
               "PreGarrisonUnitTypes": [],
-              "PlacementType": 3
+              "PlacementType": 3,
+              "Width": 3
             },
             {
               "EntityBlueprint": "slit_trench_german_bg",
@@ -179,7 +183,8 @@
               "IsLinePlacement": true,
               "MaxPlacement": 16,
               "PreGarrisonUnitTypes": [],
-              "PlacementType": 2
+              "PlacementType": 2,
+              "Width":34
             },
             {
               "EntityBlueprint": "barbed_wire_fence_bg",
@@ -187,7 +192,8 @@
               "IsLinePlacement": true,
               "MaxPlacement": -1,
               "PreGarrisonUnitTypes": [],
-              "PlacementType": 2
+              "PlacementType": 2,
+              "Width": 4
             }
           ]
         }

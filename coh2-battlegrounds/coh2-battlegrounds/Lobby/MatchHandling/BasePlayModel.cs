@@ -172,13 +172,13 @@ internal abstract class BasePlayModel {
             // Grab elements
             var elements = this.m_handle.PlanningHandle.GetPlanningElements(0).Concat(this.m_handle.PlanningHandle.GetPlanningElements(1));
 
-            // Invoke helper functions
-            sessionGoals = CreatePlanningGoals(participants, elements);
-            sessionEntities = CreatePlanningEntities(participants, elements);
-            sessionSquads = CreatePlanningSquads(participants, elements);
-
             // Get gamode instance
             var mode = package.Gamemodes.FirstOrDefault(x => x.ID == gamemodeInstance.Name, new());
+
+            // Invoke helper functions
+            sessionGoals = CreatePlanningGoals(participants, elements);
+            sessionEntities = CreatePlanningEntities(participants, elements, mode);
+            sessionSquads = CreatePlanningSquads(participants, elements);
 
             // Determine if there's need for AI planning
             this.CreateAIPlans(scen, revflag ? allies : axis, (byte)(revflag ? 0 : 1), ref sessionSquads, ref sessionEntities, sessionGoals, mode);
@@ -251,7 +251,7 @@ internal abstract class BasePlayModel {
 
     }
 
-    protected static SessionPlanEntityInfo[] CreatePlanningEntities(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements) {
+    protected static SessionPlanEntityInfo[] CreatePlanningEntities(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements, Gamemode gamemode) {
 
         // Grab planning entities
         var planEntities = planElements.Filter(x => x.IsEntity && x.ObjectiveType is PlanningObjectiveType.None);
@@ -272,7 +272,8 @@ internal abstract class BasePlayModel {
                 Blueprint = BlueprintManager.FromBlueprintName<EntityBlueprint>(planEntities[i].Blueprint),
                 Spawn = planEntities[i].SpawnPosition,
                 Lookat = planEntities[i].LookatPosition,
-                IsDirectional = planEntities[i].IsDirectional
+                IsDirectional = planEntities[i].IsDirectional,
+                Width = gamemode.GetPlanningEntity(planEntities[i].Blueprint).Width
             };
 
         }
@@ -398,7 +399,8 @@ internal abstract class BasePlayModel {
                 Blueprint = BlueprintManager.FromBlueprintName<EntityBlueprint>(x.PlanElement.Blueprint),
                 Spawn = x.PlanElement.SpawnPosition,
                 Lookat = x.PlanElement.LookatPosition,
-                IsDirectional = x.PlanElement.IsDirectional
+                IsDirectional = x.PlanElement.IsDirectional,
+                Width = gamemode.GetPlanningEntity(x.PlanElement.Blueprint).Width
             };
         }));
 

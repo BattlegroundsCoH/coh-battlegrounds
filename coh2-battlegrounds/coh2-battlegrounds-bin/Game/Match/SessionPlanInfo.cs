@@ -38,6 +38,11 @@ public readonly struct SessionPlanEntityInfo : ISessionPlanEntity {
     /// </summary>
     public bool IsDirectional { get; init; }
 
+    /// <summary>
+    /// Get or initialise the width of the entity.
+    /// </summary>
+    public int Width { get; init; }
+
 }
 
 /// <summary>

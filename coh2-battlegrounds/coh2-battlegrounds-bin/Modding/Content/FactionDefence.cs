@@ -68,6 +68,11 @@ public readonly struct FactionDefence {
     public AIPlacementType PlacementType { get; }
 
     /// <summary>
+    /// Get the width of the element.
+    /// </summary>
+    public int Width { get; }
+
+    /// <summary>
     /// Initialise a new <see cref="FactionDefence"/> instance with specified parameters.
     /// </summary>
     /// <param name="EntityBlueprint">The name of the EBP.</param>
@@ -76,13 +81,15 @@ public readonly struct FactionDefence {
     /// <param name="MaxPlacement">Max placement count.</param>
     /// <param name="PreGarrisonUnitTypes">Allowed pre-garrison units.</param>
     [JsonConstructor]
-    public FactionDefence(string EntityBlueprint, bool IsDirectional, bool IsLinePlacement, int MaxPlacement, string[] PreGarrisonUnitTypes, AIPlacementType PlacementType) {
+    public FactionDefence(string EntityBlueprint, bool IsDirectional, bool IsLinePlacement, int MaxPlacement, string[] PreGarrisonUnitTypes, 
+        AIPlacementType PlacementType, int Width) {
         this.EntityBlueprint = EntityBlueprint;
         this.IsDirectional = IsDirectional;
         this.IsLinePlacement = IsLinePlacement;
         this.MaxPlacement = MaxPlacement is -1 ? int.MaxValue : MaxPlacement;
         this.PreGarrisonUnitTypes = PreGarrisonUnitTypes;
         this.PlacementType = PlacementType;
+        this.Width = Width;
     }
 
     public override string ToString() => this.EntityBlueprint;

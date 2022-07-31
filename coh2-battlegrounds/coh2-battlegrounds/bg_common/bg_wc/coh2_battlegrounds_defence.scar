@@ -471,11 +471,14 @@ function BattlegroundsDefence_InitObjectives()
 	end
 
 	-- Begin objectives delayed
-	Rule_AddOneShot(BattlegroundsDefence_DelayedStartObjectives, 30);
+	Rule_AddOneShot(BattlegroundsDefence_DelayedStartObjectives, 10);
 
 end
 
 function BattlegroundsDefence_DelayedStartObjectives()
+
+	-- Start main
+	BattlegroundsDefence_StartMainObjective();
 
 	-- Loop over all objectives and start them
 	for k,v in pairs(OBJ_DefenceAllAssault) do
@@ -485,6 +488,14 @@ function BattlegroundsDefence_DelayedStartObjectives()
 	-- Add check every 10s
 	Rule_AddInterval(BattlegroundsDefence_CheckObjectives, 10)
 
+end
+
+function BattlegroundsDefence_StartMainObjective()
+	for _, v in pairs(__BGDefenceTeams[1]) do
+		if Game_GetLocalPlayer() == v then
+			Objective_Start(OBJ_DefenceMain)
+		end
+	end
 end
 
 function BattlegroundsDefence_CreateObjective(objectiveType, objectivePosition)
@@ -662,8 +673,8 @@ function BattlegroundsDefence_CheckCleared(obj, playerid)
 	local eg_temp = EGroup_CreateIfNotFound("eg_temp_chckclear");
 
 	-- Grab team
-	local attackers = Player_GetTeam(__BGDefenceTeams[1][1]);
-	local defenders = Player_GetTeam(__BGDefenceTeams[2][1]);
+	local attackers = __BGDefenceTeams[1];
+	local defenders = __BGDefenceTeams[2];
 
 	-- Grab units
 	Team_GetAllEntitiesNearMarker(defenders, eg_temp, obj.attackpos, 30);

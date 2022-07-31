@@ -16,4 +16,6 @@ public interface ISessionPlanEntity {
 
     public bool IsDirectional { get; }
 
+    public int Width { get; }
+
 }

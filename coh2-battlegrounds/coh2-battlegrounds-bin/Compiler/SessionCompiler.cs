@@ -154,9 +154,8 @@ public class SessionCompiler : ISessionCompiler {
                 ["ebp"] = entities[i].Blueprint.GetScarName(),
                 ["pos"] = entities[i].Spawn.SwapYZ(),
                 ["mode"] = entities[i].Lookat is null ? "place" : (entities[i].IsDirectional ? "lookat" : "line"),
-                ["width"] = 4, // TODO: Grab properly
-            };
-            
+                ["width"] = entities[i].Width
+            };            
             if (entities[i].Lookat is GamePosition lookat) {
                 entity["target"] = lookat.SwapYZ();
             }

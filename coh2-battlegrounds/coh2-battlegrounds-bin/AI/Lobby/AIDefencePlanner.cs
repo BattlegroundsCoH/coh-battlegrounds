@@ -273,8 +273,8 @@ public class AIDefencePlanner {
                         var cdir = new Vector2(dir.Y, -dir.X);
                         this.m_placeEntities.Add(new(indexOnTeam, new JsonPlanElement() {
                             Blueprint = barricades[i].EntityBlueprint,
-                            SpawnPosition = Translate(mid, dir, -3.0f),
-                            LookatPosition = Translate(mid, dir, 3.0f),
+                            SpawnPosition = Translate(mid, dir, -6.0f),
+                            LookatPosition = Translate(mid, dir, 6.0f),
                             IsEntity = true
                         }));
                         nodes.Remove(this.m_nodes[roads[k].First]);
