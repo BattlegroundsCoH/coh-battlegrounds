@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Markup;
 
 using Battlegrounds;
@@ -74,7 +73,7 @@ public class LocLabel : Label {
     /// </summary>
     public bool UpperCaseAll {
         get => (bool)this.GetValue(UpperCaseAllProperty);
-        set => this.SetValue(UpperCaseAllProperty, value);
+        set => this.SetCurrentValue(UpperCaseAllProperty, value);
     }
 
     private static void OnCaseChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e) {
@@ -95,7 +94,7 @@ public class LocLabel : Label {
     /// </summary>
     public object? Arguments {
         get => this.GetValue(ArgumentsProperty);
-        set => this.SetValue(ArgumentsProperty, value);
+        set => this.SetCurrentValue(ArgumentsProperty, value);
     }
 
     private static void OnArgumentsChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e) {
@@ -104,6 +103,10 @@ public class LocLabel : Label {
             loc.RefreshDisplay();
             if (e.NewValue is CapacityValue capNew) {
                 capNew.ObjectChanged += loc.OnArgumentsObjectChanged;
+            } else if (e.NewValue is INotifyPropertyChanged changed) {
+                changed.PropertyChanged += (a, b) => {
+                    loc.RefreshDisplay();
+                };
             }
             if (e.OldValue is CapacityValue capOld) {
                 capOld.ObjectChanged -= loc.OnArgumentsObjectChanged;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -55,8 +56,10 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     public record LobbyPlanningMinimapItem(EntityBlueprint EntityBlueprint, ushort Owner, GamePosition WorldPos, Scenario Scenario);
 
-    public class LobbyPlanningCompanyDisplay : ILocLabelArgumentsObject {
+    public class LobbyPlanningCompanyDisplay : ILocLabelArgumentsObject, INotifyPropertyChanged {
         public event ObjectChangedEventHandler? ObjectChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public string Name { get; }
         public CapacityValue Cap { get; }
         public LobbyPlanningCompanyDisplay(string CompanyName, CapacityValue Cap) {
@@ -65,6 +68,9 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
             this.Cap.ObjectChanged += (a, b) => this.ObjectChanged?.Invoke(a, b);
         }
         public object[] ToArgs() => this.Cap.ToArgs().Prepend(this.Name);
+        public void Update() {
+            this.PropertyChanged?.Invoke(this, new(nameof(Cap)));
+        }
     }
 
     private readonly ILobbyPlanningHandle m_planHandle;
@@ -145,6 +151,8 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
         // Create capacity
         this.PlanningDisplay = new(self.Occupant?.Company?.Name ?? string.Empty, new(10, () => this.PreplacableUnits.Picked));
+        this.PreplacableUnits.OnPick += (_, _) => this.PlanningDisplay.Update();
+        this.PreplacableUnits.OnUnPick += (_, _) => this.PlanningDisplay.Update();
 
         // Get faction str
         var factionStr = self.Occupant?.Company?.Army ?? string.Empty;

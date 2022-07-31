@@ -12,6 +12,10 @@ public class Pool<T> : ObservableCollection<T> {
 
     private readonly HashSet<T> m_items;
 
+    public event EventHandler<T>? OnPick;
+
+    public event EventHandler<T>? OnUnPick;
+
     /// <summary>
     /// Get the amount of available items.
     /// </summary>
@@ -53,8 +57,9 @@ public class Pool<T> : ObservableCollection<T> {
     /// <param name="item"></param>
     /// <returns></returns>
     public bool Pick(T item) {
-        if (this.m_items.Contains(item)) {
-            return this.Remove(item);
+        if (this.m_items.Contains(item) && this.Remove(item)) {
+            this.OnPick?.Invoke(this, item);
+            return true;
         }
         return false;
     }
@@ -67,6 +72,7 @@ public class Pool<T> : ObservableCollection<T> {
     public T Unpick(T item) {
         if (this.m_items.Contains(item)) {
             this.Add(item);
+            this.OnUnPick?.Invoke(this, item);
         }
         return item;
     }

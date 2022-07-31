@@ -112,7 +112,13 @@
 113 Support Position
 114 Clear Area
 115	Time
-116	The time the attackers have to defeat the defending team
+116	The time the attackers have to defeat the defending team.
 117	AI-Support
-118	Enable basic AI units to aid the assault
+118	Enable basic AI units to aid the assault.
 119	Time Remaining: %1TIME%
+120	The attackers are concentrating on a nearby location!
+121	Attackers are defending this position!
+122	The attackers are targetting a nearby location!
+123	Attackers are trying to clear this position!
+124	The attackers are attempting to capture strategic points!
+125	Attackers are trying to capture this point!

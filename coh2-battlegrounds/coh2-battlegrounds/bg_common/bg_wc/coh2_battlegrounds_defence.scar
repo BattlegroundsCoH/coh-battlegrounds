@@ -463,7 +463,7 @@ function BattlegroundsDefence_InitObjectives()
 		end
 
 		-- Insert objective
-		OBJ_DefenceAllAssault[ownerid].objectives[v.order + 1] = BattlegroundsDefence_CreateObjective(v.type, v.pos)
+		OBJ_DefenceAllAssault[ownerid].objectives[v.order + 1] = BattlegroundsDefence_CreateObjective(v.type, v.pos, v.order)
 
 		-- Register objective
 		Objective_Register(OBJ_DefenceAllAssault[ownerid].objectives[v.order + 1])
@@ -498,7 +498,7 @@ function BattlegroundsDefence_StartMainObjective()
 	end
 end
 
-function BattlegroundsDefence_CreateObjective(objectiveType, objectivePosition)
+function BattlegroundsDefence_CreateObjective(objectiveType, objectivePosition, objectiveOrder)
 	local obj = {
 		SetupUI = function() end,
 		OnStart = function() end,
@@ -507,6 +507,7 @@ function BattlegroundsDefence_CreateObjective(objectiveType, objectivePosition)
 		IsComplete = function() return false end,
 		Type = OT_Primary,
 		Parent = OBJ_DefenceMain,
+		PlayerOrder = objectiveOrder,
 	}
 	local pos = World_GetNearestInteractablePoint(World_Pos(objectivePosition.x, objectivePosition.y, objectivePosition.z))
 	if objectiveType == BG_OT_ATTACK then
@@ -514,7 +515,7 @@ function BattlegroundsDefence_CreateObjective(objectiveType, objectivePosition)
 		-- Loop over points in range
 		local targetPoints = {}
 		for _, v in pairs(DefenceSettingsData.Sectors)  do
-			if Util_GetDistance(pos, Entity_GetPosition(v)) < 35 then
+			if Util_GetDistance(pos, Entity_GetPosition(v)) < 45 then
 				table.insert(targetPoints, v)
 			end
 		end
@@ -525,6 +526,24 @@ function BattlegroundsDefence_CreateObjective(objectiveType, objectivePosition)
 			obj.__oncheck = BattlegroundsDefence_CheckCapture
 			obj.__oncomplete = function (self)
 				DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - 10 * #self.targets
+				for i = 1, #self.targets do
+					HintPoint_SetVisible(self.targets[i], false);
+				end
+			end
+			obj.__onstart = function(self)
+				self.targethints = {}
+				for i = 1, #self.targets do
+					self.targethints[i] = HintPoint_Add(self.targets[i], false, BG_LocString(125), 4, HPAT_Objective);
+				end
+			end
+			obj.__onstartdefenders = function (self)
+				if self.PlayerOrder ~= 0 then
+					Util_MissionTitle(BG_LocString(124), 1, 6, 1);
+				end
+				UI_CreateMinimapBlip(self.attackpos, 45, BT_DefendHere);
+				for i=1, #self.targethints do					
+					HintPoint_SetVisible(self.targethints[i], true);
+				end
 			end
 			obj.OnStart = function ()
 				Objective_SetCounter(obj, 0, #obj.targets)
@@ -537,7 +556,18 @@ function BattlegroundsDefence_CreateObjective(objectiveType, objectivePosition)
 			obj.attackpos = pos
 			obj.__oncheck = BattlegroundsDefence_CheckCleared
 			obj.__oncomplete = function (self)
-				DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - 5
+				DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - 10
+				HintPoint_SetVisible(self.defencehint, false); -- Will disable it for attackers too, shouldn't be a problem
+			end
+			obj.__onstart = function(self)
+				self.defencehint = HintPoint_Add(self.attackpos, false, BG_LocString(123), 4, HPAT_Objective);
+			end
+			obj.__onstartdefenders = function (self)
+				if self.PlayerOrder ~= 0 then
+					Util_MissionTitle(BG_LocString(122), 1, 6, 1);
+				end
+				HintPoint_SetVisible(self.defencehint, true);
+				UI_CreateMinimapBlip(self.attackpos, 45, BT_Combat);
 			end
 			obj.OnStart = function ()
 				Objective_AddUIElements(obj, pos, true, BG_LocString(114), true)
@@ -552,11 +582,20 @@ function BattlegroundsDefence_CreateObjective(objectiveType, objectivePosition)
 		obj.defendpos = pos
 		obj.__oncheck = BattlegroundsDefence_CheckIsDefended
 		obj.__oncomplete = function (self)
-			DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - 10
+			DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - 5;
+			HintPoint_SetVisible(self.defencehint, false); -- Will disable it for attackers too, shouldn't be a problem
 		end
 		obj.__onstart = function(self)
 			self.starttime = World_GetGameTime()
 			self.endtime = World_GetGameTime() + 3 * 60
+			self.defencehint = HintPoint_Add(self.defendpos, false, BG_LocString(121), 4, HPAT_Objective);
+		end
+		obj.__onstartdefenders = function (self)
+			if self.PlayerOrder ~= 0 then
+				Util_MissionTitle(BG_LocString(120), 1, 6, 1 );
+			end
+			HintPoint_SetVisible(self.defencehint, true);
+			UI_CreateMinimapBlip(self.defendpos, 3 * 60, BT_AttackHere);
 		end
 		obj.OnStart = function ()
 			Objective_StartTimer(obj, COUNT_DOWN, 3*60, 60);
@@ -578,6 +617,9 @@ function BattlegroundsDefence_CreateObjective(objectiveType, objectivePosition)
 
 	else
 		fatal("Expected objective type value in interval 0 < type < 4 but got " .. tostring(objectiveType));
+	end
+	obj.__onfail = function (self)
+		DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints + 10
 	end
 	return obj
 end
@@ -607,8 +649,11 @@ function BattlegroundsDefence_CheckObjectives()
 		-- Make sure we have an objective
 		if v.objectives[v.current] ~= nil then
 
+			-- Get status
+			local obj_status = v.objectives[v.current]:__oncheck(k);
+
 			-- Check if complete
-			if v.objectives[v.current]:__oncheck(k) then
+			if obj_status == true then
 
 				-- Trigger on complete
 				v.objectives[v.current]:__oncomplete()
@@ -624,6 +669,28 @@ function BattlegroundsDefence_CheckObjectives()
 				-- Start it if defined
 				if v.objectives[v.current] ~= nil then
 					BattlegroundsDefence_StartObjective(k, v.objectives[v.current])
+				elseif k == Player_GetID(Game_GetLocalPlayer()) then
+					Objective_Complete(OBJ_DefenceMain, true);
+				end
+
+			elseif obj_status == -1 then -- Fail it
+
+				-- Trigger on complete
+				v.objectives[v.current]:__onfail()
+
+				-- Fail visually
+				if k == Player_GetID(Game_GetLocalPlayer()) then
+					Objective_Fail(v.objectives[v.current], true);
+				end
+
+				-- Go to next
+				v.current = v.current + 1
+
+				-- Start it if defined
+				if v.objectives[v.current] ~= nil then
+					BattlegroundsDefence_StartObjective(k, v.objectives[v.current])
+				elseif k == Player_GetID(Game_GetLocalPlayer()) then
+					Objective_Complete(OBJ_DefenceMain, true);
 				end
 
 			end
@@ -669,8 +736,8 @@ end
 function BattlegroundsDefence_CheckCleared(obj, playerid)
 	
 	-- Define sg and eg temps
-	local sg_temp = SGroup_CreateIfNotFound("sg_temp_chckclear")
-	local eg_temp = EGroup_CreateIfNotFound("eg_temp_chckclear");
+	local sg_temp = SGroup_CreateIfNotFound("sg_temp_chckclear"..playerid)
+	local eg_temp = EGroup_CreateIfNotFound("eg_temp_chckclear"..playerid);
 
 	-- Grab team
 	local attackers = __BGDefenceTeams[1];
@@ -686,8 +753,27 @@ function BattlegroundsDefence_CheckCleared(obj, playerid)
 end
 
 function BattlegroundsDefence_CheckIsDefended(obj, playerid)
-	-- TODO: Proper defence checks...
+	
+	-- Define temp sg
+	local sg_temp_def = SGroup_CreateIfNotFound("sg_temp_chckclear_def"..playerid)
+	local sg_temp_att = SGroup_CreateIfNotFound("sg_temp_chckclear_att"..playerid)
+
+	-- Grab team
+	local attackers = __BGDefenceTeams[1];
+	local defenders = __BGDefenceTeams[2];
+
+	-- Grab squad counts
+	Team_GetAllSquadsNearMarker(defenders, sg_temp_def, obj.defendpos, 30);
+	Team_GetAllSquadsNearMarker(attackers, sg_temp_att, obj.defendpos, 30);
+
+	-- Fail if no defenders
+	if SGroup_Count(sg_temp_def) > 0 and SGroup_Count(sg_temp_att) == 0 then
+		return -1
+	end
+
+	-- Return if defend time is over
 	return World_GetGameTime() > obj.endtime
+
 end
 
 function BattlegroundsDefence_CheckIsSupported(obj, playerid)

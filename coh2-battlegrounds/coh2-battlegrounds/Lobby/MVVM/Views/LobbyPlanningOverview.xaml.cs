@@ -59,17 +59,22 @@ public partial class LobbyPlanningOverview : UserControl {
 
     private void PlanningCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
 
+        // Bail if no place element
         if (!this.ContextHandler.HasPlaceElement) {
             return;
         }
 
+        // Grab click position
         var clickPos = e.GetPosition(this.PlanningCanvas);
+
+        // invert Y to get it into correct coordinate system
+        var clickPosInv = clickPos with { Y = this.PlanningCanvas.Height - clickPos.Y };
 
         if (this.ContextHandler.RequiresSecond) {
             
             if (this.m_points.Count is 0) {
 
-                this.m_points.Push(clickPos);
+                this.m_points.Push(clickPosInv);
                 var marker = this.CreateSelectedMarker(clickPos);
                 this.m_planningHelper = marker;
                 this.PlanningCanvas.Children.Add(marker.Element);
@@ -80,7 +85,7 @@ public partial class LobbyPlanningOverview : UserControl {
                 var placeElement = this.m_points.Pop();
 
                 // Place
-                this.ContextHandler.PlaceElement(placeElement, clickPos);
+                this.ContextHandler.PlaceElement(placeElement, clickPosInv);
 
                 // Clear
                 this.m_points.Clear();
@@ -91,7 +96,7 @@ public partial class LobbyPlanningOverview : UserControl {
         } else {
             
             // Place the element
-            this.ContextHandler.PlaceElement(clickPos);
+            this.ContextHandler.PlaceElement(clickPosInv);
 
         }        
 
