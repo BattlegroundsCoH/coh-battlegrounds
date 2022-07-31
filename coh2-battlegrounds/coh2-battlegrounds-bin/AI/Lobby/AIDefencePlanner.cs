@@ -19,6 +19,8 @@ namespace Battlegrounds.AI.Lobby;
 /// </summary>
 public class AIDefencePlanner {
 
+    public const double RANDOM_OFFSET_RANGE = 45;
+
     public record AIPlanElement(byte AIIndex, ILobbyPlanElement PlanElement);
 
     private record SquadPlacement(SquadBlueprint? Sbp, GamePosition Pos, GamePosition? Lookat);
@@ -121,10 +123,10 @@ public class AIDefencePlanner {
             for (int i = 0; i < this.m_analysis.Nodes.Length; i++) {
 
                 // Grab pos
-                var pos = this.m_analysis.Nodes[i].RandomOffset(10);
+                var pos = this.m_analysis.Nodes[i].RandomOffset(RANDOM_OFFSET_RANGE);
 
                 // Ignore this node if close to a point "covered" by human ally
-                if (this.m_ignorePositions.Any(x => x.SquareDistance(pos) < 30))
+                if (this.m_ignorePositions.Any(x => x.SquareDistance(pos) < 45))
                     continue;
 
                 // Pick smallest and assign
@@ -145,10 +147,10 @@ public class AIDefencePlanner {
             for (int i = 0; i < this.m_analysis.StrategicPositions.Length; i++) {
 
                 // Grab position
-                var pos = this.m_analysis.StrategicPositions[i].Position.RandomOffset(10);
+                var pos = this.m_analysis.StrategicPositions[i].Position.RandomOffset(RANDOM_OFFSET_RANGE);
 
                 // Ignore this node if close to a point "covered" by human ally
-                if (this.m_ignorePositions.Any(x => x.SquareDistance(pos) < 30))
+                if (this.m_ignorePositions.Any(x => x.SquareDistance(pos) < 45))
                     continue;
 
                 // Pick smallest and assign
@@ -209,7 +211,7 @@ public class AIDefencePlanner {
                 int k = PickNode(strat, nodes);
 
                 // Get nearest strat and attacking pos
-                var t1 = strat.Min(x => x.Position.SquareDistance(nodes[k]) * (5 - x.Weight));
+                var t1 = strat.Min(x => x.Position.SquareDistance(nodes[k]) * (1 - x.Weight));
                 var t2 = startAttackers.Min(x => x.SquareDistance(nodes[k]));
 
                 // Compute angles
@@ -220,7 +222,7 @@ public class AIDefencePlanner {
                 // If small angle, look at target; otherwise at start point
                 this.m_placeEntities.Add(new(indexOnTeam, new JsonPlanElement() {
                     Blueprint = bunkers[i].EntityBlueprint,
-                    SpawnPosition = nodes[k],
+                    SpawnPosition = nodes[k].RandomOffset(RANDOM_OFFSET_RANGE),
                     LookatPosition = angle < 45 ? t1.Position : t2,
                     IsEntity = true,
                     IsDirectional = true
@@ -293,7 +295,7 @@ public class AIDefencePlanner {
             if (k != -1) {
 
                 // Get nearest strat and attacking pos
-                var t1 = strat.Min(x => x.Position.SquareDistance(nodes[k]) * (5 - x.Weight));
+                var t1 = strat.Min(x => x.Position.SquareDistance(nodes[k]) * (1 - x.Weight));
                 var t2 = startAttackers.Min(x => x.SquareDistance(nodes[k]));
 
                 // Compute angles
@@ -303,7 +305,7 @@ public class AIDefencePlanner {
 
                 // If small angle, look at target; otherwise at start point
                 this.m_placeSquads.Add(new(indexOnTeam, new JsonPlanElement() {
-                    SpawnPosition = nodes[k].RandomOffset(15),
+                    SpawnPosition = nodes[k].RandomOffset(RANDOM_OFFSET_RANGE),
                     LookatPosition = angle < 45 ? t1.Position : t2,
                     IsEntity = false,
                     IsDirectional = true,
@@ -332,7 +334,7 @@ public class AIDefencePlanner {
         for (int i = 0; i < strategics.Length; i++) {
             var j = strategics[i];
             for (int k = 0; k < nodes.Count; k++) {
-                scores[k] += (float)nodes[k].SquareDistance(j.Position) * (5 - j.Weight);
+                scores[k] += (float)nodes[k].SquareDistance(j.Position) * (1 - j.Weight);
             }
         }
 

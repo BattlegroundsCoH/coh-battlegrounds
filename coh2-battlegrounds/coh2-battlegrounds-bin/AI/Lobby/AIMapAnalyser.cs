@@ -116,8 +116,9 @@ public class AIMapAnalyser {
             // Grab all important crossroads
             var gChokePoints = gNodes.Mapi((i, x) => {
                 int eCount = gEdges.Filter(y => y.First == i || y.Second == i).Length;
-                if (eCount > 3) {
-                    return new AIMapAnalysis.StrategicValue(x, AIMapAnalysis.StrategicValueType.Crossroads, eCount - 2);
+                if (eCount > 4) {
+                    float w = Math.Max(eCount - 2, 5);
+                    return new AIMapAnalysis.StrategicValue(x, AIMapAnalysis.StrategicValueType.Crossroads, w / 5.0f);
                 } else {
                     return null;
                 }
@@ -133,11 +134,11 @@ public class AIMapAnalyser {
                     "territory_point_mp" => AIMapAnalysis.StrategicValueType.Resource,
                     _ => AIMapAnalysis.StrategicValueType.Crossroads,
                 }, x.EntityBlueprint switch {
-                    "victory_point" => 1f,
-                    "territory_fuel_point_mp" => .9f,
-                    "territory_munitions_point_mp" => .8f,
+                    "victory_point" => 0.9f,
+                    "territory_fuel_point_mp" => .8f,
+                    "territory_munitions_point_mp" => .6f,
                     "territory_point_mp" => .4f,
-                    _ => 0f
+                    _ => .1f
                 }));
 
             // Return analysis

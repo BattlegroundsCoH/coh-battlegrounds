@@ -267,6 +267,20 @@ function Squad_IsGarrisoned(squad)
 end
 
 ------------------------------------------------------------
+-- EGroup functions
+------------------------------------------------------------
+
+function EGroup_FromEntity(entity, temp_name)
+    if temp_name == nil then
+        temp_name = "eg_temp";
+    end
+    local eg_temp = EGroup_CreateIfNotFound(temp_name);
+    EGroup_Clear(eg_temp);
+    EGroup_Add(eg_temp, entity);
+    return eg_temp;
+end
+
+------------------------------------------------------------
 -- Entity functions
 ------------------------------------------------------------
 

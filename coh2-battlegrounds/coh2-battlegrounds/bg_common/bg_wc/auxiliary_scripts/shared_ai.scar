@@ -1,17 +1,17 @@
 _bg_AISettings = {
     thresholds = {
         [1] = {
-            smart_thinking = 4,
-            trigger_callin = 9,
-            max_deployed = 10, -- max deployed at a time
+            smart_thinking = 7,         -- Decides how many units are required before a smarter decision is made on what to call in.
+            trigger_callin = 9,         -- Decides when a demand is high enough to trigger a call-in.
+            max_deployed = 10,          -- max deployed at a time.
         },
         [2] = {
-            smart_thinking = 3,
+            smart_thinking = 5,
             trigger_callin = 7,
             max_deployed = 12,
         },
         [3] = {
-            smart_thinking = 2,
+            smart_thinking = 4,
             trigger_callin = 6,
             max_deployed = 15,
         },
@@ -50,7 +50,8 @@ _bg_AISettings = {
             munitions_income = 2.2,
             fuel_income = 1.7,
         }
-    }
+    },
+    is_enabled = true
 };
 
 function BGAI_RegisterAIPlayer(index, player)
@@ -127,20 +128,26 @@ end
 
 function BGAI_UpdateAIPlayers()
 
-    for i=1, #_bg_aiData do
+    -- Do nothing if not enabled
+    if not _bg_AISettings.is_enabled then
+        return
+    end
 
-        _bg_aiData[i].update_time = _bg_aiData[i].update_time - 5;
+    -- Loop over all players
+    for index, aiplayer in pairs(_bg_aiData) do
 
-        if _bg_aiData[i].update_time <= 0 then
+        aiplayer.update_time = aiplayer.update_time - 5;
+
+        if aiplayer.update_time <= 0 then
 
             -- Evaluate own units
-            BGAI_EvalUnits(i);
+            BGAI_EvalUnits(index);
 
             -- Evaluate production
-            BGAI_EvalProduction(i);
+            BGAI_EvalProduction(index);
 
             -- Reset update interval
-            _bg_aiData[i].update_time = _bg_aiData[i].update_interval;
+            aiplayer.update_time = aiplayer.update_interval;
 
         end
 
@@ -338,7 +345,7 @@ function BGAI_BuyRandom(index, set)
     local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
 
     -- Call in the unit
-    local squad, crew, transport = BG_CallInUnit(set[i], player, gotopos, spawnfrom);
+    local squad, crew, _ = BG_CallInUnit(set[i], player, gotopos, spawnfrom);
 
     -- If log AI is enabled, then log the AI
     if _bg_custom.log_ai then

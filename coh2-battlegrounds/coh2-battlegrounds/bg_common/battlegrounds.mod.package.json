@@ -171,7 +171,7 @@
               "IsLinePlacement": false,
               "MaxPlacement": 8,
               "PreGarrisonUnitTypes": [],
-              "PlacementType": 1
+              "PlacementType": 0
             },
             {
               "EntityBlueprint": "tank_trap_bg",
