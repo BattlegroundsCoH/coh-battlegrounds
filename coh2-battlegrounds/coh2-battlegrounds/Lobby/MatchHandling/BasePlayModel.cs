@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text.Json;
 using System.Windows.Media;
 
 using Battlegrounds.AI;
@@ -222,6 +223,9 @@ internal abstract class BasePlayModel {
             ReverseTeamOrder = revflag,
             AdditionalOptions = additionalSettings
         };
+
+        // Log this object (Helpful for debugging)
+        Trace.WriteLine($"Session Startup Info:\n{JsonSerializer.Serialize(this.m_info, new JsonSerializerOptions() { WriteIndented = true })}", nameof(BasePlayModel));
 
     }
 

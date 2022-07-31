@@ -364,7 +364,7 @@ public class LobbyHostModel : LobbyModel {
                 // Create control
                 var settingControl = custom.OptionInputType switch {
                     AuxiliaryOptionType.Dropdown => 
-                        (LobbySetting)LobbySetting<IGamemodeOption>.NewDropdown(name, new(custom.Options), handler, custom.GetNumber("def")),
+                        (LobbySetting)LobbySetting<IGamemodeOption>.NewDropdown(name, new(custom.Options.OrderBy(x => x.Value)), handler, custom.GetNumber("def")),
                     AuxiliaryOptionType.Slider => 
                         LobbySetting<int>.NewSlider(name, custom.GetNumber("min"), custom.GetNumber("max"), custom.GetNumber("step"), custom.Format, handler),
                     _ => throw new Exception()
