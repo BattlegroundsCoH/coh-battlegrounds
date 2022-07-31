@@ -115,7 +115,7 @@
 		<template_reference name="exts" value="ebpextensions\type_ext">
 			<group name="unit_type_list">
 				<enum name="unit_type00" value="strategic_node" />
-				<enum name="unit_type01" value="" />
+				<enum name="unit_type01" value="retreat_target" />
 				<enum name="unit_type02" value="" />
 				<enum name="unit_type03" value="" />
 				<enum name="unit_type04" value="" />
@@ -391,6 +391,26 @@
 					</template_reference>
 					<bool name="permanent" value="True" />
 					<uniqueid name="id" value="1073744986" />
+				</template_reference>
+				<template_reference name="action" value="action\spawn_entity">
+					<float name="duration" value="0" />
+					<instance_reference name="entity_blueprint" value="ebps\gameplay\campaign\sp_retreat_point" />
+					<bool name="permanent" value="True" />
+					<bool name="player_owned" value="True" />
+					<group name="target_info">
+						<template_reference name="target_info" value="type_ability_target_type\all">
+						</template_reference>
+					</group>
+					<uniqueid name="id" value="1073745696" />
+					<template_reference name="spawn_attached_option" value="options\none">
+					</template_reference>
+					<list name="spawned_entity_actions">
+					</list>
+					<group name="offset">
+						<float name="x" value="0" />
+						<float name="y" value="0" />
+						<float name="z" value="0" />
+					</group>
 				</template_reference>
 			</list>
 		</template_reference>

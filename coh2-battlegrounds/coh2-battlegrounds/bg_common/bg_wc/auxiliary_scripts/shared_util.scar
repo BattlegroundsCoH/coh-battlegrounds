@@ -288,7 +288,7 @@ function Entity_CreateAndSpawn(player, blueprint, position, towards)
 
     -- If position is nil - use player's starting position
     if position == nil then
-        position = Player_GetStartingPosition(player);
+        position = Player_GetBasePosition(player);
     end
 
     -- If towards is nil - use position + some
@@ -406,6 +406,41 @@ function Player_LoopSquadsWhile(player, squadFunc, condition)
     while condition() and i < count do
         squadFunc(SGroup_GetSpawnedSquadAt(playerSquads, i), i, count);
         i = i + 1;
+    end
+
+end
+
+___basepositions = {}
+function Player_GetBasePosition(player)
+
+    -- Return already registered
+    local pid = Player_GetID(player);
+    if ___basepositions[pid] ~= nil then
+        return ___basepositions[pid];
+    end
+
+    -- Return if starting position is available
+    local spos = Player_GetStartingPosition(player);
+    if scartype(spos) == ST_SCARPOS then
+        ___basepositions[pid] = spos;
+        return spos;
+    end
+
+    -- Find available command point
+    local eg_playerentities = Player_GetEntitiesFromType(player, "strategic_node");
+    local invbp = BP_GetEntityBlueprint("142b113740474c82a60b0a428bd553d5:territory_point_invisible_command");
+    if EGroup_Count(eg_playerentities) > 0 then
+        local egmatch = function(_, _, entity)
+            if Entity_GetBlueprint(entity) == invbp then
+                ___basepositions[pid] = EGroup_GetSpawnedEntityAt(eg_playerentities, 1);
+                return true
+            end
+            return false
+        end
+        EGroup_ForEach(eg_playerentities, egmatch);
+        return ___basepositions[pid]
+    else
+        fatal("Player "..  pid .. " has no base position!");
     end
 
 end

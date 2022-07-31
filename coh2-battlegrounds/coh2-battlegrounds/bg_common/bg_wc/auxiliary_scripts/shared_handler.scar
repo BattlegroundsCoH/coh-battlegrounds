@@ -354,6 +354,9 @@ end
 
 function BG_GameBroadcastMessageReceived(sender, messageType, message)
     if messageType == _bg_message_type_player_deploy then
+        if _bg_matchStopped then
+            return
+        end
         BG_DeploySquad(sender, tonumber(message));
     elseif messageType == _bg_message_type_player_resource then
         local resources = Str_CmdParse(message);
@@ -474,7 +477,7 @@ end
 
 function BG_GetCallInPoint(self) -- The intention of this function is to avoid telling units to deploy to the exact same position if within a 15s time interval
     if self.last_callin_point == nil then
-        return Player_GetStartingPosition(self.player);
+        return Player_GetBasePosition(self.player);
     end
     local t = World_GetGameTime();
     local p = self.last_callin_point;

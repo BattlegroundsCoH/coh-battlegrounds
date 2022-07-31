@@ -873,20 +873,20 @@ function BattlegroundsDefence_AIGetRandomTarget(player)
 	local available = {}
 	for _, v in pairs(DefenceSettingsData.Sectors) do
 		if not Entity_IsStrategicPointCapturedBy(v, player) then
-			table.insert(available, v)
+			table.insert(available, Entity_GetPosition(v))
 		end
 	end
 	if #available > 0 then
 		return available[World_GetRand(1, #available)]
 	else
-		return Player_GetStartingPosition(Player_FindFirstEnemyPlayer(player))
+		return Player_GetBasePosition(Player_FindFirstEnemyPlayer(player))
 	end
 end
 
 function BattlegroundsDefence_SpawnAIUnit(player, group, blueprint, target)
 
 	-- Spawn
-	local pos = Player_GetStartingPosition(player)
+	local pos = Player_GetNearestMapEntry(player, target)
 	local squad = Squad_CreateAndSpawnToward(blueprint, player, 0, pos, target)
 
 	-- Make not selectable
@@ -895,6 +895,9 @@ function BattlegroundsDefence_SpawnAIUnit(player, group, blueprint, target)
 	-- Add to group and hide decorators
 	SGroup_Add(group, squad)
 	SGroup_EnableUIDecorator(group, false);
+
+	-- Add vulnerability (this will add to existing, so units keep getting more and more vulnerable)
+	Modify_Vulnerability(group, 1.4);
 
 	-- Attack move (queue)
 	Cmd_AttackMove( group, target, true, nil, 9.5);

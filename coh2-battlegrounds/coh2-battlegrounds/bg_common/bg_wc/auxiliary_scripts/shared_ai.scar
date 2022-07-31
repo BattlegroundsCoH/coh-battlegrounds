@@ -341,7 +341,7 @@ function BGAI_BuyRandom(index, set)
 
     -- Get basic data to use
     local player = _bg_aiData[index].player;
-    local gotopos = Player_GetStartingPosition(player);
+    local gotopos = Player_GetBasePosition(player);
     local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
 
     -- Call in the unit
