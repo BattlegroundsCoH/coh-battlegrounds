@@ -91,21 +91,29 @@ public class LobbyPlanningContextHandler {
     }
 
     public void PickPlaceElement(SquadBlueprint sbp, ushort cid) {
+        
+        // Bail if units are unavailable
+        if (this.PreplacableUnits.Available > 0) {
+            return;
+        }
+
+        // Set placement
         this.m_currentPlacement = new SquadPlacement(sbp, cid);
+    
     }
 
     public void PickPlaceElement(PlanningObjectiveType objectiveType) {
         this.m_currentPlacement = new ObjectivePlacement(objectiveType);
     }
 
-    public int PlaceElement(Point point, Point? other = null) {
+    public int PlaceElement(Size mmSize, Point point, Point? other = null) {
 
         // Grab self
         var self = this.m_handle.Handle.Self.ID;
 
         // Translate points
-        GamePosition spawn = this.m_scenario.FromMinimapPosition(768, 768, point.X, point.Y);
-        GamePosition? lookat = other is null ? null : this.m_scenario.FromMinimapPosition(768, 768, other.Value.X, other.Value.Y);
+        GamePosition spawn = this.m_scenario.FromMinimapPosition(mmSize.Width, mmSize.Height, point.X, point.Y);
+        GamePosition? lookat = other is null ? null : this.m_scenario.FromMinimapPosition(mmSize.Width, mmSize.Height, other.Value.X, other.Value.Y);
 
         // Define placed index
         int i = -1;
@@ -170,6 +178,7 @@ public class LobbyPlanningContextHandler {
     }
 
     public void AddElementVisuals(ILobbyPlanElement planElement) {
+
         if (planElement.ObjectiveType is not PlanningObjectiveType.None) {
 
             // objective

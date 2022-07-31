@@ -67,25 +67,25 @@ public partial class LobbyPlanningOverview : UserControl {
         // Grab click position
         var clickPos = e.GetPosition(this.PlanningCanvas);
 
-        // invert Y to get it into correct coordinate system
-        var clickPosInv = clickPos with { Y = this.PlanningCanvas.Height - clickPos.Y };
-
         if (this.ContextHandler.RequiresSecond) {
             
             if (this.m_points.Count is 0) {
 
-                this.m_points.Push(clickPosInv);
+                this.m_points.Push(clickPos);
                 var marker = this.CreateSelectedMarker(clickPos);
                 this.m_planningHelper = marker;
                 this.PlanningCanvas.Children.Add(marker.Element);
 
-            } else {
+            } else if (this.m_planningHelper is not null) {
 
                 // Grab element
                 var placeElement = this.m_points.Pop();
 
                 // Place
-                this.ContextHandler.PlaceElement(placeElement, clickPosInv);
+                this.ContextHandler.PlaceElement(this.PlanningCanvas.RenderSize, placeElement, clickPos);
+
+                // Remove it
+                this.PlanningCanvas.Children.Remove(this.m_planningHelper.Element);
 
                 // Clear
                 this.m_points.Clear();
@@ -96,7 +96,7 @@ public partial class LobbyPlanningOverview : UserControl {
         } else {
             
             // Place the element
-            this.ContextHandler.PlaceElement(clickPosInv);
+            this.ContextHandler.PlaceElement(this.PlanningCanvas.RenderSize, clickPos);
 
         }        
 
