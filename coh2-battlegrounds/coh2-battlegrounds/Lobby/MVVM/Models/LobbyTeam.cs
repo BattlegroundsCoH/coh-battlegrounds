@@ -120,7 +120,7 @@ public class LobbyTeam {
                 if (slots[i].Occupant is not ILobbyMember mem) {
                     continue; // Some werid err
                 }
-                flag1 |= mem.State is LobbyMemberState.Waiting;
+                flag1 |= (mem.State is LobbyMemberState.Waiting or LobbyMemberState.Planning); // Could do something here forcing planning players to press ready
                 if (mem.Company?.IsNone ?? true) {
                     flag2 = false;
                 } else {

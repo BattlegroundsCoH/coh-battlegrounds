@@ -112,10 +112,10 @@ public sealed class OnlineLobbyPlanner : ILobbyPlanningHandle {
         _ => this.m_remote.Call<uint>("CreatePlanningStructure", owner, blueprint, directional ? 1 : 0, origin)
     });
 
-    public ILobbyPlanElement? GetPlanElement(int planElementId) => this.m_remote.Call<ILobbyPlanElement>("GetPlanElement", planElementId);
+    public ILobbyPlanElement? GetPlanElement(int planElementId) => this.m_remote.Call<JsonPlanElement>("GetPlanElement", planElementId);
 
     public ILobbyPlanElement[] GetPlanningElements(byte teamIndex)
-        => this.m_remote.Call<ILobbyPlanElement[]>("GetPlanElements", teamIndex) ?? Array.Empty<ILobbyPlanElement>();
+        => this.m_remote.Call<JsonPlanElement[]>("GetPlanElements", teamIndex) ?? Array.Empty<JsonPlanElement>();
 
     public void RemovePlanElement(int planElementId)
         => this.m_remote.Call("RemovePlanElement", planElementId);

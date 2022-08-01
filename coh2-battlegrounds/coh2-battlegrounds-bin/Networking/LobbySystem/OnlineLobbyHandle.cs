@@ -835,7 +835,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     public LobbyPollResults ConductPoll(string pollType, double pollTime = 3) {
 
         // Conduct poll with expecnded time
-        if (this.m_remote.CallWithTime<ILobbyPoll>("PollInfo", new object[] { pollType }, TimeSpan.FromSeconds(pollTime + 1)) is ILobbyPoll poll) {
+        if (this.m_remote.CallWithTime<JsonLobbyPoll>("PollInfo", new object[] { pollType }, TimeSpan.FromSeconds(pollTime + 1)) is JsonLobbyPoll poll) {
 
             // Count yays
             byte y = (byte)poll.Responses.Aggregate(0, (a, b) => a + (b.Value ? 1 : 0));
