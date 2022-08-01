@@ -93,7 +93,7 @@ public class LobbyPlanningContextHandler {
     public void PickPlaceElement(SquadBlueprint sbp, ushort cid) {
         
         // Bail if units are unavailable
-        if (this.PreplacableUnits.Available > 0) {
+        if (this.PreplacableUnits.Available is 0) {
             return;
         }
 
