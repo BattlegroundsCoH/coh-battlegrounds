@@ -14,6 +14,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Util;
 
@@ -30,6 +31,7 @@ namespace BattlegroundsApp.Lobby.MVVM.Models;
 public record LobbyPlanningOverviewModelInput(LobbyModel Model, LobbyChatSpectatorModel Chat, ILobbyHandle Handle) {
     public Scenario Scenario => this.Model.Scenario ?? throw new Exception("No scenario was set!");
     public ModPackage Package => this.Model.ModPackage;
+    public Gamemode Gamemode => this.Model.Gamemode;
 }
 
 public class LobbyPlanningOverviewModel : ViewModelBase {
@@ -161,7 +163,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         }
 
         // Get gamemode
-        var gamemode = this.m_data.Package.Gamemodes[this.m_data.Model.GamemodeDropdown.Selected];
+        var gamemode = this.m_data.Gamemode;
 
         // Grab defence structures
         var defData = gamemode.PlanningEntities[factionStr];

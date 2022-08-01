@@ -17,6 +17,7 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
@@ -156,6 +157,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     public LobbyTeam Allies { get; }
 
     public LobbyTeam Axis { get; }
+
+    public Gamemode Gamemode { get; set; }
 
     public ObservableCollection<LobbySetting> MapSetting { get; }
 

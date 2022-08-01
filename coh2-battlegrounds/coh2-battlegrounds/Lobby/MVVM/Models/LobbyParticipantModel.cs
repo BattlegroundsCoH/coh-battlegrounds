@@ -14,6 +14,7 @@ using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
+using Battlegrounds.Functional;
 
 using BattlegroundsApp.Lobby.MVVM.Views;
 using BattlegroundsApp.LocalData;
@@ -97,14 +98,18 @@ public class LobbyParticipantModel : LobbyModel {
     }
 
     private void OnScreenChange(string args) {
-        switch (args) {
-            case "planning":
-                this.PlanMatch();
-                break;
-            default:
-                Trace.WriteLine($"Unknown screen change '{args}'", nameof(LobbyParticipantModel));
-                break;
-        }
+
+        Application.Current.Dispatcher.Invoke(() => {
+            switch (args) {
+                case "planning":
+                    this.PlanMatch();
+                    break;
+                default:
+                    Trace.WriteLine($"Unknown screen change '{args}'", nameof(LobbyParticipantModel));
+                    break;
+            }
+        });
+
     }
 
     private void OnMatchBegin() {
@@ -327,30 +332,32 @@ public class LobbyParticipantModel : LobbyModel {
 
     private void OnLobbyChange(LobbySettingsChangedEventArgs e) {
 
-        switch (e.SettingsKey) {
-            case LobbyConstants.SETTING_MAP:
-                this.OnScenarioChange(e.SettingsValue);
-                break;
-            case LobbyConstants.SETTING_GAMEMODE:
-                this.OnGamemodeChange(e.SettingsValue);
-                break;
-            case LobbyConstants.SETTING_GAMEMODEOPTION:
-                this.OnGamemodeOptionChanage(e.SettingsValue);
-                break;
-            case LobbyConstants.SETTING_WEATHER:
-                this.WeatherDropdown.Label = (e.SettingsValue is "1") ? "On" : "Off";
-                break;
-            case LobbyConstants.SETTING_LOGISTICS:
-                this.SupplySystemDropdown.Label = (e.SettingsValue is "1") ? "On" : "Off";
-                break;
-            case LobbyConstants.SETTING_MODPACK:
-                this.OnModPackageChange(e.SettingsValue);
-                break;
-            default:
-                Trace.WriteLine($"Unexpected setting key: {e.SettingsKey}", nameof(LobbyParticipantModel));
-                break;
-        }
+        Application.Current.Dispatcher.Invoke(() => {
 
+            switch (e.SettingsKey) {
+                case LobbyConstants.SETTING_MAP:
+                    this.OnScenarioChange(e.SettingsValue);
+                    break;
+                case LobbyConstants.SETTING_GAMEMODE:
+                    this.OnGamemodeChange(e.SettingsValue);
+                    break;
+                case LobbyConstants.SETTING_GAMEMODEOPTION:
+                    this.OnGamemodeOptionChanage(e.SettingsValue);
+                    break;
+                case LobbyConstants.SETTING_WEATHER:
+                    this.WeatherDropdown.Label = (e.SettingsValue is "1") ? "On" : "Off";
+                    break;
+                case LobbyConstants.SETTING_LOGISTICS:
+                    this.SupplySystemDropdown.Label = (e.SettingsValue is "1") ? "On" : "Off";
+                    break;
+                case LobbyConstants.SETTING_MODPACK:
+                    this.OnModPackageChange(e.SettingsValue);
+                    break;
+                default:
+                    Trace.WriteLine($"Unexpected setting key: {e.SettingsKey}", nameof(LobbyParticipantModel));
+                    break;
+            }
+        });
     }
 
     private void OnScenarioChange(string map) {
@@ -372,17 +379,34 @@ public class LobbyParticipantModel : LobbyModel {
             // Notify
             this.NotifyProperty(nameof(ScenarioPreview));
 
+            this.Scenario = scenario;
+
         });
 
     }
 
-    private void OnGamemodeChange(string gamemode) 
-        => this.GamemodeDropdown.Label = LobbySettingsLookup.GetGamemodeName(gamemode, this.m_package);
+    private void OnGamemodeChange(string gamemode) {
+
+        Application.Current.Dispatcher.Invoke(() => {
+
+            this.GamemodeDropdown.Label = LobbySettingsLookup.GetGamemodeName(gamemode, this.m_package);
+
+            this.Gamemode = ModPackage.Gamemodes.Filter(x => x.ID == gamemode)
+                                                .IfTrue(x => x.Length == 1)
+                                                .ThenDo(x => x[0])
+                                                .OrDefaultTo(() => throw new IndexOutOfRangeException());
+
+        });
+
+    }
 
     private void OnGamemodeOptionChanage(string gamomodeOption) {
 
-        // TODO: Lookup the option and set its string properly
-        this.GamemodeOptionDropdown.Label = gamomodeOption;
+        Application.Current.Dispatcher.Invoke(() => {
+            // TODO: Lookup the option and set its string properly
+            this.GamemodeOptionDropdown.Label = gamomodeOption;
+        });
+          
 
     }
 
