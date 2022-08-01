@@ -24,15 +24,24 @@ function BattlegroundsDefence_InitGamemode()
 		Safezones = {},
 
 		-- Squads locked for AI use
-		LockedSquads = {}
+		LockedSquads = {},
+
+		-- Identifier of teams
+		Defenders = {},
+		Attackers = {},
 
 	}
 
-	-- Define teams
-	__BGDefenceTeams = {
-		Team_GetPlayers(bg_settings.team_first),
-		Team_GetPlayers(bg_settings.team_second)
-	}
+	-- Loop over all players
+	for i = 1, World_GetPlayerCount() do
+		local player = World_GetPlayerAt(i);
+		local team = Player_GetTeam(player);
+		if team ~= bg_settings.team_first then
+			table.insert(DefenceSettingsData.Defenders, player)
+		else
+			table.insert(DefenceSettingsData.Attackers, player)
+		end
+	end
 
 	-- While debugging
 	FOW_RevealAll();
@@ -52,14 +61,14 @@ function BattlegroundsDefence_InitGamemode()
 	Rule_Add(BattlegroundsDefence_CheckTime);
 
 	-- Grant additional resources to the attacking team.
-	for _, p in pairs(__BGDefenceTeams[1]) do
+	for _, p in pairs(DefenceSettingsData.Attackers) do
 		Player_AddResource(p, RT_Manpower, 240);
 		Player_AddResource(p, RT_Munition, 120);
 		Player_AddResource(p, RT_Fuel, 90);
 	end
 
 	-- Limit defending team supply
-	for _, p in pairs(__BGDefenceTeams[2]) do
+	for _, p in pairs(DefenceSettingsData.Defenders) do
 
 		-- Reset --> Too bad if no structures have been preplaced
 		Player_SetResource(p, RT_Manpower, 0);
@@ -103,10 +112,10 @@ end
 function BattlegroundsDefence_InitSectors()
 
 	-- Get first player of the attacking team
-	local attacker = __BGDefenceTeams[1][1]
+	local attacker = DefenceSettingsData.Attackers[1]
 
 	-- Get first player of the defending team
-	local defender = __BGDefenceTeams[2][1]
+	local defender = DefenceSettingsData.Defenders[1]
 
 	-- Grab ignore ebp
 	local ignore_ter = BP_GetEntityBlueprint("142b113740474c82a60b0a428bd553d5:territory_point_invisible_command");
@@ -147,8 +156,8 @@ end
 function BattlegroundsDefence_UpdatePoints()
 
 	-- Get first player of the defending and attacking teams
-	local attacker = __BGDefenceTeams[1][1]
-	local defender = __BGDefenceTeams[2][1]
+	local attacker = DefenceSettingsData.Attackers[1]
+	local defender = DefenceSettingsData.Defenders[1]
 
 	-- Create counts
 	local counts = { 0, 0 }
@@ -180,7 +189,7 @@ function BattlegroundsDefence_UpdatePoints()
 		DefenceSettingsData.DefenderPoints = 0
 
 		-- Set winner to attacking team
-		World_SetTeamWin(Player_GetTeam(__BGDefenceTeams[1][1]))
+		World_SetTeamWin(Player_GetTeam(DefenceSettingsData.Attackers[1]))
 
 	end
 
@@ -218,7 +227,7 @@ function BattlegroundsDefence_CheckTime()
 		Rule_RemoveMe();
 
 		-- Make defenders win
-		World_SetTeamWin(Player_GetTeam(__BGDefenceTeams[2][1]))
+		World_SetTeamWin(Player_GetTeam(DefenceSettingsData.Defenders[1]))
 
 	end
 
@@ -309,7 +318,11 @@ function BattlegroundsDefence_InitDefence()
 end
 
 function BattlegroundsDefence_SolveOwner(team, indexOnTeam)
-	return __BGDefenceTeams[team][indexOnTeam]
+	if team == bg_settings.team_first then
+		return DefenceSettingsData.Attackers[indexOnTeam]
+	else
+		return DefenceSettingsData.Defenders[indexOnTeam]
+	end
 end
 
 function BattlegroundsDefence_IsValidDefencePoint(p)
@@ -385,7 +398,9 @@ function BattlegroundsDefence_SetupSquad(squad, pos, lookat, aisquad)
 	-- Try spawn in garrison if infantry
 	if Squad_IsInfantrySquad(squad) then
 		garrisonId = Util_GarrisonNearbyBuilding(sg_temp, pos, 20, false)
-		Cmd_Garrison(sg_temp, EGroup_FromEntity(garrisonId), true, false, true);
+		if garrisonId ~= nil then
+			Cmd_Garrison(sg_temp, EGroup_FromEntity(garrisonId), true, false, true);
+		end
 	end
 
 	-- If not garrisoned, warp to pos and look at target (if any)
@@ -491,7 +506,7 @@ function BattlegroundsDefence_DelayedStartObjectives()
 end
 
 function BattlegroundsDefence_StartMainObjective()
-	for _, v in pairs(__BGDefenceTeams[1]) do
+	for _, v in pairs(DefenceSettingsData.Attackers) do
 		if Game_GetLocalPlayer() == v then
 			Objective_Start(OBJ_DefenceMain)
 		end
@@ -702,9 +717,8 @@ function BattlegroundsDefence_CheckObjectives()
 end
 
 function BattlegroundsDefence_TriggerDefender(obj, func)
-	for i=1, World_GetPlayerCount() do
-		local p = World_GetPlayerAt(i)
-		if Player_GetTeam(p) == bg_settings.team_second and p == Game_GetLocalPlayer() then
+	for _, player in pairs(DefenceSettingsData.Defenders) do
+		if player == Game_GetLocalPlayer() then
 			func(obj)
 		end
 	end
@@ -740,8 +754,8 @@ function BattlegroundsDefence_CheckCleared(obj, playerid)
 	local eg_temp = EGroup_CreateIfNotFound("eg_temp_chckclear"..playerid);
 
 	-- Grab team
-	local attackers = __BGDefenceTeams[1];
-	local defenders = __BGDefenceTeams[2];
+	local attackers = DefenceSettingsData.Attackers;
+	local defenders = DefenceSettingsData.Defenders;
 
 	-- Grab units
 	Team_GetAllEntitiesNearMarker(defenders, eg_temp, obj.attackpos, 30);
@@ -759,8 +773,8 @@ function BattlegroundsDefence_CheckIsDefended(obj, playerid)
 	local sg_temp_att = SGroup_CreateIfNotFound("sg_temp_chckclear_att"..playerid)
 
 	-- Grab team
-	local attackers = __BGDefenceTeams[1];
-	local defenders = __BGDefenceTeams[2];
+	local attackers = DefenceSettingsData.Attackers;
+	local defenders = DefenceSettingsData.Defenders;
 
 	-- Grab squad counts
 	Team_GetAllSquadsNearMarker(defenders, sg_temp_def, obj.defendpos, 30);
