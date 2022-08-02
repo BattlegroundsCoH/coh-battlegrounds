@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -87,9 +86,13 @@ public partial class LobbyPlanningOverview : UserControl {
                 // Remove it
                 this.PlanningCanvas.Children.Remove(this.m_planningHelper.Element);
 
-                // Clear
+                // Clear points and planner
                 this.m_points.Clear();
                 this.m_planningHelper = null;
+
+                // Clear line helpers
+                this.m_lineHelpers.ForEach(this.PlanningCanvas.Children.Remove);
+                this.m_lineHelpers.Clear();
 
             }
 
@@ -460,8 +463,14 @@ public partial class LobbyPlanningOverview : UserControl {
     }
 
     private void RegisterRemoveEvent(UIElement e, int index) => e.MouseRightButtonUp += (a, b) => {
-        this.ContextHandler.RemoveElement(index);
-        this.PlanningCanvas.Children.Remove((UIElement)a);
+        if (a is FrameworkElement element && element.Tag is HelperElement helper) {
+            for (int i = 0; i < this.PlanningCanvas.Children.Count; i++) {
+                if (this.PlanningCanvas.Children[i] is FrameworkElement fe && fe.Tag is HelperElement otherHelper && helper.ElementId == otherHelper.ElementId) {
+                    this.PlanningCanvas.Children.RemoveAt(i--);
+                }
+            }
+            this.ContextHandler.RemoveElement(index);
+        }
     };
 
 }

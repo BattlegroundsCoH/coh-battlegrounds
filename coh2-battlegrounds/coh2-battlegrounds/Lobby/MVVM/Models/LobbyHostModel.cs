@@ -304,6 +304,9 @@ public class LobbyHostModel : LobbyModel {
         this.Scenario = scen;
         this.NotifyProperty(nameof(Scenario));
 
+        // Update last played
+        BattlegroundsInstance.LastPlayedMap = scen.RelativeFilename;
+
         // Update gamemode
         this.UpdateGamemodeAndOptionsSelection(scen);
 
@@ -447,7 +450,7 @@ public class LobbyHostModel : LobbyModel {
             this.GamemodeDropdown.Items.Clear();
             gamemodes.ForEach(this.GamemodeDropdown.Items.Add);
 
-            // TODO: Set gamemode that was last selected
+            // Set gamemode
             this.GamemodeDropdown.Selected = 0;
 
         }
