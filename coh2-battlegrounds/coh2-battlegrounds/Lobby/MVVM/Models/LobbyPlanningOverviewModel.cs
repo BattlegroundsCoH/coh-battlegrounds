@@ -162,11 +162,8 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
             return;
         }
 
-        // Get gamemode
-        var gamemode = this.m_data.Gamemode;
-
         // Grab defence structures
-        var defData = gamemode.PlanningEntities[factionStr];
+        var defData = this.m_data.Gamemode.PlanningEntities[factionStr];
 
         // Grab if defender
         this.m_isDefending = this.m_planHandle.IsDefender;
@@ -337,9 +334,9 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
     }
 
     private void PlanElementRemoved(int elementId) 
-        => this.m_planningContext.RemoveElementVisuals(elementId);
+        => MainThread(() => this.m_planningContext.RemoveElementVisuals(elementId));
 
     private void PlanElementAdded(ILobbyPlanElement planElement)
-        => this.m_planningContext.AddElementVisuals(planElement);
+        => MainThread(() => this.m_planningContext.AddElementVisuals(planElement));
 
 }

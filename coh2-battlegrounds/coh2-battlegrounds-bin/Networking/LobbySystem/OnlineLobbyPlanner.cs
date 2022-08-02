@@ -100,7 +100,7 @@ public sealed class OnlineLobbyPlanner : ILobbyPlanningHandle {
     }
 
     public int CreatePlanningObjective(ulong owner, PlanningObjectiveType objectiveType, int objectiveOrder, GamePosition objectivePosition)
-        => (int)this.m_remote.Call<uint>("CreatePlanningObjective", owner, (byte)objectiveOrder, objectiveOrder, objectivePosition);
+        => (int)this.m_remote.Call<uint>("CreatePlanningObjective", owner, (byte)objectiveType, objectiveOrder, objectivePosition);
 
     public int CreatePlanningSquad(ulong owner, string blueprint, ushort companyId, GamePosition spawn, GamePosition? lookat = null) => (int)(lookat switch {
         GamePosition look => this.m_remote.Call<uint>("CreatePlanningSquad", owner, blueprint, companyId, spawn, look),

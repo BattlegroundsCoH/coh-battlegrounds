@@ -67,6 +67,7 @@ function BGAI_RegisterAIPlayer(index, player)
     _bg_aiData[index].demand_heavy = 0;
     _bg_aiData[index].demand_support = 0;
     _bg_aiData[index].demand_any = 1;
+    _bg_aiData[index].is_enabled = true;
 
     -- Apply resource modifiers
     _bg_aiData[index].resource_mods = {
@@ -87,6 +88,11 @@ function BGAI_RegisterAIPlayer(index, player)
         Rule_AddInterval(BGAI_UpdateAIPlayers, 5);
     end
 
+end
+
+function BGAI_SetAIPlayerEnabled(player, enabled)
+    local index = BGAI_GetAIPlayerID(player);
+    _bg_aiData[index].is_enabled = enabled;
 end
 
 function BGAI_GetDifficultyFromValue(d)
@@ -136,18 +142,25 @@ function BGAI_UpdateAIPlayers()
     -- Loop over all players
     for index, aiplayer in pairs(_bg_aiData) do
 
-        aiplayer.update_time = aiplayer.update_time - 5;
+        -- If enabled
+        if aiplayer.is_enabled then
 
-        if aiplayer.update_time <= 0 then
+            -- Update update time
+            aiplayer.update_time = aiplayer.update_time - 5;
 
-            -- Evaluate own units
-            BGAI_EvalUnits(index);
+            -- If time to update, invoke updates
+            if aiplayer.update_time <= 0 then
 
-            -- Evaluate production
-            BGAI_EvalProduction(index);
+                -- Evaluate own units
+                BGAI_EvalUnits(index);
 
-            -- Reset update interval
-            aiplayer.update_time = aiplayer.update_interval;
+                -- Evaluate production
+                BGAI_EvalProduction(index);
+
+                -- Reset update interval
+                aiplayer.update_time = aiplayer.update_interval;
+
+            end
 
         end
 

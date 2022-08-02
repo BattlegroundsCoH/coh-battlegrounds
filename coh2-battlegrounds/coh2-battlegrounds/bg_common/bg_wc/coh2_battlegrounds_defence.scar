@@ -30,16 +30,22 @@ function BattlegroundsDefence_InitGamemode()
 		Defenders = {},
 		Attackers = {},
 
+		-- Flag setting if local player is defender
+		IsLocalDefender = false
+
 	}
 
 	-- Loop over all players
 	for i = 1, World_GetPlayerCount() do
 		local player = World_GetPlayerAt(i);
 		local team = Player_GetTeam(player);
-		if team ~= bg_settings.team_first then
-			table.insert(DefenceSettingsData.Defenders, player)
-		else
+		if (team == 0 and bg_settings.roles_swapped == false) or (team ~= 0 and bg_settings.roles_swapped == true) then
 			table.insert(DefenceSettingsData.Attackers, player)
+		else
+			table.insert(DefenceSettingsData.Defenders, player)
+			if player == Game_GetLocalPlayer() then
+				DefenceSettingsData.IsLocalDefender = true
+			end
 		end
 	end
 
@@ -80,16 +86,14 @@ function BattlegroundsDefence_InitGamemode()
 		Modify_PlayerResourceRate(p, RT_Munition, 0.8, MUT_Multiplication);
 		Modify_PlayerResourceRate(p, RT_Fuel, 0.6, MUT_Multiplication);
 
-		-- If AI player create them in the locked squad
+		-- If AI player make them a locked squad group and disable their purchasing behaviour
 		if AI_IsAIPlayer(p) then
 			local pid = Player_GetID(p);
 			DefenceSettingsData.LockedSquads[pid] = SGroup_CreateIfNotFound("sg_deflocksquads" .. pid);
+			BGAI_SetAIPlayerEnabled(p, false);
 		end
 
 	end
-
-	-- Disable AI
-	_bg_AISettings.is_enabled = false;
 
 	-- Re-enable AI buying stuff in 2.5 min.
 	Rule_AddOneShot(BattlegroundsDefence_ReenableAI, 2.5 * 60);
@@ -99,7 +103,11 @@ end
 function BattlegroundsDefence_ReenableAI()
 
 	-- Enable AI purchasing
-	_bg_AISettings.is_enabled = true
+	for _, player in pairs(DefenceSettingsData.Defenders) do
+		if AI_IsAIPlayer(player) then
+			BGAI_SetAIPlayerEnabled(player, true)
+		end
+	end
 
 	-- Allow AI squads to move
 	for pid, group in pairs(DefenceSettingsData.LockedSquads) do
@@ -198,13 +206,17 @@ function BattlegroundsDefence_UpdatePoints()
 	local team2Tickers = DefenceSettingsData.DefenderPoints
 
 	-- Update visually
-	WinWarning_SetTickers(team1Tickers, team2Tickers)
+	BattlegroundsDefence_SetTickers(team1Tickers, team2Tickers)
 	WinWarning_SetCritical(false, 100 * team2Tickers / DefenceSettingsData.MaxPoints <= 20)
 
-	-- Sync
-	Misc_SyncCheckVariable("Team 1 Tickers", team1Tickers)
-	Misc_SyncCheckVariable("Team 2 Tickers", team2Tickers)
+end
 
+function BattlegroundsDefence_SetTickers(attackers, defenders)
+	if DefenceSettingsData.IsLocalDefender then
+		WinWarning_SetTickers(defenders, attackers)
+	else
+		WinWarning_SetTickers(attackers, defenders)
+	end
 end
 
 function BattlegroundsDefence_CheckTime()
@@ -253,10 +265,10 @@ function BattlegroundsDefence_InitDefence()
 
 		-- Grab positions
 		local pos = World_GetNearestInteractablePoint(World_Pos(entity.pos.x, entity.pos.y, entity.pos.z))
-		if entity.lookat ~= nil then
-			entity.lookat = World_GetNearestInteractablePoint(World_Pos(entity.lookat.x, entity.lookat.y, entity.lookat.z))
+		if entity.target ~= nil then
+			entity.target = World_GetNearestInteractablePoint(World_Pos(entity.target.x, entity.target.y, entity.target.z))
 		else
-			entity.lookat = pos;
+			entity.target = pos;
 		end
 
 		-- Spawn if valid
@@ -265,15 +277,15 @@ function BattlegroundsDefence_InitDefence()
 			-- Determine placement mode
 			if entity.mode ~= "line" then
 				local eg_temp = EGroup_CreateIfNotFound("eg_deftmp" .. eid);
-				Util_CreateEntities(owner, eg_temp, ebp, pos, 1, entity.lookat);
+				Util_CreateEntities(owner, eg_temp, ebp, pos, 1, entity.target);
 				if EGroup_Count(eg_temp) == 1 then
 					local e = EGroup_GetSpawnedEntityAt(eg_temp, 1);
 					local bestPos = World_GetSpawnablePosition(pos, e);
 					Entity_SetPosition(e, bestPos);
-					Entity_SetHeading(e, entity.lookat, false)
+					Entity_SetHeading(e, entity.target, false)
 				end
 			else
-				BattlegroundsDefence_SpawnLine(owner, ebp, pos, entity.lookat, entity.width)
+				BattlegroundsDefence_SpawnLine(owner, ebp, pos, entity.target, entity.width)
 			end
 
 		end
@@ -318,7 +330,7 @@ function BattlegroundsDefence_InitDefence()
 end
 
 function BattlegroundsDefence_SolveOwner(team, indexOnTeam)
-	if team == bg_settings.team_first then
+	if team == 0 then
 		return DefenceSettingsData.Attackers[indexOnTeam]
 	else
 		return DefenceSettingsData.Defenders[indexOnTeam]
@@ -344,10 +356,6 @@ function BattlegroundsDefence_CreateEntity(bp, owner, pos, lookat)
 end
 
 function BattlegroundsDefence_SpawnLine(owner, bp, startpos, endpos, width)
-
-	-- Grab positions
-	startpos = World_Pos(startpos.x, startpos.y, startpos.z)
-	endpos = World_Pos(endpos.x, endpos.y, endpos.z)
 
 	-- Grab distance
 	local dist = Util_GetDistance(startpos, endpos)

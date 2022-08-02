@@ -605,11 +605,11 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
         => this.m_remote.Call("UnlockSlot", tid, sid);
 
     /// <summary>
-    /// 
+    /// Send a chat message along a communication channel.
     /// </summary>
-    /// <param name="filter"></param>
-    /// <param name="mid"></param>
-    /// <param name="msg"></param>
+    /// <param name="filter">The message channel. 0 = (Lobby) Global Chat; 1 = Team Chat.</param>
+    /// <param name="mid">The ID of the sender of the message.</param>
+    /// <param name="msg">The contents of the message to send.</param>
     /// <exception cref="IndexOutOfRangeException"></exception>
     public void SendChatMessage(int filter, ulong mid, string msg) => this.m_remote.Call(filter switch {
         0 => "GlobalChat",

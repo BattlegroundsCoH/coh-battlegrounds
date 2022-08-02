@@ -332,6 +332,9 @@ public class LobbyHostModel : LobbyModel {
         // If gamemode has fixed positions, allow us to swap
         this.SwapRoles.Visibility = gamemode.RequireFixed ? Visibility.Visible : Visibility.Collapsed;
 
+        // Set gamemode
+        this.Gamemode = this.ModPackage.Gamemodes[newIndex];
+
         // Hide options
         if (options is null || options.Length is 0) {
 
