@@ -72,7 +72,6 @@ function BG_Init()
     -- Create the UI
     UI_AddSetupFunction(function()
         BG_CreateCallInUI(Game_GetLocalPlayer()); -- Call-in / Deploy UI
-        BG_CreateAndDisplayMultiplayerActionsScreenOverride(Game_GetLocalPlayer()); -- Game actions (Vote on withdraw, Surrender)
         if BGSupply_SetupUI ~= nil then -- Make the supply UI check here
             BGSupply_SetupUI();
         end
@@ -202,80 +201,6 @@ function BG_SaveAndExit()
 
 end
 
-function BG_PlayerSurrender(player)
-
-    -- Get the ref ID
-    local refID = BG_GetPlayerID(player);
-
-    -- Broadcast this player is surrendering.
-    Battlegrounds_LogEvent(nil, BG_EVENT_ONSURRENDER, _bg_playerData[refID].name);
-
-    -- Calculate the surrender count
-    local surrenderCountMax = math.ceil(Player_GetSquadCount(player) * 0.15);
-
-    -- Surrender squads
-    Player_LoopSquadsWhile(player, function(s, i, max)
-        if Squad_IsPinned(s) or Squad_IsSuppressed(s) or Squad_IsUnderAttack(s, 5) then
-            Squad_Surrender(s);
-            surrenderCountMax = surrenderCountMax - 1;
-        else
-            if max - i <= surrenderCountMax then
-                Squad_Surrender(s);
-                surrenderCountMax = surrenderCountMax - 1;
-            end
-        end
-    end,
-    function()
-        return surrenderCountMax > 0;
-    end);
-
-    -- If local player, we display game-over screen
-    if player == Game_GetLocalPlayer() then
-        BG_CreateAndDisplayGameOverScreenOverride(Game_GetLocalPlayer(), BG_SaveAndExit);
-    end
-
-end
-
-function BG_WithdrawVoteSequence(playerTrigger)
-
-    if (World_GetPlayerCount() == 2) then
-        BG_ShowYesNoDialog(LOC("Confirm Action"), LOC("Are you sure you'd like to withdraw from the battle?"), LOC("Yes"), LOC("Withdraw from battle."), function(t)
-            BG_TeamWithdraw(playerTrigger);
-        end, LOC("No"), LOC("Cancel withdrawal."), function(t)
-        end);
-        return;
-    end
-
-    -- Get withdrawing team index
-    local withdrawTeamID = Player_GetTeam(playerTrigger);
-
-    -- Set votes
-    _bg_custom.team_voting[withdrawTeamID] = {
-        yes = 1,
-        no = 0,
-    };
-
-    -- Get vote from all players
-    Team_ForEachPlayer(withdrawTeamID, function(Player)
-        if player == Game_GetLocalPlayer() and player ~= playerTrigger then
-            BG_ShowYesNoDialog(LOC("Withdraw from battle?"), LOC("Vote yes or no to withdrawing from battle."), LOC("Yes"), LOC("Vote yes to begin withdrawing from battle."), function(t)
-                --Game_SendMessage(_bg_message_type_team_vote_yes_withdraw, "");
-            end, LOC("No"), LOC("Vote no and stop the team's withdrawal from battle."), function(t)
-                --Game_SendMessage(_bg_message_type_team_vote_no_withdraw, "");
-            end);
-        end
-    end);
-
-end
-
-function BG_TeamWithdraw(player)
-
-    -- The "objective" of the game changes --> The team must withdraw as many units as possible within 2-3 minutes
-
-    -- TODO: Tell other team this team is withdrawing
-
-end
-
 function BG_CollectEndofMatchData()
 
     -- Loop through all the players
@@ -365,8 +290,6 @@ function BG_GameBroadcastMessageReceived(sender, messageType, message)
         UI_TeamEventCue(sender, Util_CreateLocString("** Unit Request **"), Util_CreateLocString("PlayerName has requested '' for deployment."));
     elseif messageType == _bg_message_type_player_cancel_deploy then
         UI_TeamEventCue(sender, Util_CreateLocString("** Unit Cancelled **"), Util_CreateLocString("PlayerName has cancelled the deployment of ''."));
-    elseif messageType == _bg_message_type_player_surrender then
-        BG_PlayerSurrender(sender);
     elseif messageType == _bg_message_type_player_ability then
 
         -- Parse cmd
@@ -387,23 +310,6 @@ function BG_GameBroadcastMessageReceived(sender, messageType, message)
         -- Trigger ability
         BGAE_TriggerAbillityFromStringData(sender, data[1], o, f);
 
-    elseif messageType == _bg_message_type_team_request_withdraw then
-        BG_WithdrawVoteSequence(sender);
-    elseif messageType == _bg_message_type_team_vote_yes_withdraw then
-        _bg_custom.team_voting[t].yes = _bg_custom.team_voting[t].yes + 1
-        local tsize = Team_GetSize(Player_GetTeam(sender));
-        if _bg_custom.team_voting[t].yes >= tsize then
-            BG_TeamWithdraw(sender);
-        elseif _bg_custom.team_voting[t].yes + _bg_custom.team_voting[t].no >= tsize then
-            _bg_custom.team_voting[t] = nil;
-            -- TODO: Tell other team we're withdrawing
-        end
-    elseif messageType == _bg_message_type_team_vote_no_withdraw then
-        _bg_custom.team_voting[t].no = _bg_custom.team_voting[t].no + 1
-        if _bg_custom.team_voting[t].yes + _bg_custom.team_voting[t].no >= tsize then
-            _bg_custom.team_voting[t] = nil;
-            -- TODO: Tell other team we're not withdrawing
-        end
     end
 end
 

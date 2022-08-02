@@ -49,9 +49,6 @@ function BattlegroundsDefence_InitGamemode()
 		end
 	end
 
-	-- While debugging
-	FOW_RevealAll();
-
 	-- Init sectors
 	BattlegroundsDefence_InitSectors()
 
@@ -419,6 +416,8 @@ function BattlegroundsDefence_SetupSquad(squad, pos, lookat, aisquad)
 			if Squad_GetSyncWeapon(squad) ~= nil then
 				Cmd_InstantSetupTeamWeapon(sg_temp)
 			end
+		else
+			Cmd_Stop(sg_temp); -- Stop it from doing anything else
 		end
 	end
 
@@ -447,7 +446,7 @@ BG_OT_DEFEND = 2 -- Defend position (hold for 3 minutes)
 BG_OT_SUPPORT = 3 --  Support position (provide support for another player for 3 minutes)
 
 function BattlegroundsDefence_InitObjectives()
-	
+
 	-- Bail if no objectives are defined
 	if #bg_plandata.objectives == 0 then
 		return
@@ -472,7 +471,7 @@ function BattlegroundsDefence_InitObjectives()
 
 	-- Loop over all objectives and queue
 	for _, v in pairs(bg_plandata.objectives) do
-		
+
 		-- Grab owner
 		local owner = BattlegroundsDefence_SolveOwner(v.team, v.player)
 		local ownerid = Player_GetID(owner)
