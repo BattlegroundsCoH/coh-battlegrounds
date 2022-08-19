@@ -179,6 +179,12 @@ public class CompanyBuilder : IBuilder<Company> {
     public int VehicleCount => this.m_target.Units.Count(x => x.Blueprint.Category is SquadCategory.Vehicle);
 
     /// <summary>
+    /// Get if the company currently has auto-reinforcement enabled
+    /// </summary>
+    public bool AutoReinforce =>
+        this.m_actions.FirstOrDefault(x => x is AutoReinforceAction) is AutoReinforceAction a ? a.NewValue : (this.m_companyResult?.AutoReplenish ?? false);
+
+    /// <summary>
     /// New instance of the <see cref="CompanyBuilder"/>.
     /// </summary>
     [Obsolete("Please use specialised static methods when creating a company.")]

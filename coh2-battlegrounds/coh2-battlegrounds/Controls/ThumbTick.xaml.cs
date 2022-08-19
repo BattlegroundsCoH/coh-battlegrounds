@@ -42,7 +42,7 @@ public partial class ThumbTick : UserControl {
         var dur = TimeSpan.Parse("0:0:0.08");
 
         // Grab colours
-        var disabledColour = ((SolidColorBrush)this.FindResource("TickColour")).Color;
+        var disabledColour = (Color)this.FindResource("BackgroundLightGray");
         var enabledColour = (Color)App.Current.FindResource("BackgroundDarkBlue");
 
         // Create animations

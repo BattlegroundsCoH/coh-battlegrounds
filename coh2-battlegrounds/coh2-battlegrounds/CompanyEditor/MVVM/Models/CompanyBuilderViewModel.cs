@@ -116,6 +116,11 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     public int SaveStatus { get; set; } = -1;
 
+    public bool IsCompanyReplacementEnabled {
+        get => this.m_builder?.AutoReinforce ?? false;
+        set => this.m_builder?.SetAutoReinforce(value);
+    }
+
     private CompanyBuilderViewModel(ModGuid guid) {
 
         // Create save

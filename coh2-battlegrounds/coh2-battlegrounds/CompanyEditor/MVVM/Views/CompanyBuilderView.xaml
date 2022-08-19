@@ -446,7 +446,9 @@
                         Grid.Row="0"
                         LocKey="CompanyBuilder_AutoReplace"
                         VerticalAlignment="Center"
-                        Foreground="White">
+                        Foreground="White"
+                        FontSize="14"
+                        FontFamily="Open Sans">
                         <controls:LocLabel.ToolTip>
                             <ToolTip>
                                 <controls:LocLabel
@@ -460,7 +462,8 @@
                     <controls:ThumbTick
                         Grid.Column="2"
                         Grid.Row="0"
-                        HorizontalAlignment="Right"/>
+                        HorizontalAlignment="Right"
+                        IsTicked="{Binding IsCompanyReplacementEnabled}"/>
 
                 </Grid>
                 
