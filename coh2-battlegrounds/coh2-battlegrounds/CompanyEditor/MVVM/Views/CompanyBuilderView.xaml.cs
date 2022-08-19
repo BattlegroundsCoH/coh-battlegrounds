@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media.Animation;
+using System.Windows.Media;
 
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
 
@@ -172,6 +174,54 @@ public partial class CompanyBuilderView : UserControl {
             this.RHS_ScrollBar.Value -= e.Delta * 0.25;
             this.RHS_ScrollBar_Scroll(sender, new(ScrollEventType.ThumbTrack, this.RHS_ScrollBar.Value)); // For some reason this is not triggered when changing the value
         }
+    }
+
+    private void saveButton_Click(object sender, RoutedEventArgs e) {
+
+        // Bail if datacontext is not set
+        if (this.DataContext is null) {
+            return;
+        }
+
+        // Execute
+        this.ViewModel.Save.Click?.Execute(null);
+
+        // Grab status
+        int status = this.ViewModel.SaveStatus;
+
+        // Try grab grid background
+        var bkg = (Grid)this.saveButton.Template.FindName("Gridbackground", this.saveButton);
+        if (bkg is not Grid buttonGrid)
+            return;
+
+        // Set background color
+        buttonGrid.Background = new SolidColorBrush(((SolidColorBrush)App.Current.Resources["BackgroundLightBlueBrush"]).Color);
+
+        // Check
+        if (status is 0) {
+
+            ColorAnimation animation = new ColorAnimation {
+                To = Colors.Red,
+                AutoReverse = true,
+                FillBehavior = FillBehavior.Stop,
+                Duration = new Duration(TimeSpan.FromSeconds(0.125))
+            };
+
+            buttonGrid.Background.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+
+        } else if (status is 1) {
+
+            ColorAnimation animation = new ColorAnimation {
+                To = Colors.Green,
+                AutoReverse = true,
+                FillBehavior = FillBehavior.Stop,
+                Duration = new Duration(TimeSpan.FromSeconds(0.125))
+            };
+
+            buttonGrid.Background.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+
+        }
+
     }
 
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -112,6 +113,8 @@ public class CompanyBuilderViewModel : ViewModelBase {
     public CapacityValue VehicleCapacity { get; }
 
     public IViewModel? ReturnTo { get; set; }
+
+    public int SaveStatus { get; set; } = -1;
 
     private CompanyBuilderViewModel(ModGuid guid) {
 
@@ -236,11 +239,26 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     public void SaveButton() {
 
-        // Commit changes
-        var company = this.Builder.Commit().Result;
+        try {
 
-        // Save
-        PlayerCompanies.SaveCompany(company);
+            // Commit changes
+            var company = this.Builder.Commit().Result;
+
+            // Save
+            PlayerCompanies.SaveCompany(company);
+
+            // Set status
+            this.SaveStatus = 1;
+
+        } catch (Exception e) {
+
+            // Log error
+            Trace.WriteLine(e, nameof(CompanyBrowserViewModel));
+
+            // Set not saved
+            this.SaveStatus = 0;
+
+        }
 
     }
 
