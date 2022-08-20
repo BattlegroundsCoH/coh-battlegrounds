@@ -10,6 +10,7 @@ using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany.Builder;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Content.Companies;
 
 namespace Battlegrounds.Game.DataCompany;
 
@@ -22,8 +23,8 @@ public class CompanyBuilder : IBuilder<Company> {
     // Record detailing the current setup of the company
     // This is very much meant for functional style changes
     public record BuildableCompany(
-        string Name, 
-        CompanyType Type,
+        string Name,
+        FactionCompanyType Type,
         ModGuid ModGuid,
         Faction Faction,
         UnitBuilder[] Units,
@@ -78,16 +79,6 @@ public class CompanyBuilder : IBuilder<Company> {
         };
     }
 
-    public sealed record TypeAction(CompanyType Type) : IEditAction<BuildableCompany> {
-        private CompanyType m_prevType;
-        public BuildableCompany Apply(BuildableCompany target) => target with {
-            Type = this.Type.And(() => this.m_prevType = target.Type)
-        };
-        public BuildableCompany Undo(BuildableCompany target) => target with {
-            Type = this.m_prevType
-        };
-    }
-
     public sealed record ModAction(ModGuid ModGuid) : IEditAction<BuildableCompany> {
         private ModGuid m_modGuid;
         public BuildableCompany Apply(BuildableCompany target) => target with {
@@ -123,7 +114,7 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <summary>
     /// Get the current company type.
     /// </summary>
-    public CompanyType CompanyType => this.m_target.Type;
+    public FactionCompanyType CompanyType => this.m_target.Type;
 
     /// <summary>
     /// Get or set the statistics of the company.
@@ -184,16 +175,6 @@ public class CompanyBuilder : IBuilder<Company> {
     public bool AutoReinforce =>
         this.m_actions.FirstOrDefault(x => x is AutoReinforceAction) is AutoReinforceAction a ? a.NewValue : (this.m_companyResult?.AutoReplenish ?? false);
 
-    /// <summary>
-    /// New instance of the <see cref="CompanyBuilder"/>.
-    /// </summary>
-    [Obsolete("Please use specialised static methods when creating a company.")]
-    public CompanyBuilder() {
-        this.m_companyResult = null;
-        this.m_actions = new();
-        this.m_redoActions = new();
-    }
-
     private CompanyBuilder(BuildableCompany company) {
 
         // Set private fields
@@ -211,8 +192,8 @@ public class CompanyBuilder : IBuilder<Company> {
     /// </summary>
     /// <param name="faction">The <see cref="Faction"/> that the company will belong to.</param>
     /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
-    public virtual CompanyBuilder NewCompany(Faction faction) {
-        this.m_companyResult = new Company(faction);
+    public virtual CompanyBuilder NewCompany(Faction faction, FactionCompanyType companyType) {
+        this.m_companyResult = new Company(faction, companyType);
         return this;
     }
 
@@ -302,14 +283,6 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
     public virtual CompanyBuilder RemoveUnit(UnitBuilder builder)
         => this.ApplyAction(new RemoveUnitAction(builder));
-
-    /// <summary>
-    /// Change the specified <see cref="CompanyType"/> of the <see cref="Company"/>.
-    /// </summary>
-    /// <param name="type">The new <see cref="CompanyType"/> to set.</param>
-    /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
-    public virtual CompanyBuilder ChangeType(CompanyType type)
-        => this.ApplyAction(new TypeAction(type));
 
     /// <summary>
     /// Change the name of the <see cref="Company"/>.
@@ -457,8 +430,7 @@ public class CompanyBuilder : IBuilder<Company> {
     public virtual IBuilder<Company> Commit(object? arg = null) {
 
         // Update company fluff
-        var company = new Company(this.m_target.Faction);
-        company.SetType(this.m_target.Type);
+        var company = new Company(this.m_target.Faction, this.m_target.Type);
         company.SetAvailability(this.AvailabilityType);
         company.SetAppVersion(Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0.0");
         company.Name = this.m_target.Name;
@@ -531,10 +503,10 @@ public class CompanyBuilder : IBuilder<Company> {
     public virtual void EachItem(Action<Blueprint> action) => this.m_target.Items.ForEach(action);
 
     /// <summary>
-    /// 
+    /// Create a <see cref="CompanyBuilder"/> capable of constructing a mutated version of the given <paramref name="company"/>.
     /// </summary>
-    /// <param name="company"></param>
-    /// <returns></returns>
+    /// <param name="company">The company to edit.</param>
+    /// <returns>A <see cref="CompanyBuilder"/> reflecting the current version of the <paramref name="company"/>.</returns>
     public static CompanyBuilder EditCompany(Company company) {
 
         // Grab unit list as unit builders
@@ -554,15 +526,15 @@ public class CompanyBuilder : IBuilder<Company> {
     }
 
     /// <summary>
-    /// 
+    /// Create a new <see cref="Company"/> using a <see cref="CompanyBuilder"/> instance.
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="type"></param>
-    /// <param name="availabilityType"></param>
-    /// <param name="faction"></param>
-    /// <param name="modGuid"></param>
-    /// <returns></returns>
-    public static CompanyBuilder NewCompany(string name, CompanyType type, CompanyAvailabilityType availabilityType, Faction faction, ModGuid modGuid) {
+    /// <param name="name">The name of the company to be created.</param>
+    /// <param name="type">The <see cref="FactionCompanyType"/> of the new company to be created.</param>
+    /// <param name="availabilityType">The availability type of the company.</param>
+    /// <param name="faction">The faction of the company</param>
+    /// <param name="modGuid">The assoociated tuning pack mod guid.</param>
+    /// <returns>A <see cref="CompanyBuilder"/> instance that can construct a new <see cref="Company"/>.</returns>
+    public static CompanyBuilder NewCompany(string name, FactionCompanyType type, CompanyAvailabilityType availabilityType, Faction faction, ModGuid modGuid) {
 
         // return new company builder 
         return new CompanyBuilder(new(name, type, modGuid, faction, Array.Empty<UnitBuilder>(), Array.Empty<Ability>(), Array.Empty<Blueprint>(), false)) {

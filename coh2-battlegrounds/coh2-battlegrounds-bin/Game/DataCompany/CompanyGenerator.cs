@@ -7,6 +7,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Content.Companies;
 
 namespace Battlegrounds.Game.DataCompany;
 
@@ -27,15 +28,15 @@ public static class CompanyGenerator {
     /// <param name="borrowVanilla"></param>
     /// <param name="allowVeterancy"></param>
     /// <returns></returns>
-    public static Company Generate(Faction army, CompanyType type, string tuningGUID, bool borrowVanilla, bool allowVeterancy, bool allowCapturedEquipment) {
+    public static Company Generate(Faction army, ModPackage package, bool allowVeterancy, bool allowCapturedEquipment) {
 
         // Create the company
-        CompanyBuilder builder = CompanyBuilder.NewCompany("Auto-generated Company", type, CompanyAvailabilityType.AnyMode, army, ModGuid.FromGuid(tuningGUID));
+        CompanyBuilder builder = CompanyBuilder.NewCompany("Auto-generated Company", new BasicCompanyType(), CompanyAvailabilityType.AnyMode, army, package.TuningGUID);
 
         // Our selection query
         bool selectQuery(Blueprint x) {
             if (x is SquadBlueprint sbp) {
-                return sbp.Army == army.Name && (borrowVanilla && string.IsNullOrEmpty(sbp.PBGID.Mod)) || sbp.PBGID.Mod.GUID == tuningGUID;
+                return sbp.Army == army.Name && sbp.PBGID.Mod.GUID == package.TuningGUID;
             } else {
                 return false;
             }
@@ -46,13 +47,13 @@ public static class CompanyGenerator {
 
         // Get the max units we can deploy (not representative of standard-human company design!)
         int remaining = Company.MAX_SIZE;
-        int max_tanks = 10 + (type == CompanyType.Armoured ? 6 : 0);
+        int max_tanks = 10;
         int max_vehicles = 4;
         int max_command_units = 1;
-        int max_specialized_infantry = 4 + (type is CompanyType.Infantry or CompanyType.Airborne ? 4 : 0);
-        int max_heavy_tank = 2 + (type == CompanyType.Armoured ? 1 : 0);
-        int max_support = 6 + (type == CompanyType.Engineer ? 2 : 0);
-        int max_transport_use = 4 + ((type is CompanyType.Motorized or CompanyType.Mechanized) ? 5 : 0);
+        int max_specialized_infantry = 4;
+        int max_heavy_tank = 2;
+        int max_support = 6;
+        int max_transport_use = 4;
 
         // While we can add a unit
         while (remaining >= 0) {
@@ -69,7 +70,7 @@ public static class CompanyGenerator {
 
                 if (__random.Next(0, 50) <= 24 && max_transport_use > 0) {
                     transportbp = blueprintPool.Where(x => x.Types.IsTransportVehicle).Random(__random);
-                    deployMethod = (type != CompanyType.Mechanized) ? DeploymentMethod.DeployAndExit : DeploymentMethod.DeployAndStay;
+                    deployMethod = DeploymentMethod.DeployAndExit;
                     max_transport_use--;
                 }
 
@@ -90,7 +91,7 @@ public static class CompanyGenerator {
 
                 if (__random.Next(0, 40) <= 24 && max_transport_use > 0) {
                     transportbp = blueprintPool.Where(x => x.Types.IsTransportVehicle).Random(__random);
-                    deployMethod = (type == CompanyType.Motorized) ? DeploymentMethod.DeployAndExit : DeploymentMethod.DeployAndStay;
+                    deployMethod = DeploymentMethod.DeployAndExit;
                     max_transport_use--;
                 }
 
@@ -186,16 +187,4 @@ public static class CompanyGenerator {
 
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="army"></param>
-    /// <param name="tuningGUID"></param>
-    /// <param name="borrowVanilla"></param>
-    /// <param name="allowVeterancy"></param>
-    /// <returns></returns>
-    public static Company Generate(Faction army, string tuningGUID, bool borrowVanilla, bool allowVeterancy, bool allowCapturedEquipment)
-        => Generate(army, CompanyType.Unspecified, tuningGUID, borrowVanilla, allowVeterancy, allowCapturedEquipment);
-
 }
-

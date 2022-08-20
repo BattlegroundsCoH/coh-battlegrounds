@@ -1,6 +1,9 @@
 ﻿using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+
+using BattlegroundsApp.Utilities.Converters;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,16 +34,17 @@ public partial class CompanyCard : UserControl {
         [Faction.British] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/british.png"))
     };
 
+    // Ragnar thinks code duplication is a good thing, because he doesn't do refactoring ( Greetings from CoDiEx :P )
     private static readonly Dictionary<string, ImageSource> Icons = new() {
-        [nameof(CompanyType.Infantry)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_infantry.png")),
-        [nameof(CompanyType.Armoured)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_armoured.png")),
-        [nameof(CompanyType.Motorized)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_motorized.png")),
-        [nameof(CompanyType.Mechanized)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_mechanized.png")),
-        [nameof(CompanyType.Airborne)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_airborne.png")),
-        [nameof(CompanyType.Artillery)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_artillery.png")),
-        [nameof(CompanyType.TankDestroyer)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_td.png")),
-        [nameof(CompanyType.Engineer)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_engineer.png")),
-        [nameof(CompanyType.Unspecified)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_unspecified.png")),
+        ["ct_infantry"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_infantry.png")),
+        ["ct_armoured"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_armoured.png")),
+        ["ct_motorized"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_motorized.png")),
+        ["ct_mechanized"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_mechanized.png")),
+        ["ct_airborne"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_airborne.png")),
+        ["ct_artillery"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_artillery.png")),
+        ["ct_td"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_td.png")),
+        ["ct_engineer"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_engineer.png")),
+        ["ct_unspecified"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_unspecified.png")),
         [string.Empty] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_unspecified.png"))
     };
 
@@ -58,7 +62,7 @@ public partial class CompanyCard : UserControl {
     }
 
     public CompanyCard() {
-        InitializeComponent();
+        this.InitializeComponent();
         this.TrySetCompanyData();
     }
 
@@ -82,8 +86,8 @@ public partial class CompanyCard : UserControl {
         // Set company name
         companyName.Text = company.Name;
 
-        // Set company type
-        typeIcon.Source = Icons.GetValueOrDefault(company.Type.ToString(), Icons[string.Empty]);
+        // Set company type ( For real... :P  ) 
+        typeIcon.Source = StringToCompanyTypeIconConverter.GetFromType(company.Type); /* Icons.GetValueOrDefault(company.Type.ToString(), Icons[string.Empty]);*/
 
         // Set company data
         winRateValue.Text = company.Statistics.WinRate is 0 ? "N/A" : company.Statistics.WinRate.ToString();

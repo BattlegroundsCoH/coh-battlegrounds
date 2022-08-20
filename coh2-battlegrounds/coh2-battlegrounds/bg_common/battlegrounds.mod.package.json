@@ -374,8 +374,15 @@
       "CanHaveParadropInCompanies": false,
       "CanHaveGliderInCompanies": false,
       "Companies": {
-        "Types": {
-          "sov_rifles": {
+        "Types": [
+          {
+            "Id": "sov_rifles",
+            "Icon": "ct_infantry",
+            "MaxInfantry": 20,
+            "MaxTeamWeapons": 10,
+            "MaxVehicles": 8,
+            "MaxLeaders": 2,
+            "MaxAbilities": 4,
             "Exclude": [
               "is-2_bg"
             ],
@@ -440,7 +447,7 @@
               }
             ]
           }
-        }
+        ]
       }
     },
     {

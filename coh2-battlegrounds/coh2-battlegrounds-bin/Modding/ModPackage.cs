@@ -9,6 +9,7 @@ using Battlegrounds.Game.DataSource;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content;
+using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Modding.Loaders;
 
 namespace Battlegrounds.Modding;
@@ -107,5 +108,10 @@ public class ModPackage {
             //LocaleLanguage.Russian => "russian",
             _ => throw new NotSupportedException()
         });
+
+    public FactionCompanyType? GetCompanyType(string id)
+        => this.FactionSettings.Values.SelectMany(x => x.Companies.Types).FirstOrDefault(x => x.Id == id);
+
+    public FactionCompanyType? GetCompanyType(Faction faction, string id) => this.FactionSettings[faction].Companies.Types?.FirstOrDefault(x => x.Id == id) ?? null;
 
 }

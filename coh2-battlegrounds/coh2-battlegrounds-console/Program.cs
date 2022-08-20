@@ -22,6 +22,7 @@ using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Gfx;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Networking;
 using Battlegrounds.Verification;
 
@@ -625,7 +626,7 @@ class Program {
 
         // Create a dummy company
         CompanyBuilder bld =
-            CompanyBuilder.NewCompany("26th Rifle Division", CompanyType.Infantry, CompanyAvailabilityType.MultiplayerOnly, Faction.Soviet, g);
+            CompanyBuilder.NewCompany("26th Rifle Division", new BasicCompanyType(), CompanyAvailabilityType.MultiplayerOnly, Faction.Soviet, g);
 
         // Grab blueprints
         var conscripts = BlueprintManager.FromBlueprintName<SquadBlueprint>("conscript_squad_bg");
@@ -777,7 +778,7 @@ class Program {
         var g = tuningMod.Guid;
 
         // Create a dummy company
-        CompanyBuilder bld = CompanyBuilder.NewCompany("69th Panzer Kompanie", CompanyType.Mechanized, CompanyAvailabilityType.MultiplayerOnly, Faction.Wehrmacht, g);
+        CompanyBuilder bld = CompanyBuilder.NewCompany("69th Panzer Kompanie", new BasicCompanyType(), CompanyAvailabilityType.MultiplayerOnly, Faction.Wehrmacht, g);
 
         // Grab blueprints
         var pioneers = BlueprintManager.FromBlueprintName<SquadBlueprint>("pioneer_squad_bg");

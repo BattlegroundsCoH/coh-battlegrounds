@@ -254,7 +254,7 @@ public class Session : ISession {
         for (int i = 0; i < fillAICount; i++) {
             byte pIndex = currentIndex++;
             Faction complementary = Faction.GetComplementaryFaction(complementaryFunc(i));
-            Company aiCompany = CompanyGenerator.Generate(complementary, this.TuningMod.Guid.ToString(), false, true, false);
+            Company aiCompany = CompanyGenerator.Generate(complementary, this.TuningMod.Package, true, false);
             aiCompany.Owner = "AIPlayer";
             this.m_participants[pIndex] = new SessionParticipant(aIDifficulty, aiCompany, team, playerTeamIndex++, pIndex);
         }

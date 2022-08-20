@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using Battlegrounds;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
@@ -16,6 +17,7 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Content.Companies;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
@@ -198,7 +200,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.CompanyName = company.Name;
         this.CompanyFaction = company.Army;
         this.CompanyGUID = company.TuningGUID;
-        this.CompanyType = company.Type.ToString();
+        this.CompanyType = BattlegroundsInstance.Localize.GetString(company.Type.Id);
 
         // Load database and display
         this.LoadFactionDatabase();
@@ -209,14 +211,14 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     }
 
-    public CompanyBuilderViewModel(string companyName, Faction faction, CompanyType type, ModGuid modGuid) : this(modGuid) {
+    public CompanyBuilderViewModel(string companyName, Faction faction, FactionCompanyType type, ModGuid modGuid) : this(modGuid) {
 
         // Set properties
         this.m_builder = CompanyBuilder.NewCompany(companyName, type, CompanyAvailabilityType.MultiplayerOnly, faction, modGuid);
         this.CompanyName = companyName;
         this.CompanyFaction = faction;
         this.CompanyGUID = modGuid;
-        this.CompanyType = type.ToString();
+        this.CompanyType = BattlegroundsInstance.Localize.GetString(type.Id);
 
         // Load database and display
         this.LoadFactionDatabase();
@@ -232,13 +234,13 @@ public class CompanyBuilderViewModel : ViewModelBase {
     private void SetCapacityValues() {
 
         // Update unit capacity values
-        this.InfantryCapacity.Capacity = this.Builder.CompanyType.GetMaxInfantry();
-        this.SupportCapacity.Capacity = this.Builder.CompanyType.GetMaxSupportWeapons();
-        this.VehicleCapacity.Capacity = this.Builder.CompanyType.GetMaxVehicles();
+        this.InfantryCapacity.Capacity = this.Builder.CompanyType.MaxInfantry;
+        this.SupportCapacity.Capacity = this.Builder.CompanyType.MaxTeamWeapons;
+        this.VehicleCapacity.Capacity = this.Builder.CompanyType.MaxVehicles;
         this.UnitCapacity.Capacity = Math.Min(Company.MAX_SIZE, this.InfantryCapacity.Capacity + this.SupportCapacity.Capacity + this.VehicleCapacity.Capacity);
 
         // Update ability capacity value
-        this.AbilityCapacity.Capacity = Math.Min(Company.MAX_ABILITY, this.Builder.CompanyType.GetMaxAbilities());
+        this.AbilityCapacity.Capacity = Math.Min(Company.MAX_ABILITY, this.Builder.CompanyType.MaxAbilities);
 
     }
 
@@ -317,13 +319,17 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     private void LoadFactionDatabase() {
 
-        _ = Task.Run(() => {
+        Task.Run(() => {
+
+            // Grab type
+            var type = this.Builder.CompanyType;
 
             // Get available squads
             BlueprintManager.GetCollection<SquadBlueprint>()
                 .FilterByMod(this.CompanyGUID)
-                .Filter(x => x.Army == this.CompanyFaction.ToString())
+                .Filter(x => x.Army == this.CompanyFaction.Name)
                 .Filter(x => !x.Types.IsVehicleCrew)
+                .Filter(x => !type.Exclude.Contains(x.Name))
                 .ForEach(this.m_availableSquads.Add);
 
             // Get available crews

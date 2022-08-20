@@ -124,15 +124,21 @@ public class CompanyBrowserViewModel : ViewModelBase {
         }
 
         // Do modal
-        CreateCompanyDialogViewModel.ShowModal(mControl, (vm, resault) => {
+        CreateCompanyDialogViewModel.ShowModal(mControl, (vm, result) => {
             
             // Check return value
-            if (resault is not ModalDialogResult.Confirm) {
+            if (result is not ModalDialogResult.Confirm) {
+                return;
+            }
+
+            // Check return value
+            if (vm.SelectedType.Type is null) {
+                Trace.WriteLine($"Fatal error: Tried to create new company with no valid type: '{vm.SelectedType.Name}'", nameof(CompanyBrowserViewModel));
                 return;
             }
 
             // Create view model
-            CompanyBuilderViewModel companyBuilder = new CompanyBuilderViewModel(vm.CompanyName, vm.CompanyFaction, vm.CompanyType, modGuid);
+            CompanyBuilderViewModel companyBuilder = new CompanyBuilderViewModel(vm.SelectedName, vm.SelectedFaction, vm.SelectedType.Type, modGuid);
 
             // Display it
             App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, companyBuilder);

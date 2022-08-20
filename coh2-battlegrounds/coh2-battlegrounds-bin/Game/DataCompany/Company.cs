@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Functional;
@@ -10,9 +9,32 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Verification;
 
 namespace Battlegrounds.Game.DataCompany;
+
+/// <summary>
+/// Enum specifying the availability context of a company.
+/// </summary>
+public enum CompanyAvailabilityType {
+
+    /// <summary>
+    /// May only be used in multiplayer (skirmish)
+    /// </summary>
+    MultiplayerOnly,
+
+    /// <summary>
+    /// May only be used in campaigns.
+    /// </summary>
+    CampaignOnly,
+
+    /// <summary>
+    /// May be used in either campaigns or multiplayer.
+    /// </summary>
+    AnyMode,
+
+}
 
 /// <summary>
 /// Represents a Company. Implements <see cref="IChecksumItem"/>.
@@ -43,7 +65,6 @@ public class Company : IChecksumItem {
     private ulong m_checksum;
     private string m_lastEditVersion;
     private ushort m_nextSquadId;
-    private CompanyType m_companyType;
     private CompanyAvailabilityType m_availabilityType;
     private readonly List<Squad> m_squads;
     private readonly List<Blueprint> m_inventory;
@@ -77,7 +98,7 @@ public class Company : IChecksumItem {
     /// Get the <see cref="CompanyType"/> that can be used to describe the <see cref="Company"/> characteristics.
     /// </summary>
     [ChecksumProperty]
-    public CompanyType Type => this.m_companyType;
+    public FactionCompanyType Type { get; init; }
 
     /// <summary>
     /// Get the <see cref="CompanyAvailabilityType"/> that will determine when the company is available.
@@ -158,15 +179,15 @@ public class Company : IChecksumItem {
     /// <summary>
     /// New empty <see cref="Company"/> instance.
     /// </summary>
-    internal Company(Faction faction) {
+    internal Company(Faction faction, FactionCompanyType companyType) {
         this.Army = faction;
+        this.Type = companyType;
         this.Name = "Untitled Company";
         this.m_squads = new List<Squad>();
         this.m_inventory = new List<Blueprint>();
         this.m_modifiers = new List<Modifier>();
         this.m_upgrades = new List<UpgradeBlueprint>();
         this.m_abilities = new List<Ability>();
-        this.m_companyType = CompanyType.Unspecified;
         this.m_companyStatistics = new CompanyStatistics();
         this.m_lastEditVersion = BattlegroundsInstance.BG_VERSION;
     }
@@ -280,8 +301,10 @@ public class Company : IChecksumItem {
     public void CalculateChecksum()
         => this.m_checksum = new Checksum(this).GetCheckksum();
 
-    public void SetType(CompanyType type) => this.m_companyType = type;
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="companyAvailability"></param>
     public void SetAvailability(CompanyAvailabilityType companyAvailability) => this.m_availabilityType = companyAvailability;
 
     /// <summary>

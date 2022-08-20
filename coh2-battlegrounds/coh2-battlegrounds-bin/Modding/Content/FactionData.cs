@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Modding.Content.Companies;
@@ -39,11 +40,11 @@ public readonly struct FactionData {
 
     public readonly struct CompanySettings {
 
-        public Dictionary<string, FactionCompanyType> Types { get; }
+        public FactionCompanyType[] Types { get; }
 
         [JsonConstructor]
-        public CompanySettings(Dictionary<string, FactionCompanyType> Types) {
-            this.Types = Types;
+        public CompanySettings(FactionCompanyType[]? Types) {
+            this.Types = Types ?? Array.Empty<FactionCompanyType>();
         }
 
     }

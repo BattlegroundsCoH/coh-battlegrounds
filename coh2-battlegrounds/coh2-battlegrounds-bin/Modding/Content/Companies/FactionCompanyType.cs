@@ -54,6 +54,20 @@ public class FactionCompanyType {
 
     }
 
+    public string Id { get; init; }
+
+    public string Icon { get; init; }
+
+    public int MaxInfantry { get; init; }
+
+    public int MaxTeamWeapons { get; init; }
+    
+    public int MaxVehicles { get; init; }
+    
+    public int MaxLeaders { get; init; }
+
+    public int MaxAbilities { get; init; }
+
     public string[] Exclude { get; init; }
 
     public string[] DeployTypes { get; init; }
@@ -63,15 +77,22 @@ public class FactionCompanyType {
     public Dictionary<string, Phase> Phases { get; init; }
 
     [JsonConstructor]
-    public FactionCompanyType(string[] Exclude, string[] DeployTypes, 
-        Dictionary<string, TransportOption> DeployBlueprints, Dictionary<string, Phase> Phases) {
-        
+    public FactionCompanyType(string Id, string Icon, 
+        int MaxInfantry, int MaxTeamWeapons, int MaxVehicles, int MaxLeaders, int MaxAbilities, 
+        string[] Exclude, string[] DeployTypes, Dictionary<string, TransportOption> DeployBlueprints, Dictionary<string, Phase> Phases) {
+
         // Set properties
+        this.Id = Id;
+        this.Icon = Icon;
+        this.MaxLeaders = MaxLeaders;
+        this.MaxInfantry = MaxInfantry;
+        this.MaxVehicles = MaxVehicles;
+        this.MaxTeamWeapons = MaxTeamWeapons;
         this.Exclude = Exclude;
         this.DeployTypes = DeployTypes;
         this.DeployBlueprints = DeployBlueprints;
         this.Phases = Phases;
-
+        this.MaxAbilities = MaxAbilities;
     }
 
 }

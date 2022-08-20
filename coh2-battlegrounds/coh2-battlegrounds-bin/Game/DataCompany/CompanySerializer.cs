@@ -16,7 +16,7 @@ using Battlegrounds.Verification;
 namespace Battlegrounds.Game.DataCompany;
 
 /// <summary>
-/// Class for serializing a <see cref="Company"/> to and from json.
+/// Class for serializing a <see cref="Company"/> to and from json. Extends <see cref="JsonConverter{T}"/>.
 /// </summary>
 public class CompanySerializer : JsonConverter<Company> {
 
@@ -55,7 +55,7 @@ public class CompanySerializer : JsonConverter<Company> {
         writer.WriteString(nameof(Company.TuningGUID), value.TuningGUID.GUID);
         writer.WriteString(nameof(Company.AppVersion), value.AppVersion);
         writer.WriteNumber(nameof(Company.Checksum), value.Checksum);
-        writer.WriteString(nameof(Company.Type), value.Type.ToString());
+        writer.WriteString(nameof(Company.Type), value.Type.Id);
         writer.WriteString(nameof(Company.AvailabilityType), value.AvailabilityType.ToString());
 
         // Write statistics
@@ -210,19 +210,35 @@ public class CompanySerializer : JsonConverter<Company> {
                 return new(0, null);
             }
 
+            // Get proper faction
+            var faction = Faction.FromName(army);
+
             // Read mod GUID and BG App version
             var guid = ModGuid.FromGuid(ReadProperty(ref reader, nameof(Company.TuningGUID)));
             var version = ReadProperty(ref reader, nameof(Company.AppVersion));
+
+            // Verify package
+            if (ModManager.GetPackageFromGuid(guid) is not ModPackage companyModPackage) {
+                Trace.WriteLine($"Failed to find mod package for tuning mod '{guid}'.", nameof(CompanySerializer));
+                return new(0, null);
+            }
 
             // Read checksum
             ulong checksum = ReadChecksum(ref reader, nameof(Company.Checksum));
 
             // Read type data
-            var type = Enum.Parse<CompanyType>(ReadProperty(ref reader, nameof(Company.Type)));
+            string typeStr = ReadProperty(ref reader, nameof(Company.Type));
+            var type = companyModPackage.GetCompanyType(faction, typeStr);
             var availability = Enum.Parse<CompanyAvailabilityType>(ReadProperty(ref reader, nameof(Company.AvailabilityType)));
 
+            // Verify type
+            if (type is null) {
+                Trace.WriteLine($"Failed to find company type '{typeStr}' in mod package '{companyModPackage.ID}'.", nameof(CompanySerializer));
+                return new(0, null);
+            }
+
             // Create builder instance
-            CompanyBuilder builder = CompanyBuilder.NewCompany(name, type, availability, Faction.FromName(army), guid);
+            CompanyBuilder builder = CompanyBuilder.NewCompany(name, type, availability, faction, guid);
             if (ReadPropertyThroughSerialisation<CompanyStatistics>(ref reader, nameof(Company.Statistics)) is CompanyStatistics statistics) {
                 builder.Statistics = statistics;
             }
@@ -290,6 +306,7 @@ public class CompanySerializer : JsonConverter<Company> {
         public override void Write(Utf8JsonWriter writer, UnverifiedCompany value, JsonSerializerOptions options) {
             JsonSerializer.Serialize(writer, value.Company, options);
         }
+
     }
 
 }

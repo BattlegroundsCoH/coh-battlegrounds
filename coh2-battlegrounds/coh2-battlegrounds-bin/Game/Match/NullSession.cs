@@ -5,6 +5,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Content.Companies;
 
 namespace Battlegrounds.Game.Match;
 
@@ -49,7 +50,7 @@ public class NullSession : ISession {
     /// <param name="steamID">The Steam ID of the player.</param>
     /// <param name="builder">The builder function</param>
     public void CreateCompany(ulong steamID, Faction army, string companyName, Func<CompanyBuilder, CompanyBuilder> builder) {
-        CompanyBuilder bld = CompanyBuilder.NewCompany(companyName, CompanyType.Unspecified, CompanyAvailabilityType.AnyMode, army, ModGuid.FromGuid(""));
+        CompanyBuilder bld = CompanyBuilder.NewCompany(companyName, new BasicCompanyType(), CompanyAvailabilityType.AnyMode, army, ModGuid.FromGuid(""));
         this.m_dummyCompanies[steamID] = bld.Commit().Result;
     }
 
