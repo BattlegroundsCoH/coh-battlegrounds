@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
+using Battlegrounds.Modding.Content.Companies;
 
 namespace Battlegrounds.Modding.Content;
 
@@ -34,6 +37,17 @@ public readonly struct FactionData {
 
     }
 
+    public readonly struct CompanySettings {
+
+        public Dictionary<string, FactionCompanyType> Types { get; }
+
+        [JsonConstructor]
+        public CompanySettings(Dictionary<string, FactionCompanyType> Types) {
+            this.Types = Types;
+        }
+
+    }
+
     public string Faction { get; }
 
     public Driver[] Drivers { get; }
@@ -50,11 +64,14 @@ public readonly struct FactionData {
 
     public bool CanHaveGliderInCompanies { get; }
 
+    public CompanySettings Companies { get; }
+
     [JsonConstructor]
     public FactionData(string Faction, 
         Driver[] Drivers, 
         FactionAbility[] Abilities, 
-        UnitAbility[] UnitAbilities, string[] Transports, string[] TowTransports, bool CanHaveParadropInCompanies, bool CanHaveGliderInCompanies) {
+        UnitAbility[] UnitAbilities, string[] Transports, string[] TowTransports, bool CanHaveParadropInCompanies, bool CanHaveGliderInCompanies,
+        CompanySettings Companies) {
         
         // Set fields
         this.Faction = Faction;
@@ -65,6 +82,7 @@ public readonly struct FactionData {
         this.TowTransports = TowTransports;
         this.CanHaveGliderInCompanies = CanHaveGliderInCompanies;
         this.CanHaveParadropInCompanies = CanHaveParadropInCompanies;
+        this.Companies = Companies;
 
     }
 
