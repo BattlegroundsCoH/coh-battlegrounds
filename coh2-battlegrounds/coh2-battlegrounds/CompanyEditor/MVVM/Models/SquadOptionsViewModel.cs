@@ -20,17 +20,17 @@ using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
-public class SquadOptionsViewModel {
+public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     public record AbilityButton(AbilityBlueprint Abp) {
-        public ImageSource Icon => App.ResourceHandler.GetIcon("ability_icons", this.Abp.UI.Icon);
+        public ImageSource? Icon => App.ResourceHandler.GetIcon("ability_icons", this.Abp.UI.Icon);
         public string Title => GameLocale.GetString(this.Abp.UI.ScreenName);
         public string Desc => GameLocale.GetString(this.Abp.UI.LongDescription);
         public CostExtension Cost => this.Abp.Cost;
     }
 
     public record UpgradeButton(UpgradeBlueprint Ubp, bool IsApplied, bool IsAvailable, EventCommand Clicked) {
-        public ImageSource Icon => App.ResourceHandler.GetIcon("upgrade_icons", this.Ubp.UI.Icon);
+        public ImageSource? Icon => App.ResourceHandler.GetIcon("upgrade_icons", this.Ubp.UI.Icon);
         public string Title => GameLocale.GetString(this.Ubp.UI.ScreenName);
         public string Desc => GameLocale.GetString(this.Ubp.UI.LongDescription);
         public CostExtension Cost => this.Ubp.Cost;
@@ -40,7 +40,7 @@ public class SquadOptionsViewModel {
         public bool IsActivePhase => this.IsActive();
         public bool IsPickable { get; set; }
         public event PropertyChangedEventHandler? PropertyChanged;
-        public ImageSource Icon => this.Phase switch {
+        public ImageSource? Icon => this.Phase switch {
             DeploymentPhase.PhaseInitial => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_01"),
             DeploymentPhase.PhaseA => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_02"),
             DeploymentPhase.PhaseB => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_03"),
@@ -72,7 +72,7 @@ public class SquadOptionsViewModel {
         public bool IsActiveMethod => this.IsActive();
         public bool IsTransportOptionsVisible => this.IsActiveMethod && this.Method is not DeploymentMethod.None;
         public event PropertyChangedEventHandler? PropertyChanged;
-        public ImageSource Icon => this.Method switch {
+        public ImageSource? Icon => this.Method switch {
             DeploymentMethod.None => App.ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_none"),
             DeploymentMethod.DeployAndExit => App.ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_drop_exit"),
             DeploymentMethod.DeployAndStay => App.ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_drop_stay"),
@@ -99,7 +99,7 @@ public class SquadOptionsViewModel {
     public record DeployUnitButton(SquadBlueprint Blueprint, Func<bool> IsActive, Func<CostExtension, CostExtension> CostEval, EventCommand Clicked) : INotifyPropertyChanged {
         public bool IsActiveMethod => this.IsActive();
         public event PropertyChangedEventHandler? PropertyChanged;
-        public ImageSource Icon => App.ResourceHandler.GetIcon("unit_icons", this.Blueprint.UI.Icon);
+        public ImageSource? Icon => App.ResourceHandler.GetIcon("unit_icons", this.Blueprint.UI.Icon);
         public string Title => GameLocale.GetString(this.Blueprint.UI.ScreenName);
         public string Desc => GameLocale.GetString(this.Blueprint.UI.LongDescription);
         public CostExtension Cost => this.CostEval(this.Blueprint.Cost);
@@ -115,6 +115,8 @@ public class SquadOptionsViewModel {
     public SquadSlotViewModel TriggerModel { get; }
 
     public string UnitName => GameLocale.GetString(this.BuilderInstance.GetName());
+
+    public string UnitRawName => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ScreenName);
 
     public string UnitDesc => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.LongDescription);
 
@@ -144,7 +146,7 @@ public class SquadOptionsViewModel {
 
     public CostExtension Cost => this.BuilderInstance.GetCost();
 
-    public Visibility NameButtonVisibility => Visibility.Collapsed; /* this.BuilderInstance.Rank >= 3 ? Visibility.Visible : Visibility.Collapsed; */ // TODO: Beta version
+    public Visibility NameButtonVisibility => UnitBuilder.AllowCustomName(this.BuilderInstance) ? Visibility.Visible : Visibility.Collapsed;
 
     public ProgressValue Experience => new ProgressValue(this.BuilderInstance.Experience, this.BuilderInstance.Blueprint.Veterancy.MaxExperience);
 
@@ -213,6 +215,8 @@ public class SquadOptionsViewModel {
             .ForEach(this.DeployUnits.Add);
 
     }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     private CostExtension CalculateUnitCost(CostExtension transport)
         => transport * Squad.GetDeployMethodTransportCostModifier(this.BuilderInstance.DeployMethod);
@@ -357,6 +361,13 @@ public class SquadOptionsViewModel {
     public void CloseModal() {
         this.OnClose();
         App.ViewManager.GetRightsideModalControl()?.CloseModal();
+    }
+
+    public void SetCustomName(string text)
+        => this.BuilderInstance.SetCustomName(text);
+
+    internal void RefreshName() {
+        this.PropertyChanged?.Invoke(this, new(nameof(this.UnitName)));
     }
 
 }

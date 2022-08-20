@@ -688,11 +688,12 @@
                                           VerticalAlignment="Center" />
 
                         <Label Margin="05,0,0,0" 
-                                   x:Name="WaterMarkLabel" 
-                                   Content="{TemplateBinding Tag}" 
-                                   VerticalAlignment="Center"
-                                   Visibility="Collapsed" 
-                                   Foreground="Gray"/>
+                               x:Name="WaterMarkLabel" 
+                               Content="{TemplateBinding Tag}" 
+                               VerticalAlignment="Center"
+                               Visibility="Collapsed" 
+                               Foreground="Gray"
+                               FontStyle="Italic"/>
 
                     </Grid>
                     <ControlTemplate.Triggers>

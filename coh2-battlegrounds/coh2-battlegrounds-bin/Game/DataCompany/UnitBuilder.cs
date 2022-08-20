@@ -608,6 +608,13 @@ public class UnitBuilder : IBuilder<Squad> {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sbp"></param>
+    /// <param name="modGuid"></param>
+    /// <returns></returns>
+    /// <exception cref="ObjectNotFoundException"></exception>
     public static UnitBuilder NewUnit(string sbp, ModGuid modGuid) {
         var sbp_val = BlueprintManager.GetCollection<SquadBlueprint>()
             .FilterByMod(modGuid).FirstOrDefault(x => x.Name == sbp);
@@ -618,15 +625,31 @@ public class UnitBuilder : IBuilder<Squad> {
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sbp"></param>
+    /// <returns></returns>
+    /// <exception cref="ObjectNotFoundException"></exception>
     public static UnitBuilder NewUnit(SquadBlueprint sbp)
         => new(new BuildableSquad(0, 0.0f, false, string.Empty, sbp, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, 
-            sbp.HasCrew ? NewCrew(sbp.GetCrewBlueprint()) : null,
+            sbp.HasCrew ? NewCrew(sbp.GetCrewBlueprint() ?? throw new ObjectNotFoundException($"Crew blueprint not found for blueprint '{sbp}'.")) : null,
             Array.Empty<UpgradeBlueprint>(), Array.Empty<SlotItemBlueprint>(), Array.Empty<Modifier>()));
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sbp"></param>
+    /// <returns></returns>
     public static UnitBuilder NewCrew(SquadBlueprint sbp)
         => new(new BuildableSquad(0, 0.0f, true, string.Empty, sbp, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, null,
             Array.Empty<UpgradeBlueprint>(), Array.Empty<SlotItemBlueprint>(), Array.Empty<Modifier>()));
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="squad"></param>
+    /// <returns></returns>
     public static UnitBuilder EditUnit(Squad squad) {
 
         // Grab elements
@@ -647,5 +670,23 @@ public class UnitBuilder : IBuilder<Squad> {
 
     }
 
-}
+    /// <summary>
+    /// Checks if the given <see cref="UnitBuilder"/> instance allows for custom naming.
+    /// </summary>
+    /// <param name="builder">The builder instance to check.</param>
+    /// <returns>If custom name is allowed, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+    public static bool AllowCustomName(UnitBuilder builder) {
 
+        // Bail if not vet
+        if (builder.Rank < 3)
+            return false;
+
+        // Grab typelist
+        var ts = builder.Blueprint.Types;
+
+        // Return ok if of type
+        return ts.IsSniper || ts.IsSpecialInfantry || ts.IsVehicle;
+
+    }
+
+}
