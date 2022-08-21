@@ -198,24 +198,6 @@ public class CompanyBuilder : IBuilder<Company> {
     }
 
     /// <summary>
-    /// Clones an existing <see cref="Company"/> instance using a <see cref="CompanyTemplate"/> to clone.
-    /// </summary>
-    /// <remarks>
-    /// Company progression is lost when using this method.
-    /// </remarks>
-    /// <param name="company">The company to clone.</param>
-    /// <param name="newName">The new name of the company.</param>
-    /// <param name="companyAvailability">The <see cref="CompanyAvailabilityType"/> new availability type</param>
-    /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
-    [Obsolete("Please use the static method for cloning a company.")]
-    public CompanyBuilder CloneCompany(Company company, string newName, CompanyAvailabilityType companyAvailability) {
-        var template = CompanyTemplate.FromCompany(company);
-        this.m_companyResult = CompanyTemplate.FromTemplate(template);
-        this.AvailabilityType = companyAvailability;
-        return this;
-    }
-
-    /// <summary>
     /// Add a unit to the <see cref="Company"/> using a <see cref="UnitBuilder"/>.
     /// </summary>
     /// <param name="blueprint">The squad blueprint the new unit will have</param>
@@ -236,12 +218,12 @@ public class CompanyBuilder : IBuilder<Company> {
     public virtual void AddAndCommitUnit(UnitBuilder builder) {
 
         // If null, throw error
-        if (builder == null) {
+        if (builder is null) {
             throw new ArgumentNullException(nameof(builder), "The given unit builder may not be null");
         }
 
         // If null, throw error
-        if (this.m_companyResult == null) {
+        if (this.m_companyResult is null) {
             throw new ArgumentNullException("CompanyTarget", "Cannot add unit to a company that has not been created.");
         }
 
@@ -291,15 +273,6 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
     public virtual CompanyBuilder ChangeName(string name)
         => this.ApplyAction(new RenameAction(name));
-
-    /// <summary>
-    /// Change the user of the company (Possibly obsolete - you may ignore it).
-    /// </summary>
-    /// <param name="name"></param>
-    [Obsolete("Please remove any call to this method")]
-    public virtual CompanyBuilder ChangeUser(string name) {
-        return this;
-    }
 
     /// <summary>
     /// Change the associated <see cref="Guid"/> of the <see cref="Company"/>. (This will decide from where the blueprints can be drawn from).

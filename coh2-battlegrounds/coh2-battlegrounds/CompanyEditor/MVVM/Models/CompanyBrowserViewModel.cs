@@ -1,12 +1,12 @@
 ﻿using Battlegrounds.Game.DataCompany;
-using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
-using Battlegrounds.Modding;
+
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Utilities;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
@@ -115,9 +116,6 @@ public class CompanyBrowserViewModel : ViewModelBase {
 
     public void CreateButton() {
 
-        // Grab mod GUID (TODO: Allow user to pick in modal dialog)
-        ModGuid modGuid = ModManager.GetPackage("mod_bg")?.TuningGUID ?? throw new Exception("Failed to find tuning GUID for mod package 'mod_bg'");
-
         // Null check
         if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
             return;
@@ -138,7 +136,7 @@ public class CompanyBrowserViewModel : ViewModelBase {
             }
 
             // Create view model
-            CompanyBuilderViewModel companyBuilder = new CompanyBuilderViewModel(vm.SelectedName, vm.SelectedFaction, vm.SelectedType.Type, modGuid);
+            CompanyBuilderViewModel companyBuilder = new CompanyBuilderViewModel(vm.SelectedName, vm.SelectedFaction, vm.SelectedType.Type, vm.Package.TuningGUID);
 
             // Display it
             App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, companyBuilder);
@@ -149,36 +147,40 @@ public class CompanyBrowserViewModel : ViewModelBase {
 
     public void EditButton() {
 
+        // Make sure there's a company to edit
         if (this.SelectedCompany is null) {
             return;
         }
 
-        CompanyBuilderViewModel companyBuilder = new CompanyBuilderViewModel(SelectedCompany);
-
-        App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, companyBuilder);
+        // Goto edit view
+        App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, new CompanyBuilderViewModel(SelectedCompany));
 
     }
 
-    // TODO: CompanyTemplate.cs is broken
     public void RenameButton() {
 
         // Safeguard
         if (this.SelectedCompany is null)
             return;
 
-        //if (RenameCopyDialogViewModel.ShowRenameDialog(new LocaleKey("CompanyView_RenameCopyDialog_Rename_Title"), out string companyName)
-        //    is RenameCopyDialogResult.Rename) {
+        // Null check
+        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+            return;
+        }
 
-        //    // Delete old company
-        //    PlayerCompanies.DeleteCompany(this.SelectedCompany);
+        // Do rename modal
+        RenameDialogViewModel.ShowModal(mControl, "Rename Company", x => {
 
-        //    // Save new company
-        //    PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(companyName).Commit().Result);
+            // Delete old company
+            PlayerCompanies.DeleteCompany(this.SelectedCompany);
 
-        //    // Trigger refresh of company
-        //    UpdateCompanyList();
+            // Save new company
+            PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(x).Commit().Result);
 
-        //}
+            // Trigger refresh of company
+            UpdateCompanyList();
+
+        }, "Rename", this.SelectedCompany.Name);
 
     }
 
@@ -215,27 +217,64 @@ public class CompanyBrowserViewModel : ViewModelBase {
         if (this.SelectedCompany is null)
             return;
 
-        //if (RenameCopyDialogViewModel.ShowCopyDialog(new LocaleKey("CompanyView_RenameCopyDialog_Copy_Title"), out string companyName)
-        //    is RenameCopyDialogResult.Copy) {
+        // Null check
+        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+            return;
+        }
 
-        //    // 'edit' company but immediately commit and save result
-        //    PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(companyName).Commit().Result);
+        // Do rename modal
+        RenameDialogViewModel.ShowModal(mControl, "Copy Company", x => {
 
-        //    UpdateCompanyList();
+            // 'edit' company but immediately commit and save result
+            PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(x).Commit().Result);
 
-        //}
+            // Trigger refresh of company
+            UpdateCompanyList();
+
+        }, "Copy", this.SelectedCompany.Name);
 
     }
 
-    public void ExportButton() { 
-    
-        // TODO
+    public void ExportButton() {
+
+        // Safeguard
+        if (this.SelectedCompany is null)
+            return;
+
+        // Null check
+        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+            return;
+        }
+
+        // Show export
+        ImportExportCompanyDialogViewModel.ShowExport(mControl, "Export Company", CompanyTemplate.FromCompany(this.SelectedCompany).ToString(), this.SelectedCompany.Name);
 
     }
 
-    public void ImportButton() { 
-    
-        // TODO
+    public void ImportButton() {
+
+        // Null check
+        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+            return;
+        }
+
+        // Do import
+        ImportExportCompanyDialogViewModel.ShowImport(mControl, "Import Company", (name, template) => {
+
+            // Create company
+            if (CompanyTemplate.FromTemplate(name, template, out Company? company)) {
+
+                // Save
+                PlayerCompanies.SaveCompany(company);
+
+                // Trigger refresh of company
+                UpdateCompanyList();
+
+            } else {
+                OKDialogViewModel.ShowModal(mControl, (_, _) => { }, "Import Failed", "Failed to create company from the given template string.");
+            }
+
+        });
 
     }
 

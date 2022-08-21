@@ -349,4 +349,13 @@ public static class BlueprintManager {
         }
     }
 
+    /// <summary>
+    /// Retrieve a <typeparamref name="T"/> instance from the blueprint database based on the given <see cref="BlueprintUID"/>.
+    /// </summary>
+    /// <typeparam name="T">The specific blueprint type.</typeparam>
+    /// <param name="pBGID">The blueprint used to identify a blueprint.</param>
+    /// <returns>The blueprint associated with the given id.</returns>
+    public static T FromPPbgid<T>(BlueprintUID pBGID) where T : Blueprint
+        => (T)GetAllBlueprintsOfType(BlueprintTypeFromType<T>())[pBGID];
+
 }

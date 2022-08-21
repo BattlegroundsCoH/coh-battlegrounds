@@ -404,8 +404,6 @@
             },
             "Phases": {
               "PhaseA": {
-                "ActivationTime": 420,
-                "DeployDelay": 1,
                 "ResourceIncomeModifier": {
                   "Manpower": 1,
                   "Munitions": 1,
@@ -413,7 +411,7 @@
                 }
               },
               "PhaseB": {
-                "ActivationTime": 660,
+                "ActivationTime": 420,
                 "DeployDelay": 1,
                 "ResourceIncomeModifier": {
                   "Manpower": 1,
@@ -430,7 +428,7 @@
                 ]
               },
               "PhaseC": {
-                "ActivationTime": 1080,
+                "ActivationTime": 660,
                 "DeployDelay": 1,
                 "ResourceIncomeModifier": {
                   "Manpower": 1,

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 using Battlegrounds.Util;
-using Battlegrounds.Verification;
 
 namespace Battlegrounds.Game.DataCompany;
 
@@ -17,60 +18,27 @@ namespace Battlegrounds.Game.DataCompany;
 /// </summary>
 public sealed class CompanyTemplate {
 
-    private struct CompanyUnit {
-        public ushort PBGID { get; init; }
-        public ushort TPBGID { get; init; }
-        public byte DMODE { get; init; }
-        public byte PHASE { get; init; }
-        public bool FILLED { get; init; } // If there's any relevant data
-        public override string ToString() => FILLED ? $"[{this.PBGID}, {this.TPBGID} | {this.DMODE}, {this.PHASE}]" : "NONE";
-        public string Collapse() => $"{this.PBGID}?{this.TPBGID}?{this.DMODE}?{this.PHASE}";
-    }
+    private record CompanyUnit(ulong PBGID, ulong TPBGID, byte DMODE, int AMOUNT);
 
-    private CompanyUnit[] m_units;
-    private string m_guid;
-    private string m_name;
-    private string m_army;
-    private string m_checksum;
-
-    /// <summary>
-    /// Get the company name set by this template.
-    /// </summary>
-    public string TemplateName => this.m_name;
+    private readonly CompanyUnit[][] m_units;
+    private readonly string m_guid;
+    private readonly string m_army;
+    private readonly string m_type;
 
     /// <summary>
     /// Get the company army set by this template
     /// </summary>
     public string TemplateArmy => this.m_army;
 
-    /// <summary>
-    /// Get the amount of actual units in this template.
-    /// </summary>
-    public int TemplateUnitCount => this.m_units.Count(x => x.FILLED);
-
-    private CompanyTemplate() {
-        this.m_units = new CompanyUnit[Company.MAX_SIZE];
-        this.m_checksum = string.Empty;
+    private CompanyTemplate(string guid, string army, string companytype)
+        : this(guid, army, companytype, new CompanyUnit[4][]){
     }
 
-    public string GetChecksum() => this.ToString().Aggregate((uint)0, (a, b) => a + b + (b % (a + 1))).ToString("X8");
-
-    public bool VerifyChecksum() {
-
-        // Backup and reset checksum
-        string checksum = this.m_checksum;
-        this.m_checksum = string.Empty;
-
-        // Calculate checksum
-        string newChecksum = this.GetChecksum();
-        bool result = newChecksum.CompareTo(checksum) == 0;
-
-        // Restore checksum
-        this.m_checksum = checksum;
-
-        // Return result
-        return result;
-
+    private CompanyTemplate(string guid, string army, string companytype, CompanyUnit[][] units) {
+        this.m_army = army;
+        this.m_type = companytype;
+        this.m_guid = guid;
+        this.m_units = units;
     }
 
     /// <summary>
@@ -80,27 +48,25 @@ public sealed class CompanyTemplate {
     public override string ToString() {
 
         // Create string builder and encode basic information
-        StringBuilder sb = new StringBuilder();
-        sb.Append($"{this.m_guid}{EncodeArmy(this.m_army)}{this.m_name.Length:X}-{this.m_name.Replace(' ', '@')}-");
+        StringBuilder sb = new();
+        sb.Append($"{this.m_guid}{EncodeArmy(this.m_army)}");
 
         // Get valid non-zero chunks
-        sb.Append(StringCompression.CompressString($"{string.Join('-', this.m_units.Where(x => x.FILLED).Select(x => x.Collapse()))}<{this.m_checksum}>"));
+        StringBuilder subBuilder = new();
+        subBuilder.Append(this.m_type);
+        for (int i = 0; i < 4; i++) {
+            subBuilder.Append('[');
+            subBuilder.Append(string.Join('-', this.m_units[i].Map(UnitToString)));
+            subBuilder.Append(']');
+        }
 
         // Return in string
-        return sb.ToString();
+        return sb.Append(StringCompression.CompressString(subBuilder.ToString())).ToString();
 
     }
 
-    public string ToTemplateString() {
-
-        // Get the checksum
-        this.m_checksum = string.Empty;
-        this.m_checksum = GetChecksum();
-
-        // Return template with checksum
-        return this.ToString();
-
-    }
+    private string UnitToString(CompanyUnit unit)
+        => $"{unit.PBGID:X}?{unit.TPBGID:X}?{unit.DMODE}?{unit.AMOUNT:X}";
 
     /// <summary>
     /// Create a <see cref="CompanyTemplate"/> from a <see cref="Company"/> instance. Certain settings are not saved from the <see cref="Company"/>.
@@ -110,26 +76,38 @@ public sealed class CompanyTemplate {
     public static CompanyTemplate FromCompany(Company company) {
 
         // Create template with base params
-        CompanyTemplate template = new CompanyTemplate {
-            m_army = company.Army.Name,
-            m_guid = company.TuningGUID,
-            m_name = company.Name,
+        CompanyTemplate template = new CompanyTemplate(company.TuningGUID, company.Army.Name, company.Type.Id);
+
+        // Define container
+        Dictionary<DeploymentPhase, Dictionary<CompanyUnit, int>> templateSetup = new() {
+            [DeploymentPhase.PhaseInitial] = new(),
+            [DeploymentPhase.PhaseA] = new(),
+            [DeploymentPhase.PhaseB] = new(),
+            [DeploymentPhase.PhaseC] = new(),
         };
 
-        // Get unit enumerator and add all units (in a basic format).
-        var unitEnumerator = company.Units.GetEnumerator() as IEnumerator<Squad>;
-        for (int i = 0; i < Company.MAX_SIZE; i++) {
-            if (unitEnumerator.MoveNext()) {
-                template.m_units[i] = new CompanyUnit() {
-                    FILLED = true,
-                    PBGID = unitEnumerator.Current.Blueprint.ModPBGID,
-                    TPBGID = (unitEnumerator.Current.SupportBlueprint is not null) ? unitEnumerator.Current.SupportBlueprint.ModPBGID : BlueprintManager.InvalidLocalBlueprint,
-                    DMODE = (byte)unitEnumerator.Current.DeploymentMethod,
-                    PHASE = (byte)unitEnumerator.Current.DeploymentPhase,
-                };
+        // Loop over units and put them into their respective phases
+        for (int i = 0; i < company.Units.Length; i++) {
+
+            // Create unit
+            var unit = new CompanyUnit(
+                company.Units[i].Blueprint.PBGID.UniqueIdentifier, 
+                company.Units[i].SupportBlueprint?.PBGID.UniqueIdentifier ?? 0, 
+                (byte)company.Units[i].DeploymentMethod, 0);
+            
+            // Increment or define count
+            if (templateSetup[company.Units[i].DeploymentPhase].ContainsKey(unit)) {
+                templateSetup[company.Units[i].DeploymentPhase][unit]++;
             } else {
-                template.m_units[i] = new CompanyUnit() { FILLED = false };
+                templateSetup[company.Units[i].DeploymentPhase][unit] = 1;
             }
+
+        }
+
+        // Insert
+        for (byte i = 1; i <= 4; i++) {
+            DeploymentPhase phase = (DeploymentPhase)i;
+            template.m_units[i - 1] = templateSetup[phase].Map((k, v) => k with { AMOUNT = v });
         }
 
         // Return template
@@ -150,98 +128,112 @@ public sealed class CompanyTemplate {
     /// <exception cref="ArgumentOutOfRangeException"/>
     public static CompanyTemplate FromString(string tmpString) {
 
-        try {
+        // Get cut position and length for name
+        string decompressed = StringCompression.DecompressString(tmpString[(ModGuid.FIXED_LENGTH + 2)..]);
 
-            // Create template from first parameters of tmpString
-            CompanyTemplate template = new CompanyTemplate {
-                m_guid = tmpString[0..ModGuid.FIXED_LENGTH],
-                m_army = DecodeArmy(tmpString[ModGuid.FIXED_LENGTH]),
-            };
+        // Grab first section
+        int a = decompressed.IndexOf('[');
+        int b = decompressed.IndexOf(']');
 
-            // Get cut position and length for name
-            int cut = tmpString.IndexOf('-');
-            int nameLength = int.Parse(tmpString[(ModGuid.FIXED_LENGTH + 1)..cut], System.Globalization.NumberStyles.HexNumber);
+        // Grab type
+        string typ = decompressed[..a];
 
-            // Get company name
-            int nameEnd = cut + 1 + nameLength;
-            template.m_name = tmpString[(cut + 1)..nameEnd].Replace('@', ' ');
+        // Loop over all phases
+        CompanyUnit[][] units = new CompanyUnit[4][];
+        for (int i = 0; i < 4; i++) {
 
-            // Decompress string
-            tmpString = tmpString[(nameEnd + 1)..];
-            tmpString = StringCompression.DecompressString(tmpString);
+            // Grab decompressed
+            string sub = decompressed[a..b];
 
-            // Get checksum
-            int checksumBegin = tmpString.LastIndexOf('<') + 1;
-            int checksumEnd = tmpString.LastIndexOf('>');
-            template.m_checksum = tmpString[checksumBegin..checksumEnd];
-            tmpString = tmpString[0..(checksumBegin - 1)];
+            // Split individually
+            string[] phaseUnitStrs = sub.Split('-');
+            units[i] = new CompanyUnit[phaseUnitStrs.Length];
 
-            // Get each individual unit
-            string[] units = tmpString.Split('-');
-            for (int i = 0; i < Company.MAX_SIZE; i++) {
-                if (i < units.Length) {
-                    string[] components = units[i].Split('?');
-                    template.m_units[i] = new CompanyUnit() {
-                        FILLED = true,
-                        PBGID = ushort.Parse(components[0]),
-                        TPBGID = ushort.Parse(components[1]),
-                        DMODE = byte.Parse(components[2]),
-                        PHASE = byte.Parse(components[3]),
-                    };
-                } else {
-                    template.m_units[i] = new CompanyUnit() { FILLED = false };
-                }
+            // Parse
+            for (int j = 0; j < units[i].Length; j++) {
+
+                // Split into separate data
+                string[] data = phaseUnitStrs[j].Split('?');
+
+                // Set
+                units[i][j] = new(
+                    ulong.Parse(data[0], NumberStyles.HexNumber), 
+                    ulong.Parse(data[1], NumberStyles.HexNumber), 
+                    byte.Parse(data[2]), 
+                    int.Parse(data[3], NumberStyles.HexNumber));
+
             }
 
-            //// Verify checksum
-            //if (!template.VerifyChecksum()) {
-            //    throw new ChecksumViolationException(template.m_checksum, "0");
-            //}
+            // Update decompress string
+            a = decompressed.IndexOf('[', a + 1);
+            b = decompressed.IndexOf(']', b + 1);
 
-            // Return template
-            return template;
-
-        } catch (Exception e) {
-            throw new FormatException("Template string was of incorrect format", e);
         }
+
+        // Create template and return
+        return new CompanyTemplate(
+            tmpString[0..ModGuid.FIXED_LENGTH],
+            DecodeArmy(tmpString[ModGuid.FIXED_LENGTH]),
+            typ, units);
 
     }
 
     /// <summary>
     /// Convert a <see cref="string"/> representation of a <see cref="CompanyTemplate"/> into a new <see cref="Company"/>.
     /// </summary>
+    /// <param name="templateName">The name of the company to create from the template</param>
     /// <param name="template">The template <see cref="string"/> to generate <see cref="Company"/> instance from.</param>
     /// <returns>A <see cref="Company"/> instance based on the <see cref="CompanyTemplate"/>.</returns>
-    public static Company FromTemplate(string template) => FromTemplate(FromString(template));
+    public static bool FromTemplate(string templateName, string template, [NotNullWhen(true)] out Company? company) 
+        => FromTemplate(templateName, FromString(template), out company);
 
     /// <summary>
     /// Convert a <see cref="CompanyTemplate"/> into a new <see cref="Company"/>.
     /// </summary>
+    /// <param name="templateName">The name of the company to create from the template</param>
     /// <param name="template">The <see cref="CompanyTemplate"/> to generate new <see cref="Company"/> instance from.</param>
     /// <returns>A <see cref="Company"/> instance based on the <see cref="CompanyTemplate"/>.</returns>
-    public static Company FromTemplate(CompanyTemplate template) {
+    public static bool FromTemplate(string templateName, CompanyTemplate template, [NotNullWhen(true)] out Company? company) {
+
+        // Get mod guid
+        var guid = ModGuid.FromGuid(template.m_guid);
+
+        // Get type
+        var typ = ModManager.GetPackageFromGuid(guid)?.GetCompanyType(template.m_type);
+        if (typ is null) {
+            company = null;
+            return false;
+        }
 
         // Create Company Builder
-        //CompanyBuilder builder = new CompanyBuilder()
-           /* .NewCompany(Faction.FromName(template.m_army))
-            .ChangeTuningMod(template.m_guid)
-            .ChangeName(template.m_name)*/;
+        var builder = CompanyBuilder.NewCompany(templateName, typ, CompanyAvailabilityType.AnyMode, Faction.FromName(template.m_army), guid);
 
         // Create Units
         for (int i = 0; i < template.m_units.Length; i++) {
-            /*if (template.m_units[i].FILLED) {
-                UnitBuilder unit = new UnitBuilder()
-                    .SetModGUID(template.m_guid)
-                    .SetBlueprint(template.m_units[i].PBGID)
-                    .SetDeploymentPhase((DeploymentPhase)template.m_units[i].PHASE)
-                    .IfTrue(x => template.m_units[i].TPBGID != BlueprintManager.InvalidLocalBlueprint).Then(x => x.SetTransportBlueprint(template.m_units[i].TPBGID))
-                    .SetDeploymentMethod((DeploymentMethod)template.m_units[i].DMODE);
-                builder.AddAndCommitUnit(unit);
-            }*/
+            for (int j = 0; j < template.m_units[i].Length; j++) {
+                var sbp = BlueprintManager.FromPPbgid<SquadBlueprint>(new BlueprintUID(template.m_units[i][j].PBGID, guid));
+                var tsbp = template.m_units[i][j].TPBGID is 0 ? null : BlueprintManager.FromPPbgid<SquadBlueprint>(new BlueprintUID(template.m_units[i][j].TPBGID, guid));
+                for (int k = 0; k < template.m_units[i][j].AMOUNT; k++) {
+                    
+                    // Create unit with basics
+                    var ub = UnitBuilder.NewUnit(sbp)
+                        .SetDeploymentPhase((DeploymentPhase)(i + 1))
+                        .SetDeploymentMethod((DeploymentMethod)template.m_units[i][j].DMODE);
+
+                    // Add transport if possible
+                    if (tsbp is not null)
+                        ub.SetTransportBlueprint(tsbp);
+                    
+                    // Add unit
+                    builder.AddUnit(ub);
+
+                }
+            }
         }
 
         // Commit changes and get result
-        return null;
+        company = builder.Commit().Result;
+        return true;
 
     }
 
@@ -271,7 +263,4 @@ public sealed class CompanyTemplate {
         }
     }
 
-    public bool VerifyChecksum(string checksum) => throw new NotImplementedException();
-    public void CalculateChecksum() => throw new NotImplementedException();
 }
-

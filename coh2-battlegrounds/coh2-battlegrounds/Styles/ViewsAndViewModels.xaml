@@ -86,6 +86,10 @@
     <DataTemplate DataType="{x:Type dialogModels:OKDialogViewModel}">
         <dialogViews:OKDialogView/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type dialogModels:RenameDialogViewModel}">
+        <dialogViews:RenameDialogView/>
+    </DataTemplate>
     <!-- DIALOGS END -->
 
     <DataTemplate DataType="{x:Type lobbymodels:LobbyChatSpectatorModel}">
