@@ -50,7 +50,7 @@ public class Company : IChecksumItem {
     /// <summary>
     /// The max amount of initially deployed units.
     /// </summary>
-    public const int MAX_INITIAL = 5;
+    public const int DEFAULT_INITIAL = 5;
 
     /// <summary>
     /// The max amount of abilities available to a company.
@@ -244,7 +244,7 @@ public class Company : IChecksumItem {
     /// </summary>
     /// <param name="blueprint"></param>
     public void RemoveInventoryItem(Blueprint blueprint) {
-        if (this.m_inventory.FirstOrDefault(x => x.Name == blueprint.Name) is Blueprint bp) { // TODO: Write blueprint equals method such that it's not based on memory but name
+        if (this.m_inventory.FirstOrDefault(x => x.Equals(blueprint)) is Blueprint bp) {
             this.m_inventory.Remove(bp);
         }
     }

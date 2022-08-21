@@ -384,11 +384,15 @@ public class CompanyBuilder : IBuilder<Company> {
     /// </summary>
     /// <param name="phase">The phase to check if new units can be assiged to.</param>
     /// <returns>If phase has capaciy <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
-    public bool IsPhaseAvailable(DeploymentPhase phase) => (phase, this.CountUnitsInPhase(phase)) switch {
-        (DeploymentPhase.PhaseInitial, int x) => x < Company.MAX_INITIAL,
-        (DeploymentPhase.PhaseA, _) => true,
-        (DeploymentPhase.PhaseB, _) => true,
-        (DeploymentPhase.PhaseC, _) => true,
+    public bool IsPhaseAvailable(DeploymentPhase phase, SquadBlueprint? blueprint = null) => (phase, this.CountUnitsInPhase(phase)) switch {
+        // Check if there's space in initial AND the unit is available in phase A
+        (DeploymentPhase.PhaseInitial, int x) => 
+            x < this.CompanyType.MaxInitialPhase && (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseA)),
+        // Basic check on phases
+        (DeploymentPhase.PhaseA, _) => (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseA)),
+        (DeploymentPhase.PhaseB, _) => (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseB)),
+        (DeploymentPhase.PhaseC, _) => (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseC)),
+        // Default to not available
         _ => false
     };
 
@@ -397,22 +401,13 @@ public class CompanyBuilder : IBuilder<Company> {
     /// </summary>
     /// <param name="isTow">Flag setting whether transport units should be for towing or not.</param>
     /// <returns>Array of blueprints for transport use.</returns>
-    public SquadBlueprint[] GetTransports(bool isTow) {
+    public IList<SquadBlueprint> GetTransports(bool isTow) {
 
-        if (ModManager.GetPackageFromGuid(this.m_target.ModGuid) is ModPackage package) {
+        // Grab list from company type
+        var transports = isTow ? this.CompanyType.GetTowTransports() : this.CompanyType.DeployBlueprints.Map((k, _) => BlueprintManager.FromBlueprintName<SquadBlueprint>(k));
 
-            // Grab faction data
-            var data = package.FactionSettings[this.m_target.Faction];
-
-            // Return based on boolean flag
-            return (isTow ? data.TowTransports : data.Transports).Map(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x));
-
-        } else {
-
-            // Return nothing
-            return Array.Empty<SquadBlueprint>();
-
-        }
+        // Return the transports
+        return transports;
 
     }
 

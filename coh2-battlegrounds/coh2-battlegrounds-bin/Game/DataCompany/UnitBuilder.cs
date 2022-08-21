@@ -512,14 +512,14 @@ public class UnitBuilder : IBuilder<Squad> {
     /// </summary>
     /// <returns></returns>
     public CostExtension GetCost()
-        => Squad.ComputeFullCost(this.Blueprint.Cost, this.Rank, this.Upgrades, this.Transport, this.DeployMethod, this.Phase, this.Blueprint.Category);
+        => Squad.ComputeFullCost(this.Blueprint, this.Rank, this.Upgrades, this.Transport, this.DeployMethod, this.Phase);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="builder"></param>
     /// <returns></returns>
-    public SquadBlueprint[] GetTransportUnits(CompanyBuilder builder)
+    public IList<SquadBlueprint> GetTransportUnits(CompanyBuilder builder)
         => builder.GetTransports(this.Blueprint.Types.IsHeavyArtillery || this.Blueprint.Types.IsAntiTank);
 
     /// <summary>

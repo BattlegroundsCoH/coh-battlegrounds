@@ -18,7 +18,7 @@ public class AvailableItemViewModel : INotifyPropertyChanged {
 
     public string ItemName { get; }
 
-    public ImageSource ItemSymbol { get; }
+    public ImageSource? ItemSymbol { get; }
 
     public CostExtension ItemCost { get; set; }
 

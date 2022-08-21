@@ -578,7 +578,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     private bool CanAddBlueprint(Blueprint bp) {
         if (bp is SquadBlueprint sbp) {
-            return sbp.Category switch {
+            return !this.UnitCapacity.IsAtCapacity && sbp.Category switch {
                 SquadCategory.Infantry => !this.InfantryCapacity.IsAtCapacity,
                 SquadCategory.Support => !this.SupportCapacity.IsAtCapacity,
                 SquadCategory.Vehicle => !this.VehicleCapacity.IsAtCapacity,
@@ -672,9 +672,19 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     private void NewUnit(SquadBlueprint sbp) {
 
+        // Get earliest phase
+        var earliestPhase = this.Builder.CompanyType.GetEarliestPhase(sbp);
+
+        // Determine the initial phase of the unit
+        var basicPhase = this.Builder.IsPhaseAvailable(DeploymentPhase.PhaseInitial) && earliestPhase is DeploymentPhase.PhaseA ?
+            DeploymentPhase.PhaseInitial : earliestPhase;
+
         // Create squad (in initial phase or in phase A)
-        var unitBuilder = UnitBuilder.NewUnit(sbp)
-            .SetDeploymentPhase(this.Builder.IsPhaseAvailable(DeploymentPhase.PhaseInitial) ? DeploymentPhase.PhaseInitial : DeploymentPhase.PhaseA);
+        var unitBuilder = UnitBuilder.NewUnit(sbp).SetDeploymentPhase(basicPhase);
+
+        // If heavy arty add tow
+        if (sbp.Types.IsHeavyArtillery)
+            unitBuilder.SetDeploymentMethod(DeploymentMethod.DeployAndStay).SetTransportBlueprint(this.Builder.CompanyType.GetTowTransports()[0]);
 
         // Add to company
         this.Builder.AddUnit(unitBuilder);

@@ -392,7 +392,14 @@
             ],
             "DeployBlueprints": {
               "zis_6_transport_truck_bg": {
-                "CostModifier": 1
+                "CostModifier": 1,
+                "Tow": true,
+                "TowCostModifier": 1
+              }
+            },
+            "CostModifiers": {
+              "penal_battalion_bg": {
+                "Manpower": 20
               }
             },
             "Phases": {

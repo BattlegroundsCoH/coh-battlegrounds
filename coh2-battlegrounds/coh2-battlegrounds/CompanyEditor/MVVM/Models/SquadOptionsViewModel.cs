@@ -180,21 +180,21 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
         this.RefreshUpgrades();
 
         // Create phase capacity
-        this.PhaseICap = new(Company.MAX_INITIAL, () => this.CompanyBuilder.CountUnitsInPhase(DeploymentPhase.PhaseInitial));
+        this.PhaseICap = new(this.CompanyBuilder.CompanyType.MaxInitialPhase, () => this.CompanyBuilder.CountUnitsInPhase(DeploymentPhase.PhaseInitial));
 
         // Create phase buttons
         this.Phases = new ObservableCollection<PhaseButton>() {
             new PhaseButton(DeploymentPhase.PhaseInitial, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseInitial, this.PhaseICap, new EventCommand<MouseEventArgs>(this.PhaseCommand)) {
-                IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseInitial)
+                IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseInitial, this.BuilderInstance.Blueprint)
             },
             new PhaseButton(DeploymentPhase.PhaseA, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseA, null, new EventCommand<MouseEventArgs>(this.PhaseCommand)){
-                IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseA)
+                IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseA, this.BuilderInstance.Blueprint)
             },
             new PhaseButton(DeploymentPhase.PhaseB, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseB, null, new EventCommand<MouseEventArgs>(this.PhaseCommand)){
-                IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseB)
+                IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseB, this.BuilderInstance.Blueprint)
             },
             new PhaseButton(DeploymentPhase.PhaseC, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseC, null, new EventCommand<MouseEventArgs>(this.PhaseCommand)){
-                IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseC)
+                IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseC, this.BuilderInstance.Blueprint)
             }
         };
 
@@ -207,6 +207,10 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
             new DeployButton(DeploymentMethod.DeployAndExit, () => this.BuilderInstance.DeployMethod == DeploymentMethod.DeployAndExit, dcmd),
             new DeployButton(DeploymentMethod.DeployAndStay, () => this.BuilderInstance.DeployMethod == DeploymentMethod.DeployAndStay, dcmd),
         };
+
+        // If heavy arty remove the none option
+        if (this.BuilderInstance.Blueprint.Types.IsHeavyArtillery)
+            this.DeploySettings.RemoveAt(0);
 
         // Create deploy unit buttons
         this.DeployUnits = new();
@@ -261,7 +265,7 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
         // Collect all upgrades
         var upgrades = this.BuilderInstance.Blueprint.Upgrades
-            .Map(x => BlueprintManager.FromBlueprintName<UpgradeBlueprint>(x))
+            .Map(BlueprintManager.FromBlueprintName<UpgradeBlueprint>)
             .Filter(x => x.UI.Icon is not "" && App.ResourceHandler.HasIcon("upgrade_icons", x.UI.Icon))
             .Map(x => new UpgradeButton(x, this.BuilderInstance.Upgrades.Contains(x), !this.UpgradeCapacity.IsAtCapacity, new EventCommand<MouseEventArgs>(this.UpgradeCommand)))
             .ForEach(this.Upgrades.Add);
