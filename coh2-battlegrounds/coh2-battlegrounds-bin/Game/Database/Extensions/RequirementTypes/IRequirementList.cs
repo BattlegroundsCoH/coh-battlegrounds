@@ -1,9 +1,7 @@
-﻿namespace Battlegrounds.Game.Database.Extensions.RequirementTypes {
+﻿namespace Battlegrounds.Game.Database.Extensions.RequirementTypes;
 
-    public interface IRequirementList {
+public interface IRequirementList {
 
-        RequirementExtension[] Requirements { get; }
-
-    }
+    RequirementExtension[] Requirements { get; }
 
 }

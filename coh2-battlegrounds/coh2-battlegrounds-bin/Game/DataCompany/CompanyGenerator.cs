@@ -36,7 +36,7 @@ public static class CompanyGenerator {
         // Our selection query
         bool selectQuery(Blueprint x) {
             if (x is SquadBlueprint sbp) {
-                return sbp.Army == army.Name && sbp.PBGID.Mod.GUID == package.TuningGUID;
+                return sbp.Army == army && sbp.PBGID.Mod.GUID == package.TuningGUID;
             } else {
                 return false;
             }

@@ -4,6 +4,7 @@ using System.IO;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Compiler.Source; 
+
 public static class WinconditionSourceFinder {
 
     private static IWinconditionSource? GetLocalSource() {

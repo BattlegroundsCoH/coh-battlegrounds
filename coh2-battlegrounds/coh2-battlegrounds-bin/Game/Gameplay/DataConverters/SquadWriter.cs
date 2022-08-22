@@ -156,13 +156,13 @@ public static class SquadWriter {
 
             // Get upgrades
             if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() is nameof(Squad.Upgrades) && reader.Read()) {
-                unitBuilder.AddUpgrade(reader.GetStringArray());
+                unitBuilder.AddUpgrade(reader.GetStringArray().NotNull());
                 reader.Read();
             }
 
             // Get upgrades
             if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() is nameof(Squad.SlotItems) && reader.Read()) {
-                unitBuilder.AddSlotItem(reader.GetStringArray());
+                unitBuilder.AddSlotItem(reader.GetStringArray().NotNull());
                 reader.Read();
             }
 
@@ -179,7 +179,7 @@ public static class SquadWriter {
         private static string ReadStringPropertyIfThere(ref Utf8JsonReader reader, string property, string defaultValue) {
             if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() == property) {
                 reader.Read();
-                return reader.ReadProperty();
+                return reader.ReadProperty() ?? string.Empty;
             } else {
                 return defaultValue;
             }
@@ -187,7 +187,7 @@ public static class SquadWriter {
 
         private static string ReadStringProperty(ref Utf8JsonReader reader, string property) {
             if (reader.GetString() == property && reader.Read()) {
-                return reader.ReadProperty();
+                return reader.ReadProperty() ?? string.Empty;
             } else {
                 return string.Empty;
             }

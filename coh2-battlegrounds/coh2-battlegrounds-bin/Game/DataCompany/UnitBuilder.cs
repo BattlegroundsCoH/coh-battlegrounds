@@ -271,16 +271,6 @@ public class UnitBuilder : IBuilder<Squad> {
     };
 
     /// <summary>
-    /// Set the tuning pack GUID this unit should be based on.
-    /// </summary>
-    /// <param name="guid">The GUID (in coh2 string format).</param>
-    /// <returns>The modified instance the method is invoked with.</returns>
-    [Obsolete("Should not set mod GUID")]
-    public UnitBuilder SetModGUID(ModGuid guid) {
-        return this;
-    }
-
-    /// <summary>
     /// Set the veterancy rank of the <see cref="Squad"/> instance being built.
     /// </summary>
     /// <param name="level">The veterancy rank in byte-range to set.</param>
@@ -295,30 +285,6 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <returns>The modified instance the method is invoked with.</returns>
     public virtual UnitBuilder SetVeterancyExperience(float experience)
         => this.ApplyAction(new ExperienceAction(experience));
-
-    /// <summary>
-    /// Set the <see cref="SquadBlueprint"/> the <see cref="Squad"/> instance being built will use.
-    /// </summary>
-    /// <param name="sbp">The <see cref="SquadBlueprint"/> to set.</param>
-    /// <remarks>This must be set before certain other methods.</remarks>
-    /// <returns>The modified instance the method is invoked with.</returns>
-    [Obsolete("Unit builder should already know blueprint.")]
-    public virtual UnitBuilder SetBlueprint(SquadBlueprint sbp) {
-        return this;
-    }
-
-    /// <summary>
-    /// Set the <see cref="SquadBlueprint"/> the <see cref="Squad"/> instance being built will use.
-    /// </summary>
-    /// <remarks>
-    /// This must be called before certain other methods.
-    /// </remarks>
-    /// <param name="sbpName">The blueprint name to use when finding the <see cref="Blueprint"/>.</param>
-    /// <returns>The modified instance the method is invoked with.</returns>
-    [Obsolete("Unit builder should already know blueprint.")]
-    public virtual UnitBuilder SetBlueprint(string sbpName) {
-        return this;
-    }
 
     /// <summary>
     /// Set the transport <see cref="SquadBlueprint"/> of the <see cref="Squad"/> instance being built will use when entering the battlefield.
@@ -479,31 +445,12 @@ public class UnitBuilder : IBuilder<Squad> {
     }
 
     /// <summary>
-    /// Build the <see cref="Squad"/> instance using the data collected with the <see cref="UnitBuilder"/>. 
-    /// The ID will be copied from the original <see cref="Squad"/> if possible.
-    /// </summary>
-    /// <param name="ID">The unique ID to use when creating the <see cref="Squad"/> instance.</param>
-    /// <returns>A <see cref="Squad"/> instance with all the parameters defined by the <see cref="UnitBuilder"/>.</returns>
-    [Obsolete("Use commit instead")]
-    public virtual Squad Build(ushort ID) 
-        => this.Commit(ID).Result;
-
-    /// <summary>
     /// 
     /// </summary>
     /// <param name="span"></param>
     /// <returns></returns>
     public virtual UnitBuilder SetCombatTime(TimeSpan span) {
         this.CombatTime = span;
-        return this;
-    }
-
-    /// <summary>
-    /// Clone self and resets the current instance.
-    /// </summary>
-    /// <returns>The cloned instance.</returns>
-    [Obsolete("Unit builder instances should not be reused.")]
-    public UnitBuilder GetAndReset() {
         return this;
     }
 

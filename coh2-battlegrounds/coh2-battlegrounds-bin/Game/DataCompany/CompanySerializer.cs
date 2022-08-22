@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
@@ -33,7 +34,7 @@ public class CompanySerializer : JsonConverter<Company> {
     }
 
     private static string ReadProperty(ref Utf8JsonReader reader, string property)
-        => reader.GetString() == property && reader.Read() ? reader.ReadProperty() : string.Empty;
+        => reader.GetString() == property && reader.Read() ? (reader.ReadProperty() ?? string.Empty) : string.Empty;
 
     private static ulong ReadChecksum(ref Utf8JsonReader reader, string property)
         => reader.GetString() == property && reader.Read() ? reader.ReadUlongProperty() : 0;
@@ -256,7 +257,7 @@ public class CompanySerializer : JsonConverter<Company> {
             while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
 
                 // Read property
-                string property = reader.ReadProperty();
+                string property = reader.ReadProperty() ?? throw new ObjectPropertyNotFoundException();
                 var inputType = arrayTypes[property];
 
                 // Get data and set it
