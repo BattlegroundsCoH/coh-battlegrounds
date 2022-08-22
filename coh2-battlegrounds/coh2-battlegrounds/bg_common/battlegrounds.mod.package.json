@@ -390,13 +390,14 @@
               "DeployAndExit",
               "DeployAndStay"
             ],
-            "DeployBlueprints": {
-              "zis_6_transport_truck_bg": {
+            "DeployBlueprints": [
+              { 
+                "Blueprint": "zis_6_transport_truck_bg",
                 "CostModifier": 1,
                 "Tow": true,
                 "TowCostModifier": 1
               }
-            },
+            ],
             "CostModifiers": {
               "penal_battalion_bg": {
                 "Manpower": 20

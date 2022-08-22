@@ -338,7 +338,7 @@ public class CompanyBuilder : IBuilder<Company> {
     public IList<SquadBlueprint> GetTransports(bool isTow) {
 
         // Grab list from company type
-        var transports = isTow ? this.CompanyType.GetTowTransports() : this.CompanyType.DeployBlueprints.Map((k, _) => BlueprintManager.FromBlueprintName<SquadBlueprint>(k));
+        var transports = isTow ? this.CompanyType.GetTowTransports() : this.CompanyType.DeployBlueprints.Map(v => BlueprintManager.FromBlueprintName<SquadBlueprint>(v.Blueprint));
 
         // Return the transports
         return transports;

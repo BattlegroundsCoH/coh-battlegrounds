@@ -209,7 +209,7 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
         };
 
         // If heavy arty remove the none option
-        if (this.BuilderInstance.Blueprint.Types.IsHeavyArtillery)
+        if (this.BuilderInstance.Blueprint.Types.IsHeavyArtillery && !this.BuilderInstance.Blueprint.Types.IsAntiTank)
             this.DeploySettings.RemoveAt(0);
 
         // Create deploy unit buttons

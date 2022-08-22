@@ -327,7 +327,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
             // Get available squads
             BlueprintManager.GetCollection<SquadBlueprint>()
                 .FilterByMod(this.CompanyGUID)
-                .Filter(x => x.Army == this.CompanyFaction.Name)
+                .Filter(x => x.Army == this.CompanyFaction)
                 .Filter(x => !x.Types.IsVehicleCrew)
                 .Filter(x => !type.Exclude.Contains(x.Name))
                 .ForEach(this.m_availableSquads.Add);
@@ -335,7 +335,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
             // Get available crews
             BlueprintManager.GetCollection<SquadBlueprint>()
                 .FilterByMod(this.CompanyGUID)
-                .Filter(x => x.Army == this.CompanyFaction.ToString())
+                .Filter(x => x.Army == this.CompanyFaction)
                 .Filter(x => x.Types.IsVehicleCrew)
                 .ForEach(this.m_availableCrews.Add);
 
@@ -683,7 +683,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         var unitBuilder = UnitBuilder.NewUnit(sbp).SetDeploymentPhase(basicPhase);
 
         // If heavy arty add tow
-        if (sbp.Types.IsHeavyArtillery)
+        if (sbp.Types.IsHeavyArtillery && !sbp.Types.IsAntiTank)
             unitBuilder.SetDeploymentMethod(DeploymentMethod.DeployAndStay).SetTransportBlueprint(this.Builder.CompanyType.GetTowTransports()[0]);
 
         // Add to company

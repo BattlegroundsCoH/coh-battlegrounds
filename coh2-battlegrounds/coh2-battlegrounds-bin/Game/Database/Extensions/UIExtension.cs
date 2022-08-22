@@ -32,13 +32,14 @@ public class UIExtension {
     }
 
     public static UIExtension FromJson(ref Utf8JsonReader reader) {
-        string[] values = new string[6];
+        string[] values = { "", "", "", "", "", "" };
         int pos = 0;
         while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
             string prop = reader.ReadProperty() ?? throw new ObjectPropertyNotFoundException();
             if (prop is "Position") {
                 pos = reader.GetInt32();
             } else {
+                var val = reader.GetString();
                 values[prop switch {
                     "LocaleName" => 0,
                     "LocaleDescriptionShort" => 1,
@@ -47,7 +48,7 @@ public class UIExtension {
                     "Symbol" => 4,
                     "Portrait" => 5,
                     _ => throw new FormatException($"Unexpected UI property '{prop}'.")
-                }] = reader.GetString() ?? string.Empty;
+                }] = string.IsNullOrEmpty(val) ? string.Empty : val;
             }
         }
         return new() {

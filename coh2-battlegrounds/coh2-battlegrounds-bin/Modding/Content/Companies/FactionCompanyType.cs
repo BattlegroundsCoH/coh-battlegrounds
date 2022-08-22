@@ -56,6 +56,11 @@ public class FactionCompanyType : IChecksumElement {
     public readonly struct TransportOption {
         
         /// <summary>
+        /// 
+        /// </summary>
+        public string Blueprint { get; }
+
+        /// <summary>
         /// Get the cost modifier for picking this transport option.
         /// </summary>
         public float CostModifier { get; }
@@ -73,13 +78,26 @@ public class FactionCompanyType : IChecksumElement {
         /// <summary>
         /// 
         /// </summary>
+        public string AvailableInPhase { get; }
+
+        /// <summary>
+        /// Get the list of units that can be transported. If null or empty, all units are allowed.
+        /// </summary>
+        public string[] Units { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="CostModifier"></param>
         /// <param name="Tow"></param>
         [JsonConstructor]
-        public TransportOption(float CostModifier, bool Tow, float TowCostModifier) {
+        public TransportOption(string Blueprint, float CostModifier, bool Tow, float TowCostModifier, string AvailableInPhase, string[] Units) {
+            this.AvailableInPhase = AvailableInPhase;
+            this.Blueprint = Blueprint;
             this.CostModifier = CostModifier;
             this.Tow = Tow;
             this.TowCostModifier = TowCostModifier;
+            this.Units = Units ?? Array.Empty<string>();
         }
 
     }
@@ -117,18 +135,24 @@ public class FactionCompanyType : IChecksumElement {
         /// <summary>
         /// 
         /// </summary>
+        public int MaxPhase { get; init; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="ActivationTime"></param>
         /// <param name="DeployDelay"></param>
         /// <param name="ResourceIncomeModifier"></param>
         /// <param name="UnitCostModifier"></param>
         /// <param name="Unlocks"></param>
         [JsonConstructor]
-        public Phase(int ActivationTime, float DeployDelay, CostModifier ResourceIncomeModifier, CostModifier UnitCostModifier, string[] Unlocks) {
+        public Phase(int ActivationTime, float DeployDelay, CostModifier ResourceIncomeModifier, CostModifier UnitCostModifier, string[] Unlocks, int MaxPhase) {
             this.ActivationTime = ActivationTime;
             this.DeployDelay = DeployDelay;
             this.ResourceIncomeModifier = ResourceIncomeModifier;
             this.UnitCostModifier = UnitCostModifier;
             this.Unlocks = Unlocks ?? Array.Empty<string>();
+            this.MaxPhase = MaxPhase;
         }
 
     }
@@ -188,7 +212,7 @@ public class FactionCompanyType : IChecksumElement {
     /// <summary>
     /// 
     /// </summary>
-    public Dictionary<string, TransportOption> DeployBlueprints { get; init; }
+    public TransportOption[] DeployBlueprints { get; init; }
 
     /// <summary>
     /// 
@@ -219,7 +243,7 @@ public class FactionCompanyType : IChecksumElement {
     [JsonConstructor]
     public FactionCompanyType(string Id, string Icon, 
         int MaxInfantry, int MaxTeamWeapons, int MaxVehicles, int MaxLeaders, int MaxAbilities, int MaxInitialPhase,
-        string[] Exclude, string[] DeployTypes, Dictionary<string, TransportOption> DeployBlueprints, Dictionary<string, Phase> Phases) {
+        string[] Exclude, string[] DeployTypes, TransportOption[] DeployBlueprints, Dictionary<string, Phase> Phases) {
 
         // Set properties
         this.Id = Id;
@@ -273,14 +297,7 @@ public class FactionCompanyType : IChecksumElement {
     /// 
     /// </summary>
     /// <returns></returns>
-    public IList<SquadBlueprint> GetTowTransports() {
-        List<SquadBlueprint> tows = new(); ;
-        foreach (var (k, v) in this.DeployBlueprints) {
-            if (v.Tow) {
-                tows.Add(BlueprintManager.FromBlueprintName<SquadBlueprint>(k));
-            }
-        }
-        return tows;
-    }
+    public IList<SquadBlueprint> GetTowTransports() 
+        => this.DeployBlueprints.Filter(x => x.Tow).Map(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x.Blueprint));
 
 }

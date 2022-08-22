@@ -32,8 +32,6 @@ public class AvailableItemViewModel : INotifyPropertyChanged {
 
     public bool CanAdd => this.AddEval(this.Blueprint);
 
-    public bool SingleInstanceOnly => false; // This will allow us to override
-
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public AvailableItemViewModel(Blueprint bp, AvailableItemViewModelEvent onAdd, AvailableItemViewModelEvent onMove, IsBlueprintAvailableHandler addable) {
