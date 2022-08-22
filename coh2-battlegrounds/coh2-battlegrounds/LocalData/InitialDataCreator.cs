@@ -97,7 +97,7 @@ public static class InitialDataCreator {
         var ger = Faction.Wehrmacht;
 
         // Grab type
-        var typ = package.GetCompanyType("sov_rifles") ?? throw new System.Exception("Failed to fetch company type"); // TODO: Fix this!!!!
+        var typ = package.GetCompanyType("ost_rifles") ?? throw new System.Exception("Failed to fetch company type");
 
         // Create builder
         CompanyBuilder builder = CompanyBuilder.NewCompany("Default German", typ, CompanyAvailabilityType.MultiplayerOnly, ger, ModGuid.BattlegroundsTuning);

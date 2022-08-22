@@ -152,7 +152,7 @@ public class FactionCompanyType : IChecksumElement {
             this.ResourceIncomeModifier = ResourceIncomeModifier;
             this.UnitCostModifier = UnitCostModifier;
             this.Unlocks = Unlocks ?? Array.Empty<string>();
-            this.MaxPhase = MaxPhase;
+            this.MaxPhase = MaxPhase <= 0 ? (Company.MAX_SIZE / 3 + 1) : MaxPhase;
         }
 
     }
@@ -299,5 +299,17 @@ public class FactionCompanyType : IChecksumElement {
     /// <returns></returns>
     public IList<SquadBlueprint> GetTowTransports() 
         => this.DeployBlueprints.Filter(x => x.Tow).Map(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x.Blueprint));
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="phase"></param>
+    /// <returns></returns>
+    public int GetMaxInPhase(DeploymentPhase phase) {
+        if (this.Phases.TryGetValue(phase.ToString(), out Phase? p)) {
+            return p.MaxPhase;
+        }
+        return Company.MAX_SIZE / 3 + 1;
+    }
 
 }

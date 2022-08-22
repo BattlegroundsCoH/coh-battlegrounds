@@ -323,9 +323,12 @@ public class CompanyBuilder : IBuilder<Company> {
         (DeploymentPhase.PhaseInitial, int x) => 
             x < this.CompanyType.MaxInitialPhase && (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseA)),
         // Basic check on phases
-        (DeploymentPhase.PhaseA, _) => (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseA)),
-        (DeploymentPhase.PhaseB, _) => (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseB)),
-        (DeploymentPhase.PhaseC, _) => (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseC)),
+        (DeploymentPhase.PhaseA, int x) when x < this.CompanyType.GetMaxInPhase(DeploymentPhase.PhaseA) => 
+            (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseA)),
+        (DeploymentPhase.PhaseB, int x) when x < this.CompanyType.GetMaxInPhase(DeploymentPhase.PhaseA) => 
+            (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseB)),
+        (DeploymentPhase.PhaseC, int x) when x < this.CompanyType.GetMaxInPhase(DeploymentPhase.PhaseA) => 
+            (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseC)),
         // Default to not available
         _ => false
     };

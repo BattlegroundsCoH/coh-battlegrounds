@@ -679,6 +679,8 @@ public class CompanyBuilderViewModel : ViewModelBase {
         var basicPhase = this.Builder.IsPhaseAvailable(DeploymentPhase.PhaseInitial) && earliestPhase is DeploymentPhase.PhaseA ?
             DeploymentPhase.PhaseInitial : earliestPhase;
 
+        // TODO: Get earliest available phase adhering to company type phase limits
+
         // Create squad (in initial phase or in phase A)
         var unitBuilder = UnitBuilder.NewUnit(sbp).SetDeploymentPhase(basicPhase);
 
