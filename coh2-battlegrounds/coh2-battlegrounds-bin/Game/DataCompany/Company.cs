@@ -337,20 +337,6 @@ public class Company : IChecksumItem {
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="squadIndex"></param>
-    /// <param name="squad"></param>
-    public bool ReplaceSquad(ushort squadIndex, Squad squad) {
-        int arrIndex = this.m_squads.FindIndex(x => x.SquadID == squadIndex);
-        if (arrIndex is -1) {
-            return false;
-        }
-        this.m_squads[arrIndex] = squad;
-        return true;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="version"></param>
     public void SetAppVersion(string version) => this.m_lastEditVersion = version;
 

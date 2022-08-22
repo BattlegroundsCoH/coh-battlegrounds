@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 using BattlegroundsApp.Utilities;
@@ -11,6 +8,8 @@ using BattlegroundsApp.Utilities;
 namespace BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 
 public class ImportExportCompanyDialogViewModel : INotifyPropertyChanged {
+
+    private bool m_isExportMode = false;
 
     public string Title { get; }
 
@@ -23,6 +22,7 @@ public class ImportExportCompanyDialogViewModel : INotifyPropertyChanged {
         set {
             this.m_newValue = value;
             this.PropertyChanged?.Invoke(this, new(nameof(Value)));
+            this.PropertyChanged?.Invoke(this, new(nameof(CanOk)));
         }
     }
 
@@ -30,10 +30,29 @@ public class ImportExportCompanyDialogViewModel : INotifyPropertyChanged {
 
     public ICommand OkButton { get; }
 
-    public string TemplateString { 
-        get; 
-        set; 
+    private string m_templateStr;
+
+    public string TemplateString {
+        get => this.m_templateStr;
+        set {
+            this.m_templateStr = value;
+            this.PropertyChanged?.Invoke(this, new(nameof(TemplateString)));
+            this.PropertyChanged?.Invoke(this, new(nameof(CanOk)));
+        }
     }
+
+    public bool CanOk {
+        get {
+            if (this.m_isExportMode)
+                return true;
+            else
+                return this.TemplateString.Length > 0 && this.Value.Length > 0;
+        }
+    }
+
+    public bool IsNameReadonly => this.m_isExportMode;
+
+    public bool IsTemplateReadonly => this.m_isExportMode;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -44,7 +63,7 @@ public class ImportExportCompanyDialogViewModel : INotifyPropertyChanged {
         this.OldValue = oldvalue;
 
         // Set template if there
-        this.TemplateString = templateString;
+        this.m_templateStr = templateString;
 
         // Set initial new value
         this.m_newValue = "";
@@ -58,7 +77,12 @@ public class ImportExportCompanyDialogViewModel : INotifyPropertyChanged {
     public static void ShowExport(ModalControl control, string title, string templateString, string oldval = "") {
 
         // Create dialog view model
-        ImportExportCompanyDialogViewModel dialog = new(title, (_,_) => { }, "Export Company", oldval, templateString);
+        ImportExportCompanyDialogViewModel dialog = new(title, (_,tmpl) => {
+            Clipboard.SetText(tmpl);
+            control.CloseModal();
+        }, "Export Company", oldval, templateString) {
+            m_isExportMode = true
+        };
         control.ModalMaskBehaviour = ModalBackgroundBehaviour.ExitWhenClicked;
         control.ShowModal(dialog);
 
@@ -67,7 +91,10 @@ public class ImportExportCompanyDialogViewModel : INotifyPropertyChanged {
     public static void ShowImport(ModalControl control, string title, Action<string, string> resultCallback) {
 
         // Create dialog view model
-        ImportExportCompanyDialogViewModel dialog = new(title, resultCallback, "Import Company");
+        ImportExportCompanyDialogViewModel dialog = new(title, (a,b) => {
+            resultCallback(a, b);
+            control.CloseModal();
+        }, "Import Company");
         control.ModalMaskBehaviour = ModalBackgroundBehaviour.ExitWhenClicked;
         control.ShowModal(dialog);
 

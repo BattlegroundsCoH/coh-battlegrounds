@@ -46,7 +46,10 @@ public class RenameDialogViewModel : INotifyPropertyChanged {
     public static void ShowModal(ModalControl control, string title, Action<string> resultCallback, string acceptTitle = "", string oldval = "") {
 
         // Create dialog view model
-        RenameDialogViewModel dialog = new(title, resultCallback, acceptTitle, oldval);
+        RenameDialogViewModel dialog = new(title, x => {
+            resultCallback(x);
+            control.CloseModal();
+        }, acceptTitle, oldval);
         control.ModalMaskBehaviour = ModalBackgroundBehaviour.ExitWhenClicked;
         control.ShowModal(dialog);
 

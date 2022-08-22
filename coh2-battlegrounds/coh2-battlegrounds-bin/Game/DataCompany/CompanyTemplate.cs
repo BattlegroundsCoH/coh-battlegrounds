@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
@@ -120,61 +121,62 @@ public sealed class CompanyTemplate {
     /// </summary>
     /// <param name="tmpString">The <see cref="string"/> to convert into a <see cref="CompanyTemplate"/>.</param>
     /// <returns>The <see cref="CompanyTemplate"/> represented by the input <see cref="string"/>.</returns>
-    /// <exception cref="ArgumentException"/>
-    /// <exception cref="ArgumentNullException"/>
-    /// <exception cref="FormatException"/>
-    /// <exception cref="OverflowException"/>
-    /// <exception cref="IndexOutOfRangeException"/>
-    /// <exception cref="ArgumentOutOfRangeException"/>
-    public static CompanyTemplate FromString(string tmpString) {
+    public static CompanyTemplate? FromString(string tmpString) {
 
-        // Get cut position and length for name
-        string decompressed = StringCompression.DecompressString(tmpString[(ModGuid.FIXED_LENGTH + 2)..]);
+        try {
 
-        // Grab first section
-        int a = decompressed.IndexOf('[');
-        int b = decompressed.IndexOf(']');
+            // Get cut position and length for name
+            string decompressed = StringCompression.DecompressString(tmpString[(ModGuid.FIXED_LENGTH + 1)..]);
 
-        // Grab type
-        string typ = decompressed[..a];
+            // Grab first section
+            int a = decompressed.IndexOf('[');
+            int b = decompressed.IndexOf(']');
 
-        // Loop over all phases
-        CompanyUnit[][] units = new CompanyUnit[4][];
-        for (int i = 0; i < 4; i++) {
+            // Grab type
+            string typ = decompressed[..a];
 
-            // Grab decompressed
-            string sub = decompressed[a..b];
+            // Loop over all phases
+            CompanyUnit[][] units = new CompanyUnit[4][];
+            for (int i = 0; i < 4; i++) {
 
-            // Split individually
-            string[] phaseUnitStrs = sub.Split('-');
-            units[i] = new CompanyUnit[phaseUnitStrs.Length];
+                // Grab decompressed
+                string sub = decompressed[(a + 1)..b];
 
-            // Parse
-            for (int j = 0; j < units[i].Length; j++) {
+                // Split individually
+                string[] phaseUnitStrs = sub.Split('-', StringSplitOptions.RemoveEmptyEntries);
+                units[i] = new CompanyUnit[phaseUnitStrs.Length];
 
-                // Split into separate data
-                string[] data = phaseUnitStrs[j].Split('?');
+                // Parse
+                for (int j = 0; j < units[i].Length; j++) {
 
-                // Set
-                units[i][j] = new(
-                    ulong.Parse(data[0], NumberStyles.HexNumber), 
-                    ulong.Parse(data[1], NumberStyles.HexNumber), 
-                    byte.Parse(data[2]), 
-                    int.Parse(data[3], NumberStyles.HexNumber));
+                    // Split into separate data
+                    string[] data = phaseUnitStrs[j].Split('?');
+
+                    // Set
+                    units[i][j] = new(
+                        ulong.Parse(data[0], NumberStyles.HexNumber),
+                        ulong.Parse(data[1], NumberStyles.HexNumber),
+                        byte.Parse(data[2]),
+                        int.Parse(data[3], NumberStyles.HexNumber));
+
+                }
+
+                // Update decompress string
+                a = decompressed.IndexOf('[', a + 1);
+                b = decompressed.IndexOf(']', b + 1);
 
             }
 
-            // Update decompress string
-            a = decompressed.IndexOf('[', a + 1);
-            b = decompressed.IndexOf(']', b + 1);
+            // Create template and return
+            return new CompanyTemplate(
+                tmpString[0..ModGuid.FIXED_LENGTH],
+                DecodeArmy(tmpString[ModGuid.FIXED_LENGTH]),
+                typ, units);
 
+        } catch (Exception ex) {
+            Trace.WriteLine(ex, nameof(CompanyTemplate));
+            return null;
         }
-
-        // Create template and return
-        return new CompanyTemplate(
-            tmpString[0..ModGuid.FIXED_LENGTH],
-            DecodeArmy(tmpString[ModGuid.FIXED_LENGTH]),
-            typ, units);
 
     }
 
@@ -185,7 +187,7 @@ public sealed class CompanyTemplate {
     /// <param name="template">The template <see cref="string"/> to generate <see cref="Company"/> instance from.</param>
     /// <returns>A <see cref="Company"/> instance based on the <see cref="CompanyTemplate"/>.</returns>
     public static bool FromTemplate(string templateName, string template, [NotNullWhen(true)] out Company? company) 
-        => FromTemplate(templateName, FromString(template), out company);
+        => FromTemplate(templateName, FromString(template) ?? throw new Exception("Cannot parse template string"), out company);
 
     /// <summary>
     /// Convert a <see cref="CompanyTemplate"/> into a new <see cref="Company"/>.

@@ -261,18 +261,28 @@ public class CompanyBrowserViewModel : ViewModelBase {
         // Do import
         ImportExportCompanyDialogViewModel.ShowImport(mControl, "Import Company", (name, template) => {
 
-            // Create company
-            if (CompanyTemplate.FromTemplate(name, template, out Company? company)) {
+            try {
 
-                // Save
-                PlayerCompanies.SaveCompany(company);
+                // Create company from template
+                if (CompanyTemplate.FromTemplate(name, template, out Company? company)) {
 
-                // Trigger refresh of company
-                UpdateCompanyList();
+                    // Save
+                    PlayerCompanies.SaveCompany(company);
 
-            } else {
-                OKDialogViewModel.ShowModal(mControl, (_, _) => { }, "Import Failed", "Failed to create company from the given template string.");
+                    // Trigger refresh of company
+                    UpdateCompanyList();
+
+                    // Bail now
+                    return;
+
+                }
+
+            } catch (Exception e) { // Catch any error
+                Trace.WriteLine(e, nameof(CompanyBrowserViewModel));
             }
+
+            // Catch all situation
+            OKDialogViewModel.ShowModal(mControl, (_, _) => { }, "Import Failed", "Failed to create company from the given template string (Error dumped to log).");
 
         });
 

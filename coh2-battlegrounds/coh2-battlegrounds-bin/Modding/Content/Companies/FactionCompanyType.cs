@@ -7,13 +7,14 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Verification;
 
 namespace Battlegrounds.Modding.Content.Companies;
 
 /// <summary>
 /// Class representing a company type for a specific faction.
 /// </summary>
-public class FactionCompanyType {
+public class FactionCompanyType : IChecksumElement {
 
     /// <summary>
     /// Readonly struct representing a modifier to cost (or anything resource related).
@@ -193,6 +194,12 @@ public class FactionCompanyType {
     /// 
     /// </summary>
     public Dictionary<string, Phase> Phases { get; init; }
+
+    /// <summary>
+    /// Get the checksum associated with the company type
+    /// </summary>
+    [JsonIgnore]
+    public ulong Checksum => this.Id.ToCharArray().Fold(0ul, (s, c) => (s + 1) * c);
 
     /// <summary>
     /// Initialise a new <see cref="FactionCompanyType"/> instance.

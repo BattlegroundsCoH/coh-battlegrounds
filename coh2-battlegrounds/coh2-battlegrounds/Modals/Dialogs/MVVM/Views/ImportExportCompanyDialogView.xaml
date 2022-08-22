@@ -44,26 +44,32 @@
 
             <TextBox 
                 Margin="0, 0, 0, 7"
-                Text="{Binding SelectedName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 Style="{StaticResource WaterMarkTextBox}"
                 Tag="{Binding OldValue, FallbackValue='Company Name'}"
                 Height="25"
+                IsReadOnly="{Binding IsNameReadonly}"
                 x:Name="nameValue"/>
 
             <TextBox 
                 Margin="0, 0, 0, 7"
-                Text="{Binding SelectedName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                Text="{Binding TemplateString, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 Style="{StaticResource WaterMarkTextBox}"
-                IsReadOnly="True"
-                Tag=""
-                Height="50"/>
+                IsReadOnly="{Binding IsTemplateReadonly}"
+                TextWrapping="Wrap"
+                TextAlignment="Justify"
+                Foreground="Gray"
+                FontSize="12"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                Height="58"/>
 
             <Button 
                 Content="{Binding OkButtonTitle, FallbackValue='Export'}"
                 Style="{StaticResource StandardBlueLocButton}"
                 Margin="0, 7, 0, 0"
                 Command="{Binding OkButton}"
-                IsEnabled="{Binding ElementName=nameValue, Path=Text.Length, Mode=OneWay}"/>
+                IsEnabled="{Binding CanOk}"/>
 
         </StackPanel>
 

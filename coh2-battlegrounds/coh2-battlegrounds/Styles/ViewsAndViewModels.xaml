@@ -90,6 +90,10 @@
     <DataTemplate DataType="{x:Type dialogModels:RenameDialogViewModel}">
         <dialogViews:RenameDialogView/>
     </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type dialogModels:ImportExportCompanyDialogViewModel}">
+        <dialogViews:ImportExportCompanyDialogView/>
+    </DataTemplate>
     <!-- DIALOGS END -->
 
     <DataTemplate DataType="{x:Type lobbymodels:LobbyChatSpectatorModel}">

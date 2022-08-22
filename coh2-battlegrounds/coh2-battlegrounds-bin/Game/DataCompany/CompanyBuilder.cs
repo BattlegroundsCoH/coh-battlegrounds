@@ -188,16 +188,6 @@ public class CompanyBuilder : IBuilder<Company> {
     }
 
     /// <summary>
-    /// Creates a new <see cref="Company"/> internally that the <see cref="CompanyBuilder"/> will modify while building.
-    /// </summary>
-    /// <param name="faction">The <see cref="Faction"/> that the company will belong to.</param>
-    /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
-    public virtual CompanyBuilder NewCompany(Faction faction, FactionCompanyType companyType) {
-        this.m_companyResult = new Company(faction, companyType);
-        return this;
-    }
-
-    /// <summary>
     /// Add a unit to the <see cref="Company"/> using a <see cref="UnitBuilder"/>.
     /// </summary>
     /// <param name="blueprint">The squad blueprint the new unit will have</param>
@@ -207,32 +197,6 @@ public class CompanyBuilder : IBuilder<Company> {
         UnitBuilder bld = UnitBuilder.NewUnit(blueprint);
         this.AddUnit(builder(bld));
         return this;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="builder"></param>
-    /// <returns></returns>
-    [Obsolete("Please use AddUnit")]
-    public virtual void AddAndCommitUnit(UnitBuilder builder) {
-
-        // If null, throw error
-        if (builder is null) {
-            throw new ArgumentNullException(nameof(builder), "The given unit builder may not be null");
-        }
-
-        // If null, throw error
-        if (this.m_companyResult is null) {
-            throw new ArgumentNullException("CompanyTarget", "Cannot add unit to a company that has not been created.");
-        }
-
-        // Set the mod GUID (So we get no conflicts between mods).
-        builder.SetModGUID(this.m_target.ModGuid);
-
-        // Add squad
-        this.m_companyResult.AddSquad(builder);
-
     }
 
     /// <summary>
@@ -277,14 +241,6 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <summary>
     /// Change the associated <see cref="Guid"/> of the <see cref="Company"/>. (This will decide from where the blueprints can be drawn from).
     /// </summary>
-    /// <param name="tuningGUID">The string version of the mod GUID. (May contain '-' characters).</param>
-    /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
-    public virtual CompanyBuilder ChangeTuningMod(string tuningGUID)
-        => this.ChangeTuningMod(ModGuid.FromGuid(tuningGUID));
-
-    /// <summary>
-    /// Change the associated <see cref="Guid"/> of the <see cref="Company"/>. (This will decide from where the blueprints can be drawn from).
-    /// </summary>
     /// <param name="tuningGUID">The tuning mod GUID.</param>
     /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
     public virtual CompanyBuilder ChangeTuningMod(ModGuid tuningGUID)
@@ -303,6 +259,11 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <returns></returns>
     public CompanyBuilder RemoveEquipment(Blueprint equipment) => throw new NotImplementedException();
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="enable"></param>
+    /// <returns></returns>
     public CompanyBuilder SetAutoReinforce(bool enable) => this.ApplyAction(new AutoReinforceAction(enable));
 
     /// <summary>
@@ -401,6 +362,7 @@ public class CompanyBuilder : IBuilder<Company> {
         var company = new Company(this.m_target.Faction, this.m_target.Type);
         company.SetAvailability(this.AvailabilityType);
         company.SetAppVersion(Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0.0");
+        company.SetReinforcementsEnabled(this.m_target.AutoReinforce);
         company.Name = this.m_target.Name;
         company.TuningGUID = this.m_target.ModGuid;
         company.UpdateStatistics(_ => this.Statistics);
