@@ -262,6 +262,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="bg_common\bg_wc\auxiliary_scripts\debug_script.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\bg_wc\coh2_battlegrounds_defence.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -63,7 +63,7 @@
                     <Image Width="28"
                            Height="28"
                            VerticalAlignment="Center"
-                           Source="{Binding CompanyType, Converter={StaticResource CompanyTypeConverter}}"/>
+                           Source="{Binding CompanyTypeIcon, Converter={StaticResource CompanyTypeConverter}}"/>
                 </InlineUIContainer>
 
             </TextBlock>

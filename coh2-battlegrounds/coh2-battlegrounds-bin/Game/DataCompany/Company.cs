@@ -213,7 +213,7 @@ public class Company : IChecksumItem {
     public Squad? GetSquadByIndex(ushort squadID) {
         Squad? s = this.m_squads.FirstOrDefault(x => x.SquadID == squadID);
         if (s is null) { 
-            return this.m_squads.FirstOrDefault(x => x.Crew is not null ? x.Crew.SquadID == squadID : false)?.Crew; 
+            return this.m_squads.FirstOrDefault(x => x.Crew is not null && x.Crew.SquadID == squadID)?.Crew; 
         }
         return s;
     }

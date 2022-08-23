@@ -1,0 +1,35 @@
+function InitBGDebug()
+
+    -- Bail if more than one player
+    if #_bg_playerData > 1 then
+        return
+    end
+
+    -- Grab local player
+    _bgdebugplayer = Game_GetLocalPlayer();
+
+    if testEquipment then
+        BGDebug_TestEquipment();
+    end
+
+    if autoWin ~= nil then
+        Rule_AddOneShot(BGDebug_AutoWin, autoWin);
+    end
+
+end
+
+function BGDebug_TestEquipment()
+
+    -- Grab base position
+    local startpos = Player_GetBasePosition(_bgdebugplayer);
+
+    -- Spawn in random items to test
+    local bp_vehicle = BP_GetSquadBlueprint("panzer_iv_squad_mp")
+    local bp_decrew = BP_GetCriticalBlueprint("vehicle_decrew")
+
+end
+
+function BGDebug_AutoWin()
+    local team = Player_GetTeam(_bgdebugplayer);
+    World_SetTeamWin(team);
+end

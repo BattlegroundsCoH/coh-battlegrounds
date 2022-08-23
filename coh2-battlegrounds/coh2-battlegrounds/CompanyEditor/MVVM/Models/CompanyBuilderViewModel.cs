@@ -81,6 +81,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
     public Faction CompanyFaction { get; }
     public string CompanyGUID { get; }
     public string CompanyType { get; }
+    public string CompanyTypeIcon { get; }
 
     public LocaleKey CompanyMatchHistoryLabelContent { get; }
     public LocaleKey CompanyVictoriesLabelContent { get; }
@@ -139,6 +140,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.CompanyGUID = ModGuid.BaseGame;
         this.CompanyName = string.Empty;
         this.CompanyType = string.Empty;
+        this.CompanyTypeIcon = string.Empty;
         this.Statistics = new();
 
         // Define locales
@@ -201,6 +203,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.CompanyFaction = company.Army;
         this.CompanyGUID = company.TuningGUID;
         this.CompanyType = BattlegroundsInstance.Localize.GetString(company.Type.Id);
+        this.CompanyTypeIcon = company.Type.Icon;
 
         // Load database and display
         this.LoadFactionDatabase();
@@ -219,6 +222,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.CompanyFaction = faction;
         this.CompanyGUID = modGuid;
         this.CompanyType = BattlegroundsInstance.Localize.GetString(type.Id);
+        this.CompanyTypeIcon = type.Icon;
 
         // Load database and display
         this.LoadFactionDatabase();

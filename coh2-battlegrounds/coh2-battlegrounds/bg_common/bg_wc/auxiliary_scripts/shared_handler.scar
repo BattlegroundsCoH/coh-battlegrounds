@@ -20,6 +20,7 @@ import("WinConditions/auxiliary_scripts/api_ui.scar");
 import("WinConditions/auxiliary_scripts/client_companyui.scar");
 import("WinConditions/auxiliary_scripts/client_overrideui.scar");
 import("WinConditions/auxiliary_scripts/system_tow.scar");
+import("WinConditions/auxiliary_scripts/debug_script.scar");
 
 ------------------------------------------------------------------------------------
 -- Script Code
@@ -94,6 +95,9 @@ function BG_Init()
 
     -- Add the broadcast event callback
     Rule_AddGlobalEvent(BG_GameBroadcastMessageReceived, GE_BroadcastMessage);
+
+    -- Hook into debug_script
+    InitBGDebug();
 
 end
 

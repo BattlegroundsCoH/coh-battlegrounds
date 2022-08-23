@@ -7,6 +7,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Lua.Generator.RuntimeServices;
 using Battlegrounds.Verification;
 
 namespace Battlegrounds.Modding.Content.Companies;
@@ -24,16 +25,19 @@ public class FactionCompanyType : IChecksumElement {
         /// <summary>
         /// Get the manpower modifier.
         /// </summary>
+        [LuaName("manpower")]
         public float Manpower { get; }
 
         /// <summary>
         /// Get the munition modifier.
         /// </summary>
+        [LuaName("munition")]
         public float Munition { get; }
 
         /// <summary>
         /// Get the fuel modifier.
         /// </summary>
+        [LuaName("fuel")]
         public float Fuel { get; }
 
         /// <summary>
@@ -56,7 +60,7 @@ public class FactionCompanyType : IChecksumElement {
     public readonly struct TransportOption {
         
         /// <summary>
-        /// 
+        /// Get the blueprint associated with the transport option.
         /// </summary>
         public string Blueprint { get; }
 
@@ -76,7 +80,7 @@ public class FactionCompanyType : IChecksumElement {
         public float TowCostModifier { get; }
 
         /// <summary>
-        /// 
+        /// Get the name of the phase this transport method first becomes available.
         /// </summary>
         public string AvailableInPhase { get; }
 
@@ -86,10 +90,14 @@ public class FactionCompanyType : IChecksumElement {
         public string[] Units { get; }
 
         /// <summary>
-        /// 
+        /// Initialise a new <see cref="TransportOption"/> instance.
         /// </summary>
+        /// <param name="Blueprint"></param>
         /// <param name="CostModifier"></param>
         /// <param name="Tow"></param>
+        /// <param name="TowCostModifier"></param>
+        /// <param name="AvailableInPhase"></param>
+        /// <param name="Units"></param>
         [JsonConstructor]
         public TransportOption(string Blueprint, float CostModifier, bool Tow, float TowCostModifier, string AvailableInPhase, string[] Units) {
             this.AvailableInPhase = AvailableInPhase;
@@ -103,38 +111,41 @@ public class FactionCompanyType : IChecksumElement {
     }
 
     /// <summary>
-    /// 
+    /// Class representing phase specific data.
     /// </summary>
     public class Phase {
 
         /// <summary>
-        /// 
+        /// Get or initialise when the phase is activated.
         /// </summary>
         public int ActivationTime { get; init; }
 
         /// <summary>
-        /// Get the additional deployment delay applied to unlocked units
+        /// Get the additional deployment delay applied to unlocked units.
         /// </summary>
         public float DeployDelay { get; init; }
 
         /// <summary>
-        /// 
+        /// Get or initialise the income modifier given to the player when entering the phase.
         /// </summary>
         public CostModifier ResourceIncomeModifier { get; init; }
 
         /// <summary>
-        /// Get the cost modifier applied to units that are unlocked in the previous phase
+        /// Get the cost modifier applied to units that are unlocked in the previous phase.
         /// </summary>
         public CostModifier UnitCostModifier { get; init; }
 
         /// <summary>
-        /// 
+        /// Get or initialise the blueprints that become available in this phase.
         /// </summary>
         public string[] Unlocks { get; init; }
 
         /// <summary>
-        /// 
+        /// Get or initialise the maximum amount of unts in this phase.
         /// </summary>
+        /// <remarks>
+        /// If none is specified the value is (<see cref="Company.MAX_SIZE"/> / 3) + 1
+        /// </remarks>
         public int MaxPhase { get; init; }
 
         /// <summary>
