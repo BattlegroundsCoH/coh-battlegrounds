@@ -23,9 +23,26 @@ function BGDebug_TestEquipment()
     -- Grab base position
     local startpos = Player_GetBasePosition(_bgdebugplayer);
 
-    -- Spawn in random items to test
+    -- Grab blueprints to spawn
     local bp_vehicle = BP_GetSquadBlueprint("panzer_iv_squad_mp")
     local bp_decrew = BP_GetCriticalBlueprint("vehicle_decrew")
+    local bp_tw = BP_GetEntityBlueprint("mg42_hmg")
+
+    -- Get random position
+    local decrewedPos = Util_GetRandomPosition(startpos, 15);
+    local twPos = Util_GetRandomPosition(startpos, 15);
+
+    -- Create temp sg
+    local sg_decrew = SGroup_CreateIfNotFound("sg_debug_decrew");
+
+    -- Spawn squad
+    Util_CreateSquads(_bgdebugplayer, sg_decrew, bp_vehicle, decrewedPos);
+
+    -- Do critical
+    Cmd_CriticalHit(_bgdebugplayer, sg_decrew, bp_decrew, 0.5);
+
+    -- Spawn entity
+    Util_CreateEntities(nil, EGroup_CreateIfNotFound("eg_debug_tw"), bp_tw, twPos, 1);
 
 end
 

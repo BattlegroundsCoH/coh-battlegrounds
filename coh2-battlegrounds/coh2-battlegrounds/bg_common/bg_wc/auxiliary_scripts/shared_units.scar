@@ -439,7 +439,7 @@ function BG_RecallSquad(playerID, squadID)
     end
 
     -- Create SGroup and disable use for player
-    local sg_temp = SGroup_FromSquad(squadID, "sg_recall_temp" .. companyID .._recallCounter);
+    local sg_temp = SGroup_FromSquad(squadID, "sg_recall_temp" .. _recallCounter);
     _recallCounter = _recallCounter + 1;
     SGroup_SetSelectable(sg_temp, false);
     SGroup_EnableUIDecorator(sg_temp, false);
@@ -576,7 +576,7 @@ function BG_SaveCapturedItem(player, blueprint, type, bptype)
 
     -- Generate message
     local capture_message = "T["..blueprint..","..type..","..bptype.."]";
-    
+
     -- Broadcast event
     Battlegrounds_LogEvent(nil, BG_EVENT_ONCAPTURE, capture_message, player);
 
