@@ -72,7 +72,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     public ObservableCollection<AbilitySlotViewModel> CompanyAbilities { get; set; }
     public ObservableCollection<AbilitySlotViewModel> CompanyUnitAbilities { get; set; }
-    //public ObservableCollection<EquipmentSlot> CompanyEquipment { get; set; }
+    public ObservableCollection<EquipmentSlotViewModel> CompanyEquipment { get; set; }
 
     public CompanyBuilder Builder => this.m_builder ?? throw new Exception("Expected a valid instance of a company builder but found none (Invalid call tree!)");
 
@@ -161,7 +161,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.CompanyVehicleSquads = new();
         this.CompanyAbilities = new();
         this.CompanyUnitAbilities = new();
-        //this.CompanyEquipment = new();
+        this.CompanyEquipment = new();
         this.AvailableItems = new();
 
         // Define list

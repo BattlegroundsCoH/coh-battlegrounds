@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="BattlegroundsApp.CompanyEditor.MVVM.Views.EquipmentSlotView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views" 
+             xmlns:icon="clr-namespace:BattlegroundsApp.Controls.Editor"
+             mc:Ignorable="d" 
+             d:DesignHeight="64" d:DesignWidth="250"
+             Background="#334252">
+
+    <Canvas 
+        Height="64"
+        Width="250">
+
+        <!-- Name -->
+        <Label 
+            Content="{Binding AbilityName}"
+            Canvas.Left="75"
+            MaxWidth="180"
+            Foreground="White"
+            FontWeight="DemiBold"/>
+
+        <!-- Icon -->
+        <icon:Icon 
+            IconName="{Binding AbilityIcon}"
+            SymbolName="{Binding AbilitySymbol}"
+            x:Name="IconElement"/>
+
+        <!-- Equip -->
+        <Button 
+            Width="16"
+            Height="64"
+            Canvas.Right="0"
+            Style="{StaticResource StandardGreenButton}"
+            Content=">"
+            x:Name="RemoveButton"/>
+
+    </Canvas>
+</UserControl>
