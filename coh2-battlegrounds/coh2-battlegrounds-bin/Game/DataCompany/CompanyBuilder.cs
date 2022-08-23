@@ -29,7 +29,7 @@ public class CompanyBuilder : IBuilder<Company> {
         Faction Faction,
         UnitBuilder[] Units,
         Ability[] Abilities,
-        Blueprint[] Items,
+        CompanyItem[] Items,
         bool AutoReinforce);
 
     public sealed record RemoveUnitAction(UnitBuilder Builder) : IEditAction<BuildableCompany> {
@@ -66,6 +66,25 @@ public class CompanyBuilder : IBuilder<Company> {
         };
         public BuildableCompany Undo(BuildableCompany target) => target with {
             Abilities = target.Abilities.Except(this.Ability)
+        };
+    }
+
+    public sealed record RemoveEquipmentAction(CompanyItem Equipment) : IEditAction<BuildableCompany> {
+        private CompanyItem? m_removeEquipment; // cache ability incase we need to undo this
+        public BuildableCompany Apply(BuildableCompany target) => target with {
+            Items = target.Items.Except(this.m_removeEquipment = target.Items.First(x => x == this.Equipment))
+        };
+        public BuildableCompany Undo(BuildableCompany target) => target with {
+            Items = this.m_removeEquipment is null ? target.Items : target.Items.Append(this.m_removeEquipment)
+        };
+    }
+
+    public sealed record AddEquipmentAction(CompanyItem Equipment) : IEditAction<BuildableCompany> {
+        public BuildableCompany Apply(BuildableCompany target) => target with {
+            Items = target.Items.Append(this.Equipment)
+        };
+        public BuildableCompany Undo(BuildableCompany target) => target with {
+            Items = target.Items.Except(this.Equipment)
         };
     }
 
@@ -250,14 +269,8 @@ public class CompanyBuilder : IBuilder<Company> {
     /// 
     /// </summary>
     /// <param name="blueprint"></param>
-    public void AddEquipment(Blueprint blueprint) => throw new NotImplementedException();
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="equipment"></param>
-    /// <returns></returns>
-    public CompanyBuilder RemoveEquipment(Blueprint equipment) => throw new NotImplementedException();
+    public virtual CompanyBuilder AddEquipment(CompanyItem blueprint)
+        => this.ApplyAction(new AddEquipmentAction(blueprint));
 
     /// <summary>
     /// 
@@ -433,7 +446,7 @@ public class CompanyBuilder : IBuilder<Company> {
     /// 
     /// </summary>
     /// <param name="action"></param>
-    public virtual void EachItem(Action<Blueprint> action) => this.m_target.Items.ForEach(action);
+    public virtual void EachItem(Action<CompanyItem> action) => this.m_target.Items.ForEach(action);
 
     /// <summary>
     /// Create a <see cref="CompanyBuilder"/> capable of constructing a mutated version of the given <paramref name="company"/>.
@@ -470,7 +483,7 @@ public class CompanyBuilder : IBuilder<Company> {
     public static CompanyBuilder NewCompany(string name, FactionCompanyType type, CompanyAvailabilityType availabilityType, Faction faction, ModGuid modGuid) {
 
         // return new company builder 
-        return new CompanyBuilder(new(name, type, modGuid, faction, Array.Empty<UnitBuilder>(), Array.Empty<Ability>(), Array.Empty<Blueprint>(), false)) {
+        return new CompanyBuilder(new(name, type, modGuid, faction, Array.Empty<UnitBuilder>(), Array.Empty<Ability>(), Array.Empty<CompanyItem>(), false)) {
             AvailabilityType = availabilityType,
         };
 

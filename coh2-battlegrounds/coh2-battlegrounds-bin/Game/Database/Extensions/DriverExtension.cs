@@ -23,6 +23,11 @@ public class DriverExtension {
 
     private readonly Entry[] m_entries;
 
+    /// <summary>
+    /// Get if there are any drivers in the driver extension
+    /// </summary>
+    public bool Any => this.m_entries.Length > 0;
+
     public SquadBlueprint? GetSquad(Faction faction) {
         foreach (var e in this.m_entries) {
             if (e.Faction == faction.RbpPath) {

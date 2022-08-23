@@ -449,7 +449,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     }
 
-    private void AddEquipmentToDisplay(Blueprint blueprint) {
+    private void AddEquipmentToDisplay(CompanyItem item) {
 
         // Create display
         //EquipmentSlot equipmentSlot = new(blueprint);

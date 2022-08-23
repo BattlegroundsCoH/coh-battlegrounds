@@ -264,6 +264,7 @@ public class CompanySerializer : JsonConverter<Company> {
                 if (JsonSerializer.Deserialize(ref reader, inputType) is not Array values) {
                     throw new InvalidDataException();
                 }
+
                 switch (property) {
                     case nameof(Company.Units):
                         for (int i = 0; i < values.Length; i++) {
@@ -276,9 +277,9 @@ public class CompanySerializer : JsonConverter<Company> {
                         }
                         break;
                     case nameof(Company.Inventory):
-                        // TMP
-                        if (values.Length > 0)
-                            throw new NotImplementedException();
+                        for (int i = 0; i < values.Length; i++) {
+                            builder.AddEquipment(values.GetValue(i) as CompanyItem ?? throw new InvalidDataException());
+                        }
                         break;
                     case nameof(Company.Upgrades):
                         // TMP

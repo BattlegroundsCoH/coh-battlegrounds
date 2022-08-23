@@ -17,6 +17,12 @@ public static class FunctionJsonReader {
         return val;
     }
 
+    public static uint ReadUintProperty(this ref Utf8JsonReader reader) {
+        uint val = reader.GetUInt32();
+        reader.Read();
+        return val;
+    }
+
     public static ulong ReadUlongProperty(this ref Utf8JsonReader reader) {
         ulong val = reader.GetUInt64();
         reader.Read();

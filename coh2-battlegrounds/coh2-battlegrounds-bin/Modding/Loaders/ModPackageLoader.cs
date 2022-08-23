@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding.Content;
@@ -23,7 +24,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
 
         // Read data
         while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
-            string prop = reader.ReadProperty();
+            string prop = reader.ReadProperty() ?? throw new ObjectPropertyNotFoundException();
             __lookup[prop] = prop switch {
                 "ID" => reader.GetString()?.ToLowerInvariant() ?? string.Empty,
                 "Name" => reader.GetString() ?? string.Empty,
@@ -85,7 +86,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
     private static (bool, string, string) ReadTowdata(ref Utf8JsonReader reader) {
         object[] data = { false, string.Empty, string.Empty };
         while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
-            string prop = reader.ReadProperty();
+            string prop = reader.ReadProperty() ?? throw new ObjectPropertyNotFoundException();
             data[prop switch {
                 "IsEnabled" => 0,
                 "IsTowed" => 1,

@@ -67,7 +67,7 @@ public class Company : IChecksumItem {
     private ushort m_nextSquadId;
     private CompanyAvailabilityType m_availabilityType;
     private readonly List<Squad> m_squads;
-    private readonly List<Blueprint> m_inventory;
+    private readonly List<CompanyItem> m_inventory;
     private readonly List<Modifier> m_modifiers;
     private readonly List<UpgradeBlueprint> m_upgrades;
     private readonly List<Ability> m_abilities;
@@ -139,7 +139,7 @@ public class Company : IChecksumItem {
     /// Get the <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/> inventory of stored <see cref="Blueprint"/> objects.
     /// </summary>
     [ChecksumProperty(IsCollection = true)]
-    public ImmutableArray<Blueprint> Inventory => this.m_inventory.ToImmutableArray();
+    public ImmutableArray<CompanyItem> Inventory => this.m_inventory.ToImmutableArray();
 
     /// <summary>
     /// Get the <see cref="ImmutableArray{T}"/> representation of a <see cref="Company"/>'s upgrade list.
@@ -184,7 +184,7 @@ public class Company : IChecksumItem {
         this.Type = companyType;
         this.Name = "Untitled Company";
         this.m_squads = new List<Squad>();
-        this.m_inventory = new List<Blueprint>();
+        this.m_inventory = new List<CompanyItem>();
         this.m_modifiers = new List<Modifier>();
         this.m_upgrades = new List<UpgradeBlueprint>();
         this.m_abilities = new List<Ability>();
@@ -237,15 +237,16 @@ public class Company : IChecksumItem {
     /// 
     /// </summary>
     /// <param name="blueprint"></param>
-    public void AddInventoryItem(Blueprint blueprint) => this.m_inventory.Add(blueprint);
+    public void AddInventoryItem(Blueprint blueprint) 
+        => this.m_inventory.Add(new(this.m_inventory.Max(x => x.ItemId) + 1, blueprint, blueprint is EntityBlueprint ebp && ebp.Drivers.Any));
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="blueprint"></param>
-    public void RemoveInventoryItem(Blueprint blueprint) {
-        if (this.m_inventory.FirstOrDefault(x => x.Equals(blueprint)) is Blueprint bp) {
-            this.m_inventory.Remove(bp);
+    public void RemoveInventoryItem(uint itemId) {
+        if (this.m_inventory.Find(x => x.ItemId == itemId) is CompanyItem item) {
+            this.m_inventory.Remove(item);
         }
     }
 

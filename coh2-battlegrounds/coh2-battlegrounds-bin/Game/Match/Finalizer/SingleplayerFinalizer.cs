@@ -97,7 +97,8 @@ public class SingleplayerFinalizer : IFinalizeStrategy {
                 }
 
                 // Update losses
-                company.UpdateStatistics(x => UpdateLosses(x, !squad.SBP.Types.IsVehicle, 0)); // TODO: Get proper loss sizes
+                int loss = squad.SBP.Types.IsVehicle ? 1 : squad.SBP.Loadout.Count;
+                company.UpdateStatistics(x => UpdateLosses(x, !squad.SBP.Types.IsVehicle, (uint)loss));
 
             } else {
 
