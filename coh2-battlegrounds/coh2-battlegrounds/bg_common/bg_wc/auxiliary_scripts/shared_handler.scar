@@ -321,7 +321,7 @@ function BG_CallInInitials()
 
     for i=1, #_bg_playerData do
 
-        for k,v in pairs(_bg_playerData[i].company.units) do
+        for _, v in pairs(_bg_playerData[i].company.units) do
             if v.phase == 0 then
                 BG_DeploySquad(_bg_playerData[i].player, v.company_id);
             end
@@ -333,36 +333,43 @@ end
 
 function BG_PhaseUpdate()
 
-    if _bg_custom.phase_current < 3 then
+    local phase_complete = 0;
+    for _, v in pairs(_bg_playerData) do
 
-        if not _bg_custom.phase_pasued then
+        -- Get phase
+        local p = v.company.typedata[v.phase + 1]
 
-            _bg_custom.phase_time_left = _bg_custom.phase_time_left - 1;
+        -- Check
+        if p and World_GetGameTime() >= p.activation then
 
-            if _bg_custom.phase_time_left <= 0 then
-                _bg_custom.phase_current = _bg_custom.phase_current + 1;
-                _bg_custom.phase_time = _bg_custom.phase_time * 1.2;
-                _bg_custom.phase_time_left = _bg_custom.phase_time;
-                BG_OnEnterNewPhase();
-            end
+            -- Goto next phase
+            v.phase = v.phase + 1;
 
+            -- Trigger on enter
+            BG_OnEnterNewPhase(v.player, v.phase, p);
+
+        else
+            phase_complete = phase_complete + 1;
         end
 
-    else
+    end
+
+    -- Stop updating phases if all phases for all players are done
+    if phase_complete == #_bg_playerData then
         Rule_RemoveMe();
     end
 
 end
 
-function BG_OnEnterNewPhase()
-    if _bg_custom.phase_current == 2 then -- Could do more messages here (Within context of the player's situation)
+function BG_OnEnterNewPhase(player, newPhase, phase_data)
+    if newPhase == 2 then -- Could do more messages here (Within context of the player's situation)
         Util_MissionTitle(BG_LocString(16), 3, 8, 2 );
     else
         Util_MissionTitle(BG_LocString(17), 3, 8, 2 );
     end
+    -- TODO: Add resource income modifiers
     for i=1, World_GetPlayerCount() do
-        local p = World_GetPlayerAt(i);
-        if p == Game_GetLocalPlayer() then
+        if player == Game_GetLocalPlayer() then
             BG_RefreshCompanyView(); -- Refresh the company view
         end
     end

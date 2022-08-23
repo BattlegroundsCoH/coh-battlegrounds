@@ -18,9 +18,9 @@ namespace Battlegrounds.Modding.Content.Companies;
 public class FactionCompanyType : IChecksumElement {
 
     /// <summary>
-    /// Readonly struct representing a modifier to cost (or anything resource related).
+    /// Readonly class representing a modifier to cost (or anything resource related).
     /// </summary>
-    public readonly struct CostModifier {
+    public class CostModifier {
 
         /// <summary>
         /// Get the manpower modifier.

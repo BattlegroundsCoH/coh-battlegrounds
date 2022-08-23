@@ -22,6 +22,7 @@ function BG_LoadSessionData()
             _bg_playerData[j].lossData = {};
             _bg_playerData[j].GetCallInDestination = BG_GetCallInPoint;
             _bg_playerData[j].teamStr = BG_GetTeamString(_bg_playerData[j].race);
+            _bg_playerData[j].phase = 1
             local isVerified, steamID = BG_VerifyPlayer(_bg_playerData[j].name, _bg_playerData[j].teamStr, false);
             if not isVerified then
                 return BG_LocStringFormat(9, Player_GetDisplayName(player));
