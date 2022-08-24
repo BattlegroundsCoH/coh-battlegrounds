@@ -183,7 +183,7 @@ english:
  LobbyPlanning_Deployments: "{0} ({1}/{2})"
  CompanyBuilder_Units: "Units ({0}/{1})"
  CompanyBuilder_Abilities: "Abilities ({0}/{1})"
- CompanyBuilder_Storage: "Storage ({0}/{1})"
+ CompanyBuilder_Storage: "Inventory"
  CompanyBuilder_Stats: "Stats"
  CompanyBuilder_Infantry: "Infantry ({0}/{1})"
  CompanyBuilder_Support: "Support ({0}/{1})"

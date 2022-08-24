@@ -42,6 +42,8 @@ function BG_SolveNewUnit(playerData, sid)
                 playerData.tempcrews[sid] = driverID; -- Mark driver squad ID as temporary crew (and point to the captured squad)
                 playerData.deployed[sid] = _bg_unitID_RecrewRecapture; -- Mark vehicle as being a recrew or recapture case
                 Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled); -- Add on death event for squad
+            else
+                bgdebug("BG_SolveNewUnit: Crew squad " .. driverID .. " recrewed old vehicle with new id " ..sid);
             end -- else the crew (most likely) recrewed its old vehicle.
         else
             bgdebug("BG_SolveNewUnit: Crew was not spawned!");
@@ -49,7 +51,7 @@ function BG_SolveNewUnit(playerData, sid)
         end
 
     elseif Squad_HasTeamWeapon(squad) then -- if team weapon
-        bgdebug("Registering new team weapon");
+        bgdebug("BG_SolveNewUnit: Registering new team weapon");
         -- Find a potential "invalid" squad that could have captured this (and save ptr to it so it's not lost).
         local firstAvailableSquad, company_id = BG_FindFirstNonDeadSquadInCompany(playerData.selfID);
         if firstAvailableSquad ~= nil and (company_id or -1) >= 0 then -- Some squad is no longer valid - and most likely the squad capturing this

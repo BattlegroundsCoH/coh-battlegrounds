@@ -331,7 +331,7 @@ public class CompanyBuilder : IBuilder<Company> {
     /// </summary>
     /// <param name="phase">The phase to check if new units can be assiged to.</param>
     /// <returns>If phase has capaciy <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
-    public bool IsPhaseAvailable(DeploymentPhase phase, SquadBlueprint? blueprint = null) => (phase, this.CountUnitsInPhase(phase)) switch {
+    public virtual bool IsPhaseAvailable(DeploymentPhase phase, SquadBlueprint? blueprint = null) => (phase, this.CountUnitsInPhase(phase)) switch {
         // Check if there's space in initial AND the unit is available in phase A
         (DeploymentPhase.PhaseInitial, int x) => 
             x < this.CompanyType.MaxInitialPhase && (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseA)),
@@ -347,17 +347,52 @@ public class CompanyBuilder : IBuilder<Company> {
     };
 
     /// <summary>
+    /// Get the first deployment phase not fully occupied.
+    /// </summary>
+    /// <param name="minPhase">The minimum phase to begin checking from.</param>
+    /// <returns>The first available deployment phase</returns>
+    public virtual DeploymentPhase GetFirstAvailablePhase(DeploymentPhase minPhase) {
+        if (IsPhaseAvailable(minPhase))
+            return minPhase;
+        return GetFirstAvailablePhase(((int)minPhase + 1));
+    }
+
+    /// <summary>
+    /// Get the first deployment phase not fully occupied.
+    /// </summary>
+    /// <param name="minPhase">The minimum phase to begin checking from.</param>
+    /// <returns>The first available deployment phase</returns>
+    public virtual DeploymentPhase GetFirstAvailablePhase(int minPhase) {
+        if (IsPhaseAvailable((DeploymentPhase)minPhase))
+            return (DeploymentPhase)minPhase;
+        return minPhase is (int)DeploymentPhase.PhaseC ? DeploymentPhase.PhaseNone : GetFirstAvailablePhase(minPhase + 1);
+    }
+
+    /// <summary>
     /// Get a list of available transport units based on the settings of the <see cref="CompanyBuilder"/>.
     /// </summary>
     /// <param name="isTow">Flag setting whether transport units should be for towing or not.</param>
     /// <returns>Array of blueprints for transport use.</returns>
-    public IList<SquadBlueprint> GetTransports(bool isTow) {
+    public virtual IList<SquadBlueprint> GetTransports(bool isTow) {
 
         // Grab list from company type
         var transports = isTow ? this.CompanyType.GetTowTransports() : this.CompanyType.DeployBlueprints.Map(v => BlueprintManager.FromBlueprintName<SquadBlueprint>(v.Blueprint));
 
         // Return the transports
         return transports;
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="itemIndex"></param>
+    /// <param name="crew"></param>
+    /// <returns></returns>
+    public virtual CompanyBuilder CrewCompanyItem(uint itemIndex, SquadBlueprint crew) {
+
+        // Return self
+        return this;
 
     }
 
@@ -390,6 +425,10 @@ public class CompanyBuilder : IBuilder<Company> {
         // Loop over abilities and add to company
         foreach (var ability in this.m_target.Abilities)
             company.AddAbility(ability);
+
+        // Loop over items and add to company
+        foreach (var item in this.m_target.Items)
+            company.AddInventoryItem(item);
 
         // Trigger checksum calculation
         company.CalculateChecksum();

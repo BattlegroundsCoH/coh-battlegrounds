@@ -5,11 +5,12 @@ using System.Text.Json.Serialization;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Verification;
 
 namespace Battlegrounds.Game.DataCompany;
 
 [JsonConverter(typeof(CompanyItemSerialiser))]
-public class CompanyItem {
+public class CompanyItem : IChecksumElement {
 
     public class CompanyItemSerialiser : JsonConverter<CompanyItem> {
         private static string ReadProperty(ref Utf8JsonReader reader, string property)
@@ -35,9 +36,6 @@ public class CompanyItem {
 
             // Get bp name
             var bpNam = ReadProperty(ref reader, nameof(Item));
-
-            // End
-            reader.Read();
 
             // Return
             return new(itemId, BlueprintManager.FromBlueprintName(bpNam, bpTyp), isVeh);
@@ -76,6 +74,8 @@ public class CompanyItem {
     public bool IsEntity => this.Item is EntityBlueprint;
 
     public bool IsSlotItem => this.Item is SlotItemBlueprint;
+
+    public ulong Checksum => (ulong)(this.ItemId * this.Item.PBGID.UniqueIdentifier);
 
     public CompanyItem(uint id, Blueprint blueprint, bool isVehicle) {
         this.ItemId = id;

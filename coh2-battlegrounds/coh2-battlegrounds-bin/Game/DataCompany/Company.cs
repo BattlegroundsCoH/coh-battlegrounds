@@ -237,8 +237,17 @@ public class Company : IChecksumItem {
     /// 
     /// </summary>
     /// <param name="blueprint"></param>
-    public void AddInventoryItem(Blueprint blueprint) 
-        => this.m_inventory.Add(new(this.m_inventory.Max(0, x => x.ItemId) + 1, blueprint, blueprint is EntityBlueprint ebp && ebp.Drivers.Any));
+    public void AddInventoryItem(Blueprint blueprint) {
+        var isVeh = blueprint is EntityBlueprint ebp && ebp.Drivers.Any || blueprint is SquadBlueprint sbp && sbp.Types.IsVehicle;
+        this.m_inventory.Add(new(this.m_inventory.Max(0, x => x.ItemId) + 1, blueprint, isVeh));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="blueprint"></param>
+    public void AddInventoryItem(CompanyItem item)
+        => this.m_inventory.Add(item);
 
     /// <summary>
     /// 

@@ -25,6 +25,7 @@ public class UnitBuilder : IBuilder<Squad> {
         string CustomName,
         SquadBlueprint Blueprint,
         SquadBlueprint? Transport,
+        EntityBlueprint? SyncWeapon,
         DeploymentMethod DeploymentMethod,
         DeploymentPhase DeploymentPhase,
         UnitBuilder? CrewBuilder,
@@ -110,6 +111,16 @@ public class UnitBuilder : IBuilder<Squad> {
         };
     }
 
+    public sealed record AddSyncWeaponAction(EntityBlueprint Blueprint) : IEditAction<BuildableSquad> {
+        private EntityBlueprint? m_prev;
+        public BuildableSquad Apply(BuildableSquad target) => target with {
+            SyncWeapon = this.Blueprint.And(() => this.m_prev = target.SyncWeapon)
+        };
+        public BuildableSquad Undo(BuildableSquad target) => target with {
+            SyncWeapon = this.m_prev
+        };
+    }
+
     public sealed record AddModifierAction(Modifier Modifier) : IEditAction<BuildableSquad> {
         public BuildableSquad Apply(BuildableSquad target) => target with {
             Modifiers = target.Modifiers.Append(this.Modifier)
@@ -143,6 +154,16 @@ public class UnitBuilder : IBuilder<Squad> {
         };
         public BuildableSquad Undo(BuildableSquad target) => target with {
             Modifiers = target.Modifiers.Append(this.Modifier)
+        };
+    }
+
+    public sealed record RemoveSyncWeaponAction() : IEditAction<BuildableSquad> {
+        private EntityBlueprint? m_prev;
+        public BuildableSquad Apply(BuildableSquad target) => target with {
+            SyncWeapon = (this.m_prev = target.SyncWeapon).Then(_ => null)
+        };
+        public BuildableSquad Undo(BuildableSquad target) => target with {
+            SyncWeapon = this.m_prev
         };
     }
 
@@ -472,6 +493,14 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="entityBlueprint"></param>
+    /// <returns></returns>
+    public virtual UnitBuilder SetSyncWeapon(EntityBlueprint entityBlueprint)
+        => this.ApplyAction(new AddSyncWeaponAction(entityBlueprint));
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="arg"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
@@ -490,6 +519,7 @@ public class UnitBuilder : IBuilder<Squad> {
         squad.SetVeterancy(this.Rank, this.Experience);
         squad.SetCombatTime(this.CombatTime);
         squad.SetIsCrew(this.IsCrew);
+        squad.SetSyncWeapon(this.m_target.SyncWeapon);
 
         // Handle crew
         if (this.m_target.CrewBuilder is not null) {
@@ -579,7 +609,7 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <returns></returns>
     /// <exception cref="ObjectNotFoundException"></exception>
     public static UnitBuilder NewUnit(SquadBlueprint sbp)
-        => new(new BuildableSquad(0, 0.0f, false, string.Empty, sbp, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, 
+        => new(new BuildableSquad(0, 0.0f, false, string.Empty, sbp, null, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, 
             sbp.HasCrew ? NewCrew(sbp.GetCrewBlueprint() ?? throw new ObjectNotFoundException($"Crew blueprint not found for blueprint '{sbp}'.")) : null,
             Array.Empty<UpgradeBlueprint>(), Array.Empty<SlotItemBlueprint>(), Array.Empty<Modifier>()));
 
@@ -589,7 +619,7 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <param name="sbp"></param>
     /// <returns></returns>
     public static UnitBuilder NewCrew(SquadBlueprint sbp)
-        => new(new BuildableSquad(0, 0.0f, true, string.Empty, sbp, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, null,
+        => new(new BuildableSquad(0, 0.0f, true, string.Empty, sbp, null, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, null,
             Array.Empty<UpgradeBlueprint>(), Array.Empty<SlotItemBlueprint>(), Array.Empty<Modifier>()));
 
     /// <summary>
@@ -606,6 +636,7 @@ public class UnitBuilder : IBuilder<Squad> {
         // Create buildabe
         var buildable = new BuildableSquad(squad.VeterancyRank, squad.VeterancyProgress, squad.IsCrew, squad.CustomName, 
             squad.SBP, squad.SupportBlueprint as SquadBlueprint,
+            squad.SyncWeapon,
             squad.DeploymentMethod, squad.DeploymentPhase,
             squad.Crew is not null ? EditUnit(squad.Crew) : null,
             upgrades, items, squad.Modifiers.ToArray());

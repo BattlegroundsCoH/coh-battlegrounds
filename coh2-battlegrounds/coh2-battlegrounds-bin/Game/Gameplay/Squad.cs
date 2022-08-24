@@ -93,6 +93,7 @@ public class Squad : IChecksumPropertyItem {
     private DeploymentPhase m_deployPhase;
     private Squad? m_crewSquad;
     private Blueprint? m_deployBp;
+    private EntityBlueprint? m_weaponBlueprint;
 
     private readonly HashSet<Blueprint> m_upgrades;
     private readonly HashSet<Blueprint> m_slotItems;
@@ -118,10 +119,16 @@ public class Squad : IChecksumPropertyItem {
     public Blueprint Blueprint { get; }
 
     /// <summary>
-    /// The squad or entity <see cref="Database.Blueprint"/> to support this squad.
+    /// Get the squad or entity <see cref="Database.Blueprint"/> to support this squad.
     /// </summary>
     [ChecksumProperty]
     public Blueprint? SupportBlueprint => this.m_deployBp;
+
+    /// <summary>
+    /// Get the sync weapon assigned to the squad.
+    /// </summary>
+    [ChecksumProperty]
+    public EntityBlueprint? SyncWeapon => this.m_weaponBlueprint;
 
     /// <summary>
     /// The method to use when deploying a <see cref="Squad"/>.
@@ -264,7 +271,15 @@ public class Squad : IChecksumPropertyItem {
     /// 
     /// </summary>
     /// <param name="isCrew"></param>
-    public void SetIsCrew(bool isCrew) => m_isCrewSquad = isCrew;
+    public void SetIsCrew(bool isCrew) 
+        => this.m_isCrewSquad = isCrew;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="syncWeapon"></param>
+    public void SetSyncWeapon(EntityBlueprint? syncWeapon) 
+        => this.m_weaponBlueprint = syncWeapon;
 
     /// <summary>
     /// Add an upgrade to the squad

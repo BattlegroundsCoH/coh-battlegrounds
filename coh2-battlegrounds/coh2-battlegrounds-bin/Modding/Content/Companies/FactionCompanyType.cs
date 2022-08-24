@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
@@ -157,7 +158,8 @@ public class FactionCompanyType : IChecksumElement {
         /// <param name="UnitCostModifier"></param>
         /// <param name="Unlocks"></param>
         [JsonConstructor]
-        public Phase(int ActivationTime, float DeployDelay, CostModifier ResourceIncomeModifier, CostModifier UnitCostModifier, string[] Unlocks, int MaxPhase) {
+        public Phase(int ActivationTime, float DeployDelay, CostModifier ResourceIncomeModifier, CostModifier UnitCostModifier, 
+            string[] Unlocks, int MaxPhase) {
             this.ActivationTime = ActivationTime;
             this.DeployDelay = DeployDelay;
             this.ResourceIncomeModifier = ResourceIncomeModifier;
@@ -231,10 +233,21 @@ public class FactionCompanyType : IChecksumElement {
     public Dictionary<string, Phase> Phases { get; init; }
 
     /// <summary>
+    /// Get or initialise the blueprint to use when recrewing team weapons
+    /// </summary>
+    public string TeamWeaponCrew { get; init; }
+
+    /// <summary>
     /// Get the checksum associated with the company type
     /// </summary>
     [JsonIgnore]
     public ulong Checksum => this.Id.ToCharArray().Fold(0ul, (s, c) => (s + 1) * c);
+
+    /// <summary>
+    /// Get or set the faction data associated with this company type
+    /// </summary>
+    [JsonIgnore]
+    public FactionData? FactionData { get; set; }
 
     /// <summary>
     /// Initialise a new <see cref="FactionCompanyType"/> instance.
@@ -254,7 +267,8 @@ public class FactionCompanyType : IChecksumElement {
     [JsonConstructor]
     public FactionCompanyType(string Id, string Icon, 
         int MaxInfantry, int MaxTeamWeapons, int MaxVehicles, int MaxLeaders, int MaxAbilities, int MaxInitialPhase,
-        string[] Exclude, string[] DeployTypes, TransportOption[] DeployBlueprints, Dictionary<string, Phase> Phases) {
+        string[] Exclude, string[] DeployTypes, TransportOption[] DeployBlueprints, Dictionary<string, Phase> Phases,
+        string TeamWeaponCrew) {
 
         // Set properties
         this.Id = Id;
@@ -269,6 +283,7 @@ public class FactionCompanyType : IChecksumElement {
         this.DeployTypes = DeployTypes;
         this.DeployBlueprints = DeployBlueprints;
         this.Phases = Phases;
+        this.TeamWeaponCrew = TeamWeaponCrew;
 
         // Init internals
         this.m_unitUnlocks = new();
@@ -321,6 +336,18 @@ public class FactionCompanyType : IChecksumElement {
             return p.MaxPhase;
         }
         return Company.MAX_SIZE / 3 + 1;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="ObjectNotFoundException"></exception>
+    public SquadBlueprint GetWeaponsCrew() {
+        if (string.IsNullOrEmpty(this.TeamWeaponCrew)) {
+            return BlueprintManager.FromBlueprintName<SquadBlueprint>(this.FactionData?.TeamWeaponCrew ?? throw new ObjectNotFoundException("Weapons crew squad is unspecified."));
+        }
+        return BlueprintManager.FromBlueprintName<SquadBlueprint>(this.TeamWeaponCrew);
     }
 
 }

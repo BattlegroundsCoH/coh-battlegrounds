@@ -279,10 +279,8 @@
 
             <!-- STORAGE -->
             <TabItem Header="CompanyBuilder_Storage"
-                     Tag="{Binding StorageCapacity}"
                      Width="180"
                      Height="35"
-                     Visibility="Collapsed"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto" 
@@ -290,6 +288,11 @@
                               Height="660">
 
                     <StackPanel>
+                        <StackPanel.Resources>
+                            <Style TargetType="{x:Type views:EquipmentSlotView}">
+                                <Setter Property="Margin" Value="0, 5, 5, 0"/>
+                            </Style>
+                        </StackPanel.Resources>
                         <ItemsControl ItemsSource="{Binding CompanyEquipment}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>

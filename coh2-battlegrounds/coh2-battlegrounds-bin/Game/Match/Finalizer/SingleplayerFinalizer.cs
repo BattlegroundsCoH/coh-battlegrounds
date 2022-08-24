@@ -97,15 +97,16 @@ public class SingleplayerFinalizer : IFinalizeStrategy {
                 }
 
                 // Update losses
-                int loss = squad.SBP.Types.IsVehicle ? 1 : squad.SBP.Loadout.Count;
-                company.UpdateStatistics(x => UpdateLosses(x, !squad.SBP.Types.IsVehicle, (uint)loss));
+                int loss = squad.SBP.Types.IsInfantry ? squad.SBP.Loadout.Count : 1;
+                company.UpdateStatistics(x => UpdateLosses(x, !squad.SBP.Types.IsInfantry, (uint)loss));
 
             } else {
 
                 // Update veterancy
                 if (status.VetChange >= 0) {
                     squad.IncreaseVeterancy(status.VetChange, status.VetExperience);
-                    Trace.WriteLine($"Unit ID '{status.UnitID}' from '{company.Name}' gained '{status.VetExperience}'.", nameof(SingleplayerFinalizer));
+                    if (status.VetExperience > 0)
+                        Trace.WriteLine($"Unit ID '{status.UnitID}' from '{company.Name}' gained '{status.VetExperience}'.", nameof(SingleplayerFinalizer));
                 }
 
                 // Update combat time

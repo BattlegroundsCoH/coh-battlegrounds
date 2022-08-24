@@ -25,14 +25,19 @@ public enum SquadCategory {
     Infantry,
 
     /// <summary>
-    /// Support weapon/vehicle category (aka team weapon).
+    /// Support weapon/vehicle category (aka team weapon). Also includes support vehicles such as supply trucks.
     /// </summary>
     Support,
 
     /// <summary>
     /// Vehicle category.
     /// </summary>
-    Vehicle
+    Vehicle,
+
+    /// <summary>
+    /// Leader category
+    /// </summary>
+    Leader,
 
 }
 
@@ -296,6 +301,8 @@ public sealed class SquadBlueprint : Blueprint, IUIBlueprint {
             return SquadCategory.Support;
         } else if (types.Contains("vehicle")) {
             return SquadCategory.Vehicle;
+        } else if (types.IsCommandUnit) {
+            return SquadCategory.Leader;
         }
         return SquadCategory.Infantry;
     }

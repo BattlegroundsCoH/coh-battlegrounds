@@ -250,7 +250,7 @@ public class CompanySerializer : JsonConverter<Company> {
                 [nameof(Company.Units)] = typeof(Squad[]),
                 [nameof(Company.Upgrades)] = typeof(UpgradeBlueprint[]),
                 [nameof(Company.Modifiers)] = typeof(Modifier[]),
-                [nameof(Company.Inventory)] = typeof(Blueprint[]),
+                [nameof(Company.Inventory)] = typeof(CompanyItem[]),
             };
 
             // Read arrays

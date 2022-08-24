@@ -55,16 +55,14 @@ public class CompanyBuilderViewModel : ViewModelBase {
     private readonly CompanyBuilder? m_builder;
 
     private readonly List<SquadBlueprint> m_availableSquads;
-    private readonly List<SquadBlueprint> m_availableCrews;
     private readonly List<AbilityBlueprint> m_abilities;
 
     public ObservableCollection<AvailableItemViewModel> AvailableItems { get; set; }
 
-    public List<AvailableItemViewModel> m_availableInfantrySquads;
-    public List<AvailableItemViewModel> m_availableSupportSquads;
-    public List<AvailableItemViewModel> m_availableVehicleSquads;
-
-    public List<AvailableItemViewModel> m_availableAbilities;
+    public List<AvailableItemViewModel> AvailableInfantrySquads { get; }
+    public List<AvailableItemViewModel> AvailableSupportSquads { get; }
+    public List<AvailableItemViewModel> AvailableVehicleSquads { get; }
+    public List<AvailableItemViewModel> AvailableAbilities { get; }
 
     public ObservableCollection<SquadSlotViewModel> CompanyInfantrySquads { get; set; }
     public ObservableCollection<SquadSlotViewModel> CompanySupportSquads { get; set; }
@@ -165,12 +163,11 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.AvailableItems = new();
 
         // Define list
-        this.m_availableInfantrySquads = new();
-        this.m_availableSupportSquads = new();
-        this.m_availableVehicleSquads = new();
-        this.m_availableAbilities = new();
+        this.AvailableInfantrySquads = new();
+        this.AvailableSupportSquads = new();
+        this.AvailableVehicleSquads = new();
+        this.AvailableAbilities = new();
         this.m_availableSquads = new();
-        this.m_availableCrews = new();
         this.m_abilities = new();
 
         // Set default tabs
@@ -228,7 +225,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.LoadFactionDatabase();
         this.ShowCompany();
 
-        this.m_availableInfantrySquads.ForEach(x => this.AvailableItems.Add(x));
+        this.AvailableInfantrySquads.ForEach(x => this.AvailableItems.Add(x));
 
         // Update capacity values
         this.SetCapacityValues();
@@ -328,20 +325,17 @@ public class CompanyBuilderViewModel : ViewModelBase {
             // Grab type
             var type = this.Builder.CompanyType;
 
+            // Grab crew squads (invisible squads we're going to keep hidden)
+            var hidden = type.FactionData?.GetHiddenSquads() ?? Array.Empty<string>();
+
             // Get available squads
             BlueprintManager.GetCollection<SquadBlueprint>()
                 .FilterByMod(this.CompanyGUID)
                 .Filter(x => x.Army == this.CompanyFaction)
                 .Filter(x => !x.Types.IsVehicleCrew)
                 .Filter(x => !type.Exclude.Contains(x.Name))
+                .Filter(x => !hidden.Contains(x.Name))
                 .ForEach(this.m_availableSquads.Add);
-
-            // Get available crews
-            BlueprintManager.GetCollection<SquadBlueprint>()
-                .FilterByMod(this.CompanyGUID)
-                .Filter(x => x.Army == this.CompanyFaction)
-                .Filter(x => x.Types.IsVehicleCrew)
-                .ForEach(this.m_availableCrews.Add);
 
             // Get faction data
             var faction = this.m_activeModPackage.FactionSettings[this.CompanyFaction];
@@ -356,15 +350,15 @@ public class CompanyBuilderViewModel : ViewModelBase {
             Application.Current.Dispatcher.Invoke(() => {
 
                 this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsInfantry == true),
-                                           this.m_availableInfantrySquads);
+                                           this.AvailableInfantrySquads);
 
                 this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.IsTeamWeapon == true),
-                                           this.m_availableSupportSquads);
+                                           this.AvailableSupportSquads);
 
                 this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsVehicle == true || s.Types.IsArmour == true || s.Types.IsHeavyArmour == true),
-                                           this.m_availableVehicleSquads);
+                                           this.AvailableVehicleSquads);
 
-                this.FillAvailableItemSlot(this.m_abilities, this.m_availableAbilities);
+                this.FillAvailableItemSlot(this.m_abilities, this.AvailableAbilities);
 
                 this.UpdateAvailableItems();
 
@@ -382,7 +376,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.CompanyVehicleSquads.Clear();
         this.CompanyAbilities.Clear();
         this.CompanyUnitAbilities.Clear();
-        //this.CompanyEquipment.Clear();
+        this.CompanyEquipment.Clear();
 
         // Add all units
         this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.Phase);
@@ -452,11 +446,10 @@ public class CompanyBuilderViewModel : ViewModelBase {
     private void AddEquipmentToDisplay(CompanyItem item) {
 
         // Create display
-        //EquipmentSlot equipmentSlot = new(blueprint);
-        //equipmentSlot.OnRemove += this.OnEquipmentRemoveClicked;
-        //equipmentSlot.OnEquipped += this.EquipItem;
+        var equipmentSlot = new EquipmentSlotViewModel(item, this);
 
-        //this.CompanyEquipment.Add(equipmentSlot);
+        // Add to equipment list
+        this.CompanyEquipment.Add(equipmentSlot);
 
     }
 
@@ -603,13 +596,13 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
             switch (this.SelectedUnitTabItem) {
                 case 0:
-                    this.m_availableInfantrySquads.ForEach(x => this.AvailableItems.Add(x));
+                    this.AvailableInfantrySquads.ForEach(x => this.AvailableItems.Add(x));
                     break;
                 case 1:
-                    this.m_availableSupportSquads.ForEach(x => this.AvailableItems.Add(x));
+                    this.AvailableSupportSquads.ForEach(x => this.AvailableItems.Add(x));
                     break;
                 case 2:
-                    this.m_availableVehicleSquads.ForEach(x => this.AvailableItems.Add(x));
+                    this.AvailableVehicleSquads.ForEach(x => this.AvailableItems.Add(x));
                     break;
                 default:
                     break;
@@ -620,7 +613,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
             switch (this.SelectedAbilityTabItem) {
                 case 0:
                     this.AvailableItemsVisibility = Visibility.Visible;
-                    this.m_availableAbilities.ForEach(x => this.AvailableItems.Add(x));
+                    this.AvailableAbilities.ForEach(x => this.AvailableItems.Add(x));
                     break;
                 case 1:
                     this.AvailableItemsVisibility = Visibility.Hidden;
@@ -683,10 +676,15 @@ public class CompanyBuilderViewModel : ViewModelBase {
         var basicPhase = this.Builder.IsPhaseAvailable(DeploymentPhase.PhaseInitial) && earliestPhase is DeploymentPhase.PhaseA ?
             DeploymentPhase.PhaseInitial : earliestPhase;
 
-        // TODO: Get earliest available phase adhering to company type phase limits
+        // Get the default phase
+        var defaultPhase = this.Builder.GetFirstAvailablePhase(basicPhase);
+        if (defaultPhase is DeploymentPhase.PhaseNone) {
+            // TODO: Show warning for user
+            return;
+        }
 
         // Create squad (in initial phase or in phase A)
-        var unitBuilder = UnitBuilder.NewUnit(sbp).SetDeploymentPhase(basicPhase);
+        var unitBuilder = UnitBuilder.NewUnit(sbp).SetDeploymentPhase(defaultPhase);
 
         // If heavy arty add tow
         if (sbp.Types.IsHeavyArtillery && !sbp.Types.IsAntiTank)
