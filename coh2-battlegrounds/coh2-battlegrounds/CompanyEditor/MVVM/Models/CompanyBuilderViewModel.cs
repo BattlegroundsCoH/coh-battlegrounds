@@ -370,22 +370,31 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     private void ShowCompany() {
 
-        // Clear collections
-        this.CompanyInfantrySquads.Clear();
-        this.CompanySupportSquads.Clear();
-        this.CompanyVehicleSquads.Clear();
-        this.CompanyAbilities.Clear();
-        this.CompanyUnitAbilities.Clear();
-        this.CompanyEquipment.Clear();
+        // Refresh unit overview
+        this.RefreshUnitOverview();
 
-        // Add all units
-        this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.Phase);
+        // Clear collections
+        this.CompanyAbilities.Clear();
+        this.CompanyEquipment.Clear();
 
         // Add all abilities
         this.Builder.EachAbility(this.AddAbilityToDisplay);
 
         // Add all items
         this.Builder.EachItem(this.AddEquipmentToDisplay);
+
+    }
+
+    private void RefreshUnitOverview() {
+
+        // Clear equipment
+        this.CompanyInfantrySquads.Clear();
+        this.CompanySupportSquads.Clear();
+        this.CompanyVehicleSquads.Clear();
+        this.CompanyUnitAbilities.Clear();
+
+        // Add all units
+        this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.Phase);
 
     }
 
@@ -446,7 +455,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
     private void AddEquipmentToDisplay(CompanyItem item) {
 
         // Create display
-        var equipmentSlot = new EquipmentSlotViewModel(item, this);
+        var equipmentSlot = new EquipmentSlotViewModel(item, this.OnEquipmentClicked, this.CanEquipItem);
 
         // Add to equipment list
         this.CompanyEquipment.Add(equipmentSlot);
@@ -516,6 +525,57 @@ public class CompanyBuilderViewModel : ViewModelBase {
             this.NewAbility(abp);
         }
         
+    }
+
+    private bool CanEquipItem(EquipmentSlotViewModel equipmentSlot) {
+        if (equipmentSlot.Item.Item is SquadBlueprint sbp) {
+            return sbp.Category switch {
+                SquadCategory.Infantry => !this.InfantryCapacity.IsAtCapacity,
+                SquadCategory.Support => !this.SupportCapacity.IsAtCapacity,
+                SquadCategory.Vehicle => !this.VehicleCapacity.IsAtCapacity,
+                _ => false // TODO: Add support for command units
+            };
+        } else if (equipmentSlot.Item.Item is EntityBlueprint) {
+            return !this.SupportCapacity.IsAtCapacity; // Based on team weapons *always* being ebps
+        }
+        return false;
+    }
+
+    private void OnEquipmentClicked(EquipmentSlotViewModel equipmentSlot) {
+
+        try {
+
+            // Determine how
+            if (equipmentSlot.Item.Item is SquadBlueprint sbp) { // Is vehicle...
+
+                // Get driver squad
+                var driverSbp = sbp.GetCrewBlueprint(this.CompanyFaction);
+                driverSbp ??= this.Builder.CompanyType.FactionData!.GetDriver(sbp.Types);
+
+                // Add action
+                this.Builder.CrewCompanyItem(equipmentSlot.Item.ItemId, driverSbp);
+
+            } else if (equipmentSlot.Item.Item is EntityBlueprint ebp) {
+
+                // Get crew
+                var crewSbp = this.Builder.CompanyType.GetWeaponsCrew();
+
+                // Add action
+                this.Builder.CrewCompanyItem(equipmentSlot.Item.ItemId, crewSbp);
+
+            } else return;
+
+        } catch (InvalidOperationException) {
+            // TODO: Show error message with message from caught exception
+            return;
+        }
+
+        // Remove item
+        this.CompanyEquipment.Remove(equipmentSlot);
+
+        // Refresh unit status
+        this.RefreshUnitOverview();
+
     }
 
     private void OnItemMove(object sender, AvailableItemViewModel itemSlot, object? arg) {
@@ -648,14 +708,6 @@ public class CompanyBuilderViewModel : ViewModelBase {
         }
 
     }
-
-    /*private void OnEquipmentRemoveClicked(EquipmentSlot equipmentSlot) { 
-    
-    }
-
-    private void EquipItem(EquipmentSlot equipmentSlot, SquadBlueprint sbp) { 
-    
-    }*/
 
     private void RefreshAbilityDisplay() {
 

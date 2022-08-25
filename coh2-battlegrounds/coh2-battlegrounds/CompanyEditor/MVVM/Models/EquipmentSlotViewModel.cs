@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 
 using BattlegroundsApp.Resources;
@@ -16,7 +17,7 @@ namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
 public class EquipmentSlotViewModel {
 
-    private readonly CompanyBuilderViewModel m_builderViewModel;
+    private readonly Predicate<EquipmentSlotViewModel> m_canEquipPredicate;
 
     public CompanyItem Item { get; }
     
@@ -28,9 +29,9 @@ public class EquipmentSlotViewModel {
 
     public ICommand EquipClick { get; }
 
-    public bool CanEquip => this.IsEquippable();
+    public bool CanEquip => this.m_canEquipPredicate(this);
 
-    public EquipmentSlotViewModel(CompanyItem item, CompanyBuilderViewModel companyBuilder) {
+    public EquipmentSlotViewModel(CompanyItem item, Action<EquipmentSlotViewModel> onEquip, Predicate<EquipmentSlotViewModel> canEquip) {
         
         // Set Item
         this.Item = item;
@@ -49,51 +50,10 @@ public class EquipmentSlotViewModel {
         } ?? string.Empty;
 
         // Define equip click command
-        this.EquipClick = new RelayCommand(this.OnEquipmentClicked);
+        this.EquipClick = new RelayCommand(() => onEquip(this));
 
-        // Set builder ref
-        this.m_builderViewModel = companyBuilder;
-
-    }
-
-    public bool IsEquippable() {
-        if (this.Item.Item is SquadBlueprint sbp) {
-            return sbp.Category switch {
-                SquadCategory.Infantry => !this.m_builderViewModel.InfantryCapacity.IsAtCapacity,
-                SquadCategory.Support => !this.m_builderViewModel.SupportCapacity.IsAtCapacity,
-                SquadCategory.Vehicle => !this.m_builderViewModel.VehicleCapacity.IsAtCapacity,
-                _ => false // TODO: Add support for command units
-            };
-        } else if (this.Item.Item is EntityBlueprint) {
-            return !this.m_builderViewModel.SupportCapacity.IsAtCapacity; // Based on team weapons *always* being ebps
-        }
-        return false;
-    }
-
-    private void OnEquipmentClicked() {
-
-        // Determine how
-        if (this.Item.Item is SquadBlueprint sbp) { // Is vehicle...
-
-            // Get driver squad
-            var driverSbp = sbp.GetCrewBlueprint(this.m_builderViewModel.CompanyFaction);
-            if (driverSbp is null) {
-                // TODO: Exception
-                return;
-            }
-
-            // Add action
-            this.m_builderViewModel.Builder.CrewCompanyItem(this.Item.ItemId, driverSbp);
-
-        } else if (this.Item.Item is EntityBlueprint ebp) {
-
-            // Get crew
-            var crewSbp = this.m_builderViewModel.Builder.CompanyType.GetWeaponsCrew();
-
-            // Add action
-            this.m_builderViewModel.Builder.CrewCompanyItem(this.Item.ItemId, crewSbp);
-
-        }
+        // Set can equip
+        this.m_canEquipPredicate = canEquip;
 
     }
 

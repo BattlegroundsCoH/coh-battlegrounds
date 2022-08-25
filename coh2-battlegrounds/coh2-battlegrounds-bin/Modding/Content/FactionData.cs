@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Extensions;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Modding.Content.Companies;
 
 namespace Battlegrounds.Modding.Content;
@@ -74,6 +77,9 @@ public class FactionData {
     /// </summary>
     public string TeamWeaponCrew { get; init; }
 
+    [JsonIgnore]
+    public ModPackage? Package { get; set; }
+
     [JsonConstructor]
     public FactionData(string Faction, 
         Driver[] Drivers, 
@@ -98,7 +104,25 @@ public class FactionData {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public string[] GetHiddenSquads()
         => this.Companies.Types.MapNotNull(x => x.TeamWeaponCrew).Append(this.TeamWeaponCrew);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="types"></param>
+    /// <returns></returns>
+    /// <exception cref="ObjectNotFoundException"></exception>
+    public SquadBlueprint GetDriver(TypeList types) {
+        for (int i = 0; i < this.Drivers.Length; i++) {
+            if (string.IsNullOrEmpty(this.Drivers[i].WhenType) || types.IsType(this.Drivers[i].WhenType))
+                return BlueprintManager.FromBlueprintName<SquadBlueprint>(this.Drivers[i].Blueprint);
+        }
+        throw new ObjectNotFoundException("Failed to find driver blueprint.");
+    }
 
 }

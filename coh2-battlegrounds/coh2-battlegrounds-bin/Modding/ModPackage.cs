@@ -5,6 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataSource;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
@@ -86,6 +89,8 @@ public class ModPackage {
 
     public Gamemode[] Gamemodes { get; init; }
 
+    public Dictionary<string, Dictionary<string, string>> TeamWeaponCaptureSquads { get; init; }
+
     public ModPackage() {
         this.ID = "$invalid";
         this.PackageName = "Invalid Mod Package";
@@ -93,12 +98,26 @@ public class ModPackage {
         this.FactionSettings = new();
         this.ParadropUnits = Array.Empty<string>();
         this.LocaleFiles = Array.Empty<ModLocale>();
+        this.TeamWeaponCaptureSquads = new();
         this.VerificationUpgrade = this.IsTowedUpgrade = this.IsTowingUpgrade = string.Empty;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="modType"></param>
+    /// <param name="language"></param>
+    /// <returns></returns>
     public UcsFile? GetLocale(ModType modType, string language)
         => this.LocaleFiles.FirstOrDefault(x => x.ModType == modType) is ModLocale loc ? loc.GetLocale(this.ID, language) : null;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="modType"></param>
+    /// <param name="language"></param>
+    /// <returns></returns>
+    /// <exception cref="NotSupportedException"></exception>
     public UcsFile? GetLocale(ModType modType, LocaleLanguage language)
         => this.GetLocale(modType, language switch {
             LocaleLanguage.Default => "english",
@@ -109,9 +128,37 @@ public class ModPackage {
             _ => throw new NotSupportedException()
         });
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public FactionCompanyType? GetCompanyType(string id)
         => this.FactionSettings.Values.SelectMany(x => x.Companies.Types).FirstOrDefault(x => x.Id == id);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="faction"></param>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public FactionCompanyType? GetCompanyType(Faction faction, string id) => this.FactionSettings[faction].Companies.Types?.FirstOrDefault(x => x.Id == id) ?? null;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="ebp"></param>
+    /// <param name="faction"></param>
+    /// <returns></returns>
+    /// <exception cref="ObjectNotFoundException"></exception>
+    public SquadBlueprint GetCaptureSquad(EntityBlueprint ebp, Faction faction) {
+        var ebpstr = ebp.GetScarName();
+        foreach (var (k,v) in this.TeamWeaponCaptureSquads) {
+            if (k == ebpstr) {
+                return BlueprintManager.FromBlueprintName<SquadBlueprint>(v[faction.Name]);
+            }
+        }
+        throw new ObjectNotFoundException($"Failed to find capture squad blueprint for team weapon '{ebp}' for faction '{faction}'.");
+    }
 
 }

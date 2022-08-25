@@ -933,6 +933,31 @@
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741944,
+    "Name": "geramn_weapon_crew_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 45,
+      "FieldTime": 4.5
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "weapon_crew_\u0026_pioneer_mp40_smg_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741879,
     "Name": "howitzer_crew_bg",
     "Army": "german",
@@ -3604,6 +3629,30 @@
       "battle_phase_4_mp"
     ],
     "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1234,
+    "Name": "map_entry_point",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1235,
+    "Name": "map_entry_point_player",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",

@@ -744,5 +744,63 @@
     "IsTowing": "is_towing"
   },
   "AllowSupplySystem": true,
-  "AllowWeatherSystem": true
+  "AllowWeatherSystem": true,
+  "TeamWeaponCaptureSquads": {
+    "mg42_hmg_mp": {
+      "soviet": "sov_capture_mg42_bg",
+      "german": "mg42_heavy_machine_gun_squad_bg"
+    },
+    "142b113740474c82a60b0a428bd553d5:mg42_hmg_bg": {
+      "soviet": "sov_capture_mg42_bg",
+      "german": "mg42_heavy_machine_gun_squad_bg"
+    },
+    "142b113740474c82a60b0a428bd553d5:granatewerfer_34_81mm_mortar_bg": {
+      "soviet": "sov_capture_81mm_bg",
+      "german": "mortar_team_81mm_bg"
+    },
+    "142b113740474c82a60b0a428bd553d5:pak40_75mm_at_gun_bg": {
+      "soviet": "sov_capture_pak40_bg",
+      "german": "pak40_75mm_at_gun_squad_bg"
+    },
+    "142b113740474c82a60b0a428bd553d5:pak43_88mm_at_gun_bg": {
+      "soviet": "sov_capture_pak43_bg",
+      "german": "pak43_88mm_at_gun_squad_bg"
+    },
+    "142b113740474c82a60b0a428bd553d5:howitzer_105mm_le_fh18_bg": {
+      "soviet": "sov_capture_lefh18_bg",
+      "german": "howitzer_105mm_le_fh18_artillery_bg"
+    },
+    "142b113740474c82a60b0a428bd553d5:m1937_53-k_45mm_at_gun_bg": {
+      "soviet": "m1937_53-k_45mm_at_gun_squad_bg",
+      "german": "ger_capture_45mm_bg"
+    },
+    "142b113740474c82a60b0a428bd553d5:m1942_76mm_divisional_gun_zis-3_bg": {
+      "soviet": "m1942_zis-3_76mm_at_gun_squad_bg",
+      "german": "ger_capture_zis3_bg"
+    },
+    "142b113740474c82a60b0a428bd553d5:pm41_82mm_mortar_bg": {
+      "soviet": "pm-82_41_mortar_squad_bg",
+      "german": "ger_capture_pm-82_bg"
+    },
+    "142b113740474c82a60b0a428bd553d5:hm-120_38_mortar_bg": {
+      "soviet": "hm-120_38_mortar_squad_bg",
+      "german": "ger_capture_hm-120_bg"
+    },
+    "142b113740474c82a60b0a428bd553d5:dhsk_38_machine_gun_bg": {
+      "soviet": "dshk_38_hmg_squad_bg",
+      "german": "ger_capture_dhsk_bg"
+    },
+    "142b113740474c82a60b0a428bd553d5:m1910_maxim_heavy_machine_gun_bg": {
+      "soviet": "m1910_maxim_heavy_machine_gun_squad_bg",
+      "german": "ger_capture_maxim_bg"
+    },
+    "142b113740474c82a60b0a428bd553d5:m1931_203mm_b-4_howitzer_artillery_bg": {
+      "soviet": "m1931_203mm_b-4_howitzer_artillery_bg",
+      "german": "ger_capture_b4_bg"
+    },
+    "142b113740474c82a60b0a428bd553d5:m1937_152mm_ml_20_artillery_bg": {
+      "soviet": "m1937_152mm_ml_20_artillery_bg",
+      "german": "ger_capture_ml_20_bg"
+    }
+  }
 }

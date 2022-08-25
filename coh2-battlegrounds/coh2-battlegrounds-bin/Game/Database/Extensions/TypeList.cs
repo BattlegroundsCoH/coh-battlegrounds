@@ -118,6 +118,8 @@ public class TypeList : IEnumerable<string> {
 
     }
 
+    public bool IsType(string type) => this.m_types.Contains(type);
+
     public IEnumerator<string> GetEnumerator() => ((IEnumerable<string>)this.m_types).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)this.m_types).GetEnumerator();

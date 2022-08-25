@@ -384,12 +384,34 @@ public class CompanyBuilder : IBuilder<Company> {
     }
 
     /// <summary>
-    /// 
+    /// Add a crew to a company item that is crewable.
     /// </summary>
-    /// <param name="itemIndex"></param>
-    /// <param name="crew"></param>
-    /// <returns></returns>
+    /// <remarks>
+    /// This action cannot be undone
+    /// </remarks>
+    /// <param name="itemIndex">The index of the company item to crew.</param>
+    /// <param name="crew">The <see cref="SquadBlueprint"/> of the crew that will take control of the team weapon.</param>
+    /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
+    /// <exception cref="InvalidOperationException"/>
     public virtual CompanyBuilder CrewCompanyItem(uint itemIndex, SquadBlueprint crew) {
+
+        // Grab item
+        var item = this.m_target.Items.FirstOrDefault(x => x.ItemId == itemIndex);
+        if (item is null) 
+            throw new InvalidOperationException("Cannot crew a company item that does not exist");
+
+        // Create unit
+        var unit = (item.Item switch {
+            SquadBlueprint sbp => UnitBuilder.NewUnit(sbp),
+            EntityBlueprint ebp => UnitBuilder.NewUnit(this.CompanyType!.FactionData!.Package!.GetCaptureSquad(ebp, this.m_target.Faction)),
+            _ => throw new NotImplementedException()
+        }).SetDeploymentPhase(GetFirstAvailablePhase(DeploymentPhase.PhaseA));
+
+        // Remove item and add unit
+        this.m_target = this.m_target with {
+            Items = this.m_target.Items.Except(item),
+            Units = this.m_target.Units.Append(unit)
+        };
 
         // Return self
         return this;
