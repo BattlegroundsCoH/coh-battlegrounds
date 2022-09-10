@@ -355,9 +355,9 @@ class Program {
 
         const string msbuild_path = @"C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin";
 
-        public static readonly Argument<bool> SKIP_COMPILE = new Argument<bool>("-c", "Skip compilation (must be handled by user then", false);
+        public static readonly Argument<bool> SKIP_COMPILE = new Argument<bool>("-c", "Skip compilation (must be handled by user then)", false);
 
-        public CreateInstaller() : base("mki", "Makes an installer file (Zips the release build folder and attempts to compile the Rust installer).", SKIP_COMPILE) { }
+        public CreateInstaller() : base("mki", "Makes an installer file (Zips the release build folder).", SKIP_COMPILE) { }
 
         public override void Execute(CommandArgumentList argumentList) {
 
