@@ -1,17 +1,26 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
+using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Functional;
+using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Extensions;
+using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Modding.Content.Companies;
 
 namespace Battlegrounds.Modding.Content;
 
 /// <summary>
-/// Readonly struct representing faction data for a Battlegrounds mod package.
+/// Class representing faction data for a Battlegrounds mod package.
 /// </summary>
-public readonly struct FactionData {
+public class FactionData {
 
     public readonly struct UnitAbility {
 
-        public string Blueprint { get; }
+        public string Blueprint { get; init; }
 
-        public FactionAbility[] Abilities { get; }
+        public FactionAbility[] Abilities { get; init; }
 
         [JsonConstructor]
         public UnitAbility(string Blueprint, FactionAbility[] Abilities) {
@@ -23,8 +32,8 @@ public readonly struct FactionData {
 
     public readonly struct Driver {
 
-        public string Blueprint { get; }
-        public string WhenType { get; }
+        public string Blueprint { get; init; }
+        public string WhenType { get; init; }
 
         [JsonConstructor]
         public Driver(string Blueprint, string WhenType) {
@@ -34,27 +43,49 @@ public readonly struct FactionData {
 
     }
 
-    public string Faction { get; }
+    public readonly struct CompanySettings {
 
-    public Driver[] Drivers { get; }
+        public FactionCompanyType[] Types { get; init; }
 
-    public FactionAbility[] Abilities { get; }
+        [JsonConstructor]
+        public CompanySettings(FactionCompanyType[]? Types) {
+            this.Types = Types ?? Array.Empty<FactionCompanyType>();
+        }
 
-    public UnitAbility[] UnitAbilities { get; }
+    }
 
-    public string[] Transports { get; }
+    public string Faction { get; init; }
 
-    public string[] TowTransports { get; }
+    public Driver[] Drivers { get; init; }
 
-    public bool CanHaveParadropInCompanies { get; }
+    public FactionAbility[] Abilities { get; init; }
 
-    public bool CanHaveGliderInCompanies { get; }
+    public UnitAbility[] UnitAbilities { get; init; }
+
+    public string[] Transports { get; init; }
+
+    public string[] TowTransports { get; init; }
+
+    public bool CanHaveParadropInCompanies { get; init; }
+
+    public bool CanHaveGliderInCompanies { get; init; }
+
+    public CompanySettings Companies { get; init; }
+
+    /// <summary>
+    /// Get or initialise the blueprint to use when recrewing team weapons
+    /// </summary>
+    public string TeamWeaponCrew { get; init; }
+
+    [JsonIgnore]
+    public ModPackage? Package { get; set; }
 
     [JsonConstructor]
     public FactionData(string Faction, 
         Driver[] Drivers, 
         FactionAbility[] Abilities, 
-        UnitAbility[] UnitAbilities, string[] Transports, string[] TowTransports, bool CanHaveParadropInCompanies, bool CanHaveGliderInCompanies) {
+        UnitAbility[] UnitAbilities, string[] Transports, string[] TowTransports, bool CanHaveParadropInCompanies, bool CanHaveGliderInCompanies,
+        CompanySettings Companies, string TeamWeaponCrew) {
         
         // Set fields
         this.Faction = Faction;
@@ -65,7 +96,33 @@ public readonly struct FactionData {
         this.TowTransports = TowTransports;
         this.CanHaveGliderInCompanies = CanHaveGliderInCompanies;
         this.CanHaveParadropInCompanies = CanHaveParadropInCompanies;
+        this.Companies = Companies;
+        this.TeamWeaponCrew = TeamWeaponCrew;
 
+        // Fixup companies
+        this.Companies.Types.ForEach(x => x.FactionData = this);
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public string[] GetHiddenSquads()
+        => this.Companies.Types.MapNotNull(x => x.TeamWeaponCrew).Append(this.TeamWeaponCrew);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="types"></param>
+    /// <returns></returns>
+    /// <exception cref="ObjectNotFoundException"></exception>
+    public SquadBlueprint GetDriver(TypeList types) {
+        for (int i = 0; i < this.Drivers.Length; i++) {
+            if (string.IsNullOrEmpty(this.Drivers[i].WhenType) || types.IsType(this.Drivers[i].WhenType))
+                return BlueprintManager.FromBlueprintName<SquadBlueprint>(this.Drivers[i].Blueprint);
+        }
+        throw new ObjectNotFoundException("Failed to find driver blueprint.");
     }
 
 }

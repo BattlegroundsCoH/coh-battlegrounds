@@ -56,11 +56,19 @@ public sealed class Faction {
     /// <returns>A string that represents the current object.</returns>
     public override string ToString() => this.Name;
 
+    public override bool Equals(object? obj) => obj is Faction f && f.UID == this.UID;
+
+    public override int GetHashCode() => this.UID;
+
     #region Static Region
 
     public static implicit operator string(Faction fac) => fac.Name;
 
     public static explicit operator Faction(string name) => FromName(name);
+
+    public static bool operator ==(Faction? a, Faction? b) => a is not null && a.Equals(b);
+    public static bool operator !=(Faction? a, Faction? b) => !(a == b);
+
 
     public const string FactionStrSoviet = "soviet";
     public const string FactionStrAmerican = "aef";

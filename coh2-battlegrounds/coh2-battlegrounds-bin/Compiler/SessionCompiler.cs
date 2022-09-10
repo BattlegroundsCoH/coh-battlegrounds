@@ -80,6 +80,14 @@ public class SessionCompiler : ISessionCompiler {
             .Assignment("bg_db.towing_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowingUpgrade))
             .Assignment("bg_db.towed_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowUpgrade));
 
+#if DEBUG
+        // Write any debug flags that may have been set
+        for (int i = 0; i < BattlegroundsInstance.Debug.ScarFlags.Length; i++) {
+            sourceBuilder.Writer.WriteVerbatim(BattlegroundsInstance.Debug.ScarFlags[i]);
+            sourceBuilder.Writer.EndLine(true);
+        }
+#endif
+
         // If any planning data
         if (session.HasPlanning) {
             sourceBuilder.Assignment("bg_plandata", GetPlanning(session));

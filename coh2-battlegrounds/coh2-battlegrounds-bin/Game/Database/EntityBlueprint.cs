@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Database.Management;
@@ -99,7 +100,7 @@ public class EntityBlueprintConverter : JsonConverter<EntityBlueprint> {
     public override EntityBlueprint Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
         Dictionary<string, object> __lookup = new();
         while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
-            string prop = reader.ReadProperty();
+            string prop = reader.ReadProperty() ?? throw new ObjectPropertyNotFoundException();
             __lookup[prop] = prop switch {
                 "Cost" => CostExtension.FromJson(ref reader),
                 "Display" => UIExtension.FromJson(ref reader),

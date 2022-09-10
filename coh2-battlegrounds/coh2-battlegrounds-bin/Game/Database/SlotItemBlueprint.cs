@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Database.Management;
@@ -32,14 +33,15 @@ public sealed class SlotItemBlueprint : Blueprint, IUIBlueprint {
 
     public string Weapon { get; }
 
-    public Faction Army { get; }
+    public Faction? Army { get; }
 
-    public SlotItemBlueprint(string name, BlueprintUID pbgid, UIExtension ui, Faction faction, int weight, string wpn) {
+    public SlotItemBlueprint(string name, BlueprintUID pbgid, UIExtension ui, Faction? faction, int weight, string wpn) {
         this.Name = name;
         this.PBGID = pbgid;
         this.UI = ui;
         this.SlotWeight = weight;
         this.Weapon = wpn;
+        this.Army = faction;
     }
 
 }
@@ -49,15 +51,15 @@ public class SlotItemBlueprintConverter : JsonConverter<SlotItemBlueprint> {
     public override SlotItemBlueprint Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
         Dictionary<string, object> __lookup = new();
         while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
-            string prop = reader.ReadProperty();
+            string prop = reader.ReadProperty() ?? throw new ObjectPropertyNotFoundException();
             __lookup[prop] = prop switch {
                 "Display" => UIExtension.FromJson(ref reader),
                 "PBGID" => reader.GetUInt64(),
-                "Name" => reader.GetString(),
-                "ModGUID" => reader.GetString(),
+                "Name" => reader.GetString() ?? throw new ObjectPropertyNotFoundException("Name"),
+                "ModGUID" => reader.GetString() ?? throw new ObjectPropertyNotFoundException("ModGUID"),
                 "SlotSize" => reader.GetInt32(),
-                "WPB" => reader.GetString(),
-                "Army" => reader.GetString(),
+                "WPB" => reader.GetString() ?? string.Empty,
+                "Army" => reader.GetString() ?? string.Empty,
                 _ => throw new NotImplementedException(prop)
             };
         }
@@ -65,7 +67,7 @@ public class SlotItemBlueprintConverter : JsonConverter<SlotItemBlueprint> {
         var weight = __lookup.GetCastValueOrDefault("SlotSize", 0);
         string wpn = __lookup.GetCastValueOrDefault("WPB", string.Empty);
         var fac = __lookup.GetCastValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetCastValueOrDefault("Army", "NULL"));
-        var modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
+        var modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid((string)__lookup["ModGUID"]) : ModGuid.BaseGame;
         var pbgid = new BlueprintUID(__lookup.GetCastValueOrDefault("PBGID", 0ul), modguid);
         return new(__lookup.GetCastValueOrDefault("Name", string.Empty), pbgid, ui, fac, weight, wpn);
     }

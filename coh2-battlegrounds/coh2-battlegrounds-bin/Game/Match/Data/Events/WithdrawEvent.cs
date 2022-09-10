@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Battlegrounds.Game.Match.Data.Events {
-    class WithdrawEvent {
-    }
+namespace Battlegrounds.Game.Match.Data.Events;
+
+class WithdrawEvent {
 }

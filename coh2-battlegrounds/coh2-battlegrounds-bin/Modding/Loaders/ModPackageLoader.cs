@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding.Content;
@@ -23,7 +24,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
 
         // Read data
         while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
-            string prop = reader.ReadProperty();
+            string prop = reader.ReadProperty() ?? throw new ObjectPropertyNotFoundException();
             __lookup[prop] = prop switch {
                 "ID" => reader.GetString()?.ToLowerInvariant() ?? string.Empty,
                 "Name" => reader.GetString() ?? string.Empty,
@@ -39,6 +40,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
                 "CustomOptions" => JsonSerializer.Deserialize<ModPackage.CustomOptions[]>(ref reader) ?? Array.Empty<ModPackage.CustomOptions>(),
                 "Gamemodes" => JsonSerializer.Deserialize<Gamemode[]>(ref reader) ?? Array.Empty<Gamemode>(),
                 "Towing" => ReadTowdata(ref reader),
+                "TeamWeaponCaptureSquads" => JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(ref reader) ?? new(),
                 _ => throw new NotImplementedException(prop)
             };
         }
@@ -62,7 +64,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
         }
 
         // Return mod package
-        return new() {
+        ModPackage package = new() {
             ID = packageID,
             PackageName = __lookup.GetCastValueOrDefault("Name", packageID),
             TuningGUID = tuningGUID,
@@ -77,15 +79,22 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
             LocaleFiles = __lookup.GetCastValueOrDefault("LocaleFiles", Array.Empty<ModPackage.ModLocale>()),
             AllowSupplySystem = __lookup.GetCastValueOrDefault("AllowSupplySystem", false),
             AllowWeatherSystem = __lookup.GetCastValueOrDefault("AllowWeatherSystem", false),
-            Gamemodes = __lookup.GetCastValueOrDefault("Gamemodes", Array.Empty<Gamemode>())
+            Gamemodes = __lookup.GetCastValueOrDefault("Gamemodes", Array.Empty<Gamemode>()),
+            TeamWeaponCaptureSquads = __lookup.GetCastValueOrDefault("TeamWeaponCaptureSquads", new Dictionary<string, Dictionary<string, string>>())
         };
+
+        // Set faction data owners
+        package.FactionSettings.Values.ForEach(x => x.Package = package);
+
+        // Return the package
+        return package;
 
     }
 
     private static (bool, string, string) ReadTowdata(ref Utf8JsonReader reader) {
         object[] data = { false, string.Empty, string.Empty };
         while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
-            string prop = reader.ReadProperty();
+            string prop = reader.ReadProperty() ?? throw new ObjectPropertyNotFoundException();
             data[prop switch {
                 "IsEnabled" => 0,
                 "IsTowed" => 1,

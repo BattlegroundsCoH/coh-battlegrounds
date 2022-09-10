@@ -3,6 +3,7 @@
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Content.Companies;
 
 namespace coh2_battlegrounds_bin_tests {
     public static class CompanyTestBuilder {
@@ -12,7 +13,7 @@ namespace coh2_battlegrounds_bin_tests {
             var guid = ModGuid.FromGuid("142b113740474c82a60b0a428bd553d5");
 
             // Create a dummy company
-            var companyBuilder = CompanyBuilder.NewCompany("26th Rifle Division", CompanyType.Infantry, CompanyAvailabilityType.MultiplayerOnly, Faction.Soviet, guid);
+            var companyBuilder = CompanyBuilder.NewCompany("26th Rifle Division", new BasicCompanyType(), CompanyAvailabilityType.MultiplayerOnly, Faction.Soviet, guid);
 
             // Basic infantry
             companyBuilder.AddUnit(UnitBuilder.NewUnit("conscript_squad_bg", guid).SetDeploymentPhase(DeploymentPhase.PhaseInitial));
@@ -63,7 +64,7 @@ namespace coh2_battlegrounds_bin_tests {
             var guid = ModGuid.FromGuid("142b113740474c82a60b0a428bd553d5");
 
             // Create a dummy company
-            CompanyBuilder companyBuilder = CompanyBuilder.NewCompany("11th Motorized", CompanyType.Motorized, CompanyAvailabilityType.MultiplayerOnly, Faction.Soviet, guid);
+            CompanyBuilder companyBuilder = CompanyBuilder.NewCompany("11th Motorized", new BasicCompanyType(), CompanyAvailabilityType.MultiplayerOnly, Faction.Soviet, guid);
   
             // Basic infantry
             companyBuilder.AddUnit(UnitBuilder.NewUnit("conscript_squad_bg", guid).SetDeploymentPhase(DeploymentPhase.PhaseInitial));
@@ -165,7 +166,7 @@ namespace coh2_battlegrounds_bin_tests {
 
             // Create a dummy company
             CompanyBuilder companyBuilder
-                = CompanyBuilder.NewCompany("29th Panzer Regiment", CompanyType.Motorized, CompanyAvailabilityType.MultiplayerOnly, Faction.Wehrmacht, guid);
+                = CompanyBuilder.NewCompany("29th Panzer Regiment", new BasicCompanyType(), CompanyAvailabilityType.MultiplayerOnly, Faction.Wehrmacht, guid);
 
             // Basic infantry
             companyBuilder.AddUnit(UnitBuilder.NewUnit("grenadier_squad_bg", guid).SetDeploymentPhase(DeploymentPhase.PhaseInitial));

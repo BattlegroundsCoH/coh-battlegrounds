@@ -93,6 +93,7 @@ public class Squad : IChecksumPropertyItem {
     private DeploymentPhase m_deployPhase;
     private Squad? m_crewSquad;
     private Blueprint? m_deployBp;
+    private EntityBlueprint? m_weaponBlueprint;
 
     private readonly HashSet<Blueprint> m_upgrades;
     private readonly HashSet<Blueprint> m_slotItems;
@@ -118,10 +119,16 @@ public class Squad : IChecksumPropertyItem {
     public Blueprint Blueprint { get; }
 
     /// <summary>
-    /// The squad or entity <see cref="Database.Blueprint"/> to support this squad.
+    /// Get the squad or entity <see cref="Database.Blueprint"/> to support this squad.
     /// </summary>
     [ChecksumProperty]
     public Blueprint? SupportBlueprint => this.m_deployBp;
+
+    /// <summary>
+    /// Get the sync weapon assigned to the squad.
+    /// </summary>
+    [ChecksumProperty]
+    public EntityBlueprint? SyncWeapon => this.m_weaponBlueprint;
 
     /// <summary>
     /// The method to use when deploying a <see cref="Squad"/>.
@@ -264,7 +271,15 @@ public class Squad : IChecksumPropertyItem {
     /// 
     /// </summary>
     /// <param name="isCrew"></param>
-    public void SetIsCrew(bool isCrew) => m_isCrewSquad = isCrew;
+    public void SetIsCrew(bool isCrew) 
+        => this.m_isCrewSquad = isCrew;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="syncWeapon"></param>
+    public void SetSyncWeapon(EntityBlueprint? syncWeapon) 
+        => this.m_weaponBlueprint = syncWeapon;
 
     /// <summary>
     /// Add an upgrade to the squad
@@ -323,9 +338,9 @@ public class Squad : IChecksumPropertyItem {
     /// </summary>
     /// <returns>The cost of the squad.</returns>
     public CostExtension GetCost() 
-        => ComputeFullCost(this.SBP.Cost, this.VeterancyRank, this.m_upgrades.Select(x => x as UpgradeBlueprint ?? throw new Exception("Expected upgrade but found null.")), 
+        => ComputeFullCost(this.SBP, this.VeterancyRank, this.m_upgrades.Select(x => x as UpgradeBlueprint ?? throw new Exception("Expected upgrade but found null.")), 
             this.m_deployBp as SquadBlueprint, 
-            this.DeploymentMethod, this.DeploymentPhase, this.SBP.Category);
+            this.DeploymentMethod, this.DeploymentPhase);
 
     /// <summary>
     /// Get the display name of the squad.
@@ -366,28 +381,30 @@ public class Squad : IChecksumPropertyItem {
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="initialCost"></param>
+    /// <param name="sbp"></param>
     /// <param name="rank"></param>
     /// <param name="upgrades"></param>
     /// <param name="transport"></param>
     /// <param name="deploymentMethod"></param>
     /// <param name="phase"></param>
-    /// <param name="category"></param>
     /// <returns></returns>
-    public static CostExtension ComputeFullCost(CostExtension initialCost, 
-        byte rank, IEnumerable<UpgradeBlueprint> upgrades, SquadBlueprint? transport, DeploymentMethod deploymentMethod, DeploymentPhase phase, SquadCategory category) {
+    public static CostExtension ComputeFullCost(SquadBlueprint sbp, 
+        byte rank, IEnumerable<UpgradeBlueprint> upgrades, SquadBlueprint? transport, DeploymentMethod deploymentMethod, DeploymentPhase phase) {
+
+        // Grab cost
+        var initialCost = sbp.Cost;
 
         // Get base cost and add upgrade costs
         CostExtension c = new(initialCost.Manpower, initialCost.Munitions, initialCost.Fuel, initialCost.FieldTime);
         c = upgrades.Select(x => x.Cost).Aggregate(c, (a, b) => a + b);
 
         // Add deploy method factor
-        if (transport is SquadBlueprint sbp) {
-            c += sbp.Cost * GetDeployMethodTransportCostModifier(deploymentMethod);
+        if (transport is SquadBlueprint tsbp) {
+            c += tsbp.Cost * GetDeployMethodTransportCostModifier(deploymentMethod);
         }
 
         // Subtract phase mod
-        c *= (1.0f - GetDeployPhaseCostModifier(phase, category));
+        c *= 1.0f - GetDeployPhaseCostModifier(phase, sbp.Category);
 
         // Return cost
         return c;

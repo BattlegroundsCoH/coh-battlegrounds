@@ -38,7 +38,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -63,7 +63,7 @@
                     <Image Width="28"
                            Height="28"
                            VerticalAlignment="Center"
-                           Source="{Binding CompanyType, Converter={StaticResource CompanyTypeConverter}}"/>
+                           Source="{Binding CompanyTypeIcon, Converter={StaticResource CompanyTypeConverter}}"/>
                 </InlineUIContainer>
 
             </TextBlock>
@@ -279,10 +279,8 @@
 
             <!-- STORAGE -->
             <TabItem Header="CompanyBuilder_Storage"
-                     Tag="{Binding StorageCapacity}"
                      Width="180"
                      Height="35"
-                     Visibility="Collapsed"
                      Style="{StaticResource CompanyBuilderMainTabItem}">
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto" 
@@ -290,6 +288,11 @@
                               Height="660">
 
                     <StackPanel>
+                        <StackPanel.Resources>
+                            <Style TargetType="{x:Type views:EquipmentSlotView}">
+                                <Setter Property="Margin" Value="0, 5, 5, 0"/>
+                            </Style>
+                        </StackPanel.Resources>
                         <ItemsControl ItemsSource="{Binding CompanyEquipment}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -419,6 +422,56 @@
                 </Grid>
             </TabItem>
 
+            <!-- SETTINGS -->
+            <TabItem
+                Header="CompanyBuilder_Settings"
+                Width="180"
+                Height="35"
+                Style="{StaticResource CompanyBuilderMainTabItem}">
+
+                <!-- Define content grid -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="32"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Define setting -->
+                    <controls:LocLabel
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        LocKey="CompanyBuilder_AutoReplace"
+                        VerticalAlignment="Center"
+                        Foreground="White"
+                        FontSize="14"
+                        FontFamily="Open Sans">
+                        <controls:LocLabel.ToolTip>
+                            <ToolTip>
+                                <controls:LocLabel
+                                    LocKey="CompanyBuilder_AutoReplace_Desc"
+                                    Foreground="White"
+                                    />
+                            </ToolTip>
+                        </controls:LocLabel.ToolTip>
+                    </controls:LocLabel>
+
+                    <controls:ThumbTick
+                        Grid.Column="2"
+                        Grid.Row="0"
+                        HorizontalAlignment="Right"
+                        IsTicked="{Binding IsCompanyReplacementEnabled}"/>
+
+                </Grid>
+                
+            </TabItem>
+            
         </TabControl>
 
         <ScrollBar Grid.Row="2" 
@@ -457,7 +510,35 @@
                     Height="35"
                     Style="{StaticResource StandardBlueLocButton}" 
                     Margin="10,0,18,0"
-                    Command="{Binding Save.Click}"/>
+                    Click="saveButton_Click">
+                <Button.RenderTransform>
+                    <TranslateTransform/>
+                </Button.RenderTransform>
+                <Button.Triggers>
+                    <EventTrigger RoutedEvent="MouseEnter">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard
+                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
+                                    <DoubleAnimation
+                                        From="0" To="-2.5" Duration="00:00:0.075"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="MouseLeave">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard
+                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
+                                    <DoubleAnimation
+                                        From="-2.5" To="0" Duration="00:00:0.075"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                </Button.Triggers>
+            </Button>
 
         </StackPanel>
 

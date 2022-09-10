@@ -66,6 +66,11 @@
         <companyEditorViews:AvailableItemView/>
     </DataTemplate>
 
+    <!-- Item MVVM -->
+    <DataTemplate DataType="{x:Type companyEditorModels:EquipmentSlotViewModel}">
+        <companyEditorViews:EquipmentSlotView/>
+    </DataTemplate>
+
     <!-- DIALOGS START -->
     <DataTemplate DataType="{x:Type dialogModels:CreateCompanyDialogViewModel}">
         <dialogViews:CreateCompanyDialogView/>
@@ -85,6 +90,14 @@
 
     <DataTemplate DataType="{x:Type dialogModels:OKDialogViewModel}">
         <dialogViews:OKDialogView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type dialogModels:RenameDialogViewModel}">
+        <dialogViews:RenameDialogView/>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type dialogModels:ImportExportCompanyDialogViewModel}">
+        <dialogViews:ImportExportCompanyDialogView/>
     </DataTemplate>
     <!-- DIALOGS END -->
 
