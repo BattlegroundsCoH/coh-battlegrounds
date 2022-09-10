@@ -16,8 +16,6 @@
 	<!-- Website to a support platform -->
 	<?define SupportLink = "https://discord.gg/Hr7yTbSv25" ?>
 	
-	<?define BuildVersion = 1.0.0.0 ?>
-	
 	<!-- Define main product -->
 	<Product Id="$(var.ProductCode)" 
 			 Name="!(loc.ProductName_$(var.Platform))" 
@@ -64,6 +62,7 @@
 		<Feature Id="ProductFeature" Title="Battlegrounds" Level="1">
 			
 			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentGroupRef Id="PublishedComponents" />
 		
 		</Feature>
 		

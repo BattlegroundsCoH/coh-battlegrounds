@@ -3,10 +3,10 @@
 
 	<String Id="Company">Battlegrounds Development Team</String>
 
-	<String Id="ProductNameFolder">Battlegrounds</String>
+	<String Id="ProductNameFolder">Battlegrounds Mod Launcher</String>
 
-	<String Id="ProductName_x86">Battlegrounds Setup (32bit)</String>
-	<String Id="ProductName_x64">Battlegrounds Setup (64bit)</String>
+	<String Id="ProductName_x86">Battlegrounds Mod Launcher (32bit)</String>
+	<String Id="ProductName_x64">Battlegrounds Mod Launcher (64bit)</String>
 
 	<String Id="Description">Battlegrounds mod launcher setup</String>
 	<String Id="Comments">Battlegrounds mod launcher setup</String>

@@ -6,9 +6,9 @@
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			
 			<!-- Start Menu -->
-			<Directory Id="ProgramMenuFolder">
-			
-			</Directory>
+			<Directory Id="ProgramMenuFolder" />
+
+			<Directory Id="DesktopFolder" />
 			
 			<?if $(var.Platform) = x64 ?>
 				<!-- Program Files (64bit) folder -->
