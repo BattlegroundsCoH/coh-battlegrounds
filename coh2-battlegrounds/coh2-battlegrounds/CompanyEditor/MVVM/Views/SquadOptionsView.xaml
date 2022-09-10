@@ -39,14 +39,29 @@
                                FontSize="14"
                                Foreground="White"
                                FontFamily="Open Sans">
-                        <Run Text="{Binding UnitName, Mode=OneWay}"/>
+                        <Run
+                            x:Name="RunName"
+                            Text="{Binding UnitName, Mode=OneWay}"/>
+                        <InlineUIContainer
+                            BaselineAlignment="Center">
+                            <TextBox
+                                x:Name="EditName"
+                                Width="172"
+                                Tag="{Binding UnitRawName}"
+                                Style="{StaticResource WaterMarkTextBox}"
+                                KeyUp="EditName_KeyUp"
+                                Visibility="Collapsed"/>
+                        </InlineUIContainer>
                         <InlineUIContainer BaselineAlignment="Center">
-                            <Button Content="Edit"
-                                    Style="{StaticResource StandardGreenButton}"
-                                    FontSize="12"
-                                    Width="36"
-                                    Height="16"
-                                    Visibility="{Binding NameButtonVisibility}"/>
+                            <Button 
+                                x:Name="EditSquadName"
+                                Content="Edit"
+                                Style="{StaticResource StandardGreenButton}"
+                                FontSize="12"
+                                Width="36"
+                                Height="16"
+                                Visibility="{Binding NameButtonVisibility}"
+                                Click="EditSquadName_Click"/>
                         </InlineUIContainer>
                     </TextBlock>
                     <TextBlock TextWrapping="Wrap"
@@ -270,19 +285,19 @@
                     </Grid.RowDefinitions>
 
                     <controls:LocLabel
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="{Binding LowerSpan}"
-                    Foreground="White"
-                    HorizontalAlignment="Center"
-                    LocKey="CompanySquadView_Phases"/>
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="{Binding LowerSpan}"
+                        Foreground="White"
+                        HorizontalAlignment="Center"
+                        LocKey="CompanySquadView_Phases"/>
                     <controls:LocLabel
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Foreground="White"
-                    HorizontalAlignment="Center"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Foreground="White"
+                        HorizontalAlignment="Center"
                         Visibility="{Binding DeployMethodsVisible}"
-                    LocKey="CompanySquadView_Methods"/>
+                        LocKey="CompanySquadView_Methods"/>
                     <ItemsControl Grid.Column="0"
                               Grid.Row="1"
                                   Grid.ColumnSpan="{Binding LowerSpan}"
@@ -486,15 +501,16 @@
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
 
-                <Button Style="{StaticResource StandardBlueButton}"
+                <Button 
+                    Style="{StaticResource StandardBlueButton}"
                     Width="156"
                     Height="36"
                     Margin="2.5"
                     Command="{Binding SaveExitCommand}">
-                    <controls:LocLabel
-                    Foreground="White"
-                    HorizontalAlignment="Center"
-                    LocKey="CompanySquadView_Close"/>
+                        <controls:LocLabel
+                        Foreground="White"
+                        HorizontalAlignment="Center"
+                        LocKey="CompanySquadView_Close"/>
                 </Button>
 
             </StackPanel>

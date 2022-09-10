@@ -51,6 +51,6 @@ public interface IBuilder<T> : IBuilder {
     /// </summary>
     /// <param name="arg">Optional argument to give while building.</param>
     /// <returns>Calling <see cref="IBuilder{T}"/> instance.</returns>
-    IBuilder<T> Commit(object arg = null);
+    IBuilder<T> Commit(object? arg = null);
 
 }

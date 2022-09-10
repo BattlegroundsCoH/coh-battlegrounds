@@ -85,7 +85,37 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <!-- STANDARD BLUE LOCALE BUTTON (Adheres to font size) -->
+    <Style x:Key="StandardBlueLocSizeButton" TargetType="{x:Type Button}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid x:Name="Gridbackground" Background="{StaticResource BackgroundLightBlueBrush}">
+                        <controls:LocLabel
+                                LocKey="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+                                Foreground="White"
+                                FontSize="{Binding FontSize, RelativeSource={RelativeSource TemplatedParent}}"
+                                FontFamily="Open Sans"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Gridbackground" Property="Background" Value="{StaticResource BackgroundLightGrayBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.65"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- STANDARD RED BUTTON -->
     <Style x:Key="StandardRedButton" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -257,4 +287,56 @@
         <Setter Property="Padding" Value="5" />
     </Style>
 
+    <!-- UNIT/ENTITY ICON BUTTON -->
+    <Style x:Key="UnitEntityIconButton" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="Opacity" Value="0.8"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid 
+                        Background="{TemplateBinding Background}">
+                        <ContentPresenter/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Opacity" Value="1"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.65"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!-- Entity Icon Buton 2.0 -->
+    <Style x:Key="EntityIconButton2" TargetType="{x:Type Button}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border
+                        x:Name="__BKG"
+                        Background="{StaticResource BackgroundLightBlueBrush}"
+                        BorderBrush="#767676"
+                        Padding="4"
+                        BorderThickness="0.6">
+                        <ContentPresenter/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="__BKG" Property="Background" Value="{StaticResource BackgroundLightGrayBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
 </ResourceDictionary>

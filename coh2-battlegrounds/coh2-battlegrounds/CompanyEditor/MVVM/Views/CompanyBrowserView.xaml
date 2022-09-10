@@ -187,7 +187,7 @@
                 Margin="5,5,5,8"
                 Command="{Binding Rename.Click}"
                 Style="{StaticResource StandardBlueLocButton}"
-                IsEnabled="False"
+                IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
                 Width="100"/>
 
         <Button x:Name="deleteCompanyButton"
@@ -207,7 +207,7 @@
                 Margin="5,5,5,8"
                 Command="{Binding Copy.Click}"
                 Style="{StaticResource StandardBlueLocButton}"
-                IsEnabled="False"
+                IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
                 Width="100"/>
 
         <Button x:Name="exportCompanyButton"
@@ -217,7 +217,7 @@
                 Margin="5,5,5,8"
                 Command="{Binding Export.Click}"
                 Style="{StaticResource StandardBlueLocButton}"
-                IsEnabled="False"
+                IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
                 Width="100"/>
 
         <Button x:Name="importCompanyButton"
@@ -227,7 +227,7 @@
                 Margin="5,5,15,8"
                 Command="{Binding Import.Click}"
                 Style="{StaticResource StandardBlueLocButton}"
-                IsEnabled="False"
+                IsEnabled="True"
                 Width="100"/>
 
     </Grid>

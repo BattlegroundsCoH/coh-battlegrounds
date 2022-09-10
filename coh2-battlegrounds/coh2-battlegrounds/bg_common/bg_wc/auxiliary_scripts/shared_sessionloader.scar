@@ -22,6 +22,7 @@ function BG_LoadSessionData()
             _bg_playerData[j].lossData = {};
             _bg_playerData[j].GetCallInDestination = BG_GetCallInPoint;
             _bg_playerData[j].teamStr = BG_GetTeamString(_bg_playerData[j].race);
+            _bg_playerData[j].phase = 1
             local isVerified, steamID = BG_VerifyPlayer(_bg_playerData[j].name, _bg_playerData[j].teamStr, false);
             if not isVerified then
                 return BG_LocStringFormat(9, Player_GetDisplayName(player));
@@ -93,6 +94,11 @@ function BG_SetupWincondition()
 
     -- Get local variable
     local mode = bg_settings.gamemode;
+    
+    -- Override this function
+    Setup_GetWinConditionOption = function()
+        return bg_settings.gameoptions.gamemode_setting;
+    end
 
     -- Is Victory Points?
     if mode == "Victory Points" or mode == "bg_vp" then
@@ -100,18 +106,24 @@ function BG_SetupWincondition()
         -- Import the VP ticker code
         import("Prototype/VPTickerWin-Annihilate_Functions.scar")
 
-        -- Override this function
-        Setup_GetWinConditionOption = function()
-            return bg_settings.gameoptions.gamemode_setting;
-        end
-
         -- Call the set globals
         SetGlobals();
 
         -- Call the OnInit
         VPTicker_OnInit();
 
+    elseif mode == "bg_defence" then
+
+        -- Import the defence code
+        import("WinConditions/coh2_battlegrounds_defence.scar")
+
+        -- Loop over hooks and init
+        for i=1, #bg_wchook.init do
+            bg_wchook.init[i]();
+        end
+
     end -- Add more gamemodes here!
+    -- May need a more dynamic approach here
 
 end
 

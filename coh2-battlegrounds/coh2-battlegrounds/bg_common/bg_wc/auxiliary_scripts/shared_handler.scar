@@ -20,6 +20,7 @@ import("WinConditions/auxiliary_scripts/api_ui.scar");
 import("WinConditions/auxiliary_scripts/client_companyui.scar");
 import("WinConditions/auxiliary_scripts/client_overrideui.scar");
 import("WinConditions/auxiliary_scripts/system_tow.scar");
+import("WinConditions/auxiliary_scripts/debug_script.scar");
 
 ------------------------------------------------------------------------------------
 -- Script Code
@@ -63,9 +64,6 @@ function BG_Init()
     -- Setup map data
     BG_PrepareMapdata();
 
-    -- Activate the unit system
-    --BG_HookUnitSystem();
-
     -- Properly set up win condition data
     BG_SetupWincondition();
 
@@ -75,7 +73,6 @@ function BG_Init()
     -- Create the UI
     UI_AddSetupFunction(function()
         BG_CreateCallInUI(Game_GetLocalPlayer()); -- Call-in / Deploy UI
-        BG_CreateAndDisplayMultiplayerActionsScreenOverride(Game_GetLocalPlayer()); -- Game actions (Vote on withdraw, Surrender)
         if BGSupply_SetupUI ~= nil then -- Make the supply UI check here
             BGSupply_SetupUI();
         end
@@ -98,6 +95,9 @@ function BG_Init()
 
     -- Add the broadcast event callback
     Rule_AddGlobalEvent(BG_GameBroadcastMessageReceived, GE_BroadcastMessage);
+
+    -- Hook into debug_script
+    InitBGDebug();
 
 end
 
@@ -205,80 +205,6 @@ function BG_SaveAndExit()
 
 end
 
-function BG_PlayerSurrender(player)
-
-    -- Get the ref ID
-    local refID = BG_GetPlayerID(player);
-
-    -- Broadcast this player is surrendering.
-    Battlegrounds_LogEvent(nil, BG_EVENT_ONSURRENDER, _bg_playerData[refID].name);
-
-    -- Calculate the surrender count
-    local surrenderCountMax = math.ceil(Player_GetSquadCount(player) * 0.15);
-
-    -- Surrender squads
-    Player_LoopSquadsWhile(player, function(s, i, max)
-        if Squad_IsPinned(s) or Squad_IsSuppressed(s) or Squad_IsUnderAttack(s, 5) then
-            Squad_Surrender(s);
-            surrenderCountMax = surrenderCountMax - 1;
-        else
-            if max - i <= surrenderCountMax then
-                Squad_Surrender(s);
-                surrenderCountMax = surrenderCountMax - 1;
-            end
-        end
-    end,
-    function()
-        return surrenderCountMax > 0;
-    end);
-
-    -- If local player, we display game-over screen
-    if player == Game_GetLocalPlayer() then
-        BG_CreateAndDisplayGameOverScreenOverride(Game_GetLocalPlayer(), BG_SaveAndExit);
-    end
-
-end
-
-function BG_WithdrawVoteSequence(playerTrigger)
-
-    if (World_GetPlayerCount() == 2) then
-        BG_ShowYesNoDialog(LOC("Confirm Action"), LOC("Are you sure you'd like to withdraw from the battle?"), LOC("Yes"), LOC("Withdraw from battle."), function(t)
-            BG_TeamWithdraw(playerTrigger);
-        end, LOC("No"), LOC("Cancel withdrawal."), function(t)
-        end);
-        return;
-    end
-
-    -- Get withdrawing team index
-    local withdrawTeamID = Player_GetTeam(playerTrigger);
-
-    -- Set votes
-    _bg_custom.team_voting[withdrawTeamID] = {
-        yes = 1,
-        no = 0,
-    };
-
-    -- Get vote from all players
-    Team_ForEachPlayer(withdrawTeamID, function(Player)
-        if player == Game_GetLocalPlayer() and player ~= playerTrigger then
-            BG_ShowYesNoDialog(LOC("Withdraw from battle?"), LOC("Vote yes or no to withdrawing from battle."), LOC("Yes"), LOC("Vote yes to begin withdrawing from battle."), function(t)
-                --Game_SendMessage(_bg_message_type_team_vote_yes_withdraw, "");
-            end, LOC("No"), LOC("Vote no and stop the team's withdrawal from battle."), function(t)
-                --Game_SendMessage(_bg_message_type_team_vote_no_withdraw, "");
-            end);
-        end
-    end);
-
-end
-
-function BG_TeamWithdraw(player)
-
-    -- The "objective" of the game changes --> The team must withdraw as many units as possible within 2-3 minutes
-
-    -- TODO: Tell other team this team is withdrawing
-
-end
-
 function BG_CollectEndofMatchData()
 
     -- Loop through all the players
@@ -357,6 +283,9 @@ end
 
 function BG_GameBroadcastMessageReceived(sender, messageType, message)
     if messageType == _bg_message_type_player_deploy then
+        if _bg_matchStopped then
+            return
+        end
         BG_DeploySquad(sender, tonumber(message));
     elseif messageType == _bg_message_type_player_resource then
         local resources = Str_CmdParse(message);
@@ -365,8 +294,6 @@ function BG_GameBroadcastMessageReceived(sender, messageType, message)
         UI_TeamEventCue(sender, Util_CreateLocString("** Unit Request **"), Util_CreateLocString("PlayerName has requested '' for deployment."));
     elseif messageType == _bg_message_type_player_cancel_deploy then
         UI_TeamEventCue(sender, Util_CreateLocString("** Unit Cancelled **"), Util_CreateLocString("PlayerName has cancelled the deployment of ''."));
-    elseif messageType == _bg_message_type_player_surrender then
-        BG_PlayerSurrender(sender);
     elseif messageType == _bg_message_type_player_ability then
 
         -- Parse cmd
@@ -387,23 +314,6 @@ function BG_GameBroadcastMessageReceived(sender, messageType, message)
         -- Trigger ability
         BGAE_TriggerAbillityFromStringData(sender, data[1], o, f);
 
-    elseif messageType == _bg_message_type_team_request_withdraw then
-        BG_WithdrawVoteSequence(sender);
-    elseif messageType == _bg_message_type_team_vote_yes_withdraw then
-        _bg_custom.team_voting[t].yes = _bg_custom.team_voting[t].yes + 1
-        local tsize = Team_GetSize(Player_GetTeam(sender));
-        if _bg_custom.team_voting[t].yes >= tsize then
-            BG_TeamWithdraw(sender);
-        elseif _bg_custom.team_voting[t].yes + _bg_custom.team_voting[t].no >= tsize then
-            _bg_custom.team_voting[t] = nil;
-            -- TODO: Tell other team we're withdrawing
-        end
-    elseif messageType == _bg_message_type_team_vote_no_withdraw then
-        _bg_custom.team_voting[t].no = _bg_custom.team_voting[t].no + 1
-        if _bg_custom.team_voting[t].yes + _bg_custom.team_voting[t].no >= tsize then
-            _bg_custom.team_voting[t] = nil;
-            -- TODO: Tell other team we're not withdrawing
-        end
     end
 end
 
@@ -411,7 +321,7 @@ function BG_CallInInitials()
 
     for i=1, #_bg_playerData do
 
-        for k,v in pairs(_bg_playerData[i].company.units) do
+        for _, v in pairs(_bg_playerData[i].company.units) do
             if v.phase == 0 then
                 BG_DeploySquad(_bg_playerData[i].player, v.company_id);
             end
@@ -423,36 +333,43 @@ end
 
 function BG_PhaseUpdate()
 
-    if _bg_custom.phase_current < 3 then
+    local phase_complete = 0;
+    for _, v in pairs(_bg_playerData) do
 
-        if not _bg_custom.phase_pasued then
+        -- Get phase
+        local p = v.company.typedata[v.phase + 1]
 
-            _bg_custom.phase_time_left = _bg_custom.phase_time_left - 1;
+        -- Check
+        if p and World_GetGameTime() >= p.activation then
 
-            if _bg_custom.phase_time_left <= 0 then
-                _bg_custom.phase_current = _bg_custom.phase_current + 1;
-                _bg_custom.phase_time = _bg_custom.phase_time * 1.2;
-                _bg_custom.phase_time_left = _bg_custom.phase_time;
-                BG_OnEnterNewPhase();
-            end
+            -- Goto next phase
+            v.phase = v.phase + 1;
 
+            -- Trigger on enter
+            BG_OnEnterNewPhase(v.player, v.phase, p);
+
+        else
+            phase_complete = phase_complete + 1;
         end
 
-    else
+    end
+
+    -- Stop updating phases if all phases for all players are done
+    if phase_complete == #_bg_playerData then
         Rule_RemoveMe();
     end
 
 end
 
-function BG_OnEnterNewPhase()
-    if _bg_custom.phase_current == 2 then -- Could do more messages here (Within context of the player's sitution)
+function BG_OnEnterNewPhase(player, newPhase, phase_data)
+    if newPhase == 2 then -- Could do more messages here (Within context of the player's situation)
         Util_MissionTitle(BG_LocString(16), 3, 8, 2 );
     else
         Util_MissionTitle(BG_LocString(17), 3, 8, 2 );
     end
+    -- TODO: Add resource income modifiers
     for i=1, World_GetPlayerCount() do
-        local p = World_GetPlayerAt(i);
-        if p == Game_GetLocalPlayer() then
+        if player == Game_GetLocalPlayer() then
             BG_RefreshCompanyView(); -- Refresh the company view
         end
     end
@@ -477,7 +394,7 @@ end
 
 function BG_GetCallInPoint(self) -- The intention of this function is to avoid telling units to deploy to the exact same position if within a 15s time interval
     if self.last_callin_point == nil then
-        return Player_GetStartingPosition(self.player);
+        return Player_GetBasePosition(self.player);
     end
     local t = World_GetGameTime();
     local p = self.last_callin_point;

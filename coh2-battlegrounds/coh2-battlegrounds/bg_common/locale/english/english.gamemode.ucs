@@ -34,7 +34,7 @@
 34  Domination
 35  Capture key locations, defend them, and decide where the match is fought.
 36  Invasion
-37  One side defends, the other attacks.
+37  One side defends their victory points while the other attacks.
 38  Untitled Unit 1
 39  Untitled Unit 2
 40  Untitled Unit 3
@@ -99,3 +99,26 @@
 100 Untitled Unit 62
 101 Untitled Unit 63
 102 Untitled Unit 64
+103	150 Points
+104	300 Points
+105	500 Points
+106	800 Points
+107	1000 Points
+108 On
+109 Off
+110 Capture Enemy Positions
+111 Secure Position
+112 Defend Position
+113 Support Position
+114 Clear Area
+115	Time
+116	The time the attackers have to defeat the defending team.
+117	AI-Support
+118	Enable basic AI units to aid the assault.
+119	Time Remaining: %1TIME%
+120	The attackers are concentrating on a nearby location!
+121	Attackers are defending this position!
+122	The attackers are targetting a nearby location!
+123	Attackers are trying to clear this position!
+124	The attackers are attempting to capture strategic points!
+125	Attackers are trying to capture this point!

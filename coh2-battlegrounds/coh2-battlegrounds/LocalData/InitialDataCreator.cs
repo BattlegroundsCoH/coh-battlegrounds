@@ -16,18 +16,27 @@ public static class InitialDataCreator {
         // Wait for database to be loaded
         DatabaseManager.LoadedCallback(() => {
 
+            // Grab package
+            var package = ModManager.GetPackageOrError("mod_bg");
+
             // Create default companies
-            CreateDefaultSovietCompany();
-            CreateDefaultGermanCompany();
+            CreateDefaultSovietCompany(package);
+            CreateDefaultGermanCompany(package);
 
         });
 
     }
 
-    private static void CreateDefaultSovietCompany() {
+    private static void CreateDefaultSovietCompany(ModPackage package) {
+
+        // Grab faction
+        var sov = Faction.Soviet;
+
+        // Grab type
+        var typ = package.GetCompanyType(sov, "sov_rifles") ?? throw new System.Exception("Failed to fetch company type");
 
         // Create builder
-        CompanyBuilder builder = CompanyBuilder.NewCompany("Default Soviet", CompanyType.Infantry, CompanyAvailabilityType.MultiplayerOnly, Faction.Soviet, ModGuid.BattlegroundsTuning);
+        CompanyBuilder builder = CompanyBuilder.NewCompany("Default Soviet", typ, CompanyAvailabilityType.MultiplayerOnly, sov, ModGuid.BattlegroundsTuning);
 
         // Initial phase
         AddUnit(builder, "combat_engineer_squad_bg", DeploymentPhase.PhaseInitial);
@@ -82,10 +91,16 @@ public static class InitialDataCreator {
 
     }
 
-    private static void CreateDefaultGermanCompany() {
-        
+    private static void CreateDefaultGermanCompany(ModPackage package) {
+
+        // Grab faction
+        var ger = Faction.Wehrmacht;
+
+        // Grab type
+        var typ = package.GetCompanyType("ost_rifles") ?? throw new System.Exception("Failed to fetch company type");
+
         // Create builder
-        CompanyBuilder builder = CompanyBuilder.NewCompany("Default German", CompanyType.Infantry, CompanyAvailabilityType.MultiplayerOnly, Faction.Wehrmacht, ModGuid.BattlegroundsTuning);
+        CompanyBuilder builder = CompanyBuilder.NewCompany("Default German", typ, CompanyAvailabilityType.MultiplayerOnly, ger, ModGuid.BattlegroundsTuning);
 
         // Initial phase
         AddUnit(builder, "pioneer_squad_bg", DeploymentPhase.PhaseInitial);

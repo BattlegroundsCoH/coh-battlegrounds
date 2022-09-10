@@ -106,4 +106,28 @@ public class ChunkyFile {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="outpath"></param>
+    public void DumpTree(string outpath = "chunky.txt") {
+
+        // Create file
+        using var fs = File.Create(outpath);
+        using var sw = new StreamWriter(fs);
+
+        void WriteChunk(int indent, Chunk chunk) {
+            sw.WriteLine($"{new string('-', indent)} {chunk.Name} |{chunk.Data.Length}| '{chunk.Descriptor}'");
+            foreach (var child in chunk.SubChunks) {
+                WriteChunk(indent + 1, child);
+            }
+        }
+
+        // Loop over all
+        foreach (Chunk c in this.m_chunks) {
+            WriteChunk(0, c);
+        }
+
+    }
+
 }

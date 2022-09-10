@@ -59,6 +59,36 @@ public static class SessionUtility {
 
             }
 
+            // Loop over additional include files
+            for (int i = 0; i < session.Gamemode.IncludeFiles.Length; i++) {
+
+                // Grab path and parse it
+                var pathInfo = session.Gamemode.IncludeFiles[i].Split(';');
+                if (pathInfo.Length is 2) {
+
+                    // Pick real path
+                    var realPath = BattlegroundsInstance.GetRelativeVirtualPath(pathInfo[0], ".scar");
+
+                    // Verify file exists
+                    if (!File.Exists(realPath)) {
+                        Trace.WriteLine($"Invalid include file. File not found: {realPath}", nameof(SessionUtility));
+                    }
+
+                    // Read contents
+                    var contents = File.ReadAllBytes(realPath);
+
+                    // Register
+                    includeFiles.Add(new(pathInfo[1], contents));
+
+                } else {
+
+                    // Log
+                    Trace.WriteLine("Invalid include file. Expected include file of the form '<RealPath>;<ScarPath>'", nameof(SessionUtility));
+
+                }
+
+            }
+
         } catch (Exception e) {
 
             // Log
@@ -95,9 +125,15 @@ public static class SessionUtility {
     public static bool GotFatalScarError() {
 
         if (File.Exists(LogFilePath)) {
-            if (File.ReadAllText(LogFilePath).Contains("GameObj::OnFatalScarError:")) {
-                return true;
+            try {
+                if (File.ReadAllText(LogFilePath).Contains("GameObj::OnFatalScarError:")) {
+                    return true;
+                }
+            } catch (IOException iox) {
+                Trace.WriteLine($"Error reading warnings.log when checking for scar error: {iox.Message}", nameof(SessionUtility));
+                return false; // ASSUME false - may change to true if this branch is hit more in that case.
             }
+
         }
 
         return false;
@@ -111,9 +147,7 @@ public static class SessionUtility {
     public static bool WasAnyMatchPlayed() {
 
         if (File.Exists(LogFilePath)) {
-            if (File.ReadAllText(LogFilePath).Contains("GameObj::OnFatalScarError:")) {
-                return true;
-            }
+            return true;
         }
 
         return false;
@@ -147,6 +181,5 @@ public static class SessionUtility {
     /// <returns>Returns <see langword="true"/> if there's a file at <see cref="ReplayMatchData.LATEST_REPLAY_FILE"/>. Otherwise <see langword="false"/>.</returns>
     public static bool HasPlayback()
         => File.Exists(ReplayMatchData.LATEST_REPLAY_FILE);
-
 
 }

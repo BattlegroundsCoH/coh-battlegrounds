@@ -103,8 +103,8 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
         // Set transport
         var transportBp = this.BuilderInstance.Transport;
         this.SquadIsTransported = transportBp is not null;
-        if (this.SquadIsTransported && App.ResourceHandler.HasIcon("symbol_icons", this.BuilderInstance.Transport.UI.Symbol)) {
-            this.SquadTransportIcon = App.ResourceHandler.GetIcon("symbol_icons", this.BuilderInstance.Transport.UI.Symbol);
+        if (this.SquadIsTransported && App.ResourceHandler.HasIcon("symbol_icons", transportBp!.UI.Symbol)) {
+            this.SquadTransportIcon = App.ResourceHandler.GetIcon("symbol_icons", transportBp!.UI.Symbol);
         }
 
         // Refresh

@@ -4,8 +4,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 
 using Battlegrounds;
+using Battlegrounds.AI;
 using Battlegrounds.Compiler;
-using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
