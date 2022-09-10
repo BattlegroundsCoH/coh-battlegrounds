@@ -32,7 +32,10 @@ public class CommandArgumentList {
         => this.m_args.TryGetValue(arg, out object? argval) ? (argval is T t ? t : throw new Exception("Invalid type argument.")) : throw new Exception("Invalid argument name.");
     public T GetValue<T>(Argument arg) {
         if (arg is Argument<T>) {
-            return this.m_args.TryGetValue(arg.Name, out object? argval) ? ((T)argval) : throw new Exception("Invalid argument name.");
+            if (this.m_args.TryGetValue(arg.Name, out object? v) && v is T argv) {
+                return argv;
+            }
+            throw new Exception("Invalid argument name.");
         }
         throw new Exception("Invalid argument type");
     }

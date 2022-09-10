@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.IO.Compression;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -110,7 +111,7 @@ class Program {
 
         public static readonly Argument<bool> TEST = new Argument<bool>("-t", "Specifies if the testmap should be read instead", false);
 
-        public MapExtract() : base("coh2-extract-maps", "Verifies the integrity of a gfx file.", PATH, TEST) { }
+        public MapExtract() : base("coh2-extract-maps", "Extracts all CoH2 maps.", PATH, TEST) { }
 
         public override void Execute(CommandArgumentList argumentList) {
 
@@ -131,7 +132,7 @@ class Program {
         public static readonly Argument<string> PATH = new Argument<string>("-c", "Specifies the directory to compile", string.Empty);
         public static readonly Argument<string> OUT = new Argument<string>("-o", "Specifies compiled campaign output file.", "campaign.camp");
 
-        public CampaignCompile() : base("campaign", "Verifies the integrity of a gfx file.", PATH, OUT) { }
+        public CampaignCompile() : base("campaign", "Compiles a campaign directory..", PATH, OUT) { }
 
         public override void Execute(CommandArgumentList argumentList) {
 
@@ -195,6 +196,8 @@ class Program {
 
     class Update : Command {
         
+        public static readonly string ChecksumPath = Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\checksum.txt");
+
         public static readonly Argument<string> TARGET = new Argument<string>("-target", "Specifies the update target [db, checksum]", "db");
 
         public static readonly Argument<string> MOD = new Argument<string>("-m", "Specifies the mod to update, applicable when target=db", "vcoh");
@@ -213,7 +216,7 @@ class Program {
                     this.UpdateDatabase(argumentList);
                     break;
                 case "checksum":
-                    this.ComputeChecksum();
+                    ComputeChecksum();
                     break;
                 default:
                     Console.WriteLine("Undefined update target.");
@@ -290,16 +293,13 @@ class Program {
 
         }
 
-        private void ComputeChecksum() {
-
-            // Get full checksum path
-            string checksumPath = Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\checksum.txt");
+        internal static void ComputeChecksum() {
 
             // Get path to release build
             string releaseExe = Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\bin\\Release\\net6.0-windows\\coh2-battlegrounds.exe");
 
             // Log
-            Console.WriteLine($"Checksum file: {checksumPath}");
+            Console.WriteLine($"Checksum file: {ChecksumPath}");
             Console.WriteLine($"Release Build: {releaseExe}");
 
             // Make sure release build exists
@@ -316,8 +316,8 @@ class Program {
             Console.WriteLine($"Saving integrity hash to checksum file.");
 
             // Save
-            File.WriteAllText(checksumPath, Integrity.IntegrityHashString);
-            File.Copy(checksumPath, releaseExe.Replace("coh2-battlegrounds.exe", "checksum.txt"), true);
+            File.WriteAllText(ChecksumPath, Integrity.IntegrityHashString);
+            File.Copy(ChecksumPath, releaseExe.Replace("coh2-battlegrounds.exe", "checksum.txt"), true);
 
             // Log
             Console.WriteLine("Saved hash to checksum file(s).");
@@ -353,9 +353,100 @@ class Program {
 
     class CreateInstaller : Command {
 
-        public CreateInstaller() : base("mki", "Makes an installer file (Zips the release build folder and attempts to compile the Rust installer).") { }
+        const string msbuild_path = @"C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin";
+
+        public static readonly Argument<bool> SKIP_COMPILE = new Argument<bool>("-c", "Skip compilation (must be handled by user then", false);
+
+        public CreateInstaller() : base("mki", "Makes an installer file (Zips the release build folder and attempts to compile the Rust installer).", SKIP_COMPILE) { }
 
         public override void Execute(CommandArgumentList argumentList) {
+
+            // Flag to check if compilation should be skipped
+            bool skipFlag = argumentList.GetValue(SKIP_COMPILE);
+
+            // Make sure msbuild exists
+            if (!File.Exists(msbuild_path + "\\msbuild.exe")) {
+                Console.WriteLine("Failed to locate msbuild.exe");
+                Console.WriteLine("Create install data file anyways (y/n)?");
+                if (Console.Read() is (int)'Y' or (int)'y') {
+                    skipFlag = true;
+                } else {
+                    return;
+                }
+            }
+
+            // Find abs path for working directory
+            string workdir = Path.GetFullPath("..\\..\\..\\..\\");
+
+            // Check if compile flag is set
+            if (!skipFlag) {
+
+                // Compile aux library and bail if failure
+                if (!CompileProject("coh2-battlegrounds-bin.csproj", Path.Combine(workdir, "coh2-battlegrounds-bin"))) {
+                    return;
+                }
+
+                // Compile main app
+                if (!CompileProject("coh2-battlegrounds.csproj", Path.Combine(workdir, "coh2-battlegrounds"))) {
+                    return;
+                }
+
+            }
+
+            // Update checksum
+            Update.ComputeChecksum();
+
+            // Log
+            Console.WriteLine();
+            Console.WriteLine("Copying checksum file to release directory");
+
+            // Copy
+            File.Copy(Update.ChecksumPath, Path.Combine(workdir, "coh2-battlegrounds\\bin\\Release\\net6.0-windows\\checksum.txt"), true);
+            Console.WriteLine("Copied checksum file to release directory:");
+            Console.WriteLine("\tNow packing into zipfile...");
+
+            // Define zip path
+            const string zippy = "bg-release.zip";
+            if (File.Exists(zippy)) {
+                File.Delete(zippy);
+            }
+
+            // Creaste zip
+            ZipFile.CreateFromDirectory(Path.Combine(workdir, "coh2-battlegrounds\\bin\\Release\\net6.0-windows"), zippy);
+            Console.WriteLine("Zip file created");
+
+        }
+
+        private static bool CompileProject(string project, string projectDir) {
+
+            // Firstly we trigger MSBuild.exe on our solution file
+            ProcessStartInfo msbuild_bin = new ProcessStartInfo() {
+                UseShellExecute = false,
+                FileName = $"{msbuild_path}\\MSBuild.exe",
+                Arguments = $"{project} -property:Configuration=Release",
+                WorkingDirectory = projectDir,
+            };
+
+            // Trigger compile
+            Process? binbuilder = Process.Start(msbuild_bin);
+            if (binbuilder is null) {
+                Console.WriteLine("Failed to create MS build process");
+                return false;
+            }
+
+            // Grab io
+            binbuilder.OutputDataReceived += (s, e) => {
+                Console.WriteLine($"msbuild: {e.Data}");
+            };
+            binbuilder.ErrorDataReceived += (s, e) => {
+                Console.WriteLine($"error: {e.Data}");
+            };
+
+            // Wait for exit
+            binbuilder.WaitForExit();
+
+            // Return OK
+            return true;
 
         }
 
@@ -513,6 +604,19 @@ class Program {
 
     }
 
+    class Echo : Command {
+
+        public static readonly Argument<string> TEXT = new Argument<string>("-m", "Message to echo", "");
+
+        public Echo() : base("echo", "Will echo the input", TEXT) {}
+
+        public override void Execute(CommandArgumentList argumentList) {
+            string txt = argumentList.GetValue(TEXT);
+            Console.WriteLine(txt);
+        }
+
+    }
+
     class Repl : Command {
 
         public Repl() : base("repl", "The program will enter a repl mode and allow for various inputs.") { }
@@ -571,6 +675,7 @@ class Program {
         flags.RegisterCommand<CreateInstaller>();
         flags.RegisterCommand<AIDefenceAnalyser>();
         flags.RegisterCommand<AIDefencePlannerTest>();
+        flags.RegisterCommand<Echo>();
         flags.RegisterCommand<Repl>();
 #if DEBUG
         flags.RegisterCommand<Update>();

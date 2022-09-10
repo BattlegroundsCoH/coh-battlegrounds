@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace coh2_battlegrounds_console;
 
@@ -10,12 +8,41 @@ public class Flags {
 
     private readonly Dictionary<string, Command> m_commands = new();
 
+    private static string[] Sanitize(string[] input) {
+        StringBuilder sb = new StringBuilder();
+        List<string> res = new();
+        bool isInString = false;
+        for (int i = 0; i < input.Length; i++) {
+            if (isInString) {
+                sb.Append(input[i]);
+                if (input[i].EndsWith('\"')) {
+                    res.Add(sb.ToString().Trim('\"'));
+                    isInString = false;
+                } else {
+                    sb.Append(' ');
+                }
+            } else {
+                if (input[i].StartsWith('\"')) {
+                    sb.Append(input[i]);
+                    sb.Append(' ');
+                    isInString = true;
+                } else {
+                    res.Add(input[i]);
+                }
+            }
+        }
+        return res.ToArray();
+    }
+
     public void Parse(params string[] args) {
 
         if (args.Length is 0) {
             this.HelpAll();
             return;
         }
+
+        // Sanitise
+        args = Sanitize(args);
 
         Dictionary<string, object?> cmdargs = new();
         string? current = null;
