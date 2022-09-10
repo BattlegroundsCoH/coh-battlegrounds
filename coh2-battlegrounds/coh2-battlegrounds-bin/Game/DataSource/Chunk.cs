@@ -5,6 +5,7 @@ using System.Linq;
 
 using Battlegrounds.Util;
 using System;
+using System.Collections.Immutable;
 
 namespace Battlegrounds.Game.DataSource;
 
@@ -63,6 +64,11 @@ public class Chunk {
     /// Get the version of the <see cref="Chunk"/>.
     /// </summary>
     public int Version => this.m_version;
+
+    /// <summary>
+    /// Get a list of subchunks
+    /// </summary>
+    public ImmutableList<Chunk> SubChunks => this.m_childChunks.ToImmutableList();
 
     /// <summary>
     /// Create a new <see cref="Chunk"/> with parent file version supplied

@@ -93,6 +93,11 @@ function BG_SetupWincondition()
 
     -- Get local variable
     local mode = bg_settings.gamemode;
+    
+    -- Override this function
+    Setup_GetWinConditionOption = function()
+        return bg_settings.gameoptions.gamemode_setting;
+    end
 
     -- Is Victory Points?
     if mode == "Victory Points" or mode == "bg_vp" then
@@ -100,18 +105,24 @@ function BG_SetupWincondition()
         -- Import the VP ticker code
         import("Prototype/VPTickerWin-Annihilate_Functions.scar")
 
-        -- Override this function
-        Setup_GetWinConditionOption = function()
-            return bg_settings.gameoptions.gamemode_setting;
-        end
-
         -- Call the set globals
         SetGlobals();
 
         -- Call the OnInit
         VPTicker_OnInit();
 
+    elseif mode == "bg_defence" then
+
+        -- Import the defence code
+        import("WinConditions/coh2_battlegrounds_defence.scar")
+
+        -- Loop over hooks and init
+        for i=1, #bg_wchook.init do
+            bg_wchook.init[i]();
+        end
+
     end -- Add more gamemodes here!
+    -- May need a more dynamic approach here
 
 end
 

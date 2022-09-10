@@ -1,24 +1,24 @@
 _bg_AISettings = {
     thresholds = {
         [1] = {
-            smart_thinking = 4,
-            trigger_callin = 9,
-            max_deployed = 12, -- max deployed at a time
+            smart_thinking = 7,         -- Decides how many units are required before a smarter decision is made on what to call in.
+            trigger_callin = 9,         -- Decides when a demand is high enough to trigger a call-in.
+            max_deployed = 10,          -- max deployed at a time.
         },
         [2] = {
-            smart_thinking = 3,
+            smart_thinking = 5,
             trigger_callin = 7,
-            max_deployed = 14,
+            max_deployed = 12,
         },
         [3] = {
-            smart_thinking = 2,
-            trigger_callin = 4,
-            max_deployed = 20,
+            smart_thinking = 4,
+            trigger_callin = 6,
+            max_deployed = 15,
         },
         [4] = {
             smart_thinking = 1,
-            trigger_callin = 3,
-            max_deployed = 24,
+            trigger_callin = 5,
+            max_deployed = 18,
         }
     },
     modifiers = {
@@ -41,16 +41,17 @@ _bg_AISettings = {
             call_mod = 1.2,
             manpower_income = 1.4,
             munitions_income = 1.8,
-            fuel_income = 2.2,
+            fuel_income = 1.5,
         },
         [4] = {
-            aggressive_factor = 3.25,
+            aggressive_factor = 2.75,
             call_mod = 0.9,
             manpower_income = 1.6,
             munitions_income = 2.2,
-            fuel_income = 2.2,
+            fuel_income = 1.7,
         }
-    }
+    },
+    is_enabled = true
 };
 
 function BGAI_RegisterAIPlayer(index, player)
@@ -66,6 +67,7 @@ function BGAI_RegisterAIPlayer(index, player)
     _bg_aiData[index].demand_heavy = 0;
     _bg_aiData[index].demand_support = 0;
     _bg_aiData[index].demand_any = 1;
+    _bg_aiData[index].is_enabled = true;
 
     -- Apply resource modifiers
     _bg_aiData[index].resource_mods = {
@@ -86,6 +88,11 @@ function BGAI_RegisterAIPlayer(index, player)
         Rule_AddInterval(BGAI_UpdateAIPlayers, 5);
     end
 
+end
+
+function BGAI_SetAIPlayerEnabled(player, enabled)
+    local index = BGAI_GetAIPlayerID(player);
+    _bg_aiData[index].is_enabled = enabled;
 end
 
 function BGAI_GetDifficultyFromValue(d)
@@ -109,6 +116,16 @@ function BGAI_GetAIPlayerID(player)
     return -1;
 end
 
+function BGAI_GetAIUnit(player, unit_id)
+    local i = BGAI_GetAIPlayerID(player);
+    for _, unit in pairs(_bg_aiData[i].company.units) do
+        if unit.company_id == unit_id then
+            return unit;
+        end
+    end
+    return nil
+end
+
 function BGAI_EvalAllInitial()
     for i=1, #_bg_aiData do
         BGAI_EvalProduction(i);
@@ -117,20 +134,33 @@ end
 
 function BGAI_UpdateAIPlayers()
 
-    for i=1, #_bg_aiData do
+    -- Do nothing if not enabled
+    if not _bg_AISettings.is_enabled then
+        return
+    end
 
-        _bg_aiData[i].update_time = _bg_aiData[i].update_time - 5;
+    -- Loop over all players
+    for index, aiplayer in pairs(_bg_aiData) do
 
-        if _bg_aiData[i].update_time <= 0 then
+        -- If enabled
+        if aiplayer.is_enabled then
 
-            -- Evaluate own units
-            BGAI_EvalUnits(i);
+            -- Update update time
+            aiplayer.update_time = aiplayer.update_time - 5;
 
-            -- Evaluate production
-            BGAI_EvalProduction(i);
+            -- If time to update, invoke updates
+            if aiplayer.update_time <= 0 then
 
-            -- Reset update interval
-            _bg_aiData[i].update_time = _bg_aiData[i].update_interval;
+                -- Evaluate own units
+                BGAI_EvalUnits(index);
+
+                -- Evaluate production
+                BGAI_EvalProduction(index);
+
+                -- Reset update interval
+                aiplayer.update_time = aiplayer.update_interval;
+
+            end
 
         end
 
@@ -324,11 +354,11 @@ function BGAI_BuyRandom(index, set)
 
     -- Get basic data to use
     local player = _bg_aiData[index].player;
-    local gotopos = Player_GetStartingPosition(player);
+    local gotopos = Player_GetBasePosition(player);
     local spawnfrom = Player_GetNearestMapEntry(player, gotopos);
 
     -- Call in the unit
-    local squad, crew, transport = BG_CallInUnit(set[i], player, gotopos, spawnfrom);
+    local squad, crew, _ = BG_CallInUnit(set[i], player, gotopos, spawnfrom);
 
     -- If log AI is enabled, then log the AI
     if _bg_custom.log_ai then

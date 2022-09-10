@@ -24,7 +24,7 @@ public class CompanyCompiler : ICompanyCompiler {
 
         // Grab units
         var units = company.Units;
-        Array.Sort(units, (a, b) => this.CompareUnit(a, b));
+        Array.Sort(units, this.CompareUnit);
 
         // Set unit names
         for (int i = 0; i < units.Length; i++) {

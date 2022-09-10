@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -45,21 +46,14 @@ public class IconButton : Button {
     }
 
     public static readonly DependencyProperty HoverColourProperty =
-        DependencyProperty.Register(nameof(HoverColour), typeof(object), typeof(IconButton), new PropertyMetadata("#536375"));
+        DependencyProperty.Register(nameof(HoverColour), typeof(Brush), typeof(IconButton), 
+            new FrameworkPropertyMetadata(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#536375")), 
+                FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.SubPropertiesDoNotAffectRender));
 
-    public object? HoverColour {
+    [Bindable(true), Category("Appearance")]
+    public Brush? HoverColour {
         get => (SolidColorBrush)this.GetValue(HoverColourProperty);
-        set {
-            if (value is SolidColorBrush brush) {
-                this.SetValue(HoverColourProperty, brush);
-            } else if (value is Color col) {
-                this.SetValue(HoverColourProperty, new SolidColorBrush(col));
-            } else if (value is string s) {
-                try {
-                    this.SetValue(HoverColourProperty, new SolidColorBrush((Color)ColorConverter.ConvertFromString(s)));
-                } catch { }
-            }
-        }
+        set => this.SetValue(HoverColourProperty, value);
     }
 
     public static readonly DependencyProperty ImageTooltipProperty =

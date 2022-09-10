@@ -13,6 +13,7 @@ using Battlegrounds.Lua.Generator;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Gameplay.Supply;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.AI;
 
 namespace Battlegrounds.Compiler;
 
@@ -56,6 +57,16 @@ public class SessionCompiler : ISessionCompiler {
             },
         };
 
+        // If there's a specific team order, write it out
+        switch (session.TeamOrder) {
+            case TeamMode.Fixed:
+            case TeamMode.FixedReverse:
+                bg_settings["roles_swapped"] = session.TeamOrder is TeamMode.FixedReverse;
+                break;
+            default:
+                break;
+        }
+
         // Prepare company data
         Dictionary<string, int> aiCounters = new() { ["allies"] = 0, ["axis"] = 0 };
         Dictionary<string, Dictionary<string, object>> bg_companies = participants
@@ -69,8 +80,13 @@ public class SessionCompiler : ISessionCompiler {
             .Assignment("bg_db.towing_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowingUpgrade))
             .Assignment("bg_db.towed_upgrade", GetBlueprintName(session.TuningMod.Guid, session.TuningMod.TowUpgrade));
 
+        // If any planning data
+        if (session.HasPlanning) {
+            sourceBuilder.Assignment("bg_plandata", GetPlanning(session));
+        }
+
         // Write the precompiled database
-        this.WritePrecompiledDatabase(sourceBuilder, participants.Map(x => x.SelectedCompany).NotNull());
+        this.WritePrecompiledDatabase(sourceBuilder, participants.MapNotNull(x => x.SelectedCompany));
 
         // Return built source code
         return sourceBuilder.GetSourceText();
@@ -122,6 +138,69 @@ public class SessionCompiler : ISessionCompiler {
 
     }
 
+    protected virtual Dictionary<string, object> GetPlanning(ISession session) {
+
+        // Create containers
+        var entityList = new List<Dictionary<string, object>>();
+        var squadList = new List<Dictionary<string, object>>();
+        var goalList = new List<Dictionary<string, object>>();
+
+        // Grab data
+        var entities = session.GetPlanEntities();
+        var squads = session.GetPlanSquads();
+        var goals = session.GetPlanGoals();
+
+        // Loop over entities
+        for (int i = 0; i < entities.Length; i++) {
+            var entity = new Dictionary<string, object>() {
+                ["team"] = entities[i].TeamOwner + 1,
+                ["player"] = entities[i].TeamMemberOwner,
+                ["ebp"] = entities[i].Blueprint.GetScarName(),
+                ["pos"] = entities[i].Spawn.SwapYZ(),
+                ["mode"] = entities[i].Lookat is null ? "place" : (entities[i].IsDirectional ? "lookat" : "line"),
+                ["width"] = entities[i].Width
+            };            
+            if (entities[i].Lookat is GamePosition lookat) {
+                entity["target"] = lookat.SwapYZ();
+            }
+            entityList.Add(entity);
+        }
+
+        // Loop over entities
+        for (int i = 0; i < squads.Length; i++) {
+            var squad = new Dictionary<string, object>() {
+                ["team"] = squads[i].TeamOwner + 1,
+                ["player"] = squads[i].TeamMemberOwner,
+                ["sid"] = squads[i].SpawnId,
+                ["pos"] = squads[i].Spawn.SwapYZ(),
+            };
+            if (squads[i].Lookat is GamePosition lookat) {
+                squad["target"] = lookat.SwapYZ();
+            }
+            squadList.Add(squad);
+        }
+
+        // Loop over goals
+        for (int i = 0; i < goals.Length; i++) {
+            var goal = new Dictionary<string, object>() {
+                ["team"] = goals[i].ObjectiveTeam + 1,
+                ["player"] = goals[i].ObjectivePlayer,
+                ["order"] = goals[i].ObjectiveIndex,
+                ["type"] = goals[i].ObjectiveType,
+                ["pos"] = goals[i].ObjectivePosition.SwapYZ()
+            };
+            goalList.Add(goal);
+        }
+
+        // Return plan data
+        return new() {
+            ["entities"] = entityList,
+            ["squads"] = squadList,
+            ["objectives"] = goalList
+        };
+
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -147,7 +226,7 @@ public class SessionCompiler : ISessionCompiler {
             };
 
             // Write DB
-            _ = lua.Assignment($"bg_db.slot_items[\"{ibp.GetScarName()}\"]", ibpData);
+            lua.Assignment($"bg_db.slot_items[\"{ibp.GetScarName()}\"]", ibpData);
 
         }
 

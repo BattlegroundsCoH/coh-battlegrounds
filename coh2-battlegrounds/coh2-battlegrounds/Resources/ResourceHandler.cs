@@ -30,16 +30,22 @@ public class ResourceHandler {
         "upgrade_icons",
         "phase_icons",
         "deploy_icons",
-        "portraits"
+        "portraits",
+        "minimap_icons",
+        "entity_icons",
+        "entity_symbols"
     };
     private static readonly string[] __iconResourceFiles = {
         "resources/ingame/ability_icons.dat",
+        "resources/ingame/entity_icons.dat",
+        "resources/ingame/entity_symbols.dat",
         "resources/ingame/item_icons.dat",
         "resources/ingame/symbol_icons.dat",
         "resources/ingame/unit_icons.dat",
         "resources/ingame/upgrade_icons.dat",
         "resources/ingame/phase_icons.dat",
         "resources/ingame/deploy_icons.dat",
+        "resources/ingame/minimap_icons.dat",
         "resources/ingame/portraits.dat"
     };
 

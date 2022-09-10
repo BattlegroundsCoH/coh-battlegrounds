@@ -1,0 +1,938 @@
+------------------------------------------------------------------------------------
+-- Point and Time check
+------------------------------------------------------------------------------------
+
+function BattlegroundsDefence_InitGamemode()
+
+	-- Init settings
+	DefenceSettingsData = {
+
+		-- Grab points
+		MaxPoints = Setup_GetWinConditionOption(),
+		DefenderPoints = Setup_GetWinConditionOption(),
+
+		-- Create counter Id
+		Counter = 333,
+
+		-- Define wait time
+		Time = bg_settings.gameoptions.Time * 60,
+
+		-- Create teritory group
+		Sectors = {},
+
+		-- Create attacker territory safezones
+		Safezones = {},
+
+		-- Squads locked for AI use
+		LockedSquads = {},
+
+		-- Identifier of teams
+		Defenders = {},
+		Attackers = {},
+
+		-- Flag setting if local player is defender
+		IsLocalDefender = false
+
+	}
+
+	-- Loop over all players
+	for i = 1, World_GetPlayerCount() do
+		local player = World_GetPlayerAt(i);
+		local team = Player_GetTeam(player);
+		if (team == 0 and bg_settings.roles_swapped == false) or (team ~= 0 and bg_settings.roles_swapped == true) then
+			table.insert(DefenceSettingsData.Attackers, player)
+		else
+			table.insert(DefenceSettingsData.Defenders, player)
+			if player == Game_GetLocalPlayer() then
+				DefenceSettingsData.IsLocalDefender = true
+			end
+		end
+	end
+
+	-- Init sectors
+	BattlegroundsDefence_InitSectors()
+
+	-- Set points
+	WinWarning_SetMaxTickers(DefenceSettingsData.MaxPoints, DefenceSettingsData.DefenderPoints)
+	WinWarning_SetTickers(DefenceSettingsData.MaxPoints - DefenceSettingsData.DefenderPoints, DefenceSettingsData.DefenderPoints)
+
+	-- Start timer
+	Timer_Start(DefenceSettingsData.Counter, DefenceSettingsData.Time)
+
+	-- Add interval to update points
+	Rule_AddInterval(BattlegroundsDefence_UpdatePoints, 3);
+	Rule_Add(BattlegroundsDefence_CheckTime);
+
+	-- Grant additional resources to the attacking team.
+	for _, p in pairs(DefenceSettingsData.Attackers) do
+		Player_AddResource(p, RT_Manpower, 240);
+		Player_AddResource(p, RT_Munition, 120);
+		Player_AddResource(p, RT_Fuel, 90);
+	end
+
+	-- Limit defending team supply
+	for _, p in pairs(DefenceSettingsData.Defenders) do
+
+		-- Reset --> Too bad if no structures have been preplaced
+		Player_SetResource(p, RT_Manpower, 0);
+		Player_SetResource(p, RT_Munition, 0);
+		Player_SetResource(p, RT_Fuel, 0);
+
+		-- Modify resource rate so it's slightly lower than normal (They do start out with all points afterall...)
+		Modify_PlayerResourceRate(p, RT_Manpower, 0.7, MUT_Multiplication);
+		Modify_PlayerResourceRate(p, RT_Munition, 0.8, MUT_Multiplication);
+		Modify_PlayerResourceRate(p, RT_Fuel, 0.6, MUT_Multiplication);
+
+		-- If AI player make them a locked squad group and disable their purchasing behaviour
+		if AI_IsAIPlayer(p) then
+			local pid = Player_GetID(p);
+			DefenceSettingsData.LockedSquads[pid] = SGroup_CreateIfNotFound("sg_deflocksquads" .. pid);
+			BGAI_SetAIPlayerEnabled(p, false);
+		end
+
+	end
+
+	-- Re-enable AI buying stuff in 2.5 min.
+	Rule_AddOneShot(BattlegroundsDefence_ReenableAI, 2.5 * 60);
+
+end
+
+function BattlegroundsDefence_ReenableAI()
+
+	-- Enable AI purchasing
+	for _, player in pairs(DefenceSettingsData.Defenders) do
+		if AI_IsAIPlayer(player) then
+			BGAI_SetAIPlayerEnabled(player, true)
+		end
+	end
+
+	-- Allow AI squads to move
+	for pid, group in pairs(DefenceSettingsData.LockedSquads) do
+		local p = Player_FromId(pid);
+		AI_UnlockSquads(p, group);
+	end
+
+end
+
+function BattlegroundsDefence_InitSectors()
+
+	-- Get first player of the attacking team
+	local attacker = DefenceSettingsData.Attackers[1]
+
+	-- Get first player of the defending team
+	local defender = DefenceSettingsData.Defenders[1]
+
+	-- Grab ignore ebp
+	local ignore_ter = BP_GetEntityBlueprint("142b113740474c82a60b0a428bd553d5:territory_point_invisible_command");
+
+	-- Loop over stategic points
+	for i=0, World_GetNumEntities()-1 do
+		local entity = World_GetEntity(i);
+		local ebp = Entity_GetBlueprint(entity);
+
+		-- Collect point if strategic point
+		if Entity_IsStrategicPoint(entity) and ebp ~= ignore_ter then
+
+			-- If safezone
+			if ebp == ignore_ter then
+
+				-- If owned by attacking team we register it as a safezone
+				if Entity_IsStrategicPointCapturedBy(entity, attacker) then
+					local epos = Entity_GetPosition(entity);
+					table.insert(DefenceSettingsData.Safezones, World_GetTerritorySectorID(epos))
+				end
+
+			else
+
+				-- Insert into list of sectors
+				table.insert(DefenceSettingsData.Sectors, entity)
+
+				-- Capture by defender
+				Entity_InstantCaptureStrategicPoint(entity, defender)
+
+			end
+
+		end
+
+	end
+
+end
+
+function BattlegroundsDefence_UpdatePoints()
+
+	-- Get first player of the defending and attacking teams
+	local attacker = DefenceSettingsData.Attackers[1]
+	local defender = DefenceSettingsData.Defenders[1]
+
+	-- Create counts
+	local counts = { 0, 0 }
+
+	-- Collect status
+	for _, v in pairs(DefenceSettingsData.Sectors) do
+		local spos = Entity_GetPosition(v)
+		if Entity_IsStrategicPointCapturedBy(v, defender) and World_IsInSupply(defender, spos) then
+			counts[2] = counts[2] + 1
+		elseif Entity_IsStrategicPointCapturedBy(v, attacker) and World_IsInSupply(attacker, spos) then
+			counts[1] = counts[1] + 1
+		end
+	end
+
+	-- Calculate penalty and cap penalty
+	local inplay = counts[1] + counts[2]
+	local defenderPenalty = math.floor((counts[1] / counts[2] * inplay) / 3)
+	if defenderPenalty < 0 then
+		defenderPenalty = 0
+	elseif defenderPenalty > 3 then
+		defenderPenalty = 3
+	end
+
+	-- Update points
+	DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - defenderPenalty
+	if DefenceSettingsData.DefenderPoints <= 0 then
+
+		-- Set to 0
+		DefenceSettingsData.DefenderPoints = 0
+
+		-- Set winner to attacking team
+		World_SetTeamWin(Player_GetTeam(DefenceSettingsData.Attackers[1]))
+
+	end
+
+	-- Grab points
+	local team1Tickers = DefenceSettingsData.MaxPoints - DefenceSettingsData.DefenderPoints
+	local team2Tickers = DefenceSettingsData.DefenderPoints
+
+	-- Update visually
+	BattlegroundsDefence_SetTickers(team1Tickers, team2Tickers)
+	WinWarning_SetCritical(false, 100 * team2Tickers / DefenceSettingsData.MaxPoints <= 20)
+
+end
+
+function BattlegroundsDefence_SetTickers(attackers, defenders)
+	if DefenceSettingsData.IsLocalDefender then
+		WinWarning_SetTickers(defenders, attackers)
+	else
+		WinWarning_SetTickers(attackers, defenders)
+	end
+end
+
+function BattlegroundsDefence_CheckTime()
+
+	-- Grab time
+	local t = Timer_GetRemaining(DefenceSettingsData.Counter);
+	local tStr = Loc_FormatTime(math.floor(t), false, false)
+
+	-- Update time
+	Obj_ShowProgress(BG_LocStringFormat(119, tStr), t / DefenceSettingsData.Time);
+
+	-- Set blinking if less than 20% of the time remaining
+	Obj_SetProgressBlinking(t / DefenceSettingsData.Time < 0.2);
+
+	-- Check timer
+	if t <= 0 then
+
+		-- Remove rules
+		Rule_Remove(BattlegroundsDefence_UpdatePoints)
+		Rule_RemoveMe();
+
+		-- Make defenders win
+		World_SetTeamWin(Player_GetTeam(DefenceSettingsData.Defenders[1]))
+
+	end
+
+end
+
+------------------------------------------------------------------------------------
+-- Spawn Defences
+------------------------------------------------------------------------------------
+
+function BattlegroundsDefence_InitDefence()
+
+	-- Grab defence data and spawn it in
+	for eid, entity in pairs(bg_plandata.entities) do
+
+		-- Grab owner and ebp
+		local owner = BattlegroundsDefence_SolveOwner(entity.team, entity.player)
+		local ebp = BP_GetEntityBlueprint(entity.ebp)
+
+		-- Log
+		if owner == nil then
+			return
+		end
+
+		-- Grab positions
+		local pos = World_GetNearestInteractablePoint(World_Pos(entity.pos.x, entity.pos.y, entity.pos.z))
+		if entity.target ~= nil then
+			entity.target = World_GetNearestInteractablePoint(World_Pos(entity.target.x, entity.target.y, entity.target.z))
+		else
+			entity.target = pos;
+		end
+
+		-- Spawn if valid
+		if BattlegroundsDefence_IsValidDefencePoint(pos) then
+
+			-- Determine placement mode
+			if entity.mode ~= "line" then
+				local eg_temp = EGroup_CreateIfNotFound("eg_deftmp" .. eid);
+				Util_CreateEntities(owner, eg_temp, ebp, pos, 1, entity.target);
+				if EGroup_Count(eg_temp) == 1 then
+					local e = EGroup_GetSpawnedEntityAt(eg_temp, 1);
+					local bestPos = World_GetSpawnablePosition(pos, e);
+					Entity_SetPosition(e, bestPos);
+					Entity_SetHeading(e, entity.target, false)
+				end
+			else
+				BattlegroundsDefence_SpawnLine(owner, ebp, pos, entity.target, entity.width)
+			end
+
+		end
+
+	end
+
+	-- Grab defence unit data and call them in
+	for _, squad in pairs(bg_plandata.squads) do
+
+		-- Grab owner of squad to spawn
+		local owner = BattlegroundsDefence_SolveOwner(squad.team, squad.player)
+
+		-- Grab positions
+		squad.pos = World_GetNearestInteractablePoint(World_Pos(squad.pos.x, squad.pos.y, squad.pos.z))
+		if squad.target ~= nil then
+			squad.target = World_GetNearestInteractablePoint(World_Pos(squad.target.x, squad.target.y, squad.target.z))
+		else
+			squad.target = Player_GetNearestMapEntry(Player_FindFirstEnemyPlayer(owner), squad.pos)
+		end
+
+		-- Check if valid spawn point
+		if BattlegroundsDefence_IsValidDefencePoint(squad.pos) then
+
+			-- Spawn company unit (and consider special case of AI player)
+			if AI_IsAIPlayer(owner) then
+				local aiunit = BGAI_GetAIUnit(owner, squad.sid);
+				if aiunit ~= nil then
+					local bgsquad = BG_CallInUnit(aiunit, owner,  squad.target, Player_GetNearestMapEntry(owner, squad.pos), true);
+					BattlegroundsDefence_SetupSquad(bgsquad, squad.pos, squad.target, true)
+				end
+			else
+				local bgsquad = BG_DeploySquad(owner, squad.sid, true)
+				if bgsquad then
+					BattlegroundsDefence_SetupSquad(bgsquad, squad.pos, squad.target, false)
+				end
+			end
+
+		end
+
+	end
+
+end
+
+function BattlegroundsDefence_SolveOwner(team, indexOnTeam)
+	if team == 0 then
+		return DefenceSettingsData.Attackers[indexOnTeam]
+	else
+		return DefenceSettingsData.Defenders[indexOnTeam]
+	end
+end
+
+function BattlegroundsDefence_IsValidDefencePoint(p)
+	local sid = World_GetTerritorySectorID(p);
+	for k,v in pairs(DefenceSettingsData.Safezones) do
+		if v == sid then
+			return false
+		end
+	end
+	return true
+end
+
+function BattlegroundsDefence_CreateEntity(bp, owner, pos, lookat)
+	if owner == nil then
+		return Entity_CreateENV(bp, pos, lookat)
+	else
+		return Entity_Create(bp, owner, pos, lookat)
+	end
+end
+
+function BattlegroundsDefence_SpawnLine(owner, bp, startpos, endpos, width)
+
+	-- Grab distance
+	local dist = Util_GetDistance(startpos, endpos)
+
+	-- Grab amount to spawn
+	local count = math.floor(dist / width)
+	local current = 0
+	local step = 1 / count
+
+	-- Loop over
+	for i=1, count do
+
+		-- Grab pos
+		local currPos = Util_GetPositionFromAtoB(startpos, endpos, current)
+		local nextPos = Util_GetPositionFromAtoB(startpos, endpos, current + step)
+
+		-- Grab heading
+		local dir = { x = nextPos.x - currPos.x, z = nextPos.z - currPos.z };
+		dir.x, dir.z = dir.z, -dir.x
+
+		-- Get lookat position
+		local lookat = Util_ScarPos(currPos.x + dir.x, currPos.z + dir.z)
+
+		-- Create entity
+		local entity = BattlegroundsDefence_CreateEntity(bp, owner, currPos, lookat)
+
+		-- Spawn entity
+		Entity_Spawn(entity);
+
+		-- Force construct
+		if (Entity_IsBuilding(entity) == true) then
+			Entity_ForceConstruct(entity)
+		end
+
+		-- Set current pos
+		current = current + step
+
+	end
+
+end
+
+function BattlegroundsDefence_SetupSquad(squad, pos, lookat, aisquad)
+
+	-- Try garrison
+	local sg_temp = SGroup_FromSquad(squad)
+	local garrisonId = nil
+
+	-- Try spawn in garrison if infantry
+	if Squad_IsInfantrySquad(squad) then
+		garrisonId = Util_GarrisonNearbyBuilding(sg_temp, pos, 20, false)
+		if garrisonId ~= nil then
+			Cmd_Garrison(sg_temp, EGroup_FromEntity(garrisonId), true, false, true);
+		end
+	end
+
+	-- If not garrisoned, warp to pos and look at target (if any)
+	if garrisonId == nil then
+		Squad_WarpToPos(squad, pos)
+		if lookat ~= nil then
+			Squad_FacePosition(squad, lookat)
+			if Squad_GetSyncWeapon(squad) ~= nil then
+				Cmd_InstantSetupTeamWeapon(sg_temp)
+			end
+		else
+			Cmd_Stop(sg_temp); -- Stop it from doing anything else
+		end
+	end
+
+	-- Lock squad from AI use (temporarily)
+	if aisquad then
+
+		-- Grab player and lock the squad
+		local p = Squad_GetPlayerOwner(squad)
+		AI_LockSquad(p, squad)
+
+		-- Register in locked squad list
+		local pid = Player_GetID(p);
+		SGroup_Add(DefenceSettingsData.LockedSquads[pid], squad)
+
+	end
+
+end
+
+------------------------------------------------------------------------------------
+-- Objectives Check
+------------------------------------------------------------------------------------
+
+-- Battlegrounds Objective Types
+BG_OT_ATTACK = 1 -- Attack position (capture)
+BG_OT_DEFEND = 2 -- Defend position (hold for 3 minutes)
+BG_OT_SUPPORT = 3 --  Support position (provide support for another player for 3 minutes)
+
+function BattlegroundsDefence_InitObjectives()
+
+	-- Bail if no objectives are defined
+	if #bg_plandata.objectives == 0 then
+		return
+	end
+
+	-- Create main objective
+	OBJ_DefenceMain = {
+		SetupUI = function() end,
+		OnStart = function() end,
+		OnComplete = function()	end,
+		OnFail = function() end,
+		IsComplete = function() return false end,
+		Title = BG_LocString(110),
+		Type = OT_Primary,
+	}
+
+	-- Register main objective
+	Objective_Register(OBJ_DefenceMain)
+
+	-- Create objective order
+	OBJ_DefenceAllAssault = {}
+
+	-- Loop over all objectives and queue
+	for _, v in pairs(bg_plandata.objectives) do
+
+		-- Grab owner
+		local owner = BattlegroundsDefence_SolveOwner(v.team, v.player)
+		local ownerid = Player_GetID(owner)
+
+		-- Init container
+		if OBJ_DefenceAllAssault[ownerid] == nil then
+			OBJ_DefenceAllAssault[ownerid] = {
+				objectives = {},
+				current = 1
+			}
+		end
+
+		-- Insert objective
+		OBJ_DefenceAllAssault[ownerid].objectives[v.order + 1] = BattlegroundsDefence_CreateObjective(v.type, v.pos, v.order)
+
+		-- Register objective
+		Objective_Register(OBJ_DefenceAllAssault[ownerid].objectives[v.order + 1])
+
+	end
+
+	-- Begin objectives delayed
+	Rule_AddOneShot(BattlegroundsDefence_DelayedStartObjectives, 10);
+
+end
+
+function BattlegroundsDefence_DelayedStartObjectives()
+
+	-- Start main
+	BattlegroundsDefence_StartMainObjective();
+
+	-- Loop over all objectives and start them
+	for k,v in pairs(OBJ_DefenceAllAssault) do
+		BattlegroundsDefence_StartObjective(k, v.objectives[1])
+	end
+
+	-- Add check every 10s
+	Rule_AddInterval(BattlegroundsDefence_CheckObjectives, 10)
+
+end
+
+function BattlegroundsDefence_StartMainObjective()
+	for _, v in pairs(DefenceSettingsData.Attackers) do
+		if Game_GetLocalPlayer() == v then
+			Objective_Start(OBJ_DefenceMain)
+		end
+	end
+end
+
+function BattlegroundsDefence_CreateObjective(objectiveType, objectivePosition, objectiveOrder)
+	local obj = {
+		SetupUI = function() end,
+		OnStart = function() end,
+		OnComplete = function()	end,
+		OnFail = function() end,
+		IsComplete = function() return false end,
+		Type = OT_Primary,
+		Parent = OBJ_DefenceMain,
+		PlayerOrder = objectiveOrder,
+	}
+	local pos = World_GetNearestInteractablePoint(World_Pos(objectivePosition.x, objectivePosition.y, objectivePosition.z))
+	if objectiveType == BG_OT_ATTACK then
+
+		-- Loop over points in range
+		local targetPoints = {}
+		for _, v in pairs(DefenceSettingsData.Sectors)  do
+			if Util_GetDistance(pos, Entity_GetPosition(v)) < 45 then
+				table.insert(targetPoints, v)
+			end
+		end
+
+		-- Capture points if any; otherwise it's a clear objective
+		if #targetPoints > 0 then
+			obj.targets = targetPoints
+			obj.__oncheck = BattlegroundsDefence_CheckCapture
+			obj.__oncomplete = function (self)
+				DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - 10 * #self.targets
+				for i = 1, #self.targets do
+					HintPoint_SetVisible(self.targets[i], false);
+				end
+			end
+			obj.__onstart = function(self)
+				self.targethints = {}
+				for i = 1, #self.targets do
+					self.targethints[i] = HintPoint_Add(self.targets[i], false, BG_LocString(125), 4, HPAT_Objective);
+				end
+			end
+			obj.__onstartdefenders = function (self)
+				if self.PlayerOrder ~= 0 then
+					Util_MissionTitle(BG_LocString(124), 1, 6, 1);
+				end
+				UI_CreateMinimapBlip(self.attackpos, 45, BT_DefendHere);
+				for i=1, #self.targethints do					
+					HintPoint_SetVisible(self.targethints[i], true);
+				end
+			end
+			obj.OnStart = function ()
+				Objective_SetCounter(obj, 0, #obj.targets)
+				obj.targetsui = {}
+				for k, v in ipairs(obj.targets) do
+					obj.targetsui[k] = Objective_AddUIElements(obj, Entity_GetPosition(v), true, BG_LocString(114), true)
+				end
+			end
+		else -- Else, clear the area
+			obj.attackpos = pos
+			obj.__oncheck = BattlegroundsDefence_CheckCleared
+			obj.__oncomplete = function (self)
+				DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - 10
+				HintPoint_SetVisible(self.defencehint, false); -- Will disable it for attackers too, shouldn't be a problem
+			end
+			obj.__onstart = function(self)
+				self.defencehint = HintPoint_Add(self.attackpos, false, BG_LocString(123), 4, HPAT_Objective);
+			end
+			obj.__onstartdefenders = function (self)
+				if self.PlayerOrder ~= 0 then
+					Util_MissionTitle(BG_LocString(122), 1, 6, 1);
+				end
+				HintPoint_SetVisible(self.defencehint, true);
+				UI_CreateMinimapBlip(self.attackpos, 45, BT_Combat);
+			end
+			obj.OnStart = function ()
+				Objective_AddUIElements(obj, pos, true, BG_LocString(114), true)
+			end
+		end
+
+		-- Set title
+		obj.Title = BG_LocString(111)
+
+	elseif objectiveType == BG_OT_DEFEND then
+
+		obj.defendpos = pos
+		obj.__oncheck = BattlegroundsDefence_CheckIsDefended
+		obj.__oncomplete = function (self)
+			DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - 5;
+			HintPoint_SetVisible(self.defencehint, false); -- Will disable it for attackers too, shouldn't be a problem
+		end
+		obj.__onstart = function(self)
+			self.starttime = World_GetGameTime()
+			self.endtime = World_GetGameTime() + 3 * 60
+			self.defencehint = HintPoint_Add(self.defendpos, false, BG_LocString(121), 4, HPAT_Objective);
+		end
+		obj.__onstartdefenders = function (self)
+			if self.PlayerOrder ~= 0 then
+				Util_MissionTitle(BG_LocString(120), 1, 6, 1 );
+			end
+			HintPoint_SetVisible(self.defencehint, true);
+			UI_CreateMinimapBlip(self.defendpos, 3 * 60, BT_AttackHere);
+		end
+		obj.OnStart = function ()
+			Objective_StartTimer(obj, COUNT_DOWN, 3*60, 60);
+		end
+		obj.Title = BG_LocString(112)
+
+	elseif objectiveType == BG_OT_SUPPORT then
+
+		obj.defendpos = pos
+		obj.__oncheck = BattlegroundsDefence_CheckIsSupported
+		obj.__oncomplete = function (self)
+			DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints - 5
+		end
+		obj.__onstart = function(self)
+			self.starttime = World_GetGameTime()
+			self.endtime = World_GetGameTime() + 3 * 60
+		end
+		obj.Title = BG_LocString(113)
+
+	else
+		fatal("Expected objective type value in interval 0 < type < 4 but got " .. tostring(objectiveType));
+	end
+	obj.__onfail = function (self)
+		DefenceSettingsData.DefenderPoints = DefenceSettingsData.DefenderPoints + 10
+	end
+	return obj
+end
+
+function BattlegroundsDefence_StartObjective(playerid, obj)
+
+	-- Run triggers
+	if obj.__onstart ~= nil then
+		obj:__onstart() -- For global triggers
+	end
+	if obj.__onstartdefenders ~= nil then
+		BattlegroundsDefence_TriggerDefender(obj, __onstartdefenders) -- Trigger to invoke enemy team (UI notifiers)
+	end
+
+	-- Start the objective visually on the local machine
+	if Player_GetID(Game_GetLocalPlayer()) == playerid then
+		Objective_Start(obj)
+	end
+
+end
+
+function BattlegroundsDefence_CheckObjectives()
+
+	-- Loop over all objectives and check them them
+	for k,v in pairs(OBJ_DefenceAllAssault) do
+
+		-- Make sure we have an objective
+		if v.objectives[v.current] ~= nil then
+
+			-- Get status
+			local obj_status = v.objectives[v.current]:__oncheck(k);
+
+			-- Check if complete
+			if obj_status == true then
+
+				-- Trigger on complete
+				v.objectives[v.current]:__oncomplete()
+
+				-- Complete visually for local player
+				if k == Player_GetID(Game_GetLocalPlayer()) then
+					Objective_Complete(v.objectives[v.current], true);
+				end
+
+				-- Go to next
+				v.current = v.current + 1
+
+				-- Start it if defined
+				if v.objectives[v.current] ~= nil then
+					BattlegroundsDefence_StartObjective(k, v.objectives[v.current])
+				elseif k == Player_GetID(Game_GetLocalPlayer()) then
+					Objective_Complete(OBJ_DefenceMain, true);
+				end
+
+			elseif obj_status == -1 then -- Fail it
+
+				-- Trigger on complete
+				v.objectives[v.current]:__onfail()
+
+				-- Fail visually
+				if k == Player_GetID(Game_GetLocalPlayer()) then
+					Objective_Fail(v.objectives[v.current], true);
+				end
+
+				-- Go to next
+				v.current = v.current + 1
+
+				-- Start it if defined
+				if v.objectives[v.current] ~= nil then
+					BattlegroundsDefence_StartObjective(k, v.objectives[v.current])
+				elseif k == Player_GetID(Game_GetLocalPlayer()) then
+					Objective_Complete(OBJ_DefenceMain, true);
+				end
+
+			end
+
+		end
+
+	end
+
+end
+
+function BattlegroundsDefence_TriggerDefender(obj, func)
+	for _, player in pairs(DefenceSettingsData.Defenders) do
+		if player == Game_GetLocalPlayer() then
+			func(obj)
+		end
+	end
+end
+
+function BattlegroundsDefence_CheckCapture(obj, playerid)
+
+	-- Grab player and define how many have been captured
+	local player = Player_FromId(playerid)
+	local captured = 0
+
+	-- Loop over points
+	for _, v in pairs(obj.targets) do
+		if Entity_IsStrategicPointCapturedBy(v, player) then
+			captured = captured + 1
+		end
+	end
+
+	-- Update visually
+	if playerid == Player_GetID(Game_GetLocalPlayer()) then
+		Objective_SetCounter(obj, captured, #obj.targets)
+	end
+
+	-- Return if we have captured the amount expected
+	return captured == #obj.targets
+
+end
+
+function BattlegroundsDefence_CheckCleared(obj, playerid)
+	
+	-- Define sg and eg temps
+	local sg_temp = SGroup_CreateIfNotFound("sg_temp_chckclear"..playerid)
+	local eg_temp = EGroup_CreateIfNotFound("eg_temp_chckclear"..playerid);
+
+	-- Grab team
+	local attackers = DefenceSettingsData.Attackers;
+	local defenders = DefenceSettingsData.Defenders;
+
+	-- Grab units
+	Team_GetAllEntitiesNearMarker(defenders, eg_temp, obj.attackpos, 30);
+	Team_GetAllSquadsNearMarker(defenders, sg_temp, obj.attackpos, 30);
+
+	-- Return if player can see position and has cleared all
+	return Team_CanSee(attackers, obj.attackpos, ANY) and SGroup_Count(sg_temp) == 0 and EGroup_Count(eg_temp) == 0
+
+end
+
+function BattlegroundsDefence_CheckIsDefended(obj, playerid)
+	
+	-- Define temp sg
+	local sg_temp_def = SGroup_CreateIfNotFound("sg_temp_chckclear_def"..playerid)
+	local sg_temp_att = SGroup_CreateIfNotFound("sg_temp_chckclear_att"..playerid)
+
+	-- Grab team
+	local attackers = DefenceSettingsData.Attackers;
+	local defenders = DefenceSettingsData.Defenders;
+
+	-- Grab squad counts
+	Team_GetAllSquadsNearMarker(defenders, sg_temp_def, obj.defendpos, 30);
+	Team_GetAllSquadsNearMarker(attackers, sg_temp_att, obj.defendpos, 30);
+
+	-- Fail if no defenders
+	if SGroup_Count(sg_temp_def) > 0 and SGroup_Count(sg_temp_att) == 0 then
+		return -1
+	end
+
+	-- Return if defend time is over
+	return World_GetGameTime() > obj.endtime
+
+end
+
+function BattlegroundsDefence_CheckIsSupported(obj, playerid)
+	-- TODO: More support checks
+	return World_GetGameTime() > obj.endtime
+end
+
+------------------------------------------------------------------------------------
+-- AI Stuff
+------------------------------------------------------------------------------------
+g_aidefenceunits = { -- just gonna use vanilla units for now, may change later
+	["soviet"] = {
+		infantry = "conscript_squad_mp",
+		tank = "t_34_85_squad_mp"
+	},
+	["german"] = {
+		infantry = "ostruppen_squad_mp",
+		tank = "panzer_iv_squad_mp"
+	},
+	["west_german"] = {
+		infantry = "volksgrenadier_squad_mp",
+		tank = "panzer_iv_squad_mp"
+	},
+	["aef"] =  {
+		infantry = "riflemen_squad_mp",
+		tank = "m4a3_sherman_squad_mp"
+	},
+	["british"] = {
+		infantry = "tommy_squad_mp",
+		tank = "cromwell_mk4_75mm_squad_mp"
+	}
+}
+
+function BattlegroundsDefence_InitAI()
+
+	-- Invoke AI wave init if enabled (Defined in .json package)
+	if bg_settings.gameoptions.Support == 1 then
+		BattlegroundsDefence_InitAIWaves();
+	end
+
+end
+
+function BattlegroundsDefence_InitAIWaves()
+
+	-- Grab attacking team
+	local attackers = __BGDefenceTeams[1];
+
+	-- Init table
+	__BGAISupport = {}
+	for i, v in ipairs(attackers) do
+		__BGAISupport[i] = {
+			player = v,
+			sgroup = SGroup_CreateIfNotFound("sg_bgaidef" .. tostring(i))
+		};
+	end
+
+	-- Do interval
+	Rule_AddInterval(BattlegroundsDefence_SpawnWave, 7);
+
+end
+
+-- Wave spawner
+function BattlegroundsDefence_SpawnWave()
+
+	-- Calculate how many units the AI can field for a player
+	local maxcap = 5;
+	if World_GetGameTime() > 15 * 60 then
+		maxcap = 7;
+	end
+
+	-- Loop over players and spawn them in
+	for _, v in pairs(__BGAISupport) do
+		local target = BattlegroundsDefence_AIGetRandomTarget(v.player)
+		if SGroup_Count(v.sgroup) < maxcap then
+
+			-- Determine blueprint
+			local bp = g_aidefenceunits[Player_GetRaceName(v.player)].infantry
+			if World_GetRand(1,100) < 25 then
+				bp = g_aidefenceunits[Player_GetRaceName(v.player)].tank
+			end
+
+			-- Spawn
+			BattlegroundsDefence_SpawnAIUnit(v.player, v.sgroup, BP_GetSquadBlueprint(bp), target)
+
+		end
+		local foreach = function(gid, it, sid)
+			if (not Squad_IsMoving(sid)) and (not Squad_IsUnderAttack(sid, 5)) then
+				Cmd_AttackMove( v.sgroup, target, true, nil, 9.5);
+			end
+		end
+		SGroup_ForEach(v.sgroup, foreach)
+	end
+
+end
+
+function BattlegroundsDefence_AIGetRandomTarget(player)
+	local available = {}
+	for _, v in pairs(DefenceSettingsData.Sectors) do
+		if not Entity_IsStrategicPointCapturedBy(v, player) then
+			table.insert(available, Entity_GetPosition(v))
+		end
+	end
+	if #available > 0 then
+		return available[World_GetRand(1, #available)]
+	else
+		return Player_GetBasePosition(Player_FindFirstEnemyPlayer(player))
+	end
+end
+
+function BattlegroundsDefence_SpawnAIUnit(player, group, blueprint, target)
+
+	-- Spawn
+	local pos = Player_GetNearestMapEntry(player, target)
+	local squad = Squad_CreateAndSpawnToward(blueprint, player, 0, pos, target)
+
+	-- Make not selectable
+	Misc_SetSquadSelectable(squad, false);
+
+	-- Add to group and hide decorators
+	SGroup_Add(group, squad)
+	SGroup_EnableUIDecorator(group, false);
+
+	-- Add vulnerability (this will add to existing, so units keep getting more and more vulnerable)
+	Modify_Vulnerability(group, 1.4);
+
+	-- Attack move (queue)
+	Cmd_AttackMove( group, target, true, nil, 9.5);
+
+end
+
+------------------------------------------------------------------------------------
+-- Hook
+------------------------------------------------------------------------------------
+bg_wchook = {
+	init = {
+		BattlegroundsDefence_InitGamemode,
+		BattlegroundsDefence_InitDefence,
+		BattlegroundsDefence_InitObjectives,
+		BattlegroundsDefence_InitAI
+	}
+}

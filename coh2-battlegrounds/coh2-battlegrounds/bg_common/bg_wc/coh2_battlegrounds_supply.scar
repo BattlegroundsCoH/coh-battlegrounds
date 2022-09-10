@@ -5,7 +5,7 @@ _bg_supply = {
 };
 
 function BGSupply_Setup()
-    
+
     -- Get supply blueprints
     if not BGSupply_GetBlueprints() then
         BGSupply_SetupUI = nil; -- Clear the supply UI
@@ -193,11 +193,11 @@ function BGSupply_OnOutOfAmmunition(squad)
     if Squad_HasTeamWeapon(squad) then
         crit = _bg_supply.crit_ammo_tw;
     end
-    Cmd_CriticalHit(Squad_GetPlayerOwner(squad), squad, crit, 0.0); 
+    Cmd_CriticalHit(Squad_GetPlayerOwner(squad), squad, crit, 0.0);
 end
 
 function BGSupplyAE_RefillAll(executer, target)
-    
+
     if scartype(target) == ST_ENTITY then
         target = Entity_GetSquad(target);
         if target == nil then
@@ -212,7 +212,7 @@ function BGSupplyAE_RefillAll(executer, target)
 end
 
 function BGSupplyAE_RefillAmmo(executer, target)
-    
+
     -- Get target squad
     if scartype(target) == ST_ENTITY then
         target = Entity_GetSquad(target);
@@ -244,7 +244,7 @@ function BGSupplyAE_RefillAmmo(executer, target)
 end
 
 function BGSupplyAE_RefillFuel(executer, target)
-    
+
     if scartype(target) == ST_ENTITY then
         target = Entity_GetSquad(target);
         if target == nil then
