@@ -356,13 +356,17 @@ class Program {
         const string msbuild_path = @"C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin";
 
         public static readonly Argument<bool> SKIP_COMPILE = new Argument<bool>("-c", "Skip compilation (must be handled by user then)", false);
+        public static readonly Argument<bool> DONT_ZIP = new Argument<bool>("-dz", "Don't zip the file", false);
 
-        public CreateInstaller() : base("mki", "Makes an installer file (Zips the release build folder).", SKIP_COMPILE) { }
+        public CreateInstaller() : base("mki", "Makes an installer file (Zips the release build folder).", SKIP_COMPILE, DONT_ZIP) { }
 
         public override void Execute(CommandArgumentList argumentList) {
 
             // Flag to check if compilation should be skipped
             bool skipFlag = argumentList.GetValue(SKIP_COMPILE);
+
+            // Flag to check if we should zip
+            bool zipFlag = argumentList.GetValue(DONT_ZIP);
 
             // Make sure msbuild exists
             if (!File.Exists(msbuild_path + "\\msbuild.exe")) {
@@ -403,17 +407,35 @@ class Program {
             // Copy
             File.Copy(Update.ChecksumPath, Path.Combine(workdir, "coh2-battlegrounds\\bin\\Release\\net6.0-windows\\checksum.txt"), true);
             Console.WriteLine("Copied checksum file to release directory:");
-            Console.WriteLine("\tNow packing into zipfile...");
 
-            // Define zip path
-            const string zippy = "bg-release.zip";
-            if (File.Exists(zippy)) {
-                File.Delete(zippy);
+            if (zipFlag) {
+
+                const string dir = "bg-release";
+                if (Directory.Exists(dir)) {
+                    Directory.Delete(dir, true);
+                }
+
+                Directory.CreateDirectory(dir);
+
+                Helpers.CopyFilesRecursively(Path.Combine(workdir, "coh2-battlegrounds\\bin\\Release\\net6.0-windows"), dir);
+                Console.WriteLine($"{dir} created");
+
+
+            } else {
+
+                Console.WriteLine("\tNow packing into zipfile...");
+
+                // Define zip path
+                const string zippy = "bg-release.zip";
+                if (File.Exists(zippy)) {
+                    File.Delete(zippy);
+                }
+
+                // Creaste zip
+                ZipFile.CreateFromDirectory(Path.Combine(workdir, "coh2-battlegrounds\\bin\\Release\\net6.0-windows"), zippy);
+                Console.WriteLine("Zip file created");
+
             }
-
-            // Creaste zip
-            ZipFile.CreateFromDirectory(Path.Combine(workdir, "coh2-battlegrounds\\bin\\Release\\net6.0-windows"), zippy);
-            Console.WriteLine("Zip file created");
 
         }
 
