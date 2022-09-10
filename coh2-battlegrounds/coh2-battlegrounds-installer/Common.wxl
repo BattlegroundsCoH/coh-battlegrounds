@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+
+	<String Id="Company">Battlegrounds Development Team</String>
+
+	<String Id="ProductNameFolder">Battlegrounds</String>
+
+	<String Id="ProductName_x86">Battlegrounds Setup (32bit)</String>
+	<String Id="ProductName_x64">Battlegrounds Setup (64bit)</String>
+
+	<String Id="Description">Battlegrounds mod launcher setup</String>
+	<String Id="Comments">Battlegrounds mod launcher setup</String>
+	<String Id="Keywords">coh2, mod, installer, application</String>
+
+	<String Id="DowngradeErrorMessage">A new version of Battlegrounds is already installed.</String>
+
+	<String Id="Language">1033</String>
+	
+</WixLocalization>
