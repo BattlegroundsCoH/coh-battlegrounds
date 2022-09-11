@@ -7,8 +7,7 @@
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			
 			<!-- Shortcut -->
-			<ComponentRef Id="MainAppShortcut"/>
-			<ComponentRef Id="MainAppDescktopShortcut"/>
+			<ComponentRef Id="MainAppShortcuts"/>
 			
 		</ComponentGroup>
 	
@@ -16,7 +15,7 @@
 		<DirectoryRef Id="INSTALLFOLDER">
 			
 			<!-- Shortcut to main application -->
-			<Component Id="MainAppShortcut" Guid="{8728FEA1-9313-49D2-AAFA-9E17A395A577}">
+			<Component Id="MainAppShortcuts" Guid="{8728FEA1-9313-49D2-AAFA-9E17A395A577}">
 
 				<Shortcut Id="MainAppShortcut" 
 						  Name="!(loc.ProductNameFolder)" 
@@ -24,13 +23,6 @@
 						  Directory="ProgramMenuFolder" 
 						  WorkingDirectory="INSTALLFOLDER"
 						  Icon="icon.ico"/>
-				
-				<!-- Our unique key for this component shortcut -->
-				<RegistryValue Id="RegShortcutKey" Root="HKCU" Key="SOFTWARE\!(loc.ProductNameFolder)" Name="MenuShortcut" Value="1" Type="integer" KeyPath="yes" />
-				
-			</Component>
-
-			<Component Id="MainAppDescktopShortcut" Guid="{1E335065-E97E-4D7C-8C52-24DDE9C2DCBF}">
 
 				<Shortcut Id="MainAppDescktopShortcut"
 						  Name="!(loc.ProductNameFolder)"
@@ -39,11 +31,18 @@
 						  WorkingDirectory="INSTALLFOLDER"
 						  Icon="icon.ico"/>
 
+				<Shortcut Id="UninstallProductShortcut"
+                          Name="Uninstall"
+                          Description="Uninstalls application"
+                          Target="[SystemFolder]msiexec.exe"
+                          Arguments="/x [ProductCode]"
+						  Icon="icon.ico"/>
+				
 				<!-- Our unique key for this component shortcut -->
-				<RegistryValue Id="RegDesktopShortcutKey" Root="HKCU" Key="SOFTWARE\!(loc.ProductNameFolder)" Name="DesktopShortcut" Value="1" Type="integer" KeyPath="yes" />
-
+				<RegistryValue Root="HKCU" Key="SOFTWARE\!(loc.ProductNameFolder)" Name="BGInstaller" Value="1" Type="integer" KeyPath="yes" />
+				
 			</Component>
-			
+
 		</DirectoryRef>
 		
 	</Fragment>
