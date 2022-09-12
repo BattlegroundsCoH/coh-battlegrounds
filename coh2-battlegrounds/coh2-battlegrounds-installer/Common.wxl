@@ -5,6 +5,8 @@
 
 	<String Id="ProductNameFolder">Battlegrounds Mod Launcher</String>
 
+	<String Id="LaunchApp">Launch Battlegrounds Mod Launcher</String>
+
 	<String Id="ProductName_x86">Battlegrounds Mod Launcher (32bit)</String>
 	<String Id="ProductName_x64">Battlegrounds Mod Launcher (64bit)</String>
 

@@ -51,7 +51,19 @@
 		<Property Id="ARPURLINFOABOUT">$(var.SupportLink)</Property>
 	
 		<!-- Create a basic UI for the installer -->
-		<UIRef Id="WixUI_InstallDir"/>
+		<UI>
+			<UIRef Id="WixUI_InstallDir"/>
+			<Publish Dialog="ExitDialog"
+					 Control="Finish"
+					 Event="DoAction"
+					 Value="LaunchApplication">
+				WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed
+			</Publish>
+		</UI>
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="!(loc.LaunchApp)" />
+
+		<Property Id="WixShellExecTarget" Value="[INSTALLFOLDER]coh2-battlegrounds.exe" />
+		<CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
 		<!--
 		<WixVariable Id="WixUIDialogBmp" Value="$(var.ProjectDir)\Assets\Background.bmp" />
 		<WixVariable Id="WixUIBannerBmp" Value="$(var.ProjectDir)\Assets\Banner.bmp" />

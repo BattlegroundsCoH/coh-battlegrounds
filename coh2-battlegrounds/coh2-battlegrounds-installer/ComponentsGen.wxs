@@ -2,670 +2,670 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Fragment>
         <DirectoryRef Id="INSTALLFOLDER">
-            <Component Id="cmpB176F29CB011BA5504E84FD3C6B88E0A" Guid="{A5B30B60-217E-48CE-B43C-3BB48C0C8634}">
+            <Component Id="cmpB176F29CB011BA5504E84FD3C6B88E0A" Guid="{71439316-7599-455E-A81E-9729AE422628}">
                 <File Id="filBE1219C1C472B6E657C3E799D66B2C96" KeyPath="yes" Source="$(var.BasePath)\checksum.txt" />
             </Component>
-            <Component Id="cmp3A4E8DECA02DDC12A860356DB018B3DF" Guid="{03550EAF-741D-46D2-98A4-26658956C056}">
+            <Component Id="cmp3A4E8DECA02DDC12A860356DB018B3DF" Guid="{8D0C19E0-4158-4BC0-A2A5-039385F1D122}">
                 <File Id="filB5A067EC41324FBDDD73EDFC5B2A29C0" KeyPath="yes" Source="$(var.BasePath)\coh2-battlegrounds-bin.dll" />
             </Component>
-            <Component Id="cmp0C49FB1868C94062B5D51487F6FCB084" Guid="{A71D1FA8-5883-4D48-8A5A-88EC40055308}">
+            <Component Id="cmp0C49FB1868C94062B5D51487F6FCB084" Guid="{84732810-1287-480B-B148-50CE030BA193}">
                 <File Id="fil5E0B2E19287BD319282AFECABF1BA5CD" KeyPath="yes" Source="$(var.BasePath)\coh2-battlegrounds-bin.pdb" />
             </Component>
-            <Component Id="cmpB134FE61230E04A66878F66A2F676CC8" Guid="{CA625472-9DB7-4B2A-B8FA-5F2A4864477E}">
+            <Component Id="cmpB134FE61230E04A66878F66A2F676CC8" Guid="{7D3FE7B3-239E-47F9-B2A8-291C18F871D5}">
                 <File Id="fil9078084E055CFF0D3C2E0FDB96F80C79" KeyPath="yes" Source="$(var.BasePath)\coh2-battlegrounds.deps.json" />
             </Component>
-            <Component Id="cmp97F06F07864C0CD01F61925E782A8063" Guid="{B545D70E-A4AA-4254-83B6-1668986FCB43}">
+            <Component Id="cmp97F06F07864C0CD01F61925E782A8063" Guid="{BCE5568B-0317-4667-AE80-FD69AAF5B290}">
                 <File Id="fil9BE05DD65B1D1595A1706297BC2528B9" KeyPath="yes" Source="$(var.BasePath)\coh2-battlegrounds.dll" />
             </Component>
-            <Component Id="cmpAED6EBF78AB248E82DC537798C593AA7" Guid="{EF2239BB-57EF-435F-9471-41EDA4993A5D}">
+            <Component Id="cmpAED6EBF78AB248E82DC537798C593AA7" Guid="{1C50FD9E-C943-4200-BCA3-52E7E33C9D91}">
                 <File Id="filC3836236C73ECA8506FB24920C9B8D22" KeyPath="yes" Source="$(var.BasePath)\coh2-battlegrounds.exe" />
             </Component>
-            <Component Id="cmp87E8DD0D10263EFB489B03994B173B0C" Guid="{17761EEE-F2DE-4BD8-B138-B903E68866C6}">
+            <Component Id="cmp87E8DD0D10263EFB489B03994B173B0C" Guid="{BFB505C2-ABC1-40F0-8FCD-C1C87E352A54}">
                 <File Id="fil205A95B98C789A7EA6A1661F68A92F6E" KeyPath="yes" Source="$(var.BasePath)\coh2-battlegrounds.ico" />
             </Component>
-            <Component Id="cmp62480C288C079AB9D901211EA1B736F8" Guid="{763AE81E-BE2A-4B7B-8D01-459BC7B51446}">
+            <Component Id="cmp62480C288C079AB9D901211EA1B736F8" Guid="{06FFD7F3-769D-42E1-A7B4-22754377D650}">
                 <File Id="fil546DD002D3154E952900589189468812" KeyPath="yes" Source="$(var.BasePath)\coh2-battlegrounds.pdb" />
             </Component>
-            <Component Id="cmp4CFCBF93B01BAF10EF8C1CB3FC8E13FF" Guid="{D5390D35-2E04-48DA-95F6-8255FD31B00B}">
+            <Component Id="cmp4CFCBF93B01BAF10EF8C1CB3FC8E13FF" Guid="{029C03F6-492A-4F03-B0ED-5829B72360DF}">
                 <File Id="fil6EC38AF82B7A640AB40B53913F8E2A2C" KeyPath="yes" Source="$(var.BasePath)\coh2-battlegrounds.runtimeconfig.json" />
             </Component>
-            <Component Id="cmp2649E92579A3537BFD6860026671FCE5" Guid="{B5EF9BF2-D8D0-449F-98FE-F92E108C3B00}">
+            <Component Id="cmp2649E92579A3537BFD6860026671FCE5" Guid="{1A72F717-6C6C-4A68-9AA6-C522A6816F63}">
                 <File Id="fil20BFA8B7C25F2F15B854D26933E1DBB6" KeyPath="yes" Source="$(var.BasePath)\SharpVectors.Converters.Wpf.dll" />
             </Component>
-            <Component Id="cmp3B4FCC07CAECDB94A069031BC168324E" Guid="{8556B014-4518-416E-92DB-F754B6621914}">
+            <Component Id="cmp3B4FCC07CAECDB94A069031BC168324E" Guid="{9877EB18-4322-4EE9-97AA-F073BE246ADF}">
                 <File Id="filD33D7E850E022CF12EF5753B103A534D" KeyPath="yes" Source="$(var.BasePath)\SharpVectors.Core.dll" />
             </Component>
-            <Component Id="cmp08EEC311E7471131DD9C48756161618E" Guid="{8DE12D01-43C2-4756-BACA-6FD8EAEDCC2D}">
+            <Component Id="cmp08EEC311E7471131DD9C48756161618E" Guid="{23E1B1B9-51E9-43E5-8B84-E191EDEDB343}">
                 <File Id="fil102BB91B40B34F1ADC227DEA746F2B01" KeyPath="yes" Source="$(var.BasePath)\SharpVectors.Css.dll" />
             </Component>
-            <Component Id="cmp56E995C7783AEBDAC6B752A94ACD0ED2" Guid="{61BC36D2-BA48-48C1-BB4A-6CC12754CF83}">
+            <Component Id="cmp56E995C7783AEBDAC6B752A94ACD0ED2" Guid="{7537CBB0-21AC-4F0F-8A13-8044B2766330}">
                 <File Id="filCC44B5EA8E504783D32EAFDD3E30E21A" KeyPath="yes" Source="$(var.BasePath)\SharpVectors.Dom.dll" />
             </Component>
-            <Component Id="cmpB8B303C1586A1169B1A2E216B6A9BE32" Guid="{B214B0C2-E381-495D-850D-D04CAC3B8FA6}">
+            <Component Id="cmpB8B303C1586A1169B1A2E216B6A9BE32" Guid="{2D46A752-BEF1-4E45-B266-6B9CD08FF479}">
                 <File Id="fil0586FE7A984D4AF3A228468FF781AF97" KeyPath="yes" Source="$(var.BasePath)\SharpVectors.Model.dll" />
             </Component>
-            <Component Id="cmp5C560EAC9C5772203E383D79B4A58E6E" Guid="{51F7F7FF-0B56-4D96-8358-CF0ACBFFA1F0}">
+            <Component Id="cmp5C560EAC9C5772203E383D79B4A58E6E" Guid="{8A8BD3F3-6067-45AD-A92A-55C0EC3F2C1C}">
                 <File Id="fil527C9F33ACF68F88CC7D897C717637D0" KeyPath="yes" Source="$(var.BasePath)\SharpVectors.Rendering.Gdi.dll" />
             </Component>
-            <Component Id="cmp02DD37C0B535C7B93C5BB33A7DA9BB1C" Guid="{02A9D49C-8940-42AE-83C1-4EF16AADC664}">
+            <Component Id="cmp02DD37C0B535C7B93C5BB33A7DA9BB1C" Guid="{327C9DA9-2CAE-4C59-AE57-0D5C816FB937}">
                 <File Id="fil3CD450688EDB59F884A6545893A7F7D4" KeyPath="yes" Source="$(var.BasePath)\SharpVectors.Rendering.Wpf.dll" />
             </Component>
-            <Component Id="cmpC1119906A8080810EDEBCBFD3B1B38F1" Guid="{124F7BA6-BB12-40F2-8D15-A7966A8B7789}">
+            <Component Id="cmpC1119906A8080810EDEBCBFD3B1B38F1" Guid="{0E0CC52E-30A0-4091-B8EE-C01BA330FDC4}">
                 <File Id="filF90875F2A924073A3615783B54E20562" KeyPath="yes" Source="$(var.BasePath)\SharpVectors.Runtime.Wpf.dll" />
             </Component>
             <Directory Id="dirA8EFDD71EA58AF620B2F6BDCC2A3C5AB" Name="bg_common">
-                <Component Id="cmpF9C0580F5108B046D42EC809AEA52FE9" Guid="{321E7718-E6C3-43F4-A4FB-987D733721AF}">
+                <Component Id="cmpF9C0580F5108B046D42EC809AEA52FE9" Guid="{47EC9B0B-1886-4639-A2EB-5A5760F70CE8}">
                     <File Id="fil4D9509BA6AC2DDC03C98CCC165BF5266" KeyPath="yes" Source="$(var.BasePath)\bg_common\battlegrounds.mod.package.json" />
                 </Component>
-                <Component Id="cmp0681AE323975EF902327B091BA816A18" Guid="{E6EF8295-F46E-4C2F-B5E5-E17E3E8270B1}">
+                <Component Id="cmp0681AE323975EF902327B091BA816A18" Guid="{4AC3E28C-2AB4-48F4-8DEC-320DFB7FA242}">
                     <File Id="fil4C4C90FAB06FDBCAB568C438FB81125F" KeyPath="yes" Source="$(var.BasePath)\bg_common\coh2_battlegrounds_wincondition_preview.dds" />
                 </Component>
                 <Directory Id="dir5C4BD7A26CD56F92C450BD1478CE4207" Name="bg_wc">
-                    <Component Id="cmp8D7928A8FEB4ABDEFFC1B63C29015944" Guid="{5A0A41BC-B031-4F0E-99C0-3D5046ECEDB5}">
+                    <Component Id="cmp8D7928A8FEB4ABDEFFC1B63C29015944" Guid="{09154697-B04D-4E44-B920-89D68BA23DF0}">
                         <File Id="fil1EE0CFA2E9B4CFDBD2D61DA1CF293ED9" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\coh2_battlegrounds.scar" />
                     </Component>
-                    <Component Id="cmpD4C7744DA729148CB9D3DF265005D154" Guid="{55FDF79C-1CC8-45A6-B199-05655DAE5CE6}">
+                    <Component Id="cmpD4C7744DA729148CB9D3DF265005D154" Guid="{1727B0E6-1DC3-49A1-96EC-3B74443DC42D}">
                         <File Id="fil19FE9EF09D8ACD3D7678678C7927709C" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\coh2_battlegrounds.win" />
                     </Component>
-                    <Component Id="cmp8D18802B411DCBB67F7EE6597A54C4FA" Guid="{1487E71F-BF3A-4938-B798-8C448E9CE395}">
+                    <Component Id="cmp8D18802B411DCBB67F7EE6597A54C4FA" Guid="{C4DF3112-F698-4825-B117-59EFFD778F18}">
                         <File Id="fil396949AD385C12526E7F23FF0769E0B0" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\coh2_battlegrounds_defence.scar" />
                     </Component>
-                    <Component Id="cmp87D40A65B27D7316A480CCBBC58A74D4" Guid="{24A7C81C-B8D7-4AC4-BC14-3979CE166D2A}">
+                    <Component Id="cmp87D40A65B27D7316A480CCBBC58A74D4" Guid="{82805258-65C8-4874-9734-93FFEE7FE7AD}">
                         <File Id="fil4CCE0A86D18D6B4CF3CEC73B73E6A6C2" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\coh2_battlegrounds_supply.scar" />
                     </Component>
-                    <Component Id="cmpBAE621C3CEB5545A3B288A4610676BD5" Guid="{ED574E24-9DA7-43B6-BAE6-448EBDFD2CF2}">
+                    <Component Id="cmpBAE621C3CEB5545A3B288A4610676BD5" Guid="{35D07FD5-7B87-4D0E-9E7C-5C61C95B3E09}">
                         <File Id="filA2A40101BAB6878BC42257DB7052D69A" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\coh2_battlegrounds_supply_ui.scar" />
                     </Component>
-                    <Component Id="cmpF20734AE86D56D5A6576A4235E12690F" Guid="{A3661A20-25C3-4B5D-82FA-75EEADC23084}">
+                    <Component Id="cmpF20734AE86D56D5A6576A4235E12690F" Guid="{A8F014FF-A24F-47C6-B555-838E302456CA}">
                         <File Id="filC64D22389289AAC4D19A29481CE1CB8C" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\coh2_battlegrounds_weather.scar" />
                     </Component>
                     <Directory Id="dir95FDD60769BB840F3C5176DE24C0D6F5" Name="auxiliary_scripts">
-                        <Component Id="cmpD297A1028960392DE2608F2B117BD24A" Guid="{1CAF3C8D-F54F-4CE2-8F59-2C4530F33D9E}">
+                        <Component Id="cmpD297A1028960392DE2608F2B117BD24A" Guid="{C18BB164-46AD-426E-BF3A-AD3CB37D0AFC}">
                             <File Id="fil453D135117050E750A116CB50A6B3DD0" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\auxiliary_scripts\api_ui.scar" />
                         </Component>
-                        <Component Id="cmpE5FB5133BC86C71710514AB6659E7A8D" Guid="{01E36DB4-3309-4B40-8291-4C864051AE41}">
+                        <Component Id="cmpE5FB5133BC86C71710514AB6659E7A8D" Guid="{0D12FC80-BC6E-4775-911F-40E2298822FE}">
                             <File Id="fil04D747A5A517FB0471B340B2E7481349" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\auxiliary_scripts\client_companyui.scar" />
                         </Component>
-                        <Component Id="cmpA714501F2E280E5AA4464C6C75908BE0" Guid="{F2FAA683-C5DB-4397-9775-6FF6542DB0AC}">
+                        <Component Id="cmpA714501F2E280E5AA4464C6C75908BE0" Guid="{366C2E38-0754-4D43-A4C7-82790B7943E5}">
                             <File Id="filA5E041B629F09665049A8A757AA15CA2" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\auxiliary_scripts\client_overrideui.scar" />
                         </Component>
-                        <Component Id="cmp905952FCF2A5D02BA5E9E51E73A36617" Guid="{6F2CB208-8B0B-47DD-A86F-F4EEB8651A8F}">
+                        <Component Id="cmp905952FCF2A5D02BA5E9E51E73A36617" Guid="{E268CC17-ACC8-488F-8FB1-EC1B3F43FC58}">
                             <File Id="fil0718A22A99B0D49367A5175AEB566507" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\auxiliary_scripts\debug_script.scar" />
                         </Component>
-                        <Component Id="cmp0BE6D360F20687C6BE959577AB8BFB17" Guid="{33CEEBE8-B5EC-4FDD-AA4E-FE26E9908D72}">
+                        <Component Id="cmp0BE6D360F20687C6BE959577AB8BFB17" Guid="{3CE24A5B-BE01-406D-9B72-2D128EEC534C}">
                             <File Id="fil21E5C11C4FBE749822D24D5A6DB4FF8D" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\auxiliary_scripts\shared_abilities.scar" />
                         </Component>
-                        <Component Id="cmp2EC7BAD2BDFCB69D9D2D8199BAF831A4" Guid="{3EF43C8D-CCCA-4CB1-848B-185FED17218F}">
+                        <Component Id="cmp2EC7BAD2BDFCB69D9D2D8199BAF831A4" Guid="{0C70F4A5-2120-48C7-A08E-D0F7B19C4B90}">
                             <File Id="filD1D131462B9DAD1B35C34CA77AC00DA8" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\auxiliary_scripts\shared_ai.scar" />
                         </Component>
-                        <Component Id="cmp733390698F5957B5ACF8C2A2A6AEFD38" Guid="{AEEB82C0-CDE5-4BB0-A760-16C62EF1EE32}">
+                        <Component Id="cmp733390698F5957B5ACF8C2A2A6AEFD38" Guid="{12410AD9-1727-4141-9596-FBF716D0E668}">
                             <File Id="fil268F935DE8B9E8008DF0945D56343553" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\auxiliary_scripts\shared_constants.scar" />
                         </Component>
-                        <Component Id="cmp9F7159FDD2AD39F87C5742BECFD12B37" Guid="{A1BF6BDA-8D40-48B6-965A-FA05CCA9ED34}">
+                        <Component Id="cmp9F7159FDD2AD39F87C5742BECFD12B37" Guid="{7E23D365-6681-4816-AA38-DD73A4447579}">
                             <File Id="filF1540F72B46CDE114D0CAEBE03318E8D" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\auxiliary_scripts\shared_handler.scar" />
                         </Component>
-                        <Component Id="cmp095BF17A3DDC3879A93231B21E1A39BF" Guid="{13EB5531-AB5B-468D-84F4-D7B82C23BCC2}">
+                        <Component Id="cmp095BF17A3DDC3879A93231B21E1A39BF" Guid="{3454370B-6620-4F1A-8CE5-4B35CFE4FACB}">
                             <File Id="filE25A37C0201E484BF9A31BD4ABD93700" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\auxiliary_scripts\shared_lookups.scar" />
                         </Component>
-                        <Component Id="cmp39E4881BDF8A8212CCE08701EC7FC331" Guid="{F9DC1193-5C92-4213-ADF4-3B5E4044BCA8}">
+                        <Component Id="cmp39E4881BDF8A8212CCE08701EC7FC331" Guid="{D26B803C-9E45-4AB7-9F60-8FC60386E8C8}">
                             <File Id="fil4129E4B93A8597B817450F8EB89BA361" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\auxiliary_scripts\shared_sessionloader.scar" />
                         </Component>
-                        <Component Id="cmp13BA4ABBCAFF458E11FB45E1E6D18049" Guid="{A64BDFCC-F0D2-4C60-8AE2-47B620F0F56D}">
+                        <Component Id="cmp13BA4ABBCAFF458E11FB45E1E6D18049" Guid="{BF9ACEDD-C64A-4A83-A9EF-2465123C4BA3}">
                             <File Id="fil866473B4B99D15E908BF755642462C4E" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\auxiliary_scripts\shared_units.scar" />
                         </Component>
-                        <Component Id="cmp24727D42E5E148946D0B784028697D84" Guid="{621DA38F-F817-446D-B496-4BEC63A7A403}">
+                        <Component Id="cmp24727D42E5E148946D0B784028697D84" Guid="{013AAA61-39D8-4FBA-974E-5471142845A7}">
                             <File Id="filF6F9CA24F8192425BDF41FA34CE9BD0A" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\auxiliary_scripts\shared_util.scar" />
                         </Component>
-                        <Component Id="cmp7F92E8E6EE463DA49EFC34D34E63AE51" Guid="{104EEFBF-34B6-48DE-9DB5-F2B5A10CE377}">
+                        <Component Id="cmp7F92E8E6EE463DA49EFC34D34E63AE51" Guid="{49164096-D4DC-4866-B270-17C6FC61FA24}">
                             <File Id="fil4B5D3A985BFE707FB473E17FBBF6F96C" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\auxiliary_scripts\system_tow.scar" />
                         </Component>
                     </Directory>
                     <Directory Id="dir42320EC9D9BCA0FA4CE09E1E6B4ED741" Name="ui_api">
-                        <Component Id="cmp86294A2AB7FAD2455A5D67A8DFFD581A" Guid="{BC92822D-124C-473A-AA56-B78251839C3F}">
+                        <Component Id="cmp86294A2AB7FAD2455A5D67A8DFFD581A" Guid="{58897A95-34B7-414F-9FA7-A0119D518306}">
                             <File Id="fil170C1EFCF7BD0B582CF8CE6AC0C77C52" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\ui_api\button.scar" />
                         </Component>
-                        <Component Id="cmpDED1195957EC797611902283668EAE93" Guid="{50372B53-8F18-45A2-BE63-477D9073A55B}">
+                        <Component Id="cmpDED1195957EC797611902283668EAE93" Guid="{2F43C439-8E83-4936-98A8-C698CF37AF7C}">
                             <File Id="filE2FC4414E2C4A8E8558A1D3B4EC4D243" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\ui_api\class.scar" />
                         </Component>
-                        <Component Id="cmpFFEA3A38E5A12E8F2AA7DA78E693407A" Guid="{81B0718C-34CC-45F9-B96A-8D455B92F0AE}">
+                        <Component Id="cmpFFEA3A38E5A12E8F2AA7DA78E693407A" Guid="{658321E8-2892-4BD9-9335-6281D4CD295C}">
                             <File Id="fil411B90BBBF194F4797CEA878B1B39E83" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\ui_api\color.scar" />
                         </Component>
-                        <Component Id="cmpF702AA786894D09E17B82C8FDCD07E7D" Guid="{B74192B6-8325-4B40-A98C-0F27FE6B7A5F}">
+                        <Component Id="cmpF702AA786894D09E17B82C8FDCD07E7D" Guid="{06F606DB-74B7-477F-9051-A15ADB7E30CC}">
                             <File Id="fil3114E49BACC63348495A5F9AEB240B64" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\ui_api\control.scar" />
                         </Component>
-                        <Component Id="cmp3E740AB676F1B43EF00B4F679F1F78AC" Guid="{3B5DE3D6-F920-4583-8654-AFDDA9A56503}">
+                        <Component Id="cmp3E740AB676F1B43EF00B4F679F1F78AC" Guid="{A250DB24-2FD4-4170-9750-B97190239B53}">
                             <File Id="filF43FACE7947997C98BC32269F9E3B35B" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\ui_api\icon.scar" />
                         </Component>
-                        <Component Id="cmp0F9C07E69386CF96DB508CF2DDC5B8C0" Guid="{F3C7749B-A3CA-4E09-B6F8-6F43170DC98A}">
+                        <Component Id="cmp0F9C07E69386CF96DB508CF2DDC5B8C0" Guid="{D90A172E-C83F-46BE-8259-9DD18E077C11}">
                             <File Id="fil475958F3911901E4C090D6515C78C7DF" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\ui_api\label.scar" />
                         </Component>
-                        <Component Id="cmpEE9382E7A074C6856C1DF653C4E9457D" Guid="{C16ABE10-70CC-46AA-977F-36AFFB50A644}">
+                        <Component Id="cmpEE9382E7A074C6856C1DF653C4E9457D" Guid="{FA050062-030E-4C54-BE2A-4401C1A58DD8}">
                             <File Id="fil009E8E55FAC71122536717BE9FC04226" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\ui_api\panel.scar" />
                         </Component>
-                        <Component Id="cmp24DFC36AC515C7B05158EC45F7A1CC54" Guid="{CD52ADC2-A647-4808-8B91-51927640E7E7}">
+                        <Component Id="cmp24DFC36AC515C7B05158EC45F7A1CC54" Guid="{C274F765-445B-4CCD-8D5F-CD88A49576AB}">
                             <File Id="filB3EA02593A1669F50956506733601A9C" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\ui_api\rootpanel.scar" />
                         </Component>
-                        <Component Id="cmp7D4C32CB4FB952C0E521AF9F2F9145CC" Guid="{32F7D223-0EDE-428E-A045-D07A044A7DE8}">
+                        <Component Id="cmp7D4C32CB4FB952C0E521AF9F2F9145CC" Guid="{1B170BBE-DEB2-4691-8D51-E1F831E83FDF}">
                             <File Id="fil13FB31C8D74C835504DA1A24887AE8BE" KeyPath="yes" Source="$(var.BasePath)\bg_common\bg_wc\ui_api\statusindicator.scar" />
                         </Component>
                     </Directory>
                 </Directory>
                 <Directory Id="dir4786C9D19F67D702D54123769E744F85" Name="campaigns">
-                    <Component Id="cmp029B93278C0C9289A42FCC02D63B3A8C" Guid="{4DA0F761-C76C-4F49-8C4E-3729A49C794C}">
+                    <Component Id="cmp029B93278C0C9289A42FCC02D63B3A8C" Guid="{DC49D267-CEEE-49C4-8361-674D7A4C03C8}">
                         <File Id="fil0AF1265DC389A14ABC2EA3509B11D9A6" KeyPath="yes" Source="$(var.BasePath)\bg_common\campaigns\sov_ost_stalingrad.dat" />
                     </Component>
                 </Directory>
                 <Directory Id="dirC020B3DB8807C7E8235E9AB68636D215" Name="data">
-                    <Component Id="cmpC3988F2807EB842EF686A8CB673932B4" Guid="{C2B72E08-9999-4F70-9E47-055C5A19599E}">
+                    <Component Id="cmpC3988F2807EB842EF686A8CB673932B4" Guid="{85D52B64-1231-432E-8901-806413F79204}">
                         <File Id="filC7CEC9865061479F441DA97ECF1F0A1D" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\mod_bg-abp-db.json" />
                     </Component>
-                    <Component Id="cmp37126485A1FC0B943F16854F4A1E9701" Guid="{5DED812C-5713-4AC9-B0AD-4EE3BA542AD4}">
+                    <Component Id="cmp37126485A1FC0B943F16854F4A1E9701" Guid="{57DF4649-6154-481F-809F-832F53A1E946}">
                         <File Id="fil01E1BAE12998150EB9CCA149EA121A8A" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\mod_bg-cbp-db.json" />
                     </Component>
-                    <Component Id="cmp59E1E2FDCD5AC54D404981CB87AAE19D" Guid="{76B12A50-6ABD-435A-95E9-36117F393397}">
+                    <Component Id="cmp59E1E2FDCD5AC54D404981CB87AAE19D" Guid="{AE54C760-1A39-4002-B470-E6DEC3F2144F}">
                         <File Id="filA94503B5DBC7E98017C53877DF2F7C72" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\mod_bg-ebp-db.json" />
                     </Component>
-                    <Component Id="cmp75B8ADDC1367C5B31877CB32DE214E46" Guid="{ACFAFDE6-89E6-4421-9521-45CDF93C7234}">
+                    <Component Id="cmp75B8ADDC1367C5B31877CB32DE214E46" Guid="{CEA98D0E-7070-4683-A8BA-6085993038D2}">
                         <File Id="fil6294DB0F52AA39DC61566FE37E5A59DC" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\mod_bg-ibp-db.json" />
                     </Component>
-                    <Component Id="cmp52BBF90D2423C3AD31560C9F6526B0C7" Guid="{0118D72F-0B6D-45CE-A81E-203FAB7DDEC3}">
+                    <Component Id="cmp52BBF90D2423C3AD31560C9F6526B0C7" Guid="{D170CF3D-0FFC-4DAC-9672-F0A76306E9E4}">
                         <File Id="filAFDDB5FCFD343E878A5D34B9A1B03C81" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\mod_bg-sbp-db.json" />
                     </Component>
-                    <Component Id="cmp393F930CE0BED6819A6870E26A08E791" Guid="{6C8C666D-A964-4869-AB7E-506C01FD20A6}">
+                    <Component Id="cmp393F930CE0BED6819A6870E26A08E791" Guid="{2ECCF930-F483-4542-87A0-95EA23F3E861}">
                         <File Id="fil3A847DB368B81C7F0055B61BEC801105" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\mod_bg-ubp-db.json" />
                     </Component>
-                    <Component Id="cmp52E3E00D45E43AC0D59DDA6CB82CEBF1" Guid="{D3ACBC2B-372E-4902-ADA2-62E3E7486705}">
+                    <Component Id="cmp52E3E00D45E43AC0D59DDA6CB82CEBF1" Guid="{7248FE13-55B2-4D0F-BDA7-4157F1803FC0}">
                         <File Id="filD205ACBDF8E01D26CE9B5A62458C480D" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\mod_bg-wbp-db.json" />
                     </Component>
-                    <Component Id="cmp51B2158727906778DD6A81C82820D58B" Guid="{207C4BE1-94BB-4603-8422-5EE906BAC788}">
+                    <Component Id="cmp51B2158727906778DD6A81C82820D58B" Guid="{0A5FF70D-4574-4EF0-A13F-47E175A6EEDB}">
                         <File Id="fil1A71AB5640B1C84ED885DE13C3980D30" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\vcoh-abp-db.json" />
                     </Component>
-                    <Component Id="cmpB89D13C2C72968FD8D1595219121F269" Guid="{CC3B5F48-8EE1-4CDB-B443-722B083B995C}">
+                    <Component Id="cmpB89D13C2C72968FD8D1595219121F269" Guid="{1505A7CB-CD0D-4D32-B416-E290142281C7}">
                         <File Id="filB3707F5E629E0A3939CB3CC00181DD37" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\vcoh-aimap-db.json" />
                     </Component>
-                    <Component Id="cmpA4B86185B220AFC90F5BAA0A256BCD5B" Guid="{BF12EDA2-E930-41F2-B478-1B367B84FD64}">
+                    <Component Id="cmpA4B86185B220AFC90F5BAA0A256BCD5B" Guid="{0FF15427-42BF-477B-B994-353405A1198D}">
                         <File Id="fil28D9E2D9C9E397C7AB2D4D0B349DDFDE" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\vcoh-cbp-db.json" />
                     </Component>
-                    <Component Id="cmp309FF47487840989EFBC0BD95354EC8F" Guid="{49D572D4-0822-4851-B451-5FD86FA1475C}">
+                    <Component Id="cmp309FF47487840989EFBC0BD95354EC8F" Guid="{AC9CC2DF-357C-49F2-BEF6-73455A3F472E}">
                         <File Id="filA0E4AE61A6773DCF8073276C8C5F25C3" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\vcoh-ebp-db.json" />
                     </Component>
-                    <Component Id="cmp4A393BBC38BC5E0095DC904D3768586E" Guid="{27E865D6-2C44-4B9E-996D-C6C35F3C048C}">
+                    <Component Id="cmp4A393BBC38BC5E0095DC904D3768586E" Guid="{578F8A62-7DDE-4B04-A7CD-8103C96EAFB1}">
                         <File Id="filBCCD7A9D9B43D03E9AE7AEFC074237A1" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\vcoh-ibp-db.json" />
                     </Component>
-                    <Component Id="cmpE801682F7B93789F90FD41DCCAAB3D58" Guid="{137C0F5D-44B2-43B0-BD14-CF71B0272737}">
+                    <Component Id="cmpE801682F7B93789F90FD41DCCAAB3D58" Guid="{72181290-046F-449A-B80A-1CCC79B5096A}">
                         <File Id="fil58BD38237E161207A1CCAADB10F17D32" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\vcoh-map-db.json" />
                     </Component>
-                    <Component Id="cmpC6B0F973CBE9F8A6AF14466F0328E026" Guid="{537296F2-634A-4911-B57C-9A734D959F13}">
+                    <Component Id="cmpC6B0F973CBE9F8A6AF14466F0328E026" Guid="{88D94053-E8EE-43CE-A302-AD0118EB1304}">
                         <File Id="filC3BBE4EDA7DA6832F259535A0D87955D" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\vcoh-sbp-db.json" />
                     </Component>
-                    <Component Id="cmp132E7FDF0974719E340921B50B23B463" Guid="{B9344C87-5F5F-4102-A8B4-89D71E896D52}">
+                    <Component Id="cmp132E7FDF0974719E340921B50B23B463" Guid="{4C436E28-86D9-4CD5-B9BA-EEBF470FA2DE}">
                         <File Id="fil47EA69DF1A86514AD33FFEDD50D1FEBC" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\vcoh-ubp-db.json" />
                     </Component>
-                    <Component Id="cmpA5E4C67220CCEA5B8EFD862F449DEF82" Guid="{3530EB33-DB76-45B2-A57D-85ED92FB11E9}">
+                    <Component Id="cmpA5E4C67220CCEA5B8EFD862F449DEF82" Guid="{2BE7F23E-EA39-41DD-BB84-1B9F2B70DD63}">
                         <File Id="fil4EC1E5C57F8E50D1FB0325B1605CA1FC" KeyPath="yes" Source="$(var.BasePath)\bg_common\data\vcoh-wbp-db.json" />
                     </Component>
                 </Directory>
                 <Directory Id="dir617225296965B67469E0DC4DA5F1E32F" Name="gfx">
-                    <Component Id="cmp3ED23D8758A5CE4D9E108628F6053CE4" Guid="{507F3B05-FF01-46F5-8D84-7104631AB271}">
+                    <Component Id="cmp3ED23D8758A5CE4D9E108628F6053CE4" Guid="{E7E38C03-B3EE-438C-A814-2398759FD5E5}">
                         <File Id="fil8D45AF488734D16F92054DF8A544BBD8" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04.gfx" />
                     </Component>
-                    <Component Id="cmp5D27A316B793EF8CC50692D72046637D" Guid="{3A88CC68-E634-468D-B17A-3BF374554BF2}">
+                    <Component Id="cmp5D27A316B793EF8CC50692D72046637D" Guid="{FBF68B9A-28F5-4F30-B908-4A9263FAB958}">
                         <File Id="filAFA4C5F692475E7D7EC4450703D1BBC2" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04_I1.dds" />
                     </Component>
-                    <Component Id="cmp522A85614FD47CA66AA8F65A19BF888C" Guid="{D052917F-A2C3-425A-A5C0-0435FFF1B13C}">
+                    <Component Id="cmp522A85614FD47CA66AA8F65A19BF888C" Guid="{F88F59EB-CCB8-4B5F-AE88-8ECD5F07E126}">
                         <File Id="fil65B9D755479EEE55F0F4DF3AFAD0CA5A" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04_I26.dds" />
                     </Component>
                     <Directory Id="dir23746A68DECA40E4E8A75F671259A02D" Name="map_icons">
-                        <Component Id="cmp984642A52DCF797CCBDF4383DD4A5AE9" Guid="{C65F5AA4-75B8-49BE-A8A5-6C995095BFB2}">
+                        <Component Id="cmp984642A52DCF797CCBDF4383DD4A5AE9" Guid="{F9FF5310-4CF8-4F97-B41E-04C0B90B1B6F}">
                             <File Id="fil9D9561740B651A8C04B2F3B43D73998E" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\(2-4)_compound_map.tga" />
                         </Component>
-                        <Component Id="cmpBA64CB08F1AF4BBB1A6229B6515914CA" Guid="{D81987D0-2314-407F-847C-F658EEB09D0C}">
+                        <Component Id="cmpBA64CB08F1AF4BBB1A6229B6515914CA" Guid="{98DBF920-D05A-41B4-8A3D-348DA83EF134}">
                             <File Id="fil0E55285F2E50F7648B27F0706FFE9918" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2-4_langres_winter_map.tga" />
                         </Component>
-                        <Component Id="cmpBEDC400D210FE1234754518811BCDD85" Guid="{1B4694E6-CD69-4AC7-AE9C-C34C17B026FA}">
+                        <Component Id="cmpBEDC400D210FE1234754518811BCDD85" Guid="{C0873252-26F8-4ED3-89E6-FE4B04D46979}">
                             <File Id="fil5774FEEB11F3240169ECE017ED210960" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_angoville_farms_map.tga" />
                         </Component>
-                        <Component Id="cmpFD8A14F138F4737A6C53B4FB8A3D9536" Guid="{56C68CEC-4D73-42FB-A1F0-79EF29380EDF}">
+                        <Component Id="cmpFD8A14F138F4737A6C53B4FB8A3D9536" Guid="{C6E143B5-810B-49EA-B8E3-18A170A66C80}">
                             <File Id="filCB788BEB9FBB7DB856A11E75B195654C" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_arnhem_checkpoint_map.tga" />
                         </Component>
-                        <Component Id="cmp0C012779D888859F1CBF53044F9670C9" Guid="{A0948CDB-0234-4204-A7A3-D2B876CB3E80}">
+                        <Component Id="cmp0C012779D888859F1CBF53044F9670C9" Guid="{AE6466C3-842A-4727-B599-7329740ACA9B}">
                             <File Id="fil0907A566E35EB0C786A68514B95ED431" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_bayeux_map.tga" />
                         </Component>
-                        <Component Id="cmp233C7857FDA7B0E0EB96B0B494EE7B1B" Guid="{353BA027-BCF4-4560-8E9C-68B4032CE703}">
+                        <Component Id="cmp233C7857FDA7B0E0EB96B0B494EE7B1B" Guid="{A7524BD9-94CA-49E7-8F31-208F844288FF}">
                             <File Id="fil888F9EE1E0023E4BC3834299262E9D3C" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_bryansk_forest_map.tga" />
                         </Component>
-                        <Component Id="cmp7409C6406A9C3200DE9B0BB85BCB50F8" Guid="{DCE8BD30-EA80-4D8B-A7B3-2C0DBC240E13}">
+                        <Component Id="cmp7409C6406A9C3200DE9B0BB85BCB50F8" Guid="{42571E45-74EE-42C3-BFE3-6A8AFDD7CFC4}">
                             <File Id="fil3A5A07E5138AD56196589F0FA794F4D6" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_caen_map.tga" />
                         </Component>
-                        <Component Id="cmpC8C09843C3F2C2245D319C9BC9E00207" Guid="{6F486251-C6FF-4782-BC75-1D869BCDCD0A}">
+                        <Component Id="cmpC8C09843C3F2C2245D319C9BC9E00207" Guid="{0010DBCD-C9FE-4BD2-8479-AE9AC4AB7C84}">
                             <File Id="fil398BE21C3806FECCDED35A6568D7E811" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_cheneux_map.tga" />
                         </Component>
-                        <Component Id="cmp0F4D0E13DE1E17BA1A6054FFBD71A4C1" Guid="{9354CB55-BB59-4DF6-BE19-D1A82A610082}">
+                        <Component Id="cmp0F4D0E13DE1E17BA1A6054FFBD71A4C1" Guid="{9AEB9F7F-A47B-47BF-9C80-79AE1A7327FF}">
                             <File Id="filCE5C503AC340A97769B7279D25A24FFB" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_coh2_resistance_map.tga" />
                         </Component>
-                        <Component Id="cmp6042AC2D07E77C69BA76FC73E419D2DF" Guid="{FB8A49DE-2F19-467B-A459-EF53FA8D96E7}">
+                        <Component Id="cmp6042AC2D07E77C69BA76FC73E419D2DF" Guid="{41AB4611-B10C-49C7-9ABC-B002EECC0C7A}">
                             <File Id="fil57766B4323483DF9DAEBF12A55B5DC8F" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_crossing_in_the_woods_map.tga" />
                         </Component>
-                        <Component Id="cmp3ACAD50945A4C2375ACA30981C8F4BBB" Guid="{A71C29DE-88BD-4590-9177-2A683723E3D9}">
+                        <Component Id="cmp3ACAD50945A4C2375ACA30981C8F4BBB" Guid="{17C66AC6-1EAA-497B-9E4F-2185D29EBAC9}">
                             <File Id="fil10B8D65F830040F1753F933D30CD7CEA" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_divide_map.tga" />
                         </Component>
-                        <Component Id="cmp85C8D01F90924272DA7E33D4C70E4055" Guid="{27666287-A16E-41C7-A153-9C18A615C331}">
+                        <Component Id="cmp85C8D01F90924272DA7E33D4C70E4055" Guid="{9C00245B-9B21-481D-A758-4034395A0AEB}">
                             <File Id="fil3F3839F6C5423D45D9C9BEB0A895235B" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_don_river_v2_map.tga" />
                         </Component>
-                        <Component Id="cmp594401D1CAFED102C508F9A4435D2ECE" Guid="{85958589-8CDC-45B3-9832-DF7BA0490F8B}">
+                        <Component Id="cmp594401D1CAFED102C508F9A4435D2ECE" Guid="{ABFC0CE7-5EDD-4C76-9F69-2F315D95C7E8}">
                             <File Id="fil0FA79D3C43B13D8CDB6154F7A8564DC4" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_faymonville_approach_map.tga" />
                         </Component>
-                        <Component Id="cmpEE09F5DAE47F739369247A9D88B0E409" Guid="{2C938549-582D-4878-A661-41DC20FDF1A4}">
+                        <Component Id="cmpEE09F5DAE47F739369247A9D88B0E409" Guid="{76E87F5A-0122-4A7D-AD54-D2FDD39BB03B}">
                             <File Id="fil79490B26F8D5369EA4200C8DA1D3A933" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_halbe_map.tga" />
                         </Component>
-                        <Component Id="cmp939BF4B8A006F6BF041E086442F560FC" Guid="{0099735A-553E-4B89-992D-4561304E4D4B}">
+                        <Component Id="cmp939BF4B8A006F6BF041E086442F560FC" Guid="{0E9014E3-526F-4385-AE28-A2CD5199E515}">
                             <File Id="filFA252B76CE77FFA4EBF5DD505FDBC3E7" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_karelia_map.tga" />
                         </Component>
-                        <Component Id="cmp40E2CD827B1D57795C25592D7D883F07" Guid="{EC51DA34-A5C2-4322-8209-07DF62B7BF3B}">
+                        <Component Id="cmp40E2CD827B1D57795C25592D7D883F07" Guid="{8E00FE12-FFDE-49A9-9991-0443105614F7}">
                             <File Id="fil42C4C59F9F3FCDC66391DAC9B9179AA3" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_kholodnaya_ferma_battlefield_map.tga" />
                         </Component>
-                        <Component Id="cmpBBD9F9812B50B0CBA3DE89A107576FD7" Guid="{709F97F2-8DAC-42B7-AAFC-16AF517C45C0}">
+                        <Component Id="cmpBBD9F9812B50B0CBA3DE89A107576FD7" Guid="{31152B94-FFA6-404B-A87E-492D39C977E4}">
                             <File Id="fil0CB7D85441826C051E9D4366BB707D62" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_kholodnaya_ferma_spring_frontline_map.tga" />
                         </Component>
-                        <Component Id="cmp32DE8C57D89EBBCF945B6167D84578DC" Guid="{79393DA2-24A2-4712-BBBC-CCC5D39AD2A8}">
+                        <Component Id="cmp32DE8C57D89EBBCF945B6167D84578DC" Guid="{391C2EF3-1FA7-400F-A492-D7889195F777}">
                             <File Id="filDB243EFA9B0AA19481A936FE9E669120" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_la_gleize_breakout_map.tga" />
                         </Component>
-                        <Component Id="cmp5C24C5894BF8877E77360D51E9738073" Guid="{83F14C4A-418C-41CB-8D05-A754F925C418}">
+                        <Component Id="cmp5C24C5894BF8877E77360D51E9738073" Guid="{05CB5834-CFC4-4579-BE8A-FB823E7E0435}">
                             <File Id="filFA882E83C0B421EF588EB1E18D519F71" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_minsk_pocket_frontline_map.tga" />
                         </Component>
-                        <Component Id="cmpF06AB573FD5FD152D6FF744882A3548E" Guid="{85598C96-CD02-4589-AF01-752626A6E6BA}">
+                        <Component Id="cmpF06AB573FD5FD152D6FF744882A3548E" Guid="{FEF71D2A-DBE1-45D0-A554-F4A7285CD544}">
                             <File Id="fil97306DFC51C15BE6EF8686FFF90BC53E" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_novgorodoutskirts_map.tga" />
                         </Component>
-                        <Component Id="cmp12CA10116EE6A8A2697A6E79B1CF5CF9" Guid="{CB3BFE7A-484F-4E2D-9342-ABE5B8B5FAA1}">
+                        <Component Id="cmp12CA10116EE6A8A2697A6E79B1CF5CF9" Guid="{C078F6C8-52DD-4F90-B36D-B7786DFC4828}">
                             <File Id="fil5A1546BEF1055E2874B407653F110577" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_road_to_kharkov_map.tga" />
                         </Component>
-                        <Component Id="cmpBADD67F4C002191582BDAD5355760B07" Guid="{AE3BACF8-ECBF-4763-A670-B722FA642EFE}">
+                        <Component Id="cmpBADD67F4C002191582BDAD5355760B07" Guid="{AD349686-5E77-4EA6-892C-DE4D6267FFDC}">
                             <File Id="fil8846059356BE58580C7BD944A9706E73" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_road_to_ligneuville_map.tga" />
                         </Component>
-                        <Component Id="cmpE2FFACC85139AD363B0A1611D6B0B1B5" Guid="{0739A112-B03E-4E7F-85AD-D6D1AA5CC669}">
+                        <Component Id="cmpE2FFACC85139AD363B0A1611D6B0B1B5" Guid="{4D42CA57-AE29-4E2D-8645-3166BBD7E819}">
                             <File Id="filA22216170DF532E20F8D0B4FABA49505" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_semois_winter_map.tga" />
                         </Component>
-                        <Component Id="cmp11BE3CF612FAB9F39C3AC0C7B6F8127B" Guid="{2FB5D63F-49F9-499E-9658-085263D69EFD}">
+                        <Component Id="cmp11BE3CF612FAB9F39C3AC0C7B6F8127B" Guid="{D27B5F8A-AA8C-461A-9CD7-57B3CC7EEC71}">
                             <File Id="fil3495883ED06FDBFCC36F613BE48AB72F" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_sturzdorf_map.tga" />
                         </Component>
-                        <Component Id="cmpF71BD40356EDFE1AEF594F5C11B2BB72" Guid="{19401DE3-B456-4DF9-B49B-10215AE45DA3}">
+                        <Component Id="cmpF71BD40356EDFE1AEF594F5C11B2BB72" Guid="{4C96B6DC-A8EB-4111-AED8-F1910B0276F9}">
                             <File Id="filBF91829070E3BDABED224191E46B8A1B" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2p_wiltz_summit_map.tga" />
                         </Component>
-                        <Component Id="cmp2035BB01D0CC38AB898012317D5754CC" Guid="{75367DB5-8DB2-4162-9F9F-8905E6048DCF}">
+                        <Component Id="cmp2035BB01D0CC38AB898012317D5754CC" Guid="{9BB75C6B-94BE-4CF6-A5F9-514D199812A3}">
                             <File Id="fil93C4E1AC4165DBE0B2BBDF8EC724307C" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\2_4_tereklines_map.tga" />
                         </Component>
-                        <Component Id="cmpCF9BA7F2497A5DD017B8A7DF86084ADD" Guid="{64230D18-CCDA-410B-A22F-3C3BCF5430CF}">
+                        <Component Id="cmpCF9BA7F2497A5DD017B8A7DF86084ADD" Guid="{BB22EF59-9FAB-4EC4-87AE-131536D99ADA}">
                             <File Id="filCB6CB371EE2942BEBA954E929767BFCD" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_across_the_rhine_map.tga" />
                         </Component>
-                        <Component Id="cmpF43DFB7FAE80ABDA91E197C65DF05B3B" Guid="{71379222-1F69-4987-97AA-7BDB0714705A}">
+                        <Component Id="cmpF43DFB7FAE80ABDA91E197C65DF05B3B" Guid="{8AAB0BDE-6F78-4458-A5A6-DEC364473EF8}">
                             <File Id="fil00AB23579DA2B49804208104F8FEC469" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_another_city_map.tga" />
                         </Component>
-                        <Component Id="cmpDB98E28662599855DA23D3C77CD3E837" Guid="{5051A3B7-1225-4760-9F4C-56ECCC6C8D30}">
+                        <Component Id="cmpDB98E28662599855DA23D3C77CD3E837" Guid="{4C08A936-A43C-4830-8BC7-D95A888A2BFF}">
                             <File Id="fil12F12FF8BE2A47A9CE948013978DA0A2" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_baugnez_outskirts_map.tga" />
                         </Component>
-                        <Component Id="cmp97843777749DA496C8CEE5296D0CE69F" Guid="{54BB586B-F477-4E4B-BB71-7122022FCF23}">
+                        <Component Id="cmp97843777749DA496C8CEE5296D0CE69F" Guid="{49BED384-361A-4EA1-94AC-4ACEB5FC991E}">
                             <File Id="filBB133FCD6486B713751FC0726263F560" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_belgorod_map.tga" />
                         </Component>
-                        <Component Id="cmpFC994E54576FE102DA7D5BBD21556EFE" Guid="{FB69949E-4E4C-46F3-BF59-A10651D897F2}">
+                        <Component Id="cmpFC994E54576FE102DA7D5BBD21556EFE" Guid="{6B776527-77B7-49BB-97A7-0C1B08B35DA5}">
                             <File Id="fil4AA5FA526E23CD39EB587D939280AA8E" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_bystraya_voda_map.tga" />
                         </Component>
-                        <Component Id="cmp417F7DBE8C80F78B4FE7CB4B921501CA" Guid="{31E3A383-56EB-4D47-BAE2-E14FFEA28824}">
+                        <Component Id="cmp417F7DBE8C80F78B4FE7CB4B921501CA" Guid="{0CF13541-3644-4B35-BD72-8B6DFAA2AB31}">
                             <File Id="filEA6472E48A26D5C9A1F2C2E317D3E75B" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_coh2_okariver_frontline_map.tga" />
                         </Component>
-                        <Component Id="cmp4F5DFFB1F810392A8E74E46D37296501" Guid="{8597C28E-6C36-4634-B4B2-C30929CC0040}">
+                        <Component Id="cmp4F5DFFB1F810392A8E74E46D37296501" Guid="{CB4C4A07-01AE-410C-9A54-96AF94519052}">
                             <File Id="fil2E48404C14708B17E8E59D3987479F9C" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_crossing_in_the_woods_map.tga" />
                         </Component>
-                        <Component Id="cmp46C1669439CB4F1BFB595A77298190D2" Guid="{38AC400D-3FA3-40E7-BCD1-48D730BE80E0}">
+                        <Component Id="cmp46C1669439CB4F1BFB595A77298190D2" Guid="{29F1DD0F-B621-4D1E-BD06-B3F2618C074C}">
                             <File Id="fil0E9E2EC514A26D3DB63CA7AFFB6269BD" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_dreux_scout_map.tga" />
                         </Component>
-                        <Component Id="cmp1D629B2A7F50559F8BFA7EDCB6E8E862" Guid="{B3A5E9D3-17C0-489E-A4AA-52EA7CFC8E94}">
+                        <Component Id="cmp1D629B2A7F50559F8BFA7EDCB6E8E862" Guid="{5A75DF0D-1481-47BA-A5C1-B30E8EAA2400}">
                             <File Id="filF692B2434CBCC2B57606AE5CF84F1C19" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_dusseldorf_map.tga" />
                         </Component>
-                        <Component Id="cmpC62E4D1A9BBA987EBA71DA305AC8D7B0" Guid="{0FC31D3C-5895-4FFD-A803-5714C4B4FE50}">
+                        <Component Id="cmpC62E4D1A9BBA987EBA71DA305AC8D7B0" Guid="{A6F9C94B-DC18-4B18-BFD6-5FF8810A2B8E}">
                             <File Id="fil63B048F431EA9A8ED70E8852207A69F8" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_ecliptic_fields_map.tga" />
                         </Component>
-                        <Component Id="cmp92D613395AC98180482FC80A0E3F81E5" Guid="{B92726EB-A8F2-4599-B9C6-C9B8EB0761A6}">
+                        <Component Id="cmp92D613395AC98180482FC80A0E3F81E5" Guid="{66DFA4C1-DC3B-4662-ADA9-A2B07975AAB0}">
                             <File Id="fil9DEB4038DC02D196DA311432F9E41AA7" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_einhoven_country_map.tga" />
                         </Component>
-                        <Component Id="cmp59641A31A7420CB78D5A444F53243C49" Guid="{24333890-7AD6-4216-8DCC-AFD4B1CE2E9C}">
+                        <Component Id="cmp59641A31A7420CB78D5A444F53243C49" Guid="{784E5877-6E49-45E1-A9F5-C75EAD691FBD}">
                             <File Id="fil276C5A60C19F991B27A98234F4197BC5" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_elst_outskirts_map.tga" />
                         </Component>
-                        <Component Id="cmp8CB8CB09790DC52A5AF7DD9E5195EEA2" Guid="{4C72C985-1FF2-4BBE-95FD-69945D6441A9}">
+                        <Component Id="cmp8CB8CB09790DC52A5AF7DD9E5195EEA2" Guid="{2A421419-8FCF-49FF-843A-9BD846F8DC1D}">
                             <File Id="filD5FFF41C036BDF355111462749A2FB30" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_ettelbruck_station_map.tga" />
                         </Component>
-                        <Component Id="cmpD26CE973C95D24416552F3719993A0C1" Guid="{8D25A18C-06A8-4FB9-8C0B-8717230EE636}">
+                        <Component Id="cmpD26CE973C95D24416552F3719993A0C1" Guid="{276D02A6-0BFD-4BBD-A75A-C6100D84CE53}">
                             <File Id="filC0225787FE474058D5E1191A2CEDFEAD" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_fields_of_winnekendonk_map.tga" />
                         </Component>
-                        <Component Id="cmp9C9341209E2DC4E6A76C83AC83A1C514" Guid="{BFB324FB-A9F5-4D9E-BF13-B7F9DB4F271C}">
+                        <Component Id="cmp9C9341209E2DC4E6A76C83AC83A1C514" Guid="{0101386B-8CFA-4BA2-9F07-AA1267109BBE}">
                             <File Id="fil3486CB135C79D754977BFAF05719AEA5" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_gelsenkirchen_refinery_map.tga" />
                         </Component>
-                        <Component Id="cmp692DC2ABC198DABB11A139AAE42EC3F4" Guid="{9D7E274E-6039-4ABC-95AE-EE40FB3149DB}">
+                        <Component Id="cmp692DC2ABC198DABB11A139AAE42EC3F4" Guid="{12A4CC08-567F-4BB5-A5F0-D102580AEA1B}">
                             <File Id="fil5A616F52CF33A5AD10C5ACB68CDB5E3D" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_heidelberg_crossings_map.tga" />
                         </Component>
-                        <Component Id="cmp121E9CAA8C0D73735B6279208449D2E1" Guid="{F48C37A0-43C0-45AA-BAE8-F5075DA1FD9F}">
+                        <Component Id="cmp121E9CAA8C0D73735B6279208449D2E1" Guid="{9B4192CD-265D-4BCA-AAA4-E0594ACFF67C}">
                             <File Id="fil1AF62697073A7AE04A921A35A21FE3A9" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_hurtgen_forest_map.tga" />
                         </Component>
-                        <Component Id="cmpFEAA76096A87D494527C5B0648193C65" Guid="{5311AB33-98DD-4788-A9E3-8FE949FB082B}">
+                        <Component Id="cmpFEAA76096A87D494527C5B0648193C65" Guid="{593D57D8-1F21-4417-8E9C-F4651A4515F5}">
                             <File Id="fil27D1BBA9EFE8ABFE8D756C209C260A64" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_kholodnaya_ferma_battlefield_map.tga" />
                         </Component>
-                        <Component Id="cmp076278E896B7E95AC76EAFA0F1DAD7DE" Guid="{032B24A7-FD4D-459A-A56D-29D9ED2F3480}">
+                        <Component Id="cmp076278E896B7E95AC76EAFA0F1DAD7DE" Guid="{79A4CEA8-892A-4EE1-B675-B5E54FB1F140}">
                             <File Id="fil63518B07FCA33107141F2840FCA640EC" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_lisores_river_map.tga" />
                         </Component>
-                        <Component Id="cmp89A8A5F40C9BB3C848C75206012B7F25" Guid="{B402E2B9-4349-4FE4-A209-1F352E80CAFF}">
+                        <Component Id="cmp89A8A5F40C9BB3C848C75206012B7F25" Guid="{2E6F08E6-78E1-4958-A3C3-2BEFDA82962F}">
                             <File Id="filD57BFA60BAA0F38197BD1958672AFBA7" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_minsk_pocket_frontline_map.tga" />
                         </Component>
-                        <Component Id="cmpC6F2AF3ED0A66C3AA2A1B47F988B0EF9" Guid="{267F8D54-4042-454B-9112-AC2BA4D0A34C}">
+                        <Component Id="cmpC6F2AF3ED0A66C3AA2A1B47F988B0EF9" Guid="{62518EB5-37FE-492D-9A08-2AD431AE9FB7}">
                             <File Id="filA70C631CDB4091884F9AEAF12FE80EAB" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_moscow_outskirts_fall_frontline_map.tga" />
                         </Component>
-                        <Component Id="cmp2D6472772EFBA973D25712996FE47718" Guid="{B50872F1-4160-4F66-96AC-5B5662DF396E}">
+                        <Component Id="cmp2D6472772EFBA973D25712996FE47718" Guid="{153D75DC-1418-409F-8832-AECC5596DCCA}">
                             <File Id="filB2762C5C2CF165B519D3AA93C5F749C2" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_moscow_outskirts_frontline_map.tga" />
                         </Component>
-                        <Component Id="cmp7C7C8511F93C7659A3A4B119A03F64CE" Guid="{6161EF69-23E8-472C-BBE0-5D630BD90531}">
+                        <Component Id="cmp7C7C8511F93C7659A3A4B119A03F64CE" Guid="{B998A9FC-0DAF-4FBD-ABA3-DEEFF1926930}">
                             <File Id="filFA05348BF6B3C33E81E6DAF970052776" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_noville_encirclement_map.tga" />
                         </Component>
-                        <Component Id="cmpFB42618E6272310AB78EE19DB0EC2E19" Guid="{1CA806EB-1997-4436-925F-4123B525B658}">
+                        <Component Id="cmpFB42618E6272310AB78EE19DB0EC2E19" Guid="{E04AFB5D-6F5E-4E69-B713-D55DCF5CC4CB}">
                             <File Id="filEA32B215DA0C54697C784D8ED27A0336" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_poltawa_map.tga" />
                         </Component>
-                        <Component Id="cmp86838D11BA9CF2C1B61103F6E078390B" Guid="{799DBD8C-31F8-4425-AF23-9501E6714AEC}">
+                        <Component Id="cmp86838D11BA9CF2C1B61103F6E078390B" Guid="{DA1D24F1-D628-4816-89D8-28C3624902DA}">
                             <File Id="filAAC3E867C98E63DFD39702BA3050AE14" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_pripyat_sector_map.tga" />
                         </Component>
-                        <Component Id="cmpD713A139363BE996EB1BDD7A18053353" Guid="{55731358-1399-452A-B544-4996D2621A71}">
+                        <Component Id="cmpD713A139363BE996EB1BDD7A18053353" Guid="{1F8999E0-2D33-4C4C-8555-FB8312F77FD9}">
                             <File Id="fil8C2E16492293840C6722ACDC1F7AC5A6" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_prypiat_battlefield_map.tga" />
                         </Component>
-                        <Component Id="cmpE63A22284123DAA97B688D82E6C971B6" Guid="{B91B91F0-5A84-4619-A3B5-55EF00537081}">
+                        <Component Id="cmpE63A22284123DAA97B688D82E6C971B6" Guid="{C7370957-2985-4840-86FD-510F9921894F}">
                             <File Id="filFD33313688243286743FD32476AE9BCE" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_prypiat_winter_frontline_map.tga" />
                         </Component>
-                        <Component Id="cmpC8D6F16C6C9820E38594A8277AC515DF" Guid="{350EA4B0-6BF1-4CB0-BF2F-8942B8A09273}">
+                        <Component Id="cmpC8D6F16C6C9820E38594A8277AC515DF" Guid="{645C324A-1C87-4CCE-ABD3-38FE3827B789}">
                             <File Id="filF053C56BA0C5D49990F5BCA7AEB37620" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_pump_station_map.tga" />
                         </Component>
-                        <Component Id="cmpB53E077BE616161668408EED3366BD95" Guid="{37127659-509F-4371-9541-A8A310A0A0ED}">
+                        <Component Id="cmpB53E077BE616161668408EED3366BD95" Guid="{EDF6EE7B-5CE5-406F-8BC3-5718341A8F5D}">
                             <File Id="fil7CECF7F59B100B63CEDCA3A366B8B4F4" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_rails_and_metal_map.tga" />
                         </Component>
-                        <Component Id="cmpC909F60A0B1AE0639A97C94BB00313EC" Guid="{5949C65D-1DF0-42B6-9A94-C70FB75F5187}">
+                        <Component Id="cmpC909F60A0B1AE0639A97C94BB00313EC" Guid="{DEC1B9A4-5CC9-462F-9BA4-763A243FF6EC}">
                             <File Id="fil201388D71FFEBF5DB7A1BDAF659D0D3C" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_road_to_kharkov_map.tga" />
                         </Component>
-                        <Component Id="cmpE6077EA2DABE38E6DDA2346D1033B962" Guid="{C8279721-D582-49FC-993C-0821467CE056}">
+                        <Component Id="cmpE6077EA2DABE38E6DDA2346D1033B962" Guid="{6DECEF85-9D8B-4FFA-91B0-CE92F0410990}">
                             <File Id="fil808E35899753040860A324A52E8D7D54" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_rothe_erde_station_map.tga" />
                         </Component>
-                        <Component Id="cmp08785F7229F056942038ADB567BEE6AC" Guid="{8D5D726C-9F0A-4E13-9A34-C0345DB4EEDE}">
+                        <Component Id="cmp08785F7229F056942038ADB567BEE6AC" Guid="{9DF96BD7-9328-4C5E-803B-5CB16B97F5BA}">
                             <File Id="fil6EECA8BAD2D9F145DA728DAE7D5B5682" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_rzhev_frontline_map.tga" />
                         </Component>
-                        <Component Id="cmp14D15D11E59C39258841CE3C9AA5EAD3" Guid="{0BD74E30-28BF-4F3D-B48B-DF6F9BEBEDC8}">
+                        <Component Id="cmp14D15D11E59C39258841CE3C9AA5EAD3" Guid="{30F89236-29ED-4F91-8770-2C5D0886CFF0}">
                             <File Id="fil129734314D87A9FAF5F503E2929FA9BB" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_rzhev_summer_frontline_map.tga" />
                         </Component>
-                        <Component Id="cmp055EEB62FDED4FA68E0E32F24F3AA75C" Guid="{7F69A34D-6439-4ECD-ADDD-2DB3D295963D}">
+                        <Component Id="cmp055EEB62FDED4FA68E0E32F24F3AA75C" Guid="{A36FED1E-E179-4E01-8C34-2FFC95CC40AD}">
                             <File Id="filEC27949AD7D3B6FF9BA698F1474B7024" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_schilberg_outskirts_map.tga" />
                         </Component>
-                        <Component Id="cmp0C001788915AA7B2468AC7363252077A" Guid="{3F1D6C67-AA31-42D8-A546-3B09830862B5}">
+                        <Component Id="cmp0C001788915AA7B2468AC7363252077A" Guid="{9BAA74FB-7629-4C9F-BD94-D718F10BF6AB}">
                             <File Id="filE06B3D7FD06B0EB6D8E8171AD4F3E3F2" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_semois_attrition_map.tga" />
                         </Component>
-                        <Component Id="cmpBAA3AF7E8487FDE05F2FF372AABF6385" Guid="{421487DE-1A11-429A-AAB3-063EC91C81BD}">
+                        <Component Id="cmpBAA3AF7E8487FDE05F2FF372AABF6385" Guid="{76080E5B-4B5C-420B-B80A-77767DEAF522}">
                             <File Id="fil779DE3171585EBFD0913E7C9240F4977" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_semois_map.tga" />
                         </Component>
-                        <Component Id="cmpED09E4D3A2426C01052ACE0F9437465E" Guid="{523D217E-504A-4A95-B537-C0187E98570C}">
+                        <Component Id="cmpED09E4D3A2426C01052ACE0F9437465E" Guid="{BB4E76E5-AAE1-4B75-B371-34468948933D}">
                             <File Id="fil20418EFF3E8D97DC77EDC04F684FE07D" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_semois_winter_map.tga" />
                         </Component>
-                        <Component Id="cmp81165FD9F819505348762995A0EF3CFC" Guid="{D26B5D90-3469-47E3-9A72-129EC99C2AF3}">
+                        <Component Id="cmp81165FD9F819505348762995A0EF3CFC" Guid="{888F69AD-00EA-491A-A16E-6510AE2AB847}">
                             <File Id="fil9B7533916A82A49A661E986C158BF3B3" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_trois_pont_map.tga" />
                         </Component>
-                        <Component Id="cmp0DB7CBEFC228F1124A85501EE6586052" Guid="{14D89213-C6E3-44D3-B2F5-8EF1B6E91DB3}">
+                        <Component Id="cmp0DB7CBEFC228F1124A85501EE6586052" Guid="{1B4ADB8F-3032-438C-A8EC-4E97F7EE9DEF}">
                             <File Id="filD264D0984ECC6D53A5D85BD9E2E22657" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_vaux_farmlands_attrition_map.tga" />
                         </Component>
-                        <Component Id="cmp5EBE479D1A93B42A5879EBC22F819B22" Guid="{950C6C7E-C8EC-4C24-827B-398E2CC72C80}">
+                        <Component Id="cmp5EBE479D1A93B42A5879EBC22F819B22" Guid="{020918CC-6BC7-4D21-992E-DAD84A7D9D86}">
                             <File Id="fil0B6F6EC267082074924A1A5E8956D34E" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4p_vaux_farmlands_map.tga" />
                         </Component>
-                        <Component Id="cmpCD11BC97935779A76977294647CEA866" Guid="{FF651E04-C0B4-4D54-BA5E-C8749AC49F2D}">
+                        <Component Id="cmpCD11BC97935779A76977294647CEA866" Guid="{508BF8B2-572B-48D1-8686-4544CE280589}">
                             <File Id="fil3D69469E6863BD3F4E9D30827EF4394F" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4_6_lemberg_fall_map.tga" />
                         </Component>
-                        <Component Id="cmpC01604084CE9193FDEEB32FDBC2BADC1" Guid="{5503252E-380C-4866-B062-27C7F5B6623B}">
+                        <Component Id="cmpC01604084CE9193FDEEB32FDBC2BADC1" Guid="{D364F967-B81B-4452-A574-34837305B067}">
                             <File Id="fil05EBF3E9A34578969DF5B8DA095193F5" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\4_6_rostov_map.tga" />
                         </Component>
-                        <Component Id="cmp7031B7A2D178B06E5531E8D54D8BB308" Guid="{157FA92C-6A59-4137-985E-4E31CE5C932A}">
+                        <Component Id="cmp7031B7A2D178B06E5531E8D54D8BB308" Guid="{79A03D30-A425-49F9-AED8-79215E2482B7}">
                             <File Id="fil85BCD8B13AAB02C88EE19BA985069074" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_across_the_rhine_map.tga" />
                         </Component>
-                        <Component Id="cmp9B076F2464D384AF83C2675B381A5704" Guid="{09AB73B8-BA13-4BEF-A098-A0AA202AADA7}">
+                        <Component Id="cmp9B076F2464D384AF83C2675B381A5704" Guid="{DE1C3C6A-4DF0-4989-9283-892A97E47A03}">
                             <File Id="fil21FCA4C4DE5DB678155599D30770642A" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_angermuende_map.tga" />
                         </Component>
-                        <Component Id="cmpD252979FD0150EE1DEC81F92FA009789" Guid="{03E2CAE5-2ED3-4AA9-A21D-0F66E53911A6}">
+                        <Component Id="cmpD252979FD0150EE1DEC81F92FA009789" Guid="{89941E77-38DA-4607-8792-82F4D3A9CA61}">
                             <File Id="fil15D6EF674DE6625704B5D70EA61A4DEF" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_anklet_map.tga" />
                         </Component>
-                        <Component Id="cmp8444A18806137A179D62C2C693932AD6" Guid="{4AA29EA0-F1DF-44B2-B776-4172EBFCCD01}">
+                        <Component Id="cmp8444A18806137A179D62C2C693932AD6" Guid="{EFD3C30B-2B3A-4A16-B14F-62E86E0C0E91}">
                             <File Id="fil48ACE7394E8A0BC9015BA125E0F17AB6" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_bulligen_spearhead_2_map.tga" />
                         </Component>
-                        <Component Id="cmpDE46528B528A616DD8754B9E7DAFF189" Guid="{19C596A2-5F19-46BA-8334-635CD9FBD213}">
+                        <Component Id="cmpDE46528B528A616DD8754B9E7DAFF189" Guid="{CF9A3B44-2576-45DC-81D2-5322E3E55EAC}">
                             <File Id="fil57731F279FD5003D0FA7448D4E3586BB" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_coh2_pavlov_s_house_map.tga" />
                         </Component>
-                        <Component Id="cmpD8A17A4DFAC24CCCC9C2781C91092048" Guid="{46EC27B3-631F-4307-83B3-675C5802A89B}">
+                        <Component Id="cmpD8A17A4DFAC24CCCC9C2781C91092048" Guid="{F81A585D-4511-46B2-8C2A-1E8888F7E11C}">
                             <File Id="fil305889D11AF6A70DA9F44DF157EA4B6F" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_esch_sur_sure_map.tga" />
                         </Component>
-                        <Component Id="cmp8A9E8AEF031D7B1FA2E54961968C7713" Guid="{180E39F1-DFAF-456D-BBF1-931EC602AF97}">
+                        <Component Id="cmp8A9E8AEF031D7B1FA2E54961968C7713" Guid="{528EE8E3-882C-4EFF-88B0-68E7F979F537}">
                             <File Id="filCF55B0B405D28DA62E6C4B7B9BFB988D" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_ettelbruck_station_map.tga" />
                         </Component>
-                        <Component Id="cmp4079FD75D5F437EC774120BD434ABFF6" Guid="{7C2EAD22-8AFA-472A-9553-48BD037AA2E7}">
+                        <Component Id="cmp4079FD75D5F437EC774120BD434ABFF6" Guid="{CCA763E9-E980-4010-B500-67B2978284F2}">
                             <File Id="fil8DDB7CF7560C5B45DFFC075AE8F3E9AF" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_fields_of_winnekendonk_map.tga" />
                         </Component>
-                        <Component Id="cmp5D962BA6B737C1A3F27352F7F09C4AB2" Guid="{A7ECFC64-2F84-44CD-8C7D-CF7F60311F22}">
+                        <Component Id="cmp5D962BA6B737C1A3F27352F7F09C4AB2" Guid="{74A4173A-416D-49AA-8E1A-2069121F6E7D}">
                             <File Id="fil9E88CB27B1F154B00BBE2F8940111962" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_general_mud_map.tga" />
                         </Component>
-                        <Component Id="cmpB417D7DC5C564FD7A8487DA3167F31C9" Guid="{8384FFD8-FFFC-41D7-B53A-03C2578217D4}">
+                        <Component Id="cmpB417D7DC5C564FD7A8487DA3167F31C9" Guid="{56F5952D-0242-4DFB-B264-25AE786197F2}">
                             <File Id="fil691EED842CD53651329F83D5F54F03A1" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_hill_331_map.tga" />
                         </Component>
-                        <Component Id="cmp3CF0E8C2427B391E82F3CC349943077E" Guid="{8E58327E-1D05-460A-87B0-1F4E24B3642E}">
+                        <Component Id="cmp3CF0E8C2427B391E82F3CC349943077E" Guid="{72BE3AE6-5742-49A4-9DF7-1AEC97485946}">
                             <File Id="filEE9A3092A28C148B6DC93F5FB9BDBA85" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_hill_400_map.tga" />
                         </Component>
-                        <Component Id="cmpB9B92FA734E9E809309A39E667E795D7" Guid="{9026C0CF-27D8-4D07-9DE3-B460B32A1B1B}">
+                        <Component Id="cmpB9B92FA734E9E809309A39E667E795D7" Guid="{3F487824-850A-4AEB-90B2-4536B538E304}">
                             <File Id="filFAECF68B0510C458A86C2E16F2A284C7" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_lazenrath_ambush_map.tga" />
                         </Component>
-                        <Component Id="cmpE37BA25BEE27E80B89B8D17E1A14FE24" Guid="{036EEC8D-B33B-4A5B-AD5A-98A068B9830B}">
+                        <Component Id="cmpE37BA25BEE27E80B89B8D17E1A14FE24" Guid="{190F41F5-DAA5-419E-B3CB-FA49908B75F9}">
                             <File Id="filB7920B1E893A19594F8794C08290A832" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_montherme_map.tga" />
                         </Component>
-                        <Component Id="cmpF15B94F137CC20C58D24110484CAE556" Guid="{B8E29352-F4E3-437E-B19F-E5870569FAD4}">
+                        <Component Id="cmpF15B94F137CC20C58D24110484CAE556" Guid="{16BB8F25-9625-42B2-946D-5C700EEECF73}">
                             <File Id="fil8C26C5DEF2654A8B0E772D250F3743EA" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_mudroad311_map.tga" />
                         </Component>
-                        <Component Id="cmp0655A095A0624EDF0E0A22BB138ACFF5" Guid="{587B97C2-A972-4CD1-9F19-27E0788F9E56}">
+                        <Component Id="cmp0655A095A0624EDF0E0A22BB138ACFF5" Guid="{8199D2DE-BEEE-45D3-B0D6-1892F2DCAC53}">
                             <File Id="fil0C9EDDD27A366751B871AAA16BB524B6" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_mud_valley_map.tga" />
                         </Component>
-                        <Component Id="cmpD2B864F8AB89719CFA2CFBFC9A088626" Guid="{E2809343-A9BE-4024-B972-9A4019C04C99}">
+                        <Component Id="cmpD2B864F8AB89719CFA2CFBFC9A088626" Guid="{82596BFD-97FA-4B60-96C3-817D368842AF}">
                             <File Id="filB914E40663EBA3D1355D9008176AC8CC" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_port_of_hamburg_map.tga" />
                         </Component>
-                        <Component Id="cmp9E8E120F89B55CAC376611EC0DEDA99D" Guid="{43BA9D7F-C8A9-4CCE-945C-F31A55D33B3B}">
+                        <Component Id="cmp9E8E120F89B55CAC376611EC0DEDA99D" Guid="{F2273F40-83F3-4EF6-8B36-ECD3797688E3}">
                             <File Id="fil3897050BD41D88B7241DD0E8F39FB5CC" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_rzhev_frontline_map.tga" />
                         </Component>
-                        <Component Id="cmp709CBC2DA964FD42156DA8DE6D0746A7" Guid="{159EFEC9-E613-4AAE-8EEB-9C64E1ED942C}">
+                        <Component Id="cmp709CBC2DA964FD42156DA8DE6D0746A7" Guid="{E814F407-26C2-4FFF-B082-EADFA5DEAD93}">
                             <File Id="filE512B779C0811B2BECD885A666DF520A" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6p_swamps_map.tga" />
                         </Component>
-                        <Component Id="cmp1668F16B320B6378F1F7EE3D9C071E9D" Guid="{567FE30D-AF7C-442A-94EB-6016A3C63F6F}">
+                        <Component Id="cmp1668F16B320B6378F1F7EE3D9C071E9D" Guid="{A670C815-049B-4A19-8903-A852D44E3A44}">
                             <File Id="filD346CBDC0D8F6BD107E6369149460587" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\6_8_brody_map.tga" />
                         </Component>
-                        <Component Id="cmp19873BA39BAB79EEFBB8C1EAB9A4EAEE" Guid="{64107106-3185-459A-94CA-1867BB048559}">
+                        <Component Id="cmp19873BA39BAB79EEFBB8C1EAB9A4EAEE" Guid="{E9330FFA-AF0D-4584-B263-2C880CAFA6A6}">
                             <File Id="fil5649A72C28584E2ABDA2971A37D36E3E" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_achelous_river_map.tga" />
                         </Component>
-                        <Component Id="cmp3A31EBECC381E2F9DBB49938DD09FF6E" Guid="{6FF2E3E3-8FEE-4528-8DCE-EA381E0AB83D}">
+                        <Component Id="cmp3A31EBECC381E2F9DBB49938DD09FF6E" Guid="{3D332D95-ED58-4722-9E24-7CA00D2D4E0B}">
                             <File Id="fil69BBCF43AD480913A8D6D4B1AC623F06" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_angermuende_map.tga" />
                         </Component>
-                        <Component Id="cmp1CCC4BED7D3A4F8C1274B8958C84E846" Guid="{9CFA576D-8616-48D8-B16F-2FA85C773CF9}">
+                        <Component Id="cmp1CCC4BED7D3A4F8C1274B8958C84E846" Guid="{DC28984A-18D8-4B69-80FC-52F236194DE3}">
                             <File Id="fil16DFD9B5FB9995A43C93E54ABB6D5DB3" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_anklet_map.tga" />
                         </Component>
-                        <Component Id="cmpF3085107EC342E46FC06B6F60E736654" Guid="{76CAD7C0-5725-4992-9822-71F271DD0891}">
+                        <Component Id="cmpF3085107EC342E46FC06B6F60E736654" Guid="{7A72E726-A3ED-4CF9-A83A-AEF0DE4DDB98}">
                             <File Id="fil48D5C16DA8D461D6BD46EB0C97EFBC01" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_coh2_city_17_spring_frontline_map.tga" />
                         </Component>
-                        <Component Id="cmp30616B3143CC511D8DEBBE03E0AAAAA0" Guid="{355FA46F-BD8E-4D78-B234-091CF002F584}">
+                        <Component Id="cmp30616B3143CC511D8DEBBE03E0AAAAA0" Guid="{45A470E4-BCBA-4FBA-9FD5-6552B5EE4B9D}">
                             <File Id="filFDD0DC178B8D7F9211A0584CAF2A3FE5" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_coh2_city_17_winter_battlefield_map.tga" />
                         </Component>
-                        <Component Id="cmp5D590CD9B5FAD634CFC0260CAD96C060" Guid="{A220DFE6-901C-4396-801A-920C1812949E}">
+                        <Component Id="cmp5D590CD9B5FAD634CFC0260CAD96C060" Guid="{3D6159CF-D1A7-4B6C-865A-708AF88C49DE}">
                             <File Id="fil6E3626CF28AF9B42E556ECC8E9F2D5EC" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_coh2_thesteppes_frontline_map.tga" />
                         </Component>
-                        <Component Id="cmp42B72FC68AE3FE8D5EA3BBE98DE78BF1" Guid="{6B48A4DC-1618-454C-A32A-76DBC119AA5A}">
+                        <Component Id="cmp42B72FC68AE3FE8D5EA3BBE98DE78BF1" Guid="{5B044761-24FD-4FB8-84A3-58C5343E06B1}">
                             <File Id="fil4C08E1C3FB32CCDB12FCF0A765276D7F" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_essen_steelworks_map.tga" />
                         </Component>
-                        <Component Id="cmp57DFFFEDBAC36DC8077E9BB3A9D56B3C" Guid="{4668B707-F4F6-44A7-BCC8-2CDD16D33398}">
+                        <Component Id="cmp57DFFFEDBAC36DC8077E9BB3A9D56B3C" Guid="{59DAB1A4-4C20-402B-B0E4-8F3E244CDDFF}">
                             <File Id="fil1BB85BA0C23768517C8451E8EEC3605E" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_general_mud_map.tga" />
                         </Component>
-                        <Component Id="cmp6EB465114A2FDEA19EF4BB115BE381E5" Guid="{12FDE5DF-AEDE-4E90-A629-9E5F6B1CDD89}">
+                        <Component Id="cmp6EB465114A2FDEA19EF4BB115BE381E5" Guid="{5F18A559-BB37-420B-A72C-57B1ACDFF5D4}">
                             <File Id="fil3E5EF18D218D9A0F0B9D29E79BE6D812" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_hill_400_map.tga" />
                         </Component>
-                        <Component Id="cmp33226CF1F99C29EB8A807AB8C3B53FBA" Guid="{792185F9-51F1-4E2B-B2FE-10467311A286}">
+                        <Component Id="cmp33226CF1F99C29EB8A807AB8C3B53FBA" Guid="{FEEEBB58-3759-44A7-8D33-D6FFD16E9AFB}">
                             <File Id="fil83D70455F126ED6C2B36EDD826EE2699" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_lazenrath_ambush_map.tga" />
                         </Component>
-                        <Component Id="cmp98A9504FB1DE2945A91CBC1D201B26DC" Guid="{3358C034-A0C7-4B11-9A9C-08E114BC62AE}">
+                        <Component Id="cmp98A9504FB1DE2945A91CBC1D201B26DC" Guid="{86661A28-C9F8-47ED-9FF6-5E73103F07EA}">
                             <File Id="fil2480A67938359D472E09615C2F91A3C4" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_la_gleize_map.tga" />
                         </Component>
-                        <Component Id="cmpCD4A6B375C1468968EF1B117869BDE97" Guid="{D6E06E5D-302C-440D-9CA9-A368FE7AF5D4}">
+                        <Component Id="cmpCD4A6B375C1468968EF1B117869BDE97" Guid="{245F19D1-4880-4059-B0F8-BABAAE765722}">
                             <File Id="fil13688A42FFDB8595CCCC02F5C0CC677E" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_lienne_forest_map.tga" />
                         </Component>
-                        <Component Id="cmp180F48DCD53AD1B45EEB9C2EED531001" Guid="{68B8D52C-52A0-452A-801C-7493F4CC13A1}">
+                        <Component Id="cmp180F48DCD53AD1B45EEB9C2EED531001" Guid="{41763A28-E475-4C77-AC91-603EB0DE846C}">
                             <File Id="filC924EEA863789C7961106882F85437E4" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_lienne_forest_winter_map.tga" />
                         </Component>
-                        <Component Id="cmp8F950EC68C37FE9B71962C7E73D2EAEB" Guid="{7F94A995-B3B8-4AEE-8EDD-F115A298139D}">
+                        <Component Id="cmp8F950EC68C37FE9B71962C7E73D2EAEB" Guid="{E01C7252-D246-47DE-AEB3-313977A420E5}">
                             <File Id="fil74279768ABE6B515F467F0548EEC044A" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_lorch_assault_map.tga" />
                         </Component>
-                        <Component Id="cmp9430CB1D81F25F04932D9E894519DE5C" Guid="{30ECC3D0-1525-45BF-84E3-DC1B7C884ACE}">
+                        <Component Id="cmp9430CB1D81F25F04932D9E894519DE5C" Guid="{69BFED5B-3B06-469F-8522-9F6EA8D0674E}">
                             <File Id="filD3AAE3E16723BE8D11DCEC08F02DCFD8" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_montargis_region_map.tga" />
                         </Component>
-                        <Component Id="cmp349677B2459690EA3FD70BC6C08524C7" Guid="{8064997A-5FB1-4015-89C5-3540C16D50BE}">
+                        <Component Id="cmp349677B2459690EA3FD70BC6C08524C7" Guid="{A0481487-9A82-4618-A252-173ECEB142DD}">
                             <File Id="filB5D3ABF2BA18C89A971BECB462B664C3" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_narva_v2_map.tga" />
                         </Component>
-                        <Component Id="cmpB38ED6DB00E42822AA638E52C945FB12" Guid="{6621439A-46F2-4254-B829-B4F948797339}">
+                        <Component Id="cmpB38ED6DB00E42822AA638E52C945FB12" Guid="{DD37E8BF-32F0-4704-B84F-3811202B8818}">
                             <File Id="filAFF00226074CA4EB5A6CE59145661C7A" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_nordwind_map.tga" />
                         </Component>
-                        <Component Id="cmpC77358E3CC24BB02F7BDE3AF9896414F" Guid="{1C47F101-1F1A-485C-B0AF-17A386E8231D}">
+                        <Component Id="cmpC77358E3CC24BB02F7BDE3AF9896414F" Guid="{6AF615FA-498B-45E3-8985-06995B1CEC27}">
                             <File Id="fil2BCF880030ECB5EFBEE7472A413AD89F" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_port_of_hamburg_map.tga" />
                         </Component>
-                        <Component Id="cmpE9845AB132382340086295A29D505998" Guid="{618CB1A2-B6FB-42CF-9DA5-CF8A649E94E0}">
+                        <Component Id="cmpE9845AB132382340086295A29D505998" Guid="{581A61DE-2D13-4FEB-92C3-E78A8B5C11AF}">
                             <File Id="fil3BDC29084FDF71188B5C2A61264BD4C4" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_redball_express_map.tga" />
                         </Component>
-                        <Component Id="cmp96A20348ED958AC1E073E5E5F0196CD8" Guid="{696FF6A3-B37C-4CBC-88C9-A97E4C28BB66}">
+                        <Component Id="cmp96A20348ED958AC1E073E5E5F0196CD8" Guid="{3C9EB964-3CC0-4732-A8D9-D5F67284704F}">
                             <File Id="fil867EED8BF4C73B3F304EDE4AD20A6BD2" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_sittard_2_map.tga" />
                         </Component>
-                        <Component Id="cmp9375CA379B86E438C9ADCB44AA22FB41" Guid="{8100E01D-A0C4-46F9-9513-513B1CF79E2B}">
+                        <Component Id="cmp9375CA379B86E438C9ADCB44AA22FB41" Guid="{B2FB0D19-D81A-44B8-8333-E292A39A27DF}">
                             <File Id="fil2A5006171EB20F24805F535B0117BF1A" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_tank_factory_map.tga" />
                         </Component>
-                        <Component Id="cmp608F8FA47B11761FCFD387DDC63E8052" Guid="{53AC450F-D576-4FD9-815D-32B5988FBFEC}">
+                        <Component Id="cmp608F8FA47B11761FCFD387DDC63E8052" Guid="{FE5FC01E-3CFE-4C39-AA65-785D214705A8}">
                             <File Id="fil90802AE32E972E03D79375F221512BD8" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_tundra_map.tga" />
                         </Component>
-                        <Component Id="cmp257F62FC020ADB4CEAA1094996B53390" Guid="{DF222501-AE24-4265-A4FA-3D67E9620FC1}">
+                        <Component Id="cmp257F62FC020ADB4CEAA1094996B53390" Guid="{540EB840-673C-4B80-904A-51F7211742FE}">
                             <File Id="fil1A63B2347AEFBA9AAEC4B18F81E4EABC" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_west_wall_map.tga" />
                         </Component>
-                        <Component Id="cmp03BBB6915766EB5029A74E79960BF6C7" Guid="{F2F12A5B-493E-406B-92F6-6A8652880B0E}">
+                        <Component Id="cmp03BBB6915766EB5029A74E79960BF6C7" Guid="{A1A7B920-ABE1-4983-AD62-1C746F422979}">
                             <File Id="fil390CB3F9B2463EDF9BA3C94F6186F499" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\8p_whiteball_express_map.tga" />
                         </Component>
-                        <Component Id="cmp1AE6E185F24C01EEB6770529970FF3A9" Guid="{1479889C-06AA-424C-BD2B-CF20E4B5C042}">
+                        <Component Id="cmp1AE6E185F24C01EEB6770529970FF3A9" Guid="{896189F2-2B23-4EE5-9871-13A350A9D60C}">
                             <File Id="filDAF1AACAACA19ACBF9F478190D938761" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\amilly_fields_map.tga" />
                         </Component>
-                        <Component Id="cmpAEA7332A484ED1B5B0DDF1DB959AD94F" Guid="{AE3E7AE6-5FE8-4234-878F-B2DF9316016C}">
+                        <Component Id="cmpAEA7332A484ED1B5B0DDF1DB959AD94F" Guid="{618C83D1-5E60-425B-942C-777BC3EC7087}">
                             <File Id="fil2F8C301F44B6A4B060D2950DF687C80F" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\anotherstalingrad_map.tga" />
                         </Component>
-                        <Component Id="cmp91A4784324AB176789CEE24E94E6B92C" Guid="{03E0E888-431A-494F-BD06-3A84AEF08644}">
+                        <Component Id="cmp91A4784324AB176789CEE24E94E6B92C" Guid="{F3E2D97A-E6E2-4693-9A53-74EC6F068D51}">
                             <File Id="fil804429224D13F48BDB6EE77BF7C35229" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\aod_map.tga" />
                         </Component>
-                        <Component Id="cmp50F80ABA489829834634CB8DBDA2B2FC" Guid="{1D7E080C-2726-4AEE-A673-0C6BB666E922}">
+                        <Component Id="cmp50F80ABA489829834634CB8DBDA2B2FC" Guid="{BC6AAF9D-D3EF-49B8-8D63-FF5C233A01FA}">
                             <File Id="fil8E5AD41A4689A118717A3E0E44445ADC" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\bacon_mirage_round2_map.tga" />
                         </Component>
-                        <Component Id="cmp3F9F710D42C54B3C01CD00F94AA20993" Guid="{9307100C-4A7F-4ED3-8BD5-19AAA46E9DBA}">
+                        <Component Id="cmp3F9F710D42C54B3C01CD00F94AA20993" Guid="{33A86D4C-DAD4-4BAA-BD58-D70AEE128CE5}">
                             <File Id="filBB773FED3A43E14419F37CD1EEC858A7" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\bialystok_market_map.tga" />
                         </Component>
-                        <Component Id="cmp2B81DE0131E60EF76EB3562EF870546B" Guid="{76C667C5-A3D5-4821-9946-B2A8D1E8EBD2}">
+                        <Component Id="cmp2B81DE0131E60EF76EB3562EF870546B" Guid="{71EF0CA5-A6C7-4131-88D0-F575B8AE47B7}">
                             <File Id="fil0CBCA424D9DAC5F8EE3A3642DB284E80" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\bocage_map.tga" />
                         </Component>
-                        <Component Id="cmp865329C02DE3A7D038A99E41F175576A" Guid="{D9AAFC2A-8B7A-4FF0-B7CA-BF2FA77D4191}">
+                        <Component Id="cmp865329C02DE3A7D038A99E41F175576A" Guid="{D5938591-2297-46BB-85EB-50A3E3457F9B}">
                             <File Id="fil92254D55173E6CABEB41F1E9BFC29131" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\crossroadswx_map.tga" />
                         </Component>
-                        <Component Id="cmpE1F05566CC231C4C46D5098CE8B2F66B" Guid="{CBF24360-ED5A-4402-A989-A51BC47BEFF0}">
+                        <Component Id="cmpE1F05566CC231C4C46D5098CE8B2F66B" Guid="{3A406247-82F8-4FC5-980F-B249D04D3CD2}">
                             <File Id="filD8CC72CF19998DF19E4E7DBB578FB4EE" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\crossroads_map.tga" />
                         </Component>
-                        <Component Id="cmpBB7779DD35B99FA7EAD5BD926F240A5C" Guid="{3C9B7799-2749-4454-B866-E11A40436754}">
+                        <Component Id="cmpBB7779DD35B99FA7EAD5BD926F240A5C" Guid="{F9F39A64-BACB-4246-9114-E2B894DCBD08}">
                             <File Id="filC3EDFB577C6A600B9BFD757CF8AC81F0" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\deutz_map.tga" />
                         </Component>
-                        <Component Id="cmp91C4CDE02EF6E04C32E145DF2B50D8BF" Guid="{BD610F13-6C7C-437F-90BC-C7A9B4A7331F}">
+                        <Component Id="cmp91C4CDE02EF6E04C32E145DF2B50D8BF" Guid="{C6D0123E-3671-48F2-8876-E63A1CF87BED}">
                             <File Id="fil3E6FB0D743AD4873BD94215BCEF8987F" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\german_industry_test_map_map.tga" />
                         </Component>
-                        <Component Id="cmp8199C484FA66C421463D5DF6805ACC60" Guid="{47A07641-4AA0-4C77-A7B7-CF3EEED4AD27}">
+                        <Component Id="cmp8199C484FA66C421463D5DF6805ACC60" Guid="{72287641-FEFA-4CE0-9F25-76FF5591FA38}">
                             <File Id="filF4844D68A4F8D439D7056D4C1985E875" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\hamlet_map.tga" />
                         </Component>
-                        <Component Id="cmp98C9205443C448D31FC4C8D460B3008D" Guid="{5338D444-1A2E-4136-AE97-71B15CCC522F}">
+                        <Component Id="cmp98C9205443C448D31FC4C8D460B3008D" Guid="{8D1B1730-67CA-4FBC-897F-2B269254C6D7}">
                             <File Id="fil566FB72D9720A41BF501A24CD50FBD7D" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\highwaybaku_map.tga" />
                         </Component>
-                        <Component Id="cmp5D8E6579829867B5590AA941C3F707B7" Guid="{A92707CC-B203-4AC2-BD78-154EB7CD0955}">
+                        <Component Id="cmp5D8E6579829867B5590AA941C3F707B7" Guid="{5E3B302C-769C-4D06-A90E-F562D2A81694}">
                             <File Id="fil247130AEE367E141D207A74F0ECBD7D0" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\ladoga_karelia_map.tga" />
                         </Component>
-                        <Component Id="cmp4BB37DE2577DA5898EE4DD657BDC9DA6" Guid="{7817A804-AEB5-4FF6-A9AC-A7E07847448D}">
+                        <Component Id="cmp4BB37DE2577DA5898EE4DD657BDC9DA6" Guid="{EC8A8851-4576-4FFB-AEC1-5EA73F5412FA}">
                             <File Id="fil74BBB3303EFFD32DC66B68559F2756D5" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\langres_map.tga" />
                         </Component>
-                        <Component Id="cmpDD841DF35AC71882050EC0AB3BDF30C7" Guid="{C78DA8E9-5C3B-4BEC-8680-B604707C4717}">
+                        <Component Id="cmpDD841DF35AC71882050EC0AB3BDF30C7" Guid="{345B786C-1368-41F3-81B5-1023AF996C2C}">
                             <File Id="fil8B939191CA3F8CC9992E9C414027C775" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\lost_glider_map.tga" />
                         </Component>
-                        <Component Id="cmp3760BC58FAC755505740EDD8507C5415" Guid="{63A3BC00-F9CD-491F-92E4-4314A66F3D60}">
+                        <Component Id="cmp3760BC58FAC755505740EDD8507C5415" Guid="{06A1B0E5-D0CD-42C4-841B-CD3B88C5C09D}">
                             <File Id="fil9BD0A046D80B4D79EA2E79B781E95985" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\market_map.tga" />
                         </Component>
-                        <Component Id="cmp8BB61983723A4FCC648D19597EC14A79" Guid="{20E927BE-E35C-4B0F-AFA6-1FB6942246AD}">
+                        <Component Id="cmp8BB61983723A4FCC648D19597EC14A79" Guid="{42145639-F4F3-4625-BEE1-E26145F7C88B}">
                             <File Id="fil81D6FFAD1A7CF03304E625C7830FC4FF" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\mill_road_map.tga" />
                         </Component>
-                        <Component Id="cmp30D255B2D23ECC0374410916E285D9D1" Guid="{A292C0FE-583E-414C-B054-DC3F1D2760BB}">
+                        <Component Id="cmp30D255B2D23ECC0374410916E285D9D1" Guid="{C8EA1DE4-E2AC-4DE7-A9C8-3F6B2CA4B527}">
                             <File Id="fil9B1FD7B0EF641C8A9AF0535852819BC2" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\nexus_map.tga" />
                         </Component>
-                        <Component Id="cmp5327AC2C153F9AF55035B5D8363AF691" Guid="{4B220BFE-ADE0-4FFB-A337-00F05AC69667}">
+                        <Component Id="cmp5327AC2C153F9AF55035B5D8363AF691" Guid="{988691AF-DEBD-4493-8884-D686E3C89D93}">
                             <File Id="fil4B3CFD99D35CC6A4C9242A2766C9AF79" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\operation_plunder_map.tga" />
                         </Component>
-                        <Component Id="cmp44AA81579300489B9D5B192FEF7FDE01" Guid="{41A2708A-3940-4518-95BB-F32509021436}">
+                        <Component Id="cmp44AA81579300489B9D5B192FEF7FDE01" Guid="{A9C5DDD6-8447-4B04-876D-CB39B5D88E21}">
                             <File Id="fil9B1D23643C1E56696E38C2215085C390" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\operation_queen_map.tga" />
                         </Component>
-                        <Component Id="cmp962B664F24F19001A9EA0E4069B1543A" Guid="{9037BA33-BDE9-4872-920C-37B497280097}">
+                        <Component Id="cmp962B664F24F19001A9EA0E4069B1543A" Guid="{7631683F-4256-4D55-818B-564CFF74C7EE}">
                             <File Id="fil0F0F1902DB602D9AFC7F21CB2315E267" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\overgrowth_map.tga" />
                         </Component>
-                        <Component Id="cmp822C6824B6DECF912FEA9D0FAE2ACBEB" Guid="{8134F8DD-A597-4808-83B9-5ADA67013ADF}">
+                        <Component Id="cmp822C6824B6DECF912FEA9D0FAE2ACBEB" Guid="{6FAA619A-1212-465B-B897-34E46768CF51}">
                             <File Id="fil4C8810954395737FB5494BD81E32149E" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\ploiesti_map.tga" />
                         </Component>
-                        <Component Id="cmp029F0AC92A742C91DB708F0528D82E41" Guid="{7E947F4E-64DC-4A94-A573-311CC0E745D1}">
+                        <Component Id="cmp029F0AC92A742C91DB708F0528D82E41" Guid="{202230EA-49B8-4CE2-BC1C-97D89D15FDAA}">
                             <File Id="fil1EDFD5D9FB06CD6963D1FA0D0AEF24CB" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\ponaryforest_map.tga" />
                         </Component>
-                        <Component Id="cmp6A707EA17DCABA089D4A602E64C4C411" Guid="{2E22448F-9C06-4BE4-B676-1B0C230748A1}">
+                        <Component Id="cmp6A707EA17DCABA089D4A602E64C4C411" Guid="{BC92B9AB-D172-4917-B459-A0F84B8D533F}">
                             <File Id="filE7110DFC5F10FCBEC005E8575981F662" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\rechnaya_pereprava_map.tga" />
                         </Component>
-                        <Component Id="cmp3D924DB17343782F4A5EAA18A245E8F0" Guid="{D6627822-2263-4923-A523-F1D166535E31}">
+                        <Component Id="cmp3D924DB17343782F4A5EAA18A245E8F0" Guid="{E42D5697-8FD8-446F-8236-AE872A7C60A8}">
                             <File Id="fil488682B68B1F0928D58A02C8EE35AC38" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\refinery_map.tga" />
                         </Component>
-                        <Component Id="cmp49DA9CD78F2A67B760A225E70E078C6C" Guid="{50F06BE2-C638-4BF5-844A-C4BC12033730}">
+                        <Component Id="cmp49DA9CD78F2A67B760A225E70E078C6C" Guid="{C0DF3367-AC34-47B2-8304-135ADF1C4E66}">
                             <File Id="filF8E6AF0D9E8C10064A45C8920032CF32" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\roadtoarnhem_map.tga" />
                         </Component>
-                        <Component Id="cmpB78C2FD6644697E1FFCAD7F51BFE164D" Guid="{64A1D0C2-B337-4480-ADCD-70DBAC0D148E}">
+                        <Component Id="cmpB78C2FD6644697E1FFCAD7F51BFE164D" Guid="{F18853E0-86BC-4DF6-B209-91239360696B}">
                             <File Id="fil8AA91F0D697E8C8831DF685415FB8E5D" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\southern_alblasserwaard_map.tga" />
                         </Component>
-                        <Component Id="cmpFAC79F930C02A172BCDE1FDE380B6158" Guid="{7E75853E-CCBD-4BE7-9C9E-D2F5A68E39C0}">
+                        <Component Id="cmpFAC79F930C02A172BCDE1FDE380B6158" Guid="{B4408214-0FE5-44F2-89B2-618C0181513D}">
                             <File Id="filDB78DE53FAE381BF1A8E4A214BF2BECA" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\specialtest_map.tga" />
                         </Component>
-                        <Component Id="cmpFF628501CEC1E89F881B75960A22B046" Guid="{05D79DBF-98FF-406A-A1FB-8172018170DE}">
+                        <Component Id="cmpFF628501CEC1E89F881B75960A22B046" Guid="{6AEB51F3-7D9B-4038-B92A-EB44157C7FD6}">
                             <File Id="filAD0CA8BB3AF3B79F4ECB44ABD77CE8BF" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\stadtschutt_map.tga" />
                         </Component>
-                        <Component Id="cmp832D4F1ECDDDD90748B00711662FB8AE" Guid="{96BA6B8D-3B14-447D-ACC5-65D81B9D0DD9}">
+                        <Component Id="cmp832D4F1ECDDDD90748B00711662FB8AE" Guid="{E23E90BB-F658-490A-8AD7-AC4F111BF5FF}">
                             <File Id="fil96E1FF1FBE46C199A33CAF5007506664" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\vilshanka_map.tga" />
                         </Component>
-                        <Component Id="cmp823195DD27BF062196E019CD7E629E00" Guid="{DA67875D-709E-4B8A-BC92-F0A08AB5B356}">
+                        <Component Id="cmp823195DD27BF062196E019CD7E629E00" Guid="{C7A678ED-9485-4AB0-93B4-103107DE5797}">
                             <File Id="filDEA8486ABF335CBB5B0B949FAFA106DB" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\volga_timber_yard_map.tga" />
                         </Component>
-                        <Component Id="cmp004CFE3A71AEE8A3AD37796434FAA777" Guid="{45E01557-A9B8-4B4A-A342-02B6E6715DAB}">
+                        <Component Id="cmp004CFE3A71AEE8A3AD37796434FAA777" Guid="{4207CE5B-0D16-4EC8-ABE4-B215F3E4D6DC}">
                             <File Id="filFE8CB06F6B0A76E3EC4392085A266D51" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\wolfheze_map.tga" />
                         </Component>
-                        <Component Id="cmpBD419243C3FC24DCFA3DBB1CF7F50D42" Guid="{50657CB1-FFCF-4E36-9F96-AEB49F053E4E}">
+                        <Component Id="cmpBD419243C3FC24DCFA3DBB1CF7F50D42" Guid="{3D3DA26B-7896-469C-84C7-DBD4A73A6A49}">
                             <File Id="fil7B6A81A1DBF46CAB9EB9ED2AB7E9314C" KeyPath="yes" Source="$(var.BasePath)\bg_common\gfx\map_icons\wolfs_lair_map.tga" />
                         </Component>
                     </Directory>
                 </Directory>
                 <Directory Id="dirA9B617525FD07D99403FAE9839FE45D6" Name="locale">
-                    <Component Id="cmp0A66AA3EAF17CF5922BB9911A848FE9D" Guid="{B241494D-1DE4-4A54-A4C8-5D507847B110}">
+                    <Component Id="cmp0A66AA3EAF17CF5922BB9911A848FE9D" Guid="{A9428721-892B-4165-9F62-E4C5FFCC09DE}">
                         <File Id="fil64F9D97C9E156CFB66335D4E17B133B4" KeyPath="yes" Source="$(var.BasePath)\bg_common\locale\english.loc" />
                     </Component>
                     <Directory Id="dir27129E0FF561D39AD528B13F24EEEEE2" Name="english">
-                        <Component Id="cmp56DFF18B62E2478FE400E3477F8F00C2" Guid="{882BAD36-93C6-4BF9-979E-84DF76049286}">
+                        <Component Id="cmp56DFF18B62E2478FE400E3477F8F00C2" Guid="{F29B039D-6074-4036-B700-5DEDBCE5DC5F}">
                             <File Id="filBB70B308820452ADC060F0AFAEB638F6" KeyPath="yes" Source="$(var.BasePath)\bg_common\locale\english\english.gamemode.ucs" />
                         </Component>
-                        <Component Id="cmp9E5486D20A38B40EDB2038595A49A3F0" Guid="{F3B19328-FD94-4DDE-9F01-BF007A334AAE}">
+                        <Component Id="cmp9E5486D20A38B40EDB2038595A49A3F0" Guid="{0FB35170-81C8-41A9-AB3D-F42B819E0954}">
                             <File Id="fil5BA9285101A42276B7AA57EE27619990" KeyPath="yes" Source="$(var.BasePath)\bg_common\locale\english\english.tuning.ucs" />
                         </Component>
                     </Directory>
                 </Directory>
             </Directory>
             <Directory Id="dir655E50E5ABDD0F7183A54CFA0F822CE2" Name="plugins">
-                <Component Id="cmpEEF00AB1B6179B84B2931FC57CE2C0ED" Guid="{3067B3D8-671D-4FC9-9535-55570BB88370}">
+                <Component Id="cmpEEF00AB1B6179B84B2931FC57CE2C0ED" Guid="{FB2ED522-F761-47E2-A545-D7C4E3996190}">
                     <File Id="fil22791F1E869B3410B536CC016BC048A1" KeyPath="yes" Source="$(var.BasePath)\plugins\README.txt" />
                 </Component>
             </Directory>
