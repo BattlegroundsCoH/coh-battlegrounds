@@ -48,9 +48,11 @@ end
 
 function BGSupply_NewUnit(player, squad, data)
 
+    -- Grab supply profile
     local profile = bgsupplydata_profiles[data.bp_name];
     local sid = Squad_GetGameID(squad);
 
+    -- Create fuel profile
     if profile.FueldData ~= nil then
         BGSupply_NewFuelUnit(squad, sid, profile.FueldData);
     end
