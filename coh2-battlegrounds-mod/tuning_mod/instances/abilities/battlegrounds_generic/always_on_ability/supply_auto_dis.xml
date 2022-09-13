@@ -1,0 +1,230 @@
+<instance description="" template="abilities">
+	<group name="ability_bag">
+		<group name="action_list">
+			<list name="end_self_actions">
+			</list>
+			<list name="end_target_actions">
+			</list>
+			<list name="start_self_actions">
+				<template_reference name="action" value="action\target">
+					<group name="area_info">
+						<float name="angle_left" value="0" />
+						<float name="angle_right" value="0" />
+						<enum name="area_type" value="circle" />
+						<float name="radius" value="20" />
+					</group>
+					<bool name="die_with_creator" value="True" />
+					<bool name="do_recalc_targets" value="True" />
+					<float name="duration" value="0" />
+					<bool name="entity_targets" value="False" />
+					<instance_reference name="entity_types_to_choose" value="" />
+					<bool name="stationary" value="False" />
+					<group name="target_info">
+						<template_reference name="target_info" value="type_ability_target_type\has_all_in_list">
+							<list name="target_infos">
+								<template_reference name="info" value="type_ability_target_type\allied">
+								</template_reference>
+								<template_reference name="info" value="type_ability_target_type\not">
+									<group name="target_info">
+										<template_reference name="target_info" value="type_ability_target_type\has_unit_type">
+											<enum name="unit_type" value="building" />
+										</template_reference>
+									</group>
+								</template_reference>
+								<template_reference name="info" value="type_ability_target_type\not">
+									<group name="target_info">
+										<template_reference name="target_info" value="type_ability_target_type\has_unit_type">
+											<enum name="unit_type" value="glider" />
+										</template_reference>
+									</group>
+								</template_reference>
+								<template_reference name="info" value="type_ability_target_type\not">
+									<group name="target_info">
+										<template_reference name="target_info" value="type_ability_target_type\is_moving">
+										</template_reference>
+									</group>
+								</template_reference>
+								<template_reference name="info" value="type_ability_target_type\not">
+									<group name="target_info">
+										<template_reference name="target_info" value="type_ability_target_type\is_retreating">
+										</template_reference>
+									</group>
+								</template_reference>
+							</list>
+						</template_reference>
+					</group>
+					<enum name="unit_type" value="" />
+					<list name="subactions">
+						<template_reference name="action" value="action\scar_function_call">
+							<string name="function_name" value="BGSupplyAE_RefillAllCost" />
+							<uniqueid name="id" value="1073745969" />
+						</template_reference>
+					</list>
+					<uniqueid name="id" value="1073745970" />
+					<bool name="any_subaction" value="False" />
+				</template_reference>
+			</list>
+			<list name="start_target_actions">
+			</list>
+		</group>
+		<enum name="activation" value="always_on" />
+		<bool name="can_interrupt" value="True" />
+		<bool name="can_target_in_fow" value="False" />
+		<float name="caster_close_in_distance" value="0" />
+		<bool name="casters_can_evacuate" value="False" />
+		<group name="cost">
+			<float name="action" value="0" />
+			<float name="command" value="0" />
+			<float name="fuel" value="0" />
+			<float name="manpower" value="0" />
+			<float name="munition" value="0" />
+			<float name="popcap" value="0" />
+		</group>
+		<string name="cursor_ghost_blueprint" value="" />
+		<float name="cursor_ghost_blueprint_angle" value="0" />
+		<bool name="disable_combat" value="False" />
+		<bool name="disable_when_active" value="False" />
+		<float name="duration_time" value="-1" />
+		<bool name="enable_in_building" value="False" />
+		<bool name="enable_in_vehicle" value="False" />
+		<bool name="engage_combat" value="False" />
+		<float name="entity_busy_time" value="0" />
+		<float name="facing_angle" value="5" />
+		<bool name="facing_ignore" value="False" />
+		<float name="final_close_in_distance" value="0" />
+		<bool name="fire_and_forget" value="False" />
+		<bool name="garrison_target" value="False" />
+		<bool name="has_speech_code" value="True" />
+		<float name="initial_delay_time" value="0" />
+		<bool name="initial_recharge" value="False" />
+		<bool name="is_default_action" value="False" />
+		<bool name="move_back" value="False" />
+		<float name="move_back_distance" value="10" />
+		<float name="range" value="0" />
+		<bool name="range_ignore" value="False" />
+		<float name="recharge_time" value="0" />
+		<bool name="refundable" value="True" />
+		<bool name="require_no_shot_block" value="False" />
+		<enum name="shared_timer" value="" />
+		<bool name="shared_timer_player_wide" value="False" />
+		<group name="speech_code_2">
+			<string name="code_1" value="" />
+			<string name="code_2" value="" />
+			<string name="code_3" value="" />
+		</group>
+		<group name="speech_code_3">
+			<string name="code_1" value="med" />
+			<string name="code_2" value="" />
+			<string name="code_3" value="" />
+		</group>
+		<enum name="squad_caster" value="squad" />
+		<enum name="target" value="tp_any" />
+		<group name="target_special_validation">
+			<template_reference name="target_special_validation" value="type_ability_target_type\all">
+			</template_reference>
+		</group>
+		<float name="toggled_recharge_time_off" value="0" />
+		<float name="toggled_recharge_time_on" value="0" />
+		<group name="ui_cursor">
+			<string name="cursor_bad" value="" />
+			<string name="cursor_good" value="" />
+			<string name="cursor_nonmodal_good" value="" />
+		</group>
+		<group name="ui_info">
+			<locstring name="extra_text" value="0" />
+			<locstring name="help_text" value="0" />
+			<string name="hotkey_name" value="" />
+			<icon name="icon_name" value="" />
+			<string name="overlay_name" value="" />
+			<bool name="reveal_for_decryption" value="False" />
+			<locstring name="screen_name" value="0" />
+			<icon name="icon_alternate_name" value="" />
+			<locstring name="brief_text" value="0" />
+			<locstring name="help_text_alternate" value="0" />
+			<locstring name="screen_name_alternate" value="0" />
+			<locstring name="screen_name_short" value="0" />
+		</group>
+		<locstring name="ui_usage_txt" value="0" />
+		<bool name="validate_actions" value="False" />
+		<list name="global_self_actions">
+		</list>
+		<list name="requirements">
+			<template_reference name="required" value="requirements\required_not">
+				<enum name="reason" value="usage" />
+				<locstring name="ui_name" value="0" />
+				<list name="requirement_table">
+					<template_reference name="required" value="requirements\required_in_state">
+						<enum name="reason" value="usage" />
+						<locstring name="ui_name" value="0" />
+						<bool name="garrisoned" value="True" />
+						<bool name="healed" value="False" />
+						<float name="in_combat_since" value="-1" />
+						<bool name="injured" value="False" />
+						<bool name="leader" value="False" />
+						<bool name="not_moving" value="False" />
+						<bool name="not_retreating" value="False" />
+						<bool name="pinned" value="False" />
+						<bool name="suppressed" value="False" />
+						<bool name="camouflaged" value="False" />
+					</template_reference>
+				</list>
+			</template_reference>
+			<template_reference name="required" value="requirements\required_in_state">
+				<enum name="reason" value="usage" />
+				<locstring name="ui_name" value="0" />
+				<bool name="garrisoned" value="False" />
+				<bool name="healed" value="False" />
+				<float name="in_combat_since" value="-1" />
+				<bool name="injured" value="False" />
+				<bool name="leader" value="False" />
+				<bool name="not_moving" value="True" />
+				<bool name="not_retreating" value="False" />
+				<bool name="pinned" value="False" />
+				<bool name="suppressed" value="False" />
+				<bool name="camouflaged" value="False" />
+			</template_reference>
+			<template_reference name="required" value="requirements\required_slot_item">
+				<enum name="reason" value="usage" />
+				<locstring name="ui_name" value="0" />
+				<bool name="check_item_on_entity" value="False" />
+				<bool name="display_requirement" value="False" />
+				<float name="max_owned" value="0" />
+				<float name="min_owned" value="0" />
+				<instance_reference name="slot_item" value="slot_item\generic\supply_auto_distribute_token" mod="142b113740474c82a60b0a428bd553d5" />
+			</template_reference>
+		</list>
+		<enum name="ability_super" value="tp_none" />
+		<int name="ui_position" value="0" />
+		<bool name="ui_mini_map_capture" value="False" />
+		<bool name="facing_ignore_during_active" value="False" />
+		<instance_reference name="ui_range" value="" />
+		<instance_reference name="ui_reticule" value="" />
+		<float name="ui_reticule_radius_min" value="1" />
+		<float name="ui_reticule_radius_max" value="1" />
+		<enum name="pending_ability_out_of_range_behaviour" value="chase" />
+		<enum name="ui_group" value="group_primary" />
+		<string name="ui_targetable_sm_key" value="" />
+		<string name="ui_targetable_on_key" value="" />
+		<string name="ui_targetable_off_key" value="" />
+		<enum name="ui_targetable_receiver" value="local" />
+		<enum name="ui_combine_type" value="intersection" />
+		<enum_table name="ui_modal_highlight">
+			<bool name="world_sector" value="False" />
+			<bool name="map_sector" value="False" />
+			<bool name="map_sector_hq_link_extender" value="False" />
+		</enum_table>
+		<enum name="ui_group_cast_type" value="single" />
+		<list name="requirements_target">
+		</list>
+		<template_reference name="targeted_ability_option" value="options\none">
+		</template_reference>
+		<enum name="ui_direction_requirement" value="nondirectional" />
+		<instance_reference name="cursor_ghost_ebp" value="" />
+		<bool name="can_cast_whilst_constructing" value="False" />
+		<list name="requirements_self_recharge">
+		</list>
+		<bool name="can_cast_outside_active_battle_field" value="False" />
+		<bool name="ability_super_event_cue" value="False" />
+	</group>
+	<uniqueid name="pbgid" value="1073741943" />
+</instance>

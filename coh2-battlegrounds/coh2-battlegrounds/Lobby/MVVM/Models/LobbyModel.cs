@@ -354,6 +354,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
             // Make sure there's a company
             if (self.Occupant.Company is null) {
+                Trace.WriteLine("Attempt to get self company returned null (self company was null).", nameof(LobbyModel));
                 return null;
             }
 
@@ -366,7 +367,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             // Get company
             var company = PlayerCompanies.FromNameAndFaction(companyName, faction);
             if (company is null) {
-                Trace.WriteLine($"Failed to fetch company json file (Company '{companyName}' not found).", nameof(LobbyHostModel));
+                Trace.WriteLine($"Failed to fetch company json file (Company '{companyName}' not found).", nameof(LobbyModel));
                 return null;
             }
 
@@ -384,7 +385,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     private void OnCompanyRequested(ServerAPI obj) {
 
         // Log request
-        Trace.WriteLine("Received request to upload company file", nameof(LobbyHostModel));
+        Trace.WriteLine("Received request to upload company file.", nameof(LobbyModel));
 
         // Try get
         if (this.TryGetSelectedCompany(out ulong selfid) is Company company) {
@@ -392,20 +393,20 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             // Get company json
             string companyJson = CompanySerializer.GetCompanyAsJson(company, indent: false);
             if (string.IsNullOrEmpty(companyJson)) {
-                Trace.WriteLine($"Failed to upload company json file (Company '{company.Name}' not found).", nameof(LobbyHostModel));
+                Trace.WriteLine($"Failed to upload company json file (Company '{company.Name}' not found).", nameof(LobbyModel));
                 return;
             }
 
             // Upload file
             var encoded = Encoding.UTF8.GetBytes(companyJson);
             if (this.m_handle.UploadCompanyFile(encoded, selfid, (a, b, _) => Trace.WriteLine($"Upload company progress {a}/{b}", nameof(LobbyHostModel))) is not UploadResult.UPLOAD_SUCCESS) {
-                Trace.WriteLine("Failed to upload company json file.", nameof(LobbyHostModel));
+                Trace.WriteLine("Failed to upload company json file.", nameof(LobbyModel));
             }
 
         } else {
 
             // Log request
-            Trace.WriteLine("Failed to find self-instance and cannot upload company file.", nameof(LobbyHostModel));
+            Trace.WriteLine("Failed to find self-instance and cannot upload company file.", nameof(LobbyModel));
 
         }
 
@@ -523,19 +524,18 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
         // Check allies
         if (handler.Allies is null) {
+            Trace.WriteLine($"{nameof(CreateModelAsHost)} is returning null has Allies were not defined.", nameof(LobbyModel));
             return null;
         }
 
         // Check axis
         if (handler.Axis is null) {
+            Trace.WriteLine($"{nameof(CreateModelAsHost)} is returning null has Axis were not defined.", nameof(LobbyModel));
             return null;
         }
 
-        // Create model
-        LobbyHostModel model = new(handler, handler.Allies, handler.Axis);
-
         // Return model
-        return model;
+        return new LobbyHostModel(handler, handler.Allies, handler.Axis);
 
     }
 
@@ -543,19 +543,18 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
         // Check allies
         if (handler.Allies is null) {
+            Trace.WriteLine($"{nameof(CreateModelAsParticipant)} is returning null has Allies were not defined.", nameof(LobbyModel));
             return null;
         }
 
         // Check axis
         if (handler.Axis is null) {
+            Trace.WriteLine($"{nameof(CreateModelAsParticipant)} is returning null has Allies were not defined.", nameof(LobbyModel));
             return null;
         }
 
-        // Create model
-        LobbyParticipantModel model = new(handler, handler.Allies, handler.Axis);
-
         // Return model
-        return model;
+        return new LobbyParticipantModel(handler, handler.Allies, handler.Axis);
 
     }
 

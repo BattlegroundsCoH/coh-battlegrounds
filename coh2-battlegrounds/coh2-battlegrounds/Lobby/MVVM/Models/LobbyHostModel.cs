@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 using Battlegrounds;
 using Battlegrounds.AI;
@@ -135,6 +136,7 @@ public class LobbyHostModel : LobbyModel {
 
         // Skip check if not host
         if (!this.m_handle.IsHost) {
+            Trace.WriteLine($"Attempt to invoke '{nameof(RefreshPlayability)}' but is not host!.", nameof(LobbyHostModel));
             return;
         }
 
@@ -174,21 +176,31 @@ public class LobbyHostModel : LobbyModel {
 
     private void BeginMatchSetup() {
 
+        // Log start match button
+        Trace.WriteLine("Start match button was clicked.", nameof(LobbyHostModel));
+
         // If not host -> bail.
-        if (!this.m_handle.IsHost)
+        if (!this.m_handle.IsHost) {
+            Trace.WriteLine($"Attempt to invoke '{nameof(BeginMatchSetup)}' but is not host!.", nameof(LobbyHostModel));
             return;
+        }
 
         // Bail if no chat model
-        if (this.m_chatModel is null)
+        if (this.m_chatModel is null) {
+            Trace.WriteLine($"Attempt to invoke '{nameof(BeginMatchSetup)}' but chat model was null!.", nameof(LobbyHostModel));
             return;
+        }
 
         // Bail if no package defined
-        if (this.m_package is null)
-            return; // TODO: Show error
+        if (this.m_package is null) {
+            Trace.WriteLine($"Attempt to invoke '{nameof(BeginMatchSetup)}' but mod packase is null!.", nameof(LobbyHostModel));
+            this.m_chatModel.SystemMessage("Mod package is not set!", Colors.Red);
+            return;
+        }
 
         // Bail if not ready
         if (!this.IsReady()) {
-            // TODO: Inform user
+            this.m_chatModel.SystemMessage("Cannot start match (Host not ready).", Colors.Yellow);
             return;
         }
 
@@ -197,6 +209,9 @@ public class LobbyHostModel : LobbyModel {
 
         // Do on a worker thread (especially needed now that AI planning is added -- which can take ~1-3s to generate *some* plan).
         Task.Run(() => {
+
+            // Log startup on new thread
+            Trace.WriteLine("Conducting startup poll.", nameof(LobbyHostModel));
 
             // Get status from other participants
             if (!this.m_handle.ConductPoll("ready_check", 1.5)) {
@@ -207,6 +222,9 @@ public class LobbyHostModel : LobbyModel {
             // Decide what to do, based on planning
             if (gamemode.Planning) {
 
+                // Log Screen change
+                Trace.WriteLine("Changing screen to planning phase.", nameof(LobbyHostModel));
+
                 // Inform others we're entering the planning phase
                 this.m_handle.NotifyScreen("planning");
 
@@ -214,6 +232,9 @@ public class LobbyHostModel : LobbyModel {
                 Application.Current.Dispatcher.Invoke(this.PlanMatch);
 
             } else {
+
+                // Log startup
+                Trace.WriteLine("Starting play model selection and preparation.", nameof(LobbyHostModel));
 
                 // Set starting flag
                 this.m_isStarting = true;
@@ -223,6 +244,9 @@ public class LobbyHostModel : LobbyModel {
 
                 // Get play model
                 var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, this.UploadGamemodeCallback);
+
+                // Log Screen change
+                Trace.WriteLine($"{nameof(PlayModelFactory)} picked play model '{play.GetType().Name}'.", nameof(LobbyHostModel));
 
                 // prepare
                 play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
