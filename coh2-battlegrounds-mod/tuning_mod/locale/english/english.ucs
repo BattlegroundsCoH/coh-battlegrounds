@@ -86,3 +86,6 @@
 87	Enable Automatic Supply
 88	Avoid supplying nearby units.
 89	Supply nearby units with fuel and ammunition.
+90	Automatic Supply
+91	Avoid supplying neraby units, subtracting munitions cost.
+92	Order supply to any nearby units.

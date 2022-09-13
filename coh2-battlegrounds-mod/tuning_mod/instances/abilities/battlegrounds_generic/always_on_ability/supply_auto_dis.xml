@@ -56,7 +56,7 @@
 					<enum name="unit_type" value="" />
 					<list name="subactions">
 						<template_reference name="action" value="action\scar_function_call">
-							<string name="function_name" value="BGSupplyAE_RefillAll" />
+							<string name="function_name" value="BGSupplyAE_RefillAllCost" />
 							<uniqueid name="id" value="1073745969" />
 						</template_reference>
 					</list>
@@ -190,7 +190,7 @@
 				<bool name="display_requirement" value="False" />
 				<float name="max_owned" value="0" />
 				<float name="min_owned" value="0" />
-				<instance_reference name="slot_item" value="slot_item\aef\medic_auto_heal_token" />
+				<instance_reference name="slot_item" value="slot_item\generic\supply_auto_distribute_token" mod="142b113740474c82a60b0a428bd553d5" />
 			</template_reference>
 		</list>
 		<enum name="ability_super" value="tp_none" />

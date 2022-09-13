@@ -198,14 +198,8 @@ function BGSupply_OnOutOfAmmunition(squad)
     Cmd_CriticalHit(Squad_GetPlayerOwner(squad), squad, crit, 0.0);
 end
 
+-- Reffills all supply for free
 function BGSupplyAE_RefillAll(executer, target)
-
-    if scartype(target) == ST_ENTITY then
-        target = Entity_GetSquad(target);
-        if target == nil then
-            return;
-        end
-    end
 
     -- Call the two other functiosn dedicated to each type
     BGSupplyAE_RefillAmmo(executer, target);
@@ -213,7 +207,24 @@ function BGSupplyAE_RefillAll(executer, target)
 
 end
 
+-- Refills all supply and subtracts a cost for doing so
+function BGSupplyAE_RefillAllCost(executer, target)
+
+    -- Call the two other functiosn dedicated to each type
+    BGSupplyAE_RefillAmmoCost(executer, target);
+    BGSupplyAE_RefillFuelCost(executer, target);
+
+end
+
 function BGSupplyAE_RefillAmmo(executer, target)
+    BGSupply_RefillAmmoCost(target, 0)
+end
+
+function BGSupplyAE_RefillAmmoCost(executer, target)
+    BGSupply_RefillAmmoCost(target, 2.5) -- TODO: Make 2.5 a controllable parameter
+end
+
+function BGSupply_RefillAmmoCost(target, munitions)
 
     -- Get target squad
     if scartype(target) == ST_ENTITY then
@@ -223,17 +234,28 @@ function BGSupplyAE_RefillAmmo(executer, target)
         end
     end
 
+    -- Remove criticals if any
     if Squad_HasCritical(target, _bg_supply.crit_ammo) then
         Squad_RemoveCritical(target, _bg_supply.crit_ammo);
     elseif Squad_HasCritical(target, _bg_supply.crit_ammo_tw) then
         Squad_RemoveCritical(target, _bg_supply.crit_ammo_tw);
     end
 
+    -- Grab supply state
     local state = _bg_supply.ammo[Squad_GetGameID(target)];
     if state == nil then
         return;
     end
 
+    -- Grab player owner
+    local owner = Util_GetPlayerOwner(target);
+
+    -- Bail if not enough
+    if Player_GetResource(owner, RT_Munition) > munitions then 
+        return;
+    end
+
+    -- Loop over and add
     for _,slot in pairs(state.slots) do
         if slot.current < slot.max then
             slot.current = slot.current + slot.refill;
@@ -243,9 +265,24 @@ function BGSupplyAE_RefillAmmo(executer, target)
         end
     end
 
+    -- Create kicker and subtract
+    if munitions > 0 then
+        local n = Loc_ConvertNumber(-munitions);
+        UI_CreateColouredSquadKickerMessage(owner, target, BG_LocStringFormat(126, n), 198, 120, 74, 0);
+        Player_AddResource(owner, RT_Munition, -munitions);
+    end
+
 end
 
 function BGSupplyAE_RefillFuel(executer, target)
+    BGSupply_RefillFuel(target, 0)
+end
+
+function BGSupplyAE_RefillFuelCost(executer, target)
+    BGSupply_RefillFuel(target, 1)
+end
+
+function BGSupply_RefillFuel(target, fuel)
 
     if scartype(target) == ST_ENTITY then
         target = Entity_GetSquad(target);
@@ -263,9 +300,28 @@ function BGSupplyAE_RefillFuel(executer, target)
         return;
     end
 
-    state.current = state.current + (state.rate * 2);
+    -- Grab player owner
+    local owner = Util_GetPlayerOwner(target);
+
+    -- Determine cost of refill
+    local refill = state.rate * 2
+
+    -- Bail if not enough munitions
+    if Player_GetResource(owner, RT_Fuel) < fuel then
+        return
+    end
+
+    -- Add and clamp
+    state.current = state.current + refill;
     if state.current > state.max then
         state.current = state.max;
+    end
+
+    -- Create kicker and subtract
+    if fuel > 0 then
+        local n = Loc_ConvertNumber(-fuel);
+        UI_CreateColouredSquadKickerMessage(owner, target, BG_LocStringFormat(127, n), 198, 120, 74, 0);
+        Player_AddResource(owner, RT_Fuel, -fuel);
     end
 
 end
