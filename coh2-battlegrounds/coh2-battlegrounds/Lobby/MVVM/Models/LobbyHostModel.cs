@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 using Battlegrounds;
 using Battlegrounds.AI;
@@ -174,6 +175,9 @@ public class LobbyHostModel : LobbyModel {
 
     private void BeginMatchSetup() {
 
+        // Log being match setup
+        Trace.WriteLine("Begin match setup button pressed.", nameof(LobbyHostModel));
+
         // If not host -> bail.
         if (!this.m_handle.IsHost)
             return;
@@ -183,12 +187,14 @@ public class LobbyHostModel : LobbyModel {
             return;
 
         // Bail if no package defined
-        if (this.m_package is null)
-            return; // TODO: Show error
+        if (this.m_package is null) {
+            this.m_chatModel.SystemMessage("Mod package not set.", Colors.Gray);
+            return;
+        }
 
         // Bail if not ready
         if (!this.IsReady()) {
-            // TODO: Inform user
+            this.m_chatModel.SystemMessage("Lobby not ready to start.", Colors.Gray);
             return;
         }
 
@@ -199,8 +205,8 @@ public class LobbyHostModel : LobbyModel {
         Task.Run(() => {
 
             // Get status from other participants
-            if (!this.m_handle.ConductPoll("ready_check", 1.5)) {
-                Trace.WriteLine("Someone didn't report back positively!", nameof(LobbyHostModel));
+            if (!this.m_handle.ConductPoll("ready_check", 2)) {
+                this.m_chatModel.SystemMessage("One or more lobby members are not ready.", Colors.Gray);
                 return;
             }
 

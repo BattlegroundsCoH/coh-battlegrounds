@@ -724,6 +724,9 @@ function BattlegroundsDefence_CheckObjectives()
 end
 
 function BattlegroundsDefence_TriggerDefender(obj, func)
+	if func == nil then
+		return -- Bail if nil (Nothing to call)
+	end
 	for _, player in pairs(DefenceSettingsData.Defenders) do
 		if player == Game_GetLocalPlayer() then
 			func(obj)
