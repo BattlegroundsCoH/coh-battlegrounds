@@ -306,7 +306,7 @@ class Program {
             ProcessStartInfo msbuild_bin = new ProcessStartInfo() {
                 UseShellExecute = false,
                 FileName = $"{msbuild_path}\\MSBuild.exe",
-                Arguments = $"{project} -property:Configuration=Release",
+                Arguments = $"{project} -property:Configuration=Release -property:Platform=x64",
                 WorkingDirectory = projectDir,
             };
 
@@ -355,8 +355,8 @@ class Program {
             string content = reader.ReadToEnd();
             reader.Close();
 
-            content = Regex.Replace(content, oldHeader, newHeader);
-            content = Regex.Replace(content, oldComponent, newComponent);
+            content = content.Replace(oldHeader, newHeader);
+            content = content.Replace(oldComponent, newComponent);
 
             StreamWriter writer = new(file);
             writer.Write(content);
