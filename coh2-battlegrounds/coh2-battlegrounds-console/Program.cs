@@ -260,30 +260,30 @@ class Program {
 
         public override void Execute(CommandArgumentList argumentList) {
 
+            string workdir = Path.GetFullPath("..\\..\\..\\..\\");
+
+            // Create publish files 
+            ProcessStartInfo createPublishFiles = new ProcessStartInfo() {
+                UseShellExecute = false,
+                FileName = Path.Combine(workdir, "coh2-battlegrounds-console\\bin\\Debug\\net6.0\\coh2-battlegrounds-console.exe"),
+                Arguments = "mki -dz",
+                WorkingDirectory = Path.Combine(workdir, "coh2-battlegrounds-console\\bin\\Debug\\net6.0\\"),
+            };
+
+            Process? createPublishFilesProcess = Process.Start(createPublishFiles);
+            if (createPublishFilesProcess is null) {
+                Console.WriteLine("Failed to create coh2-battlegrounds-console.exe mki -dz process");
+            }
+
+            createPublishFilesProcess!.WaitForExit();
+
             Dictionary<string, object?> publishArgs = new();
             CommandArgumentList publishArgumentList = new CommandArgumentList(publishArgs);
 
             PublishDirCheck publishDirCheck = new();
             publishDirCheck.Execute(publishArgumentList);
 
-            string workdir = Path.GetFullPath("..\\..\\..\\..\\");
-
             if (publishDirCheck.IsChanged) {
-
-                // Create publish files 
-                ProcessStartInfo createPublishFiles = new ProcessStartInfo() {
-                    UseShellExecute = false,
-                    FileName = Path.Combine(workdir, "coh2-battlegrounds-console\\bin\\Debug\\net6.0\\coh2-battlegrounds-console.exe"),
-                    Arguments = "mki -dz",
-                    WorkingDirectory = Path.Combine(workdir, "coh2-battlegrounds-console\\bin\\Debug\\net6.0\\"),
-                };
-
-                Process? createPublishFilesProcess = Process.Start(createPublishFiles);
-                if (createPublishFilesProcess is null) {
-                    Console.WriteLine("Failed to create coh2-battlegrounds-console.exe mki -dz process");
-                }
-
-                createPublishFilesProcess!.WaitForExit();
 
                 if (!CompileProject("coh2-battlegrounds-installer.wixproj", Path.Combine(workdir, "coh2-battlegrounds-installer"))) {
                     return;

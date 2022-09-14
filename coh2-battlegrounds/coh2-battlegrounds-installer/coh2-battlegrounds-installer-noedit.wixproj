@@ -77,5 +77,13 @@
     </PropertyGroup>
   </Target>
 	<Target Name="AfterBuild">
+		<!-- Get assembly version -->
+		<GetAssemblyIdentity AssemblyFiles="..\coh2-battlegrounds-console\bin\Debug\net6.0\bg-release\coh2-battlegrounds.dll">
+			<Output TaskParameter="Assemblies" ItemName="AssemblyVersion" />
+		</GetAssemblyIdentity>
+
+		<!-- Rename and move final MSI -->
+		<Exec Command="if not exist Installs mkdir Installs" />
+		<Exec Command="move bin\$(Platform)\$(Configuration)\$(OutputName).msi Installs\BattlegroundsSetup_%(AssemblyVersion.Version)_$(Platform).msi" />
 	</Target>
 </Project>

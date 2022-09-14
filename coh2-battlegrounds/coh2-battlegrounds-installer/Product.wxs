@@ -36,7 +36,7 @@
 				 Languages="!(loc.Language)" />
 		
 		<!-- Downgrade error message -->
-		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" />
+		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" Schedule="afterInstallFinalize"/>
 		
 		<!-- Include .cab file into .msi file -->
 		<MediaTemplate EmbedCab="yes" />
