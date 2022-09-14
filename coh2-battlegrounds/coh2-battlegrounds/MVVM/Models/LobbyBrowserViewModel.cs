@@ -137,7 +137,12 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         this.Local = new(new RelayCommand(LocalButton), PlayerCompanies.HasCompanyForBothAlliances);
 
         // Create double-click
-        this.JoinLobbyDirectly = new EventCommand<MouseButtonEventArgs>(this.JoinLobby);
+        this.JoinLobbyDirectly = new EventCommand<MouseButtonEventArgs>((sender, args) => {
+            if (!PlayerCompanies.HasCompanyForBothAlliances()) {
+                return; // Bail on attempt to join when no companies are available.
+            }
+            this.JoinLobby(sender, args);
+        });
 
         // Create lobbies container (But do no populate it)
         this.Lobbies = new();
@@ -354,6 +359,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
         // Null check
         if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+            Trace.WriteLine("Failed to show host modal (No Modal Control)", nameof(LobbyBrowserViewModel));
             return;
         }
 
@@ -433,6 +439,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
         // Ensure the interface object is set
         if (NetworkInterface.APIObject is null) {
+            Trace.WriteLine("Failed to show join modal (Network interface API is null)", nameof(LobbyBrowserViewModel));
             return;
         }
 
