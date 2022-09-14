@@ -256,9 +256,17 @@ class Program {
 
         const string msbuild_path = @"C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin";
 
-        public CreateInstaller() : base("create-installer", "Creates a .msi file") { }
+        public static readonly Argument<string> PLATFORM = new Argument<string>("-p", "Specifies the build platform", "x64");
+
+        public CreateInstaller() : base("create-installer", "Creates a .msi file", PLATFORM) { }
 
         public override void Execute(CommandArgumentList argumentList) {
+
+            string platform = argumentList.GetValue(PLATFORM);
+            if (platform != "x64" && platform != "x86") {
+                Console.WriteLine("Invalid platform");
+                return;
+            }
 
             string workdir = Path.GetFullPath("..\\..\\..\\..\\");
 
@@ -273,6 +281,7 @@ class Program {
             Process? createPublishFilesProcess = Process.Start(createPublishFiles);
             if (createPublishFilesProcess is null) {
                 Console.WriteLine("Failed to create coh2-battlegrounds-console.exe mki -dz process");
+                return;
             }
 
             createPublishFilesProcess!.WaitForExit();
@@ -285,14 +294,14 @@ class Program {
 
             if (publishDirCheck.IsChanged) {
 
-                if (!CompileProject("coh2-battlegrounds-installer.wixproj", Path.Combine(workdir, "coh2-battlegrounds-installer"))) {
+                if (!CompileProject("coh2-battlegrounds-installer.wixproj", Path.Combine(workdir, "coh2-battlegrounds-installer"), platform)) {
                     return;
                 }
 
 
             } else {
 
-                if (!CompileProject("coh2-battlegrounds-installer-noedit.wixproj", Path.Combine(workdir, "coh2-battlegrounds-installer"))) {
+                if (!CompileProject("coh2-battlegrounds-installer-noedit.wixproj", Path.Combine(workdir, "coh2-battlegrounds-installer"), platform)) {
                     return;
                 }
 
@@ -300,13 +309,13 @@ class Program {
 
         }
 
-        private bool CompileProject(string project, string projectDir) {
+        private bool CompileProject(string project, string projectDir, string platform) {
 
             // Firstly we trigger MSBuild.exe on our solution file
             ProcessStartInfo msbuild_bin = new ProcessStartInfo() {
                 UseShellExecute = false,
                 FileName = $"{msbuild_path}\\MSBuild.exe",
-                Arguments = $"{project} -property:Configuration=Release -property:Platform=x64",
+                Arguments = $"{project} -property:Configuration=Release -property:Platform={platform}",
                 WorkingDirectory = projectDir,
             };
 
