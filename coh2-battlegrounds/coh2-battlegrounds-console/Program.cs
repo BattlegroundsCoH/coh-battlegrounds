@@ -6,7 +6,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -194,6 +197,175 @@ class Program {
 
     }
 
+    class PublishDirCheck : Command {
+
+        public bool IsChanged { get; private set; }
+
+        public PublishDirCheck() : base("publishdir-check", "Checks if the publish directory changed its contents.") { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+
+            // Find abs path for working directory
+            string workdir = Path.GetFullPath("..\\..\\..\\..\\");
+
+            string publishPath = Path.Combine(workdir, "coh2-battlegrounds\\bin\\Release\\net6.0-windows");
+            string installPath = Path.Combine(workdir, "coh2-battlegrounds-console\\bin\\Debug\\net6.0\\bg-release");
+
+            // Take a snapshot of the file system
+            string publishChecksum = ComputeChecksum(publishPath);
+            string installChecksum = ComputeChecksum(installPath);
+
+            if (publishChecksum == installChecksum) {
+                Console.WriteLine("No changes detected");
+                this.IsChanged = false;
+            } else {
+                Console.WriteLine("Changes have been detected");
+                this.IsChanged = true;
+            }
+
+        }
+
+        internal static string ComputeChecksum(string dir) {
+
+            // Get path to executable
+            string executable = Path.Combine(dir, "coh2-battlegrounds.exe");
+
+            // Log
+            Console.WriteLine("Computing Checksum");
+            Console.WriteLine($"Executable: {executable}");
+
+            // Make sure executable exists
+            if (!File.Exists(executable)) {
+                Console.WriteLine("Executable not found - aborting!");
+                return string.Empty;
+            }
+
+            // Compute hash
+            Integrity.CheckIntegrity(executable);
+
+            // Log hash
+            Console.WriteLine($"Computed integrity hash as: {Integrity.IntegrityHashString}");
+            return Integrity.IntegrityHashString;
+
+        }
+
+    }
+
+    class CreateInstaller : Command {
+
+        const string msbuild_path = @"C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin";
+
+        public CreateInstaller() : base("create-installer", "Creates a .msi file") { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            Dictionary<string, object?> publishArgs = new();
+            CommandArgumentList publishArgumentList = new CommandArgumentList(publishArgs);
+
+            PublishDirCheck publishDirCheck = new();
+            publishDirCheck.Execute(publishArgumentList);
+
+            string workdir = Path.GetFullPath("..\\..\\..\\..\\");
+
+            if (publishDirCheck.IsChanged) {
+
+                // Create publish files 
+                ProcessStartInfo createPublishFiles = new ProcessStartInfo() {
+                    UseShellExecute = false,
+                    FileName = Path.Combine(workdir, "coh2-battlegrounds-console\\bin\\Debug\\net6.0\\coh2-battlegrounds-console.exe"),
+                    Arguments = "mki -dz",
+                    WorkingDirectory = Path.Combine(workdir, "coh2-battlegrounds-console\\bin\\Debug\\net6.0\\"),
+                };
+
+                Process? createPublishFilesProcess = Process.Start(createPublishFiles);
+                if (createPublishFilesProcess is null) {
+                    Console.WriteLine("Failed to create coh2-battlegrounds-console.exe mki -dz process");
+                }
+
+                createPublishFilesProcess!.WaitForExit();
+
+                if (!CompileProject("coh2-battlegrounds-installer.wixproj", Path.Combine(workdir, "coh2-battlegrounds-installer"))) {
+                    return;
+                }
+
+
+            } else {
+
+                if (!CompileProject("coh2-battlegrounds-installer-noedit.wixproj", Path.Combine(workdir, "coh2-battlegrounds-installer"))) {
+                    return;
+                }
+
+            }
+
+        }
+
+        private bool CompileProject(string project, string projectDir) {
+
+            // Firstly we trigger MSBuild.exe on our solution file
+            ProcessStartInfo msbuild_bin = new ProcessStartInfo() {
+                UseShellExecute = false,
+                FileName = $"{msbuild_path}\\MSBuild.exe",
+                Arguments = $"{project} -property:Configuration=Release",
+                WorkingDirectory = projectDir,
+            };
+
+            // Trigger compile
+            Process? binbuilder = Process.Start(msbuild_bin);
+            if (binbuilder is null) {
+                Console.WriteLine("Failed to create MS build process");
+                return false;
+            }
+
+            // Grab io
+            binbuilder.OutputDataReceived += (s, e) => {
+                Console.WriteLine($"msbuild: {e.Data}");
+            };
+            binbuilder.ErrorDataReceived += (s, e) => {
+                Console.WriteLine($"error: {e.Data}");
+            };
+
+            // Wait for exit
+            binbuilder.WaitForExit();
+
+            // Return OK
+            return true;
+
+        }
+
+    }
+
+    class ExecutableFirewall : Command {
+
+        public ExecutableFirewall() : base("add-firewallexeption", "Adds FirewallExceptio to executable") { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            string workdir = Path.GetFullPath("..\\..\\..\\..\\");
+
+            string oldHeader = "<Wix xmlns=\"http://schemas.microsoft.com/wix/2006/wi\">";
+            string newHeader = "<Wix xmlns=\"http://schemas.microsoft.com/wix/2006/wi\" xmlns:fire=\"http://schemas.microsoft.com/wix/FirewallExtension\">";
+
+            string oldComponent = "<File Id=\"filC3836236C73ECA8506FB24920C9B8D22\" KeyPath=\"yes\" Source=\"$(var.BasePath)\\coh2-battlegrounds.exe\" />";
+            string newComponent = "<File Id=\"filC3836236C73ECA8506FB24920C9B8D22\" KeyPath=\"yes\" Source=\"$(var.BasePath)\\coh2-battlegrounds.exe\"><fire:FirewallException Id=\"ExeFirewall\" Name=\"!(loc.ProductNameFolder)\" Port=\"11000\" Protocol=\"tcp\" Profile=\"public\" Scope=\"any\"/></File>";
+
+            string file = Path.Combine(workdir, "coh2-battlegrounds-installer\\ComponentsGen.wxs");
+
+            StreamReader reader = new(file);
+            string content = reader.ReadToEnd();
+            reader.Close();
+
+            content = Regex.Replace(content, oldHeader, newHeader);
+            content = Regex.Replace(content, oldComponent, newComponent);
+
+            StreamWriter writer = new(file);
+            writer.Write(content);
+            writer.Close();
+
+        }
+
+    }
+
     class Update : Command {
         
         public static readonly string ChecksumPath = Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\checksum.txt");
@@ -351,14 +523,14 @@ class Program {
 
     }
 
-    class CreateInstaller : Command {
+    class CreateInstallFiles : Command {
 
         const string msbuild_path = @"C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin";
 
         public static readonly Argument<bool> SKIP_COMPILE = new Argument<bool>("-c", "Skip compilation (must be handled by user then)", false);
         public static readonly Argument<bool> DONT_ZIP = new Argument<bool>("-dz", "Don't zip the file", false);
 
-        public CreateInstaller() : base("mki", "Makes an installer file (Zips the release build folder).", SKIP_COMPILE, DONT_ZIP) { }
+        public CreateInstallFiles() : base("mki", "Makes an installer file (Zips the release build folder).", SKIP_COMPILE, DONT_ZIP) { }
 
         public override void Execute(CommandArgumentList argumentList) {
 
@@ -406,7 +578,7 @@ class Program {
 
             // Copy
             File.Copy(Update.ChecksumPath, Path.Combine(workdir, "coh2-battlegrounds\\bin\\Release\\net6.0-windows\\checksum.txt"), true);
-            Console.WriteLine("Copied checksum file to release directory:");
+            Console.WriteLine("Copied checksum file to release directory");
 
             if (zipFlag) {
 
@@ -418,7 +590,7 @@ class Program {
                 Directory.CreateDirectory(dir);
 
                 Helpers.CopyFilesRecursively(Path.Combine(workdir, "coh2-battlegrounds\\bin\\Release\\net6.0-windows"), dir);
-                Console.WriteLine($"{dir} created");
+                Console.WriteLine($"Created {dir} successfully");
 
 
             } else {
@@ -694,13 +866,16 @@ class Program {
         flags.RegisterCommand<ReplayAnalysis>();
         flags.RegisterCommand<ServerCheck>();
         flags.RegisterCommand<MinimapperCommand>();
-        flags.RegisterCommand<CreateInstaller>();
+        flags.RegisterCommand<CreateInstallFiles>();
         flags.RegisterCommand<AIDefenceAnalyser>();
         flags.RegisterCommand<AIDefencePlannerTest>();
         flags.RegisterCommand<Echo>();
         flags.RegisterCommand<Repl>();
 #if DEBUG
         flags.RegisterCommand<Update>();
+        flags.RegisterCommand<PublishDirCheck>();
+        flags.RegisterCommand<CreateInstaller>();
+        flags.RegisterCommand<ExecutableFirewall>();
 #endif
 
         // Parse (and dispatch)

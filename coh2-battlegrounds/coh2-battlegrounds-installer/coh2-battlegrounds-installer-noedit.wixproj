@@ -4,11 +4,11 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>3.10</ProductVersion>
-    <ProjectGuid>3e8286bb-b500-4714-8891-99e973a39b1f</ProjectGuid>
+    <ProjectGuid>{4cccb596-4b98-4851-a260-b994f9a9e9fd}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>BattlegroundsSetup_$(Platform)</OutputName>
     <OutputType>Package</OutputType>
-	<Cultures>;</Cultures>
+    <Cultures>;</Cultures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -75,22 +75,7 @@
     <PropertyGroup>
       <DefineConstants>BuildVersion=%(AssemblyVersion.Version);BasePath=..\coh2-battlegrounds-console\bin\Debug\net6.0\bg-release\</DefineConstants>
     </PropertyGroup>
-    <!-- Harvest file components from publish folder -->
-    <HeatDirectory OutputFile="ComponentsGen.wxs" 
-				   DirectoryRefId="INSTALLFOLDER" 
-				   ComponentGroupName="PublishedComponents" 
-				   SuppressCom="true" 
-				   Directory="..\coh2-battlegrounds-console\bin\Debug\net6.0\bg-release" 
-				   SuppressFragments="true" 
-				   SuppressRegistry="true" 
-				   SuppressRootDirectory="true" 
-				   AutoGenerateGuids="false" 
-				   GenerateGuidsNow="true" 
-				   ToolPath="$(WixToolPath)" 
-                   RunAsSeparateProcess="true" 
-				   PreprocessorVariable="var.BasePath" />
-	  <Exec Command="coh2-battlegrounds-console.exe add-firewallexeption" WorkingDirectory="..\coh2-battlegrounds-console\bin\Debug\net6.0\" />
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
+	<Target Name="AfterBuild">
+	</Target>
 </Project>
