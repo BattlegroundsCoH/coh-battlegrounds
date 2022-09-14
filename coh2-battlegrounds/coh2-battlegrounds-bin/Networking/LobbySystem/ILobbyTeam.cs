@@ -1,30 +1,35 @@
 ﻿namespace Battlegrounds.Networking.LobbySystem;
 
 /// <summary>
-/// 
+/// Interface for representing a team in a lobby.
 /// </summary>
-public interface ILobbyTeam : IHandleObject {
+public interface ILobbyTeam : IHandleObject<ILobbyHandle> {
 
     /// <summary>
-    /// 
+    /// Get the slots of the team.
     /// </summary>
-    public ILobbySlot[] Slots { get; }
+    ILobbySlot[] Slots { get; }
 
     /// <summary>
-    /// 
+    /// Get the team ID.
     /// </summary>
-    public int TeamID { get; }
+    int TeamID { get; }
     
     /// <summary>
-    /// 
+    /// Get the capacity of the team.
     /// </summary>
-    public int Capacity { get; }
+    int Capacity { get; }
     
     /// <summary>
-    /// 
+    /// Get the role of the team.
     /// </summary>
-    /// <param name="memberID"></param>
-    /// <returns></returns>
-    public ILobbySlot? GetSlotOfMember(ulong memberID);
+    string TeamRole { get; }
+
+    /// <summary>
+    /// Get the <see cref="ILobbySlot"/> representing the slot for a member.
+    /// </summary>
+    /// <param name="memberID">The Id of the member to fetch the <see cref="ILobbySlot"/> for.</param>
+    /// <returns>A <see cref="ILobbySlot"/> for the member or null if no slot is found.</returns>
+    ILobbySlot? GetSlotOfMember(ulong memberID);
 
 }

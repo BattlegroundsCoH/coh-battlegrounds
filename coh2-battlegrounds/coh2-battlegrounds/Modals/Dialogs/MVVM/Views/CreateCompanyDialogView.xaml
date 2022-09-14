@@ -40,7 +40,7 @@
                     Width="200">
 
             <TextBox Margin="0, 0, 0, 7"
-                     Text="{Binding CompanyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                     Text="{Binding SelectedName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                      Style="{StaticResource WaterMarkTextBox}"
                      Tag="Company Name"
                      Height="25"
@@ -49,18 +49,18 @@
             <ComboBox Style="{StaticResource StandardBlueDropdown}"
                       Margin="0, 0, 0, 7"
                       ItemsSource="{Binding Source={x:Static factions:Faction.Factions}}"
-                      SelectedItem="{Binding CompanyFaction, Mode=TwoWay}"/>
+                      SelectedItem="{Binding SelectedFaction, Mode=TwoWay}"/>
             
             <ComboBox Style="{StaticResource StandardBlueDropdown}"
                       Margin="0, 0, 0, 7"
-                      ItemsSource="{Binding Source={x:Static type:CompanyTypeExtension.CompanyTypes}}"
-                      SelectedItem="{Binding CompanyType, Mode=TwoWay}"/>
+                      ItemsSource="{Binding AvailableTypes}"
+                      SelectedItem="{Binding SelectedType, Mode=TwoWay}"/>
             
             <Button Content="CompanyView_Create"
                     Style="{StaticResource StandardBlueLocButton}"
                     Margin="0, 7, 0, 0"
                     Command="{Binding CreateCommand}"
-                    IsEnabled="{Binding ElementName=companyName, Path=Text.Length, Mode=OneWay}"/>
+                    IsEnabled="{Binding CanCreate}"/>
 
 
         </StackPanel>

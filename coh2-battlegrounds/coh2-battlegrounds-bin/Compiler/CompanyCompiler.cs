@@ -4,6 +4,7 @@ using System.Linq;
 
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding.Content.Companies;
 
 namespace Battlegrounds.Compiler;
 
@@ -24,7 +25,7 @@ public class CompanyCompiler : ICompanyCompiler {
 
         // Grab units
         var units = company.Units;
-        Array.Sort(units, (a, b) => this.CompareUnit(a, b));
+        Array.Sort(units, this.CompareUnit);
 
         // Set unit names
         for (int i = 0; i < units.Length; i++) {
@@ -45,10 +46,14 @@ public class CompanyCompiler : ICompanyCompiler {
         var air = company.Abilities.Where(x => x.Category is AbilityCategory.AirSupport)
             .Union(uabps.Where(x => x.Category is AbilityCategory.AirSupport)).ToArray();
 
+        // Get type data
+        var typedata = this.CompileCompanyType(company.Type);
+
         // Create result
         Dictionary<string, object> result = new() {
             ["name"] = company.Name,
-            ["style"] = company.Type,
+            ["style"] = company.Type.Id,
+            ["typedata"] = typedata,
             ["army"] = company.Army.Name,
             ["specials"] = new Dictionary<string, object>() {
                 ["artillery"] = artillery,
@@ -83,6 +88,32 @@ public class CompanyCompiler : ICompanyCompiler {
         } else {
             return cilhs - cirhs;
         }
+    }
+
+    protected virtual Dictionary<string, object> CompileCompanyType(FactionCompanyType companyType) {
+
+        // Create data container
+        var data = new Dictionary<string, object>();
+
+        // Loop over phases
+        for (int i = (int)DeploymentPhase.PhaseA; i <= (int)DeploymentPhase.PhaseC; i++) {
+            string k = (i - 1).ToString();
+            if (companyType.Phases.TryGetValue(((DeploymentPhase)i).ToString(), out FactionCompanyType.Phase? p)) {
+                data[k] = new Dictionary<string, object>() {
+                    ["activation"] = p.ActivationTime,
+                    ["income"] = p.ResourceIncomeModifier
+                };
+            } else {
+                data[k] = new Dictionary<string, object>() {
+                    ["activation"] = 0, // Activate whenever possible
+                    ["income"] = new FactionCompanyType.CostModifier(1,1,1)
+                };
+            }
+        }
+
+        // Return data
+        return data;
+
     }
 
 }

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	
+	<!-- Give product a unique ID per platform -->
+	<!-- DO NOT CHANGE THE GUID -->
+	<?if $(var.Platform) = x64 ?>
+	<?define ProductCode = "{29119749-CAA0-4DED-86D9-690A8C677299}" ?>
+	<?else?>
+	<?define ProductCode = "{60F0DA7D-C2F4-4C40-8E46-34198CBF1CC3}" ?>
+	<?endif?>
+	
+	<!-- Fixed upgrade Id -->
+	<!-- DO NOT CHANGE THE GUID -->
+	<?define UpgradeCode = "{28C10320-3E7C-44D4-8A18-FD90035A4689}" ?>
+	
+	<!-- Website to a support platform -->
+	<?define SupportLink = "https://discord.gg/Hr7yTbSv25" ?>
+	
+	<?define BuildVersion = 1.0.0.0 ?>
+	
+	<!-- Define main product -->
+	<Product Id="$(var.ProductCode)" 
+			 Name="!(loc.ProductName_$(var.Platform))" 
+			 Language="!(loc.Language)" 
+			 Version="$(var.BuildVersion)" 
+			 Manufacturer="!(loc.Company)" 
+			 UpgradeCode="$(var.UpgradeCode)">
+		
+		<!-- Provide package details -->
+		<Package InstallerVersion="200" 
+				 Compressed="yes" 
+				 InstallScope="perMachine" 
+				 Platform="$(var.Platform)"
+				 Manufacturer="!(loc.Company)"
+				 Description="!(loc.Description)"
+				 Keywords="!(loc.Keywords)"
+				 Comments="!(loc.Comments)"
+				 Languages="!(loc.Language)" />
+		
+		<!-- Downgrade error message -->
+		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" />
+		
+		<!-- Include .cab file into .msi file -->
+		<MediaTemplate EmbedCab="yes" />
+
+		<!-- Define main app icon -->
+		<Icon Id="icon.ico" SourceFile="$(var.coh2-battlegrounds.ProjectDir)\coh2-battlegrounds.ico" />
+	
+		<!-- Use the icon.ico icon for the installer (shows up in Add/Remove programs) -->
+		<Property Id="ARPPRODUCTICON">icon.ico</Property>
+		
+		<!-- Help/Support website/link (shows in the Add/Remove programs) -->
+		<Property Id="ARPURLINFOABOUT">$(var.SupportLink)</Property>
+	
+		<!-- Create a basic UI for the installer -->
+		<UIRef Id="WixUI_Minimal"/>
+		<!--
+		<WixVariable Id="WixUIDialogBmp" Value="$(var.ProjectDir)\Assets\Background.bmp" />
+		<WixVariable Id="WixUIBannerBmp" Value="$(var.ProjectDir)\Assets\Banner.bmp" />
+		-->
+		<WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)\Assets\license.rtf" />
+
+		<!-- Define components, shortcuts, files, etc... for installer -->
+		<Feature Id="ProductFeature" Title="Battlegrounds" Level="1">
+			
+			<ComponentGroupRef Id="ProductComponents" />
+		
+		</Feature>
+		
+	</Product>
+
+</Wix>

@@ -38,7 +38,8 @@ public static class WinconditionCompiler {
     /// <param name="source">The wincondition source file locator.</param>
     /// <param name="includeFiles">Additional files to include in the gamemode.</param>
     /// <returns>True of the archive file was created sucessfully. False if any error occured.</returns>
-    public static bool CompileToSga(string workdir, string sessionFile, ISession session, IWinconditionSource source, LocaleCompiler locCompiler, params WinconditionSourceFile[] includeFiles) {
+    public static bool CompileToSga(string workdir, string sessionFile, ISession session, IWinconditionSource source, LocaleCompiler locCompiler, 
+        params WinconditionSourceFile[] includeFiles) {
 
         // Verify is win condition source is valid
         if (source is null) {

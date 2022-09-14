@@ -15,6 +15,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Lua.Generator.RuntimeServices;
 using Battlegrounds.Lua.Generator;
 using System.Globalization;
+using Battlegrounds.Game.Database.Management;
 
 namespace Battlegrounds.Game.Gameplay.DataConverters;
 
@@ -147,6 +148,13 @@ public static class SquadWriter {
             unitBuilder.SetVeterancyRank((byte)ReadNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyRank), 0));
             unitBuilder.SetVeterancyExperience((float)ReadAccurateNumberPropertyIfThere(ref reader, nameof(Squad.VeterancyProgress), 0));
 
+            // Get sync weapon if there
+            var syncBp = ReadStringPropertyIfThere(ref reader, nameof(Squad.SyncWeapon), string.Empty);
+            if (!string.IsNullOrEmpty(syncBp)) {
+                unitBuilder.SetSyncWeapon(BlueprintManager.FromBlueprintName<EntityBlueprint>(syncBp));
+                reader.Read(); // goto next object
+            }
+
             // Get crew if there
             Squad? crew = ReadPropertyThroughSerialisationIfThere<Squad>(ref reader, nameof(Squad.Crew), null);
             if (crew is not null) {
@@ -156,13 +164,13 @@ public static class SquadWriter {
 
             // Get upgrades
             if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() is nameof(Squad.Upgrades) && reader.Read()) {
-                unitBuilder.AddUpgrade(reader.GetStringArray());
+                unitBuilder.AddUpgrade(reader.GetStringArray().NotNull());
                 reader.Read();
             }
 
             // Get upgrades
             if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() is nameof(Squad.SlotItems) && reader.Read()) {
-                unitBuilder.AddSlotItem(reader.GetStringArray());
+                unitBuilder.AddSlotItem(reader.GetStringArray().NotNull());
                 reader.Read();
             }
 
@@ -179,7 +187,7 @@ public static class SquadWriter {
         private static string ReadStringPropertyIfThere(ref Utf8JsonReader reader, string property, string defaultValue) {
             if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() == property) {
                 reader.Read();
-                return reader.ReadProperty();
+                return reader.ReadProperty() ?? string.Empty;
             } else {
                 return defaultValue;
             }
@@ -187,7 +195,7 @@ public static class SquadWriter {
 
         private static string ReadStringProperty(ref Utf8JsonReader reader, string property) {
             if (reader.GetString() == property && reader.Read()) {
-                return reader.ReadProperty();
+                return reader.ReadProperty() ?? string.Empty;
             } else {
                 return string.Empty;
             }
@@ -270,6 +278,10 @@ public static class SquadWriter {
             if (value.VeterancyProgress != 0) {
                 writer.WriteNumber(nameof(Squad.VeterancyProgress), value.VeterancyProgress);
             }
+
+            // If sync weapon
+            if (value.SyncWeapon is not null)
+                writer.WriteString(nameof(Squad.SyncWeapon), value.SyncWeapon.GetScarName());
 
             // If crew
             if (value.Crew is not null) {

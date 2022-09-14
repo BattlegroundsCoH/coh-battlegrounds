@@ -6,19 +6,19 @@ namespace Battlegrounds.Networking.LobbySystem;
 /// <summary>
 /// 
 /// </summary>
-public interface IHandleObject {
+public interface IHandleObject<T> {
 
     /// <summary>
     /// 
     /// </summary>
     [JsonIgnore]
-    public ILobbyHandle Handle { get; }
+    public T Handle { get; }
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="handle"></param>
     [MemberNotNull(nameof(Handle))]
-    void SetHandle(ILobbyHandle handle);
+    void SetHandle(T handle);
 
 }

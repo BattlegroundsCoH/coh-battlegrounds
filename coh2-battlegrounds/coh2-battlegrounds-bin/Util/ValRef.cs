@@ -35,6 +35,17 @@ public class ValRef<T> where T : struct {
         => this.m_value = func(this.m_value);
 
     /// <summary>
+    /// Get the current value and then modify the referenced value.
+    /// </summary>
+    /// <param name="func">Mutator function to apply on referenced value.</param>
+    /// <returns>The old value.</returns>
+    public T GetAndChange(Func<T, T> func) {
+        T v = this.m_value;
+        this.m_value = func(this.m_value);
+        return v;
+    }
+
+    /// <summary>
     /// Create a reference to the specified value.
     /// </summary>
     /// <param name="value">The value to reference.</param>

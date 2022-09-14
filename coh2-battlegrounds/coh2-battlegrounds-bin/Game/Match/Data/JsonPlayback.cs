@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -28,11 +29,19 @@ public class JsonPlayback : IMatchData {
         [JsonInclude] [DefaultValue(ushort.MaxValue)] public ushort Id;
         [JsonInclude] [DefaultValue(null)] public string Arg1;
         [JsonInclude] [DefaultValue(null)] public string Arg2;
-
+        public override bool Equals([NotNullWhen(true)] object? obj)
+            => obj is Event e && e.UID == this.UID;
+        public override int GetHashCode() => (int)this.Uid;
+        public static bool operator ==(Event left, Event right) {
+            return left.Equals(right);
+        }
+        public static bool operator !=(Event left, Event right) {
+            return !(left == right);
+        }
     }
 
     public struct EventTick {
-        public List<Event> Events { get; set; }
+        public HashSet<Event> Events { get; set; }
     }
 
     public struct PlayerData {
@@ -95,12 +104,11 @@ public class JsonPlayback : IMatchData {
                     if (this.Events.ContainsKey(element.Timestamp)) {
                         this.Events[element.Timestamp].Events.Add(FromData(element.UnderlyingEvent));
                     } else {
-                        EventTick tick = new EventTick() {
-                            Events = new List<Event>() {
+                        this.Events.Add(element.Timestamp, new EventTick() {
+                            Events = new HashSet<Event>() {
                                 FromData(element.UnderlyingEvent)
                             }
-                        };
-                        this.Events.Add(element.Timestamp, tick);
+                        });
                     }
                 }
             }
@@ -145,7 +153,13 @@ public class JsonPlayback : IMatchData {
                 Arg1 = g.VerificationType.ToString(),
                 Arg2 = g.VerificationArgument
             },
-            CaptureEvent c => new Event() { UID = e.Uid, Type = nameof(CaptureEvent), Player = c.CapturingPlayer.SteamID, Id = ushort.MaxValue, Arg1 = c.CapturedBlueprint.PBGID.ToString() },
+            CaptureEvent c => new Event() { 
+                UID = e.Uid,
+                Type = nameof(CaptureEvent), 
+                Player = c.CapturingPlayer.SteamID, 
+                Id = ushort.MaxValue, 
+                Arg1 = c.CapturedBlueprint.PBGID.ToString() 
+            },
             _ => new Event() { UID = e.Uid },
         };
     }

@@ -3,36 +3,35 @@ using System.Collections.Generic;
 
 using Battlegrounds.Lua.Parsing;
 
-namespace Battlegrounds.Lua.Operators {
+namespace Battlegrounds.Lua.Operators;
 
-    /// <summary>
-    /// Lua operator syntax handler for call operations.
-    /// </summary>
-    public class LuaCallOperatorSyntax : ILuaOperatorSyntax {
+/// <summary>
+/// Lua operator syntax handler for call operations.
+/// </summary>
+public class LuaCallOperatorSyntax : ILuaOperatorSyntax {
 
-        public string OperatorSymbol => "()";
+    public string OperatorSymbol => "()";
 
-        public bool Apply(List<LuaExpr> luaExprs, int i, Action<List<LuaExpr>> recursiveFunction) {
-            if (i - 1 >= 0 && luaExprs[i - 1] is LuaLookupIdExpr) {
+    public bool Apply(List<LuaExpr> luaExprs, int i, Action<List<LuaExpr>> recursiveFunction) {
+        if (i - 1 >= 0 && luaExprs[i - 1] is LuaLookupIdExpr) {
 
-                // Set args
-                var largs = luaExprs[i] as LuaArguments;
-                luaExprs[i - 1] = new LuaCallExpr(luaExprs[i - 1], largs);
-                luaExprs.RemoveAt(i);
+            // Set args
+            var largs = luaExprs[i] as LuaArguments;
+            luaExprs[i - 1] = new LuaCallExpr(luaExprs[i - 1], largs);
+            luaExprs.RemoveAt(i);
 
-                // Recursively apply OOP on arguments
-                recursiveFunction(largs.Arguments);
+            // Recursively apply OOP on arguments
+            recursiveFunction(largs.Arguments);
 
-                return true;
-            } else {
-                return false;
-            }
+            return true;
+        } else {
+            return false;
         }
-
-        public bool IsOperator(LuaExpr source) => source is LuaArguments;
-
-        public bool PrePostCondtion(bool pre, bool post) => pre is true;
-
     }
 
+    public bool IsOperator(LuaExpr source) => source is LuaArguments;
+
+    public bool PrePostCondtion(bool pre, bool post) => pre is true;
+
 }
+

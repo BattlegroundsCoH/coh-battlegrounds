@@ -39,6 +39,13 @@ public static class GoMarshal {
     /// <exception cref="NotSupportedException"/>
     /// <exception cref="JsonException"/>
     public static T? JsonUnmarshal<T>(byte[] input) {
+        if (input.Length is 0) {
+            return default;
+        }
+        if (input[0] is 0) {
+            File.WriteAllBytes("errpackage.json.dat", input);
+            Trace.WriteLine("Halting unmarshal process before attempt to parse opening '0x0' byte.", "Networking.json");
+        }
         try {
             return JsonSerializer.Deserialize<T>(input);
         } catch (Exception e) {

@@ -18,7 +18,7 @@ public class AvailableItemViewModel : INotifyPropertyChanged {
 
     public string ItemName { get; }
 
-    public ImageSource ItemSymbol { get; }
+    public ImageSource? ItemSymbol { get; }
 
     public CostExtension ItemCost { get; set; }
 
@@ -31,8 +31,6 @@ public class AvailableItemViewModel : INotifyPropertyChanged {
     public IsBlueprintAvailableHandler AddEval { get; }
 
     public bool CanAdd => this.AddEval(this.Blueprint);
-
-    public bool SingleInstanceOnly => false; // This will allow us to override
 
     public event PropertyChangedEventHandler? PropertyChanged;
 

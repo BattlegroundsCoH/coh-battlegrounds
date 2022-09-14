@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 using Battlegrounds;
@@ -16,60 +17,25 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
+using BattlegroundsApp.Lobby.MVVM.Views;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
 using BattlegroundsApp.Resources;
-using BattlegroundsApp.Utilities;
+
+using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
 public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
-
-    public record LobbyButton(string Title, bool IsEnabled, RelayCommand Click, Visibility Visible, string Tooltip);
-
-    public record LobbyMutButton(RelayCommand Click, Visibility Visible) : INotifyPropertyChanged {
-        private bool m_isEnabled;
-        private Visibility m_iconVisible;
-        private string? m_tooltip;
-        private string? m_title;
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public bool IsEnabled {
-            get => this.m_isEnabled;
-            set {
-                this.m_isEnabled = value;
-                this.PropertyChanged?.Invoke(this, new(nameof(IsEnabled)));
-            }
-        }
-        public string? Tooltip {
-            get => this.m_tooltip;
-            set {
-                this.m_tooltip = value;
-                this.PropertyChanged?.Invoke(this, new(nameof(Tooltip)));
-            }
-        }
-        public string? Title {
-            get => this.m_title;
-            set {
-                this.m_title = value;
-                this.PropertyChanged?.Invoke(this, new(nameof(Title)));
-            }
-        }
-        public Visibility NotificationVisible {
-            get => this.m_iconVisible;
-            set {
-                this.m_iconVisible = value;
-                this.PropertyChanged?.Invoke(this, new(nameof(NotificationVisible)));
-            }
-        }
-    }
 
     public record ScenOp(Scenario Scenario) {
         private static readonly Dictionary<string, string> _cachedNames = new();
@@ -158,31 +124,49 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public bool KeepAlive => true;
 
+    public bool IsLocal => this.m_handle is not OnlineLobbyHandle;
+
     public LobbyButton ExitButton { get; }
 
     public LobbyButton EditCompanyButton { get; }
 
+    public abstract LobbyMutButton SwapRoles { get; }
+
     public abstract LobbyMutButton StartMatchButton { get; }
 
-    public abstract LobbyDropdown<ScenOp> MapDropdown { get; }
+    public abstract LobbySetting<ScenOp> MapDropdown { get; }
 
-    public abstract LobbyDropdown<IGamemode> GamemodeDropdown { get; }
+    public abstract LobbySetting<IGamemode> GamemodeDropdown { get; }
 
-    public abstract LobbyDropdown<IGamemodeOption> GamemodeOptionDropdown { get; }
+    public abstract LobbySetting<IGamemodeOption> GamemodeOptionDropdown { get; }
 
-    public abstract LobbyDropdown<OnOffOption> WeatherDropdown { get; }
+    public abstract LobbySetting<OnOffOption> WeatherDropdown { get; }
 
-    public abstract LobbyDropdown<OnOffOption> SupplySystemDropdown { get; }
+    public abstract LobbySetting<OnOffOption> SupplySystemDropdown { get; }
 
-    public abstract LobbyDropdown<ModPackageOption> ModPackageDropdown { get; }
+    public abstract LobbySetting<ModPackageOption> ModPackageDropdown { get; }
+
+    public abstract ModPackage ModPackage { get; }
 
     public ImageSource? ScenarioPreview { get; set; }
+
+    public Scenario? Scenario { get; set; }
 
     public string LobbyTitle { get; }
 
     public LobbyTeam Allies { get; }
 
     public LobbyTeam Axis { get; }
+
+    public Gamemode Gamemode { get; set; }
+
+    public ObservableCollection<LobbySetting> MapSetting { get; }
+
+    public ObservableCollection<LobbySetting> GamemodeSettings { get; }
+
+    public ObservableCollection<LobbySetting> AuxSettings { get; }
+
+    public bool ShowScrollbarForSettings => this.GamemodeSettings.Count + this.AuxSettings.Count >= 4;
 
     public LobbyModel(ILobbyHandle api, ILobbyTeam allies, ILobbyTeam axis) {
 
@@ -213,6 +197,11 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             matchNotifier.OnLobbyCountdown += this.OnCountdownNotify;
         }
 
+        // Create settings container
+        this.MapSetting = new();
+        this.GamemodeSettings = new();
+        this.AuxSettings = new();
+
     }
 
     public void UnloadViewModel(OnModelClosed closeCallback, bool requestDestroyed) {
@@ -230,7 +219,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     public void Swapback() {
 
-        if (this.TryGetSelf() is ILobbySlot self && self.Occupant is not null) {
+        if (this.GetSelf() is ILobbySlot self && self.Occupant is not null) {
             Task.Run(() => this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.Waiting));
         }
 
@@ -250,7 +239,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, builder, false);
 
             // Inform others
-            if (this.TryGetSelf() is ILobbySlot self && self.Occupant is not null) {
+            if (this.GetSelf() is ILobbySlot self && self.Occupant is not null) {
                 Task.Run(() => this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.EditCompany));
             }
 
@@ -287,6 +276,27 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
                 this.StartMatchButton.Title = LOCSTR_CANCEL(second.ToString());
             }
         });
+    }
+
+    protected void PlanMatch() {
+
+        // Bail if chat for some reason is null
+        if (this.m_chatModel is null) {
+            Trace.WriteLine("Chat model was null!", nameof(LobbyModel));
+            return;
+        }
+
+        // Create match planner
+        var planner = new LobbyPlanningOverviewModel(new(this, this.m_chatModel, this.m_handle));
+
+        // Set RHS
+        App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, planner, false);
+
+        // Inform others
+        if (this.GetSelf() is ILobbySlot self && self.Occupant is not null) {
+            Task.Run(() => this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.Planning));
+        }
+
     }
 
     protected void LeaveLobby() {
@@ -326,7 +336,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    protected ILobbySlot? TryGetSelf() {
+    public ILobbySlot? GetSelf() {
 
         // Get self
         var selfid = this.m_handle.Self.ID;
@@ -334,9 +344,9 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    protected Company? TryGetSelectedCompany(out ulong selfid) {
+    internal Company? TryGetSelectedCompany(out ulong selfid) {
 
-        var self = TryGetSelf();
+        var self = GetSelf();
         if (self is not null && self.Occupant is not null) {
 
             // Set selfid
@@ -344,6 +354,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
             // Make sure there's a company
             if (self.Occupant.Company is null) {
+                Trace.WriteLine("Attempt to get self company returned null (self company was null).", nameof(LobbyModel));
                 return null;
             }
 
@@ -356,7 +367,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             // Get company
             var company = PlayerCompanies.FromNameAndFaction(companyName, faction);
             if (company is null) {
-                Trace.WriteLine($"Failed to fetch company json file (Company '{companyName}' not found).", nameof(LobbyHostModel));
+                Trace.WriteLine($"Failed to fetch company json file (Company '{companyName}' not found).", nameof(LobbyModel));
                 return null;
             }
 
@@ -374,7 +385,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     private void OnCompanyRequested(ServerAPI obj) {
 
         // Log request
-        Trace.WriteLine("Received request to upload company file", nameof(LobbyHostModel));
+        Trace.WriteLine("Received request to upload company file.", nameof(LobbyModel));
 
         // Try get
         if (this.TryGetSelectedCompany(out ulong selfid) is Company company) {
@@ -382,20 +393,20 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             // Get company json
             string companyJson = CompanySerializer.GetCompanyAsJson(company, indent: false);
             if (string.IsNullOrEmpty(companyJson)) {
-                Trace.WriteLine($"Failed to upload company json file (Company '{company.Name}' not found).", nameof(LobbyHostModel));
+                Trace.WriteLine($"Failed to upload company json file (Company '{company.Name}' not found).", nameof(LobbyModel));
                 return;
             }
 
             // Upload file
             var encoded = Encoding.UTF8.GetBytes(companyJson);
             if (this.m_handle.UploadCompanyFile(encoded, selfid, (a, b, _) => Trace.WriteLine($"Upload company progress {a}/{b}", nameof(LobbyHostModel))) is not UploadResult.UPLOAD_SUCCESS) {
-                Trace.WriteLine("Failed to upload company json file.", nameof(LobbyHostModel));
+                Trace.WriteLine("Failed to upload company json file.", nameof(LobbyModel));
             }
 
         } else {
 
             // Log request
-            Trace.WriteLine("Failed to find self-instance and cannot upload company file.", nameof(LobbyHostModel));
+            Trace.WriteLine("Failed to find self-instance and cannot upload company file.", nameof(LobbyModel));
 
         }
 
@@ -488,7 +499,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    protected void NotifyProperty(string property) => this.PropertyChanged?.Invoke(this, new(property));
+    public void NotifyProperty(string property) => this.PropertyChanged?.Invoke(this, new(property));
 
     protected bool IsReady() {
         
@@ -513,19 +524,18 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
         // Check allies
         if (handler.Allies is null) {
+            Trace.WriteLine($"{nameof(CreateModelAsHost)} is returning null has Allies were not defined.", nameof(LobbyModel));
             return null;
         }
 
         // Check axis
         if (handler.Axis is null) {
+            Trace.WriteLine($"{nameof(CreateModelAsHost)} is returning null has Axis were not defined.", nameof(LobbyModel));
             return null;
         }
 
-        // Create model
-        LobbyHostModel model = new(handler, handler.Allies, handler.Axis);
-
         // Return model
-        return model;
+        return new LobbyHostModel(handler, handler.Allies, handler.Axis);
 
     }
 
@@ -533,19 +543,18 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
         // Check allies
         if (handler.Allies is null) {
+            Trace.WriteLine($"{nameof(CreateModelAsParticipant)} is returning null has Allies were not defined.", nameof(LobbyModel));
             return null;
         }
 
         // Check axis
         if (handler.Axis is null) {
+            Trace.WriteLine($"{nameof(CreateModelAsParticipant)} is returning null has Allies were not defined.", nameof(LobbyModel));
             return null;
         }
 
-        // Create model
-        LobbyParticipantModel model = new(handler, handler.Allies, handler.Axis);
-
         // Return model
-        return model;
+        return new LobbyParticipantModel(handler, handler.Allies, handler.Axis);
 
     }
 

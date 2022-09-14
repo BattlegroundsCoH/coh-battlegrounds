@@ -75,23 +75,38 @@ public class SingleplayerFinalizer : IFinalizeStrategy {
             // Get the squad
             var squad = company.GetSquadByIndex(status.UnitID);
 
+            // Skip squad if null
+            if (squad is null) {
+                Trace.WriteLine($"Failed to handle company unit '{status.UnitID}' from company '{company.Name}'.", nameof(SingleplayerFinalizer));
+                continue;
+            }
+
             // If the unit is dead, remove it.
             if (status.IsDead) {
 
                 // Remove the squad
                 if (!company.RemoveSquad(status.UnitID)) {
                     Trace.WriteLine($"Failed to remove company unit '{status.UnitID}' from company '{company.Name}'.", nameof(SingleplayerFinalizer));
+                    continue;
+                }
+
+                // Replace if company has flag
+                if (company.AutoReplenish) {
+                    company.AddSquad(UnitBuilder.NewUnit(squad.SBP));
+                    Trace.WriteLine($"Replaced company unit '{status.UnitID}' from company '{company.Name}' with a new copy.", nameof(SingleplayerFinalizer));
                 }
 
                 // Update losses
-                company.UpdateStatistics(x => UpdateLosses(x, !squad.SBP.Types.IsVehicle, 0)); // TODO: Get proper loss sizes
+                int loss = squad.SBP.Types.IsInfantry ? squad.SBP.Loadout.Count : 1;
+                company.UpdateStatistics(x => UpdateLosses(x, !squad.SBP.Types.IsInfantry, (uint)loss));
 
             } else {
 
                 // Update veterancy
                 if (status.VetChange >= 0) {
                     squad.IncreaseVeterancy(status.VetChange, status.VetExperience);
-                    Trace.WriteLine($"Unit ID '{status.UnitID}' from '{company.Name}' gained '{status.VetExperience}'.", nameof(SingleplayerFinalizer));
+                    if (status.VetExperience > 0)
+                        Trace.WriteLine($"Unit ID '{status.UnitID}' from '{company.Name}' gained '{status.VetExperience}'.", nameof(SingleplayerFinalizer));
                 }
 
                 // Update combat time

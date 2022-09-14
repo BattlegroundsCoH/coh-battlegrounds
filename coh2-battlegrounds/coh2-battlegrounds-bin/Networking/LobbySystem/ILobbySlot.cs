@@ -1,13 +1,13 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-using Battlegrounds.Game;
+using Battlegrounds.AI;
 
 namespace Battlegrounds.Networking.LobbySystem;
 
 /// <summary>
 /// 
 /// </summary>
-public interface ILobbySlot : IHandleObject {
+public interface ILobbySlot : IHandleObject<ILobbyHandle> {
 
     /// <summary>
     /// 
