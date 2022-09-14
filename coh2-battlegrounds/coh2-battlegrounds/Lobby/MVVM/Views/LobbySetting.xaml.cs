@@ -132,8 +132,11 @@ public class LobbySetting<T> : LobbySetting {
         return setting;
     }
 
-    public static LobbySetting<T> NewValue(StringOrKey settingName, string value) {
-        var setting = new LobbySetting<T>();
+    public static LobbySetting<T> NewValue(StringOrKey settingName, string value, object? tag = null) {
+        var setting = new LobbySetting<T>() {
+            Tag = tag,
+            Label = value
+        };
         setting.SettingName.LocKey = settingName;
         setting.ShowValue();
         return setting;

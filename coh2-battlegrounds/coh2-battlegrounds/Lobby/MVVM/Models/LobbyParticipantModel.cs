@@ -20,6 +20,7 @@ using BattlegroundsApp.Lobby.MVVM.Views;
 using BattlegroundsApp.LocalData;
 
 using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
+using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
@@ -354,6 +355,13 @@ public class LobbyParticipantModel : LobbyModel {
                     this.OnModPackageChange(e.SettingsValue);
                     break;
                 default:
+                    // Try set custom gamemode settings if there
+                    foreach (var opt in this.GamemodeSettings) {
+                        if (e.SettingsKey.Equals(opt.Tag)) {
+                            opt.Label = e.SettingsValue;
+                            return;
+                        }
+                    }
                     Trace.WriteLine($"Unexpected setting key: {e.SettingsKey}", nameof(LobbyParticipantModel));
                     break;
             }
@@ -379,6 +387,7 @@ public class LobbyParticipantModel : LobbyModel {
             // Notify
             this.NotifyProperty(nameof(ScenarioPreview));
 
+            // Set current scenario
             this.Scenario = scenario;
 
         });
@@ -387,14 +396,29 @@ public class LobbyParticipantModel : LobbyModel {
 
     private void OnGamemodeChange(string gamemode) {
 
+        // Get settings
+        var settings = this.m_handle.Settings;
+
+        // Invoke on UI thread
         Application.Current.Dispatcher.Invoke(() => {
 
+            // Set gamemode label
             this.GamemodeDropdown.Label = LobbySettingsLookup.GetGamemodeName(gamemode, this.m_package);
 
-            this.Gamemode = ModPackage.Gamemodes.Filter(x => x.ID == gamemode)
-                                                .IfTrue(x => x.Length == 1)
-                                                .ThenDo(x => x[0])
-                                                .OrDefaultTo(() => throw new IndexOutOfRangeException());
+            // Set gamemode
+            this.Gamemode = ModPackage.Gamemodes
+                .Filter(x => x.ID == gamemode)
+                .IfTrue(x => x.Length == 1)
+                .ThenDo(x => x[0])
+                .OrDefaultTo(() => throw new IndexOutOfRangeException());
+
+            // Clean additional options
+            this.GamemodeSettings.RemoveAll(x => x != this.GamemodeOptionDropdown);
+
+            // Read gamemode options
+            foreach (var (k,v) in this.Gamemode.AdditionalOptions) {
+                this.GamemodeSettings.Add(LobbySetting<string>.NewValue(k, settings.GetOrDefault(k, v.Value), k));
+            }
 
         });
 
