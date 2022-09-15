@@ -49,7 +49,7 @@
             HorizontalAlignment="Right"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
-            Content="Return To Lobby"
+            Content="{Binding ReturnLobbyText, FallbackValue='Return To Lobby'}"
             Command="{Binding ReturnLobbyCommand}"
             Background="{StaticResource BackgroundDeepRedBrush}"
             Foreground="#FFFFFF"

@@ -86,6 +86,8 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     public string LobbyTitle => this.m_data.Model.LobbyTitle;
 
+    public string ReturnLobbyText => this.m_data.Model is LobbyParticipantModel ? "Exit Lobby" : "Exit Planning"; // TODO: Localise
+
     public ImageSource? ScenarioPreview => LobbySettingsLookup.TryGetMapSource(this.m_data.Scenario);
 
     public RelayCommand ReturnLobbyCommand { get; }
@@ -133,7 +135,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         this.m_planningContext = new(this.m_planHandle, input.Scenario);
 
         // Set return command
-        this.ReturnLobbyCommand = new(() => App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, this.m_data.Model));
+        this.ReturnLobbyCommand = new(this.ExitPlanning);
         this.BeginMatchCommand = new(this.BeginMatch);
 
         // Create Lists
@@ -230,6 +232,26 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
         // Finally, display world elements
         App.Current.Dispatcher.Invoke(this.DisplayWorldElements);
+
+    }
+
+    private void ExitPlanning() {
+
+        // Determine action based on model
+        if (this.m_data.Model is LobbyParticipantModel pModel) {
+
+            // Execute leave button
+            pModel.ExitButton.Click?.Execute(null);
+
+        } else {
+            
+            // Change our view
+            App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, this.m_data.Model);
+
+            // Inform members to change back
+            this.m_data.Handle.NotifyScreen("lobby");
+
+        }
 
     }
 

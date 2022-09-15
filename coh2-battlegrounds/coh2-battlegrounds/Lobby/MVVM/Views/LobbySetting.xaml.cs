@@ -3,8 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-using Battlegrounds;
-
 using StringOrKey = Battlegrounds.Functional.Either<string, Battlegrounds.Locale.LocaleKey>;
 
 namespace BattlegroundsApp.Lobby.MVVM.Views;

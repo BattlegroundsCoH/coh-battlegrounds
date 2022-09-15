@@ -21,6 +21,7 @@ using BattlegroundsApp.LocalData;
 
 using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
 using BattlegroundsApp.Utilities;
+using BattlegroundsApp.MVVM;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
@@ -104,6 +105,12 @@ public class LobbyParticipantModel : LobbyModel {
             switch (args) {
                 case "planning":
                     this.PlanMatch();
+                    break;
+                case "lobby":
+
+                    // Change our view back to this
+                    App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, this);
+
                     break;
                 default:
                     Trace.WriteLine($"Unknown screen change '{args}'", nameof(LobbyParticipantModel));
