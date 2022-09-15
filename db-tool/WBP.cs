@@ -83,10 +83,10 @@ namespace CoH2XML2JSON {
             this.PBGID = ulong.Parse(xmlDocument["instance"]["uniqueid"].GetAttribute("value"));
 
             // Get range
-            this.Range = float.Parse((xmlDocument.SelectSingleNode("//group[@name='range']") as XmlElement).FindSubnode("float", "max")?.GetAttribute("value") ?? "0");
+            this.Range = Program.GetFloat((xmlDocument.SelectSingleNode("//group[@name='range']") as XmlElement).FindSubnode("float", "max")?.GetAttribute("value") ?? "0");
 
             // Get damage
-            this.Damage = float.Parse((xmlDocument.FirstChild as XmlElement).FindSubnode("group", "damage").FindSubnode("float", "max")?.GetAttribute("value") ?? "0");
+            this.Damage = Program.GetFloat((xmlDocument.FirstChild as XmlElement).FindSubnode("group", "damage").FindSubnode("float", "max")?.GetAttribute("value") ?? "0");
 
             // Get additional reload data
             XmlElement reloadData = xmlDocument.SelectSingleNode("//group[@name='reload']") as XmlElement;
@@ -104,8 +104,8 @@ namespace CoH2XML2JSON {
             bool canBurst = bool.Parse(burstData.FindSubnode("bool", "can_burst").GetAttribute("value"));
 
             // Get burst data
-            float burstMin = float.Parse(burstRateOfFireData.FindSubnode("float", "min").GetAttribute("value"));
-            float burstMax = float.Parse(burstRateOfFireData.FindSubnode("float", "max").GetAttribute("value"));
+            float burstMin = Program.GetFloat(burstRateOfFireData.FindSubnode("float", "min").GetAttribute("value"));
+            float burstMax = Program.GetFloat(burstRateOfFireData.FindSubnode("float", "max").GetAttribute("value"));
             float rate_of_fire = (burstMin + burstMax) / 2.0f;
 
             // Set properties
