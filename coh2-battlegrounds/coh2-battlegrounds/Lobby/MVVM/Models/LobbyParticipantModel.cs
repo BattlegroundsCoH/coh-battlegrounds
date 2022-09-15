@@ -422,9 +422,14 @@ public class LobbyParticipantModel : LobbyModel {
             // Clean additional options
             this.GamemodeSettings.RemoveAll(x => x != this.GamemodeOptionDropdown);
 
-            // Read gamemode options
-            foreach (var (k,v) in this.Gamemode.AdditionalOptions) {
-                this.GamemodeSettings.Add(LobbySetting<string>.NewValue(k, settings.GetOrDefault(k, v.Value), k));
+            // Ensure additional options are not null
+            if (this.Gamemode.AdditionalOptions is not null) {
+
+                // Read gamemode options
+                foreach (var (k, v) in this.Gamemode.AdditionalOptions) {
+                    this.GamemodeSettings.Add(LobbySetting<string>.NewValue(k, settings.GetOrDefault(k, v.Value), k));
+                }
+
             }
 
         });
