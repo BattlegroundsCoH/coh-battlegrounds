@@ -131,13 +131,19 @@ public class LobbyPlanningContextHandler {
 
         } else if (this.m_currentPlacement is SquadPlacement sp) {
 
-            this.PreplacableUnits.Pick(x => x.CompanyId == this.PlaceElementSquadId);
+            // Pick
+            var poolItem = this.PreplacableUnits.Find(x => x.CompanyId == this.PlaceElementSquadId);
+            if (poolItem is null)
+                return -1;
+
+            // Pick
+            this.PreplacableUnits.Pick(poolItem);
 
             // Grab index
             i = this.m_handle.CreatePlanningSquad(self, sp.Sbp.Name, this.PlaceElementSquadId, spawn, lookat);
 
             // Add squad placement
-            this.Elements.Add(new(i, self, sp.Sbp, point, other, companyId: sp.Cid));
+            this.Elements.Add(new(i, self, sp.Sbp, point, other, companyId: sp.Cid) { ClientTag = poolItem });
             this.m_currentPlacement = null;
 
         } else if (this.m_currentPlacement is ObjectivePlacement op) {

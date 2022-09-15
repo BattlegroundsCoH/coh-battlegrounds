@@ -70,6 +70,11 @@ public class LobbyPlanningObject {
     public int ObjectiveOrder { get; }
 
     /// <summary>
+    /// Get or set the clientside tag
+    /// </summary>
+    public object ClientTag { get; set; }
+
+    /// <summary>
     /// Iniialise a new squad/entity planning object instance.
     /// </summary>
     /// <param name="id">The id of the planning instance.</param>

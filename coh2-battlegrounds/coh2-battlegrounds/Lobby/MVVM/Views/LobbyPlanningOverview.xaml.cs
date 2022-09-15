@@ -448,7 +448,7 @@ public partial class LobbyPlanningOverview : UserControl {
                 removeElements.ForEach(this.PlanningCanvas.Children.Remove);
 
                 // Fix pre-place units
-                if (planningObject.IsSquad && this.ContextHandler.PreplacableUnits.Find(x => x.CompanyId == planningObject.CompanyId) is LobbyPlanningUnit u) {
+                if (planningObject.IsSquad && planningObject.ClientTag is LobbyPlanningUnit u) {
 
                     // Unpick unit
                     this.ContextHandler.PreplacableUnits.Unpick(u);
