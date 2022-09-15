@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Media;
@@ -124,6 +125,7 @@ public class LobbyPlanningContextHandler {
             // Grab index
             i = this.m_handle.CreatePlanningStructure(self, ep.Ebp.Name, ep.Def.IsDirectional, spawn, lookat);
 
+            // Add planning structure
             this.Elements.Add(new(i, self, ep.Ebp, point, other, ep.Def.IsLinePlacement));
             this.m_currentPlacement = null;
 
@@ -134,7 +136,8 @@ public class LobbyPlanningContextHandler {
             // Grab index
             i = this.m_handle.CreatePlanningSquad(self, sp.Sbp.Name, this.PlaceElementSquadId, spawn, lookat);
 
-            this.Elements.Add(new(i, self, sp.Sbp, point, other));
+            // Add squad placement
+            this.Elements.Add(new(i, self, sp.Sbp, point, other, companyId: sp.Cid));
             this.m_currentPlacement = null;
 
         } else if (this.m_currentPlacement is ObjectivePlacement op) {
@@ -158,23 +161,35 @@ public class LobbyPlanningContextHandler {
     }
 
     public void RemoveElement(int elemId) {
+        
+        // Remove visual
         this.RemoveElementVisuals(elemId);
+
+        // Remove from handler
         this.m_handle.RemovePlanElement(elemId);
+        
+        // Log
+        Trace.WriteLine($"Removing plan element {elemId}", nameof(LobbyPlanningContextHandler));
+
+        // Correct object order
         if (this.m_objectiveElements.IndexOf(elemId) is int i && i >= 0) {
             this.m_objectiveElements.RemoveAt(i);
             for (int j = i; j < this.m_objectiveElements.Count; j++) {
                 this.m_handle.GetPlanElement(this.m_objectiveElements[j])?.SetObjectiveOrder(j);
             }
         }
+
     }
 
     public void RemoveElementVisuals(int elemId) {
+        
         for (int i = 0; i < this.Elements.Count; i++) {
             if (this.Elements[i].ObjectId == elemId) {
                 this.Elements.RemoveAt(i);
                 break;
             }
         }
+
     }
 
     public void AddElementVisuals(ILobbyPlanElement planElement) {
@@ -205,9 +220,10 @@ public class LobbyPlanningContextHandler {
             Point? lookat = planElement.LookatPosition is GamePosition p ? this.m_scenario.ToMinimapPosition(768, 768, p).ToPoint() : null;
             
             // Add element
-            this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, sbp, spawn.ToPoint(), lookat));
+            this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, sbp, spawn.ToPoint(), lookat, companyId: planElement.CompanyId));
 
         }
+
     }
 
 }

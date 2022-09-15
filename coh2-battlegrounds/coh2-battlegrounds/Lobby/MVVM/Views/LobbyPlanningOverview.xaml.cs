@@ -71,7 +71,7 @@ public partial class LobbyPlanningOverview : UserControl {
             if (this.m_points.Count is 0) {
 
                 this.m_points.Push(clickPos);
-                var marker = this.CreateSelectedMarker(clickPos);
+                var marker = this.CreateSelectedMarker(clickPos, -1);
                 this.m_planningHelper = marker;
                 this.PlanningCanvas.Children.Add(marker.Element);
 
@@ -105,16 +105,16 @@ public partial class LobbyPlanningOverview : UserControl {
 
     }
 
-    private HelperElement CreateSelectedMarker(Point p) {
+    private HelperElement CreateSelectedMarker(Point p, int elementId) {
         if (this.ContextHandler.PlaceElementBlueprint is not null) {
-            return CreateEntityMarker(this.ContextHandler.PlaceElementBlueprint, p);
+            return CreateEntityMarker(this.ContextHandler.PlaceElementBlueprint, p, elementId);
         } else if (this.ContextHandler.PlaceElementSquadBlueprint is not null) {
-            return CreateSquadMarker(this.ContextHandler.PlaceElementSquadBlueprint, p);
+            return CreateSquadMarker(this.ContextHandler.PlaceElementSquadBlueprint, p, elementId);
         }
-        return CreateObjectiveMarker(this.ContextHandler.PlaceElemtObjectiveType, p);
+        return CreateObjectiveMarker(this.ContextHandler.PlaceElemtObjectiveType, p, elementId);
     }
 
-    private static HelperElement CreateEntityMarker(EntityBlueprint ebp, Point p) {
+    private static HelperElement CreateEntityMarker(EntityBlueprint ebp, Point p, int elementId) {
 
         // Grab blueprint
         var sym = App.ResourceHandler.GetIcon("entity_symbols", ebp.UI.Symbol);
@@ -123,11 +123,11 @@ public partial class LobbyPlanningOverview : UserControl {
         }
 
         // Create marker
-        return CreateSomeMarker(sym, p, sym.Width, sym.Height);
+        return CreateSomeMarker(sym, p, sym.Width, sym.Height, elementId);
 
     }
 
-    private static HelperElement CreateSquadMarker(SquadBlueprint sbp, Point p) {
+    private static HelperElement CreateSquadMarker(SquadBlueprint sbp, Point p, int elementId) {
 
         // Grab blueprint
         var sym = App.ResourceHandler.GetIcon("symbol_icons", sbp.UI.Symbol);
@@ -136,11 +136,11 @@ public partial class LobbyPlanningOverview : UserControl {
         }
 
         // Create marker
-        return CreateSomeMarker(sym, p, sym.Width, sym.Height);
+        return CreateSomeMarker(sym, p, sym.Width, sym.Height, elementId);
 
     }
 
-    private static HelperElement CreateObjectiveMarker(PlanningObjectiveType objectiveType, Point p) {
+    private static HelperElement CreateObjectiveMarker(PlanningObjectiveType objectiveType, Point p, int elementId) {
 
         // Grab blueprint
         ImageSource? sym = objectiveType switch {
@@ -154,11 +154,11 @@ public partial class LobbyPlanningOverview : UserControl {
         }
 
         // Create marker
-        return CreateSomeMarker(sym, p, 28, 28);
+        return CreateSomeMarker(sym, p, 28, 28, elementId);
 
     }
 
-    private static HelperElement CreateSomeMarker(ImageSource sym, Point p, double w, double h) {
+    private static HelperElement CreateSomeMarker(ImageSource sym, Point p, double w, double h, int elementId) {
 
         // Create transform data
         var offset = new Vector(0.5 * w, 0.5 * h);
@@ -179,7 +179,7 @@ public partial class LobbyPlanningOverview : UserControl {
         };
 
         // Return new marker
-        return new(marker, translate, rotate, offset, -1);
+        return new(marker, translate, rotate, offset, elementId);
 
     }
 
@@ -238,7 +238,7 @@ public partial class LobbyPlanningOverview : UserControl {
                 this.m_lineHelpers.Clear();
 
                 // Get display elements
-                LineTo(angle, ebp, v0, v1, this.m_planningHelper.OffsetVector).ForEach(x => {
+                LineTo(angle, ebp, v0, v1, this.m_planningHelper.OffsetVector, -1).ForEach(x => {
                     this.m_lineHelpers.Add(x.Element);
                     this.PlanningCanvas.Children.Add(x.Element);
                     x.Element.MouseLeftButtonUp += this.PlanningCanvas_MouseLeftButtonUp;
@@ -267,7 +267,7 @@ public partial class LobbyPlanningOverview : UserControl {
 
     }
 
-    private static List<HelperElement> LineTo(double angle, EntityBlueprint ebp, Vector origin, Vector target, Vector offset) {
+    private static List<HelperElement> LineTo(double angle, EntityBlueprint ebp, Vector origin, Vector target, Vector offset, int elementId) {
 
         // Create container
         var ls = new List<HelperElement>();
@@ -287,7 +287,7 @@ public partial class LobbyPlanningOverview : UserControl {
             var v = Vectors.Interpolate(origin, target, i * stepSize);
 
             // Create helper
-            var helper = CreateEntityMarker(ebp, v.ToPoint());
+            var helper = CreateEntityMarker(ebp, v.ToPoint(), elementId);
             helper.Rotation.Angle = angle;
 
             // Add
@@ -302,6 +302,7 @@ public partial class LobbyPlanningOverview : UserControl {
 
     private void UserControl_MouseRightButtonUp(object sender, MouseButtonEventArgs e) {
 
+        // Reset placement flag
         if (this.ContextHandler.HasPlaceElement) {
             this.ContextHandler.HasPlaceElement = false;
         }
@@ -364,7 +365,7 @@ public partial class LobbyPlanningOverview : UserControl {
                     var sbp = (SquadBlueprint)planningObject.Blueprint;
 
                     // Grab marker
-                    var marker = CreateSquadMarker(sbp, planningObject.VisualPosStart);
+                    var marker = CreateSquadMarker(sbp, planningObject.VisualPosStart, planningObject.ObjectId);
                     marker.Element.Tag = marker;
 
                     // Lookat at target
@@ -384,7 +385,7 @@ public partial class LobbyPlanningOverview : UserControl {
                     var ebp = (EntityBlueprint)planningObject.Blueprint;
 
                     // Grab marker
-                    var marker = CreateEntityMarker(ebp, planningObject.VisualPosStart);
+                    var marker = CreateEntityMarker(ebp, planningObject.VisualPosStart, planningObject.ObjectId);
                     marker.Element.Tag = marker;
 
                     // Lookat at target
@@ -393,7 +394,7 @@ public partial class LobbyPlanningOverview : UserControl {
                         var v1 = Vectors.FromPoint(lookat);
                         var angle = Lookat(marker.Rotation, v0, v1, planningObject.IsLine ? 0 : 90.0);
                         if (planningObject.IsLine) {
-                            LineTo(angle, ebp, v0, v1, marker.OffsetVector).ForEach(x => {
+                            LineTo(angle, ebp, v0, v1, marker.OffsetVector, planningObject.ObjectId).ForEach(x => {
                                 this.PlanningCanvas.Children.Add(x.Element);
                                 markers.Add(x);
                             });
@@ -409,7 +410,7 @@ public partial class LobbyPlanningOverview : UserControl {
                 } else {
 
                     // Grab marker
-                    var marker = CreateObjectiveMarker(planningObject.ObjectiveType, planningObject.VisualPosStart);
+                    var marker = CreateObjectiveMarker(planningObject.ObjectiveType, planningObject.VisualPosStart, planningObject.ObjectId);
                     marker.Element.Tag = marker;
 
                     // Add element
@@ -445,6 +446,14 @@ public partial class LobbyPlanningOverview : UserControl {
 
                 // Remove range
                 removeElements.ForEach(this.PlanningCanvas.Children.Remove);
+
+                // Fix pre-place units
+                if (planningObject.IsSquad && this.ContextHandler.PreplacableUnits.Find(x => x.CompanyId == planningObject.CompanyId) is LobbyPlanningUnit u) {
+
+                    // Unpick unit
+                    this.ContextHandler.PreplacableUnits.Unpick(u);
+
+                }
 
             }
 

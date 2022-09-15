@@ -18,6 +18,11 @@ public class LobbyPlanningObject {
     public int ObjectId { get; }
 
     /// <summary>
+    /// Get the unique Id identifying the unit.
+    /// </summary>
+    public ushort CompanyId { get; }
+
+    /// <summary>
     /// Get or set the visual starting position.
     /// </summary>
     public Point VisualPosStart { get; set; }
@@ -73,7 +78,8 @@ public class LobbyPlanningObject {
     /// <param name="start">The start position</param>
     /// <param name="end">The end position</param>
     /// <param name="isLine">flag if line placement.</param>
-    public LobbyPlanningObject(int id, ulong owner, Blueprint blueprint, Point start, Point? end, bool isLine = false) {
+    /// <param name="companyId">The company ID</param>
+    public LobbyPlanningObject(int id, ulong owner, Blueprint blueprint, Point start, Point? end, bool isLine = false, ushort companyId = 0) {
 
         // Verify blueprint type
         if (blueprint is not SquadBlueprint and not EntityBlueprint) {
@@ -81,6 +87,7 @@ public class LobbyPlanningObject {
         }
 
         this.ObjectId = id;
+        this.CompanyId = companyId;
         this.Owner = owner;
         this.Blueprint = blueprint;
         this.VisualPosStart = start;
