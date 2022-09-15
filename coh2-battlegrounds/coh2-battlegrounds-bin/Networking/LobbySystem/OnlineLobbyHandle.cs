@@ -867,4 +867,13 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     public void Subscribe(string to, LobbyEventHandler<ContentMessage> eventHandler)
         => this.m_subscribedEvents[to] = eventHandler;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="tid"></param>
+    /// <param name="memberId"></param>
+    /// <returns></returns>
+    public bool TeamHasMember(byte tid, ulong memberId)
+        => this.m_remote.Call<bool>("IsPlayerTeam", tid, memberId);
+
 }

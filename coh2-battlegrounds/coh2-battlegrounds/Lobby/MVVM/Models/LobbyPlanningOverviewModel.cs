@@ -358,7 +358,15 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
     private void PlanElementRemoved(int elementId) 
         => MainThread(() => this.m_planningContext.RemoveElementVisuals(elementId));
 
-    private void PlanElementAdded(ILobbyPlanElement planElement)
-        => MainThread(() => this.m_planningContext.AddElementVisuals(planElement));
+    private void PlanElementAdded(ILobbyPlanElement planElement) {
+
+        // Add if team member
+        byte selfTeam = this.m_planHandle.Team;
+        if (this.m_data.Handle.TeamHasMember(selfTeam, planElement.ElementOwnerId)) {
+            MainThread(() => this.m_planningContext.AddElementVisuals(planElement));
+        }
+
+
+    }
 
 }

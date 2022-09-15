@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Media;
 
 using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 
 using BattlegroundsApp.Resources;

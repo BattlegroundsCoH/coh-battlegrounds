@@ -85,10 +85,18 @@ public interface ILobbyHandle {
     uint GetPlayerCount(bool humansOnly = false);
 
     /// <summary>
-    /// 
+    /// Get the team the local machine is a member of.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A byte value telling which team the local machine is a member  of.</returns>
     byte GetSelfTeam();
+
+    /// <summary>
+    /// Get if the <paramref name="memberId"/> is on the specified team.
+    /// </summary>
+    /// <param name="tid">The team ID to check.</param>
+    /// <param name="memberId">The ID of the member to check.</param>
+    /// <returns></returns>
+    bool TeamHasMember(byte tid, ulong memberId);
 
     /// <summary>
     /// 
