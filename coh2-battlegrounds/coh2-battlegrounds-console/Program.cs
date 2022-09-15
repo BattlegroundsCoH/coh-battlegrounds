@@ -419,7 +419,7 @@ class Program {
             string mod = args.GetValue(MOD);
 
             // Get path to xaml to json tool
-            string xmlreader = Path.GetFullPath("..\\..\\..\\..\\..\\db-tool\\bin\\debug\\net5.0\\CoH2XML2JSON.exe");
+            string xmlreader = Path.GetFullPath("..\\..\\..\\..\\..\\db-tool\\bin\\debug\\net6.0\\CoH2XML2JSON.exe");
 
             // Verify
             if (!File.Exists(xmlreader)) {
