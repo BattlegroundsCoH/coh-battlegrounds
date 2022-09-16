@@ -391,13 +391,16 @@ public class LobbyHostModel : LobbyModel {
                 var name = new LocaleValueKey(custom.Title.ToString().ToUpperInvariant());
 
                 // Create control
-                var settingControl = custom.OptionInputType switch {
+                LobbySetting settingControl = custom.OptionInputType switch {
                     AuxiliaryOptionType.Dropdown => 
-                        (LobbySetting)LobbySetting<IGamemodeOption>.NewDropdown(name, new(custom.Options.OrderBy(x => x.Value)), handler, custom.GetNumber("def")),
+                        LobbySetting<IGamemodeOption>.NewDropdown(name, new(custom.Options.OrderBy(x => x.Value)), handler, custom.GetNumber("def")),
                     AuxiliaryOptionType.Slider => 
                         LobbySetting<int>.NewSlider(name, custom.GetNumber("min"), custom.GetNumber("max"), custom.GetNumber("step"), custom.Format, handler),
                     _ => throw new Exception()
                 };
+
+                // Trigger a default set
+                this.GamemodeAuxOptionSelectionchanged(0, -1, custom.Name);
 
                 // Add
                 this.GamemodeSettings.Add(settingControl);

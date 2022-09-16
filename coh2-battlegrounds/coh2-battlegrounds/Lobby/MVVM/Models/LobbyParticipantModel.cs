@@ -22,6 +22,7 @@ using BattlegroundsApp.LocalData;
 using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.MVVM;
+using Battlegrounds.Locale;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
@@ -427,7 +428,8 @@ public class LobbyParticipantModel : LobbyModel {
 
                 // Read gamemode options
                 foreach (var (k, v) in this.Gamemode.AdditionalOptions) {
-                    var setting = LobbySetting<string>.NewValue(v.Title, settings.GetOrDefault(k, v.Min.ToString()), k, v.Value);
+                    var name = new LocaleValueKey(v.Title.ToString().ToUpperInvariant());
+                    var setting = LobbySetting<string>.NewValue(name, settings.GetOrDefault(k, v.Min.ToString()), k, v.Value);
                     this.GamemodeSettings.Add(setting);
                 }
 

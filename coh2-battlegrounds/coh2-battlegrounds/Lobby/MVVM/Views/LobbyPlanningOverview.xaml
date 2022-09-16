@@ -400,7 +400,7 @@
             HorizontalAlignment="Right"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
-            Content="{Binding StartMatchButton.Title}"
+            Content="{Binding StartMatchButton.Title, FallbackValue='Start Match'}"
             ToolTip="{Binding StartMatchButton.Tooltip}"
             IsEnabled="{Binding StartMatchButton.IsEnabled}"
             Command="{Binding BeginMatchCommand}"
