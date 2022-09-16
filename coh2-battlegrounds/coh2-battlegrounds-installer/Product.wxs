@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	
-	<!-- Give product a unique ID per platform -->
-	<!-- DO NOT CHANGE THE GUID -->
-	<?if $(var.Platform) = x64 ?>
-	<?define ProductCode = "{29119749-CAA0-4DED-86D9-690A8C677299}" ?>
-	<?else?>
-	<?define ProductCode = "{60F0DA7D-C2F4-4C40-8E46-34198CBF1CC3}" ?>
-	<?endif?>
-	
 	<!-- Fixed upgrade Id -->
 	<!-- DO NOT CHANGE THE GUID -->
 	<?define UpgradeCode = "{28C10320-3E7C-44D4-8A18-FD90035A4689}" ?>
@@ -17,7 +9,7 @@
 	<?define SupportLink = "https://discord.gg/Hr7yTbSv25" ?>
 	
 	<!-- Define main product -->
-	<Product Id="$(var.ProductCode)" 
+	<Product Id="*" 
 			 Name="!(loc.ProductName_$(var.Platform))" 
 			 Language="!(loc.Language)" 
 			 Version="$(var.BuildVersion)" 
@@ -36,7 +28,7 @@
 				 Languages="!(loc.Language)" />
 		
 		<!-- Downgrade error message -->
-		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" Schedule="afterInstallFinalize"/>
+		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" Schedule="afterInstallValidate"/>
 		
 		<!-- Include .cab file into .msi file -->
 		<MediaTemplate EmbedCab="yes" />
@@ -60,6 +52,7 @@
 				WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed
 			</Publish>
 		</UI>
+		
 		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="!(loc.LaunchApp)" />
 
 		<Property Id="WixShellExecTarget" Value="[INSTALLFOLDER]coh2-battlegrounds.exe" />
