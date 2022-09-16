@@ -363,9 +363,8 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         // Add if team member
         byte selfTeam = this.m_planHandle.Team;
         if (this.m_data.Handle.TeamHasMember(selfTeam, planElement.ElementOwnerId)) {
-            MainThread(() => this.m_planningContext.AddElementVisuals(planElement));
+            MainThread(() => this.m_planningContext.AddElementVisuals(this.ContextHandler.MinimapRenderSize, planElement));
         }
-
 
     }
 

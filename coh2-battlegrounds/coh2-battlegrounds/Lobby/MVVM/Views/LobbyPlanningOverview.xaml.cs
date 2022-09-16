@@ -46,6 +46,7 @@ public partial class LobbyPlanningOverview : UserControl {
         // Grab context
         this.DataContextChanged += (a, b) => {
             if (b.NewValue is LobbyPlanningOverviewModel lpm) {
+                this.ContextHandler.MinimapRenderSize = this.PlanningCanvas.RenderSize;
                 lpm.MinimapItems.CollectionChanged += this.MinimapItems_CollectionChanged;
                 if (b.OldValue is LobbyPlanningOverviewModel lpmold) {
                     lpmold.MinimapItems.CollectionChanged -= this.MinimapItems_CollectionChanged;
@@ -469,6 +470,12 @@ public partial class LobbyPlanningOverview : UserControl {
             }
         }
         return ls;
+    }
+
+    private void PlanningCanvas_SizeChanged(object sender, SizeChangedEventArgs e) {
+        if (this.DataContext is LobbyPlanningOverviewModel lpm) {
+            lpm.ContextHandler.MinimapRenderSize = e.NewSize;
+        }
     }
 
     private void RegisterRemoveEvent(UIElement e, int index) => e.MouseRightButtonUp += (a, b) => {

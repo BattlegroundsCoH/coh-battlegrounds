@@ -29,6 +29,8 @@ public class LobbyPlanningContextHandler {
     private readonly Scenario m_scenario;
     private PlacementCase? m_currentPlacement;
 
+    public Size MinimapRenderSize { get; set; }
+
     public bool HasPlaceElement {
         get => this.m_currentPlacement is not null;
         set => this.m_currentPlacement = value is false ? null : this.m_currentPlacement;
@@ -84,6 +86,9 @@ public class LobbyPlanningContextHandler {
 
         // Init fields
         this.m_objectiveElements = new();
+
+        // Init base case
+        this.MinimapRenderSize = new Size(512, 512);
 
     }
 
@@ -198,12 +203,12 @@ public class LobbyPlanningContextHandler {
 
     }
 
-    public void AddElementVisuals(ILobbyPlanElement planElement) {
+    public void AddElementVisuals(Size mmSize, ILobbyPlanElement planElement) {
 
         if (planElement.ObjectiveType is not PlanningObjectiveType.None) {
 
             // objective
-            var spawn = this.m_scenario.ToMinimapPosition(768, 768, planElement.SpawnPosition);
+            var spawn = this.m_scenario.ToMinimapPosition(mmSize.Width, mmSize.Height, planElement.SpawnPosition);
 
             // Add element
             this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, spawn.ToPoint(), planElement.ObjectiveType, planElement.ObjectiveOrder));
@@ -212,7 +217,7 @@ public class LobbyPlanningContextHandler {
             
             // entity
             var ebp = BlueprintManager.FromBlueprintName<EntityBlueprint>(planElement.Blueprint);
-            var spawn = this.m_scenario.ToMinimapPosition(768, 768, planElement.SpawnPosition);
+            var spawn = this.m_scenario.ToMinimapPosition(mmSize.Width, mmSize.Height, planElement.SpawnPosition);
             Point? lookat = planElement.LookatPosition is GamePosition p ? this.m_scenario.ToMinimapPosition(768, 768, p).ToPoint() : null;
         
             // Add element
@@ -222,7 +227,7 @@ public class LobbyPlanningContextHandler {
             
             // squad
             var sbp = BlueprintManager.FromBlueprintName<SquadBlueprint>(planElement.Blueprint);
-            var spawn = this.m_scenario.ToMinimapPosition(768, 768, planElement.SpawnPosition);
+            var spawn = this.m_scenario.ToMinimapPosition(mmSize.Width, mmSize.Height, planElement.SpawnPosition);
             Point? lookat = planElement.LookatPosition is GamePosition p ? this.m_scenario.ToMinimapPosition(768, 768, p).ToPoint() : null;
             
             // Add element

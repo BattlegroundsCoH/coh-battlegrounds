@@ -203,7 +203,8 @@
                     Height="512"
                     x:Name="PlanningCanvas"
                     MouseLeftButtonUp="PlanningCanvas_MouseLeftButtonUp"
-                    MouseMove="PlanningCanvas_MouseMove">
+                    MouseMove="PlanningCanvas_MouseMove"
+                    SizeChanged="PlanningCanvas_SizeChanged">
                     <Rectangle
                         Width="512"
                         Height="512"
