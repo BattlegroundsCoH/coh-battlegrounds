@@ -26,7 +26,7 @@ public partial class LobbySetting : UserControl {
 
     public string Format {
         get;
-        private set;
+        set;
     }
 
     public SettingChanged? UpdateIndex { get; set; }
@@ -80,6 +80,10 @@ public partial class LobbySetting : UserControl {
         this.SliderContainer.Visibility = Visibility.Collapsed;
         this.ParticipantValue.Visibility = Visibility.Visible;
 
+        // Show formatted value
+        if (!string.IsNullOrEmpty(this.Format)) {
+            this.Label = string.Format(this.Format, this.Label);
+        }
 
     }
 
@@ -130,10 +134,11 @@ public class LobbySetting<T> : LobbySetting {
         return setting;
     }
 
-    public static LobbySetting<T> NewValue(StringOrKey settingName, string value, object? tag = null) {
+    public static LobbySetting<T> NewValue(StringOrKey settingName, string value, object? tag = null, string format = "") {
         var setting = new LobbySetting<T>() {
             Tag = tag,
-            Label = value
+            Label = value,
+            Format = format
         };
         setting.SettingName.LocKey = settingName;
         setting.ShowValue();

@@ -427,7 +427,8 @@ public class LobbyParticipantModel : LobbyModel {
 
                 // Read gamemode options
                 foreach (var (k, v) in this.Gamemode.AdditionalOptions) {
-                    this.GamemodeSettings.Add(LobbySetting<string>.NewValue(k, settings.GetOrDefault(k, v.Value), k));
+                    var setting = LobbySetting<string>.NewValue(v.Title, settings.GetOrDefault(k, v.Min.ToString()), k, v.Value);
+                    this.GamemodeSettings.Add(setting);
                 }
 
             }
