@@ -21,6 +21,7 @@
     <RepositoryType>git</RepositoryType>
     <Description>Company of Heroes 2: Battlegrounds Mod Launcher</Description>
     <Product>Battlegrounds</Product>
+	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
