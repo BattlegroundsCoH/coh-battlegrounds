@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Reflection;
 using System.Diagnostics;
-using System.Net;
 using System.IO;
-using System.ComponentModel.DataAnnotations;
 
 namespace Battlegrounds.Update;
 

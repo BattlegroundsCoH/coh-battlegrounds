@@ -351,6 +351,8 @@ public partial class App : Application {
                 return;
             }
 
+            // TODO: Add a dialong informing the user about the update being downlaoded
+            //       and that the app will close to install the new update and relaunch once install is complete
             Update.UpdateApplication();
 
         }, "New Update", "New update detected. Do you want to download?");
