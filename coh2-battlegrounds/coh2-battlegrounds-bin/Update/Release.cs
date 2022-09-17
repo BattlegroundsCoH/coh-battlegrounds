@@ -19,13 +19,3 @@ public class Release {
     public List<Asset> Assets { get; set; }
 
 }
-
-public class Asset {
-
-    [JsonPropertyName("name")]
-    public string Name { get; set; }
-
-    [JsonPropertyName("browser_download_url")]
-    public string InstallerDownloadUrl { get; set; }
-
-}
