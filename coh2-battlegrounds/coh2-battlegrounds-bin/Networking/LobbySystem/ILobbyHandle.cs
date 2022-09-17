@@ -124,6 +124,13 @@ public interface ILobbyHandle {
     void MemberState(ulong mid, int tid, int sid, LobbyMemberState state);
 
     /// <summary>
+    /// Count the amount of people in the lobby with the specified state
+    /// </summary>
+    /// <param name="state">The state to count.</param>
+    /// <returns>The amount of (human) members in the lobby with the specified state.</returns>
+    int CountMemberState(LobbyMemberState state);
+
+    /// <summary>
     /// 
     /// </summary>
     /// <param name="tid"></param>

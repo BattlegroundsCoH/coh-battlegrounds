@@ -105,7 +105,10 @@ public class LobbyParticipantModel : LobbyModel {
         Application.Current.Dispatcher.Invoke(() => {
             switch (args) {
                 case "planning":
+                    
+                    // Goto match planning
                     this.PlanMatch();
+                    
                     break;
                 case "lobby":
 

@@ -252,6 +252,10 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
         _ => false
     };
 
+    public int CountMemberState(LobbyMemberState state)
+        => this.m_allies.Slots.Fold(0, (sum, s) => sum + (s.IsOccupied ? (s.Occupant.State == state ? 1 : 0) : 0)) +
+        this.m_axis.Slots.Fold(0, (sum, s) => sum + (s.IsOccupied ? (s.Occupant.State == state ? 1 : 0) : 0));
+
     #region Nop calls
 
     public void CloseHandle() {

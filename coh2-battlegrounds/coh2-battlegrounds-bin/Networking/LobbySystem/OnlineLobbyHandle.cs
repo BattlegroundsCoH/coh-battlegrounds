@@ -548,6 +548,14 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
         => this.m_remote.Call("MemberState", mid, tid, sid, (byte)state);
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="state"></param>
+    /// <returns></returns>
+    public int CountMemberState(LobbyMemberState state)
+        => (int)this.m_remote.Call<uint>("CountMemberState", (byte)state);
+
+    /// <summary>
     /// Add an AI player to the specified slow.
     /// </summary>
     /// <param name="tid">The ID of the team to add AI to. Accepts values in the range 0 &#x2264; T &#x2264; 1</param>

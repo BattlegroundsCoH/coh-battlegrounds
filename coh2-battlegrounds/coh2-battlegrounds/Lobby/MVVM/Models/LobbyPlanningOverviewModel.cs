@@ -80,13 +80,32 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
     private readonly LobbyPlanningContextHandler m_planningContext;
     private readonly bool m_isDefending;
 
+    private readonly int m_participantCount;
+    private int m_readyParticipants;
+    private bool m_participantIsReady;
+
     public override bool SingleInstanceOnly => false;
 
     public override bool KeepAlive => false;
 
     public string LobbyTitle => this.m_data.Model.LobbyTitle;
 
-    public string ReturnLobbyText => this.m_data.Model is LobbyParticipantModel ? "Exit Lobby" : "Exit Planning"; // TODO: Localise
+    public bool CanStart => this.m_data.Model switch {
+        LobbyHostModel => this.m_readyParticipants >= this.m_participantCount,
+        LobbyParticipantModel => true,
+        _ => false
+    };
+
+    public string ReturnLobbyText => this.m_data.Model switch { // TODO: Localise
+        LobbyHostModel => "Exit Planning",
+        _ => "Exit Lobby"
+    };
+
+    public string StartLobbyText => this.m_data.Model switch { // TODO: Localise
+        LobbyHostModel => this.CanStart ? "Start Match" : $"Waiting for Players ({m_readyParticipants}/{this.m_data.Handle.GetPlayerCount(true)})",
+        LobbyParticipantModel => this.m_participantIsReady ? "Waiting for host" : "Ready",
+        _ => "Waiting for host"
+    };
 
     public ImageSource? ScenarioPreview => LobbySettingsLookup.TryGetMapSource(this.m_data.Scenario);
 
@@ -131,6 +150,10 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         // Grab handle
         this.m_planHandle = pHandle;
 
+        // Set initial
+        this.m_participantCount = (int)this.m_data.Handle.GetPlayerCount(true) - 1;
+        this.m_readyParticipants = 0;
+
         // Set planning context handler
         this.m_planningContext = new(this.m_planHandle, input.Scenario);
 
@@ -152,6 +175,9 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         if (this.m_data.Model.GetSelf() is not ILobbySlot self) {
             return;
         }
+
+        // Subscribe to member changes
+        this.m_data.Handle.OnLobbySlotUpdate += this.OnLobbySlotChange;
 
         // Create capacity
         this.PlanningDisplay = new(self.Occupant?.Company?.Name ?? string.Empty, new(10, () => this.PreplacableUnits.Picked));
@@ -235,7 +261,23 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     }
 
+    private void OnLobbySlotChange(ILobbySlot args) {
+
+        // Update slot count
+        this.m_readyParticipants = this.m_data.Handle.CountMemberState(LobbyMemberState.Waiting);
+
+        // Notify visuals
+        App.Current.Dispatcher.Invoke(() => {
+            this.Notify(nameof(CanStart));
+            this.Notify(nameof(StartLobbyText));
+        });
+
+    }
+
     private void ExitPlanning() {
+
+        // Unsubscribe
+        this.m_data.Handle.OnLobbySlotUpdate -= this.OnLobbySlotChange;
 
         // Determine action based on model
         if (this.m_data.Model is LobbyParticipantModel pModel) {
@@ -350,6 +392,20 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
             // prepare
             play.Prepare(this.m_data.Package, hostModel.BeginMatch, x => hostModel.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
+
+        } else if (this.m_data.Model is LobbyParticipantModel participantModel) {
+
+            // Get self
+            if (participantModel.GetSelf() is ILobbySlot slot && slot.Occupant is ILobbyMember selfMember) {
+                if (selfMember.State is LobbyMemberState.Planning) {
+                    this.m_data.Handle.MemberState(selfMember.MemberID, slot.TeamID, slot.SlotID, LobbyMemberState.Waiting);
+                    this.m_participantIsReady = true;
+                } else {
+                    this.m_data.Handle.MemberState(selfMember.MemberID, slot.TeamID, slot.SlotID, LobbyMemberState.Planning);
+                    this.m_participantIsReady = false;
+                }
+                this.Notify(nameof(StartLobbyText));
+            }
 
         }
 
