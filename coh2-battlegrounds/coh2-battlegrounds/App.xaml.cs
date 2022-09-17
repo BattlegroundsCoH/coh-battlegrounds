@@ -23,6 +23,7 @@ using BattlegroundsApp.Dashboard.MVVM.Models;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Startup.MVVM.Models;
 using Battlegrounds.Update;
+using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 
 namespace BattlegroundsApp;
 
@@ -114,7 +115,14 @@ public partial class App : Application {
 
         // Load more low priority stuff down here
 
-        Task.Run(Update.UpdateApplication);
+        var updateFolderContents = Directory.GetFiles(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.UPDATE_FOLDER));
+        // Remove update folder
+        if (updateFolderContents.Length > 0) {
+            updateFolderContents.ForEach(File.Delete);
+        }
+
+        // Check for new updates
+        Task.Run(CheckForUpdate);
 
     }
 
@@ -323,6 +331,29 @@ public partial class App : Application {
 
         // Return nothing
         return null;
+
+    }
+
+    private static void CheckForUpdate() {
+
+        if (!Update.IsNewVersion()) return;
+
+        // Null check
+        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+            return;
+        }
+
+        // Do modal
+        YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
+
+            // Check return value
+            if (resault is not ModalDialogResult.Confirm) {
+                return;
+            }
+
+            Update.UpdateApplication();
+
+        }, "New Update", "New update detected. Do you want to download?");
 
     }
 

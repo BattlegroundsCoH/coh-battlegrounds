@@ -15,11 +15,6 @@ namespace Battlegrounds.Update;
 
 public static class Update {
 
-	// 1. Check for new version
-	// 2. If new version => download newest version
-	// 3. Close application
-	// 4. Install newest version
-
 	private static readonly HttpClient _httpClient = new HttpClient();
 
 	private static readonly Release _latestRelease = ProcessLatestRelease().Result;
@@ -37,7 +32,7 @@ public static class Update {
 
 	}
 
-	private static bool IsNewVersion() {
+	public static bool IsNewVersion() {
 
 		var latestVersion = new Version(Regex.Replace(_latestRelease.TagName, @"[-]?[a-zA-Z]+", ""));
         var assemblyVersion = new Version(BattlegroundsInstance.Version.ApplicationVersion);
@@ -87,9 +82,6 @@ public static class Update {
 
 	public static void UpdateApplication() {
 
-		// TODO: Do the check in App_Startup to also prompt GUI
-		//if (!IsNewVersion()) return;
-
 		Trace.WriteLine($"New version {_latestRelease.TagName} detected", nameof(Update));
 
 		DownloadNewVersion(() => {
@@ -98,8 +90,6 @@ public static class Update {
 			RunInstallMSI();
 
         });
-
-
 
 	}
 
