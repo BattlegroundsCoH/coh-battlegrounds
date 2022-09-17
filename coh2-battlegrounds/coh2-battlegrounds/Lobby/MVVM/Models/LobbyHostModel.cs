@@ -395,7 +395,7 @@ public class LobbyHostModel : LobbyModel {
                     AuxiliaryOptionType.Dropdown => 
                         LobbySetting<IGamemodeOption>.NewDropdown(name, new(custom.Options.OrderBy(x => x.Value)), handler, custom.GetNumber("def")),
                     AuxiliaryOptionType.Slider => 
-                        LobbySetting<int>.NewSlider(name, custom.GetNumber("min"), custom.GetNumber("max"), custom.GetNumber("step"), custom.Format, handler),
+                        LobbySetting<int>.NewSlider(name, custom.GetNumber("min"), custom.GetNumber("max"), custom.GetNumber("step"), custom.GetNumber("def"), custom.Format, handler),
                     _ => throw new Exception()
                 };
 

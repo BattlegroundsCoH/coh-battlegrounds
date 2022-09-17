@@ -52,7 +52,7 @@ public partial class LobbySetting : UserControl {
         this.UpdateIndex?.Invoke(this.Selected, -1, this.Selected);
     }
 
-    public void ShowSlider(int min, int max, int step, string format) {
+    public void ShowSlider(int min, int max, int val, int step, string format) {
 
         // Set visibilities
         this.DropdownOptions.Visibility = Visibility.Collapsed;
@@ -62,6 +62,7 @@ public partial class LobbySetting : UserControl {
         // Set slider
         this.SliderValue.Minimum = min;
         this.SliderValue.Maximum = max;
+        this.SliderValue.Value = val;
         this.SliderValue.TickFrequency = step;
         this.SliderValue.TickPlacement = TickPlacement.None;
 
@@ -125,12 +126,12 @@ public class LobbySetting<T> : LobbySetting {
         return setting;
     }
 
-    public static LobbySetting<T> NewSlider(StringOrKey settingName, int min, int max, int step, string format, SettingChanged? changedCallback = null) {
+    public static LobbySetting<T> NewSlider(StringOrKey settingName, int min, int max, int step, int def, string format, SettingChanged? changedCallback = null) {
         var setting = new LobbySetting<T>() {
-            UpdateIndex = changedCallback
+            UpdateIndex = changedCallback,
         };
         setting.SettingName.LocKey = settingName;
-        setting.ShowSlider(min, max, step, format);
+        setting.ShowSlider(min, max, def, step, format);
         return setting;
     }
 
