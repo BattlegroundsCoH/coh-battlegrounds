@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Diagnostics;
+using System.Net;
 
 namespace Battlegrounds.Update;
 
@@ -37,17 +38,30 @@ public static class Update {
 	private static bool IsNewVersion() {
 
 		var latestVersion = new Version(Regex.Replace(_latestRelease.TagName, @"[-]?[a-zA-Z]+", ""));
-
         var assemblyVersion = new Version(BattlegroundsInstance.Version.ApplicationVersion);
 
 		if (latestVersion.CompareTo(assemblyVersion) > 0) return true; 
 
         return false;
+
+	}
+
+	private static void DownloadNewVersion() {
+
+		var downloadName = _latestRelease.Assets[0].Name;
+		var downloadUrl = _latestRelease.Assets[0].InstallerDownloadUrl;
+
+		using (var client = new WebClient()) {
+			client.DownloadFile(downloadUrl, downloadName);
+		}
+
 	}
 
 	public static void UpdateApplication() {
 
 		if (!IsNewVersion()) return;
+
+		DownloadNewVersion();
 
 	}
 
