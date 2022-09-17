@@ -370,7 +370,7 @@ public class LobbyParticipantModel : LobbyModel {
                     // Try set custom gamemode settings if there
                     foreach (var opt in this.GamemodeSettings) {
                         if (e.SettingsKey.Equals(opt.Tag)) {
-                            opt.Label = e.SettingsValue;
+                            this.OnGamemodeAuxOptionChanged(opt, e);
                             return;
                         }
                     }
@@ -470,6 +470,47 @@ public class LobbyParticipantModel : LobbyModel {
             this.GamemodeOptionDropdown.Label = gamomodeOption;
         });
           
+
+    }
+
+    private void OnGamemodeAuxOptionChanged(LobbySetting setting, LobbySettingsChangedEventArgs e) {
+
+        // Make sure there are options
+        if (this.Gamemode.AdditionalOptions is not null) {
+
+            // Get locale
+            var loc = this.ModPackage.GetLocale(ModType.Gamemode, BattlegroundsInstance.Localize.Language);
+
+            // Read gamemode options
+            foreach (var (k, v) in this.Gamemode.AdditionalOptions) {
+
+                // Make sure we got the correct one
+                if (k != e.SettingsKey)
+                    continue;
+
+                // Grab name
+                var name = loc is not null && uint.TryParse(v.Title, out uint titleKey) ?
+                    new LocaleValueKey(loc[titleKey].ToUpperInvariant()) :
+                    new LocaleValueKey(v.Title);
+
+                // Grab proper value
+                var val = v.Type switch {
+                    "Checkbox" => e.SettingsValue == "0" ? "Off" : "On",
+                    "Dropdown" => int.TryParse(e.SettingsValue, out int selectIndex) ? v.Options[selectIndex].LocStr : "", // TODO: Proper Locale
+                    "Slider" => string.Format(v.Value, e.SettingsValue),
+                    _ => e.SettingsValue
+                };
+
+                // Grab setting
+                setting.Label = val;
+
+            }
+
+        } else {
+
+            setting.Label = e.SettingsValue;
+
+        }
 
     }
 
