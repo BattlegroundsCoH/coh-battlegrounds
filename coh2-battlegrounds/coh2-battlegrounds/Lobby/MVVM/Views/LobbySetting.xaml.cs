@@ -7,7 +7,7 @@ using StringOrKey = Battlegrounds.Functional.Either<string, Battlegrounds.Locale
 
 namespace BattlegroundsApp.Lobby.MVVM.Views;
 
-public delegate void SettingChanged(int newIndex, int oldIndex);
+public delegate void SettingChanged(int newIndex, int oldIndex, object value);
 
 /// <summary>
 /// Interaction logic for LobbySetting.xaml
@@ -49,7 +49,7 @@ public partial class LobbySetting : UserControl {
     }
 
     private void DropdownOptions_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-        this.UpdateIndex?.Invoke(this.Selected, -1);
+        this.UpdateIndex?.Invoke(this.Selected, -1, this.Selected);
     }
 
     public void ShowSlider(int min, int max, int step, string format) {
@@ -93,7 +93,7 @@ public partial class LobbySetting : UserControl {
         int num = (int)e.NewValue;
 
         // Report value
-        this.UpdateIndex?.Invoke(num, -1);
+        this.UpdateIndex?.Invoke(num, -1, this.SliderValue.Value);
         
         // Update text value
         this.SliderTextValue.Content = string.Format(this.Format, num);
