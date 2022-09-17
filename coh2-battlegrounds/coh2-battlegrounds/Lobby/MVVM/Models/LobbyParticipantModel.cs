@@ -396,11 +396,11 @@ public class LobbyParticipantModel : LobbyModel {
             this.MapDropdown.Label = LobbySettingsLookup.GetScenarioName(scenario, map);
             this.ScenarioPreview = LobbySettingsLookup.TryGetMapSource(scenario);
 
-            // Notify
-            this.NotifyProperty(nameof(ScenarioPreview));
-
             // Set current scenario
             this.Scenario = scenario;
+
+            // Notify
+            this.NotifyProperty(nameof(Scenario));
 
         });
 
@@ -450,7 +450,7 @@ public class LobbyParticipantModel : LobbyModel {
                     };
 
                     // Grab setting
-                    var setting = LobbySetting<string>.NewValue(name, settings.GetOrDefault(k, v.Min.ToString()), k);
+                    var setting = LobbySetting<string>.NewValue(name, val, k, v.Value);
                     
                     // Add setting
                     this.GamemodeSettings.Add(setting);
