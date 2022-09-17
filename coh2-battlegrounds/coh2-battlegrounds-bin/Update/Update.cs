@@ -15,20 +15,30 @@ namespace Battlegrounds.Update;
 
 public static class Update {
 
-	private static readonly HttpClient _httpClient = new HttpClient();
-
 	private static readonly Release _latestRelease = ProcessLatestRelease().Result;
 
 	private static async Task<Release> ProcessLatestRelease() {
 
-		_httpClient.DefaultRequestHeaders.Accept.Clear();
-		_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
-		_httpClient.DefaultRequestHeaders.Add("User-Agent", "Battlegrounds Mod Launcher");
+        HttpClient httpClient = new HttpClient();
 
-		var streamTask = await _httpClient.GetStreamAsync("https://api.github.com/repos/JustCodiex/coh2-battlegrounds/releases/latest");
-        var release = JsonSerializer.Deserialize<Release>(streamTask);
+        httpClient.DefaultRequestHeaders.Accept.Clear();
+        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+        httpClient.DefaultRequestHeaders.Add("User-Agent", "Battlegrounds Mod Launcher");
 
-		return release!;
+		try {
+
+            var streamTask = await httpClient.GetStreamAsync("https://api.github.com/repos/JustCodiex/coh2-battlegrounds/releases/latest");
+            var release = JsonSerializer.Deserialize<Release>(streamTask);
+
+            return release!;
+
+        } catch (Exception e) {
+
+			Trace.WriteLine(e, nameof(Update));
+
+			return new Release();
+
+		}
 
 	}
 
@@ -45,12 +55,14 @@ public static class Update {
 
 	private static async void DownloadNewVersion(Action action) {
 
-		var downloadName = _latestRelease.Assets[0].Name;
+        HttpClient httpClient = new HttpClient();
+
+        var downloadName = _latestRelease.Assets[0].Name;
 		var downloadUrl = new Uri(_latestRelease.Assets[0].InstallerDownloadUrl, UriKind.Absolute);
 
 		Trace.WriteLine("Starting download", nameof(Update));
 
-		using var stream = await _httpClient.GetStreamAsync(downloadUrl);
+		using var stream = await httpClient.GetStreamAsync(downloadUrl);
 		using var fileStream = new FileStream($"{BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.UPDATE_FOLDER, Path.GetFileName(downloadName))}", FileMode.Create); 
 		
 		await stream.CopyToAsync(fileStream);
