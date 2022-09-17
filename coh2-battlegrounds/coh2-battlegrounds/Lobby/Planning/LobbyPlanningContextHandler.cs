@@ -118,8 +118,8 @@ public class LobbyPlanningContextHandler {
         var self = this.m_handle.Handle.Self.ID;
 
         // Translate points
-        GamePosition spawn = this.m_scenario.FromMinimapPosition(mmSize.Width, mmSize.Height, point.X, mmSize.Height - point.Y);
-        GamePosition? lookat = other is null ? null : this.m_scenario.FromMinimapPosition(mmSize.Width, mmSize.Height, other.Value.X, mmSize.Height - other.Value.Y);
+        GamePosition spawn = this.m_scenario.FromMinimapPosition(mmSize.Width, mmSize.Height, point.X, mmSize.Height);
+        GamePosition? lookat = other is null ? null : this.m_scenario.FromMinimapPosition(mmSize.Width, mmSize.Height, other.Value.X, mmSize.Height);
 
         // Define placed index
         int i = -1;
@@ -208,10 +208,6 @@ public class LobbyPlanningContextHandler {
         // extract 'spawn' position
         var spawn = this.m_scenario.ToMinimapPosition(mmSize.Width, mmSize.Height, planElement.SpawnPosition).ToPoint();
         Point? lookat = planElement.LookatPosition is GamePosition p ? this.m_scenario.ToMinimapPosition(mmSize.Width, mmSize.Height, p).ToPoint() : null;
-
-        // Correct spawn Y-Coordinate
-        spawn = spawn with { Y = mmSize.Height - spawn.Y };
-        lookat = lookat is Point l ? (l with { Y = mmSize.Height - l.Y}) : lookat;
 
         // Determine placement type and add
         if (planElement.ObjectiveType is not PlanningObjectiveType.None) {
