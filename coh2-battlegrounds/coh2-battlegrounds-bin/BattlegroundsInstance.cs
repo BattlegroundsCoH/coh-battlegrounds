@@ -11,6 +11,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Steam;
+using Battlegrounds.Update;
 using Battlegrounds.Util;
 
 namespace Battlegrounds;
@@ -22,9 +23,6 @@ public static class BattlegroundsInstance {
 
     // The path of the local settings file
     private static readonly string PATH_LOCAL = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\local.json");
-
-    // The BG version
-    public const string BG_VERSION = "v1.2.0-alpha";
 
     // ID of other settings
     public const string OPT_ZOOM = "ingame_zoom";
@@ -253,6 +251,11 @@ public static class BattlegroundsInstance {
     /// Get the activer logger instance
     /// </summary>
     public static Logger? Log => __logger;
+
+    /// <summary>
+    /// Get and set the assembly version of coh2-battlegrounds.exe
+    /// </summary>
+    public static IAppVersionFetcher Version { get; set; }
 
 #if DEBUG
 

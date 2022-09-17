@@ -189,7 +189,7 @@ public class Company : IChecksumItem {
         this.m_upgrades = new List<UpgradeBlueprint>();
         this.m_abilities = new List<Ability>();
         this.m_companyStatistics = new CompanyStatistics();
-        this.m_lastEditVersion = BattlegroundsInstance.BG_VERSION;
+        this.m_lastEditVersion = BattlegroundsInstance.Version.ApplicationVersion;
     }
 
     /// <summary>
@@ -303,7 +303,7 @@ public class Company : IChecksumItem {
     /// 
     /// </summary>
     /// <returns></returns>
-    public bool VerifyAppVersion() => this.m_lastEditVersion is BattlegroundsInstance.BG_VERSION;
+    public bool VerifyAppVersion() => this.m_lastEditVersion == BattlegroundsInstance.Version.ApplicationVersion;
 
     public bool VerifyChecksum(ulong checksum)
         => this.m_checksum == checksum;
