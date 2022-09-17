@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Linq;
+﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Reflection;
-using System;
+using System.Diagnostics;
 
 namespace Battlegrounds.Update;
 
@@ -21,6 +19,8 @@ public static class Update {
 
 	private static readonly HttpClient _httpClient = new HttpClient();
 
+	private static readonly Release _latestRelease = ProcessLatestRelease().Result;
+
 	private static async Task<Release> ProcessLatestRelease() {
 
 		_httpClient.DefaultRequestHeaders.Accept.Clear();
@@ -30,7 +30,24 @@ public static class Update {
 		var streamTask = await _httpClient.GetStreamAsync("https://api.github.com/repos/JustCodiex/coh2-battlegrounds/releases/latest");
         var release = JsonSerializer.Deserialize<Release>(streamTask);
 
-		return release;
+		return release!;
+
+	}
+
+	private static bool IsNewVersion() {
+
+		var latestVersion = new Version(Regex.Replace(_latestRelease.TagName, @"[-]?[a-zA-Z]+", ""));
+
+        var assemblyVersion = new Version(BattlegroundsInstance.Version.ApplicationVersion);
+
+		if (latestVersion.CompareTo(assemblyVersion) > 0) return true; 
+
+        return false;
+	}
+
+	public static void UpdateApplication() {
+
+		if (!IsNewVersion()) return;
 
 	}
 

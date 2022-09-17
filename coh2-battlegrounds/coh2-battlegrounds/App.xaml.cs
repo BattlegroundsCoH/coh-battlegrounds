@@ -22,6 +22,7 @@ using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Startup.MVVM.Models;
+using Battlegrounds.Update;
 
 namespace BattlegroundsApp;
 
@@ -96,6 +97,9 @@ public partial class App : Application {
         // Set as started
         IsStarted = true;
 
+        // Set the application version
+        BattlegroundsInstance.Version = new AppVersionFetcher();
+
         // Load
         if (!BattlegroundsInstance.IsFirstRun) {
             this.LoadNext();
@@ -109,6 +113,8 @@ public partial class App : Application {
         Task.Run(ProfanityFilter.LoadFilter);
 
         // Load more low priority stuff down here
+
+        Task.Run(Update.UpdateApplication);
 
     }
 
