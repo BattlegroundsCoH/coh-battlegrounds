@@ -23,6 +23,7 @@ using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.MVVM;
 using Battlegrounds.Locale;
+using BattlegroundsApp.Resources;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
@@ -417,7 +418,7 @@ public class LobbyParticipantModel : LobbyModel {
             this.GamemodeDropdown.Label = LobbySettingsLookup.GetGamemodeName(gamemode, this.m_package);
 
             // Set gamemode
-            this.Gamemode = ModPackage.Gamemodes
+            this.Gamemode = this.ModPackage.Gamemodes
                 .Filter(x => x.ID == gamemode)
                 .IfTrue(x => x.Length == 1)
                 .ThenDo(x => x[0])
@@ -429,11 +430,31 @@ public class LobbyParticipantModel : LobbyModel {
             // Ensure additional options are not null
             if (this.Gamemode.AdditionalOptions is not null) {
 
+                // Get locale
+                var loc = this.ModPackage.GetLocale(ModType.Gamemode, BattlegroundsInstance.Localize.Language);
+
                 // Read gamemode options
                 foreach (var (k, v) in this.Gamemode.AdditionalOptions) {
-                    var name = new LocaleValueKey(v.Title.ToString().ToUpperInvariant());
-                    var setting = LobbySetting<string>.NewValue(name, settings.GetOrDefault(k, v.Min.ToString()), k, v.Value);
+                    
+                    // Grab name
+                    var name = loc is not null && uint.TryParse(v.Title, out uint titleKey) ?
+                        new LocaleValueKey(loc[titleKey].ToUpperInvariant()) :
+                        new LocaleValueKey(v.Title);
+
+                    // Grab proper value
+                    var val = v.Type switch {
+                        "Checkbox" => settings.GetOrDefault(k, v.Min.ToString()) == "0" ? "Off" : "On",
+                        "Dropdown" => int.TryParse(settings.GetOrDefault(k, v.Min.ToString()), out int selectIndex) ? v.Options[selectIndex].LocStr : "", // TODO: Proper Locale
+                        "Slider" => string.Format(v.Value, settings.GetOrDefault(k, v.Min.ToString())),
+                        _ => settings.GetOrDefault(k, v.Min.ToString())
+                    };
+
+                    // Grab setting
+                    var setting = LobbySetting<string>.NewValue(name, settings.GetOrDefault(k, v.Min.ToString()), k);
+                    
+                    // Add setting
                     this.GamemodeSettings.Add(setting);
+
                 }
 
             }
