@@ -57,11 +57,35 @@ public static class Update {
 
 	}
 
+	private static bool RunInstallMSI() {
+
+        ProcessStartInfo msiexec_bin = new ProcessStartInfo() {
+            UseShellExecute = false,
+            FileName = "msiexec.exe",
+            Arguments = $"/package {Environment.CurrentDirectory}\\{_latestRelease.Assets[0].Name} /passive /norestart",
+        };
+
+        // Trigger compile
+        Process? msi_install = Process.Start(msiexec_bin);
+        if (msi_install is null) {
+            Trace.WriteLine("[Installer] Failed to create MSIExec process", nameof(Update));
+            return false;
+        }
+
+		msi_install.WaitForExit();
+
+		return true;
+
+    }
+
 	public static void UpdateApplication() {
 
 		if (!IsNewVersion()) return;
 
 		DownloadNewVersion();
+
+        Trace.WriteLine("[Installer] Installing new verison");
+		if (!RunInstallMSI()) return;
 
 	}
 
