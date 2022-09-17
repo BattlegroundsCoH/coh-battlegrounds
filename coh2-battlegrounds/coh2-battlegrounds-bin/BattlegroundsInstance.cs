@@ -99,6 +99,10 @@ public static class BattlegroundsInstance {
                 }
             }
 
+            if (!this.Paths.ContainsKey(BattlegroundsPaths.TEMP_FOLDER)) {
+                this.Paths.Add(BattlegroundsPaths.TEMP_FOLDER, tmppath);
+            }
+
             // Create logger
             __logger = new();
 
@@ -156,6 +160,7 @@ public static class BattlegroundsInstance {
             this.ResolveDirectory(BattlegroundsPaths.BUILD_FOLDER, $"{tmppath}bld\\");
             this.ResolveDirectory(BattlegroundsPaths.SESSION_FOLDER, $"{tmppath}ses\\");
             this.ResolveDirectory(BattlegroundsPaths.EXTRACT_FOLDER, $"{tmppath}-extract\\");
+            this.ResolveDirectory(BattlegroundsPaths.UPDATE_FOLDER, $"{tmppath}update\\");
 
         }
 

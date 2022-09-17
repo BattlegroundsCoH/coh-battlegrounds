@@ -85,4 +85,14 @@ public static class BattlegroundsPaths {
     /// </summary>
     public const string DOCUMENTS_FOLDER = "doc_folder";
 
+    /// <summary>
+    /// Get the temp folder
+    /// </summary>
+    public const string TEMP_FOLDER = "~tmp";
+
+    /// <summary>
+    /// Get the update folder
+    /// </summary>
+    public const string UPDATE_FOLDER = "update";
+
 }

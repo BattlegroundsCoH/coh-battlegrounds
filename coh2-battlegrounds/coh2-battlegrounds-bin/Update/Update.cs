@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.Diagnostics;
 using System.Net;
+using System.IO;
+using System.ComponentModel.DataAnnotations;
 
 namespace Battlegrounds.Update;
 
@@ -46,46 +48,58 @@ public static class Update {
 
 	}
 
-	private static void DownloadNewVersion() {
+	private static async void DownloadNewVersion(Action action) {
 
 		var downloadName = _latestRelease.Assets[0].Name;
-		var downloadUrl = _latestRelease.Assets[0].InstallerDownloadUrl;
+		var downloadUrl = new Uri(_latestRelease.Assets[0].InstallerDownloadUrl, UriKind.Absolute);
 
-		using (var client = new WebClient()) {
-			client.DownloadFile(downloadUrl, downloadName);
-		}
+		Trace.WriteLine("Starting download", nameof(Update));
 
-	}
+		using var stream = await _httpClient.GetStreamAsync(downloadUrl);
+		using var fileStream = new FileStream($"{BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.UPDATE_FOLDER, Path.GetFileName(downloadName))}", FileMode.Create); 
+		
+		await stream.CopyToAsync(fileStream);
 
-	private static bool RunInstallMSI() {
+        Trace.WriteLine("Finished download", nameof(Update));
+
+		action.Invoke();
+
+    }
+
+	private static void RunInstallMSI() {
 
         ProcessStartInfo msiexec_bin = new ProcessStartInfo() {
             UseShellExecute = false,
             FileName = "msiexec.exe",
-            Arguments = $"/package {Environment.CurrentDirectory}\\{_latestRelease.Assets[0].Name} /passive /norestart",
+            Arguments = $"/package {BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.UPDATE_FOLDER)}\\{_latestRelease.Assets[0].Name} /passive /norestart",
         };
 
         // Trigger compile
         Process? msi_install = Process.Start(msiexec_bin);
         if (msi_install is null) {
-            Trace.WriteLine("[Installer] Failed to create MSIExec process", nameof(Update));
-            return false;
+            Trace.WriteLine("Failed to create MSIExec process", nameof(Update));
+			return;
         }
 
-		msi_install.WaitForExit();
-
-		return true;
+        Environment.Exit(0);
 
     }
 
 	public static void UpdateApplication() {
 
-		if (!IsNewVersion()) return;
+		// TODO: Do the check in App_Startup to also prompt GUI
+		//if (!IsNewVersion()) return;
 
-		DownloadNewVersion();
+		Trace.WriteLine($"New version {_latestRelease.TagName} detected", nameof(Update));
 
-        Trace.WriteLine("[Installer] Installing new verison");
-		if (!RunInstallMSI()) return;
+		DownloadNewVersion(() => {
+
+            Trace.WriteLine("Installing new verison", nameof(Update));
+			RunInstallMSI();
+
+        });
+
+
 
 	}
 
