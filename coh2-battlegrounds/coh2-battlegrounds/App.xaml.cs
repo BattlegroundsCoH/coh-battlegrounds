@@ -222,6 +222,9 @@ public partial class App : Application {
         // Close networking
         NetworkInterface.Shutdown();
 
+        // Close log
+        BattlegroundsInstance.Log?.SaveAndClose(0);
+
         // Save all changes
         BattlegroundsInstance.SaveInstance();
 
@@ -268,8 +271,7 @@ public partial class App : Application {
     private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) {
 
         // Update
-        if (sender is null)
-            sender = "<<NULL>>";
+        sender ??= "<<NULL>>";
 
         // Log exception
         Trace.WriteLine($"\n\n\n\t*** FATAL APP EXIT ***\n\nException trigger:\n{sender}\n\nException Info:\n{e.ExceptionObject}\n");
