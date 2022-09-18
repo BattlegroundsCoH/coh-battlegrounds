@@ -15,7 +15,7 @@ public static class FunctionalGeneric {
     /// <typeparam name="T">The type of object contained within the <see cref="IEnumerable{T}"/></typeparam>
     /// <param name="enumerable"><see cref="IEnumerable{T}"/> to select random element from.</param>
     /// <returns>A random <typeparamref name="T"/> from the <paramref name="enumerable"/>.</returns>
-    public static T Random<T>(this IEnumerable<T> enumerable)
+    public static T? Random<T>(this IEnumerable<T> enumerable)
         => enumerable.Random(new Random());
 
     /// <summary>
@@ -25,7 +25,7 @@ public static class FunctionalGeneric {
     /// <param name="enumerable"><see cref="IEnumerable{T}"/> to select random element from.</param>
     /// <param name="random">The <see cref="System.Random"/> instance to use when selecting random <typeparamref name="T"/>.</param>
     /// <returns>A random <typeparamref name="T"/> from the <paramref name="enumerable"/>.</returns>
-    public static T Random<T>(this IEnumerable<T> enumerable, Random random) {
+    public static T? Random<T>(this IEnumerable<T> enumerable, Random random) {
         int i = enumerable.Any() ? random.Next(0, enumerable.Count()) : -1;
         return (i >= 0) ? enumerable.ElementAt(i) : default;
     }
@@ -90,5 +90,18 @@ public static class FunctionalGeneric {
         return dummy.GetEnumerator();
     }
 
-}
+    public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> enumerable) {
+        List<T> notnulls = new();
+        var itt = enumerable.GetEnumerator();
+        while (itt.MoveNext()) {
+            if (itt.Current is not null) {
+                notnulls.Add(itt.Current);
+            }
+        }
+        return notnulls;
+    }
 
+    public static uint Max<T>(this IEnumerable<T> sources, uint defaultValue, Func<T, uint> func)
+        => sources.Any() ? sources.Max(func) : defaultValue;
+
+}

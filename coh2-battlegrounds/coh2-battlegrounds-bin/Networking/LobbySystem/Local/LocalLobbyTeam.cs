@@ -12,6 +12,8 @@ public class LocalLobbyTeam : ILobbyTeam {
 
     public ILobbyHandle Handle { get; private set; }
 
+    public string TeamRole { get; private set; }
+
     public LocalLobbyTeam(ILobbyHandle handle, int tid) {
         this.Handle = handle;
         this.TeamID = tid;
@@ -21,6 +23,7 @@ public class LocalLobbyTeam : ILobbyTeam {
             new LocalLobbySlot(handle, 2, tid),
             new LocalLobbySlot(handle, 3, tid)
         };
+        this.TeamRole = tid is LobbyConstants.TID_ALLIES ? "Team_Allies" : "Team_Axis";
     }
 
     public ILobbySlot? GetSlotOfMember(ulong memberID) {
@@ -82,5 +85,7 @@ public class LocalLobbyTeam : ILobbyTeam {
     }
 
     public void SetHandle(ILobbyHandle handle) => this.Handle = handle;
+
+    public void SetRole(string roleId) => this.TeamRole = roleId;
 
 }

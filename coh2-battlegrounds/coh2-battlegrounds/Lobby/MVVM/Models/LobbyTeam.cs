@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 
+using Battlegrounds;
 using Battlegrounds.Networking.LobbySystem;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
@@ -19,6 +20,8 @@ public class LobbyTeam {
     public ILobbyTeam Team => this.m_team;
 
     public LobbyModel Lobby { get; }
+
+    public string Title => BattlegroundsInstance.Localize.GetString(this.m_team.TeamRole);
 
     public LobbyTeam(ILobbyHandle lobbyAPI, ILobbyTeam lobbyTeam, LobbyModel model) {
        
@@ -96,6 +99,7 @@ public class LobbyTeam {
                 if (this.Lobby is LobbyHostModel hostModel) {
                     hostModel.RefreshPlayability();
                 }
+                this.Lobby.NotifyProperty(obj.TeamID is LobbyConstants.TID_ALLIES ? nameof(LobbyModel.Allies) : nameof(LobbyModel.Axis));
             });
 
         }
@@ -116,7 +120,7 @@ public class LobbyTeam {
                 if (slots[i].Occupant is not ILobbyMember mem) {
                     continue; // Some werid err
                 }
-                flag1 |= mem.State is LobbyMemberState.Waiting;
+                flag1 |= (mem.State is LobbyMemberState.Waiting or LobbyMemberState.Planning); // Could do something here forcing planning players to press ready
                 if (mem.Company?.IsNone ?? true) {
                     flag2 = false;
                 } else {

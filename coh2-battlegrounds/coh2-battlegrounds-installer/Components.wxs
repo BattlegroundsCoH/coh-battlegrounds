@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	
+	<Fragment>
+
+		<!-- Product Componets -->
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			
+			
+		</ComponentGroup>
+	
+		<!-- Installed files -->
+		<DirectoryRef Id="INSTALLFOLDER">
+			
+		</DirectoryRef>
+		
+	</Fragment>
+	
+</Wix>

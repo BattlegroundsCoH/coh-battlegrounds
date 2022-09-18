@@ -25,6 +25,7 @@ public class UnitBuilder : IBuilder<Squad> {
         string CustomName,
         SquadBlueprint Blueprint,
         SquadBlueprint? Transport,
+        EntityBlueprint? SyncWeapon,
         DeploymentMethod DeploymentMethod,
         DeploymentPhase DeploymentPhase,
         UnitBuilder? CrewBuilder,
@@ -110,6 +111,16 @@ public class UnitBuilder : IBuilder<Squad> {
         };
     }
 
+    public sealed record AddSyncWeaponAction(EntityBlueprint Blueprint) : IEditAction<BuildableSquad> {
+        private EntityBlueprint? m_prev;
+        public BuildableSquad Apply(BuildableSquad target) => target with {
+            SyncWeapon = this.Blueprint.And(() => this.m_prev = target.SyncWeapon)
+        };
+        public BuildableSquad Undo(BuildableSquad target) => target with {
+            SyncWeapon = this.m_prev
+        };
+    }
+
     public sealed record AddModifierAction(Modifier Modifier) : IEditAction<BuildableSquad> {
         public BuildableSquad Apply(BuildableSquad target) => target with {
             Modifiers = target.Modifiers.Append(this.Modifier)
@@ -143,6 +154,16 @@ public class UnitBuilder : IBuilder<Squad> {
         };
         public BuildableSquad Undo(BuildableSquad target) => target with {
             Modifiers = target.Modifiers.Append(this.Modifier)
+        };
+    }
+
+    public sealed record RemoveSyncWeaponAction() : IEditAction<BuildableSquad> {
+        private EntityBlueprint? m_prev;
+        public BuildableSquad Apply(BuildableSquad target) => target with {
+            SyncWeapon = (this.m_prev = target.SyncWeapon).Then(_ => null)
+        };
+        public BuildableSquad Undo(BuildableSquad target) => target with {
+            SyncWeapon = this.m_prev
         };
     }
 
@@ -271,16 +292,6 @@ public class UnitBuilder : IBuilder<Squad> {
     };
 
     /// <summary>
-    /// Set the tuning pack GUID this unit should be based on.
-    /// </summary>
-    /// <param name="guid">The GUID (in coh2 string format).</param>
-    /// <returns>The modified instance the method is invoked with.</returns>
-    [Obsolete("Should not set mod GUID")]
-    public UnitBuilder SetModGUID(ModGuid guid) {
-        return this;
-    }
-
-    /// <summary>
     /// Set the veterancy rank of the <see cref="Squad"/> instance being built.
     /// </summary>
     /// <param name="level">The veterancy rank in byte-range to set.</param>
@@ -295,30 +306,6 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <returns>The modified instance the method is invoked with.</returns>
     public virtual UnitBuilder SetVeterancyExperience(float experience)
         => this.ApplyAction(new ExperienceAction(experience));
-
-    /// <summary>
-    /// Set the <see cref="SquadBlueprint"/> the <see cref="Squad"/> instance being built will use.
-    /// </summary>
-    /// <param name="sbp">The <see cref="SquadBlueprint"/> to set.</param>
-    /// <remarks>This must be set before certain other methods.</remarks>
-    /// <returns>The modified instance the method is invoked with.</returns>
-    [Obsolete("Unit builder should already know blueprint.")]
-    public virtual UnitBuilder SetBlueprint(SquadBlueprint sbp) {
-        return this;
-    }
-
-    /// <summary>
-    /// Set the <see cref="SquadBlueprint"/> the <see cref="Squad"/> instance being built will use.
-    /// </summary>
-    /// <remarks>
-    /// This must be called before certain other methods.
-    /// </remarks>
-    /// <param name="sbpName">The blueprint name to use when finding the <see cref="Blueprint"/>.</param>
-    /// <returns>The modified instance the method is invoked with.</returns>
-    [Obsolete("Unit builder should already know blueprint.")]
-    public virtual UnitBuilder SetBlueprint(string sbpName) {
-        return this;
-    }
 
     /// <summary>
     /// Set the transport <see cref="SquadBlueprint"/> of the <see cref="Squad"/> instance being built will use when entering the battlefield.
@@ -479,16 +466,6 @@ public class UnitBuilder : IBuilder<Squad> {
     }
 
     /// <summary>
-    /// Build the <see cref="Squad"/> instance using the data collected with the <see cref="UnitBuilder"/>. 
-    /// The ID will be copied from the original <see cref="Squad"/> if possible.
-    /// </summary>
-    /// <param name="ID">The unique ID to use when creating the <see cref="Squad"/> instance.</param>
-    /// <returns>A <see cref="Squad"/> instance with all the parameters defined by the <see cref="UnitBuilder"/>.</returns>
-    [Obsolete("Use commit instead")]
-    public virtual Squad Build(ushort ID) 
-        => this.Commit(ID).Result;
-
-    /// <summary>
     /// 
     /// </summary>
     /// <param name="span"></param>
@@ -499,28 +476,27 @@ public class UnitBuilder : IBuilder<Squad> {
     }
 
     /// <summary>
-    /// Clone self and resets the current instance.
-    /// </summary>
-    /// <returns>The cloned instance.</returns>
-    [Obsolete("Unit builder instances should not be reused.")]
-    public UnitBuilder GetAndReset() {
-        return this;
-    }
-
-    /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
     public CostExtension GetCost()
-        => Squad.ComputeFullCost(this.Blueprint.Cost, this.Rank, this.Upgrades, this.Transport, this.DeployMethod, this.Phase, this.Blueprint.Category);
+        => Squad.ComputeFullCost(this.Blueprint, this.Rank, this.Upgrades, this.Transport, this.DeployMethod, this.Phase);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="builder"></param>
     /// <returns></returns>
-    public SquadBlueprint[] GetTransportUnits(CompanyBuilder builder)
+    public IList<SquadBlueprint> GetTransportUnits(CompanyBuilder builder)
         => builder.GetTransports(this.Blueprint.Types.IsHeavyArtillery || this.Blueprint.Types.IsAntiTank);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="entityBlueprint"></param>
+    /// <returns></returns>
+    public virtual UnitBuilder SetSyncWeapon(EntityBlueprint entityBlueprint)
+        => this.ApplyAction(new AddSyncWeaponAction(entityBlueprint));
 
     /// <summary>
     /// 
@@ -543,6 +519,7 @@ public class UnitBuilder : IBuilder<Squad> {
         squad.SetVeterancy(this.Rank, this.Experience);
         squad.SetCombatTime(this.CombatTime);
         squad.SetIsCrew(this.IsCrew);
+        squad.SetSyncWeapon(this.m_target.SyncWeapon);
 
         // Handle crew
         if (this.m_target.CrewBuilder is not null) {
@@ -608,6 +585,13 @@ public class UnitBuilder : IBuilder<Squad> {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sbp"></param>
+    /// <param name="modGuid"></param>
+    /// <returns></returns>
+    /// <exception cref="ObjectNotFoundException"></exception>
     public static UnitBuilder NewUnit(string sbp, ModGuid modGuid) {
         var sbp_val = BlueprintManager.GetCollection<SquadBlueprint>()
             .FilterByMod(modGuid).FirstOrDefault(x => x.Name == sbp);
@@ -618,15 +602,31 @@ public class UnitBuilder : IBuilder<Squad> {
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sbp"></param>
+    /// <returns></returns>
+    /// <exception cref="ObjectNotFoundException"></exception>
     public static UnitBuilder NewUnit(SquadBlueprint sbp)
-        => new(new BuildableSquad(0, 0.0f, false, string.Empty, sbp, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, 
-            sbp.HasCrew ? NewCrew(sbp.GetCrewBlueprint()) : null,
+        => new(new BuildableSquad(0, 0.0f, false, string.Empty, sbp, null, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, 
+            sbp.HasCrew ? NewCrew(sbp.GetCrewBlueprint() ?? throw new ObjectNotFoundException($"Crew blueprint not found for blueprint '{sbp}'.")) : null,
             Array.Empty<UpgradeBlueprint>(), Array.Empty<SlotItemBlueprint>(), Array.Empty<Modifier>()));
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sbp"></param>
+    /// <returns></returns>
     public static UnitBuilder NewCrew(SquadBlueprint sbp)
-        => new(new BuildableSquad(0, 0.0f, true, string.Empty, sbp, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, null,
+        => new(new BuildableSquad(0, 0.0f, true, string.Empty, sbp, null, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, null,
             Array.Empty<UpgradeBlueprint>(), Array.Empty<SlotItemBlueprint>(), Array.Empty<Modifier>()));
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="squad"></param>
+    /// <returns></returns>
     public static UnitBuilder EditUnit(Squad squad) {
 
         // Grab elements
@@ -636,6 +636,7 @@ public class UnitBuilder : IBuilder<Squad> {
         // Create buildabe
         var buildable = new BuildableSquad(squad.VeterancyRank, squad.VeterancyProgress, squad.IsCrew, squad.CustomName, 
             squad.SBP, squad.SupportBlueprint as SquadBlueprint,
+            squad.SyncWeapon,
             squad.DeploymentMethod, squad.DeploymentPhase,
             squad.Crew is not null ? EditUnit(squad.Crew) : null,
             upgrades, items, squad.Modifiers.ToArray());
@@ -647,5 +648,23 @@ public class UnitBuilder : IBuilder<Squad> {
 
     }
 
-}
+    /// <summary>
+    /// Checks if the given <see cref="UnitBuilder"/> instance allows for custom naming.
+    /// </summary>
+    /// <param name="builder">The builder instance to check.</param>
+    /// <returns>If custom name is allowed, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+    public static bool AllowCustomName(UnitBuilder builder) {
 
+        // Bail if not vet
+        if (builder.Rank < 3)
+            return false;
+
+        // Grab typelist
+        var ts = builder.Blueprint.Types;
+
+        // Return ok if of type
+        return ts.IsSniper || ts.IsSpecialInfantry || ts.IsVehicle;
+
+    }
+
+}

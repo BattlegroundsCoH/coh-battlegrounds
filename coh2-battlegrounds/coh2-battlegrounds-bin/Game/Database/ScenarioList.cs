@@ -12,6 +12,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Lua.Debugging;
+using Battlegrounds.Util;
 
 namespace Battlegrounds.Game.Database;
 
@@ -192,18 +193,9 @@ public static class ScenarioList {
 
             // Get scenario files
             string[] scenarioFiles = Directory.GetFiles(scenarioDirectoryPath);
+            string? lao = scenarioFiles.FirstOrDefault(x => x.EndsWith("_lao.dds", false, CultureInfo.InvariantCulture));
             string? info = scenarioFiles.FirstOrDefault(x => x.EndsWith(".info", false, CultureInfo.InvariantCulture));
             string? opt = scenarioFiles.FirstOrDefault(x => x.EndsWith(".options", false, CultureInfo.InvariantCulture));
-
-            // Make sure there's actually a info file
-            if (string.IsNullOrEmpty(info)) {
-                return null;
-            }
-
-            // Make sure there's actually an options file
-            if (string.IsNullOrEmpty(opt)) {
-                return null;
-            }
 
             // Define scenario variable
             Scenario? scen = null;
@@ -211,13 +203,16 @@ public static class ScenarioList {
             try {
 
                 // Create scenario
-                scen = new Scenario(info, opt) {
-                    SgaName = sga
-                };
+                scen = Scenario.ReadScenario(lao, info, opt, sga);
+                if (scen is null) {
+                    throw new Exception("Failed to read scenario");
+                }
 
                 // Find the index of the minimap
-                int minimapFile = scenarioFiles.IndexOf(x => x.EndsWith("_preview.tga", false, CultureInfo.InvariantCulture))
-                    .IfTrue(x => x == -1).Then(x => scenarioFiles.IndexOf(x => x.EndsWith("_mm.tga", false, CultureInfo.InvariantCulture)));
+                int minimapFile = scenarioFiles.IndexOf(x => x.EndsWithAny("_mm_high.tga", "_mm_low.tga"));
+                if (minimapFile is -1) {
+                    minimapFile = scenarioFiles.IndexOf(x => x.EndsWithAny("_mm.tga", "_preview.tga"));
+                }
 
                 // Make sure it's a valid index
                 if (minimapFile != -1) {

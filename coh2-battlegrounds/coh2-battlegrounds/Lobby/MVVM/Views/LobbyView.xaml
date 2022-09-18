@@ -16,7 +16,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Margin="36">
+    <Grid Margin="32">
         <Grid.Resources>
             <!-- LocaleConverter -->
             <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
@@ -60,15 +60,17 @@
 
         <Grid Grid.Row="1" Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="312"/>
-                <RowDefinition Height="36"/>
-                <RowDefinition Height="312"/>
+                <RowDefinition Height="328"/>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="328"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             
             <!-- Allies -->
             <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="24"/>
+                    <RowDefinition Height="6"/>
                     <RowDefinition Height="72"/>
                     <RowDefinition Height="6"/>
                     <RowDefinition Height="72"/>
@@ -77,20 +79,44 @@
                     <RowDefinition Height="6"/>
                     <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
-                <ContentPresenter Grid.Row="0"
-                                  Content="{Binding Allies.Slot1}"/>
+
+                <Label 
+                    Content="{Binding Allies.Title}"
+                    FontSize="16"
+                    Foreground="#ffffff"
+                    FontFamily="Open Sans"
+                    FontWeight="SemiBold"
+                    HorizontalAlignment="Right"
+                    Grid.Row="0"
+                    Grid.Column="0"/>
                 <ContentPresenter Grid.Row="2"
-                                  Content="{Binding Allies.Slot2}"/>
+                                  Content="{Binding Allies.Slot1}"/>
                 <ContentPresenter Grid.Row="4"
-                                  Content="{Binding Allies.Slot3}"/>
+                                  Content="{Binding Allies.Slot2}"/>
                 <ContentPresenter Grid.Row="6"
+                                  Content="{Binding Allies.Slot3}"/>
+                <ContentPresenter Grid.Row="8"
                                   Content="{Binding Allies.Slot4}"/>
                 
             </Grid>
             
+            <!-- Swap -->
+            <Button
+                Grid.Row="1"
+                Width="32"
+                Height="32"
+                HorizontalAlignment="Center"
+                Command="{Binding SwapRoles.Click}"
+                Visibility="{Binding SwapRoles.Visibility}"
+                Style="{StaticResource Hoverless}">
+                <Image Source="{StaticResource SwapDrawingImage}"/>
+            </Button>
+
             <!-- Axis -->
             <Grid Grid.Row="2">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="24"/>
+                    <RowDefinition Height="6"/>
                     <RowDefinition Height="72"/>
                     <RowDefinition Height="6"/>
                     <RowDefinition Height="72"/>
@@ -99,13 +125,22 @@
                     <RowDefinition Height="6"/>
                     <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
-                <ContentPresenter Grid.Row="0"
-                                  Content="{Binding Axis.Slot1}"/>
+                <Label 
+                    Content="{Binding Axis.Title}"
+                    FontSize="16"
+                    Foreground="#ffffff"
+                    FontFamily="Open Sans"
+                    FontWeight="SemiBold"
+                    HorizontalAlignment="Right"
+                    Grid.Row="0"
+                    Grid.Column="0"/>
                 <ContentPresenter Grid.Row="2"
-                                  Content="{Binding Axis.Slot2}"/>
+                                  Content="{Binding Axis.Slot1}"/>
                 <ContentPresenter Grid.Row="4"
-                                  Content="{Binding Axis.Slot3}"/>
+                                  Content="{Binding Axis.Slot2}"/>
                 <ContentPresenter Grid.Row="6"
+                                  Content="{Binding Axis.Slot3}"/>
+                <ContentPresenter Grid.Row="8"
                                   Content="{Binding Axis.Slot4}"/>
             </Grid>
         </Grid>
@@ -114,13 +149,9 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="38"/>
                 <RowDefinition Height="356"/>
-                <RowDefinition Height="38"/>
-                <RowDefinition Height="38"/>
-                <RowDefinition Height="38"/>
-                <RowDefinition Height="38"/>
-                <RowDefinition Height="38"/>
-                <RowDefinition Height="38"/>
+                <RowDefinition Height="8"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="8"/>
                 <RowDefinition Height="38"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -157,159 +188,34 @@
                     ImageWidth="20"
                     ImageHeight="18"/>
 
-            <!-- Lots of hard-coded sizing - Be careful when editing this -->
-            <Canvas Grid.Column="0"
-                  Grid.Row="1"
-                  Grid.ColumnSpan="3">
-                <Image 
-                    Canvas.Top="10"
-                    Canvas.Left="16"
-                    Width="348"
-                    Height="322"
-                    Stretch="Fill"
-                    Source="{Binding ScenarioPreview}"/>
-                <Image
-                    Width="372"
-                    Canvas.Top="6"
-                    Canvas.Left="0"
-                    Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbySettingMap.png"/>
-            </Canvas>
+            <!-- Row 1 -->
+            <controls:Minimap
+                Grid.Column="0"
+                Grid.Row="1"
+                Grid.ColumnSpan="3"
+                IsDisplayOnly="False"
+                Scenario="{Binding Scenario}"/>
 
-            <!-- Options -->
-            <StackPanel Grid.Column="1"
-                        Grid.Row="2">
-                <controls:LocLabel LocKey="LobbyView_SettingScenario" 
-                                   Style="{StaticResource SettingLabel}"/>
-                <Separator Style="{StaticResource SettingSeperator}"/>
-            </StackPanel>
-            <Grid Grid.Column="2"
-                  Grid.Row="2">
-                <ComboBox Height="32"
-                          VerticalAlignment="Top"
-                          ItemsSource="{Binding MapDropdown.Items}"
-                          SelectedIndex="{Binding MapDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding MapDropdown.Visibility}"
-                          IsEnabled="{Binding MapDropdown.IsEnabled}"
-                          Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding MapDropdown.LabelVisibility}"
-                       Content="{Binding MapDropdown.LabelContent}"
-                       Style="{StaticResource SettingValue}"/>
-            </Grid>
-
-            <StackPanel Grid.Column="1"
-                        Grid.Row="3">
-                <controls:LocLabel LocKey="LobbyView_SettingGamemode" 
-                       Style="{StaticResource SettingLabel}"/>
-                <Separator Style="{StaticResource SettingSeperator}"/>
-            </StackPanel>
-            <Grid Grid.Column="2"
-                  Grid.Row="3">
-                <ComboBox Height="32"
-                          VerticalAlignment="Top"
-                          ItemsSource="{Binding GamemodeDropdown.Items}"
-                          SelectedIndex="{Binding GamemodeDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding GamemodeDropdown.Visibility}"
-                          IsEnabled="{Binding GamemodeDropdown.IsEnabled}"
-                          Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding GamemodeDropdown.LabelVisibility}"
-                       Content="{Binding GamemodeDropdown.LabelContent}"
-                       Style="{StaticResource SettingValue}"/>
-            </Grid>
-
-            <StackPanel Grid.Column="1"
-                        Grid.Row="4">
-                <controls:LocLabel LocKey="LobbyView_SettingOption" 
-                       Style="{StaticResource SettingLabel}"/>
-                <Separator Style="{StaticResource SettingSeperator}"/>
-            </StackPanel>
-            <Grid Grid.Column="2"
-                  Grid.Row="4">
-                <ComboBox Height="32"
-                          VerticalAlignment="Top"
-                          ItemsSource="{Binding GamemodeOptionDropdown.Items}"
-                          SelectedIndex="{Binding GamemodeOptionDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding GamemodeOptionDropdown.Visibility}"
-                          IsEnabled="{Binding GamemodeOptionDropdown.IsEnabled}"
-                          Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding GamemodeOptionDropdown.LabelVisibility}"
-                       Content="{Binding GamemodeOptionDropdown.LabelContent}"
-                       Style="{StaticResource SettingValue}"/>
-            </Grid>
-
-            <StackPanel Grid.Column="1"
-                        Grid.Row="5">
-                <controls:LocLabel LocKey="LobbyView_SettingWeather"
-                       Style="{StaticResource SettingLabel}"/>
-                <Separator Style="{StaticResource SettingSeperator}"/>
-            </StackPanel>
-            <Grid Grid.Column="2"
-                  Grid.Row="5">
-                <ComboBox Height="32"
-                          VerticalAlignment="Top"
-                          ItemsSource="{Binding WeatherDropdown.Items}"
-                          SelectedIndex="{Binding WeatherDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding WeatherDropdown.Visibility}"
-                          IsEnabled="{Binding WeatherDropdown.IsEnabled}"
-                          Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding WeatherDropdown.LabelVisibility}"
-                       Content="{Binding WeatherDropdown.LabelContent}"
-                       Style="{StaticResource SettingValue}"/>
-            </Grid>
-
-            <StackPanel Grid.Column="1"
-                        Grid.Row="6">
-                <controls:LocLabel LocKey="LobbyView_SettingSupply" 
-                                   Style="{StaticResource SettingLabel}"/>
-                <Separator Style="{StaticResource SettingSeperator}"/>
-            </StackPanel>
-            <Grid Grid.Column="2"
-                  Grid.Row="6">
-                <ComboBox Height="32"
-                          VerticalAlignment="Top"
-                          ItemsSource="{Binding SupplySystemDropdown.Items}"
-                          SelectedIndex="{Binding SupplySystemDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding SupplySystemDropdown.Visibility}"
-                          IsEnabled="{Binding SupplySystemDropdown.IsEnabled}"
-                          Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding SupplySystemDropdown.LabelVisibility}"
-                       Content="{Binding SupplySystemDropdown.LabelContent}"
-                       Style="{StaticResource SettingValue}"/>
-            </Grid>
-
-            <StackPanel Grid.Column="1"
-                        Grid.Row="7">
-                <controls:LocLabel LocKey="LobbyView_SettingTuning" 
-                       Style="{StaticResource SettingLabel}"/>
-                <Separator Style="{StaticResource SettingSeperator}"/>
-            </StackPanel>
-            <Grid Grid.Column="2"
-                  Grid.Row="7">
-                <ComboBox Height="32"
-                          VerticalAlignment="Top"
-                          ItemsSource="{Binding ModPackageDropdown.Items}"
-                          SelectedIndex="{Binding ModPackageDropdown.Selected, Mode=TwoWay}"
-                          Visibility="{Binding ModPackageDropdown.Visibility}"
-                          IsEnabled="{Binding ModPackageDropdown.IsEnabled}"
-                          Style="{StaticResource StandardBlueDropdown}"/>
-                <Label Visibility="{Binding ModPackageDropdown.LabelVisibility}"
-                       Content="{Binding ModPackageDropdown.LabelContent}"
-                       Style="{StaticResource SettingValue}"/>
-            </Grid>
-
-            <!--
-            <Button Grid.Column="1" 
-                    Grid.Row="9"
-                    Grid.ColumnSpan="2"
-                    Content="{Binding StartMatchButton.Title}"
-                    Command="{Binding StartMatchButton.Click}"
-                    IsEnabled="{Binding StartMatchButton.IsEnabled}"
-                    ToolTip="{Binding StartMatchButton.Tooltip}"
-                    Style="{StaticResource StandardBlueButton}"/>
-            -->
+            <!-- Row 2 - Options -->
+            <ScrollViewer
+                Grid.Row="3"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <ItemsControl
+                        ItemsSource="{Binding MapSetting}"/>
+                    <ItemsControl
+                        ItemsSource="{Binding GamemodeSettings}"/>
+                    <ItemsControl
+                        ItemsSource="{Binding AuxSettings}"/>
+                </StackPanel>
+            </ScrollViewer>
 
             <controls:IconButton 
                 Grid.Column="1" 
-                Grid.Row="9"
+                Grid.Row="5"
                 Grid.ColumnSpan="2"
                 VerticalContentAlignment="Center"
                 HorizontalContentAlignment="Center"

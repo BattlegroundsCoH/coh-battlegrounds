@@ -12,8 +12,8 @@ using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
-using Battlegrounds.Util;
 using Battlegrounds.Networking.LobbySystem.Json;
+using Battlegrounds.Networking.Remoting;
 
 namespace Battlegrounds.Networking.LobbySystem;
 
@@ -25,6 +25,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     private static readonly TimeZoneInfo __thisTimezone = TimeZoneInfo.Local;
 
     private readonly ServerConnection m_connection;
+    private readonly RemoteCall<ILobbyHandle> m_remote;
     private readonly bool m_isHost;
     private volatile uint m_cidcntr;
 
@@ -32,6 +33,8 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     private ILobbyTeam m_axis;
     private ILobbyTeam m_obs;
     private readonly Dictionary<string, string> m_settings;
+    private readonly Dictionary<string, LobbyEventHandler<ContentMessage>> m_subscribedEvents;
+    private readonly OnlineLobbyPlanner m_planner;
 
     /// <summary>
     /// Get the title of the joined lobby.
@@ -72,6 +75,11 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// Get the self-user instance.
     /// </summary>
     public SteamUser Self { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public ILobbyPlanningHandle? PlanningHandle => this.m_planner;
 
     /// <summary>
     /// Event triggered when a lobby chat message is received.
@@ -159,9 +167,14 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     public event LobbyEventHandler<string>? OnPoll;
 
     /// <summary>
-    /// Event triggered when the host has sent a lobby halt message
+    /// Event triggered when the host has sent a lobby halt message.
     /// </summary>
     public event LobbyEventHandler? OnLobbyMatchHalt;
+
+    /// <summary>
+    /// Event triggered when the host has sent a screen update message.
+    /// </summary>
+    public event LobbyEventHandler<string>? OnLobbyScreen;
 
     /// <summary>
     /// Initialises a new <see cref="OnlineLobbyHandle"/> instance that is connected along a <see cref="ServerConnection"/> to a lobby.
@@ -179,8 +192,10 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
 
         // Set internal refs
         this.m_connection = connection;
+        this.m_remote = new(this, connection);
         this.m_isHost = isHost;
-        this.m_cidcntr = 1000;
+        this.m_cidcntr = 800;
+        this.m_subscribedEvents = new();
 
         // Store self (id)
         this.Self = self;
@@ -196,7 +211,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
             CID = this.m_cidcntr++,
             Content = GoMarshal.JsonMarshal(new RemoteCallMessage() { Method = "GetLobby", Arguments = Array.Empty<string>() }),
             Mode = MessageMode.BrokerCall,
-            Sender = this.m_connection.SelfID,
+            Sender = this.m_connection.SelfId,
             Target = 0
         };
 
@@ -220,6 +235,9 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
                 this.m_axis = remoteLobby.Teams[1];
                 this.m_obs = remoteLobby.Teams[2];
                 this.m_settings = remoteLobby.Settings;
+
+                // Create planner instance
+                this.m_planner = new(this, this.m_remote);
 
                 // Register connection lost
                 this.m_connection.OnConnectionLost += _ => {
@@ -257,7 +275,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
 
         // If disconnect, handle
         if (message.MessageType is ContentMessgeType.Disconnect) {
-            if (message.Who == this.m_connection.SelfID) {
+            if (message.Who == this.m_connection.SelfId) {
                 this.OnLobbyConnectionLost?.Invoke(message.Kick ? "KICK" : "CLOSED");
             } else {
                 this.OnSystemMessage?.Invoke(new(message.Who, message.StrMsg, message.Kick ? "KICK" : "LEFT"));
@@ -435,8 +453,21 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
                 this.OnPoll?.Invoke(new(pollCall.Arguments[0]));
 
                 break;
+            case "Notify.Screen":
+
+                // Get call
+                var screenUpdate = GoMarshal.JsonUnmarshal<RemoteCallMessage>(message.Raw);
+
+                // Invoke event
+                this.OnLobbyScreen?.Invoke(new(screenUpdate.Arguments[0]));
+
+                break;
             default:
-                Trace.WriteLine($"Unsupported API event: {message.StrMsg}", nameof(OnlineLobbyHandle));
+                if (this.m_subscribedEvents[message.StrMsg] is LobbyEventHandler<ContentMessage> eventHandler) {
+                    eventHandler(message);
+                } else {
+                    Trace.WriteLine($"Unsupported API event: {message.StrMsg}", nameof(OnlineLobbyHandle));
+                }
                 break;
         }
 
@@ -462,7 +493,17 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// <param name="humansOnly">Only cound human players.</param>
     /// <returns>The mount of players, and if the <paramref name="humansOnly"/> flag is not set, also the amount of AI players.</returns>
     public uint GetPlayerCount(bool humansOnly = false)
-        => this.RemoteCall<uint>("GetPlayerCount", EncBool(humansOnly));
+        => this.m_remote.Call<uint>("GetPlayerCount", EncBool(humansOnly));
+
+    public byte GetSelfTeam() {
+        if (this.Allies.GetSlotOfMember(this.Self.ID) is null) {
+            if (this.Axis.GetSlotOfMember(this.Self.ID) is null) {
+                return LobbyConstants.TID_OBS;
+            }
+            return LobbyConstants.TID_AXIS;
+        }
+        return LobbyConstants.TID_ALLIES;
+    }
 
     private static string EncBool(bool b) => b ? "1" : "0";
 
@@ -480,7 +521,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
         string none = EncBool(company.IsNone);
 
         // Invoke remotely
-        this.RemoteVoidCall("SetCompany", tid, sid, auto, none, company.Name, company.Army, strength, company.Specialisation);
+        this.m_remote.Call("SetCompany", tid, sid, auto, none, company.Name, company.Army, strength, company.Specialisation);
 
         // Trigger self update
         this.OnLobbyCompanyUpdate?.Invoke(new(tid, sid, company)); // This might need to be removed!
@@ -494,7 +535,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// <param name="tid">The team ID containing the slot being move to. Accepts values in the range 0 &#x2264; T &#x2264; 2</param>
     /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4 that the member should move to.</param>
     public void MoveSlot(ulong mid, int tid, int sid)
-        => this.RemoteVoidCall("MoveSlot", mid, tid, sid);
+        => this.m_remote.Call("MoveSlot", mid, tid, sid);
 
     /// <summary>
     /// Updates the state of a lobby member.
@@ -504,7 +545,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4 that the member should move to.</param>
     /// <param name="state">The new state of the member.</param>
     public void MemberState(ulong mid, int tid, int sid, LobbyMemberState state)
-        => this.RemoteVoidCall("MemberState", mid, tid, sid, (byte)state);
+        => this.m_remote.Call("MemberState", mid, tid, sid, (byte)state);
 
     /// <summary>
     /// Add an AI player to the specified slow.
@@ -525,7 +566,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
         var inv = company.Strength.ToString(CultureInfo.InvariantCulture);
 
         // Call AI
-        RemoteVoidCall("AddAI", tid, sid, difficulty, EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, inv, company.Specialisation);
+        this.m_remote.Call("AddAI", tid, sid, difficulty, EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, inv, company.Specialisation);
 
     }
 
@@ -543,7 +584,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
         }
 
         // Trigger remote call
-        this.RemoteVoidCall("RemoveOccupant", tid, sid);
+        this.m_remote.Call("RemoveOccupant", tid, sid);
 
     }
 
@@ -553,7 +594,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// <param name="tid">The team ID containing the slot to be locked. Accepts values in the range 0 &#x2264; T &#x2264; 1</param>
     /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
     public void LockSlot(int tid, int sid)
-        => this.RemoteVoidCall("LockSlot", tid, sid);
+        => this.m_remote.Call("LockSlot", tid, sid);
 
     /// <summary>
     /// Unlocks the locked slot at specified position.
@@ -561,16 +602,16 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// <param name="tid">The team ID containing the slot to be unlocked. Accepts values in the range 0 &#x2264; T &#x2264; 1</param>
     /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
     public void UnlockSlot(int tid, int sid)
-        => this.RemoteVoidCall("UnlockSlot", tid, sid);
+        => this.m_remote.Call("UnlockSlot", tid, sid);
 
     /// <summary>
-    /// 
+    /// Send a chat message along a communication channel.
     /// </summary>
-    /// <param name="filter"></param>
-    /// <param name="mid"></param>
-    /// <param name="msg"></param>
+    /// <param name="filter">The message channel. 0 = (Lobby) Global Chat; 1 = Team Chat.</param>
+    /// <param name="mid">The ID of the sender of the message.</param>
+    /// <param name="msg">The contents of the message to send.</param>
     /// <exception cref="IndexOutOfRangeException"></exception>
-    public void SendChatMessage(int filter, ulong mid, string msg) => this.RemoteVoidCall(filter switch {
+    public void SendChatMessage(int filter, ulong mid, string msg) => this.m_remote.Call(filter switch {
         0 => "GlobalChat",
         1 => "TeamChat",
         _ => throw new IndexOutOfRangeException()
@@ -584,7 +625,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     public void SetLobbySetting(string setting, string value) {
         if (this.m_isHost) {
             this.m_settings[setting] = value; // Apply locally, just in case
-            this.RemoteVoidCall("SetLobbySetting", setting, value);
+            this.m_remote.Call("SetLobbySetting", setting, value);
         }
     }
 
@@ -595,7 +636,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// <exception cref="ArgumentException"></exception>
     public void SetLobbyState(LobbyState state) {
         if (this.m_isHost) {
-            this.RemoteVoidCall("SetLobbyState", state switch {
+            this.m_remote.Call("SetLobbyState", state switch {
                 LobbyState.Playing => "SERVERSTATUS_PLAYING",
                 LobbyState.InLobby => "SERVERSTATUS_IN_LOBBY",
                 LobbyState.Starting => "SERVERSTATUS_STARTING",
@@ -618,10 +659,36 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
         }
 
         if (this.m_isHost) {                
-            return this.RemoteCall<bool>("SetTeamsCapacity", newCapacity);
+            return this.m_remote.Call<bool>("SetTeamsCapacity", newCapacity);
         }
         return true;
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="team1"></param>
+    /// <param name="team2"></param>
+    public void SetTeamRoles(string team1, string team2) {
+        if (this.IsHost) {
+            this.m_remote.Call("SetTeamRoles", team1, team2);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void SwapTeamRoles() {
+        if (this.m_isHost) {
+            this.m_remote.Call("SwapTeamRoles");
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public bool AreTeamRolesSwapped() => this.m_remote.Call<bool>("AreTeamRolesSwapped");
 
     /// <summary>
     /// Start the match following the startup grace period.
@@ -631,7 +698,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     public bool StartMatch(double cancelTime) {
 
         // Send start match command
-        bool wasCancelled = this.RemoteCallWithTime<bool>("StartMatch", new object[] { cancelTime }, TimeSpan.FromSeconds(cancelTime + 1));
+        bool wasCancelled = this.m_remote.CallWithTime<bool>("StartMatch", new object[] { cancelTime }, TimeSpan.FromSeconds(cancelTime + 1));
 
         // Return if someone cancelled the match 
         return !wasCancelled;
@@ -644,7 +711,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     public void CancelMatch() {
 
         // Send cancel match command
-        this.RemoteVoidCall("CancelStartMatch");
+        this.m_remote.Call("CancelStartMatch");
 
     }
 
@@ -653,7 +720,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// </summary>
     public void LaunchMatch() {
         if (this.m_isHost) {
-            this.RemoteVoidCall("LaunchGame");
+            this.m_remote.Call("LaunchGame");
         }
     }
 
@@ -666,7 +733,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
             members = this.Allies.Slots.Concat(this.Axis.Slots).Filter(x => x.IsOccupied && !x.IsSelf()).Map(x => x.Occupant?.MemberID ?? 0);
         }
         for (int i = 0; i < members.Length; i++) {
-            this.RemoteVoidCall("GetCompanyFile", members[i]);
+            this.m_remote.Call("GetCompanyFile", members[i]);
         }
     }
 
@@ -675,7 +742,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// </summary>
     public void ReleaseGamemode() {
         if (this.m_isHost) {
-            this.RemoteVoidCall("ReleaseGamemode");
+            this.m_remote.Call("ReleaseGamemode");
         }
     }
 
@@ -684,7 +751,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// </summary>
     public void ReleaseResults() {
         if (this.m_isHost) {
-            this.RemoteVoidCall("ReleaseResults");
+            this.m_remote.Call("ReleaseResults");
         }
     }
 
@@ -693,7 +760,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// </summary>
     public void HaltMatch() {
         if (this.m_isHost) {
-            this.RemoteVoidCall("HaltMatch");
+            this.m_remote.Call("HaltMatch");
         }
     }
 
@@ -702,7 +769,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// </summary>
     public void NotifyMatch(string infoType, string infoMessage) {
         if (this.m_isHost) {
-            this.RemoteVoidCall("InfoMatch", infoType, infoMessage);
+            this.m_remote.Call("InfoMatch", infoType, infoMessage);
         }
     }
 
@@ -721,13 +788,23 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
             CID = this.m_cidcntr++,
             Content = GoMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = new[] { errorType, errorMessage } }),
             Mode = MessageMode.BrokerCall,
-            Sender = this.m_connection.SelfID,
+            Sender = this.m_connection.SelfId,
             Target = 0
         };
 
         // Send but ignore response
         this.m_connection.SendMessage(msg);
 
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="screen"></param>
+    public void NotifyScreen(string screen) {
+        if (this.m_isHost) {
+            this.m_remote.Call("ScreenChange", screen);
+        }
     }
 
     /// <summary>
@@ -758,7 +835,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     public LobbyPollResults ConductPoll(string pollType, double pollTime = 3) {
 
         // Conduct poll with expecnded time
-        if (this.RemoteCallWithTime<ILobbyPoll>("PollInfo", new object[] { pollType }, TimeSpan.FromSeconds(pollTime + 1)) is ILobbyPoll poll) {
+        if (this.m_remote.CallWithTime<JsonLobbyPoll>("PollInfo", new object[] { pollType }, TimeSpan.FromSeconds(pollTime + 1)) is JsonLobbyPoll poll) {
 
             // Count yays
             byte y = (byte)poll.Responses.Aggregate(0, (a, b) => a + (b.Value ? 1 : 0));
@@ -779,64 +856,15 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// <param name="pollId">The ID of the poll being responded to</param>
     /// <param name="pollVote">flag setting if vote is a yes or a no.</param>
     public void RespondPoll(string pollId, bool pollVote)
-        => this.RemoteVoidCall("PollRespond", pollId, EncBool(pollVote));
+        => this.m_remote.Call("PollRespond", pollId, EncBool(pollVote));
 
-    private T? RemoteCall<T>(string method, params object[] args)
-        => this.RemoteCallWithTime<T>(method, args);
-
-    private T? RemoteCallWithTime<T>(string method, object[] args, TimeSpan? waitTime = null) {
-
-        // Create message
-        Message msg = new Message() {
-            CID = this.m_cidcntr++,
-            Content = GoMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args.Map(x => x.ToString()).NotNull() }),
-            Mode = MessageMode.BrokerCall,
-            Sender = this.m_connection.SelfID,
-            Target = 0
-        };
-
-        // Send and await response
-        if (this.m_connection.SendAndAwaitReply(msg, waitTime) is ContentMessage response) {
-            if (response.MessageType == ContentMessgeType.Error) {
-                string e = response.StrMsg is null ? "Received error message from server with no description" : response.StrMsg;
-                throw new Exception(e);
-            }
-            if (response.StrMsg == "Primitive") {
-                // It feels nasty using 'dynamic'
-                return (T)(dynamic)(response.DotNetType switch {
-                    nameof(Boolean) => response.Raw[0] == 1,
-                    nameof(UInt32) => response.Raw.ConvertBigEndian(BitConverter.ToUInt32),
-                    _ => throw new NotImplementedException($"Support for primitive response of type '{response.DotNetType}' not implemented.")
-                });
-            } else {
-                if (GoMarshal.JsonUnmarshal<T>(response.Raw) is T content) {
-                    if (content is IHandleObject handleObject) {
-                        handleObject.SetHandle(this);
-                    }
-                    return content;
-                }
-            }
-        }
-        
-        // TODO: Warning
-        return default;
-
-    }
-
-    private void RemoteVoidCall(string method, params object[] args) {
-
-        // Create message
-        Message msg = new Message() {
-            CID = this.m_cidcntr++,
-            Content = GoMarshal.JsonMarshal(new RemoteCallMessage() { Method = method, Arguments = args.Map(x => x.ToString()).NotNull() }),
-            Mode = MessageMode.BrokerCall,
-            Sender = this.m_connection.SelfID,
-            Target = 0
-        };
-        
-        // Send but ignore response
-        this.m_connection.SendMessage(msg);
-
-    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="to"></param>
+    /// <param name="eventHandler"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    public void Subscribe(string to, LobbyEventHandler<ContentMessage> eventHandler)
+        => this.m_subscribedEvents[to] = eventHandler;
 
 }

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using Battlegrounds;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
@@ -15,6 +17,7 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Content.Companies;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
@@ -52,16 +55,14 @@ public class CompanyBuilderViewModel : ViewModelBase {
     private readonly CompanyBuilder? m_builder;
 
     private readonly List<SquadBlueprint> m_availableSquads;
-    private readonly List<SquadBlueprint> m_availableCrews;
     private readonly List<AbilityBlueprint> m_abilities;
 
     public ObservableCollection<AvailableItemViewModel> AvailableItems { get; set; }
 
-    public List<AvailableItemViewModel> m_availableInfantrySquads;
-    public List<AvailableItemViewModel> m_availableSupportSquads;
-    public List<AvailableItemViewModel> m_availableVehicleSquads;
-
-    public List<AvailableItemViewModel> m_availableAbilities;
+    public List<AvailableItemViewModel> AvailableInfantrySquads { get; }
+    public List<AvailableItemViewModel> AvailableSupportSquads { get; }
+    public List<AvailableItemViewModel> AvailableVehicleSquads { get; }
+    public List<AvailableItemViewModel> AvailableAbilities { get; }
 
     public ObservableCollection<SquadSlotViewModel> CompanyInfantrySquads { get; set; }
     public ObservableCollection<SquadSlotViewModel> CompanySupportSquads { get; set; }
@@ -69,7 +70,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     public ObservableCollection<AbilitySlotViewModel> CompanyAbilities { get; set; }
     public ObservableCollection<AbilitySlotViewModel> CompanyUnitAbilities { get; set; }
-    //public ObservableCollection<EquipmentSlot> CompanyEquipment { get; set; }
+    public ObservableCollection<EquipmentSlotViewModel> CompanyEquipment { get; set; }
 
     public CompanyBuilder Builder => this.m_builder ?? throw new Exception("Expected a valid instance of a company builder but found none (Invalid call tree!)");
 
@@ -78,6 +79,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
     public Faction CompanyFaction { get; }
     public string CompanyGUID { get; }
     public string CompanyType { get; }
+    public string CompanyTypeIcon { get; }
 
     public LocaleKey CompanyMatchHistoryLabelContent { get; }
     public LocaleKey CompanyVictoriesLabelContent { get; }
@@ -113,6 +115,13 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     public IViewModel? ReturnTo { get; set; }
 
+    public int SaveStatus { get; set; } = -1;
+
+    public bool IsCompanyReplacementEnabled {
+        get => this.m_builder?.AutoReinforce ?? false;
+        set => this.m_builder?.SetAutoReinforce(value);
+    }
+
     private CompanyBuilderViewModel(ModGuid guid) {
 
         // Create save
@@ -129,6 +138,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.CompanyGUID = ModGuid.BaseGame;
         this.CompanyName = string.Empty;
         this.CompanyType = string.Empty;
+        this.CompanyTypeIcon = string.Empty;
         this.Statistics = new();
 
         // Define locales
@@ -149,16 +159,15 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.CompanyVehicleSquads = new();
         this.CompanyAbilities = new();
         this.CompanyUnitAbilities = new();
-        //this.CompanyEquipment = new();
+        this.CompanyEquipment = new();
         this.AvailableItems = new();
 
         // Define list
-        this.m_availableInfantrySquads = new();
-        this.m_availableSupportSquads = new();
-        this.m_availableVehicleSquads = new();
-        this.m_availableAbilities = new();
+        this.AvailableInfantrySquads = new();
+        this.AvailableSupportSquads = new();
+        this.AvailableVehicleSquads = new();
+        this.AvailableAbilities = new();
         this.m_availableSquads = new();
-        this.m_availableCrews = new();
         this.m_abilities = new();
 
         // Set default tabs
@@ -190,7 +199,8 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.CompanyName = company.Name;
         this.CompanyFaction = company.Army;
         this.CompanyGUID = company.TuningGUID;
-        this.CompanyType = company.Type.ToString();
+        this.CompanyType = BattlegroundsInstance.Localize.GetString(company.Type.Id);
+        this.CompanyTypeIcon = company.Type.Icon;
 
         // Load database and display
         this.LoadFactionDatabase();
@@ -201,20 +211,21 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     }
 
-    public CompanyBuilderViewModel(string companyName, Faction faction, CompanyType type, ModGuid modGuid) : this(modGuid) {
+    public CompanyBuilderViewModel(string companyName, Faction faction, FactionCompanyType type, ModGuid modGuid) : this(modGuid) {
 
         // Set properties
         this.m_builder = CompanyBuilder.NewCompany(companyName, type, CompanyAvailabilityType.MultiplayerOnly, faction, modGuid);
         this.CompanyName = companyName;
         this.CompanyFaction = faction;
         this.CompanyGUID = modGuid;
-        this.CompanyType = type.ToString();
+        this.CompanyType = BattlegroundsInstance.Localize.GetString(type.Id);
+        this.CompanyTypeIcon = type.Icon;
 
         // Load database and display
         this.LoadFactionDatabase();
         this.ShowCompany();
 
-        this.m_availableInfantrySquads.ForEach(x => this.AvailableItems.Add(x));
+        this.AvailableInfantrySquads.ForEach(x => this.AvailableItems.Add(x));
 
         // Update capacity values
         this.SetCapacityValues();
@@ -224,23 +235,38 @@ public class CompanyBuilderViewModel : ViewModelBase {
     private void SetCapacityValues() {
 
         // Update unit capacity values
-        this.InfantryCapacity.Capacity = this.Builder.CompanyType.GetMaxInfantry();
-        this.SupportCapacity.Capacity = this.Builder.CompanyType.GetMaxSupportWeapons();
-        this.VehicleCapacity.Capacity = this.Builder.CompanyType.GetMaxVehicles();
+        this.InfantryCapacity.Capacity = this.Builder.CompanyType.MaxInfantry;
+        this.SupportCapacity.Capacity = this.Builder.CompanyType.MaxTeamWeapons;
+        this.VehicleCapacity.Capacity = this.Builder.CompanyType.MaxVehicles;
         this.UnitCapacity.Capacity = Math.Min(Company.MAX_SIZE, this.InfantryCapacity.Capacity + this.SupportCapacity.Capacity + this.VehicleCapacity.Capacity);
 
         // Update ability capacity value
-        this.AbilityCapacity.Capacity = Math.Min(Company.MAX_ABILITY, this.Builder.CompanyType.GetMaxAbilities());
+        this.AbilityCapacity.Capacity = Math.Min(Company.MAX_ABILITY, this.Builder.CompanyType.MaxAbilities);
 
     }
 
     public void SaveButton() {
 
-        // Commit changes
-        var company = this.Builder.Commit().Result;
+        try {
 
-        // Save
-        PlayerCompanies.SaveCompany(company);
+            // Commit changes
+            var company = this.Builder.Commit().Result;
+
+            // Save
+            PlayerCompanies.SaveCompany(company);
+
+            // Set status
+            this.SaveStatus = 1;
+
+        } catch (Exception e) {
+
+            // Log error
+            Trace.WriteLine(e, nameof(CompanyBrowserViewModel));
+
+            // Set not saved
+            this.SaveStatus = 0;
+
+        }
 
     }
 
@@ -294,21 +320,22 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     private void LoadFactionDatabase() {
 
-        _ = Task.Run(() => {
+        Task.Run(() => {
+
+            // Grab type
+            var type = this.Builder.CompanyType;
+
+            // Grab crew squads (invisible squads we're going to keep hidden)
+            var hidden = type.FactionData?.GetHiddenSquads() ?? Array.Empty<string>();
 
             // Get available squads
             BlueprintManager.GetCollection<SquadBlueprint>()
                 .FilterByMod(this.CompanyGUID)
-                .Filter(x => x.Army == this.CompanyFaction.ToString())
+                .Filter(x => x.Army == this.CompanyFaction)
                 .Filter(x => !x.Types.IsVehicleCrew)
+                .Filter(x => !type.Exclude.Contains(x.Name))
+                .Filter(x => !hidden.Contains(x.Name))
                 .ForEach(this.m_availableSquads.Add);
-
-            // Get available crews
-            BlueprintManager.GetCollection<SquadBlueprint>()
-                .FilterByMod(this.CompanyGUID)
-                .Filter(x => x.Army == this.CompanyFaction.ToString())
-                .Filter(x => x.Types.IsVehicleCrew)
-                .ForEach(this.m_availableCrews.Add);
 
             // Get faction data
             var faction = this.m_activeModPackage.FactionSettings[this.CompanyFaction];
@@ -323,15 +350,15 @@ public class CompanyBuilderViewModel : ViewModelBase {
             Application.Current.Dispatcher.Invoke(() => {
 
                 this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsInfantry == true),
-                                           this.m_availableInfantrySquads);
+                                           this.AvailableInfantrySquads);
 
                 this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.IsTeamWeapon == true),
-                                           this.m_availableSupportSquads);
+                                           this.AvailableSupportSquads);
 
                 this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsVehicle == true || s.Types.IsArmour == true || s.Types.IsHeavyArmour == true),
-                                           this.m_availableVehicleSquads);
+                                           this.AvailableVehicleSquads);
 
-                this.FillAvailableItemSlot(this.m_abilities, this.m_availableAbilities);
+                this.FillAvailableItemSlot(this.m_abilities, this.AvailableAbilities);
 
                 this.UpdateAvailableItems();
 
@@ -343,22 +370,31 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     private void ShowCompany() {
 
-        // Clear collections
-        this.CompanyInfantrySquads.Clear();
-        this.CompanySupportSquads.Clear();
-        this.CompanyVehicleSquads.Clear();
-        this.CompanyAbilities.Clear();
-        this.CompanyUnitAbilities.Clear();
-        //this.CompanyEquipment.Clear();
+        // Refresh unit overview
+        this.RefreshUnitOverview();
 
-        // Add all units
-        this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.Phase);
+        // Clear collections
+        this.CompanyAbilities.Clear();
+        this.CompanyEquipment.Clear();
 
         // Add all abilities
         this.Builder.EachAbility(this.AddAbilityToDisplay);
 
         // Add all items
         this.Builder.EachItem(this.AddEquipmentToDisplay);
+
+    }
+
+    private void RefreshUnitOverview() {
+
+        // Clear equipment
+        this.CompanyInfantrySquads.Clear();
+        this.CompanySupportSquads.Clear();
+        this.CompanyVehicleSquads.Clear();
+        this.CompanyUnitAbilities.Clear();
+
+        // Add all units
+        this.Builder.EachUnit(this.AddUnitToDisplay, x => (int)x.Phase);
 
     }
 
@@ -416,14 +452,13 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     }
 
-    private void AddEquipmentToDisplay(Blueprint blueprint) {
+    private void AddEquipmentToDisplay(CompanyItem item) {
 
         // Create display
-        //EquipmentSlot equipmentSlot = new(blueprint);
-        //equipmentSlot.OnRemove += this.OnEquipmentRemoveClicked;
-        //equipmentSlot.OnEquipped += this.EquipItem;
+        var equipmentSlot = new EquipmentSlotViewModel(item, this.OnEquipmentClicked, this.CanEquipItem);
 
-        //this.CompanyEquipment.Add(equipmentSlot);
+        // Add to equipment list
+        this.CompanyEquipment.Add(equipmentSlot);
 
     }
 
@@ -492,6 +527,57 @@ public class CompanyBuilderViewModel : ViewModelBase {
         
     }
 
+    private bool CanEquipItem(EquipmentSlotViewModel equipmentSlot) {
+        if (equipmentSlot.Item.Item is SquadBlueprint sbp) {
+            return sbp.Category switch {
+                SquadCategory.Infantry => !this.InfantryCapacity.IsAtCapacity,
+                SquadCategory.Support => !this.SupportCapacity.IsAtCapacity,
+                SquadCategory.Vehicle => !this.VehicleCapacity.IsAtCapacity,
+                _ => false // TODO: Add support for command units
+            };
+        } else if (equipmentSlot.Item.Item is EntityBlueprint) {
+            return !this.SupportCapacity.IsAtCapacity; // Based on team weapons *always* being ebps
+        }
+        return false;
+    }
+
+    private void OnEquipmentClicked(EquipmentSlotViewModel equipmentSlot) {
+
+        try {
+
+            // Determine how
+            if (equipmentSlot.Item.Item is SquadBlueprint sbp) { // Is vehicle...
+
+                // Get driver squad
+                var driverSbp = sbp.GetCrewBlueprint(this.CompanyFaction);
+                driverSbp ??= this.Builder.CompanyType.FactionData!.GetDriver(sbp.Types);
+
+                // Add action
+                this.Builder.CrewCompanyItem(equipmentSlot.Item.ItemId, driverSbp);
+
+            } else if (equipmentSlot.Item.Item is EntityBlueprint ebp) {
+
+                // Get crew
+                var crewSbp = this.Builder.CompanyType.GetWeaponsCrew();
+
+                // Add action
+                this.Builder.CrewCompanyItem(equipmentSlot.Item.ItemId, crewSbp);
+
+            } else return;
+
+        } catch (InvalidOperationException) {
+            // TODO: Show error message with message from caught exception
+            return;
+        }
+
+        // Remove item
+        this.CompanyEquipment.Remove(equipmentSlot);
+
+        // Refresh unit status
+        this.RefreshUnitOverview();
+
+    }
+
     private void OnItemMove(object sender, AvailableItemViewModel itemSlot, object? arg) {
 
         if (arg is MouseEventArgs mEvent) {
@@ -549,7 +635,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     private bool CanAddBlueprint(Blueprint bp) {
         if (bp is SquadBlueprint sbp) {
-            return sbp.Category switch {
+            return !this.UnitCapacity.IsAtCapacity && sbp.Category switch {
                 SquadCategory.Infantry => !this.InfantryCapacity.IsAtCapacity,
                 SquadCategory.Support => !this.SupportCapacity.IsAtCapacity,
                 SquadCategory.Vehicle => !this.VehicleCapacity.IsAtCapacity,
@@ -570,13 +656,13 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
             switch (this.SelectedUnitTabItem) {
                 case 0:
-                    this.m_availableInfantrySquads.ForEach(x => this.AvailableItems.Add(x));
+                    this.AvailableInfantrySquads.ForEach(x => this.AvailableItems.Add(x));
                     break;
                 case 1:
-                    this.m_availableSupportSquads.ForEach(x => this.AvailableItems.Add(x));
+                    this.AvailableSupportSquads.ForEach(x => this.AvailableItems.Add(x));
                     break;
                 case 2:
-                    this.m_availableVehicleSquads.ForEach(x => this.AvailableItems.Add(x));
+                    this.AvailableVehicleSquads.ForEach(x => this.AvailableItems.Add(x));
                     break;
                 default:
                     break;
@@ -587,7 +673,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
             switch (this.SelectedAbilityTabItem) {
                 case 0:
                     this.AvailableItemsVisibility = Visibility.Visible;
-                    this.m_availableAbilities.ForEach(x => this.AvailableItems.Add(x));
+                    this.AvailableAbilities.ForEach(x => this.AvailableItems.Add(x));
                     break;
                 case 1:
                     this.AvailableItemsVisibility = Visibility.Hidden;
@@ -623,14 +709,6 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     }
 
-    /*private void OnEquipmentRemoveClicked(EquipmentSlot equipmentSlot) { 
-    
-    }
-
-    private void EquipItem(EquipmentSlot equipmentSlot, SquadBlueprint sbp) { 
-    
-    }*/
-
     private void RefreshAbilityDisplay() {
 
         this.CompanyAbilities.Clear();
@@ -643,9 +721,26 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     private void NewUnit(SquadBlueprint sbp) {
 
+        // Get earliest phase
+        var earliestPhase = this.Builder.CompanyType.GetEarliestPhase(sbp);
+
+        // Determine the initial phase of the unit
+        var basicPhase = this.Builder.IsPhaseAvailable(DeploymentPhase.PhaseInitial) && earliestPhase is DeploymentPhase.PhaseA ?
+            DeploymentPhase.PhaseInitial : earliestPhase;
+
+        // Get the default phase
+        var defaultPhase = this.Builder.GetFirstAvailablePhase(basicPhase);
+        if (defaultPhase is DeploymentPhase.PhaseNone) {
+            // TODO: Show warning for user
+            return;
+        }
+
         // Create squad (in initial phase or in phase A)
-        var unitBuilder = UnitBuilder.NewUnit(sbp)
-            .SetDeploymentPhase(this.Builder.IsPhaseAvailable(DeploymentPhase.PhaseInitial) ? DeploymentPhase.PhaseInitial : DeploymentPhase.PhaseA);
+        var unitBuilder = UnitBuilder.NewUnit(sbp).SetDeploymentPhase(defaultPhase);
+
+        // If heavy arty add tow
+        if (sbp.Types.IsHeavyArtillery && !sbp.Types.IsAntiTank)
+            unitBuilder.SetDeploymentMethod(DeploymentMethod.DeployAndStay).SetTransportBlueprint(this.Builder.CompanyType.GetTowTransports()[0]);
 
         // Add to company
         this.Builder.AddUnit(unitBuilder);

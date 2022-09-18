@@ -1,118 +1,26 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-using Battlegrounds.Game.Gameplay;
+using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Functional;
+using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Extensions;
+using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Modding.Content.Companies;
 
 namespace Battlegrounds.Modding.Content;
 
-public readonly struct FactionData {
-
-    [JsonConverter(typeof(ModFactionAbilityLoader))]
-    public class FactionAbility { // Class because too many variables for it to make sense to being a struct
-
-        public readonly struct VeterancyRequirement {
-            public bool RequireVeterancy { get; }
-            public float Veterancy { get; }
-            public VeterancyRequirement(bool RequireVeterancy, float Veterancy) {
-                this.RequireVeterancy = RequireVeterancy;
-                this.Veterancy = Veterancy;
-            }
-        }
-
-        public readonly struct AbilityVeterancy {
-            public string ScreenName { get; }
-            public float Experience { get; }
-            public Modifier[] Modifiers { get; }
-            public AbilityVeterancy(string ScreenName, float Experience, Modifier[] Modifiers) {
-                this.ScreenName = ScreenName;
-                this.Experience = Experience;
-                this.Modifiers = Modifiers;
-            }
-        }
-
-        /// <summary>
-        /// Get the blueprint name of the ability.
-        /// </summary>
-        public string Blueprint { get; }
-
-        /// <summary>
-        /// Get the blueprint name that is required for this ability to be available.
-        /// </summary>
-        [DefaultValue("")]
-        public string LockoutBlueprint { get; }
-
-        /// <summary>
-        /// Get the ability category
-        /// </summary>
-        public AbilityCategory AbilityCategory { get; }
-
-        /// <summary>
-        /// Get the max use in a match (-1 = infinite)
-        /// </summary>
-        [DefaultValue(0)]
-        public int MaxUsePerMatch { get; }
-
-        /// <summary>
-        /// Get if requires granting units to be off-map
-        /// </summary>
-        [DefaultValue(false)]
-        public bool RequireOffmap { get; }
-
-        /// <summary>
-        /// Get the effectiveness multiplier when multiple units are off-map
-        /// </summary>
-        [DefaultValue(0.0f)]
-        public float OffmapCountEffectivenesss { get; }
-
-        /// <summary>
-        /// Get if the ability grants veterancy.
-        /// </summary>
-        [DefaultValue(false)]
-        public bool CanGrantVeterancy { get; }
-
-        /// <summary>
-        /// Get the ranks associated with this ability. Empty list means no special abilities.
-        /// </summary>
-        [DefaultValue(null)]
-        public AbilityVeterancy[] VeterancyRanks { get; }
-
-        /// <summary>
-        /// Get the veterancy requirement on units before this ability can be used.
-        /// </summary>
-        [DefaultValue(null)]
-        public VeterancyRequirement? VeterancyUsageRequirement { get; }
-
-        /// <summary>
-        /// Get the amount of experience granted after each use.
-        /// </summary>
-        [DefaultValue(0.0f)]
-        public float VeterancyExperienceGain { get; }
-
-        public FactionAbility(string Blueprint, string LockoutBlueprint, AbilityCategory AbilityCategory, int MaxUsePerMatch, bool RequireOffmap,
-            float OffmapCountEffectivenesss, bool CanGrantVeterancy, AbilityVeterancy[] VeterancyRanks, VeterancyRequirement? VeterancyUsageRequirement,
-            float VeterancyExperienceGain) {
-
-            // Set properties
-            this.Blueprint = Blueprint;
-            this.LockoutBlueprint = LockoutBlueprint;
-            this.AbilityCategory = AbilityCategory;
-            this.MaxUsePerMatch = MaxUsePerMatch;
-            this.RequireOffmap = RequireOffmap;
-            this.OffmapCountEffectivenesss = OffmapCountEffectivenesss;
-            this.CanGrantVeterancy = CanGrantVeterancy;
-            this.VeterancyRanks = VeterancyRanks;
-            this.VeterancyUsageRequirement = VeterancyUsageRequirement;
-            this.VeterancyExperienceGain = VeterancyExperienceGain;
-
-        }
-
-    }
+/// <summary>
+/// Class representing faction data for a Battlegrounds mod package.
+/// </summary>
+public class FactionData {
 
     public readonly struct UnitAbility {
 
-        public string Blueprint { get; }
+        public string Blueprint { get; init; }
 
-        public FactionAbility[] Abilities { get; }
+        public FactionAbility[] Abilities { get; init; }
 
         [JsonConstructor]
         public UnitAbility(string Blueprint, FactionAbility[] Abilities) {
@@ -124,8 +32,8 @@ public readonly struct FactionData {
 
     public readonly struct Driver {
 
-        public string Blueprint { get; }
-        public string WhenType { get; }
+        public string Blueprint { get; init; }
+        public string WhenType { get; init; }
 
         [JsonConstructor]
         public Driver(string Blueprint, string WhenType) {
@@ -135,24 +43,51 @@ public readonly struct FactionData {
 
     }
 
-    public string Faction { get; }
+    public readonly struct CompanySettings {
 
-    public Driver[] Drivers { get; }
+        public FactionCompanyType[] Types { get; init; }
 
-    public FactionAbility[] Abilities { get; }
+        [JsonConstructor]
+        public CompanySettings(FactionCompanyType[]? Types) {
+            this.Types = Types ?? Array.Empty<FactionCompanyType>();
+        }
 
-    public UnitAbility[] UnitAbilities { get; }
+    }
 
-    public string[] Transports { get; }
+    public string Faction { get; init; }
 
-    public string[] TowTransports { get; }
+    public Driver[] Drivers { get; init; }
 
-    public bool CanHaveParadropInCompanies { get; }
+    public FactionAbility[] Abilities { get; init; }
 
-    public bool CanHaveGliderInCompanies { get; }
+    public UnitAbility[] UnitAbilities { get; init; }
+
+    public string[] Transports { get; init; }
+
+    public string[] TowTransports { get; init; }
+
+    public bool CanHaveParadropInCompanies { get; init; }
+
+    public bool CanHaveGliderInCompanies { get; init; }
+
+    public CompanySettings Companies { get; init; }
+
+    /// <summary>
+    /// Get or initialise the blueprint to use when recrewing team weapons
+    /// </summary>
+    public string TeamWeaponCrew { get; init; }
+
+    [JsonIgnore]
+    public ModPackage? Package { get; set; }
 
     [JsonConstructor]
-    public FactionData(string Faction, Driver[] Drivers, FactionAbility[] Abilities, UnitAbility[] UnitAbilities, string[] Transports, string[] TowTransports, bool CanHaveParadropInCompanies, bool CanHaveGliderInCompanies) {
+    public FactionData(string Faction, 
+        Driver[] Drivers, 
+        FactionAbility[] Abilities, 
+        UnitAbility[] UnitAbilities, string[] Transports, string[] TowTransports, bool CanHaveParadropInCompanies, bool CanHaveGliderInCompanies,
+        CompanySettings Companies, string TeamWeaponCrew) {
+        
+        // Set fields
         this.Faction = Faction;
         this.Drivers = Drivers;
         this.Abilities = Abilities;
@@ -161,6 +96,33 @@ public readonly struct FactionData {
         this.TowTransports = TowTransports;
         this.CanHaveGliderInCompanies = CanHaveGliderInCompanies;
         this.CanHaveParadropInCompanies = CanHaveParadropInCompanies;
+        this.Companies = Companies;
+        this.TeamWeaponCrew = TeamWeaponCrew;
+
+        // Fixup companies
+        this.Companies.Types.ForEach(x => x.FactionData = this);
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public string[] GetHiddenSquads()
+        => this.Companies.Types.MapNotNull(x => x.TeamWeaponCrew).Append(this.TeamWeaponCrew);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="types"></param>
+    /// <returns></returns>
+    /// <exception cref="ObjectNotFoundException"></exception>
+    public SquadBlueprint GetDriver(TypeList types) {
+        for (int i = 0; i < this.Drivers.Length; i++) {
+            if (string.IsNullOrEmpty(this.Drivers[i].WhenType) || types.IsType(this.Drivers[i].WhenType))
+                return BlueprintManager.FromBlueprintName<SquadBlueprint>(this.Drivers[i].Blueprint);
+        }
+        throw new ObjectNotFoundException("Failed to find driver blueprint.");
     }
 
 }

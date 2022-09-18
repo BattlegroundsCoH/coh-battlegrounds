@@ -9,9 +9,9 @@ using Battlegrounds.Modding.Content;
 
 namespace Battlegrounds.Modding;
 
-public class ModFactionAbilityLoader : JsonConverter<FactionData.FactionAbility> {
+public class ModFactionAbilityLoader : JsonConverter<FactionAbility> {
 
-    public override FactionData.FactionAbility Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+    public override FactionAbility Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 
         // Lookup table to store values in temp
         Dictionary<string, object?> __lookup = new();
@@ -33,8 +33,8 @@ public class ModFactionAbilityLoader : JsonConverter<FactionData.FactionAbility>
                 "RequireOffmap" => reader.GetBoolean(),
                 "OffmapCountEffectivenesss" => reader.GetSingle(),
                 "CanGrantVeterancy" => reader.GetBoolean(),
-                "VeterancyRanks" => JsonSerializer.Deserialize<FactionData.FactionAbility.AbilityVeterancy[]>(ref reader),
-                "VeterancyUsageRequirement" => JsonSerializer.Deserialize<FactionData.FactionAbility.VeterancyRequirement?>(ref reader),
+                "VeterancyRanks" => JsonSerializer.Deserialize<FactionAbility.AbilityVeterancy[]>(ref reader),
+                "VeterancyUsageRequirement" => JsonSerializer.Deserialize<FactionAbility.VeterancyRequirement?>(ref reader),
                 "VeterancyExperienceGain" => reader.GetSingle(),
                 _ => throw new NotImplementedException(prop)
             };
@@ -48,13 +48,13 @@ public class ModFactionAbilityLoader : JsonConverter<FactionData.FactionAbility>
             __lookup.GetCastValueOrDefault("RequireOffmap", false),
             __lookup.GetCastValueOrDefault("OffmapCountEffectivenesss", 0.0f),
             __lookup.GetCastValueOrDefault("CanGrantVeterancy", false),
-            __lookup.GetCastValueOrDefault("VeterancyRanks", Array.Empty<FactionData.FactionAbility.AbilityVeterancy>()),
-            __lookup.GetCastValueOrDefault<string, object, FactionData.FactionAbility.VeterancyRequirement?>("VeterancyUsageRequirement", null),
+            __lookup.GetCastValueOrDefault("VeterancyRanks", Array.Empty<FactionAbility.AbilityVeterancy>()),
+            __lookup.GetCastValueOrDefault<string, object, FactionAbility.VeterancyRequirement?>("VeterancyUsageRequirement", null),
             __lookup.GetCastValueOrDefault("VeterancyExperienceGain", 0.0f));
 
     }
 
-    public override void Write(Utf8JsonWriter writer, FactionData.FactionAbility value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, FactionAbility value, JsonSerializerOptions options)
         => throw new NotSupportedException();
 
 }

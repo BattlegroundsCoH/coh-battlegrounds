@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Battlegrounds.Networking.Server;
+﻿using Battlegrounds.Networking.Server;
 
 namespace Battlegrounds.Networking.LobbySystem;
+
 public interface ILobbyMatchNotifier {
 
     /// <summary>
@@ -65,8 +60,13 @@ public interface ILobbyMatchNotifier {
     public event LobbyEventHandler<string>? OnPoll;
 
     /// <summary>
-    /// Event triggered when the host has sent a lobby halt message
+    /// Event triggered when the host has sent a lobby halt message.
     /// </summary>
     public event LobbyEventHandler? OnLobbyMatchHalt;
+
+    /// <summary>
+    /// Event triggered when the host wants to change the current screen.
+    /// </summary>
+    event LobbyEventHandler<string>? OnLobbyScreen;
 
 }

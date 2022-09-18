@@ -93,7 +93,7 @@ public class GameEvent {
                                                                            // ??? = ???
 
         // Log event (to verify we got something)
-        Trace.WriteLine($"[{timeStamp}] {this.Type} {this.PlayerID} {this.TargetType} {eventData.Length}", nameof(GameEvent));
+        //Trace.WriteLine($"[{timeStamp}] {this.Type} {this.PlayerID} {this.TargetType} {eventData.Length}", nameof(GameEvent));
 
         // Read type-specific content
         if (this.Type < (byte)GameEventType.EVENT_MAX2) {
