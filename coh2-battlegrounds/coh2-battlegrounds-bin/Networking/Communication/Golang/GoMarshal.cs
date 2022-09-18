@@ -70,7 +70,7 @@ public static class GoMarshal {
             ulong target = BitConverter.ToUInt64(span[5..13]);
             ulong sender = BitConverter.ToUInt64(span[13..21]);
             ushort len = BitConverter.ToUInt16(span[21..23]);
-            byte[] content = input[23..(23 + len)];
+            byte[] content = len == 0 ? Array.Empty<byte>() : input[23..(23 + len)];
             remaining = input[(23 + len)..];
             return new Message() {
                 CID = cid,

@@ -241,6 +241,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
 
                 // Register connection lost
                 this.m_connection.OnConnectionLost += _ => {
+                    Trace.WriteLine($"Inner connection triggered OnConnectionLost.", nameof(OnlineLobbyHandle));
                     this.OnLobbyConnectionLost?.Invoke("LOST");
                 };
 
@@ -276,6 +277,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
         // If disconnect, handle
         if (message.MessageType is ContentMessgeType.Disconnect) {
             if (message.Who == this.m_connection.SelfId) {
+                Trace.WriteLine($"Received disconnect message with kick flag: {message.Kick}", nameof(OnlineLobbyHandle));
                 this.OnLobbyConnectionLost?.Invoke(message.Kick ? "KICK" : "CLOSED");
             } else {
                 this.OnSystemMessage?.Invoke(new(message.Who, message.StrMsg, message.Kick ? "KICK" : "LEFT"));

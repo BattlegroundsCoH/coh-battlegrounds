@@ -382,6 +382,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     private void BeginMatch() {
 
+        // Determine correct action
         if (this.m_data.Model is LobbyHostModel hostModel) {
 
             // Set lobby status here
