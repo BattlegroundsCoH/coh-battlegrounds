@@ -24,6 +24,7 @@ using BattlegroundsApp.Utilities;
 using BattlegroundsApp.MVVM;
 using Battlegrounds.Locale;
 using BattlegroundsApp.Resources;
+using Battlegrounds.Modding.Content;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
@@ -442,15 +443,10 @@ public class LobbyParticipantModel : LobbyModel {
                         new LocaleValueKey(v.Title);
 
                     // Grab proper value
-                    var val = v.Type switch {
-                        "Checkbox" => settings.GetOrDefault(k, v.Min.ToString()) == "0" ? "Off" : "On",
-                        "Dropdown" => int.TryParse(settings.GetOrDefault(k, v.Min.ToString()), out int selectIndex) ? v.Options[selectIndex].LocStr : "", // TODO: Proper Locale
-                        "Slider" => string.Format(v.Value, settings.GetOrDefault(k, v.Min.ToString())),
-                        _ => settings.GetOrDefault(k, v.Min.ToString())
-                    };
+                    var val = settings.GetOrDefault(k, v.Min.ToString());
 
                     // Grab setting
-                    var setting = LobbySetting<string>.NewValue(name, val, k, v.Value);
+                    var setting = LobbySetting<string>.NewValue(name, GetAdditionalGamemodeValue(v, val), k, v.Value);
                     
                     // Add setting
                     this.GamemodeSettings.Add(setting);
@@ -479,7 +475,7 @@ public class LobbyParticipantModel : LobbyModel {
         if (this.Gamemode.AdditionalOptions is not null) {
 
             // Get locale
-            var loc = this.ModPackage.GetLocale(ModType.Gamemode, BattlegroundsInstance.Localize.Language);
+            //var loc = this.ModPackage.GetLocale(ModType.Gamemode, BattlegroundsInstance.Localize.Language);
 
             // Read gamemode options
             foreach (var (k, v) in this.Gamemode.AdditionalOptions) {
@@ -488,21 +484,8 @@ public class LobbyParticipantModel : LobbyModel {
                 if (k != e.SettingsKey)
                     continue;
 
-                // Grab name
-                var name = loc is not null && uint.TryParse(v.Title, out uint titleKey) ?
-                    new LocaleValueKey(loc[titleKey].ToUpperInvariant()) :
-                    new LocaleValueKey(v.Title);
-
-                // Grab proper value
-                var val = v.Type switch {
-                    "Checkbox" => e.SettingsValue == "0" ? "Off" : "On",
-                    "Dropdown" => int.TryParse(e.SettingsValue, out int selectIndex) ? v.Options[selectIndex].LocStr : "", // TODO: Proper Locale
-                    "Slider" => string.Format(v.Value, e.SettingsValue),
-                    _ => e.SettingsValue
-                };
-
                 // Grab setting
-                setting.Label = val;
+                setting.Label = GetAdditionalGamemodeValue(v, e.SettingsValue);
 
             }
 
@@ -513,6 +496,14 @@ public class LobbyParticipantModel : LobbyModel {
         }
 
     }
+
+    private static string GetAdditionalGamemodeValue(Gamemode.GamemodeAdditionalOption option, string value) 
+        => option.Type switch {
+            "Checkbox" => value == "0" ? "Off" : "On",
+            "Dropdown" => int.TryParse(value, out int selectIndex) ? option.Options[selectIndex].LocStr : "", // TODO: Proper Locale
+            "Slider" => string.Format(option.Value, value),
+            _ => value
+        };
 
     private void OnModPackageChange(string modPackage) {
 

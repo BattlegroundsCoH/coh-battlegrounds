@@ -220,10 +220,8 @@ public class LobbyPlanningContextHandler {
             // entity
             var ebp = BlueprintManager.FromBlueprintName<EntityBlueprint>(planElement.Blueprint);
         
-            // TODO: Fix line placement here
-
             // Add element
-            this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, ebp, spawn, lookat));
+            this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, ebp, spawn, lookat, !planElement.IsDirectional));
         
         } else {
             
