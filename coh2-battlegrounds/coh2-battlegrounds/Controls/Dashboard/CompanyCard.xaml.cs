@@ -90,7 +90,7 @@ public partial class CompanyCard : UserControl {
         typeIcon.Source = StringToCompanyTypeIconConverter.GetFromType(company.Type); /* Icons.GetValueOrDefault(company.Type.ToString(), Icons[string.Empty]);*/
 
         // Set company data
-        winRateValue.Text = company.Statistics.WinRate is 0 ? "N/A" : company.Statistics.WinRate.ToString();
+        winRateValue.Text = company.Statistics.WinRate is 0 ? "N/A" : $"{Math.Round(company.Statistics.WinRate * 100)}%";
         infantryKillsValue.Text = "N/A"; // TODO : This data is not currently being tracked
         vehicleKillsValue.Text = "N/A"; // TODO : This data is not currently being tracked
         killDeathRatioValue.Text = "N/A"; // TODO : This data is not currently being tracked

@@ -97,7 +97,7 @@
                         <!-- Win Ratio -->
                         <InlineUIContainer>
                             <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
-                                <TextBlock Text="Win/Loss Ratio:" />
+                                <TextBlock Text="Win Rate:" />
                                 <TextBlock Text="{Binding WinRate, FallbackValue='N/A'}"
                                            TextAlignment="Right" 
                                            Margin="0, 0, 8, 0" />
