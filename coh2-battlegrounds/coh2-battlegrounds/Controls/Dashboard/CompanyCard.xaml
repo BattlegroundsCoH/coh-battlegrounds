@@ -56,7 +56,8 @@
 
         <Border Grid.Row="1"
                 Grid.Column="0"
-                Width="275">
+                Width="275"
+                Margin="0, 0, 0, 40">
 
             <TextBlock TextWrapping="Wrap"
                        Foreground="White"
