@@ -119,7 +119,7 @@ public class LobbyPlanningContextHandler {
 
         // Translate points
         GamePosition spawn = this.m_scenario.FromMinimapPosition(mmSize.Width, mmSize.Height, point.X, point.Y);
-        GamePosition? lookat = other is null ? null : this.m_scenario.FromMinimapPosition(mmSize.Width, mmSize.Height, other.Value.X, point.Y);
+        GamePosition? lookat = other is null ? null : this.m_scenario.FromMinimapPosition(mmSize.Width, mmSize.Height, other.Value.X, other.Value.Y);
 
         // Define placed index
         int i = -1;
