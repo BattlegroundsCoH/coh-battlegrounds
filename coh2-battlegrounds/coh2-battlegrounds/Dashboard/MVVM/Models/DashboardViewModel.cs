@@ -1,5 +1,6 @@
 ﻿using Battlegrounds;
 using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.Gameplay;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.MVVM;
 using System;
@@ -16,7 +17,8 @@ public enum CompanyDataType {
     InfantryLosses,
     VehicleLosses,
     WinRate,
-    Company
+    Company,
+    FactionGames
 }
 
 public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
@@ -67,6 +69,31 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
     /// The total win/loss ration 
     /// </summary>
     private string m_winRate;
+
+    /// <summary>
+    /// The total amount of games played as Wehrmach
+    /// </summary>
+    private ulong m_wehrmachtGames;
+
+    /// <summary>
+    /// The total amount of games played as Soviets
+    /// </summary>
+    private ulong m_sovietGames;
+
+    /// <summary>
+    /// The total amount of games played as USF
+    /// </summary>
+    private ulong m_usfGames;
+
+    /// <summary>
+    /// The total amount of games played as UKF
+    /// </summary>
+    private ulong m_ukfGames;
+
+    /// <summary>
+    /// The total amount of games played as OKW
+    /// </summary>
+    private ulong m_okwGames;
 
     /// <summary>
     /// The most played company
@@ -191,6 +218,61 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
     }
 
     /// <summary>
+    /// The total games played as Wehrmacht
+    /// </summary>
+    public ulong WehrmachGames {
+        get => this.m_wehrmachtGames;
+        set {
+            this.m_wehrmachtGames = value;
+            OnPropertyChanged(nameof(WehrmachGames));
+        }
+    }
+
+    /// <summary>
+    /// The total games played as Soviets
+    /// </summary>
+    public ulong SovietGames {
+        get => this.m_sovietGames;
+        set {
+            this.m_sovietGames = value;
+            OnPropertyChanged(nameof(SovietGames));
+        }
+    }
+
+    /// <summary>
+    /// The total games played as USF
+    /// </summary>
+    public ulong USFGames {
+        get => this.m_usfGames;
+        set {
+            this.m_usfGames = value;
+            OnPropertyChanged(nameof(USFGames));
+        }
+    }
+
+    /// <summary>
+    /// The total games played as UKF
+    /// </summary>
+    public ulong UKFGames {
+        get => this.m_ukfGames;
+        set {
+            this.m_ukfGames = value;
+            OnPropertyChanged(nameof(UKFGames));
+        }
+    }
+
+    /// <summary>
+    /// The total games played as OKW
+    /// </summary>
+    public ulong OKWGames {
+        get => this.m_okwGames;
+        set {
+            this.m_okwGames = value;
+            OnPropertyChanged(nameof(OKWGames));
+        }
+    }
+
+    /// <summary>
     /// The most played company
     /// </summary>
     public Company? MostPlayedCompany { 
@@ -226,26 +308,35 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         this.WinRate = this.TotalGamesPlayed > 0 ? $"{Math.Round(this.TotalWins / (double)this.TotalGamesPlayed * 100)}%" : "N/A";
         this.MostPlayedCompany = this.GetCompanyData<Company>(CompanyDataType.Company);
 
+        this.WehrmachGames = this.GetCompanyData<ulong>(CompanyDataType.FactionGames, "ger");
+        this.SovietGames = this.GetCompanyData<ulong>(CompanyDataType.FactionGames, "sov");
+        this.USFGames = this.GetCompanyData<ulong>(CompanyDataType.FactionGames, "usa");
+        this.UKFGames = this.GetCompanyData<ulong>(CompanyDataType.FactionGames, "ukf");
+        this.OKWGames = this.GetCompanyData<ulong>(CompanyDataType.FactionGames, "okw");
+
     }
 
-    private T? GetCompanyData<T>(CompanyDataType type) => type switch {
+    private T? GetCompanyData<T>(CompanyDataType type, string faction = "") => type switch {
         CompanyDataType.Games or
         CompanyDataType.Wins or
         CompanyDataType.Losses or
         CompanyDataType.InfantryLosses or
         CompanyDataType.VehicleLosses => (T)Convert.ChangeType(this.SumerizeData(type), typeof(T)),
+        CompanyDataType.FactionGames => (T)Convert.ChangeType(this.SumerizeData(type, faction), typeof(T)),
         CompanyDataType.WinRate => (T)Convert.ChangeType(this.DataAverage(type), typeof(T)),
         CompanyDataType.Company => (T?)Convert.ChangeType(this.GetMostPlayedCompany(), typeof(T)),
         _ => default,
     };
 
     // TODO : Add returns for Infantry & Vehicle kills
-    private ulong SumerizeData(CompanyDataType type) => type switch {
+    private ulong SumerizeData(CompanyDataType type, string faction = "") => type switch {
         CompanyDataType.Games => PlayerCompanies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalMatchCount),
         CompanyDataType.Wins => PlayerCompanies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalMatchWinCount),
         CompanyDataType.Losses => PlayerCompanies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalMatchLossCount),
         CompanyDataType.InfantryLosses => PlayerCompanies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalInfantryLosses),
         CompanyDataType.VehicleLosses => PlayerCompanies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalVehicleLosses),
+        CompanyDataType.FactionGames => PlayerCompanies.GetAllCompanies().Where(x => x.Army == Faction.FromName(faction))
+                                                       .Aggregate(0ul, (a, b) => a + b.Statistics.TotalMatchCount),
         _ => 0,
     };
 
