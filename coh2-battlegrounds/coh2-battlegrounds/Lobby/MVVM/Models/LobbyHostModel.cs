@@ -242,7 +242,7 @@ public class LobbyHostModel : LobbyModel {
                 this.m_handle.SetLobbyState(LobbyState.Starting);
 
                 // Get play model
-                var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, this.UploadGamemodeCallback);
+                var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, 5, this.UploadGamemodeCallback);
 
                 // Log Screen change
                 Trace.WriteLine($"{nameof(PlayModelFactory)} picked play model '{play.GetType().Name}'.", nameof(LobbyHostModel));
@@ -277,7 +277,7 @@ public class LobbyHostModel : LobbyModel {
         // Update visually
         Application.Current.Dispatcher.Invoke(() => {
             if (p == 100) {
-                this.StartMatchButton.Title = LOCSTR_PLAYING();
+                this.StartMatchButton.Title = LobbyVisualsLookup.LOCSTR_PLAYING();
             } else {
                 this.StartMatchButton.Title = LOCSTR_GAMEMODEUPLOAD(p);
             }
@@ -290,7 +290,7 @@ public class LobbyHostModel : LobbyModel {
         // Notify
         Application.Current.Dispatcher.Invoke(() => {
             this.StartMatchButton.IsEnabled = false;
-            this.StartMatchButton.Title = LOCSTR_PLAYING();
+            this.StartMatchButton.Title = LobbyVisualsLookup.LOCSTR_PLAYING();
         });
 
     }
@@ -308,7 +308,7 @@ public class LobbyHostModel : LobbyModel {
 
     }
 
-    private void MapSelectionChanged(int newIndex, int oldIndex) {
+    private void MapSelectionChanged(int newIndex, int oldIndex, object value) {
 
         // Get scenario
         var scen = this.MapDropdown.Items[newIndex].Scenario;
@@ -338,7 +338,7 @@ public class LobbyHostModel : LobbyModel {
 
     }
 
-    private void GamemodeSelectionChanged(int newIndex, int oldIndex) {
+    private void GamemodeSelectionChanged(int newIndex, int _, object value) {
 
         // Grab gamemode
         var gamemode = this.GamemodeDropdown.Items[newIndex];
@@ -385,19 +385,22 @@ public class LobbyHostModel : LobbyModel {
                 var custom = gamemode.AuxiliaryOptions[i];
 
                 // Create handler
-                SettingChanged handler = (int a, int b) => this.GamemodeAuxOptionSelectionchanged(a,b,custom.Name);
+                void handler(int _, int __, object v) => this.GamemodeAuxOptionSelectionchanged(custom.Name, v);
 
                 // Grab name and convert it to a direct LocaleValueKey --> Only do this when merging UCS and BGLOC stuff.
                 var name = new LocaleValueKey(custom.Title.ToString().ToUpperInvariant());
 
                 // Create control
-                var settingControl = custom.OptionInputType switch {
+                LobbySetting settingControl = custom.OptionInputType switch {
                     AuxiliaryOptionType.Dropdown => 
-                        (LobbySetting)LobbySetting<IGamemodeOption>.NewDropdown(name, new(custom.Options.OrderBy(x => x.Value)), handler, custom.GetNumber("def")),
+                        LobbySetting<IGamemodeOption>.NewDropdown(name, new(custom.Options.OrderBy(x => x.Value)), handler, custom.GetNumber("def")),
                     AuxiliaryOptionType.Slider => 
-                        LobbySetting<int>.NewSlider(name, custom.GetNumber("min"), custom.GetNumber("max"), custom.GetNumber("step"), custom.Format, handler),
+                        LobbySetting<int>.NewSlider(name, custom.GetNumber("min"), custom.GetNumber("max"), custom.GetNumber("step"), custom.GetNumber("def"), custom.Format, handler),
                     _ => throw new Exception()
                 };
+
+                // Trigger a default set
+                this.GamemodeAuxOptionSelectionchanged(custom.Name, custom.GetNumber("def"));
 
                 // Add
                 this.GamemodeSettings.Add(settingControl);
@@ -414,10 +417,10 @@ public class LobbyHostModel : LobbyModel {
 
     }
 
-    private void GamemodeAuxOptionSelectionchanged(int newIndex, int _, string option)
-        => this.m_handle.SetLobbySetting(option, newIndex.ToString());
+    private void GamemodeAuxOptionSelectionchanged(string option, object v)
+        => this.m_handle.SetLobbySetting(option, v?.ToString() ?? "0");
 
-    private void GamemodeOptionSelectionChanged(int newIndex, int oldIndex) {
+    private void GamemodeOptionSelectionChanged(int newIndex, int _, object value) {
 
         // Bail
         if (newIndex == -1) {
@@ -430,21 +433,21 @@ public class LobbyHostModel : LobbyModel {
 
     }
 
-    private void WeatherSelectionChanged(int newIndex, int oldIndex) {
+    private void WeatherSelectionChanged(int newIndex, int _, object value) {
 
         // Update lobby
         this.m_handle.SetLobbySetting(LobbyConstants.SETTING_WEATHER, this.WeatherDropdown.Items[newIndex].IsOn ? "1" : "0");
 
     }
 
-    private void SupplySystemSelectionChanged(int newIndex, int oldIndex) {
+    private void SupplySystemSelectionChanged(int newIndex, int _, object value) {
 
         // Update lobby
         this.m_handle.SetLobbySetting(LobbyConstants.SETTING_LOGISTICS, this.SupplySystemDropdown.Items[newIndex].IsOn ? "1" : "0");
 
     }
 
-    private void ModPackageSelectionChanged(int newIndex, int oldIndex) {
+    private void ModPackageSelectionChanged(int newIndex, int oldIndex, object value) {
 
         // Set package
         this.m_package = this.ModPackageDropdown.Items[newIndex].ModPackage;

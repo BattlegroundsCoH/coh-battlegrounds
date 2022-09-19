@@ -114,7 +114,7 @@ public readonly struct SessionParticipant : ISessionParticipant { // Maybe chang
     public string GetName()
         => (this.IsHuman) ? this.UserDisplayname : this.Difficulty.GetIngameDisplayName();
 
-    public ulong GetID()
+    public ulong GetId()
         => this.IsHuman ? this.UserID : 0;
 
     public override string ToString()

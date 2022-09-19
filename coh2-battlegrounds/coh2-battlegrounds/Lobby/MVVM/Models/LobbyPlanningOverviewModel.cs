@@ -16,6 +16,7 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.Networking.Server;
 using Battlegrounds.Util;
 
 using BattlegroundsApp.Controls;
@@ -80,11 +81,34 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
     private readonly LobbyPlanningContextHandler m_planningContext;
     private readonly bool m_isDefending;
 
+    private readonly int m_participantCount;
+    private int m_readyParticipants;
+    private bool m_participantIsReady;
+    private bool m_participantCanCancel;
+    private string? m_participantTitle;
+
     public override bool SingleInstanceOnly => false;
 
     public override bool KeepAlive => false;
 
     public string LobbyTitle => this.m_data.Model.LobbyTitle;
+
+    public bool CanStart => this.m_data.Model switch {
+        LobbyHostModel => this.m_readyParticipants >= this.m_participantCount,
+        LobbyParticipantModel => this.m_participantCanCancel,
+        _ => false
+    };
+
+    public string ReturnLobbyText => this.m_data.Model switch { // TODO: Localise
+        LobbyHostModel => "Exit Planning",
+        _ => "Exit Lobby"
+    };
+
+    public string StartLobbyText => this.m_data.Model switch { // TODO: Localise
+        LobbyHostModel => this.CanStart ? "Start Match" : $"Waiting for Players ({this.m_readyParticipants}/{this.m_participantCount})",
+        LobbyParticipantModel => this.m_participantIsReady ? (string.IsNullOrEmpty(this.m_participantTitle) ? "Waiting for host" : this.m_participantTitle) : "Ready",
+        _ => "Waiting for host"
+    };
 
     public ImageSource? ScenarioPreview => LobbySettingsLookup.TryGetMapSource(this.m_data.Scenario);
 
@@ -133,7 +157,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         this.m_planningContext = new(this.m_planHandle, input.Scenario);
 
         // Set return command
-        this.ReturnLobbyCommand = new(() => App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, this.m_data.Model));
+        this.ReturnLobbyCommand = new(this.ExitPlanning);
         this.BeginMatchCommand = new(this.BeginMatch);
 
         // Create Lists
@@ -149,6 +173,35 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         // Grab self
         if (this.m_data.Model.GetSelf() is not ILobbySlot self) {
             return;
+        }
+
+        // Subscribe to member changes
+        this.m_data.Handle.OnLobbySlotUpdate += this.OnLobbySlotChange;
+
+        // Set client/participant specific stuff
+        if (this.m_data.Handle.IsHost) {
+
+            // Set initial
+            this.m_participantCount = (int)(this.m_data.Handle.GetPlayerCount(true) - 1);
+            this.m_readyParticipants = 0;
+            this.m_participantTitle = "";
+
+        } else {
+
+            // Set initial
+            this.m_participantCount = 0;
+            this.m_readyParticipants = 0;
+            this.m_participantTitle = "";
+            this.m_participantCanCancel = true;
+
+            // Subscribe to match info events
+            if (this.m_data.Handle is ILobbyMatchNotifier notifier) {
+                notifier.OnLobbyMatchInfo += this.OnLobbyParticipantMatchInfo;
+                notifier.OnLobbyLaunchGame += this.OnLobbyParticipantMatchStart;
+                notifier.OnLobbyMatchError += this.OnLobbyParticipantMatchCancel;
+                notifier.OnLobbyNotifyResults += this.OnLobbyParticipantMatchOver;
+            }
+
         }
 
         // Create capacity
@@ -229,7 +282,84 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         this.m_planHandle.PlanElementRemoved += this.PlanElementRemoved;
 
         // Finally, display world elements
-        App.Current.Dispatcher.Invoke(this.DisplayWorldElements);
+        App.Dispatcher.Invoke(this.DisplayWorldElements);
+
+    }
+
+    private void OnLobbySlotChange(ILobbySlot args) {
+
+        // Update slot count
+        this.m_readyParticipants = this.m_data.Handle.CountMemberState(LobbyMemberState.Waiting);
+
+        // Notify visuals
+        App.Dispatcher.Invoke(() => {
+            this.Notify(nameof(CanStart));
+            this.Notify(nameof(StartLobbyText));
+        });
+
+    }
+
+    private void OnLobbyParticipantMatchInfo(LobbyMatchInfoEventArgs e) {
+        if (e.Type is "upload_status") {
+            App.Dispatcher.Invoke(() => {
+                this.m_participantTitle = LobbyVisualsLookup.LOCSTR_DOWNLOAD(e.Reason);
+                this.m_participantCanCancel = false;
+                this.Notify(nameof(CanStart));
+                this.Notify(nameof(StartLobbyText));
+            });
+        }
+    }
+
+    private void OnLobbyParticipantMatchStart() {
+        App.Dispatcher.Invoke(() => {
+            this.m_participantTitle = LobbyVisualsLookup.LOCSTR_PLAYING();
+            this.m_participantCanCancel = false;
+            this.Notify(nameof(CanStart));
+            this.Notify(nameof(StartLobbyText));
+        });
+    }
+
+    private void OnLobbyParticipantMatchOver(ServerAPI serverAPI) {
+        this.OnLobbyParticipantMatchCancel(new(false, "cancel", ""));
+    }
+
+    private void OnLobbyParticipantMatchCancel(LobbyMatchInfoEventArgs e) {
+        App.Dispatcher.Invoke(() => {
+            this.m_participantTitle = "";
+            this.m_participantCanCancel = true;
+            this.Notify(nameof(CanStart));
+            this.Notify(nameof(StartLobbyText));
+        });
+    }
+
+    private void ExitPlanning() {
+
+        // Unsubscribe
+        this.m_data.Handle.OnLobbySlotUpdate -= this.OnLobbySlotChange;
+
+        // Unsubscribe to match info events
+        if (!this.m_data.Handle.IsHost && this.m_data.Handle is ILobbyMatchNotifier notifier) {
+            notifier.OnLobbyMatchInfo += this.OnLobbyParticipantMatchInfo;
+            notifier.OnLobbyLaunchGame += this.OnLobbyParticipantMatchStart;
+            notifier.OnLobbyMatchError += this.OnLobbyParticipantMatchCancel;
+            notifier.OnLobbyNotifyResults += this.OnLobbyParticipantMatchOver;
+        }
+
+        // Determine action based on model
+        if (this.m_data.Model is LobbyParticipantModel pModel) {
+
+            // Execute leave button
+            pModel.ExitButton.Click?.Execute(null);
+
+        } else {
+            
+            // Change our view
+            App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, this.m_data.Model);
+
+            // Inform members to change back
+            this.m_data.Handle.NotifyScreen("lobby");
+
+        }
 
     }
 
@@ -318,16 +448,31 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     private void BeginMatch() {
 
+        // Determine correct action
         if (this.m_data.Model is LobbyHostModel hostModel) {
 
             // Set lobby status here
             this.m_data.Handle.SetLobbyState(LobbyState.Starting);
 
             // Get play model
-            var play = PlayModelFactory.GetModel(this.m_data.Handle, this.m_data.Chat, hostModel.UploadGamemodeCallback);
+            var play = PlayModelFactory.GetModel(this.m_data.Handle, this.m_data.Chat, 0, hostModel.UploadGamemodeCallback);
 
             // prepare
             play.Prepare(this.m_data.Package, hostModel.BeginMatch, x => hostModel.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
+
+        } else if (this.m_data.Model is LobbyParticipantModel participantModel) {
+
+            // Get self
+            if (participantModel.GetSelf() is ILobbySlot slot && slot.Occupant is ILobbyMember selfMember) {
+                if (selfMember.State is LobbyMemberState.Planning) {
+                    this.m_data.Handle.MemberState(selfMember.MemberID, slot.TeamID, slot.SlotID, LobbyMemberState.Waiting);
+                    this.m_participantIsReady = true;
+                } else {
+                    this.m_data.Handle.MemberState(selfMember.MemberID, slot.TeamID, slot.SlotID, LobbyMemberState.Planning);
+                    this.m_participantIsReady = false;
+                }
+                this.Notify(nameof(StartLobbyText));
+            }
 
         }
 
@@ -336,7 +481,29 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
     private void PlanElementRemoved(int elementId) 
         => MainThread(() => this.m_planningContext.RemoveElementVisuals(elementId));
 
-    private void PlanElementAdded(ILobbyPlanElement planElement)
-        => MainThread(() => this.m_planningContext.AddElementVisuals(planElement));
+    private void PlanElementAdded(ILobbyPlanElement planElement) {
+
+        // Add if team member
+        byte selfTeam = this.m_planHandle.Team;
+        if (this.m_data.Handle.TeamHasMember(selfTeam, planElement.ElementOwnerId)) {
+            MainThread(() => this.m_planningContext.AddElementVisuals(this.ContextHandler.MinimapRenderSize, planElement));
+        }
+
+    }
+
+    public override void UnloadViewModel(OnModelClosed onClosed, bool requestDestroyed) {
+
+        // Check if a destroy command is requested.
+        if (requestDestroyed) {
+
+            // Destroy this isntance (to avoid annoying stuff, like trying to reconnect to an existing one...)
+            App.ViewManager.DestroyView(this);
+
+        }
+
+        // Use default here, since we cannot exit unless exit lobby button is pressed or hard exit
+        onClosed(false);
+
+    }
 
 }

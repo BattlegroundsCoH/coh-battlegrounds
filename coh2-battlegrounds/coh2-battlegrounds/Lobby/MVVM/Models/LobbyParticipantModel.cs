@@ -20,6 +20,11 @@ using BattlegroundsApp.Lobby.MVVM.Views;
 using BattlegroundsApp.LocalData;
 
 using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
+using BattlegroundsApp.Utilities;
+using BattlegroundsApp.MVVM;
+using Battlegrounds.Locale;
+using BattlegroundsApp.Resources;
+using Battlegrounds.Modding.Content;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
@@ -46,8 +51,6 @@ public class LobbyParticipantModel : LobbyModel {
     public override LobbySetting<ModPackageOption> ModPackageDropdown { get; }
 
     public override ModPackage ModPackage => this.m_package ?? throw new Exception("No Mod Package Defined");
-
-    private readonly Func<string, string> LOCSTR_DOWNLOAD = x => BattlegroundsInstance.Localize.GetString("LobbyView_DownloadGamemode", x); 
 
     public LobbyParticipantModel(ILobbyHandle handle, ILobbyTeam allies, ILobbyTeam axis) : base(handle, allies, axis) {
 
@@ -102,7 +105,16 @@ public class LobbyParticipantModel : LobbyModel {
         Application.Current.Dispatcher.Invoke(() => {
             switch (args) {
                 case "planning":
+                    
+                    // Goto match planning
                     this.PlanMatch();
+                    
+                    break;
+                case "lobby":
+
+                    // Change our view back to this
+                    App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, this);
+
                     break;
                 default:
                     Trace.WriteLine($"Unknown screen change '{args}'", nameof(LobbyParticipantModel));
@@ -138,7 +150,7 @@ public class LobbyParticipantModel : LobbyModel {
         Application.Current.Dispatcher.Invoke(() => {
 
             // Reset text
-            this.StartMatchButton.Title = LOCSTR_PLAYING();
+            this.StartMatchButton.Title = LobbyVisualsLookup.LOCSTR_PLAYING();
 
             // Re-enable
             this.StartMatchButton.IsEnabled = false;
@@ -301,7 +313,7 @@ public class LobbyParticipantModel : LobbyModel {
 
             if (e.Type is "upload_status") {
 
-                this.StartMatchButton.Title = LOCSTR_DOWNLOAD(e.Reason);
+                this.StartMatchButton.Title = LobbyVisualsLookup.LOCSTR_DOWNLOAD(e.Reason);
 
             } else {
 
@@ -354,6 +366,13 @@ public class LobbyParticipantModel : LobbyModel {
                     this.OnModPackageChange(e.SettingsValue);
                     break;
                 default:
+                    // Try set custom gamemode settings if there
+                    foreach (var opt in this.GamemodeSettings) {
+                        if (e.SettingsKey.Equals(opt.Tag)) {
+                            this.OnGamemodeAuxOptionChanged(opt, e);
+                            return;
+                        }
+                    }
                     Trace.WriteLine($"Unexpected setting key: {e.SettingsKey}", nameof(LobbyParticipantModel));
                     break;
             }
@@ -376,10 +395,11 @@ public class LobbyParticipantModel : LobbyModel {
             this.MapDropdown.Label = LobbySettingsLookup.GetScenarioName(scenario, map);
             this.ScenarioPreview = LobbySettingsLookup.TryGetMapSource(scenario);
 
-            // Notify
-            this.NotifyProperty(nameof(ScenarioPreview));
-
+            // Set current scenario
             this.Scenario = scenario;
+
+            // Notify
+            this.NotifyProperty(nameof(Scenario));
 
         });
 
@@ -387,14 +407,51 @@ public class LobbyParticipantModel : LobbyModel {
 
     private void OnGamemodeChange(string gamemode) {
 
+        // Get settings
+        var settings = this.m_handle.Settings;
+
+        // Invoke on UI thread
         Application.Current.Dispatcher.Invoke(() => {
 
+            // Set gamemode label
             this.GamemodeDropdown.Label = LobbySettingsLookup.GetGamemodeName(gamemode, this.m_package);
 
-            this.Gamemode = ModPackage.Gamemodes.Filter(x => x.ID == gamemode)
-                                                .IfTrue(x => x.Length == 1)
-                                                .ThenDo(x => x[0])
-                                                .OrDefaultTo(() => throw new IndexOutOfRangeException());
+            // Set gamemode
+            this.Gamemode = this.ModPackage.Gamemodes
+                .Filter(x => x.ID == gamemode)
+                .IfTrue(x => x.Length == 1)
+                .ThenDo(x => x[0])
+                .OrDefaultTo(() => throw new IndexOutOfRangeException());
+
+            // Clean additional options
+            this.GamemodeSettings.RemoveAll(x => x != this.GamemodeOptionDropdown);
+
+            // Ensure additional options are not null
+            if (this.Gamemode.AdditionalOptions is not null) {
+
+                // Get locale
+                var loc = this.ModPackage.GetLocale(ModType.Gamemode, BattlegroundsInstance.Localize.Language);
+
+                // Read gamemode options
+                foreach (var (k, v) in this.Gamemode.AdditionalOptions) {
+                    
+                    // Grab name
+                    var name = loc is not null && uint.TryParse(v.Title, out uint titleKey) ?
+                        new LocaleValueKey(loc[titleKey].ToUpperInvariant()) :
+                        new LocaleValueKey(v.Title);
+
+                    // Grab proper value
+                    var val = settings.GetOrDefault(k, v.Min.ToString());
+
+                    // Grab setting
+                    var setting = LobbySetting<string>.NewValue(name, GetAdditionalGamemodeValue(v, val), k, v.Value);
+                    
+                    // Add setting
+                    this.GamemodeSettings.Add(setting);
+
+                }
+
+            }
 
         });
 
@@ -409,6 +466,42 @@ public class LobbyParticipantModel : LobbyModel {
           
 
     }
+
+    private void OnGamemodeAuxOptionChanged(LobbySetting setting, LobbySettingsChangedEventArgs e) {
+
+        // Make sure there are options
+        if (this.Gamemode.AdditionalOptions is not null) {
+
+            // Get locale
+            //var loc = this.ModPackage.GetLocale(ModType.Gamemode, BattlegroundsInstance.Localize.Language);
+
+            // Read gamemode options
+            foreach (var (k, v) in this.Gamemode.AdditionalOptions) {
+
+                // Make sure we got the correct one
+                if (k != e.SettingsKey)
+                    continue;
+
+                // Grab setting
+                setting.Label = GetAdditionalGamemodeValue(v, e.SettingsValue);
+
+            }
+
+        } else {
+
+            setting.Label = e.SettingsValue;
+
+        }
+
+    }
+
+    private static string GetAdditionalGamemodeValue(Gamemode.GamemodeAdditionalOption option, string value) 
+        => option.Type switch {
+            "Checkbox" => value == "0" ? "Off" : "On",
+            "Dropdown" => int.TryParse(value, out int selectIndex) ? option.Options[selectIndex].LocStr : "", // TODO: Proper Locale
+            "Slider" => string.Format(option.Value, value),
+            _ => value
+        };
 
     private void OnModPackageChange(string modPackage) {
 

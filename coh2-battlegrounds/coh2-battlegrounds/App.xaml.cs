@@ -22,6 +22,7 @@ using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Startup.MVVM.Models;
+using System.Windows.Threading;
 
 namespace BattlegroundsApp;
 
@@ -47,6 +48,8 @@ public partial class App : Application {
 
     [MemberNotNullWhen(true, nameof(__viewManager), nameof(__handler))]
     public static bool IsStarted { get; private set; }
+
+    public static new Dispatcher Dispatcher => App.Current.Dispatcher;
 
     [MemberNotNull(nameof(__viewManager), nameof(__handler))]
     private void App_Startup(object sender, StartupEventArgs e) {
@@ -222,6 +225,9 @@ public partial class App : Application {
         // Close networking
         NetworkInterface.Shutdown();
 
+        // Close log
+        BattlegroundsInstance.Log?.SaveAndClose(0);
+
         // Save all changes
         BattlegroundsInstance.SaveInstance();
 
@@ -268,8 +274,7 @@ public partial class App : Application {
     private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) {
 
         // Update
-        if (sender is null)
-            sender = "<<NULL>>";
+        sender ??= "<<NULL>>";
 
         // Log exception
         Trace.WriteLine($"\n\n\n\t*** FATAL APP EXIT ***\n\nException trigger:\n{sender}\n\nException Info:\n{e.ExceptionObject}\n");

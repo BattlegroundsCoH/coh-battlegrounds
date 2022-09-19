@@ -245,6 +245,17 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
         return this.m_areRolesReversed;
     }
 
+    public bool TeamHasMember(byte tid, ulong memberId) => tid switch {
+        0 => this.m_allies.GetSlotOfMember(memberId) is not null,
+        1 => this.m_axis.GetSlotOfMember(memberId) is not null,
+        2 => this.m_obs.GetSlotOfMember(memberId) is not null,
+        _ => false
+    };
+
+    public int CountMemberState(LobbyMemberState state)
+        => this.m_allies.Slots.Fold(0, (sum, s) => sum + (s.IsOccupied ? (s.Occupant.State == state ? 1 : 0) : 0)) +
+        this.m_axis.Slots.Fold(0, (sum, s) => sum + (s.IsOccupied ? (s.Occupant.State == state ? 1 : 0) : 0));
+
     #region Nop calls
 
     public void CloseHandle() {

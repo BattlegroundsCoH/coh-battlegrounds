@@ -266,7 +266,7 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom, ignoreTransport)
 
         end
 
-    else
+    elseif gotopos ~= nil then
 
         -- Give move order
         Command_SquadPos(player, sg_temp, SCMD_Move, gotopos, false )

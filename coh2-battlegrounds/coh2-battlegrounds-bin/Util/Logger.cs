@@ -14,17 +14,22 @@ public sealed class Logger : TraceListener {
     private static readonly string OUT_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\coh2-bg.log");
 
     private readonly StreamWriter? m_writer;
+    private readonly DateTime m_startupTime;
 
     /// <summary>
     /// Get if logger instance has an open log file
     /// </summary>
     public bool HasFile => this.m_writer is not null;
 
-
     /// <summary>
     /// Initialsie a new <see cref="Logger"/> instance on <see cref="OUT_PATH"/>.
     /// </summary>
     public Logger() {
+        
+        // Grab startup time
+        this.m_startupTime = DateTime.Now;
+
+        // Open file
         FileStream? file = Open();
         if (file is not null) {
             if (file.Length > 768) { // Delete if file exceeds 768kb
@@ -61,12 +66,35 @@ public sealed class Logger : TraceListener {
             this.m_writer.WriteLine($"\t---------------------------------------------------------");
             this.m_writer.Flush();
             this.m_writer.Close();
+            this.StoreLogFile();
         }
+    }
+
+    private void StoreLogFile() {
+
+        // Ensure file exists
+        if (File.Exists(OUT_PATH)) {
+
+            // Create storage paths
+            var d = $"{this.m_startupTime.Year}_{this.m_startupTime.Month}_{this.m_startupTime.Day}_{this.m_startupTime.Hour}_{this.m_startupTime.Minute}_{this.m_startupTime.Second}";
+            var store_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\logs");
+            var store_name = Path.Combine(store_path, $"coh2-bg_{d}.log");
+            
+            // Make sure container folder exists
+            if (!Directory.Exists(store_path)) {
+                Directory.CreateDirectory(store_path);
+            }
+            
+            // Copy the file
+            File.Copy(OUT_PATH, store_name);
+
+        }
+
     }
 
     private static FileStream? Open() {
         try {
-            return File.Open(OUT_PATH, FileMode.Append, FileAccess.Write, FileShare.Read);
+            return File.Open(OUT_PATH, FileMode.Create, FileAccess.Write, FileShare.Read);
         } catch (IOException ioex) {
             Trace.WriteLine(ioex, nameof(Logger)); // <-- will only be visible in VS
             return null;

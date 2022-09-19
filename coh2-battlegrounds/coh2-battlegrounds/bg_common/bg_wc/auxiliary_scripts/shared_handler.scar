@@ -320,13 +320,14 @@ end
 function BG_CallInInitials()
 
     for i=1, #_bg_playerData do
-
-        for _, v in pairs(_bg_playerData[i].company.units) do
-            if v.phase == 0 then
-                BG_DeploySquad(_bg_playerData[i].player, v.company_id);
+        local deploy = _bg_playerData[i].deploy_initials;
+        if deploy == nil or deploy == true then
+            for _, v in pairs(_bg_playerData[i].company.units) do
+                if v.phase == 0 then
+                    BG_DeploySquad(_bg_playerData[i].player, v.company_id);
+                end
             end
         end
-
     end
 
 end

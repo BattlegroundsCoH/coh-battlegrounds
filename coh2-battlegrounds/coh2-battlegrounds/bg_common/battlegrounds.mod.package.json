@@ -145,14 +145,6 @@
         ],
         "german": [
           {
-            "EntityBlueprint": "concrete_bunker_bg",
-            "IsDirectional": true,
-            "IsLinePlacement": false,
-            "MaxPlacement": 2,
-            "PreGarrisonUnitTypes": [],
-            "PlacementType": 1
-          },
-          {
             "EntityBlueprint": "makeshift_bunker_mp",
             "IsDirectional": true,
             "IsLinePlacement": false,

@@ -166,9 +166,9 @@ internal abstract class BasePlayModel {
         // Create plan info
         if (gamemodeInstance.HasPlanning && this.m_handle.PlanningHandle is not null) {
 
-            // Union participants and map by index
+            // Union participants and map by index (and remove AI from consideration, as they have no valid UID)
             var allParticipants = allies.Concat(axis);
-            var participants = allParticipants.ToLookup(x => x.GetID());
+            var participants = allParticipants.Filter(x => x.IsHuman).ToLookup(x => x.GetId());
 
             // Grab elements
             var elements = this.m_handle.PlanningHandle.GetPlanningElements(0).Concat(this.m_handle.PlanningHandle.GetPlanningElements(1));
@@ -178,7 +178,7 @@ internal abstract class BasePlayModel {
 
             // Invoke helper functions
             sessionGoals = CreatePlanningGoals(participants, elements);
-            sessionEntities = CreatePlanningEntities(participants, elements, mode);
+            sessionEntities = CreatePlanningEntities(participants,elements, mode);
             sessionSquads = CreatePlanningSquads(participants, elements);
 
             // Determine if there's need for AI planning
