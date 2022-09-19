@@ -68,7 +68,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
     /// <summary>
     /// The total win/loss ration 
     /// </summary>
-    private string m_winRate;
+    private string m_winRate = "0";
 
     /// <summary>
     /// The total amount of games played as Wehrmach
@@ -220,11 +220,11 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
     /// <summary>
     /// The total games played as Wehrmacht
     /// </summary>
-    public ulong WehrmachGames {
+    public ulong WehrmachtGames {
         get => this.m_wehrmachtGames;
         set {
             this.m_wehrmachtGames = value;
-            OnPropertyChanged(nameof(WehrmachGames));
+            OnPropertyChanged(nameof(WehrmachtGames));
         }
     }
 
@@ -305,10 +305,10 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         this.TotalLosses = this.GetCompanyData<ulong>(CompanyDataType.Losses);
         this.TotalInfantryLosses = this.GetCompanyData<ulong>(CompanyDataType.InfantryLosses);
         this.TotalVehicleLosses = this.GetCompanyData<ulong>(CompanyDataType.VehicleLosses);
-        this.WinRate = this.TotalGamesPlayed > 0 ? $"{Math.Round(this.TotalWins / (double)this.TotalGamesPlayed * 100)}%" : "N/A";
+        this.WinRate = this.TotalGamesPlayed > 0 ? $"{Math.Round(this.TotalWins / (double)this.TotalGamesPlayed * 100)}%" : "0";
         this.MostPlayedCompany = this.GetCompanyData<Company>(CompanyDataType.Company);
 
-        this.WehrmachGames = this.GetCompanyData<ulong>(CompanyDataType.FactionGames, "ger");
+        this.WehrmachtGames = this.GetCompanyData<ulong>(CompanyDataType.FactionGames, "ger");
         this.SovietGames = this.GetCompanyData<ulong>(CompanyDataType.FactionGames, "sov");
         this.USFGames = this.GetCompanyData<ulong>(CompanyDataType.FactionGames, "usa");
         this.UKFGames = this.GetCompanyData<ulong>(CompanyDataType.FactionGames, "ukf");

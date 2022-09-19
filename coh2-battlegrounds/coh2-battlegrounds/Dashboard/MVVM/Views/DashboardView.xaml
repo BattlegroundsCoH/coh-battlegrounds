@@ -60,6 +60,7 @@
                                        FontFamily="Open Sans"
                                        FontWeight="DemiBold"
                                        VerticalContentAlignment="Center"
+                                       HorizontalAlignment="Center"
                                        LocKey="DashboardView_Statistics"/>
 
                     <!-- Statistics Data -->
@@ -167,6 +168,7 @@
                                        FontFamily="Open Sans"
                                        FontWeight="DemiBold"
                                        Margin="15, 0, 0, 0"
+                                       HorizontalAlignment="Center"
                                        VerticalContentAlignment="Center"
                                        LocKey="DashboardView_MostPlayedCompany" />
 
@@ -183,6 +185,7 @@
                                        FontFamily="Open Sans"
                                        FontWeight="DemiBold"
                                        Margin="15, 0, 0, 0"
+                                       HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
                                        LocKey="DashboardView_Misc"/>
 
@@ -198,6 +201,56 @@
                                    FontSize="16"
                                    LineHeight="26"
                                    Margin="8, 5, 0, 5">
+                            
+                            <!-- Wehrmacht Games -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="Wehrmacht Games:" />
+                                    <TextBlock Text="{Binding WehrmachtGames, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
+                            
+                            <!-- Soviet Games -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="Soviet Games:" />
+                                    <TextBlock Text="{Binding SovietGames, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
+                            
+                            <!-- USF Games -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="USF Games:" />
+                                    <TextBlock Text="{Binding USFGames, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
+                            
+                            <!-- UKF Games -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="Wehrmacht Games:" />
+                                    <TextBlock Text="{Binding UKFGames, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
+                            
+                            <!-- OKW Games -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="OKW Games:" />
+                                    <TextBlock Text="{Binding OKWGames, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
 
 
 
