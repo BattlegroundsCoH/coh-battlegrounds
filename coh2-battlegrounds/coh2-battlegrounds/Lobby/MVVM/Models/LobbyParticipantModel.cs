@@ -52,8 +52,6 @@ public class LobbyParticipantModel : LobbyModel {
 
     public override ModPackage ModPackage => this.m_package ?? throw new Exception("No Mod Package Defined");
 
-    private readonly Func<string, string> LOCSTR_DOWNLOAD = x => BattlegroundsInstance.Localize.GetString("LobbyView_DownloadGamemode", x); 
-
     public LobbyParticipantModel(ILobbyHandle handle, ILobbyTeam allies, ILobbyTeam axis) : base(handle, allies, axis) {
 
         // Define start match buttnn
@@ -152,7 +150,7 @@ public class LobbyParticipantModel : LobbyModel {
         Application.Current.Dispatcher.Invoke(() => {
 
             // Reset text
-            this.StartMatchButton.Title = LOCSTR_PLAYING();
+            this.StartMatchButton.Title = LobbyVisualsLookup.LOCSTR_PLAYING();
 
             // Re-enable
             this.StartMatchButton.IsEnabled = false;
@@ -315,7 +313,7 @@ public class LobbyParticipantModel : LobbyModel {
 
             if (e.Type is "upload_status") {
 
-                this.StartMatchButton.Title = LOCSTR_DOWNLOAD(e.Reason);
+                this.StartMatchButton.Title = LobbyVisualsLookup.LOCSTR_DOWNLOAD(e.Reason);
 
             } else {
 

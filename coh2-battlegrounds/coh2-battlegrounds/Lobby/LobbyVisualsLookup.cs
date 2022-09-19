@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using Battlegrounds;
 using Battlegrounds.Game.Gameplay;
 
 namespace BattlegroundsApp.Lobby;
@@ -46,5 +47,15 @@ public static class LobbyVisualsLookup {
         new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/objective_icons/ot_defend.png")),
         new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/objective_icons/ot_support.png")),
     };
+
+    /// <summary>
+    /// Get the Locale String for downloading
+    /// </summary>
+    public static readonly Func<string, string> LOCSTR_DOWNLOAD = x => BattlegroundsInstance.Localize.GetString("LobbyView_DownloadGamemode", x);
+
+    /// <summary>
+    /// Get the locale string for playing
+    /// </summary>
+    public static readonly Func<string> LOCSTR_PLAYING = () => BattlegroundsInstance.Localize.GetString("LobbyView_PLAYING");
 
 }

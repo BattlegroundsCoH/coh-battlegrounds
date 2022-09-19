@@ -18,7 +18,7 @@ namespace BattlegroundsApp.Lobby.MatchHandling;
 
 internal class OnlineModel : BasePlayModel, IPlayModel {
 
-    public OnlineModel(ILobbyHandle handler, LobbyChatSpectatorModel lobbyChat, UploadProgressCallbackHandler callbackHandler) : base(handler, lobbyChat) {
+    public OnlineModel(ILobbyHandle handler, LobbyChatSpectatorModel lobbyChat, UploadProgressCallbackHandler callbackHandler, uint cancelTime) : base(handler, lobbyChat) {
 
         // Startup strategy
         this.m_startupStrategy = new OnlineStartupStrategy {
@@ -26,6 +26,8 @@ internal class OnlineModel : BasePlayModel, IPlayModel {
             SessionInfoCollector = () => this.m_info,
             GamemodeUploadProgress = callbackHandler,
             PlayStrategyFactory = new OverwatchStrategyFactory(),
+            StopMatchSeconds = cancelTime
+            
         };
 
         // Analysis strategy

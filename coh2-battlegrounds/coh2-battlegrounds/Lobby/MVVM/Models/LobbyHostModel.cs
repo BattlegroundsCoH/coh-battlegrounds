@@ -242,7 +242,7 @@ public class LobbyHostModel : LobbyModel {
                 this.m_handle.SetLobbyState(LobbyState.Starting);
 
                 // Get play model
-                var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, this.UploadGamemodeCallback);
+                var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, 5, this.UploadGamemodeCallback);
 
                 // Log Screen change
                 Trace.WriteLine($"{nameof(PlayModelFactory)} picked play model '{play.GetType().Name}'.", nameof(LobbyHostModel));
@@ -277,7 +277,7 @@ public class LobbyHostModel : LobbyModel {
         // Update visually
         Application.Current.Dispatcher.Invoke(() => {
             if (p == 100) {
-                this.StartMatchButton.Title = LOCSTR_PLAYING();
+                this.StartMatchButton.Title = LobbyVisualsLookup.LOCSTR_PLAYING();
             } else {
                 this.StartMatchButton.Title = LOCSTR_GAMEMODEUPLOAD(p);
             }
@@ -290,7 +290,7 @@ public class LobbyHostModel : LobbyModel {
         // Notify
         Application.Current.Dispatcher.Invoke(() => {
             this.StartMatchButton.IsEnabled = false;
-            this.StartMatchButton.Title = LOCSTR_PLAYING();
+            this.StartMatchButton.Title = LobbyVisualsLookup.LOCSTR_PLAYING();
         });
 
     }

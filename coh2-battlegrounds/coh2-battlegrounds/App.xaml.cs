@@ -22,6 +22,7 @@ using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Startup.MVVM.Models;
+using System.Windows.Threading;
 
 namespace BattlegroundsApp;
 
@@ -47,6 +48,8 @@ public partial class App : Application {
 
     [MemberNotNullWhen(true, nameof(__viewManager), nameof(__handler))]
     public static bool IsStarted { get; private set; }
+
+    public static new Dispatcher Dispatcher => App.Current.Dispatcher;
 
     [MemberNotNull(nameof(__viewManager), nameof(__handler))]
     private void App_Startup(object sender, StartupEventArgs e) {
