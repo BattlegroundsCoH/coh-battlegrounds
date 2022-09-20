@@ -14,6 +14,15 @@
     <Color x:Key="BackgroundLightBlue">#334252</Color>
     <SolidColorBrush x:Key="BackgroundLightBlueBrush" Color="{StaticResource BackgroundLightBlue}" />
 
+    <Color x:Key="BackgroundPurple">#523352</Color>
+    <SolidColorBrush x:Key="BackgroundPurpleBrush" Color="{StaticResource BackgroundPurple}" />
+
+    <Color x:Key="BackgroundLightPurple">#714771</Color>
+    <SolidColorBrush x:Key="BackgroundLightPurpleBrush" Color="{StaticResource BackgroundLightPurple}" />
+
+    <Color x:Key="BackgroundDarkishGreen">#335234</Color>
+    <SolidColorBrush x:Key="BackgroundDarkishGreenBrush" Color="{StaticResource BackgroundDarkishGreen}" />
+
     <Color x:Key="BackgroundDarkRed">#873737</Color>
     <SolidColorBrush x:Key="BackgroundDarkRedBrush" Color="{StaticResource BackgroundDarkRed}" />
 

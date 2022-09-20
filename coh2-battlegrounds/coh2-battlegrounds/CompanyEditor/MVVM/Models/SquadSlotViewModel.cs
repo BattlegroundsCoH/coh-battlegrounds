@@ -57,6 +57,19 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
         _ => string.Empty
     };
 
+    public Brush PhaseBackground => this.BuilderInstance.Phase switch {
+        DeploymentPhase.PhaseInitial => (SolidColorBrush)App.Current.FindResource("BackgroundBlueBrush"),
+        DeploymentPhase.PhaseB => (SolidColorBrush)App.Current.FindResource("BackgroundPurpleBrush"),
+        DeploymentPhase.PhaseC => (SolidColorBrush)App.Current.FindResource("BackgroundDarkishGreenBrush"),
+        _ => (SolidColorBrush)App.Current.FindResource("BackgroundLightBlueBrush"),
+    };
+
+    public Brush PhaseBackgroundHover => this.BuilderInstance.Phase switch {
+        DeploymentPhase.PhaseB => (SolidColorBrush)App.Current.FindResource("BackgroundLightPurpleBrush"),
+        DeploymentPhase.PhaseC => (SolidColorBrush)App.Current.FindResource("BackgroundGreenBrush"),
+        _ => (SolidColorBrush)App.Current.FindResource("BackgroundLightGrayBrush"),
+    };
+
     public bool SingleInstanceOnly => false; // This will allow us to override
 
     public bool KeepAlive => false;

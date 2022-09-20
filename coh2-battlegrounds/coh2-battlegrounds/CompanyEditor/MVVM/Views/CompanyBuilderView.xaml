@@ -71,25 +71,26 @@
 
         <!-- Row 0 :: Return/Back -->
         <Button x:Name="returnLobbyButton" 
-                    Content="CompanyBuilder_Return" 
-                    Width="150"
-                    Height="35"
-                    Style="{StaticResource StandardRedLocButton}" 
-                    Margin="10,0,18,0"
-                    Grid.Row="0"
+                Content="CompanyBuilder_Return" 
+                Width="150"
+                Height="35"
+                Style="{StaticResource StandardRedLocButton}" 
+                Margin="10,0,18,0"
+                Grid.Row="0"
                 Grid.Column="2"
                 HorizontalAlignment="Right"
-                    Visibility="{Binding Back.Visibility}"
-                    Command="{Binding Back.Click}"/>
+                Visibility="{Binding Back.Visibility}"
+                Command="{Binding Back.Click}"/>
 
         <!-- Row 1 :: Company Overview -->
-        <TabControl Grid.Row="1"
-                    Grid.Column="0"
-                    Grid.RowSpan="3"
-                    Style="{StaticResource CompanyBuilderMainTabControl}"
-                    Width="770"
-                    SelectedIndex="{Binding SelectedMainTab}"
-                    SelectionChanged="ChangeMainTab">
+        <TabControl 
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.RowSpan="3"
+            Style="{StaticResource CompanyBuilderMainTabControl}"
+            Width="770"
+            SelectedIndex="{Binding SelectedMainTab}"
+            SelectionChanged="ChangeMainTab">
 
             <!-- UNITS -->
             <TabItem Header="CompanyBuilder_Units"
@@ -539,13 +540,14 @@
                     Style="{StaticResource StandardBlueLocButton}">
             </Button>
 
-            <Button x:Name="saveButton" 
-                    Content="CompanyBuilder_Save" 
-                    Width="150"
-                    Height="35"
-                    Style="{StaticResource StandardBlueLocButton}" 
-                    Margin="10,0,18,0"
-                    Click="saveButton_Click">
+            <Button 
+                x:Name="saveButton" 
+                Content="CompanyBuilder_Save" 
+                Width="150"
+                Height="35"
+                Style="{StaticResource StandardBlueLocButton}" 
+                Margin="10,0,18,0"
+                Click="saveButton_Click">
                 <Button.RenderTransform>
                     <TranslateTransform/>
                 </Button.RenderTransform>
