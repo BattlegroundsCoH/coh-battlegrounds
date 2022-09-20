@@ -209,6 +209,41 @@
                         </dropArea:DropArea>
                     </TabItem>
 
+                    <!-- Leaders -->
+                    <TabItem Header="CompanyBuilder_Leaders"
+                             Tag="{Binding LeaderCapacity}"
+                             Width="180"
+                             Style="{StaticResource CompanyBuilderSecondaryTabItem}"
+                             x:Name="LeaderTab">
+                        <dropArea:DropArea AllowDrop="True"
+                                           Background="White"
+                                           BorderThickness="1.5"
+                                           BorderBrush="Black"
+                                           Drop="OnItemDrop">
+                            <Canvas x:Name="LeaderCanvas"
+                                    ClipToBounds="True"
+                                    IsHitTestVisible="True"
+                                    Background="#212d3a">
+                                <StackPanel x:Name="LeaderPanel"
+                                            SizeChanged="LeaderPanel_SizeChanged">
+                                    <StackPanel.Resources>
+                                        <Style TargetType="{x:Type views:SquadSlotView}">
+                                            <Setter Property="Margin" Value="0, 5, 5, 0"/>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <ItemsControl ItemsSource="{Binding CompanyLeaderSquads}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal"
+                                                           Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}, Path=ActualWidth}"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Canvas>
+                        </dropArea:DropArea>
+                    </TabItem>
+
                 </TabControl>
 
             </TabItem>

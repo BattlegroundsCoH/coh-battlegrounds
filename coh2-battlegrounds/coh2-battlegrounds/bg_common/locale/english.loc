@@ -188,6 +188,7 @@ english:
  CompanyBuilder_Infantry: "Infantry ({0}/{1})"
  CompanyBuilder_Support: "Support ({0}/{1})"
  CompanyBuilder_Vehicles: "Vehicles ({0}/{1})"
+ CompanyBuilder_Leaders: "Leaders ({0}/{1})"
  CompanyBuilder_CommanderAbilities: "Commander Abilities ({0}/{1})"
  CompanyBuilder_UnitAbilities: "Unit Abilities"
  CompanyBuilder_CapturedItems: "Captured Items"

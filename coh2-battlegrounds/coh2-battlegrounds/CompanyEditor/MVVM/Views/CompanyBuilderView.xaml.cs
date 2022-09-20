@@ -25,7 +25,7 @@ public partial class CompanyBuilderView : UserControl {
     public CompanyBuilderView() {
         this.InitializeComponent();
         this.m_panels = new StackPanel[][] {
-            new StackPanel[] { this.InfantryPanel, this.SupportPanel, this.VehiclePanel },
+            new StackPanel[] { this.InfantryPanel, this.SupportPanel, this.VehiclePanel, this.LeaderPanel },
             new StackPanel[] { this.CommanderAbilitiyPanel, this.UnitAbilityPanel }
         };
     }
@@ -98,6 +98,7 @@ public partial class CompanyBuilderView : UserControl {
                 0 => this.InfantryTab,
                 1 => this.SupportTab,
                 2 => this.VehicleTab,
+                3 => this.LeaderTab,
                 _ => throw new IndexOutOfRangeException()
             },
             1 => this.m_selectedSubAbilityTab switch {
@@ -167,6 +168,9 @@ public partial class CompanyBuilderView : UserControl {
         => this.RHS_ScrollBar_Refresh();
 
     private void InfantryPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        => this.RHS_ScrollBar_Refresh();
+
+    private void LeaderPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         => this.RHS_ScrollBar_Refresh();
 
     private void RHS_ScrollBar_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
