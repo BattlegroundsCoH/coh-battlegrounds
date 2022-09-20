@@ -171,11 +171,12 @@ public class FactionCompanyType : IChecksumElement {
     }
 
     private readonly Dictionary<string, DeploymentPhase> m_unitUnlocks;
+    private string m_typeId;
 
     /// <summary>
     /// 
     /// </summary>
-    public string Id { get; init; }
+    public string Id => this.m_typeId;
 
     /// <summary>
     /// 
@@ -250,6 +251,11 @@ public class FactionCompanyType : IChecksumElement {
     public FactionData? FactionData { get; set; }
 
     /// <summary>
+    /// Get or init the source file to load data from.
+    /// </summary>
+    public string SourceFile { get; init; }
+
+    /// <summary>
     /// Initialise a new <see cref="FactionCompanyType"/> instance.
     /// </summary>
     /// <param name="Id"></param>
@@ -268,10 +274,10 @@ public class FactionCompanyType : IChecksumElement {
     public FactionCompanyType(string Id, string Icon, 
         int MaxInfantry, int MaxTeamWeapons, int MaxVehicles, int MaxLeaders, int MaxAbilities, int MaxInitialPhase,
         string[] Exclude, string[] DeployTypes, TransportOption[] DeployBlueprints, Dictionary<string, Phase> Phases,
-        string TeamWeaponCrew) {
+        string TeamWeaponCrew, string SourceFile) {
 
         // Set properties
-        this.Id = Id;
+        this.m_typeId = Id;
         this.Icon = Icon;
         this.MaxLeaders = MaxLeaders;
         this.MaxInfantry = MaxInfantry;
@@ -284,14 +290,19 @@ public class FactionCompanyType : IChecksumElement {
         this.DeployBlueprints = DeployBlueprints;
         this.Phases = Phases;
         this.TeamWeaponCrew = TeamWeaponCrew;
+        this.SourceFile = SourceFile;
 
         // Init internals
         this.m_unitUnlocks = new();
-        foreach (var (phasename, phase) in this.Phases) {
-            DeploymentPhase p = Enum.Parse<DeploymentPhase>(phasename);
-            for (int i = 0; i < phase.Unlocks.Length; i++) {
-                this.m_unitUnlocks[phase.Unlocks[i]] = p;
+        if (this.Phases is not null) {
+            foreach (var (phasename, phase) in this.Phases) {
+                DeploymentPhase p = Enum.Parse<DeploymentPhase>(phasename);
+                for (int i = 0; i < phase.Unlocks.Length; i++) {
+                    this.m_unitUnlocks[phase.Unlocks[i]] = p;
+                }
             }
+        } else {
+            this.Phases = new();
         }
 
     }
@@ -349,5 +360,7 @@ public class FactionCompanyType : IChecksumElement {
         }
         return BlueprintManager.FromBlueprintName<SquadBlueprint>(this.TeamWeaponCrew);
     }
+
+    internal void ChangeId(string id) => this.m_typeId = id;
 
 }

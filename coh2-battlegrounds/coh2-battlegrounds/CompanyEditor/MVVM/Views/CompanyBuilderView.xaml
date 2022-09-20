@@ -57,8 +57,9 @@
                        FontWeight="Bold"
                        Foreground="White">
 
-                <Run Text="{Binding CompanyName, Converter={StaticResource CaseConverter}, Mode=OneWay}"
-                     BaselineAlignment="Center"/>
+                <Run Text="{Binding CompanyName, FallbackValue='1. Schützenkompanie', Converter={StaticResource CaseConverter}, Mode=OneWay}"
+                     BaselineAlignment="Center"
+                     FontFamily="Open Sans"/>
                 <InlineUIContainer BaselineAlignment="Center">
                     <Image Width="28"
                            Height="28"

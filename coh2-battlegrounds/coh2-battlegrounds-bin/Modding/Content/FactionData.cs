@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.ErrorHandling.CommonExceptions;
@@ -45,10 +44,16 @@ public class FactionData {
 
     public readonly struct CompanySettings {
 
+        /// <summary>
+        /// Get or initialise units to exclude from unit list. (May be used in other contexts, but cannot be added directly to the company).
+        /// </summary>
+        public string[] ExcludeUnits { get; init; }
+
         public FactionCompanyType[] Types { get; init; }
 
         [JsonConstructor]
-        public CompanySettings(FactionCompanyType[]? Types) {
+        public CompanySettings(string[]? ExcludeUnits, FactionCompanyType[]? Types) {
+            this.ExcludeUnits = ExcludeUnits ?? Array.Empty<string>();
             this.Types = Types ?? Array.Empty<FactionCompanyType>();
         }
 
@@ -70,7 +75,7 @@ public class FactionData {
 
     public bool CanHaveGliderInCompanies { get; init; }
 
-    public CompanySettings Companies { get; init; }
+    public CompanySettings Companies { get; set; }
 
     /// <summary>
     /// Get or initialise the blueprint to use when recrewing team weapons
@@ -108,8 +113,10 @@ public class FactionData {
     /// 
     /// </summary>
     /// <returns></returns>
-    public string[] GetHiddenSquads()
-        => this.Companies.Types.MapNotNull(x => x.TeamWeaponCrew).Append(this.TeamWeaponCrew);
+    public string[] GetHiddenSquads() => this.Companies.Types
+        .MapNotNull(x => x.TeamWeaponCrew)
+        .Concat(this.Companies.ExcludeUnits)
+        .Append(this.TeamWeaponCrew);
 
     /// <summary>
     /// 
