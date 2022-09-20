@@ -9,14 +9,14 @@
 						<bool name="allow_spawner_production" value="False" />
 						<locstring name="extra_text" value="11046736" />
 						<bool name="has_speech_code" value="True" />
-						<locstring name="help_text" value="11035439" />
+						<locstring name="help_text" value="95" mod="142b113740474c82a60b0a428bd553d5" />
 						<string name="hotkey_name" value="axis_opel_blitz_squad" />
 						<icon name="icon_name" value="Icons_vehicles_cargo_truck" />
 						<bool name="minimap_team_only" value="False" />
 						<icon name="minimap_texture" value="Icons_minimap_unit_scout_car" />
 						<instance_reference name="modal_ability" value="" />
 						<bool name="reveal_for_decryption" value="False" />
-						<locstring name="screen_name" value="11035438" />
+						<locstring name="screen_name" value="93" mod="142b113740474c82a60b0a428bd553d5" />
 						<string name="selection_group" value="truck" />
 						<group name="speaker_generic">
 							<string name="code_1" value="" />
