@@ -1,77 +1,100 @@
 {
-    "Icon": "ct_infantry",
-    "MaxInfantry": 20,
-    "MaxTeamWeapons": 10,
-    "MaxVehicles": 8,
-    "MaxLeaders": 2,
-    "MaxAbilities": 4,
-    "Exclude": [
-      "is-2_bg"
-    ],
-    "DeployTypes": [
-      "DeployAndExit",
-      "DeployAndStay"
-    ],
-    "DeployBlueprints": [
-      {
-        "Blueprint": "zis_6_transport_truck_bg",
-        "CostModifier": 1,
-        "Tow": true,
-        "TowCostModifier": 1
-      }
-    ],
-    "CostModifiers": {
-      "penal_battalion_bg": {
-        "Manpower": 20
-      }
-    },
-    "Phases": {
-      "PhaseA": {
-        "ResourceIncomeModifier": {
-          "Manpower": 1,
-          "Munitions": 1,
-          "Fuel": 1
-        }
-      },
-      "PhaseB": {
-        "ActivationTime": 420,
-        "DeployDelay": 1,
-        "ResourceIncomeModifier": {
-          "Manpower": 1,
-          "Munitions": 1,
-          "Fuel": 1
-        },
-        "UnitCostModifier": {
-          "Manpower": 1,
-          "Munitions": 1,
-          "Fuel": 1
-        },
-        "Unlocks": [
-          "penal_battalion_bg"
-        ]
-      },
-      "PhaseC": {
-        "ActivationTime": 660,
-        "DeployDelay": 1,
-        "ResourceIncomeModifier": {
-          "Manpower": 1,
-          "Munitions": 1,
-          "Fuel": 1
-        },
-        "UnitCostModifier": {
-          "Manpower": 1,
-          "Munitions": 1,
-          "Fuel": 1
-        },
-        "Unlocks": [
-          "kv-1_bg"
-        ]
+  "Icon": "ct_infantry",
+  "MaxInfantry": 20,
+  "MaxTeamWeapons": 10,
+  "MaxVehicles": 8,
+  "MaxLeaders": 2,
+  "MaxAbilities": 4,
+  "Exclude": [
+    "is-2_bg",
+    "isu-152_bg",
+    "churchill_lend_lease_squad_bg",
+    "76mm_sherman_lend_lease_bg",
+    "shock_troops_bg",
+    "m1931_203mm_b-4_howitzer_artillery_bg",
+    "m5_halftrack_squad_bg",
+    "m5_halftrack_quad_squad_bg",
+    "m3a1_scout_car_squad_bg",
+    "kv-8_bg",
+    "kv-2_bg",
+    "valentine_lend_lease_command_bg"
+  ],
+  "DeployTypes": [
+    "DeployAndExit",
+    "DeployAndStay"
+  ],
+  "DeployBlueprints": [
+    {
+      "Blueprint": "zis_6_transport_truck_bg",
+      "CostModifier": 1,
+      "Tow": true,
+      "TowCostModifier": 1
+    }
+  ],
+  "CostModifiers": {
+    "penal_battalion_bg": {
+      "Manpower": 20
+    }
+  },
+  "Phases": {
+    "PhaseA": {
+      "ResourceIncomeModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1
       }
     },
-    "abilities": [
-      {
-        "ID": "soviet_air_recon",
-        "CostModifier": 1
-      }
-    ]
+    "PhaseB": {
+      "ActivationTime": 420,
+      "DeployDelay": 1,
+      "ResourceIncomeModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1
+      },
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1
+      },
+      "Unlocks": [
+        "penal_battalion_bg",
+        "combat_engineer_squad_bg",
+        "tank_buster_bg",
+        "nkvd_squad_bg",
+        "t_34_76_squad_bg",
+        "t_34_85_squad_bg",
+        "t-70m_bg",
+        "valentine_lend_lease_bg",
+        "valentine_lend_lease_command_bg",
+        "m1937_152mm_ml_20_artillery_bg"
+      ]
+    },
+    "PhaseC": {
+      "ActivationTime": 660,
+      "DeployDelay": 1,
+      "ResourceIncomeModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1
+      },
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1
+      },
+      "Unlocks": [
+        "kv-1_bg",
+        "su-85_bg",
+        "katyusha_rocket_truck_bg",
+        "zis_6_supply_truck_bg"
+      ]
+    }
+  },
+  "abilities": [
+    {
+      "ID": "soviet_air_recon",
+      "CostModifier": 1
+    }
+  ]
 }
