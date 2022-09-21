@@ -24,6 +24,10 @@ using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Startup.MVVM.Models;
 using Battlegrounds.Update;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
+using BattlegroundsApp.Modals.DownloadInProgress.MVVM.Models;
+using Battlegrounds.Util.Coroutines;
+using System.Threading;
+using System.Windows.Controls;
 
 namespace BattlegroundsApp;
 
@@ -343,19 +347,36 @@ public partial class App : Application {
             return;
         }
 
-        // Do modal
-        YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
+        Application.Current.Dispatcher.Invoke(() => {
 
-            // Check return value
-            if (resault is not ModalDialogResult.Confirm) {
-                return;
-            }
+            // Do modal
+            YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
 
-            // TODO: Add a dialong informing the user about the update being downlaoded
-            //       and that the app will close to install the new update and relaunch once install is complete
-            Update.UpdateApplication();
+                // Check return value
+                if (resault is not ModalDialogResult.Confirm) {
+                    return;
+                }
 
-        }, "New Update", "New update detected. Do you want to download?");
+                Coroutine.StartCoroutine(RunUpdate(mControl));
+
+            }, "New Update", "New update detected. Do you want to download?");
+
+        });
+
+    }
+
+    private static IEnumerator RunUpdate(ModalControl control) {
+
+        yield return new WaitTimespan(TimeSpan.FromSeconds(0.5));
+        Application.Current.Dispatcher.Invoke(() => {
+            // Create downloadInProgress
+            var downloadInProgress = new DownloadInProgressViewModel();
+
+            // Show modal
+            control.ShowModal(downloadInProgress);
+        });
+        yield return new WaitTimespan(TimeSpan.FromSeconds(1.0));
+        Update.UpdateApplication();
 
     }
 

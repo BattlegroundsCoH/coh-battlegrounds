@@ -37,7 +37,7 @@ public class YesNoDialogViewModel {
             control.CloseModal();
         }, title, message);
 
-        control.ModalMaskBehaviour = ModalBackgroundBehaviour.ExitWhenClicked;
+        control.ModalMaskBehaviour = ModalBackgroundBehaviour.None;
         control.ShowModal(dialog);
 
     }

@@ -12,8 +12,15 @@
                     xmlns:dialogViews="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Views"
                     xmlns:dialogModels="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Models" 
                     xmlns:startupViews="clr-namespace:BattlegroundsApp.Modals.Startup.MVVM.Views"
-                    xmlns:startupModels="clr-namespace:BattlegroundsApp.Modals.Startup.MVVM.Models">
-
+                    xmlns:startupModels="clr-namespace:BattlegroundsApp.Modals.Startup.MVVM.Models"
+                    xmlns:downloadViews="clr-namespace:BattlegroundsApp.Modals.DownloadInProgress.MVVM.Views"
+                    xmlns:downloadModels="clr-namespace:BattlegroundsApp.Modals.DownloadInProgress.MVVM.Models">
+    
+    <!-- Download modal -->
+    <DataTemplate DataType="{x:Type downloadModels:DownloadInProgressViewModel}">
+        <downloadViews:DownloadInProgressView/>
+    </DataTemplate>
+    
     <!-- Startup modal -->
     <DataTemplate DataType="{x:Type startupModels:StartupViewModel}">
         <startupViews:StartupView/>
