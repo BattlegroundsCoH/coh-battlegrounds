@@ -60,14 +60,21 @@
                 <!-- Statiscits -->
                 <StackPanel Margin="0, 0, 15, 0">
                     <!-- Statistics Title -->
-                    <controls:LocLabel Margin="0, 0, 0, 15"
-                                       Foreground="#d8dbde"
-                                       FontSize="22"
-                                       FontFamily="Open Sans"
-                                       FontWeight="DemiBold"
-                                       VerticalContentAlignment="Center"
-                                       HorizontalAlignment="Center"
-                                       LocKey="DashboardView_Statistics"/>
+                    <Border HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Width="275"
+                            Margin="0, 0, 0, 15"
+                            Background="{StaticResource BackgroundDarkBlueBrush}">
+                        
+                        <controls:LocLabel Foreground="#d8dbde"
+                                           FontSize="22"
+                                           FontFamily="Open Sans"
+                                           FontWeight="DemiBold"
+                                           VerticalContentAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           LocKey="DashboardView_Statistics"/>
+                        
+                    </Border>
 
                     <!-- Statistics Data -->
                     <Border HorizontalAlignment="Left"
@@ -172,14 +179,19 @@
                 <!-- Most Played Company -->
                 <StackPanel Margin="15, 0, 15, 0">
                     <!-- Company Title -->
-                    <controls:LocLabel Margin="0, 0, 0, 15"
-                                       Foreground="#d8dbde"
-                                       FontSize="22"
-                                       FontFamily="Open Sans"
-                                       FontWeight="DemiBold"
-                                       HorizontalAlignment="Center"
-                                       VerticalContentAlignment="Center"
-                                       LocKey="DashboardView_MostPlayedCompany" />
+                    <Border HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Width="275"
+                            Margin="0, 0, 0, 15"
+                            Background="{StaticResource BackgroundDarkBlueBrush}">
+                        <controls:LocLabel Foreground="#d8dbde"
+                                           FontSize="22"
+                                           FontFamily="Open Sans"
+                                           FontWeight="DemiBold"
+                                           HorizontalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           LocKey="DashboardView_MostPlayedCompany" />
+                    </Border>
 
                     <!-- Most Played Company Data -->
                     <card:CompanyCard Company="{Binding MostPlayedCompany}"/>
@@ -188,14 +200,19 @@
                 <!-- Misc -->
                 <StackPanel Margin="15, 0, 0, 0">
                     <!-- Misc Title -->
-                    <controls:LocLabel Margin="0, 0, 0, 15"
-                                       Foreground="#d8dbde"
-                                       FontSize="22"
-                                       FontFamily="Open Sans"
-                                       FontWeight="DemiBold"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       LocKey="DashboardView_Misc"/>
+                    <Border HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Width="275"
+                            Margin="0, 0, 0, 15"
+                            Background="{StaticResource BackgroundDarkBlueBrush}">
+                        <controls:LocLabel Foreground="#d8dbde"
+                                           FontSize="22"
+                                           FontFamily="Open Sans"
+                                           FontWeight="DemiBold"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           LocKey="DashboardView_Misc"/>
+                    </Border>
 
                     <!-- Misc Data -->
                     <Border HorizontalAlignment="Left"
