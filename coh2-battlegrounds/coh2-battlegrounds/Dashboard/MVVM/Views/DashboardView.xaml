@@ -131,7 +131,7 @@
                         <InlineUIContainer>
                             <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
                                 <TextBlock Text="Infantry Kills:" />
-                                <TextBlock Text="{Binding TotalInfantryKills, FallbackValue='N/A'}"
+                                <TextBlock Text="{Binding TotalInfantryKills, FallbackValue='N/A', StringFormat={}N/A}"
                                            TextAlignment="Right" 
                                            Margin="0, 0, 8, 0" />
                             </Grid>
@@ -141,7 +141,7 @@
                         <InlineUIContainer>
                             <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
                                 <TextBlock Text="Vehicle Kills:" />
-                                <TextBlock Text="{Binding TotalVehicleKills, FallbackValue='N/A'}"
+                                <TextBlock Text="{Binding TotalVehicleKills, FallbackValue='N/A', StringFormat={}N/A}"
                                            TextAlignment="Right" 
                                            Margin="0, 0, 8, 0" />
                             </Grid>
@@ -151,7 +151,7 @@
                         <InlineUIContainer>
                             <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
                                 <TextBlock Text="Infantry Losses:" />
-                                <TextBlock Text="{Binding TotalInfantryLosses, FallbackValue='N/A'}"
+                                <TextBlock Text="{Binding TotalInfantryLosses, FallbackValue='N/A', StringFormat={}N/A}"
                                            TextAlignment="Right" 
                                            Margin="0, 0, 8, 0" />
                             </Grid>
@@ -161,7 +161,7 @@
                         <InlineUIContainer>
                             <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
                                 <TextBlock Text="Vehicle Losses:" />
-                                <TextBlock Text="{Binding TotalVehicleLosses, FallbackValue='N/A'}"
+                                <TextBlock Text="{Binding TotalVehicleLosses, FallbackValue='N/A', StringFormat={}N/A}"
                                            TextAlignment="Right" 
                                            Margin="0, 0, 8, 0" />
                             </Grid>
@@ -171,7 +171,7 @@
                         <InlineUIContainer>
                             <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
                                 <TextBlock Text="K/D Ratio:" />
-                                <TextBlock Text="{Binding KillDeathRatio, FallbackValue='N/A'}"
+                                <TextBlock Text="{Binding KillDeathRatio, FallbackValue='N/A', StringFormat={}N/A}"
                                            TextAlignment="Right" 
                                            Margin="0, 0, 8, 0" />
                             </Grid>
