@@ -6,10 +6,15 @@
              xmlns:local="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Views"
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              xmlns:card="clr-namespace:BattlegroundsApp.Controls.Dashboard"
+             xmlns:converter="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d"
              Background="{StaticResource BackgroundBlueBrush}"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+
+        <Grid.Resources>
+            <converter:WinRateToColorConverter x:Key="winRateToColorConverter"/>
+        </Grid.Resources>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -81,7 +86,8 @@
                             <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
                                 <TextBlock Text="Wins:" />
                                 <TextBlock Text="{Binding TotalWins, FallbackValue='N/A'}"
-                                           TextAlignment="Right" 
+                                           TextAlignment="Right"
+                                           Foreground="Green"
                                            Margin="0, 0, 8, 0" />
                             </Grid>
                         </InlineUIContainer>
@@ -92,6 +98,7 @@
                                 <TextBlock Text="Losses:" />
                                 <TextBlock Text="{Binding TotalLosses, FallbackValue='N/A'}"
                                            TextAlignment="Right" 
+                                           Foreground="Red"
                                            Margin="0, 0, 8, 0" />
                             </Grid>
                         </InlineUIContainer>
@@ -100,8 +107,9 @@
                         <InlineUIContainer>
                             <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
                                 <TextBlock Text="Win Rate:" />
-                                <TextBlock Text="{Binding WinRate, FallbackValue='N/A'}"
-                                           TextAlignment="Right" 
+                                <TextBlock Text="{Binding WinRate, FallbackValue='N/A', StringFormat={}{0}%}"
+                                           TextAlignment="Right"
+                                           Foreground="{Binding WinRate, Converter={StaticResource winRateToColorConverter}}"
                                            Margin="0, 0, 8, 0" />
                             </Grid>
                         </InlineUIContainer>
@@ -149,7 +157,7 @@
                         <!-- KD Ratio -->
                         <InlineUIContainer>
                             <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
-                                <TextBlock Text="Kill/Death Ratio:" />
+                                <TextBlock Text="K/D Ratio:" />
                                 <TextBlock Text="{Binding KillDeathRatio, FallbackValue='N/A'}"
                                            TextAlignment="Right" 
                                            Margin="0, 0, 8, 0" />

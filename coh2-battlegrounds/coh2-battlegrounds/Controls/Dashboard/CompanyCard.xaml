@@ -4,10 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Controls.Dashboard"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
+             xmlns:converter="clr-namespace:BattlegroundsApp.Utilities.Converters"
              d:DesignHeight="175" d:DesignWidth="350"
              Background="{StaticResource BackgroundDarkBlueBrush}">
     <Grid>
+
+        <Grid.Resources>
+            <converter:WinRateToColorConverter x:Key="winRateToColorConverter"/>
+        </Grid.Resources>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="64" />
@@ -80,7 +85,8 @@
                     <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
                         <TextBlock Text="Win Rate:" />
                         <TextBlock x:Name="winRateValue"
-                                   TextAlignment="Right" 
+                                   TextAlignment="Right"
+                                   Foreground="{Binding CompanyWinRate, Converter={StaticResource winRateToColorConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:CompanyCard}}}"
                                    Margin="0, 0, 8, 0" />
                     </Grid>
                 </InlineUIContainer>
@@ -108,7 +114,7 @@
                 <!-- KD Ratio -->
                 <InlineUIContainer>
                     <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
-                        <TextBlock Text="Kill/Death Ratio:" />
+                        <TextBlock Text="K/D Ratio:" />
                         <TextBlock x:Name="killDeathRatioValue"
                                    TextAlignment="Right" 
                                    Margin="0, 0, 8, 0" />

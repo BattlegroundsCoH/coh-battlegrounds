@@ -68,7 +68,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
     /// <summary>
     /// The total win/loss ration 
     /// </summary>
-    private string m_winRate = "0";
+    private double m_winRate;
 
     /// <summary>
     /// The total amount of games played as Wehrmach
@@ -153,7 +153,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
     /// <summary>
     /// The total win/loss ration 
     /// </summary>
-    public string WinRate {
+    public double WinRate {
         get => this.m_winRate;
         set {
             this.m_winRate = value;
@@ -305,7 +305,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         this.TotalLosses = this.GetCompanyData<ulong>(CompanyDataType.Losses);
         this.TotalInfantryLosses = this.GetCompanyData<ulong>(CompanyDataType.InfantryLosses);
         this.TotalVehicleLosses = this.GetCompanyData<ulong>(CompanyDataType.VehicleLosses);
-        this.WinRate = this.TotalGamesPlayed > 0 ? $"{Math.Round(this.TotalWins / (double)this.TotalGamesPlayed * 100)}%" : "0";
+        this.WinRate = this.TotalGamesPlayed > 0 ? Math.Round(this.TotalWins / (double)this.TotalGamesPlayed * 100) : 0.0;
         this.MostPlayedCompany = this.GetCompanyData<Company>(CompanyDataType.Company);
 
         this.WehrmachtGames = this.GetCompanyData<ulong>(CompanyDataType.FactionGames, "ger");

@@ -26,6 +26,8 @@ namespace BattlegroundsApp.Controls.Dashboard;
 /// </summary>
 public partial class CompanyCard : UserControl {
 
+    public double CompanyWinRate { get; set; }
+
     private static readonly Dictionary<Faction, ImageSource> Flags = new() {
         [Faction.Soviet] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/soviet.png")),
         [Faction.Wehrmacht] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/german.png")),
@@ -80,6 +82,8 @@ public partial class CompanyCard : UserControl {
             gamesPlayedValue.Text = "N/A";
             return;
         }
+
+        this.CompanyWinRate = Math.Round(company.Statistics.WinRate * 100);
 
         // Set company faction
         factionIcon.Source = Flags[company.Army];
