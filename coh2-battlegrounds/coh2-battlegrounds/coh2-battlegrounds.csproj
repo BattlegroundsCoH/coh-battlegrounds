@@ -75,6 +75,8 @@
     <None Remove="Resources\app\company_types\ct_infantry.png" />
     <None Remove="Resources\app\company_types\ct_mechanized.png" />
     <None Remove="Resources\app\company_types\ct_motorized.png" />
+    <None Remove="Resources\app\company_types\ct_ost_sturm.png" />
+    <None Remove="Resources\app\company_types\ct_sov_nkvd.png" />
     <None Remove="Resources\app\company_types\ct_td.png" />
     <None Remove="Resources\app\company_types\ct_unspecified.png" />
     <None Remove="Resources\app\flags\french.png" />
@@ -176,6 +178,8 @@
     <Resource Include="Resources\app\company_types\ct_infantry.png" />
     <Resource Include="Resources\app\company_types\ct_mechanized.png" />
     <Resource Include="Resources\app\company_types\ct_motorized.png" />
+    <Resource Include="Resources\app\company_types\ct_ost_sturm.png" />
+    <Resource Include="Resources\app\company_types\ct_sov_nkvd.png" />
     <Resource Include="Resources\app\company_types\ct_td.png" />
     <Resource Include="Resources\app\company_types\ct_unspecified.png" />
     <Resource Include="Resources\app\flags\french.png" />
