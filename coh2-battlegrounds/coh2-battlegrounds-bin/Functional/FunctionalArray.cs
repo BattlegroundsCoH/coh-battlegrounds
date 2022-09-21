@@ -42,6 +42,27 @@ public static class FunctionalArray {
     }
 
     /// <summary>
+    /// Filters all elements in <paramref name="array"/> such that when an element in array is mapped using <paramref name="map"/> the resulting value is <paramref name="equal"/>.
+    /// </summary>
+    /// <typeparam name="TSource"></typeparam>
+    /// <typeparam name="TMapped"></typeparam>
+    /// <param name="array">The array to filter elements from.</param>
+    /// <param name="map">The mapping function.</param>
+    /// <param name="equal">The element to check equality against.</param>
+    /// <returns>The filtered list of elements.</returns>
+    public static TSource[] Filter<TSource, TMapped>(this TSource[] array, Func<TSource, TMapped> map, TMapped equal) where TMapped : notnull {
+        TSource[] result = new TSource[array.Length];
+        int k = 0;
+        for (int i = 0; i < array.Length; i++) {
+            var e = map(array[i]);
+            if (e.Equals(equal)) {
+                result[k++] = array[i];
+            }
+        }
+        return result[..k];
+    }
+
+    /// <summary>
     /// Maps an array of type <typeparamref name="U"/> into an array of type <typeparamref name="V"/> through a mapping function.
     /// </summary>
     /// <typeparam name="U">The original type of the array.</typeparam>
@@ -495,6 +516,46 @@ public static class FunctionalArray {
                 return array[i];
         }
         return defaultValue;
+    }
+
+    /// <summary>
+    /// Get the intersection (set of shared elements) between two arrays.
+    /// </summary>
+    /// <typeparam name="T">The array instance type.</typeparam>
+    /// <param name="array">The first array to look through</param>
+    /// <param name="other">The second array to intersect with.</param>
+    /// <returns>The intersection between input arrays.</returns>
+    public static T[] Intersect<T>(this T[] array, T[] other) where T : notnull {
+        T[] values = new T[array.Length];
+        int k = 0;
+        for (int i = 0; i < array.Length; i++) {
+            if (other.Any(x => x.Equals(array[i]))) {
+                values[k++] = array[i];
+            }
+        }
+        return values[..k];
+    }
+
+    /// <summary>
+    /// Get the intersection (set of shared elements) between two arrays.
+    /// </summary>
+    /// <typeparam name="T">The array instance type.</typeparam>
+    /// <param name="array">The first array to look through</param>
+    /// <param name="other">The second array to intersect with.</param>
+    /// <param name="equals">Function to run to check for equality (when true, elements are considered to be in the intersection).</param>
+    /// <returns>The intersection between input arrays.</returns>
+    public static T[] Intersect<T>(this T[] array, T[] other, Func<T, T, bool> equals) where T : notnull {
+        T[] values = new T[array.Length];
+        int k = 0;
+        for (int i = 0; i < array.Length; i++) {
+            for (int j = 0; j < other.Length; j++) {
+                if (equals(array[i], other[j])) {
+                    values[k++] = array[i];
+                    break;
+                }
+            }
+        }
+        return values[..k];
     }
 
 }

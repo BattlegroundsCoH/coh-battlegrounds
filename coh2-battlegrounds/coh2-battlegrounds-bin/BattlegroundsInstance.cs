@@ -306,12 +306,13 @@ public static class BattlegroundsInstance {
         int rel = path.IndexOf(':');
         string relative = (rel is not -1 ? path[..rel] : string.Empty) switch {
             "Gamemode" => GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "bg_wc"),
+            "Common" => GetRelativePath(BattlegroundsPaths.BINARY_FOLDER),
             _ => GetRelativePath(BattlegroundsPaths.INSTALL_FOLDER)
         };
 
         // Cut last
         if (relative[^1] is '\\') {
-            relative = relative[..^2];
+            relative = relative[..^1];
         }
 
         // Create path

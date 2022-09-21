@@ -62,11 +62,13 @@ public class CompanyBuilderViewModel : ViewModelBase {
     public List<AvailableItemViewModel> AvailableInfantrySquads { get; }
     public List<AvailableItemViewModel> AvailableSupportSquads { get; }
     public List<AvailableItemViewModel> AvailableVehicleSquads { get; }
+    public List<AvailableItemViewModel> AvailableLeaderSquads { get; }
     public List<AvailableItemViewModel> AvailableAbilities { get; }
 
     public ObservableCollection<SquadSlotViewModel> CompanyInfantrySquads { get; set; }
     public ObservableCollection<SquadSlotViewModel> CompanySupportSquads { get; set; }
     public ObservableCollection<SquadSlotViewModel> CompanyVehicleSquads { get; set; }
+    public ObservableCollection<SquadSlotViewModel> CompanyLeaderSquads { get; set; }
 
     public ObservableCollection<AbilitySlotViewModel> CompanyAbilities { get; set; }
     public ObservableCollection<AbilitySlotViewModel> CompanyUnitAbilities { get; set; }
@@ -113,6 +115,8 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     public CapacityValue VehicleCapacity { get; }
 
+    public CapacityValue LeaderCapacity { get; }
+
     public IViewModel? ReturnTo { get; set; }
 
     public int SaveStatus { get; set; } = -1;
@@ -157,6 +161,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.CompanyInfantrySquads = new();
         this.CompanySupportSquads = new();
         this.CompanyVehicleSquads = new();
+        this.CompanyLeaderSquads = new();
         this.CompanyAbilities = new();
         this.CompanyUnitAbilities = new();
         this.CompanyEquipment = new();
@@ -166,6 +171,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.AvailableInfantrySquads = new();
         this.AvailableSupportSquads = new();
         this.AvailableVehicleSquads = new();
+        this.AvailableLeaderSquads = new();
         this.AvailableAbilities = new();
         this.m_availableSquads = new();
         this.m_abilities = new();
@@ -185,6 +191,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.InfantryCapacity = new CapacityValue(0, 0, () => this.Builder?.InfantryCount ?? 0);
         this.SupportCapacity = new CapacityValue(0, 0, () => this.Builder?.SupportCount ?? 0);
         this.VehicleCapacity = new CapacityValue(0, 0, () => this.Builder?.VehicleCount ?? 0);
+        this.LeaderCapacity = new CapacityValue(0, 0, () => this.Builder?.LeaderCount ?? 0);
 
         // Set fields
         this.m_activeModPackage = ModManager.GetPackageFromGuid(guid) ?? throw new Exception("Attempt to create company builder vm without a valid mod package");
@@ -238,7 +245,11 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.InfantryCapacity.Capacity = this.Builder.CompanyType.MaxInfantry;
         this.SupportCapacity.Capacity = this.Builder.CompanyType.MaxTeamWeapons;
         this.VehicleCapacity.Capacity = this.Builder.CompanyType.MaxVehicles;
-        this.UnitCapacity.Capacity = Math.Min(Company.MAX_SIZE, this.InfantryCapacity.Capacity + this.SupportCapacity.Capacity + this.VehicleCapacity.Capacity);
+        this.LeaderCapacity.Capacity = this.Builder.CompanyType.MaxLeaders;
+
+        // Set unit cap
+        int unitCap = this.InfantryCapacity.Capacity + this.SupportCapacity.Capacity + this.VehicleCapacity.Capacity + this.LeaderCapacity.Capacity;
+        this.UnitCapacity.Capacity = Math.Min(Company.MAX_SIZE, unitCap);
 
         // Update ability capacity value
         this.AbilityCapacity.Capacity = Math.Min(Company.MAX_ABILITY, this.Builder.CompanyType.MaxAbilities);
@@ -349,14 +360,17 @@ public class CompanyBuilderViewModel : ViewModelBase {
             // Populate lists
             Application.Current.Dispatcher.Invoke(() => {
 
-                this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsInfantry == true),
+                this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsInfantry == true && !s.Types.IsCommandUnit),
                                            this.AvailableInfantrySquads);
 
-                this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.IsTeamWeapon == true),
+                this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.IsTeamWeapon == true && !s.Types.IsCommandUnit),
                                            this.AvailableSupportSquads);
 
-                this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsVehicle == true || s.Types.IsArmour == true || s.Types.IsHeavyArmour == true),
+                this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => (s.Types.IsVehicle == true || s.Types.IsArmour == true || s.Types.IsHeavyArmour == true) && !s.Types.IsCommandUnit),
                                            this.AvailableVehicleSquads);
+
+                this.FillAvailableItemSlot(this.m_availableSquads.FindAll(s => s.Types.IsCommandUnit),
+                                           this.AvailableLeaderSquads);
 
                 this.FillAvailableItemSlot(this.m_abilities, this.AvailableAbilities);
 
@@ -424,6 +438,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         SquadCategory.Infantry => this.CompanyInfantrySquads,
         SquadCategory.Support => this.CompanySupportSquads,
         SquadCategory.Vehicle => this.CompanyVehicleSquads,
+        SquadCategory.Leader => this.CompanyLeaderSquads,
         _ => throw new InvalidEnumArgumentException()
     };
 
@@ -431,6 +446,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         SquadCategory.Infantry => this.InfantryCapacity,
         SquadCategory.Support => this.SupportCapacity,
         SquadCategory.Vehicle => this.VehicleCapacity,
+        SquadCategory.Leader => this.LeaderCapacity,
         _ => throw new InvalidEnumArgumentException()
     };
 
@@ -639,6 +655,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
                 SquadCategory.Infantry => !this.InfantryCapacity.IsAtCapacity,
                 SquadCategory.Support => !this.SupportCapacity.IsAtCapacity,
                 SquadCategory.Vehicle => !this.VehicleCapacity.IsAtCapacity,
+                SquadCategory.Leader => !this.LeaderCapacity.IsAtCapacity,
                 _ => false
             };
         } else if (bp is AbilityBlueprint abp) {
@@ -656,13 +673,16 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
             switch (this.SelectedUnitTabItem) {
                 case 0:
-                    this.AvailableInfantrySquads.ForEach(x => this.AvailableItems.Add(x));
+                    this.AvailableInfantrySquads.ForEach(this.AvailableItems.Add);
                     break;
                 case 1:
-                    this.AvailableSupportSquads.ForEach(x => this.AvailableItems.Add(x));
+                    this.AvailableSupportSquads.ForEach(this.AvailableItems.Add);
                     break;
                 case 2:
-                    this.AvailableVehicleSquads.ForEach(x => this.AvailableItems.Add(x));
+                    this.AvailableVehicleSquads.ForEach(this.AvailableItems.Add);
+                    break;
+                case 3:
+                    this.AvailableLeaderSquads.ForEach(this.AvailableItems.Add);
                     break;
                 default:
                     break;

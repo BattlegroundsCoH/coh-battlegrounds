@@ -189,6 +189,11 @@ public class CompanyBuilder : IBuilder<Company> {
     public int VehicleCount => this.m_target.Units.Count(x => x.Blueprint.Category is SquadCategory.Vehicle);
 
     /// <summary>
+    /// Get the current leader count.
+    /// </summary>
+    public int LeaderCount => this.m_target.Units.Count(x => x.Blueprint.Category is SquadCategory.Leader);
+
+    /// <summary>
     /// Get if the company currently has auto-reinforcement enabled
     /// </summary>
     public bool AutoReinforce =>

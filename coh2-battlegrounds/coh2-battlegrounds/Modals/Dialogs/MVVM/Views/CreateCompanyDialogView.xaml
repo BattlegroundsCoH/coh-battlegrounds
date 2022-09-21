@@ -43,18 +43,21 @@
                      Text="{Binding SelectedName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                      Style="{StaticResource WaterMarkTextBox}"
                      Tag="Company Name"
+                      FontFamily="Open Sans"
                      Height="25"
                      x:Name="companyName"/>
             
             <ComboBox Style="{StaticResource StandardBlueDropdown}"
                       Margin="0, 0, 0, 7"
                       ItemsSource="{Binding Source={x:Static factions:Faction.Factions}}"
-                      SelectedItem="{Binding SelectedFaction, Mode=TwoWay}"/>
+                      SelectedItem="{Binding SelectedFaction, Mode=TwoWay}"
+                      FontFamily="Open Sans"/>
             
             <ComboBox Style="{StaticResource StandardBlueDropdown}"
                       Margin="0, 0, 0, 7"
                       ItemsSource="{Binding AvailableTypes}"
-                      SelectedItem="{Binding SelectedType, Mode=TwoWay}"/>
+                      SelectedItem="{Binding SelectedType, Mode=TwoWay}"
+                      FontFamily="Open Sans"/>
             
             <Button Content="CompanyView_Create"
                     Style="{StaticResource StandardBlueLocButton}"

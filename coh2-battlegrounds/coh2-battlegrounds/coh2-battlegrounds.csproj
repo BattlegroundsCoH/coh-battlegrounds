@@ -76,6 +76,8 @@
     <None Remove="Resources\app\company_types\ct_infantry.png" />
     <None Remove="Resources\app\company_types\ct_mechanized.png" />
     <None Remove="Resources\app\company_types\ct_motorized.png" />
+    <None Remove="Resources\app\company_types\ct_ost_sturm.png" />
+    <None Remove="Resources\app\company_types\ct_sov_nkvd.png" />
     <None Remove="Resources\app\company_types\ct_td.png" />
     <None Remove="Resources\app\company_types\ct_unspecified.png" />
     <None Remove="Resources\app\flags\french.png" />
@@ -178,6 +180,8 @@
     <Resource Include="Resources\app\company_types\ct_infantry.png" />
     <Resource Include="Resources\app\company_types\ct_mechanized.png" />
     <Resource Include="Resources\app\company_types\ct_motorized.png" />
+    <Resource Include="Resources\app\company_types\ct_ost_sturm.png" />
+    <Resource Include="Resources\app\company_types\ct_sov_nkvd.png" />
     <Resource Include="Resources\app\company_types\ct_td.png" />
     <Resource Include="Resources\app\company_types\ct_unspecified.png" />
     <Resource Include="Resources\app\flags\french.png" />
@@ -265,6 +269,60 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="bg_common\bg_ct\ost_airborne.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_arm.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_arty.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_eng.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_mech.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_mot.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_rifles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_sturm.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_td.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_airborne.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_arm.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_arty.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_eng.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_mech.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_mot.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_nkvd.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_rifles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_td.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\bg_wc\auxiliary_scripts\debug_script.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

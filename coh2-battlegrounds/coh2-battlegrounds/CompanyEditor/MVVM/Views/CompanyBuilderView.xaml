@@ -57,8 +57,9 @@
                        FontWeight="Bold"
                        Foreground="White">
 
-                <Run Text="{Binding CompanyName, Converter={StaticResource CaseConverter}, Mode=OneWay}"
-                     BaselineAlignment="Center"/>
+                <Run Text="{Binding CompanyName, FallbackValue='1. Schützenkompanie', Converter={StaticResource CaseConverter}, Mode=OneWay}"
+                     BaselineAlignment="Center"
+                     FontFamily="Open Sans"/>
                 <InlineUIContainer BaselineAlignment="Center">
                     <Image Width="28"
                            Height="28"
@@ -71,25 +72,26 @@
 
         <!-- Row 0 :: Return/Back -->
         <Button x:Name="returnLobbyButton" 
-                    Content="CompanyBuilder_Return" 
-                    Width="150"
-                    Height="35"
-                    Style="{StaticResource StandardRedLocButton}" 
-                    Margin="10,0,18,0"
-                    Grid.Row="0"
+                Content="CompanyBuilder_Return" 
+                Width="150"
+                Height="35"
+                Style="{StaticResource StandardRedLocButton}" 
+                Margin="10,0,18,0"
+                Grid.Row="0"
                 Grid.Column="2"
                 HorizontalAlignment="Right"
-                    Visibility="{Binding Back.Visibility}"
-                    Command="{Binding Back.Click}"/>
+                Visibility="{Binding Back.Visibility}"
+                Command="{Binding Back.Click}"/>
 
         <!-- Row 1 :: Company Overview -->
-        <TabControl Grid.Row="1"
-                    Grid.Column="0"
-                    Grid.RowSpan="3"
-                    Style="{StaticResource CompanyBuilderMainTabControl}"
-                    Width="770"
-                    SelectedIndex="{Binding SelectedMainTab}"
-                    SelectionChanged="ChangeMainTab">
+        <TabControl 
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.RowSpan="3"
+            Style="{StaticResource CompanyBuilderMainTabControl}"
+            Width="770"
+            SelectedIndex="{Binding SelectedMainTab}"
+            SelectionChanged="ChangeMainTab">
 
             <!-- UNITS -->
             <TabItem Header="CompanyBuilder_Units"
@@ -197,6 +199,41 @@
                                         </Style>
                                     </StackPanel.Resources>
                                     <ItemsControl ItemsSource="{Binding CompanyVehicleSquads}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal"
+                                                           Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}, Path=ActualWidth}"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Canvas>
+                        </dropArea:DropArea>
+                    </TabItem>
+
+                    <!-- Leaders -->
+                    <TabItem Header="CompanyBuilder_Leaders"
+                             Tag="{Binding LeaderCapacity}"
+                             Width="180"
+                             Style="{StaticResource CompanyBuilderSecondaryTabItem}"
+                             x:Name="LeaderTab">
+                        <dropArea:DropArea AllowDrop="True"
+                                           Background="White"
+                                           BorderThickness="1.5"
+                                           BorderBrush="Black"
+                                           Drop="OnItemDrop">
+                            <Canvas x:Name="LeaderCanvas"
+                                    ClipToBounds="True"
+                                    IsHitTestVisible="True"
+                                    Background="#212d3a">
+                                <StackPanel x:Name="LeaderPanel"
+                                            SizeChanged="LeaderPanel_SizeChanged">
+                                    <StackPanel.Resources>
+                                        <Style TargetType="{x:Type views:SquadSlotView}">
+                                            <Setter Property="Margin" Value="0, 5, 5, 0"/>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <ItemsControl ItemsSource="{Binding CompanyLeaderSquads}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <WrapPanel Orientation="Horizontal"
@@ -504,13 +541,14 @@
                     Style="{StaticResource StandardBlueLocButton}">
             </Button>
 
-            <Button x:Name="saveButton" 
-                    Content="CompanyBuilder_Save" 
-                    Width="150"
-                    Height="35"
-                    Style="{StaticResource StandardBlueLocButton}" 
-                    Margin="10,0,18,0"
-                    Click="saveButton_Click">
+            <Button 
+                x:Name="saveButton" 
+                Content="CompanyBuilder_Save" 
+                Width="150"
+                Height="35"
+                Style="{StaticResource StandardBlueLocButton}" 
+                Margin="10,0,18,0"
+                Click="saveButton_Click">
                 <Button.RenderTransform>
                     <TranslateTransform/>
                 </Button.RenderTransform>

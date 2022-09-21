@@ -89,3 +89,6 @@
 90	Automatic Supply
 91	Avoid supplying neraby units, subtracting munitions cost.
 92	Order supply to any nearby units.
+93	Opel Blitz Transport Truck
+94	Opel Blitz Supply Truck
+95	This unit can carry units to the frontline.
