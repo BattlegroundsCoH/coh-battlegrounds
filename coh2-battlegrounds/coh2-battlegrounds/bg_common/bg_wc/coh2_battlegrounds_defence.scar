@@ -57,8 +57,8 @@ function BattlegroundsDefence_InitGamemode()
 	BattlegroundsDefence_InitSectors()
 
 	-- Set points
-	WinWarning_SetMaxTickers(DefenceSettingsData.MaxPoints, DefenceSettingsData.DefenderPoints)
-	WinWarning_SetTickers(DefenceSettingsData.MaxPoints - DefenceSettingsData.DefenderPoints, DefenceSettingsData.DefenderPoints)
+	BattlegroundsDefence_SetMax(DefenceSettingsData.MaxPoints, DefenceSettingsData.MaxPoints);
+	BattlegroundsDefence_SetTickers(DefenceSettingsData.MaxPoints - DefenceSettingsData.DefenderPoints, DefenceSettingsData.DefenderPoints);
 
 	-- Start timer
 	Timer_Start(DefenceSettingsData.Counter, DefenceSettingsData.Time)
@@ -213,11 +213,19 @@ function BattlegroundsDefence_UpdatePoints()
 end
 
 function BattlegroundsDefence_SetTickers(attackers, defenders)
-	--if DefenceSettingsData.IsLocalDefender then
+	if bg_settings.roles_swapped then
 		WinWarning_SetTickers(defenders, attackers)
-	--else
-		--WinWarning_SetTickers(attackers, defenders)
-	--end
+	else
+		WinWarning_SetTickers(attackers, defenders)
+	end
+end
+
+function BattlegroundsDefence_SetMax(attackers, defenders)
+	if bg_settings.roles_swapped then
+		WinWarning_SetMaxTickers(defenders, attackers)
+	else
+		WinWarning_SetMaxTickers(attackers, defenders)
+	end
 end
 
 function BattlegroundsDefence_CheckTime()

@@ -171,7 +171,7 @@ internal abstract class BasePlayModel {
             var participants = allParticipants.Filter(x => x.IsHuman).ToLookup(x => x.GetId());
 
             // Grab elements
-            var elements = this.m_handle.PlanningHandle.GetPlanningElements(0).Concat(this.m_handle.PlanningHandle.GetPlanningElements(1));
+            var elements = this.m_handle.PlanningHandle.GetPlanningElements(4);
 
             // Get gamode instance
             var mode = package.Gamemodes.FirstOrDefault(x => x.ID == gamemodeInstance.Name, new());
