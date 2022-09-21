@@ -7,9 +7,9 @@ namespace BattlegroundsApp.Utilities.Converters;
 
 public class WinRateToColorConverter : IValueConverter {
 
-    private readonly Color _sub50Color = Colors.Red;
+    private readonly Color _sub50Color = Color.FromRgb(173, 74, 74);
     private readonly Color _50Color = Colors.Orange;
-    private readonly Color _above50Color = Colors.Green;
+    private readonly Color _above50Color = Color.FromRgb(72, 150, 53);
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
         

@@ -1,6 +1,7 @@
 ﻿using Battlegrounds;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Steam;
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.MVVM;
 using System;
@@ -28,7 +29,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
     /// <summary>
     /// The name of the currently "loged" in player
     /// </summary>
-    private string m_playerName = BattlegroundsInstance.IsFirstRun ? "" : BattlegroundsInstance.Steam.User.Name;
+    private string m_playerName = BattlegroundsInstance.Steam.HasUser ? BattlegroundsInstance.Steam.User.Name : "Unknown";
 
     /// <summary>
     /// The number of games played sumerized
@@ -295,6 +296,12 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
     public DashboardViewModel() {
 
         PlayerCompanies.PlayerCompaniesLoaded += OnPlayerCompaniesLoaded;
+
+    }
+
+    public void UpdateSteamUser() {
+
+        this.PlayerName = BattlegroundsInstance.Steam.User.Name;
 
     }
 

@@ -205,6 +205,8 @@ public partial class App : Application {
             return;
         }
 
+        __dashboard!.UpdateSteamUser();
+
         // Create other views that are directly accessible from LHS
         __companyBrowser = __viewManager.CreateDisplayIfNotFound<CompanyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create company browser view model!");
         __lobbyBrowser = __viewManager.CreateDisplayIfNotFound<LobbyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create lobby browser view model!");
