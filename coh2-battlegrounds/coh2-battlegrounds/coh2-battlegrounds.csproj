@@ -92,6 +92,7 @@
     <None Remove="Resources\app\padlock_locked.png" />
     <None Remove="Resources\app\padlock_open.png" />
     <None Remove="Resources\app\refresh.png" />
+    <None Remove="Resources\app\unknown_user.png" />
     <None Remove="Resources\campaign\icon_attrition.png" />
     <None Remove="Resources\campaign\icon_unittype_air.png" />
     <None Remove="Resources\campaign\icon_unittype_arty.png" />
@@ -207,6 +208,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\app\refresh.png" />
+    <Resource Include="Resources\app\unknown_user.png" />
     <Resource Include="Resources\campaign\icon_attrition.png" />
     <Resource Include="Resources\campaign\icon_unittype_air.png" />
     <Resource Include="Resources\campaign\icon_unittype_arty.png" />

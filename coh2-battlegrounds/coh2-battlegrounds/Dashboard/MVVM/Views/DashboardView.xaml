@@ -27,18 +27,9 @@
         </Grid.ColumnDefinitions>
 
         <!-- Row 0 :: Column 0 :: Welcome Message -->
-        <TextBlock Grid.Row="0"
-                   Grid.Column="0"
-                   TextAlignment="Center"
-                   Foreground="White"
-                   FontSize="24"
-                   Margin="0, 128, 0, 128">
-            
-            <Run>Welcome</Run>
-            <Run Text="{Binding PlayerName, Mode=OneTime}" FontWeight="DemiBold" FontStyle="Italic"/>
-            <Run>to Company of Heroes 2: Battlegrounds</Run>
-
-        </TextBlock>
+        <card:UserProfile Grid.Row="0"
+                          Grid.Column="0"
+                          Username="{Binding PlayerName}"/>
 
         <!-- Row 1 :: Column 0 :: Statistics -->
         <Grid Grid.Row="1" Grid.Column="0">
@@ -94,7 +85,7 @@
                                 <TextBlock Text="Wins:" />
                                 <TextBlock Text="{Binding TotalWins, FallbackValue='N/A'}"
                                            TextAlignment="Right"
-                                           Foreground="Green"
+                                           Foreground="{StaticResource BackgroundGreenBrush}"
                                            Margin="0, 0, 8, 0" />
                             </Grid>
                         </InlineUIContainer>
@@ -105,7 +96,7 @@
                                 <TextBlock Text="Losses:" />
                                 <TextBlock Text="{Binding TotalLosses, FallbackValue='N/A'}"
                                            TextAlignment="Right" 
-                                           Foreground="Red"
+                                           Foreground="{StaticResource BackgroundLightRedBrush}"
                                            Margin="0, 0, 8, 0" />
                             </Grid>
                         </InlineUIContainer>

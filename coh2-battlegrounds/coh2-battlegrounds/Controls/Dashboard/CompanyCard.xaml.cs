@@ -36,20 +36,6 @@ public partial class CompanyCard : UserControl {
         [Faction.British] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/british.png"))
     };
 
-    // Ragnar thinks code duplication is a good thing, because he doesn't do refactoring ( Greetings from CoDiEx :P )
-    private static readonly Dictionary<string, ImageSource> Icons = new() {
-        ["ct_infantry"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_infantry.png")),
-        ["ct_armoured"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_armoured.png")),
-        ["ct_motorized"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_motorized.png")),
-        ["ct_mechanized"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_mechanized.png")),
-        ["ct_airborne"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_airborne.png")),
-        ["ct_artillery"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_artillery.png")),
-        ["ct_td"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_td.png")),
-        ["ct_engineer"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_engineer.png")),
-        ["ct_unspecified"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_unspecified.png")),
-        [string.Empty] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_unspecified.png"))
-    };
-
     public static readonly DependencyProperty CompanyProperty 
         = DependencyProperty.Register(nameof(Company), typeof(Company), typeof(CompanyCard),
                                       new FrameworkPropertyMetadata(null,
@@ -91,8 +77,8 @@ public partial class CompanyCard : UserControl {
         // Set company name
         companyName.Text = company.Name;
 
-        // Set company type ( For real... :P  ) 
-        typeIcon.Source = StringToCompanyTypeIconConverter.GetFromType(company.Type); /* Icons.GetValueOrDefault(company.Type.ToString(), Icons[string.Empty]);*/
+        // Set company type
+        typeIcon.Source = StringToCompanyTypeIconConverter.GetFromType(company.Type);
 
         // Set company data
         winRateValue.Text = company.Statistics.WinRate is 0 ? "N/A" : $"{Math.Round(company.Statistics.WinRate * 100)}%";
