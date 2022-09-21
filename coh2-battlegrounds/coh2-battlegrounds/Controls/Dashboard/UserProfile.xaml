@@ -15,11 +15,11 @@
         <TextBlock x:Name="username"
                    Text="{Binding PlayerName}"
                    VerticalAlignment="Center"
-                   FontSize="32"
+                   FontSize="42"
                    Foreground="{StaticResource ForegroundWhiteBrush}"
-                   FontWeight="DemiBold"
+                   FontWeight="Bold"
                    HorizontalAlignment="Center"
-                   Margin="0, 225, 0, 0"/>
+                   Margin="0, 230, 0, 0"/>
 
     </Grid>
 </UserControl>

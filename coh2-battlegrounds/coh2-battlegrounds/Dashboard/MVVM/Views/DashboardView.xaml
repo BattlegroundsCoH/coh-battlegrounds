@@ -8,8 +8,15 @@
              xmlns:card="clr-namespace:BattlegroundsApp.Controls.Dashboard"
              xmlns:converter="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d"
-             Background="{StaticResource BackgroundBlueBrush}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" SnapsToDevicePixels="True" UseLayoutRounding="True">
+    <UserControl.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="{StaticResource BackgroundDeepBlue}" Offset="0.0" />
+            <GradientStop Color="{StaticResource BackgroundBlue}" Offset="0.25" />
+            <GradientStop Color="{StaticResource BackgroundDeepBlue}" Offset="0.75" />
+            <GradientStop Color="{StaticResource BackgroundDarkBlue}" Offset="1.0" />
+        </LinearGradientBrush>
+    </UserControl.Background>
     <Grid>
 
         <Grid.Resources>
@@ -56,6 +63,10 @@
                             Width="275"
                             Margin="0, 0, 0, 15"
                             Background="{StaticResource BackgroundDarkBlueBrush}">
+
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="1" Direction="0"/>
+                        </Border.Effect>
                         
                         <controls:LocLabel Foreground="#d8dbde"
                                            FontSize="22"
@@ -72,6 +83,10 @@
                             VerticalAlignment="Top"
                             Width="275"
                             Background="{StaticResource BackgroundDarkBlueBrush}">
+
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="1" Direction="0"/>
+                        </Border.Effect>
 
                         <TextBlock TextWrapping="Wrap"
                                    Foreground="White"
@@ -175,6 +190,11 @@
                             Width="275"
                             Margin="0, 0, 0, 15"
                             Background="{StaticResource BackgroundDarkBlueBrush}">
+
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="1" Direction="0"/>
+                        </Border.Effect>
+
                         <controls:LocLabel Foreground="#d8dbde"
                                            FontSize="22"
                                            FontFamily="Open Sans"
@@ -196,6 +216,11 @@
                             Width="275"
                             Margin="0, 0, 0, 15"
                             Background="{StaticResource BackgroundDarkBlueBrush}">
+
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="1" Direction="0"/>
+                        </Border.Effect>
+
                         <controls:LocLabel Foreground="#d8dbde"
                                            FontSize="22"
                                            FontFamily="Open Sans"
@@ -210,6 +235,10 @@
                             VerticalAlignment="Top"
                             Width="275"
                             Background="{StaticResource BackgroundDarkBlueBrush}">
+
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="1" Direction="0"/>
+                        </Border.Effect>
 
                         <TextBlock TextWrapping="Wrap"
                                    Foreground="White"
