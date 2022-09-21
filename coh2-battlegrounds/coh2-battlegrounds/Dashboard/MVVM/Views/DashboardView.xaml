@@ -235,7 +235,7 @@
                             <!-- UKF Games -->
                             <InlineUIContainer>
                                 <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
-                                    <TextBlock Text="Wehrmacht Games:" />
+                                    <TextBlock Text="UKF Games:" />
                                     <TextBlock Text="{Binding UKFGames, FallbackValue='N/A'}"
                                                TextAlignment="Right" 
                                                Margin="0, 0, 8, 0" />
