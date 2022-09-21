@@ -9,7 +9,7 @@
              xmlns:convertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="78" d:DesignWidth="250"
-             Background="#334252" x:Name="Self">
+             Background="{Binding PhaseBackground, FallbackValue=#334252}" x:Name="Self">
 
     <UserControl.Resources>
         <convertor:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -19,15 +19,16 @@
         
         <!-- Name -->
         <Label Content="{Binding SquadName}"
-                   Canvas.Left="50"
-                   MaxWidth="180"
-                   Foreground="White"
-                   FontWeight="DemiBold"/>
+               Canvas.Left="50"
+               MaxWidth="180"
+               Foreground="White"
+               FontWeight="DemiBold"/>
 
         <!-- Portrait -->
-        <portrait:Portrait PortraitName="{Binding SquadPortrait}"
-                               SymbolName="{Binding SquadSymbol}"
-                           x:Name="PortraitElement"/>
+        <portrait:Portrait 
+            PortraitName="{Binding SquadPortrait}"
+            SymbolName="{Binding SquadSymbol}"
+            x:Name="PortraitElement"/>
 
         <!-- Cost -->
         <cost:CostControl Canvas.Top="38"

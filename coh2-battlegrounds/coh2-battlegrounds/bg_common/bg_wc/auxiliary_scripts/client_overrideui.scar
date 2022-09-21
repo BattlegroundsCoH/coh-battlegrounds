@@ -475,46 +475,6 @@ function BG_CreateVeterancyCard(root, yOffset, data)
 
 end
 
-function BG_CreateAndDisplayMultiplayerActionsScreenOverride(player)
-
-    -- The position
-    local overridePos = UI_BottomLeft(330, 346);
-
-    -- Create root panel
-    bg_overrideui = RootPanel();
-    bg_overrideui:setPos(UI_UnpackPosition(overridePos));
-
-    bg_vote_action_button = Button(Util_CreateLocString(""), "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_mp_actions_override_button");
-    bg_vote_action_button:setBounds(0, 0, 48, 48);
-    bg_vote_action_button:setCallback(BG_OnVoteOverrideButtonClicked);
-
-    bg_overrideui:add(bg_vote_action_button);
-
-end
-
-function BG_OnVoteButtonClocked(bttn)
-    if bttn == DB_Button1 then
-        Game_SendMessage(_bg_message_type_team_request_withdraw, Player_GetID(Game_GetLocalPlayer()));
-    elseif bttn == DB_Button2 then
-        Game_SendMessage(_bg_message_type_player_surrender, Player_GetID(Game_GetLocalPlayer()));
-    end
-end
-
-function BG_OnVoteOverrideButtonClicked(tag)
-
-    -- Set contents
-    UI_MessageBoxSetText(LOC("Actions Dialog"), LOC("Here you can call for a vote to surrender to the enemy team or decide to withdraw your own company from the battle."));
-
-    -- Set the buttons
-    UI_MessageBoxSetButton(DB_Button1, LOC("Call for Surrender Vote."), LOC("This will call for a vote for the team to surrender."), "", true);
-    UI_MessageBoxSetButton(DB_Button2, LOC("Withdraw from battle."), LOC("You will withdraw from battle. 15% of your deployed units will surrender."), "", true);
-    UI_MessageBoxSetButton(DB_Button3, LOC("Close"), LOC("Close dialog."), "", true);
-
-    -- Show the messagebox
-    UI_MessageBoxShow(DC_Default, BG_OnVoteButtonClocked);
-
-end
-
 function BG_OnShowMatchErrorButtonClicked(bttn)
 
     -- Go to front end
@@ -539,36 +499,5 @@ function BG_CreateAndShowMatchError(title, message)
 
     -- Show the message box
     UI_MessageBoxShow(DC_Default, BG_OnShowMatchErrorButtonClicked);
-
-end
-
-___GUI_funyes = nil;
-___GUI_funno = nil;
-___GUI_funarg = nil;
-
-function BG_ShowYesNoDialogOnResponse(bttn)
-    if bttn == DB_Button1 then
-        ___GUI_funyes(___GUI_funarg);
-    else
-        ___GUI_funno(___GUI_funarg);
-    end
-end
-
-function BG_ShowYesNoDialog(title, message, yes_text, yes_tooltip, yes_func, no_text, no_tooltip, no_func, arg)
-
-    -- Set the message box text
-    UI_MessageBoxSetText(title, message);
-
-    -- Add the close button
-    UI_MessageBoxSetButton(DB_Button1, yes_text, yes_tooltip, "", true);
-    UI_MessageBoxSetButton(DB_Button2, no_text, no_tooltip, "", true);
-
-    -- BAD
-    ___GUI_funyes = yes_func;
-    ___GUI_funno = no_func;
-    ___GUI_funarg = arg;
-
-    -- Show the message box
-    UI_MessageBoxShow(DC_Default, BG_ShowYesNoDialogOnResponse);
 
 end

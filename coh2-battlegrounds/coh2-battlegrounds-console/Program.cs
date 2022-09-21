@@ -1,10 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Battlegrounds;
+using Battlegrounds.AI;
+using Battlegrounds.AI.Lobby;
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
@@ -14,8 +26,11 @@ using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Gfx;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Networking;
 using Battlegrounds.Verification;
+
+using Renci.SshNet;
 
 namespace coh2_battlegrounds_console;
 
@@ -69,7 +84,7 @@ class Program {
         public GfxCompile() : base("gfxdir", "Compiles directory gfx content into a gfx data file.", DIR, OUT, VER, REG) { }
 
         public override void Execute(CommandArgumentList argumentList) 
-            => GfxFolderCompiler.Compile(argumentList.GetValue(DIR), argumentList.GetValue(OUT));
+            => GfxFolderCompiler.Compile(argumentList.GetValue(DIR), argumentList.GetValue(OUT), version: argumentList.GetValue(VER));
 
     }
 
@@ -99,9 +114,16 @@ class Program {
 
         public static readonly Argument<string> PATH = new Argument<string>("-o", "Specifies output directory.", "archive_maps");
 
-        public MapExtract() : base("coh2-extract-maps", "Verifies the integrity of a gfx file.", PATH) { }
+        public static readonly Argument<bool> TEST = new Argument<bool>("-t", "Specifies if the testmap should be read instead", false);
+
+        public MapExtract() : base("coh2-extract-maps", "Extracts all CoH2 maps.", PATH, TEST) { }
 
         public override void Execute(CommandArgumentList argumentList) {
+
+            if (argumentList.GetValue(TEST)) {
+                MapExtractor.ReadTestmap();
+                return;
+            }
 
             MapExtractor.Output = argumentList.GetValue(PATH);
             MapExtractor.Extract();
@@ -115,7 +137,7 @@ class Program {
         public static readonly Argument<string> PATH = new Argument<string>("-c", "Specifies the directory to compile", string.Empty);
         public static readonly Argument<string> OUT = new Argument<string>("-o", "Specifies compiled campaign output file.", "campaign.camp");
 
-        public CampaignCompile() : base("campaign", "Verifies the integrity of a gfx file.", PATH, OUT) { }
+        public CampaignCompile() : base("campaign", "Compiles a campaign directory..", PATH, OUT) { }
 
         public override void Execute(CommandArgumentList argumentList) {
 
@@ -177,8 +199,116 @@ class Program {
 
     }
 
+    class CreateInstaller : Command {
+
+        const string msbuild_path = @"C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin";
+
+        public static readonly Argument<string> PLATFORM = new Argument<string>("-p", "Specifies the build platform", "x64");
+
+        public CreateInstaller() : base("create-installer", "Creates a .msi file", PLATFORM) { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            string platform = argumentList.GetValue(PLATFORM);
+            if (platform != "x64" && platform != "x86") {
+                Console.WriteLine("Invalid platform");
+                return;
+            }
+
+            string workdir = Path.GetFullPath("..\\..\\..\\..\\");
+
+            // Create publish files 
+            ProcessStartInfo createPublishFiles = new ProcessStartInfo() {
+                UseShellExecute = false,
+                FileName = Path.Combine(workdir, "coh2-battlegrounds-console\\bin\\Debug\\net6.0\\coh2-battlegrounds-console.exe"),
+                Arguments = $"mki -p {platform} -dz",
+                WorkingDirectory = Path.Combine(workdir, "coh2-battlegrounds-console\\bin\\Debug\\net6.0\\"),
+            };
+
+            Process? createPublishFilesProcess = Process.Start(createPublishFiles);
+            if (createPublishFilesProcess is null) {
+                Console.WriteLine($"Failed to create coh2-battlegrounds-console.exe mki -p {platform} -dz process");
+                return;
+            }
+
+            createPublishFilesProcess!.WaitForExit();
+
+            if (!CompileProject("coh2-battlegrounds-installer.wixproj", Path.Combine(workdir, "coh2-battlegrounds-installer"), platform)) {
+                return;
+            }
+
+        }
+
+        private bool CompileProject(string project, string projectDir, string platform) {
+
+            // Firstly we trigger MSBuild.exe on our solution file
+            ProcessStartInfo msbuild_bin = new ProcessStartInfo() {
+                UseShellExecute = false,
+                FileName = $"{msbuild_path}\\MSBuild.exe",
+                Arguments = $"{project} -property:Configuration=Release -property:Platform={platform}",
+                WorkingDirectory = projectDir,
+            };
+
+            // Trigger compile
+            Process? binbuilder = Process.Start(msbuild_bin);
+            if (binbuilder is null) {
+                Console.WriteLine("Failed to create MS build process");
+                return false;
+            }
+
+            // Grab io
+            binbuilder.OutputDataReceived += (s, e) => {
+                Console.WriteLine($"msbuild: {e.Data}");
+            };
+            binbuilder.ErrorDataReceived += (s, e) => {
+                Console.WriteLine($"error: {e.Data}");
+            };
+
+            // Wait for exit
+            binbuilder.WaitForExit();
+
+            // Return OK
+            return true;
+
+        }
+
+    }
+
+    class ExecutableFirewall : Command {
+
+        public ExecutableFirewall() : base("add-firewallexeption", "Adds FirewallExceptio to executable") { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            string workdir = Path.GetFullPath("..\\..\\..\\..\\");
+
+            string oldHeader = "<Wix xmlns=\"http://schemas.microsoft.com/wix/2006/wi\">";
+            string newHeader = "<Wix xmlns=\"http://schemas.microsoft.com/wix/2006/wi\" xmlns:fire=\"http://schemas.microsoft.com/wix/FirewallExtension\">";
+
+            string oldComponent = "<File Id=\"filC3836236C73ECA8506FB24920C9B8D22\" KeyPath=\"yes\" Source=\"$(var.BasePath)\\coh2-battlegrounds.exe\" />";
+            string newComponent = "<File Id=\"filC3836236C73ECA8506FB24920C9B8D22\" KeyPath=\"yes\" Source=\"$(var.BasePath)\\coh2-battlegrounds.exe\"><fire:FirewallException Id=\"ExeFirewall\" Name=\"!(loc.ProductNameFolder)\" Port=\"11000\" Protocol=\"tcp\" Profile=\"public\" Scope=\"any\"/></File>";
+
+            string file = Path.Combine(workdir, "coh2-battlegrounds-installer\\ComponentsGen.wxs");
+
+            StreamReader reader = new(file);
+            string content = reader.ReadToEnd();
+            reader.Close();
+
+            content = content.Replace(oldHeader, newHeader);
+            content = content.Replace(oldComponent, newComponent);
+
+            StreamWriter writer = new(file);
+            writer.Write(content);
+            writer.Close();
+
+        }
+
+    }
+
     class Update : Command {
         
+        public static readonly string ChecksumPath = Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\checksum.txt");
+
         public static readonly Argument<string> TARGET = new Argument<string>("-target", "Specifies the update target [db, checksum]", "db");
 
         public static readonly Argument<string> MOD = new Argument<string>("-m", "Specifies the mod to update, applicable when target=db", "vcoh");
@@ -186,18 +316,27 @@ class Program {
         public static readonly Argument<string> TOOL = 
             new Argument<string>("-t", "Specifies the full path to the tools folder", @"C:\Program Files (x86)\Steam\steamapps\common\Company of Heroes 2 Tools");
 
-        public Update() : base("update", "Will update specified elements of the source build.", TARGET, MOD, TOOL) { }
+        public static readonly Argument<string> PLATFORM = new Argument<string>("-p", "Specifies build platform", "x64");
+
+        public Update() : base("update", "Will update specified elements of the source build.", PLATFORM, TARGET, MOD, TOOL) { }
 
         private ConsoleColor m_col;
 
         public override void Execute(CommandArgumentList argumentList) {
+            // Flag to set the build platform
+            string platform = argumentList.GetValue(PLATFORM);
+            if (platform != "x64" && platform != "x86") {
+                Console.WriteLine("Invalid platform");
+                return;
+            }
+
             this.m_col = Console.ForegroundColor;
             switch (argumentList.GetValue(TARGET)) {
                 case "db":
                     this.UpdateDatabase(argumentList);
                     break;
                 case "checksum":
-                    this.ComputeChecksum();
+                    ComputeChecksum(platform);
                     break;
                 default:
                     Console.WriteLine("Undefined update target.");
@@ -219,7 +358,7 @@ class Program {
             string mod = args.GetValue(MOD);
 
             // Get path to xaml to json tool
-            string xmlreader = Path.GetFullPath("..\\..\\..\\..\\..\\db-tool\\bin\\debug\\net5.0\\CoH2XML2JSON.exe");
+            string xmlreader = Path.GetFullPath("..\\..\\..\\..\\..\\db-tool\\bin\\debug\\net6.0\\CoH2XML2JSON.exe");
 
             // Verify
             if (!File.Exists(xmlreader)) {
@@ -274,16 +413,13 @@ class Program {
 
         }
 
-        private void ComputeChecksum() {
-
-            // Get full checksum path
-            string checksumPath = Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\checksum.txt");
+        internal static void ComputeChecksum(string platform) {
 
             // Get path to release build
-            string releaseExe = Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\bin\\Release\\net6.0-windows\\coh2-battlegrounds.exe");
+            string releaseExe = Path.GetFullPath($"..\\..\\..\\..\\coh2-battlegrounds\\bin\\Release\\net6.0-windows\\win-{platform}\\publish\\coh2-battlegrounds.exe");
 
             // Log
-            Console.WriteLine($"Checksum file: {checksumPath}");
+            Console.WriteLine($"Checksum file: {ChecksumPath}");
             Console.WriteLine($"Release Build: {releaseExe}");
 
             // Make sure release build exists
@@ -300,11 +436,406 @@ class Program {
             Console.WriteLine($"Saving integrity hash to checksum file.");
 
             // Save
-            File.WriteAllText(checksumPath, Integrity.IntegrityHashString);
-            File.Copy(checksumPath, releaseExe.Replace("coh2-battlegrounds.exe", "checksum.txt"), true);
+            File.WriteAllText(ChecksumPath, Integrity.IntegrityHashString);
+            File.Copy(ChecksumPath, releaseExe.Replace("coh2-battlegrounds.exe", "checksum.txt"), true);
 
             // Log
             Console.WriteLine("Saved hash to checksum file(s).");
+
+        }
+
+    }
+
+    class MinimapperCommand : Command {
+
+        public static readonly Argument<string> SCENARIO = new Argument<string>("-s", "Specifies the scenario to map", "2p_coh2_resistance");
+
+        public MinimapperCommand() : base("mini", "Basic minimap position translator functionality testing", SCENARIO) {}
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            // Load BG
+            LoadBGAndProceed();
+
+            // Get scenario
+            string s = argumentList.GetValue(SCENARIO);
+            if (!ScenarioList.TryFindScenario(s, out Scenario? scen) && scen is null) {
+                Console.WriteLine("Failed to find scenario " + s);
+                return;
+            }
+
+            // Invoke mapper
+            Minimapper.Map(scen);
+
+        }
+
+    }
+
+    class CreateInstallFiles : Command {
+
+        const string dotnet_path = @"C:\Program Files\dotnet";
+
+        public static readonly Argument<bool> SKIP_COMPILE = new Argument<bool>("-c", "Skip compilation (must be handled by user then)", false);
+        public static readonly Argument<bool> DONT_ZIP = new Argument<bool>("-dz", "Don't zip the file", false);
+        public static readonly Argument<string> PLATFORM = new Argument<string>("-p", "Specifies the build platform", "x64");
+
+        public CreateInstallFiles() : base("mki", "Makes an installer file (Zips the release build folder).", PLATFORM, SKIP_COMPILE, DONT_ZIP) { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            // Flag to check if compilation should be skipped
+            bool skipFlag = argumentList.GetValue(SKIP_COMPILE);
+
+            // Flag to check if we should zip
+            bool zipFlag = argumentList.GetValue(DONT_ZIP);
+
+            // Flag to set the build platform
+            string platform = argumentList.GetValue(PLATFORM);
+            if (platform != "x64" && platform != "x86") {
+                Console.WriteLine("Invalid platform");
+                return;
+            }
+
+            // Make sure msbuild exists
+            if (!File.Exists(dotnet_path + "\\dotnet.exe")) {
+                Console.WriteLine("Failed to locate dotnet.exe");
+                Console.WriteLine("Create install data file anyways (y/n)?");
+                if (Console.Read() is (int)'Y' or (int)'y') {
+                    skipFlag = true;
+                } else {
+                    return;
+                }
+            }
+
+            // Find abs path for working directory
+            string workdir = Path.GetFullPath("..\\..\\..\\..\\");
+
+            // Check if compile flag is set
+            if (!skipFlag) {
+
+                // Compile aux library and bail if failure
+                if (!CompileProject("coh2-battlegrounds-bin.csproj", Path.Combine(workdir, "coh2-battlegrounds-bin"), platform)) {
+                    return;
+                }
+
+                // Compile main app
+                if (!CompileProject("coh2-battlegrounds.csproj", Path.Combine(workdir, "coh2-battlegrounds"), platform)) {
+                    return;
+                }
+
+            }
+
+            // Update checksum
+            Update.ComputeChecksum(platform);
+
+            // Log
+            Console.WriteLine();
+            Console.WriteLine("Copying checksum file to release directory");
+
+            // Copy
+            File.Copy(Update.ChecksumPath, Path.Combine(workdir, $"coh2-battlegrounds\\bin\\Release\\net6.0-windows\\win-{platform}\\publish\\checksum.txt"), true);
+            Console.WriteLine("Copied checksum file to release directory");
+
+            if (zipFlag) {
+
+                const string dir = "bg-release";
+                if (Directory.Exists(dir)) {
+                    Directory.Delete(dir, true);
+                }
+
+                Directory.CreateDirectory(dir);
+
+                Helpers.CopyFilesRecursively(Path.Combine(workdir, $"coh2-battlegrounds\\bin\\Release\\net6.0-windows\\win-{platform}\\publish"), dir);
+                Console.WriteLine($"Created {dir} successfully");
+
+
+            } else {
+
+                Console.WriteLine("\tNow packing into zipfile...");
+
+                // Define zip path
+                const string zippy = "bg-release.zip";
+                if (File.Exists(zippy)) {
+                    File.Delete(zippy);
+                }
+
+                // Creaste zip
+                ZipFile.CreateFromDirectory(Path.Combine(workdir, $"coh2-battlegrounds\\bin\\Release\\net6.0-windows\\win-{platform}\\publish"), zippy);
+                Console.WriteLine("Zip file created");
+
+            }
+
+        }
+
+        private static bool CompileProject(string project, string projectDir, string platform) {
+
+            // Firstly we trigger MSBuild.exe on our solution file
+            ProcessStartInfo msbuild_bin = new ProcessStartInfo() {
+                UseShellExecute = false,
+                FileName = $"{dotnet_path}\\dotnet.exe",
+                Arguments = $"publish {project} -r win-{platform} -c Release",
+                WorkingDirectory = projectDir,
+            };
+
+            // Trigger compile
+            Process? binbuilder = Process.Start(msbuild_bin);
+            if (binbuilder is null) {
+                Console.WriteLine("Failed to create DOTNET build process");
+                return false;
+            }
+
+            // Grab io
+            binbuilder.OutputDataReceived += (s, e) => {
+                Console.WriteLine($"dotnet: {e.Data}");
+            };
+            binbuilder.ErrorDataReceived += (s, e) => {
+                Console.WriteLine($"error: {e.Data}");
+            };
+
+            // Wait for exit
+            binbuilder.WaitForExit();
+
+            // Return OK
+            return true;
+
+        }
+
+    }
+
+    class AIDefenceAnalyser : Command {
+
+        public static readonly Argument<string> SCENARIO = new Argument<string>("-s", "Specifies the scenario to map", "2p_coh2_resistance");
+
+        public static readonly Argument<bool> DOALL = new Argument<bool>("-a", "Specifies the tool should be applied to all known maps",  false);
+
+        public AIDefenceAnalyser() : base("aidef", "Invokes the AI defence minimap analysis tool.", SCENARIO, DOALL) { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            // Load BG
+            LoadBGAndProceed();
+
+            // Do all if flag is set; otherwise just do example scenario
+            if (argumentList.GetValue(DOALL)) {
+
+                // Grab all scenarios
+                var scenarios = ScenarioList.GetList();
+
+                // Create required instances
+                var ls = new Dictionary<string, AIMapAnalysis>();
+                var sync = new object();
+
+                // Time it
+                var stop = Stopwatch.StartNew();
+
+                // Loop over
+                Parallel.ForEach(scenarios, x => {
+                    if (DoScenario(x) is AIMapAnalysis a) {
+                        lock (sync) {
+                            ls[x.RelativeFilename] = a;
+                        }
+                    }
+                });
+
+                // Halt
+                stop.Stop();
+
+                // Log
+                Console.WriteLine($"Finished processing {scenarios.Count} scenarios in {stop.Elapsed.TotalSeconds}s");
+                Thread.Sleep(5000);
+
+                File.WriteAllText($"vcoh-aimap-db.json", JsonSerializer.Serialize(ls, new JsonSerializerOptions() { WriteIndented = true }));
+
+            } else {
+
+                // Get scenario
+                string s = argumentList.GetValue(SCENARIO);
+                if (!ScenarioList.TryFindScenario(s, out Scenario? scen) && scen is null) {
+                    Console.WriteLine("Failed to find scenario " + s);
+                    return;
+                }
+
+                // Do the scenario
+                DoScenario(scen);
+
+            }
+
+        }
+
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "Will always run on Windows")]
+        private static AIMapAnalysis? DoScenario(Scenario scen) {
+
+            // Log
+            Console.WriteLine($"Doing Analysis on: {scen.RelativeFilename}.");
+
+            // Create AI map analyser
+            var analyser = new AIMapAnalyser(scen);
+            if (analyser.Analyze(out var data, 8, 3) is not AIMapAnalysis analysis) {
+                Console.WriteLine("Failed to analyse scenario file: " + scen.Name);
+                return null;
+            }
+
+            // Grab bitmap
+            using var bmp = new Bitmap(data.GetLength(0),
+                                       data.GetLength(1),
+                                       PixelFormat.Format32bppArgb);
+
+            // Draw bmp
+            for (int y = 0; y < bmp.Height; y++) {
+                for (int x = 0; x < bmp.Width; x++) {
+                    bmp.SetPixel(x, y, Color.FromArgb(data[x, y].R, data[x, y].G, data[x, y].B));
+                }
+            }
+
+            // Draw analysis data
+            using var g = Graphics.FromImage(bmp);
+            foreach (var n in analyser.Nodes) {
+                g.DrawEllipse(new Pen(Brushes.Red), new Rectangle(n.X - 1, n.Y - 1, 2, 2));
+            }
+            foreach (var e in analyser.Edges) {
+                g.DrawLine(new Pen(Brushes.DarkGreen, 1.5f), new Point(e.A.X, e.A.Y), new Point(e.B.X, e.B.Y));
+            }
+            foreach (var p in analysis.StrategicPositions) {
+                var mm = scen.ToMinimapPosition(data.GetLength(0), data.GetLength(1), p.Position);
+                g.DrawEllipse(new Pen(Brushes.Purple, 2), new Rectangle((int)(mm.X - 2), (int)(mm.Y - 2), 4, 4));
+            }
+
+            g.Save();
+            
+            if (!Directory.Exists("ai_tests")) {
+                Directory.CreateDirectory("ai_tests");
+            }
+
+            bmp.Save($"ai_tests\\{scen.RelativeFilename}.png");
+
+            // Return
+            return analysis;
+
+        }
+
+    }
+
+    class AIDefencePlannerTest : Command {
+
+        public AIDefencePlannerTest() : base("aipdef", "Runs a test on AI defence planner code") { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            // Load BG
+            LoadBGAndProceed();
+
+            // Grab the two default companies
+            //var sov = CreateSovietCompany();
+            var ger = CreateGermanCompany();
+
+            // Load AI database
+            AIDatabase.LoadAIDatabase();
+
+            // Grab scenario
+            if (!ScenarioList.TryFindScenario("2p_coh2_resistance", out Scenario? scen) && scen is null) {
+                Console.WriteLine("Failed to find scenario '2p_coh2_resistance'");
+                return;
+            }
+
+            // Get gamode instance
+            var mode = ModManager.GetPackageOrError("mod_bg").Gamemodes.FirstOrDefault(x => x.ID == "bg_defence", new());
+
+            // Grab analysis
+            var analysis = AIDatabase.GetMapAnalysis("2p_coh2_resistance");
+
+            // Create planner
+            var planner = new AIDefencePlanner(analysis, mode);
+            planner.Subdivide(scen, 1, new byte[] { 0 });
+
+            // Create plan
+            planner.CreateDefencePlan(1, 0, ger, scen);
+
+        }
+
+    }
+
+    class Echo : Command {
+
+        public static readonly Argument<string> TEXT = new Argument<string>("-m", "Message to echo", "");
+
+        public Echo() : base("echo", "Will echo the input", TEXT) {}
+
+        public override void Execute(CommandArgumentList argumentList) {
+            string txt = argumentList.GetValue(TEXT);
+            Console.WriteLine(txt);
+        }
+
+    }
+
+    class SSHCmd : Command {
+
+        public SSHCmd() : base("ssh", "The program will enter into a SSH mode to the remote server") { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            Console.Clear();
+            Console.WriteLine("====== Entering SSH Mode ======");
+            Console.Write("Username: ");
+            string? username = Console.ReadLine();
+
+            // Bail if username is not vlaid
+            if (string.IsNullOrEmpty(username)) {
+                Console.WriteLine("Username not valid");
+                return;
+            }
+
+            // Read password
+            Console.Write("Password: ");
+            string? passwrd = Console.ReadLine();
+
+            // Bail if username is not vlaid
+            if (string.IsNullOrEmpty(passwrd)) {
+                Console.WriteLine("Password not valid");
+                return;
+            }
+
+            // Create info
+            var info = new ConnectionInfo("194.37.80.249", username, new PasswordAuthenticationMethod(username, passwrd));
+
+            using var client = new SshClient(info);
+
+            try {
+
+                // Try connect
+                client.Connect();
+
+                // Run while asked
+                bool runClient = true;
+                while (runClient) {
+
+                    string? cmd = Console.ReadLine();
+                    if (string.IsNullOrEmpty(cmd)) {
+                        continue;
+                    }
+
+                    switch (cmd) {
+                        case "exit":
+                            runClient = false;
+                            break;
+                        case "@script":
+                            break;
+                        default:
+
+                            // Run command and write out result
+                            var result = client.RunCommand(cmd);
+                            Console.WriteLine(result.Result);
+
+                            break;
+                    }
+
+                }
+
+                // Disconnect
+                client.Disconnect();
+
+            } catch (Exception e) {
+                Console.WriteLine(e);
+            }
 
         }
 
@@ -364,9 +895,17 @@ class Program {
         flags.RegisterCommand<CampaignCompile>();
         flags.RegisterCommand<ReplayAnalysis>();
         flags.RegisterCommand<ServerCheck>();
+        flags.RegisterCommand<MinimapperCommand>();
+        flags.RegisterCommand<CreateInstallFiles>();
+        flags.RegisterCommand<AIDefenceAnalyser>();
+        flags.RegisterCommand<AIDefencePlannerTest>();
+        flags.RegisterCommand<Echo>();
         flags.RegisterCommand<Repl>();
 #if DEBUG
+        flags.RegisterCommand<SSHCmd>();
         flags.RegisterCommand<Update>();
+        flags.RegisterCommand<CreateInstaller>();
+        flags.RegisterCommand<ExecutableFirewall>();
 #endif
 
         // Parse (and dispatch)
@@ -396,6 +935,11 @@ class Program {
 
         // Get package
         var package = ModManager.GetPackage("mod_bg");
+        if (package is null) {
+            Trace.WriteLine("Failed to find mod_bg package");
+            Environment.Exit(-1);
+        }
+
         tuningMod = ModManager.GetMod<ITuningMod>(package.TuningGUID);
 
         // Mark loaded
@@ -414,7 +958,7 @@ class Program {
 
         // Create a dummy company
         CompanyBuilder bld =
-            CompanyBuilder.NewCompany("26th Rifle Division", CompanyType.Infantry, CompanyAvailabilityType.MultiplayerOnly, Faction.Soviet, g);
+            CompanyBuilder.NewCompany("26th Rifle Division", new BasicCompanyType(), CompanyAvailabilityType.MultiplayerOnly, Faction.Soviet, g);
 
         // Grab blueprints
         var conscripts = BlueprintManager.FromBlueprintName<SquadBlueprint>("conscript_squad_bg");
@@ -566,7 +1110,7 @@ class Program {
         var g = tuningMod.Guid;
 
         // Create a dummy company
-        CompanyBuilder bld = CompanyBuilder.NewCompany("", CompanyType.Mechanized, CompanyAvailabilityType.MultiplayerOnly, Faction.Wehrmacht, g);
+        CompanyBuilder bld = CompanyBuilder.NewCompany("69th Panzer Kompanie", new BasicCompanyType(), CompanyAvailabilityType.MultiplayerOnly, Faction.Wehrmacht, g);
 
         // Grab blueprints
         var pioneers = BlueprintManager.FromBlueprintName<SquadBlueprint>("pioneer_squad_bg");

@@ -1,4 +1,4 @@
-﻿using Battlegrounds.Game;
+﻿using Battlegrounds.AI;
 using Battlegrounds.Networking.LobbySystem;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;

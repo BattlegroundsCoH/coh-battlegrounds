@@ -9,8 +9,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using Battlegrounds;
+using Battlegrounds.AI;
 using Battlegrounds.Functional;
-using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
@@ -137,7 +137,12 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         this.Local = new(new RelayCommand(LocalButton), PlayerCompanies.HasCompanyForBothAlliances);
 
         // Create double-click
-        this.JoinLobbyDirectly = new EventCommand<MouseButtonEventArgs>(this.JoinLobby);
+        this.JoinLobbyDirectly = new EventCommand<MouseButtonEventArgs>((sender, args) => {
+            if (!PlayerCompanies.HasCompanyForBothAlliances()) {
+                return; // Bail on attempt to join when no companies are available.
+            }
+            this.JoinLobby(sender, args);
+        });
 
         // Create lobbies container (But do no populate it)
         this.Lobbies = new();
@@ -354,32 +359,38 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
         // Null check
         if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+            Trace.WriteLine("Failed to show host modal (No Modal Control)", nameof(LobbyBrowserViewModel));
             return;
         }
 
         // Ensure the interface object is set
         if (NetworkInterface.APIObject is null) {
-            return;
+
+            // Show error modal
+            OKDialogViewModel.ShowModal(mControl, (_, _) => {}, 
+                "Network Failure", "No network connection was established to the Battlegrounds Server (NetworkInterface.APIObject=<NULL>).");
+
+        } else {
+
+            // Show modal
+            HostGameDialogViewModel.ShowModal(mControl, (vm, resault) => {
+
+                // Check return value
+                if (resault is not ModalDialogResult.Confirm) {
+                    return;
+                }
+
+                // Check for null pwd
+                if (vm.LobbyPassword is null) {
+                    vm.LobbyPassword = string.Empty;
+                }
+
+                // Create lobby
+                Task.Run(() => LobbyUtil.HostLobby(NetworkInterface.APIObject, vm.LobbyName, vm.LobbyPassword, this.HostLobbyResponse));
+
+            });
+
         }
-
-        // Show modal
-        HostGameDialogViewModel.ShowModal(mControl, (vm, resault) => {
-
-            // Check return value
-            if (resault is not ModalDialogResult.Confirm) {
-                return;
-            }
-
-            // Check for null pwd
-            if (vm.LobbyPassword is null) {
-                vm.LobbyPassword = string.Empty;
-            }
-
-            // Create lobby
-            Task.Run(() => LobbyUtil.HostLobby(NetworkInterface.APIObject, vm.LobbyName, vm.LobbyPassword, this.HostLobbyResponse));
-            
-
-        });
 
     }
 
@@ -428,6 +439,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
 
         // Ensure the interface object is set
         if (NetworkInterface.APIObject is null) {
+            Trace.WriteLine("Failed to show join modal (Network interface API is null)", nameof(LobbyBrowserViewModel));
             return;
         }
 

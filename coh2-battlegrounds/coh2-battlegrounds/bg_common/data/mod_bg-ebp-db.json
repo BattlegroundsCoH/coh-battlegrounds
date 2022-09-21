@@ -394,6 +394,115 @@
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741943,
+    "Name": "concrete_bunker_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11158251",
+      "LocaleDescriptionLong": "11158252",
+      "LocaleDescriptionShort": "11158253",
+      "Icon": "Icons_buildings_building_german_concrete_mg_bunker",
+      "Symbol": "Icons_symbols_building_german_concrete_bunker_symbol"
+    },
+    "Cost": {
+      "Manpower": 300,
+      "FieldTime": 140
+    },
+    "Hardpoints": [
+      "mgnest_mg42t_dummy_mp",
+      "pillbox_mg42_mp"
+    ],
+    "Health": 960,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741942,
+    "Name": "makeshift_bunker_mp",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "2105401",
+      "LocaleDescriptionLong": "2105400",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_german_bunker",
+      "Symbol": "Icons_symbols_building_german_bunker_symbol"
+    },
+    "Cost": {
+      "Manpower": 150,
+      "FieldTime": 60
+    },
+    "Hardpoints": [
+      "mgnest_mg42t_dummy_mp"
+    ],
+    "Health": 480,
+    "Upgrades": [
+      "bunker_mg42_addition_mp",
+      "bunker_medic_station_mp",
+      "bunker_command_mp"
+    ],
+    "UpgradeCapacity": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741939,
+    "Name": "mine_field_mine_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11007845",
+      "LocaleDescriptionLong": "11046795",
+      "LocaleDescriptionShort": "11046794",
+      "Icon": "Icons_buildings_building_german_mine_field",
+      "Symbol": "Icons_symbols_building_german_mine_field_symbol"
+    },
+    "Cost": {
+      "Munition": 15,
+      "FieldTime": 25
+    },
+    "Hardpoints": [
+      "axis_mine_anti_personnel_mp"
+    ],
+    "Health": 20
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741940,
+    "Name": "slit_trench_german_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11051284",
+      "LocaleDescriptionLong": "11051283",
+      "LocaleDescriptionShort": "11051285",
+      "Icon": "Icons_buildings_building_german_slit_trench",
+      "Symbol": "Icons_symbols_building_german_slit_trench_symbol"
+    },
+    "Cost": {
+      "FieldTime": 60
+    },
+    "Hardpoints": [
+      "mgnest_mg42t_dummy_mp",
+      "mgnest_mg42t_dummy_mp"
+    ],
+    "Health": 600
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741941,
+    "Name": "tank_trap_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11052544",
+      "LocaleDescriptionLong": "11052546",
+      "LocaleDescriptionShort": "11054851",
+      "Icon": "Icons_buildings_building_german_tank_traps",
+      "Symbol": "Icons_symbols_building_german_tank_traps_symbol"
+    },
+    "Cost": {
+      "FieldTime": 30
+    },
+    "Health": 500
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741932,
     "Name": "assault_grenadiers_bg",
     "Army": "german",
@@ -801,6 +910,31 @@
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741877,
     "Name": "atgun_crew_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Cost": {
+      "Manpower": 45,
+      "FieldTime": 4.5
+    },
+    "Abilities": [
+      "blizzard_effect_deep_snow_camo",
+      "army_item_global_cover_training",
+      "heal_in_cover"
+    ],
+    "Hardpoints": [
+      "weapon_crew_\u0026_pioneer_mp40_smg_mp"
+    ],
+    "Health": 80
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741944,
+    "Name": "geramn_weapon_crew_bg",
     "Army": "german",
     "Display": {
       "LocaleName": "0",
@@ -1788,6 +1922,120 @@
       "tiger_top_gunner_mp"
     ],
     "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741933,
+    "Name": "barbed_wire_fence_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "2099701",
+      "LocaleDescriptionLong": "2099700",
+      "LocaleDescriptionShort": "11041863",
+      "Icon": "Icons_buildings_building_barbwire",
+      "Symbol": "Icons_symbols_building_barbwire_symbol"
+    },
+    "Cost": {
+      "FieldTime": 12
+    },
+    "Health": 110,
+    "UpgradeCapacity": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741934,
+    "Name": "barbed_wire_field_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11009002",
+      "LocaleDescriptionLong": "11049346",
+      "LocaleDescriptionShort": "11041865",
+      "Icon": "Icons_buildings_building_barbwire_field",
+      "Symbol": "Icons_symbols_building_barbwire_field_symbol"
+    },
+    "Cost": {
+      "FieldTime": 12
+    },
+    "Health": 400
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741935,
+    "Name": "machine_gun_nest_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "2100001",
+      "LocaleDescriptionLong": "2100000",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_soviet_mg_nest",
+      "Symbol": "Icons_symbols_building_soviet_mg_nest_symbol"
+    },
+    "Cost": {
+      "Manpower": 150,
+      "Fuel": 40,
+      "FieldTime": 90
+    },
+    "Hardpoints": [
+      "bunker_starting_position_dshk_mp"
+    ],
+    "Health": 600,
+    "UpgradeCapacity": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741938,
+    "Name": "soviet_mine_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "2140001",
+      "LocaleDescriptionLong": "2140002",
+      "LocaleDescriptionShort": "11042010",
+      "Icon": "Icons_abilities_ability_soviet_anti_personnel_mines",
+      "Symbol": "Icons_symbols_ability_soviet_tm35_mines_symbol"
+    },
+    "Cost": {
+      "Munition": 30,
+      "FieldTime": 40
+    },
+    "Hardpoints": [
+      "tm-35_mine_mp"
+    ],
+    "Health": 20
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741937,
+    "Name": "tanktrap_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11052428",
+      "LocaleDescriptionLong": "11052427",
+      "LocaleDescriptionShort": "11052486",
+      "Icon": "Icons_buildings_building_soviet_tank_traps",
+      "Symbol": "Icons_symbols_building_soviet_tank_traps_symbol"
+    },
+    "Cost": {
+      "FieldTime": 30
+    },
+    "Health": 500
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741936,
+    "Name": "wire_field_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11009002",
+      "LocaleDescriptionLong": "11035066",
+      "LocaleDescriptionShort": "11041873",
+      "Icon": "Icons_abilities_ability_soviet_barbed_wire_field",
+      "Symbol": "Icons_symbols_ability_soviet_barbed_wire_field_symbol"
+    },
+    "Cost": {
+      "FieldTime": 10
+    },
+    "Health": 2000,
+    "UpgradeCapacity": 1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -3381,5 +3629,96 @@
       "battle_phase_4_mp"
     ],
     "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1234,
+    "Name": "map_entry_point",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1235,
+    "Name": "map_entry_point_player",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741928,
+    "Name": "night_aura_entity",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1314,
+    "Name": "territory_fuel_point_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11035056",
+      "LocaleDescriptionLong": "11075054",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_fuel",
+      "Symbol": "Icons_symbols_flag_fuel_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1316,
+    "Name": "territory_munitions_point_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11035055",
+      "LocaleDescriptionLong": "11075055",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_common_munitions",
+      "Symbol": "Icons_symbols_building_common_munitions_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1320,
+    "Name": "territory_point_invisible_command",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_null",
+      "Symbol": "Icons_symbols_flag_null_symbol"
+    }
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1322,
+    "Name": "territory_point_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11035054",
+      "LocaleDescriptionLong": "11075053",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_null",
+      "Symbol": "Icons_symbols_flag_null_symbol"
+    },
+    "UpgradeCapacity": 1
   }
 ]

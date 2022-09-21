@@ -267,6 +267,20 @@ function Squad_IsGarrisoned(squad)
 end
 
 ------------------------------------------------------------
+-- EGroup functions
+------------------------------------------------------------
+
+function EGroup_FromEntity(entity, temp_name)
+    if temp_name == nil then
+        temp_name = "eg_temp";
+    end
+    local eg_temp = EGroup_CreateIfNotFound(temp_name);
+    EGroup_Clear(eg_temp);
+    EGroup_Add(eg_temp, entity);
+    return eg_temp;
+end
+
+------------------------------------------------------------
 -- Entity functions
 ------------------------------------------------------------
 
@@ -274,7 +288,7 @@ function Entity_CreateAndSpawn(player, blueprint, position, towards)
 
     -- If position is nil - use player's starting position
     if position == nil then
-        position = Player_GetStartingPosition(player);
+        position = Player_GetBasePosition(player);
     end
 
     -- If towards is nil - use position + some
@@ -309,7 +323,7 @@ end
 
 function BG_LocStringFormat(locID, arg1, arg2, arg3, arg4)
     if arg2 == nil then
-        return Loc_FormatText("$" .. _bg_guid .. ":" .. locID, arg1)[1];
+        return Loc_FormatText("$" .. _bg_guid .. ":" .. locID, arg1);
     elseif arg3 == nil then
         return Loc_FormatText("$" .. _bg_guid .. ":" .. locID, arg1, arg2)[1];
     elseif arg4 == nil then
@@ -392,6 +406,41 @@ function Player_LoopSquadsWhile(player, squadFunc, condition)
     while condition() and i < count do
         squadFunc(SGroup_GetSpawnedSquadAt(playerSquads, i), i, count);
         i = i + 1;
+    end
+
+end
+
+___basepositions = {}
+function Player_GetBasePosition(player)
+
+    -- Return already registered
+    local pid = Player_GetID(player);
+    if ___basepositions[pid] ~= nil then
+        return ___basepositions[pid];
+    end
+
+    -- Return if starting position is available
+    local spos = Player_GetStartingPosition(player);
+    if scartype(spos) == ST_SCARPOS then
+        ___basepositions[pid] = spos;
+        return spos;
+    end
+
+    -- Find available command point
+    local eg_playerentities = Player_GetEntitiesFromType(player, "strategic_node");
+    local invbp = BP_GetEntityBlueprint("142b113740474c82a60b0a428bd553d5:territory_point_invisible_command");
+    if EGroup_Count(eg_playerentities) > 0 then
+        local egmatch = function(_, _, entity)
+            if Entity_GetBlueprint(entity) == invbp then
+                ___basepositions[pid] = EGroup_GetSpawnedEntityAt(eg_playerentities, 1);
+                return true
+            end
+            return false
+        end
+        EGroup_ForEach(eg_playerentities, egmatch);
+        return ___basepositions[pid]
+    else
+        fatal("Player "..  pid .. " has no base position!");
     end
 
 end
@@ -540,4 +589,24 @@ end
 
 function DebugBg(msg)
     Battlegrounds_LogEvent(_bg_message_type_no_actions_required, BG_EVENT_DEBUG, msg)
+end
+
+------------------------------------------------------------
+-- Battlegrounds debug functions
+------------------------------------------------------------
+local bg_debuglines = {}
+local bg_debugid = "bg_db_printid"
+bgdebug = function(msg)
+    msg = tostring(msg)
+    if #bg_debuglines > 30 then
+        bg_debuglines = { msg } -- Clear and just show our message
+    else
+        table.insert(bg_debuglines, msg)
+    end
+    local display = "Debug Log:"
+    for _, v in pairs(bg_debuglines) do
+        display = display .. "\n" .. v
+    end
+    PrintOnScreen_Remove(bg_debugid)
+    PrintOnScreen_Add(display, bg_debugid)
 end

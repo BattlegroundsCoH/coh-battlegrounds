@@ -31,6 +31,11 @@ public static class BattlegroundsPaths {
     public const string MOD_ART_FOLDER = "art_folder";
 
     /// <summary>
+    /// Path ID of the install folder
+    /// </summary>
+    public const string INSTALL_FOLDER = "install_folder";
+
+    /// <summary>
     /// Path ID for the user-generated mods
     /// </summary>
     public const string MOD_USER_FOLDER = "mods_folder";
@@ -79,5 +84,15 @@ public static class BattlegroundsPaths {
     /// Path ID for the documents folder
     /// </summary>
     public const string DOCUMENTS_FOLDER = "doc_folder";
+
+    /// <summary>
+    /// Get the temp folder
+    /// </summary>
+    public const string TEMP_FOLDER = "~tmp";
+
+    /// <summary>
+    /// Get the update folder
+    /// </summary>
+    public const string UPDATE_FOLDER = "update";
 
 }

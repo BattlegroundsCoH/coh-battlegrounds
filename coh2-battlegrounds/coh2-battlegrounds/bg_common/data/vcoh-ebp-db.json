@@ -17589,5 +17589,1833 @@
       "fighting_position_mg_addition_mp"
     ],
     "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 1208,
+    "Name": "axis_hq_capturable",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_victory",
+      "Symbol": "Icons_symbols_flag_victory_symbol"
+    }
+  },
+  {
+    "PBGID": 1209,
+    "Name": "buildable_campfire",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11025818",
+      "LocaleDescriptionLong": "11025819",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_commands_icon_command_build_fire",
+      "Symbol": "Icons_symbols_icon_command_build_fire_symbol"
+    },
+    "Cost": {
+      "FieldTime": 10
+    },
+    "Health": 70
+  },
+  {
+    "PBGID": 1210,
+    "Name": "buildable_campfire_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11038530",
+      "LocaleDescriptionLong": "11025819",
+      "LocaleDescriptionShort": "11042784",
+      "Icon": "Icons_commands_icon_command_build_fire",
+      "Symbol": "Icons_symbols_icon_command_build_fire_symbol"
+    },
+    "Cost": {
+      "Manpower": 50,
+      "FieldTime": 5
+    },
+    "Health": 70
+  },
+  {
+    "PBGID": 1211,
+    "Name": "buildable_campfire_softmap_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11038530",
+      "LocaleDescriptionLong": "11025819",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_commands_icon_command_build_fire",
+      "Symbol": "Icons_symbols_icon_command_build_fire_symbol"
+    },
+    "Cost": {
+      "Manpower": 100,
+      "FieldTime": 10
+    },
+    "Health": 70
+  },
+  {
+    "PBGID": 1212,
+    "Name": "bunker_marker",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1219,
+    "Name": "circle_of_fire",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": "Icons_symbols_generic_ambient_symbol"
+    },
+    "Health": 120
+  },
+  {
+    "PBGID": 1220,
+    "Name": "default_rally_point",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 2469,
+    "Name": "forest_heat_temp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_commands_icon_command_build_fire",
+      "Symbol": "Icons_symbols_icon_command_build_fire_symbol"
+    },
+    "Cost": {
+      "FieldTime": 10
+    },
+    "Health": 70
+  },
+  {
+    "PBGID": 1231,
+    "Name": "line_of_sight_blocker",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1232,
+    "Name": "line_of_sight_blocker_mediumcrush",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1233,
+    "Name": "manpower_resource_point",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2121301",
+      "LocaleDescriptionLong": "2121300",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_null",
+      "Symbol": "Icons_symbols_flag_null_symbol"
+    }
+  },
+  {
+    "PBGID": 1234,
+    "Name": "map_entry_point",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1235,
+    "Name": "map_entry_point_player",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1241,
+    "Name": "movement_blocker",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1242,
+    "Name": "movement_blocker_shot_block_only",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1243,
+    "Name": "movement_blocker_sight_shot_block",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1239,
+    "Name": "move_block_01",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1240,
+    "Name": "move_block_02",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1285,
+    "Name": "proxy_heavy_cover",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Health": 90
+  },
+  {
+    "PBGID": 1286,
+    "Name": "proxy_light_cover",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Health": 120
+  },
+  {
+    "PBGID": 1287,
+    "Name": "proxy_sightblocking",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Health": 100
+  },
+  {
+    "PBGID": 1288,
+    "Name": "race_flags",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1289,
+    "Name": "smoke_cloud",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1290,
+    "Name": "smoke_cloud_airborne",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 14271,
+    "Name": "smoke_cloud_blendkorper",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 15700,
+    "Name": "smoke_cloud_burnout",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 89327,
+    "Name": "smoke_cloud_churchill",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1291,
+    "Name": "smoke_cloud_concealing",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 92382,
+    "Name": "smoke_cloud_cover",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1292,
+    "Name": "smoke_cloud_grenade",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1293,
+    "Name": "smoke_cloud_mortar",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 94197,
+    "Name": "smoke_cloud_mortar_lesser",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 14852,
+    "Name": "smoke_cloud_phosphorus",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1294,
+    "Name": "smoke_cloud_wreck",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1295,
+    "Name": "smoke_los_block",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1296,
+    "Name": "smoke_los_inside_block",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1297,
+    "Name": "smoke_mortar_los_block",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1298,
+    "Name": "smoke_shot_block",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 19354,
+    "Name": "smoke_wreck_shot_block",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1299,
+    "Name": "starting_position",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1300,
+    "Name": "starting_position_shared_territory",
+    "Army": "NULL",
+    "Display": {},
+    "Health": 2000
+  },
+  {
+    "PBGID": 1301,
+    "Name": "starting_position_sp",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1302,
+    "Name": "starting_territory_team",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1313,
+    "Name": "territory_fuel_point",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11034186",
+      "LocaleDescriptionLong": "11075054",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_fuel",
+      "Symbol": "Icons_symbols_flag_fuel_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 1314,
+    "Name": "territory_fuel_point_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11035056",
+      "LocaleDescriptionLong": "11075054",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_fuel",
+      "Symbol": "Icons_symbols_flag_fuel_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 1315,
+    "Name": "territory_munitions_point",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11034187",
+      "LocaleDescriptionLong": "11075055",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_common_munitions",
+      "Symbol": "Icons_symbols_building_common_munitions_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 1316,
+    "Name": "territory_munitions_point_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11035055",
+      "LocaleDescriptionLong": "11075055",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_common_munitions",
+      "Symbol": "Icons_symbols_building_common_munitions_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 1317,
+    "Name": "territory_point",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2090700",
+      "LocaleDescriptionLong": "2090701",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_null",
+      "Symbol": "Icons_symbols_flag_null_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 1318,
+    "Name": "territory_point_command",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11036863",
+      "LocaleDescriptionLong": "11036862",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_null",
+      "Symbol": "Icons_symbols_flag_null_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 1319,
+    "Name": "territory_point_invisible",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_null",
+      "Symbol": "Icons_symbols_flag_null_symbol"
+    }
+  },
+  {
+    "PBGID": 1320,
+    "Name": "territory_point_invisible_command",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_null",
+      "Symbol": "Icons_symbols_flag_null_symbol"
+    }
+  },
+  {
+    "PBGID": 1321,
+    "Name": "territory_point_low",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_null",
+      "Symbol": "Icons_symbols_flag_null_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 1322,
+    "Name": "territory_point_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11035054",
+      "LocaleDescriptionLong": "11075053",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_null",
+      "Symbol": "Icons_symbols_flag_null_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 1323,
+    "Name": "victory_point",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2091401",
+      "LocaleDescriptionLong": "2091400",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_victory",
+      "Symbol": "Icons_symbols_flag_victory_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 1324,
+    "Name": "victory_point_no_swap",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2091401",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_victory",
+      "Symbol": "Icons_symbols_flag_victory_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 4323,
+    "Name": "victory_point_no_ticker",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2091401",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_victory",
+      "Symbol": "Icons_symbols_flag_victory_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 1213,
+    "Name": "flamethrower_roks3_fake",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11008981",
+      "LocaleDescriptionLong": "11044825",
+      "LocaleDescriptionShort": "11044811",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_flamethrower",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1214,
+    "Name": "invisible_control_structure",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1215,
+    "Name": "reinforcement_point",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1216,
+    "Name": "reinforcement_point_healing_aura",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1217,
+    "Name": "sp_retreat_point",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1218,
+    "Name": "sp_victory_point_hold_without_troops",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2091401",
+      "LocaleDescriptionLong": "2091400",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_victory",
+      "Symbol": "Icons_symbols_flag_victory_symbol"
+    }
+  },
+  {
+    "PBGID": 1236,
+    "Name": "High",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1237,
+    "Name": "Low",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1238,
+    "Name": "Med",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1244,
+    "Name": "Parachute_Ammo",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1245,
+    "Name": "Parachute_Fuel",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 3310,
+    "Name": "cp_defense_marker",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 14856,
+    "Name": "forward_command_garrisonable",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_soviet_mg_nest",
+      "Symbol": "Icons_symbols_building_soviet_mg_nest_symbol"
+    },
+    "Cost": {
+      "Manpower": 100,
+      "FieldTime": 45
+    },
+    "Hardpoints": [
+      "fighting_position_mg_dummy_mp"
+    ],
+    "Health": 400,
+    "Upgrades": [
+      "fighting_position_mg_addition_mp"
+    ],
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 2470,
+    "Name": "meta_fuel_depot",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_null",
+      "Symbol": "Icons_symbols_flag_null_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 16563,
+    "Name": "pm_airdrop_fuel_crate",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11078930",
+      "LocaleDescriptionLong": "11078931",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_supply_crate",
+      "Symbol": "Icons_symbols_supply_crate_symbol"
+    }
+  },
+  {
+    "PBGID": 4154,
+    "Name": "pm_airdrop_munitions_crate",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11051876",
+      "LocaleDescriptionLong": "11051877",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_supply_crate",
+      "Symbol": "Icons_symbols_supply_crate_symbol"
+    }
+  },
+  {
+    "PBGID": 14301,
+    "Name": "pm_fuel_reserve_in_the_blind",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "11081418",
+      "Icon": "Icons_buildings_supply_crate",
+      "Symbol": "Icons_symbols_supply_crate_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 15205,
+    "Name": "pm_stoumont_airdrop_fuel_crate",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_supply_crate",
+      "Symbol": "Icons_symbols_supply_crate_symbol"
+    }
+  },
+  {
+    "PBGID": 14276,
+    "Name": "aef_bazooka_item_mp",
+    "Army": "aef",
+    "Display": {
+      "LocaleName": "11055320",
+      "LocaleDescriptionLong": "11055322",
+      "LocaleDescriptionShort": "11055317",
+      "Icon": "Icons_upgrades_icon_upgrade_aef_m9_bazooka",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 16058,
+    "Name": "aef_flamethrower_item_mp",
+    "Army": "aef",
+    "Display": {
+      "LocaleName": "11069509",
+      "LocaleDescriptionLong": "11069510",
+      "LocaleDescriptionShort": "11069511",
+      "Icon": "Icons_upgrades_icon_upgrade_aef_m2_flamethrower",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 14275,
+    "Name": "aef_m1919a6_lmg_mp",
+    "Army": "aef",
+    "Display": {
+      "LocaleName": "11055314",
+      "LocaleDescriptionLong": "11055315",
+      "LocaleDescriptionShort": "11055316",
+      "Icon": "Icons_upgrades_icon_upgrade_aef_m1919a6",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 2471,
+    "Name": "aef_rifle_m1918a2_browning",
+    "Army": "aef",
+    "Display": {
+      "LocaleName": "11055310",
+      "LocaleDescriptionLong": "11055312",
+      "LocaleDescriptionShort": "11055311",
+      "Icon": "Icons_upgrades_icon_upgrade_aef_m1918a2_browning",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 2472,
+    "Name": "aef_rifle_m1_garand",
+    "Army": "aef",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_dp28_lmg",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1246,
+    "Name": "airborne_supply_drop_munition",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2137151",
+      "LocaleDescriptionLong": "11046367",
+      "LocaleDescriptionShort": "11046368",
+      "Icon": "Icons_buildings_building_aef_supply_cache",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1247,
+    "Name": "Ammobox",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1248,
+    "Name": "axis_flamethrower_item",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11046400",
+      "LocaleDescriptionLong": "11046347",
+      "LocaleDescriptionShort": "11046348",
+      "Icon": "Icons_upgrades_icon_upgrade_german_flamethrower",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1249,
+    "Name": "axis_flamethrower_item_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11046400",
+      "LocaleDescriptionLong": "11046347",
+      "LocaleDescriptionShort": "11046348",
+      "Icon": "Icons_upgrades_icon_upgrade_german_flamethrower",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1250,
+    "Name": "axis_MG42",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11009025",
+      "LocaleDescriptionLong": "11044819",
+      "LocaleDescriptionShort": "11044805",
+      "Icon": "Icons_upgrades_icon_upgrade_german_mg42_lmg",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1251,
+    "Name": "axis_mg42_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11009025",
+      "LocaleDescriptionLong": "11044819",
+      "LocaleDescriptionShort": "11044805",
+      "Icon": "Icons_upgrades_icon_upgrade_german_mg42_lmg",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1252,
+    "Name": "axis_mp40",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11044833",
+      "LocaleDescriptionLong": "11044820",
+      "LocaleDescriptionShort": "11044806",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1253,
+    "Name": "axis_panzerbusche39",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11048741",
+      "LocaleDescriptionLong": "11044830",
+      "LocaleDescriptionShort": "11044815",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_ptrs_41",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1254,
+    "Name": "axis_panzerbusche39_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11048741",
+      "LocaleDescriptionLong": "11044830",
+      "LocaleDescriptionShort": "11044815",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_ptrs_41",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1255,
+    "Name": "Axis_Panzerfaust",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11044834",
+      "LocaleDescriptionLong": "11044821",
+      "LocaleDescriptionShort": "11044807",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1256,
+    "Name": "axis_panzerschreck_item",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2124500",
+      "LocaleDescriptionLong": "11044822",
+      "LocaleDescriptionShort": "11044808",
+      "Icon": "Icons_upgrades_icon_upgrade_german_panzerschrek",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1257,
+    "Name": "axis_panzerschreck_item_2_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11049039",
+      "LocaleDescriptionLong": "11049040",
+      "LocaleDescriptionShort": "11049041",
+      "Icon": "Icons_upgrades_icon_upgrade_german_panzerschrek",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1258,
+    "Name": "axis_panzerschreck_item_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11048836",
+      "LocaleDescriptionLong": "11048835",
+      "LocaleDescriptionShort": "11048838",
+      "Icon": "Icons_upgrades_icon_upgrade_german_panzerschrek",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1259,
+    "Name": "AXis_Panzerschrek",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11044835",
+      "LocaleDescriptionLong": "11044823",
+      "LocaleDescriptionShort": "11044809",
+      "Icon": "Icons_upgrades_icon_upgrade_german_panzerschrek",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 89167,
+    "Name": "brit_boys_at_rifle_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_ptrs_41",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 88063,
+    "Name": "brit_bren_lmg_item",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11085812",
+      "LocaleDescriptionLong": "11085806",
+      "LocaleDescriptionShort": "11085804",
+      "Icon": "Icons_upgrades_icon_upgrade_british_bren",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 87373,
+    "Name": "brit_piat_item_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11085813",
+      "LocaleDescriptionLong": "11085808",
+      "LocaleDescriptionShort": "11085805",
+      "Icon": "Icons_buildings_building_british_weapon_rack_piat",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 93846,
+    "Name": "brit_vickers_k_item",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11094911",
+      "LocaleDescriptionLong": "11094914",
+      "LocaleDescriptionShort": "11094915",
+      "Icon": "Icons_upgrades_icon_upgrade_british_vickers_lmg",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 15762,
+    "Name": "capture_intel_pickup",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11068313",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "11046381",
+      "Icon": "Icons_buildings_building_common_enemy_intel",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1260,
+    "Name": "demo_charge_commando",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11046404",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Health": 60
+  },
+  {
+    "PBGID": 1261,
+    "Name": "dp28_lmg_item",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11007104",
+      "LocaleDescriptionLong": "11044824",
+      "LocaleDescriptionShort": "11044810",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_dp28_lmg",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1262,
+    "Name": "flamethrower_roks3",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11008981",
+      "LocaleDescriptionLong": "11044825",
+      "LocaleDescriptionShort": "11044811",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_flamethrower",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1263,
+    "Name": "flamethrower_roks3_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11008981",
+      "LocaleDescriptionLong": "11044826",
+      "LocaleDescriptionShort": "11044804",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_flamethrower",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1264,
+    "Name": "Fuel_can",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1265,
+    "Name": "generic_instantuse_action_luckystrikes_item",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2125051",
+      "LocaleDescriptionLong": "2125050",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1266,
+    "Name": "generic_instantuse_fuel_fuelcan_item",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2125000",
+      "LocaleDescriptionLong": "11046380",
+      "LocaleDescriptionShort": "11046381",
+      "Icon": "Icons_buildings_building_soviet_fuel",
+      "Symbol": "Icons_symbols_building_soviet_fuel_symbol"
+    }
+  },
+  {
+    "PBGID": 14826,
+    "Name": "generic_instantuse_fuel_fuelcan_item_small",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2125000",
+      "LocaleDescriptionLong": "11046380",
+      "LocaleDescriptionShort": "11046381",
+      "Icon": "Icons_buildings_building_soviet_fuel",
+      "Symbol": "Icons_symbols_building_soviet_fuel_symbol"
+    }
+  },
+  {
+    "PBGID": 1267,
+    "Name": "generic_instantuse_manpower_k_rations_item",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2124900",
+      "LocaleDescriptionLong": "2124901",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 4283,
+    "Name": "generic_instantuse_munitions_ammobox_bridge_defense",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11054707",
+      "LocaleDescriptionLong": "11054700",
+      "LocaleDescriptionShort": "11054701",
+      "Icon": "Icons_buildings_supply_crate",
+      "Symbol": "Icons_symbols_supply_crate_symbol"
+    }
+  },
+  {
+    "PBGID": 1268,
+    "Name": "generic_instantuse_munitions_ammobox_item",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2124950",
+      "LocaleDescriptionLong": "11046370",
+      "LocaleDescriptionShort": "11046372",
+      "Icon": "Icons_buildings_supply_crate",
+      "Symbol": "Icons_symbols_supply_crate_symbol"
+    }
+  },
+  {
+    "PBGID": 2473,
+    "Name": "generic_instantuse_munitions_ammobox_item_15",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_supply_crate",
+      "Symbol": "Icons_symbols_supply_crate_symbol"
+    }
+  },
+  {
+    "PBGID": 1269,
+    "Name": "generic_instantuse_munitions_ammobox_item_small",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11046369",
+      "LocaleDescriptionLong": "11046371",
+      "LocaleDescriptionShort": "11046373",
+      "Icon": "Icons_buildings_supply_crate",
+      "Symbol": "Icons_symbols_supply_crate_symbol"
+    }
+  },
+  {
+    "PBGID": 1270,
+    "Name": "generic_instantuse_munitions_legbag_item",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2139501",
+      "LocaleDescriptionLong": "11046376",
+      "LocaleDescriptionShort": "11046377",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1271,
+    "Name": "german_mp44_assault_rifle",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11009518",
+      "LocaleDescriptionLong": "11044827",
+      "LocaleDescriptionShort": "11044812",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1272,
+    "Name": "gewehr_43_rifle_grenade_item",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11009039",
+      "LocaleDescriptionLong": "11044828",
+      "LocaleDescriptionShort": "11044813",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1273,
+    "Name": "Lucky_Strikes",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2099250",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1274,
+    "Name": "patriotic_flag",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": "Icons_symbols_generic_ambient_symbol"
+    },
+    "Health": 25
+  },
+  {
+    "PBGID": 1275,
+    "Name": "Placeholder_01",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1276,
+    "Name": "Placeholder_02",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1277,
+    "Name": "Rations",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1278,
+    "Name": "roks-2_flamethrower_item",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11008979",
+      "LocaleDescriptionLong": "11044829",
+      "LocaleDescriptionShort": "11044814",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_flamethrower",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1279,
+    "Name": "roks-2_flamethrower_item_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11008979",
+      "LocaleDescriptionLong": "11044829",
+      "LocaleDescriptionShort": "11044814",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_flamethrower",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1280,
+    "Name": "soviet_flag",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "11044818",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 175012,
+    "Name": "soviet_flag_fhq_prop",
+    "Army": "soviet",
+    "Display": {},
+    "Health": 1
+  },
+  {
+    "PBGID": 1281,
+    "Name": "soviet_guard_ptrs",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11046412",
+      "LocaleDescriptionLong": "11044830",
+      "LocaleDescriptionShort": "11044815",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_ptrs_41",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1282,
+    "Name": "soviet_guard_ptrs_mp",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11043100",
+      "LocaleDescriptionLong": "11044831",
+      "LocaleDescriptionShort": "11044816",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_ptrs_41",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1283,
+    "Name": "soviet_shock_dp28",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11007104",
+      "LocaleDescriptionLong": "11044832",
+      "LocaleDescriptionShort": "11044817",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_dp28_lmg",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1284,
+    "Name": "soviet_shock_ppsh41_mp",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11046411",
+      "LocaleDescriptionLong": "11046423",
+      "LocaleDescriptionShort": "11046422",
+      "Icon": "Icons_upgrades_icon_upgrade_soviet_conscript_assault_package",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 2474,
+    "Name": "west_german_lmg_mg34",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11062969",
+      "LocaleDescriptionLong": "11062965",
+      "LocaleDescriptionShort": "11062967",
+      "Icon": "Icons_upgrades_icon_upgrade_west_german_lmg_mg34",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 14838,
+    "Name": "west_german_lmg_mg42_mp",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11062968",
+      "LocaleDescriptionLong": "11062964",
+      "LocaleDescriptionShort": "11062966",
+      "Icon": "Icons_upgrades_icon_upgrade_german_mg42_lmg",
+      "Symbol": ""
+    }
+  },
+  {
+    "PBGID": 1303,
+    "Name": "m10_military_hospital",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11023394",
+      "LocaleDescriptionLong": "11037022",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_military_field_hospital",
+      "Symbol": "Icons_symbols_building_military_field_hospital_symbol"
+    },
+    "Cost": {
+      "FieldTime": 20
+    }
+  },
+  {
+    "PBGID": 1304,
+    "Name": "m11_military_hospital",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11023394",
+      "LocaleDescriptionLong": "11041887",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_military_field_hospital",
+      "Symbol": "Icons_symbols_building_military_field_hospital_symbol"
+    },
+    "Cost": {
+      "Manpower": 150,
+      "FieldTime": 60
+    },
+    "Health": 1400
+  },
+  {
+    "PBGID": 1305,
+    "Name": "military_hospital",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11023394",
+      "LocaleDescriptionLong": "11037022",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_military_field_hospital",
+      "Symbol": "Icons_symbols_building_military_field_hospital_symbol"
+    },
+    "Cost": {
+      "FieldTime": 20
+    }
+  },
+  {
+    "PBGID": 1306,
+    "Name": "radio_antenna",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11007617",
+      "LocaleDescriptionLong": "11047010",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_common_radio_tower",
+      "Symbol": "Icons_symbols_building_common_radio_tower_symbol"
+    },
+    "Abilities": [
+      "radio_tower_reveal"
+    ],
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 87375,
+    "Name": "radio_antenna_no_abilities",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11007617",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_common_radio_tower",
+      "Symbol": "Icons_symbols_building_common_radio_tower_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 1307,
+    "Name": "radio_post_sp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11048364",
+      "LocaleDescriptionLong": "11048365",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_common_radio_post",
+      "Symbol": "Icons_symbols_building_common_radio_post_symbol"
+    },
+    "Health": 150
+  },
+  {
+    "PBGID": 14182,
+    "Name": "radio_post_tow",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_common_radio_post",
+      "Symbol": "Icons_symbols_building_common_radio_post_symbol"
+    },
+    "Health": 150
+  },
+  {
+    "PBGID": 1308,
+    "Name": "radio_tower_point_mp",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11045630",
+      "LocaleDescriptionLong": "11045634",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_common_radio_tower",
+      "Symbol": "Icons_symbols_building_common_radio_tower_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 14586,
+    "Name": "radio_tower_point_occupation",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11045630",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_common_radio_tower",
+      "Symbol": "Icons_symbols_building_common_radio_tower_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 4468,
+    "Name": "radio_tower_point_tow",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_common_radio_tower",
+      "Symbol": "Icons_symbols_building_common_radio_tower_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 1309,
+    "Name": "sp_hq",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_soviet_headquarters",
+      "Symbol": "Icons_symbols_building_soviet_headquarters_symbol"
+    },
+    "Cost": {
+      "Manpower": 500,
+      "FieldTime": 90
+    },
+    "Health": 3000,
+    "Upgrades": [
+      "hq_healing_aura_m13"
+    ],
+    "UpgradeCapacity": -1
+  },
+  {
+    "PBGID": 1310,
+    "Name": "sp_hq_wreck",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "2101550",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_soviet_headquarters",
+      "Symbol": "Icons_symbols_building_soviet_headquarters_symbol"
+    },
+    "Cost": {
+      "FieldTime": 1
+    },
+    "Health": 750
+  },
+  {
+    "PBGID": 1311,
+    "Name": "support_bay",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11007618",
+      "LocaleDescriptionLong": "11049132",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_common_support_bay",
+      "Symbol": "Icons_symbols_building_common_support_bay_symbol"
+    },
+    "Cost": {
+      "FieldTime": 20
+    }
+  },
+  {
+    "PBGID": 2053,
+    "Name": "tow_kalach_fuel_point",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11035056",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "11045916",
+      "Icon": "Icons_resources_flag_victory",
+      "Symbol": "Icons_symbols_flag_victory_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 2054,
+    "Name": "tow_kalach_munitions_point",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11035055",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "11047602",
+      "Icon": "Icons_resources_flag_victory",
+      "Symbol": "Icons_symbols_flag_victory_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 2055,
+    "Name": "tow_kalach_radio_tower",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11045630",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_victory",
+      "Symbol": "Icons_symbols_flag_victory_symbol"
+    },
+    "UpgradeCapacity": 1
+  },
+  {
+    "PBGID": 2056,
+    "Name": "tow_kalach_watchtower",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11007619",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_resources_flag_victory",
+      "Symbol": "Icons_symbols_flag_victory_symbol"
+    },
+    "Health": 10
+  },
+  {
+    "PBGID": 1312,
+    "Name": "watchtower",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11007619",
+      "LocaleDescriptionLong": "11046874",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_common_guard_tower",
+      "Symbol": "Icons_symbols_building_common_guard_tower_symbol"
+    },
+    "Health": 10
+  },
+  {
+    "PBGID": 18928,
+    "Name": "watchtower_battle",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "11007619",
+      "LocaleDescriptionLong": "11046874",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_common_guard_tower",
+      "Symbol": "Icons_symbols_building_common_guard_tower_symbol"
+    },
+    "Health": 10
+  },
+  {
+    "PBGID": 1222,
+    "Name": "Shovel_Dirt",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1223,
+    "Name": "Arrow",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1224,
+    "Name": "Axis_Flag",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1225,
+    "Name": "Bomb",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 2052,
+    "Name": "Fast Arrow",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1227,
+    "Name": "ui_arrow_blue",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1228,
+    "Name": "ui_arrow_green",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1229,
+    "Name": "ui_arrow_red",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 1230,
+    "Name": "ui_arrow_yellow",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 2258,
+    "Name": "2x2_heavy_cover_medium_crush",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": "Icons_symbols_generic_ambient_symbol"
+    },
+    "Health": 250
+  },
+  {
+    "PBGID": 2259,
+    "Name": "2x2_light_cover_light_crush",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": "Icons_symbols_generic_ambient_symbol"
+    },
+    "Health": 150
+  },
+  {
+    "PBGID": 2260,
+    "Name": "2x4_heavy_cover_medium_crush",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": "Icons_symbols_generic_ambient_symbol"
+    },
+    "Health": 300
+  },
+  {
+    "PBGID": 2261,
+    "Name": "2x4_light_cover_light_crush",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": "Icons_symbols_generic_ambient_symbol"
+    },
+    "Health": 200
+  },
+  {
+    "PBGID": 2262,
+    "Name": "6x12_sight_shot_blocking_uncrushable",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Health": 400
+  },
+  {
+    "PBGID": 2263,
+    "Name": "designer_walkmesh_3x5",
+    "Army": "NULL",
+    "Display": {}
+  },
+  {
+    "PBGID": 2264,
+    "Name": "1x3_light_cover_passable",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": ""
+    },
+    "Health": 50
+  },
+  {
+    "PBGID": 2265,
+    "Name": "1x3_sight_shot_blocking_light_crush",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": "Icons_symbols_generic_ambient_symbol"
+    },
+    "Health": 100
+  },
+  {
+    "PBGID": 2266,
+    "Name": "1x3_sight_shot_blocking_medium_crush",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": "Icons_symbols_generic_ambient_symbol"
+    },
+    "Health": 200
+  },
+  {
+    "PBGID": 2267,
+    "Name": "1x3_heavy_cover_medium_crush",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": "Icons_symbols_generic_ambient_symbol"
+    },
+    "Health": 100
+  },
+  {
+    "PBGID": 2268,
+    "Name": "1x3_light_cover_light_crush",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": "Icons_symbols_generic_ambient_symbol"
+    },
+    "Health": 70
+  },
+  {
+    "PBGID": 2269,
+    "Name": "2x2_heavy_cover_trenchwall",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": "Icons_symbols_generic_ambient_symbol"
+    },
+    "Health": 120
   }
 ]

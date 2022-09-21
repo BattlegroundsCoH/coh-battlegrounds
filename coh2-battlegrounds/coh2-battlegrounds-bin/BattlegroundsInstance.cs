@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 
 using Battlegrounds.Functional;
@@ -10,6 +11,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Steam;
+using Battlegrounds.Update;
 using Battlegrounds.Util;
 
 namespace Battlegrounds;
@@ -21,9 +23,6 @@ public static class BattlegroundsInstance {
 
     // The path of the local settings file
     private static readonly string PATH_LOCAL = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\local.json");
-
-    // The BG version
-    public const string BG_VERSION = "alpha-v1.1.0";
 
     // ID of other settings
     public const string OPT_ZOOM = "ingame_zoom";
@@ -73,7 +72,7 @@ public static class BattlegroundsInstance {
                 [OPT_AUTODATA] = false,
                 [OPT_AUTOSCAR] = false,
                 [OPT_AUTOUPDATE] = false,
-                [OPT_AUTOWORKSHOP] = true,
+                [OPT_AUTOWORKSHOP] = false, // Don't do this automatically --> it makes the error log look annoying
                 [OPT_ZOOM] = 0.0
             };
         }
@@ -100,6 +99,10 @@ public static class BattlegroundsInstance {
                 }
             }
 
+            if (!this.Paths.ContainsKey(BattlegroundsPaths.TEMP_FOLDER)) {
+                this.Paths.Add(BattlegroundsPaths.TEMP_FOLDER, tmppath);
+            }
+
             // Create logger
             __logger = new();
 
@@ -122,6 +125,9 @@ public static class BattlegroundsInstance {
                 Directory.CreateDirectory(userpath);
                 Trace.WriteLine("User path missing - this may cause errors", nameof(BattlegroundsInstance));
             }
+
+            // Install folder
+            this.ResolveDirectory(BattlegroundsPaths.INSTALL_FOLDER, installpath);
 
             // User folder
             this.ResolveDirectory(BattlegroundsPaths.COMPANY_FOLDER, $"{doc}companies\\");
@@ -154,6 +160,7 @@ public static class BattlegroundsInstance {
             this.ResolveDirectory(BattlegroundsPaths.BUILD_FOLDER, $"{tmppath}bld\\");
             this.ResolveDirectory(BattlegroundsPaths.SESSION_FOLDER, $"{tmppath}ses\\");
             this.ResolveDirectory(BattlegroundsPaths.EXTRACT_FOLDER, $"{tmppath}-extract\\");
+            this.ResolveDirectory(BattlegroundsPaths.UPDATE_FOLDER, $"{tmppath}update\\");
 
         }
 
@@ -251,6 +258,21 @@ public static class BattlegroundsInstance {
     public static Logger? Log => __logger;
 
     /// <summary>
+    /// Get and set the assembly version of coh2-battlegrounds.exe
+    /// </summary>
+    public static IAppVersionFetcher Version { get; set; }
+
+#if DEBUG
+
+    /// <summary>
+    /// The battlegrounds debug instance for easy debug info. Not available in release mode and should always be
+    /// enclosed by a debug directive
+    /// </summary>
+    public static readonly BattlegroundsDebug Debug = new();
+
+#endif
+
+    /// <summary>
     /// Set a specific path for the instance
     /// </summary>
     /// <param name="pathId">The ID of the path to save</param>
@@ -271,6 +293,49 @@ public static class BattlegroundsInstance {
     /// <exception cref="ArgumentException"/>
     public static string GetRelativePath(string pathId, string appendPath = "")
         => Path.Combine(__instance.GetPath(pathId), appendPath);
+
+    /// <summary>
+    /// Get the relative path based on virtual path.
+    /// </summary>
+    /// <param name="path">The path to construct absolute path from</param>
+    /// <param name="extension">Optional extension to append.</param>
+    /// <returns>The absolute path to the virtual path.</returns>
+    public static string GetRelativeVirtualPath(string path, string extension = "") {
+
+        // Grab relative
+        int rel = path.IndexOf(':');
+        string relative = (rel is not -1 ? path[..rel] : string.Empty) switch {
+            "Gamemode" => GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "bg_wc"),
+            "Common" => GetRelativePath(BattlegroundsPaths.BINARY_FOLDER),
+            _ => GetRelativePath(BattlegroundsPaths.INSTALL_FOLDER)
+        };
+
+        // Cut last
+        if (relative[^1] is '\\') {
+            relative = relative[..^1];
+        }
+
+        // Create path
+        StringBuilder pathBuilder = new(relative);
+
+        // Split
+        var dotted = (rel is not -1 ? path[(rel+1)..] : path).Split('.');
+
+        // Create path from dots
+        for (int i = 0; i < dotted.Length; i++) {
+            pathBuilder.Append('\\');
+            pathBuilder.Append(dotted[i]);
+        }
+
+        // If an extension is desired, we add it
+        if (!string.IsNullOrEmpty(extension)) {
+            pathBuilder.Append(extension);
+        }
+
+        // Return path
+        return pathBuilder.ToString();
+
+    }
 
     /// <summary>
     /// Static constructor

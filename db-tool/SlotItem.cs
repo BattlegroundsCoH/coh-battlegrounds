@@ -37,7 +37,7 @@ namespace CoH2XML2JSON {
             this.Display = new(xmlDocument.SelectSingleNode("//group[@name='ui_info']") as XmlElement);
 
             // Get slot size
-            this.SlotSize = (int)float.Parse((xmlDocument.SelectSingleNode("//float[@name='slot_size']") as XmlElement)?.GetAttribute("value") ?? "0");
+            this.SlotSize = (int)Program.GetFloat((xmlDocument.SelectSingleNode("//float[@name='slot_size']") as XmlElement)?.GetAttribute("value") ?? "0");
 
             // Get weapon
             this.WPB = Path.GetFileNameWithoutExtension((xmlDocument.SelectSingleNode("//instance_reference[@name='weapon']") as XmlElement).GetAttribute("value"));

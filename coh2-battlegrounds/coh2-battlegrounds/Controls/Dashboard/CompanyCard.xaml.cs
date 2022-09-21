@@ -1,6 +1,9 @@
 ﻿using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+
+using BattlegroundsApp.Utilities.Converters;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,25 +26,14 @@ namespace BattlegroundsApp.Controls.Dashboard;
 /// </summary>
 public partial class CompanyCard : UserControl {
 
+    public double CompanyWinRate { get; set; }
+
     private static readonly Dictionary<Faction, ImageSource> Flags = new() {
         [Faction.Soviet] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/soviet.png")),
         [Faction.Wehrmacht] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/german.png")),
         [Faction.America] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/aef.png")),
         [Faction.OberkommandoWest] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/west_german.png")),
         [Faction.British] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/british.png"))
-    };
-
-    private static readonly Dictionary<string, ImageSource> Icons = new() {
-        [nameof(CompanyType.Infantry)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_infantry.png")),
-        [nameof(CompanyType.Armoured)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_armoured.png")),
-        [nameof(CompanyType.Motorized)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_motorized.png")),
-        [nameof(CompanyType.Mechanized)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_mechanized.png")),
-        [nameof(CompanyType.Airborne)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_airborne.png")),
-        [nameof(CompanyType.Artillery)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_artillery.png")),
-        [nameof(CompanyType.TankDestroyer)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_td.png")),
-        [nameof(CompanyType.Engineer)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_engineer.png")),
-        [nameof(CompanyType.Unspecified)] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_unspecified.png")),
-        [string.Empty] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_unspecified.png"))
     };
 
     public static readonly DependencyProperty CompanyProperty 
@@ -58,7 +50,7 @@ public partial class CompanyCard : UserControl {
     }
 
     public CompanyCard() {
-        InitializeComponent();
+        this.InitializeComponent();
         this.TrySetCompanyData();
     }
 
@@ -69,12 +61,15 @@ public partial class CompanyCard : UserControl {
         // Do nothing if company is null
         if (company is null) {
             companyName.Text = "No Company Data";
-            winRateValue.Text = "N/A";
+            winRateValue.Text = "0%";
             infantryKillsValue.Text = "N/A";
             vehicleKillsValue.Text = "N/A";
             killDeathRatioValue.Text = "N/A";
+            gamesPlayedValue.Text = "0";
             return;
         }
+
+        this.CompanyWinRate = Math.Round(company.Statistics.WinRate * 100);
 
         // Set company faction
         factionIcon.Source = Flags[company.Army];
@@ -83,13 +78,14 @@ public partial class CompanyCard : UserControl {
         companyName.Text = company.Name;
 
         // Set company type
-        typeIcon.Source = Icons.GetValueOrDefault(company.Type.ToString(), Icons[string.Empty]);
+        typeIcon.Source = StringToCompanyTypeIconConverter.GetFromType(company.Type);
 
         // Set company data
-        winRateValue.Text = company.Statistics.WinRate is 0 ? "N/A" : company.Statistics.WinRate.ToString();
+        winRateValue.Text = company.Statistics.WinRate is 0 ? "0%" : $"{Math.Round(company.Statistics.WinRate * 100)}%";
         infantryKillsValue.Text = "N/A"; // TODO : This data is not currently being tracked
         vehicleKillsValue.Text = "N/A"; // TODO : This data is not currently being tracked
         killDeathRatioValue.Text = "N/A"; // TODO : This data is not currently being tracked
+        gamesPlayedValue.Text = company.Statistics.TotalMatchCount.ToString();
 
 
     }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Modding.Battlegrounds;
 
 namespace Battlegrounds.Modding;
 
@@ -17,6 +18,7 @@ public static class ModManager {
 
     private static readonly List<ModPackage> __packages = new();
     private static readonly Dictionary<ModGuid, IGameMod> __mods = new();
+    private static readonly Dictionary<string, IModFactory> __modFactories = new();
 
     /// <summary>
     /// Initialise the <see cref="ModManager"/> and load available <see cref="ModPackage"/> elements.
@@ -39,7 +41,7 @@ public static class ModManager {
             try {
 
                 // Read the mod package
-                ModPackage? package = JsonSerializer.Deserialize<ModPackage>(File.ReadAllText(packageFilepath));
+                ModPackage? package = JsonSerializer.Deserialize<ModPackage>(File.OpenRead(packageFilepath));
                 if (package is null) {
                     Trace.WriteLine($"Failed to load mod package '{packageFilepath}' (Error reading file).", nameof(ModManager));
                     continue;
@@ -54,6 +56,9 @@ public static class ModManager {
                 // Add mod package
                 __packages.Add(package);
 
+                // Get mod factory
+                var modFactory = GetModFactory(package);
+
                 // Submod counter
                 int submods = 0;
 
@@ -65,8 +70,7 @@ public static class ModManager {
 
                 // Load tuning pack
                 if (package.TuningGUID != ModGuid.BaseGame) {
-                    __mods[package.TuningGUID]
-                        = package.TuningGUID.GUID is "142b113740474c82a60b0a428bd553d5" ? new BattlegroundsTuning(package) : new CustomTuning(package);
+                    __mods[package.TuningGUID] = modFactory.GetTuning();
                     submods++;
                 }
 
@@ -74,8 +78,7 @@ public static class ModManager {
                 if (package.GamemodeGUID != ModGuid.BaseGame) {
 
                     // Create mod
-                    IWinconditionMod gamemodePack
-                        = package.GamemodeGUID.GUID is "6a0a13b89555402ca75b85dc30f5cb04" ? new BattlegroundsWincondition(package) : new CustomWincondition(package);
+                    IWinconditionMod gamemodePack = modFactory.GetWinconditionMod();
 
                     // Set mod
                     __mods[package.GamemodeGUID]
@@ -102,6 +105,15 @@ public static class ModManager {
 
     }
 
+    private static IModFactory GetModFactory(ModPackage package) { 
+        if (package.ID is "mod_bg") {
+            return new BattlegroundsModFactory(package);
+        } else if (__modFactories.TryGetValue(package.ID, out IModFactory? factory) && factory is not null) {
+            return factory;
+        }
+        throw new Exception("Mod factory not found - please verify the plugin is installed correctly.");
+    }
+
     /// <summary>
     /// Get package from its <paramref name="packageID"/>.
     /// </summary>
@@ -109,6 +121,14 @@ public static class ModManager {
     /// <returns>The <see cref="ModPackage"/> associated with <paramref name="packageID"/>.</returns>
     public static ModPackage? GetPackage(string packageID)
         => __packages.FirstOrDefault(x => x.ID == packageID);
+
+    /// <summary>
+    /// Get package from its <paramref name="packageID"/>.
+    /// </summary>
+    /// <param name="packageID">The ID to use to identify the <see cref="ModPackage"/>.</param>
+    /// <returns>The <see cref="ModPackage"/> associated with <paramref name="packageID"/>.</returns>
+    public static ModPackage GetPackageOrError(string packageID)
+        => __packages.FirstOrDefault(x => x.ID == packageID) ?? throw new Exception($"Package '{packageID}' not found.");
 
     /// <summary>
     /// Iterate over each <see cref="ModPackage"/> in the system.

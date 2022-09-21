@@ -10,21 +10,6 @@ namespace Battlegrounds.Functional;
 public static class FunctionalArray {
 
     /// <summary>
-    /// Loop through each element in an array and execute a function that can mutate the element.
-    /// </summary>
-    /// <typeparam name="T">The type the array is of.</typeparam>
-    /// <param name="array">The array to run method on.</param>
-    /// <param name="func">The function to run on each element.</param>
-    /// <returns>A new array consisting of the elements returned through the given function.</returns>
-    public static T[] ForEach<T>(this T[] array, Func<T, T> func) {
-        T[] t = new T[array.Length];
-        for (int i = 0; i < array.Length; i++) {
-            t[i] = func(array[i]);
-        }
-        return t;
-    }
-
-    /// <summary>
     /// Loop through each element in an array and execute a function that cannot mutate the element.
     /// </summary>
     /// <typeparam name="T">The type the array is of.</typeparam>
@@ -57,6 +42,27 @@ public static class FunctionalArray {
     }
 
     /// <summary>
+    /// Filters all elements in <paramref name="array"/> such that when an element in array is mapped using <paramref name="map"/> the resulting value is <paramref name="equal"/>.
+    /// </summary>
+    /// <typeparam name="TSource"></typeparam>
+    /// <typeparam name="TMapped"></typeparam>
+    /// <param name="array">The array to filter elements from.</param>
+    /// <param name="map">The mapping function.</param>
+    /// <param name="equal">The element to check equality against.</param>
+    /// <returns>The filtered list of elements.</returns>
+    public static TSource[] Filter<TSource, TMapped>(this TSource[] array, Func<TSource, TMapped> map, TMapped equal) where TMapped : notnull {
+        TSource[] result = new TSource[array.Length];
+        int k = 0;
+        for (int i = 0; i < array.Length; i++) {
+            var e = map(array[i]);
+            if (e.Equals(equal)) {
+                result[k++] = array[i];
+            }
+        }
+        return result[..k];
+    }
+
+    /// <summary>
     /// Maps an array of type <typeparamref name="U"/> into an array of type <typeparamref name="V"/> through a mapping function.
     /// </summary>
     /// <typeparam name="U">The original type of the array.</typeparam>
@@ -68,6 +74,67 @@ public static class FunctionalArray {
         V[] result = new V[array.Length];
         for (int i = 0; i < array.Length; i++) {
             result[i] = func(array[i]);
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Maps an array of type <typeparamref name="U"/> into an array of type <typeparamref name="V"/> through a mapping function.
+    /// </summary>
+    /// <typeparam name="U">The original type of the array.</typeparam>
+    /// <typeparam name="V">The new type of the array.</typeparam>
+    /// <param name="array">The array to map over.</param>
+    /// <param name="func">The map funcion to map a single element from <typeparamref name="U"/> to <typeparamref name="V"/>.</param>
+    /// <returns>An array consisting of elements of type <typeparamref name="V"/>.</returns>
+    public static V[] Map<U, V>(this IList<U> array, Func<U, V> func) {
+        V[] result = new V[array.Count];
+        for (int i = 0; i < array.Count; i++) {
+            result[i] = func(array[i]);
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Maps an array of type <typeparamref name="U"/> into an array of type <typeparamref name="V"/> through a mapping function where the index of the element is given.
+    /// </summary>
+    /// <typeparam name="U">The original type of the array.</typeparam>
+    /// <typeparam name="V">The new type of the array.</typeparam>
+    /// <param name="array">The array to map over.</param>
+    /// <param name="func">The map funcion to map a single element from <typeparamref name="U"/> to <typeparamref name="V"/>. With the index.</param>
+    /// <returns>An array consisting of elements of type <typeparamref name="V"/>.</returns>
+    public static V[] Mapi<U, V>(this U[] array, Func<int, U, V> func) {
+        V[] result = new V[array.Length];
+        for (int i = 0; i < array.Length; i++) {
+            result[i] = func(i, array[i]);
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Maps an array of type <typeparamref name="U"/> into an array of type <typeparamref name="V"/> through a mapping function.
+    /// </summary>
+    /// <remarks>
+    /// Enforces all mapped elements are not <see langword="null"/>.
+    /// </remarks>
+    /// <typeparam name="U">The original type of the array.</typeparam>
+    /// <typeparam name="V">The new type of the array.</typeparam>
+    /// <param name="array">The array to map over.</param>
+    /// <param name="func">The map funcion to map a single element from <typeparamref name="U"/> to <typeparamref name="V"/>.</param>
+    /// <returns>An array consisting of elements of type <typeparamref name="V"/>.</returns>
+    public static V[] MapNotNull<U, V>(this U[] array, Func<U, V?> func) where V : notnull
+        => array.Map(func).NotNull();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="U"></typeparam>
+    /// <typeparam name="V"></typeparam>
+    /// <param name="array"></param>
+    /// <returns></returns>
+    public static V[] MapType<U,V>(this U[] array) where V : U where U : notnull {
+        V[] result = new V[array.Length];
+        for (int i = 0; i < array.Length; i++) {
+            result[i] = (V)array[i];
         }
         return result;
     }
@@ -175,6 +242,20 @@ public static class FunctionalArray {
     }
 
     /// <summary>
+    /// Prepends <paramref name="element"/> to the beginning of the <paramref name="array"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the array.</typeparam>
+    /// <param name="array">The source array to prepend element to.</param>
+    /// <param name="element">The elemend to prepend.</param>
+    /// <returns>A copy of <paramref name="array"/> with <paramref name="element"/> as the first element.</returns>
+    public static T[] Prepend<T>(this T[] array, T element) {
+        T[] buffer = new T[array.Length + 1];
+        buffer[0] = element;
+        Array.Copy(array, 0, buffer, 1, array.Length);
+        return buffer;
+    }
+
+    /// <summary>
     /// Concatenate two arrays.
     /// </summary>
     /// <typeparam name="T">The type of the array.</typeparam>
@@ -197,7 +278,7 @@ public static class FunctionalArray {
     /// <param name="max">Largest index in array to pick from.</param>
     /// <returns>A uniformly picked element from <paramref name="array"/>.</returns>
     public static T Random<T>(this T[] array, int min = 0, int max = int.MaxValue)
-        => Random(array, BattlegroundsInstance.RNG);
+        => Random(array, BattlegroundsInstance.RNG, min, max);
 
     /// <summary>
     /// Pick a random element from array.
@@ -242,7 +323,7 @@ public static class FunctionalArray {
             return array;
         var before = array[0..i];
         var after = array[(i+1)..];
-        return before.Concat(after).ToArray();
+        return before.Concat(after);
     }
 
     /// <summary>
@@ -262,5 +343,219 @@ public static class FunctionalArray {
         return state;
     }
 
-}
+    /// <summary>
+    /// Map an array into a <see cref="IDictionary{TKey, TValue}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The array type.</typeparam>
+    /// <typeparam name="K">The lookup type.</typeparam>
+    /// <typeparam name="V">The value type.</typeparam>
+    /// <param name="array">The array to map into a dictionary.</param>
+    /// <param name="key">The key mapper function.</param>
+    /// <param name="value">The value mapper function.</param>
+    /// <returns>A <see cref="IDictionary{TKey, TValue}"/> instance with all array entries mapped according to <paramref name="key"/> and <paramref name="value"/> functions.</returns>
+    public static IDictionary<K,V> ToLookup<T,K,V>(this T[] array, Func<T,K> key, Func<T,V> value) where K : notnull {
+        var dict = new Dictionary<K,V>();
+        for (int i = 0; i < array.Length; i++) {
+            dict.Add(key(array[i]), value(array[i]));
+        }
+        return dict;
+    }
 
+    /// <summary>
+    /// Map an array into a <see cref="IDictionary{TKey, TValue}"/> instance where a value member defines the lookup.
+    /// </summary>
+    /// <typeparam name="K">The lookup type.</typeparam>
+    /// <typeparam name="V">The value type.</typeparam>
+    /// <param name="array">The array to map into a dictionary.</param>
+    /// <param name="key">The key mapper function.</param>
+    /// <returns>A <see cref="IDictionary{TKey, TValue}"/> instance with all array entries indexed according to <paramref name="key"/> function.</returns>
+    public static IDictionary<K, V> ToLookup<K, V>(this V[] array, Func<V, K> key) where K : notnull
+        => array.ToLookup(key, x => x);
+
+    /// <summary>
+    /// Finds the index with the smallest value.
+    /// </summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="array">The array to find smallest index in.</param>
+    /// <returns>The index with the smallest instance in the array.</returns>
+    public static int ArgMin<T>(this T[] array) where T : IComparable<T> {
+        if (array.Length is 0) {
+            return -1;
+        }
+        int j = 0;
+        for (int i = 1; i < array.Length; i++) {
+            if (array[i].CompareTo(array[j]) < 0) {
+                j = i;
+            }
+        }
+        return j;
+    }
+
+    /// <summary>
+    /// Finds the index with the smallest value.
+    /// </summary>
+    /// <typeparam name="U">The value type.</typeparam>
+    /// <typeparam name="V">The minimum value type.</typeparam>
+    /// <param name="array">The array to find smallest index in.</param>
+    /// <param name="min">The selector function.</param>
+    /// <returns>The index with the smallest instance in the array.</returns>
+    public static int ArgMin<U, V>(this U[] array, Func<U, V> min) where V : IComparable<V> {
+        if (array.Length is 0) {
+            return -1;
+        }
+        int j = 0;
+        V v = min(array[0]);
+        for (int i = 1; i < array.Length; i++) {
+            var a = min(array[i]);
+            if (a.CompareTo(v) < 0) {
+                v = a;
+                j = i;
+            }
+        }
+        return j;
+    }
+
+    /// <summary>
+    /// Finds the instance with the smallest value.
+    /// </summary>
+    /// <typeparam name="U">The value type.</typeparam>
+    /// <typeparam name="V">The minimum value type.</typeparam>
+    /// <param name="array">The array to find smallest instance in.</param>
+    /// <param name="min">The selector function.</param>
+    /// <returns>The instance with the smallest instance in the array.</returns>
+    public static U Min<U, V>(this U[] array, Func<U, V> min) where V : IComparable<V>
+        => array[ArgMin(array, min)];
+
+    /// <summary>
+    /// Finds the smallest value.
+    /// </summary>
+    /// <typeparam name="U">The value type.</typeparam>
+    /// <typeparam name="V">The minimum value type.</typeparam>
+    /// <param name="array">The array to find smallest value in.</param>
+    /// <param name="min">The selector function.</param>
+    /// <returns>The smallest in the array.</returns>
+    public static V MinValue<U, V>(this U[] array, Func<U, V> min) where V : IComparable<V>
+        => min(array.Min(min));
+
+    /// <summary>
+    /// Finds the index of the largest value.
+    /// </summary>
+    /// <typeparam name="U">The value type.</typeparam>
+    /// <typeparam name="V">The maximum value type.</typeparam>
+    /// <param name="array">The array to find largest index for.</param>
+    /// <param name="max">The selector function.</param>
+    /// <returns>The index with the largest instance in the array.</returns>
+    public static int ArgMax<U, V>(this U[] array, Func<U, V> max) where V : IComparable<V> {
+        if (array.Length is 0) {
+            return -1;
+        }
+        int j = 0;
+        V v = max(array[0]);
+        for (int i = 1; i < array.Length; i++) {
+            var a = max(array[i]);
+            if (a.CompareTo(v) > 0) {
+                v = a;
+                j = i;
+            }
+        }
+        return j;
+    }
+
+    /// <summary>
+    /// Finds the index of the largest value.
+    /// </summary>
+    /// <typeparam name="T">The value type.</typeparam>
+    /// <param name="array">The array to find largest index for.</param>
+    /// <returns>The index with the largest instance in the array.</returns>
+    public static int ArgMax<T>(this T[] array) where T : IComparable<T> {
+        if (array.Length is 0) {
+            return -1;
+        }
+        int j = 0;
+        for (int i = 1; i < array.Length; i++) {
+            if (array[i].CompareTo(array[j]) > 0) {
+                j = i;
+            }
+        }
+        return j;
+    }
+
+    /// <summary>
+    /// Finds the instance with the largest value.
+    /// </summary>
+    /// <typeparam name="U">The value type.</typeparam>
+    /// <typeparam name="V">The maximum value type.</typeparam>
+    /// <param name="array">The array to find largest instance in.</param>
+    /// <param name="max">The selector function.</param>
+    /// <returns>The instance with the largest instance in the array.</returns>
+    public static U Max<U, V>(this U[] array, Func<U, V> max) where V : IComparable<V>
+        => array[ArgMax(array, max)];
+
+    /// <summary>
+    /// Finds the largest value.
+    /// </summary>
+    /// <typeparam name="U">The value type.</typeparam>
+    /// <typeparam name="V">The maximum value type.</typeparam>
+    /// <param name="array">The array to find largest value in.</param>
+    /// <param name="max">The selector function.</param>
+    /// <returns>The largest in the array.</returns>
+    public static V MaxValue<U, V>(this U[] array, Func<U, V> max) where V : IComparable<V>
+        => max(array.Max(max));
+
+    /// <summary>
+    /// Get the first matching instance or the <paramref name="defaultValue"/>.
+    /// </summary>
+    /// <typeparam name="T">The array instance type.</typeparam>
+    /// <param name="array">The array to find element in.</param>
+    /// <param name="predicate">The predicate to test.</param>
+    /// <param name="defaultValue">The default value to return if no value is found.</param>
+    /// <returns>The first <paramref name="predicate"/> matching instance. If none, <paramref name="defaultValue"/> is returned.</returns>
+    public static T FirstOrDefault<T>(this T[] array, Predicate<T> predicate, T defaultValue) {
+        for (int i = 0; i < array.Length; i++) {
+            if (predicate(array[i]))
+                return array[i];
+        }
+        return defaultValue;
+    }
+
+    /// <summary>
+    /// Get the intersection (set of shared elements) between two arrays.
+    /// </summary>
+    /// <typeparam name="T">The array instance type.</typeparam>
+    /// <param name="array">The first array to look through</param>
+    /// <param name="other">The second array to intersect with.</param>
+    /// <returns>The intersection between input arrays.</returns>
+    public static T[] Intersect<T>(this T[] array, T[] other) where T : notnull {
+        T[] values = new T[array.Length];
+        int k = 0;
+        for (int i = 0; i < array.Length; i++) {
+            if (other.Any(x => x.Equals(array[i]))) {
+                values[k++] = array[i];
+            }
+        }
+        return values[..k];
+    }
+
+    /// <summary>
+    /// Get the intersection (set of shared elements) between two arrays.
+    /// </summary>
+    /// <typeparam name="T">The array instance type.</typeparam>
+    /// <param name="array">The first array to look through</param>
+    /// <param name="other">The second array to intersect with.</param>
+    /// <param name="equals">Function to run to check for equality (when true, elements are considered to be in the intersection).</param>
+    /// <returns>The intersection between input arrays.</returns>
+    public static T[] Intersect<T>(this T[] array, T[] other, Func<T, T, bool> equals) where T : notnull {
+        T[] values = new T[array.Length];
+        int k = 0;
+        for (int i = 0; i < array.Length; i++) {
+            for (int j = 0; j < other.Length; j++) {
+                if (equals(array[i], other[j])) {
+                    values[k++] = array[i];
+                    break;
+                }
+            }
+        }
+        return values[..k];
+    }
+
+}

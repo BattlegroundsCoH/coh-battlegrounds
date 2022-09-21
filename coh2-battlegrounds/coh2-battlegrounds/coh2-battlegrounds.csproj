@@ -13,14 +13,15 @@
     <ApplicationIcon>coh2-battlegrounds.ico</ApplicationIcon>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>E:\coh2_battlegrounds\coh2-battlegrounds\keypair.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>1.1.3</AssemblyVersion>
-    <FileVersion>1.1.3</FileVersion>
-    <Version>1.1.3-alpha</Version>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+    <Version>1.2.0-alpha</Version>
     <RepositoryUrl>https://github.com/JustCodiex/coh2-battlegrounds</RepositoryUrl>
     <PackageProjectUrl>https://cohbattlegrounds.com/</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <Description>Company of Heroes 2: Battlegrounds Mod Launcher</Description>
     <Product>Battlegrounds</Product>
+	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -75,6 +76,8 @@
     <None Remove="Resources\app\company_types\ct_infantry.png" />
     <None Remove="Resources\app\company_types\ct_mechanized.png" />
     <None Remove="Resources\app\company_types\ct_motorized.png" />
+    <None Remove="Resources\app\company_types\ct_ost_sturm.png" />
+    <None Remove="Resources\app\company_types\ct_sov_nkvd.png" />
     <None Remove="Resources\app\company_types\ct_td.png" />
     <None Remove="Resources\app\company_types\ct_unspecified.png" />
     <None Remove="Resources\app\flags\french.png" />
@@ -83,11 +86,16 @@
     <None Remove="Resources\app\flags\spanish.png" />
     <None Remove="Resources\app\flags\unionjack.png" />
     <None Remove="Resources\app\icon_bkg.png" />
+    <None Remove="Resources\app\LobbyMapDefence.png" />
     <None Remove="Resources\app\LobbySettingMap.png" />
     <None Remove="Resources\app\logo_main.png" />
+    <None Remove="Resources\app\objective_icons\ot_attack.png" />
+    <None Remove="Resources\app\objective_icons\ot_defend.png" />
+    <None Remove="Resources\app\objective_icons\ot_support.png" />
     <None Remove="Resources\app\padlock_locked.png" />
     <None Remove="Resources\app\padlock_open.png" />
     <None Remove="Resources\app\refresh.png" />
+    <None Remove="Resources\app\unknown_user.png" />
     <None Remove="Resources\campaign\icon_attrition.png" />
     <None Remove="Resources\campaign\icon_unittype_air.png" />
     <None Remove="Resources\campaign\icon_unittype_arty.png" />
@@ -110,8 +118,11 @@
     <None Remove="Resources\ingame\application\app_logo2.png" />
     <None Remove="Resources\ingame\british.png" />
     <None Remove="Resources\ingame\deploy_icons.dat" />
+    <None Remove="Resources\ingame\entity_icons.dat" />
+    <None Remove="Resources\ingame\entity_symbols.dat" />
     <None Remove="Resources\ingame\german.png" />
     <None Remove="Resources\ingame\item_icons.dat" />
+    <None Remove="Resources\ingame\minimap_icons.dat" />
     <None Remove="Resources\ingame\no_icon.png" />
     <None Remove="Resources\ingame\phase_icons.dat" />
     <None Remove="Resources\ingame\portraits.dat" />
@@ -142,7 +153,7 @@
 
   <ItemGroup>
     <Content Include="coh2-battlegrounds.ico">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
@@ -169,6 +180,8 @@
     <Resource Include="Resources\app\company_types\ct_infantry.png" />
     <Resource Include="Resources\app\company_types\ct_mechanized.png" />
     <Resource Include="Resources\app\company_types\ct_motorized.png" />
+    <Resource Include="Resources\app\company_types\ct_ost_sturm.png" />
+    <Resource Include="Resources\app\company_types\ct_sov_nkvd.png" />
     <Resource Include="Resources\app\company_types\ct_td.png" />
     <Resource Include="Resources\app\company_types\ct_unspecified.png" />
     <Resource Include="Resources\app\flags\french.png" />
@@ -177,8 +190,14 @@
     <Resource Include="Resources\app\flags\spanish.png" />
     <Resource Include="Resources\app\flags\unionjack.png" />
     <Resource Include="Resources\app\icon_bkg.png" />
+    <Resource Include="Resources\app\LobbyMapDefence.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\app\LobbySettingMap.png" />
     <Resource Include="Resources\app\logo_main.png" />
+    <Resource Include="Resources\app\objective_icons\ot_attack.png" />
+    <Resource Include="Resources\app\objective_icons\ot_defend.png" />
+    <Resource Include="Resources\app\objective_icons\ot_support.png" />
     <Resource Include="Resources\app\padlock_locked.png" />
     <Resource Include="Resources\app\padlock_open.png" />
   </ItemGroup>
@@ -194,6 +213,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\app\refresh.png" />
+    <Resource Include="Resources\app\unknown_user.png" />
     <Resource Include="Resources\campaign\icon_attrition.png" />
     <Resource Include="Resources\campaign\icon_unittype_air.png" />
     <Resource Include="Resources\campaign\icon_unittype_arty.png" />
@@ -216,8 +236,11 @@
     <Resource Include="Resources\ingame\application\app_logo2.png" />
     <Resource Include="Resources\ingame\british.png" />
     <Resource Include="Resources\ingame\deploy_icons.dat" />
+    <Resource Include="Resources\ingame\entity_icons.dat" />
+    <Resource Include="Resources\ingame\entity_symbols.dat" />
     <Resource Include="Resources\ingame\german.png" />
     <Resource Include="Resources\ingame\item_icons.dat" />
+    <Resource Include="Resources\ingame\minimap_icons.dat" />
     <Resource Include="Resources\ingame\no_icon.png" />
     <Resource Include="Resources\ingame\phase_icons.dat" />
     <Resource Include="Resources\ingame\portraits.dat" />
@@ -246,6 +269,66 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="bg_common\bg_ct\ost_airborne.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_arm.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_arty.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_eng.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_mech.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_mot.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_rifles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_sturm.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_td.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_airborne.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_arm.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_arty.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_eng.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_mech.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_mot.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_nkvd.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_rifles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_td.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\auxiliary_scripts\debug_script.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2_battlegrounds_defence.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\campaigns\sov_ost_stalingrad.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -253,6 +336,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\data\vcoh-abp-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh-aimap-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\data\vcoh-cbp-db.json">
@@ -735,9 +821,6 @@
     <None Update="bg_common\bg_wc\auxiliary_scripts\client_overrideui.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\bg_wc\auxiliary_scripts\session.scar">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="bg_common\bg_wc\auxiliary_scripts\shared_abilities.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -843,10 +926,6 @@
     <None Update="plugins\README.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="bg_common\bg_wc\" />
   </ItemGroup>
 
 </Project>

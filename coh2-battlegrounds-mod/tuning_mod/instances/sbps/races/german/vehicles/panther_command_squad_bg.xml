@@ -11,12 +11,12 @@
 						<bool name="has_speech_code" value="True" />
 						<locstring name="help_text" value="11007023" />
 						<string name="hotkey_name" value="A" />
-						<icon name="icon_name" value="Icons_vehicles_vehicle_german_panther" />
+						<icon name="icon_name" value="Icons_vehicles_vehicle_west_german_panther_command_tank" />
 						<bool name="minimap_team_only" value="False" />
 						<icon name="minimap_texture" value="" />
 						<instance_reference name="modal_ability" value="" />
 						<bool name="reveal_for_decryption" value="True" />
-						<locstring name="screen_name" value="11007009" />
+						<locstring name="screen_name" value="78" mod="142b113740474c82a60b0a428bd553d5" />
 						<string name="selection_group" value="Panther" />
 						<group name="speaker_generic">
 							<string name="code_1" value="" />
@@ -482,7 +482,7 @@
 			</list>
 		</template_reference>
 		<template_reference name="squadexts" value="sbpextensions\squad_upgrade_ext">
-			<float name="number_of_slots" value="-1" />
+			<float name="number_of_slots" value="1" />
 			<list name="upgrades">
 				<instance_reference name="upgrade" value="upgrade\german\items\vehicles_optics" />
 			</list>

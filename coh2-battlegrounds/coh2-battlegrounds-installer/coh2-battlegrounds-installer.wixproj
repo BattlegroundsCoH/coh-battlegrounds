@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" InitialTargets="EnsureWixToolsetInstalled" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.10</ProductVersion>
+    <ProjectGuid>3e8286bb-b500-4714-8891-99e973a39b1f</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>BattlegroundsSetup_$(Platform)</OutputName>
+    <OutputType>Package</OutputType>
+	<Cultures>;</Cultures>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\$(Configuration)\$(Platform)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\$(Configuration)\$(Platform)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DefineConstants>Debug</DefineConstants>
+    <OutputPath>bin\$(Configuration)\$(Platform)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\$(Configuration)\$(Platform)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Components.wxs" />
+    <Compile Include="ComponentsGen.wxs" />
+    <Compile Include="Directories.wxs" />
+    <Compile Include="Product.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Common.wxl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\coh2-battlegrounds\coh2-battlegrounds.csproj">
+      <Name>coh2-battlegrounds</Name>
+      <Project>{16fc939e-9e79-41c1-a52e-7731e750239c}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixFirewallExtension">
+      <HintPath>$(WixExtDir)\WixFirewallExtension.dll</HintPath>
+      <Name>WixFirewallExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
+  <Target Name="EnsureWixToolsetInstalled" Condition=" '$(WixTargetsImported)' != 'true' ">
+    <Error Text="The WiX Toolset v3.11 (or newer) build tools must be installed to build this project. To download the WiX Toolset, see http://wixtoolset.org/releases/" />
+  </Target>
+  <Target Name="BeforeBuild">
+    <!-- Get assembly version -->
+    <GetAssemblyIdentity AssemblyFiles="..\coh2-battlegrounds-console\bin\Debug\net6.0\bg-release\coh2-battlegrounds.dll">
+      <Output TaskParameter="Assemblies" ItemName="AssemblyVersion" />
+    </GetAssemblyIdentity>
+    <!-- Define variables -->
+    <PropertyGroup>
+      <DefineConstants>BuildVersion=%(AssemblyVersion.Version);BasePath=..\coh2-battlegrounds-console\bin\Debug\net6.0\bg-release\</DefineConstants>
+    </PropertyGroup>
+    <!-- Harvest file components from publish folder -->
+    <HeatDirectory OutputFile="ComponentsGen.wxs" 
+				   DirectoryRefId="INSTALLFOLDER" 
+				   ComponentGroupName="PublishedComponents" 
+				   SuppressCom="true" 
+				   Directory="..\coh2-battlegrounds-console\bin\Debug\net6.0\bg-release" 
+				   SuppressFragments="true" 
+				   SuppressRegistry="true" 
+				   SuppressRootDirectory="true" 
+				   AutoGenerateGuids="false" 
+				   GenerateGuidsNow="true" 
+				   ToolPath="$(WixToolPath)" 
+                   RunAsSeparateProcess="true" 
+				   PreprocessorVariable="var.BasePath" />
+	  <Exec Command="coh2-battlegrounds-console.exe add-firewallexeption" WorkingDirectory="..\coh2-battlegrounds-console\bin\Debug\net6.0\" />
+  </Target>
+  <Target Name="AfterBuild">
+	  <!-- Get assembly version -->
+	  <GetAssemblyIdentity AssemblyFiles="..\coh2-battlegrounds-console\bin\Debug\net6.0\bg-release\coh2-battlegrounds.dll">
+		  <Output TaskParameter="Assemblies" ItemName="AssemblyVersion" />
+	  </GetAssemblyIdentity>
+
+	  <!-- Rename and move final MSI -->
+	  <Exec Command="if not exist Installs mkdir Installs" />
+	  <Exec Command="move bin\$(Configuration)\$(Platform)\$(OutputName).msi Installs\BattlegroundsSetup_%(AssemblyVersion.Version)_$(Platform).msi" />
+  </Target>
+</Project>

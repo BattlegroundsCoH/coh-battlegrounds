@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	
+	<!-- Fixed upgrade Id -->
+	<!-- DO NOT CHANGE THE GUID -->
+	<?define UpgradeCode = "{28C10320-3E7C-44D4-8A18-FD90035A4689}" ?>
+	
+	<!-- Website to a support platform -->
+	<?define SupportLink = "https://discord.gg/Hr7yTbSv25" ?>
+	
+	<!-- Define main product -->
+	<Product Id="*" 
+			 Name="!(loc.ProductName_$(var.Platform))" 
+			 Language="!(loc.Language)" 
+			 Version="$(var.BuildVersion)" 
+			 Manufacturer="!(loc.Company)" 
+			 UpgradeCode="$(var.UpgradeCode)">
+		
+		<!-- Provide package details -->
+		<Package InstallerVersion="200" 
+				 Compressed="yes" 
+				 InstallScope="perMachine" 
+				 Platform="$(var.Platform)"
+				 Manufacturer="!(loc.Company)"
+				 Description="!(loc.Description)"
+				 Keywords="!(loc.Keywords)"
+				 Comments="!(loc.Comments)"
+				 Languages="!(loc.Language)" />
+		
+		<!-- Downgrade error message -->
+		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" Schedule="afterInstallValidate"/>
+		
+		<!-- Include .cab file into .msi file -->
+		<MediaTemplate EmbedCab="yes" />
+
+		<!-- Define main app icon -->
+		<Icon Id="icon.ico" SourceFile="$(var.coh2-battlegrounds.ProjectDir)\coh2-battlegrounds.ico" />
+	
+		<!-- Use the icon.ico icon for the installer (shows up in Add/Remove programs) -->
+		<Property Id="ARPPRODUCTICON">icon.ico</Property>
+		
+		<!-- Help/Support website/link (shows in the Add/Remove programs) -->
+		<Property Id="ARPURLINFOABOUT">$(var.SupportLink)</Property>
+	
+		<!-- Create a basic UI for the installer -->
+		<UI>
+			<UIRef Id="WixUI_InstallDir"/>
+			<Publish Dialog="ExitDialog"
+					 Control="Finish"
+					 Event="DoAction"
+					 Value="LaunchApplication">
+				WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed
+			</Publish>
+		</UI>
+		
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="!(loc.LaunchApp)" />
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+
+		<Property Id="WixShellExecTarget" Value="[INSTALLFOLDER]coh2-battlegrounds.exe" />
+		<CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
+		<!--
+		<WixVariable Id="WixUIDialogBmp" Value="$(var.ProjectDir)\Assets\Background.bmp" />
+		<WixVariable Id="WixUIBannerBmp" Value="$(var.ProjectDir)\Assets\Banner.bmp" />
+		-->
+		<WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)\Assets\license.rtf" />
+
+		<!-- Define components, shortcuts, files, etc... for installer -->
+		<Feature Id="ProductFeature" Title="Battlegrounds" Level="1">
+			
+			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentGroupRef Id="PublishedComponents" />
+		
+		</Feature>
+		
+	</Product>
+
+</Wix>

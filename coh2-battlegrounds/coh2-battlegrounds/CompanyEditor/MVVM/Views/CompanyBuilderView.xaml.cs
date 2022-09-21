@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media.Animation;
+using System.Windows.Media;
 
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
 
@@ -23,7 +25,7 @@ public partial class CompanyBuilderView : UserControl {
     public CompanyBuilderView() {
         this.InitializeComponent();
         this.m_panels = new StackPanel[][] {
-            new StackPanel[] { this.InfantryPanel, this.SupportPanel, this.VehiclePanel },
+            new StackPanel[] { this.InfantryPanel, this.SupportPanel, this.VehiclePanel, this.LeaderPanel },
             new StackPanel[] { this.CommanderAbilitiyPanel, this.UnitAbilityPanel }
         };
     }
@@ -96,6 +98,7 @@ public partial class CompanyBuilderView : UserControl {
                 0 => this.InfantryTab,
                 1 => this.SupportTab,
                 2 => this.VehicleTab,
+                3 => this.LeaderTab,
                 _ => throw new IndexOutOfRangeException()
             },
             1 => this.m_selectedSubAbilityTab switch {
@@ -167,11 +170,62 @@ public partial class CompanyBuilderView : UserControl {
     private void InfantryPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         => this.RHS_ScrollBar_Refresh();
 
+    private void LeaderPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        => this.RHS_ScrollBar_Refresh();
+
     private void RHS_ScrollBar_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
         if (this.RHS_ScrollBar.Maximum > 0) {
             this.RHS_ScrollBar.Value -= e.Delta * 0.25;
             this.RHS_ScrollBar_Scroll(sender, new(ScrollEventType.ThumbTrack, this.RHS_ScrollBar.Value)); // For some reason this is not triggered when changing the value
         }
+    }
+
+    private void saveButton_Click(object sender, RoutedEventArgs e) {
+
+        // Bail if datacontext is not set
+        if (this.DataContext is null) {
+            return;
+        }
+
+        // Execute
+        this.ViewModel.Save.Click?.Execute(null);
+
+        // Grab status
+        int status = this.ViewModel.SaveStatus;
+
+        // Try grab grid background
+        var bkg = (Grid)this.saveButton.Template.FindName("Gridbackground", this.saveButton);
+        if (bkg is not Grid buttonGrid)
+            return;
+
+        // Set background color
+        buttonGrid.Background = new SolidColorBrush(((SolidColorBrush)App.Current.Resources["BackgroundLightBlueBrush"]).Color);
+
+        // Check
+        if (status is 0) {
+
+            ColorAnimation animation = new ColorAnimation {
+                To = Colors.Red,
+                AutoReverse = true,
+                FillBehavior = FillBehavior.Stop,
+                Duration = new Duration(TimeSpan.FromSeconds(0.125))
+            };
+
+            buttonGrid.Background.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+
+        } else if (status is 1) {
+
+            ColorAnimation animation = new ColorAnimation {
+                To = Colors.Green,
+                AutoReverse = true,
+                FillBehavior = FillBehavior.Stop,
+                Duration = new Duration(TimeSpan.FromSeconds(0.125))
+            };
+
+            buttonGrid.Background.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+
+        }
+
     }
 
 }

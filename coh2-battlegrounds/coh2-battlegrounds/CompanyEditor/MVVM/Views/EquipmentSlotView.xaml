@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="BattlegroundsApp.CompanyEditor.MVVM.Views.EquipmentSlotView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views" 
+             xmlns:icon="clr-namespace:BattlegroundsApp.Controls.Editor" 
+             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="78" d:DesignWidth="250"
+             Background="#334252">
+
+    <Canvas Height="78" Width="250">
+        <Canvas.Resources>
+            <converters:StringToFactionIconConverter x:Key="Str2Fac"/>
+        </Canvas.Resources>
+
+        <!-- Name -->
+        <Label 
+            Content="{Binding Title, FallbackValue='Panzer IV'}"
+            Canvas.Left="50"
+            MaxWidth="180"
+            Foreground="White"
+            FontWeight="DemiBold"/>
+
+        <!-- Portrait -->
+        <icon:Portrait 
+            PortraitName="{Binding Portrait}"
+            SymbolName=""
+            x:Name="PortraitElement"/>
+
+        <!-- Show original faction -->
+        <Ellipse
+            Width="32"
+            Height="32"
+            Fill="{StaticResource BackgroundLightBlueBrush}"
+            StrokeThickness="1"
+            Stroke="{StaticResource BackgroundLightGrayBrush}"
+            Canvas.Bottom="0"
+            Canvas.Left="24"/>
+        <Image
+            Width="24"
+            Height="24"
+            Canvas.Left="28"
+            Canvas.Bottom="4"
+            Source="{
+                Binding Army, 
+                Converter={StaticResource Str2Fac}, 
+                FallbackValue='pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/german.png'}"/>
+
+        <!-- Equip -->
+        <Button 
+            Width="16"
+            Height="78"
+            Canvas.Right="0"
+            Style="{StaticResource StandardGreenButton}"
+            Content=">"
+            IsEnabled="{Binding CanEquip, FallbackValue=False}"
+            Visibility="Collapsed"
+            Command="{Binding EquipClick}"
+            x:Name="EquipButton"/>
+
+    </Canvas>
+</UserControl>

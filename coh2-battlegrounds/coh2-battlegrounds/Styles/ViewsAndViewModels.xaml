@@ -12,8 +12,15 @@
                     xmlns:dialogViews="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Views"
                     xmlns:dialogModels="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Models" 
                     xmlns:startupViews="clr-namespace:BattlegroundsApp.Modals.Startup.MVVM.Views"
-                    xmlns:startupModels="clr-namespace:BattlegroundsApp.Modals.Startup.MVVM.Models">
-
+                    xmlns:startupModels="clr-namespace:BattlegroundsApp.Modals.Startup.MVVM.Models"
+                    xmlns:downloadViews="clr-namespace:BattlegroundsApp.Modals.DownloadInProgress.MVVM.Views"
+                    xmlns:downloadModels="clr-namespace:BattlegroundsApp.Modals.DownloadInProgress.MVVM.Models">
+    
+    <!-- Download modal -->
+    <DataTemplate DataType="{x:Type downloadModels:DownloadInProgressViewModel}">
+        <downloadViews:DownloadInProgressView/>
+    </DataTemplate>
+    
     <!-- Startup modal -->
     <DataTemplate DataType="{x:Type startupModels:StartupViewModel}">
         <startupViews:StartupView/>
@@ -66,6 +73,11 @@
         <companyEditorViews:AvailableItemView/>
     </DataTemplate>
 
+    <!-- Item MVVM -->
+    <DataTemplate DataType="{x:Type companyEditorModels:EquipmentSlotViewModel}">
+        <companyEditorViews:EquipmentSlotView/>
+    </DataTemplate>
+
     <!-- DIALOGS START -->
     <DataTemplate DataType="{x:Type dialogModels:CreateCompanyDialogViewModel}">
         <dialogViews:CreateCompanyDialogView/>
@@ -86,6 +98,14 @@
     <DataTemplate DataType="{x:Type dialogModels:OKDialogViewModel}">
         <dialogViews:OKDialogView/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type dialogModels:RenameDialogViewModel}">
+        <dialogViews:RenameDialogView/>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type dialogModels:ImportExportCompanyDialogViewModel}">
+        <dialogViews:ImportExportCompanyDialogView/>
+    </DataTemplate>
     <!-- DIALOGS END -->
 
     <DataTemplate DataType="{x:Type lobbymodels:LobbyChatSpectatorModel}">
@@ -102,6 +122,9 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type lobbymodels:LobbyParticipantSlotModel}">
         <lobbyviews:LobbyPlayerSlot/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type lobbymodels:LobbyPlanningOverviewModel}">
+        <lobbyviews:LobbyPlanningOverview/>
     </DataTemplate>
 
 </ResourceDictionary>

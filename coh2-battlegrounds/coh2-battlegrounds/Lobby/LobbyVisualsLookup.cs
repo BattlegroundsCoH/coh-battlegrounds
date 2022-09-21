@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using Battlegrounds;
 using Battlegrounds.Game.Gameplay;
 
 namespace BattlegroundsApp.Lobby;
 
+/// <summary>
+/// Static utility class for lookup up embedded visual resources.
+/// </summary>
 public static class LobbyVisualsLookup {
 
+    /// <summary>
+    /// Readonly dictionary of faction icons.
+    /// </summary>
     public static readonly Dictionary<string, ImageSource> FactionIcons = new() {
         [Faction.Soviet.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionSOVIET.png")),
         [Faction.America.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionAEF.png")),
@@ -19,6 +26,9 @@ public static class LobbyVisualsLookup {
         [string.Empty] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionLOCKED.png")),
     };
 
+    /// <summary>
+    /// Readonly dictionary of highlighted versions of faction icons.
+    /// </summary>
     public static readonly Dictionary<string, ImageSource> FactionHoverIcons = new() {
         [Faction.Soviet.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionSOVIETHighlighted.png")),
         [Faction.America.Name] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionAEFHighlighted.png")),
@@ -28,5 +38,24 @@ public static class LobbyVisualsLookup {
         ["?"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionSOVIETHighlighted.png")),
         [string.Empty] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/army_icons/FactionLOCKEDHighlighted.png")),
     };
+
+    /// <summary>
+    /// Readonly array of objective type icons.
+    /// </summary>
+    public static readonly ImageSource[] ObjectiveTypes = new[] {
+        new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/objective_icons/ot_attack.png")),
+        new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/objective_icons/ot_defend.png")),
+        new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/objective_icons/ot_support.png")),
+    };
+
+    /// <summary>
+    /// Get the Locale String for downloading
+    /// </summary>
+    public static readonly Func<string, string> LOCSTR_DOWNLOAD = x => BattlegroundsInstance.Localize.GetString("LobbyView_DownloadGamemode", x);
+
+    /// <summary>
+    /// Get the locale string for playing
+    /// </summary>
+    public static readonly Func<string> LOCSTR_PLAYING = () => BattlegroundsInstance.Localize.GetString("LobbyView_PLAYING");
 
 }

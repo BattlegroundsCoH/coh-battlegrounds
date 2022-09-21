@@ -61,7 +61,7 @@ public sealed class ServerConnection : IConnection {
     /// <summary>
     /// Get the ID of this machine used for remote identification.
     /// </summary>
-    public ulong SelfID { get; }
+    public ulong SelfId { get; }
 
     private ServerConnection(Socket socket, ulong selfId) {
         this.m_socket = socket;
@@ -70,7 +70,7 @@ public sealed class ServerConnection : IConnection {
         };
         this.m_lthread = new(this.Listen);
         this.m_rwlock = new();
-        this.SelfID = selfId;
+        this.SelfId = selfId;
     }
 
     /// <summary>
@@ -169,9 +169,19 @@ public sealed class ServerConnection : IConnection {
 
             // If null; connection was lost to server
             if (messages is null) {
-                this.OnConnectionLost?.Invoke(true);
-                this.m_listen = false;
-                return;
+                try {
+                    if (!this.m_socket.Connected) {
+                        this.OnConnectionLost?.Invoke(true);
+                        this.m_listen = false;
+                        return;
+                    }
+                } catch (Exception e) {
+                    Trace.WriteLine(e, nameof(ServerConnection));
+                    this.OnConnectionLost?.Invoke(true);
+                    this.m_listen = false;
+                    return;
+                }
+                continue;
             }
 
             // Get lock

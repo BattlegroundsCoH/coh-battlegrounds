@@ -14,8 +14,15 @@ public record SquadSlotViewClickEventArgs(object Sender);
 /// </summary>
 public partial class SquadSlotView : UserControl {
 
-    public static readonly Brush VIEW_DEFAULT = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#334252"));
-    public static readonly Brush VIEW_HOVER = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#536375"));
+    private Brush VIEW_DEFAULT => this.DataContext switch {
+        SquadSlotViewModel ssvm => ssvm.PhaseBackground,
+        _ => (SolidColorBrush)App.Current.FindResource("BackgroundLightBlueBrush")
+    };
+
+    private Brush VIEW_HOVER => this.DataContext switch {
+        SquadSlotViewModel ssvm => ssvm.PhaseBackgroundHover,
+        _ => (SolidColorBrush)App.Current.FindResource("BackgroundLightGrayBrush")
+    };
 
     public SquadSlotView() {
         this.InitializeComponent();

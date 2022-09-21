@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Diagnostics;
 using System.Windows;
@@ -22,6 +22,13 @@ using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Startup.MVVM.Models;
+using Battlegrounds.Update;
+using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
+using BattlegroundsApp.Modals.DownloadInProgress.MVVM.Models;
+using Battlegrounds.Util.Coroutines;
+using System.Threading;
+using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace BattlegroundsApp;
 
@@ -47,6 +54,8 @@ public partial class App : Application {
 
     [MemberNotNullWhen(true, nameof(__viewManager), nameof(__handler))]
     public static bool IsStarted { get; private set; }
+
+    public static new Dispatcher Dispatcher => App.Current.Dispatcher;
 
     [MemberNotNull(nameof(__viewManager), nameof(__handler))]
     private void App_Startup(object sender, StartupEventArgs e) {
@@ -96,6 +105,9 @@ public partial class App : Application {
         // Set as started
         IsStarted = true;
 
+        // Set the application version
+        BattlegroundsInstance.Version = new AppVersionFetcher();
+
         // Load
         if (!BattlegroundsInstance.IsFirstRun) {
             this.LoadNext();
@@ -109,6 +121,15 @@ public partial class App : Application {
         Task.Run(ProfanityFilter.LoadFilter);
 
         // Load more low priority stuff down here
+
+        var updateFolderContents = Directory.GetFiles(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.UPDATE_FOLDER));
+        // Remove update folder
+        if (updateFolderContents.Length > 0) {
+            updateFolderContents.ForEach(File.Delete);
+        }
+
+        // Check for new updates
+        Task.Run(CheckForUpdate);
 
     }
 
@@ -205,6 +226,8 @@ public partial class App : Application {
             return;
         }
 
+        __dashboard!.UpdateSteamUser();
+
         // Create other views that are directly accessible from LHS
         __companyBrowser = __viewManager.CreateDisplayIfNotFound<CompanyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create company browser view model!");
         __lobbyBrowser = __viewManager.CreateDisplayIfNotFound<LobbyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create lobby browser view model!");
@@ -221,6 +244,9 @@ public partial class App : Application {
 
         // Close networking
         NetworkInterface.Shutdown();
+
+        // Close log
+        BattlegroundsInstance.Log?.SaveAndClose(0);
 
         // Save all changes
         BattlegroundsInstance.SaveInstance();
@@ -268,8 +294,7 @@ public partial class App : Application {
     private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) {
 
         // Update
-        if (sender is null)
-            sender = "<<NULL>>";
+        sender ??= "<<NULL>>";
 
         // Log exception
         Trace.WriteLine($"\n\n\n\t*** FATAL APP EXIT ***\n\nException trigger:\n{sender}\n\nException Info:\n{e.ExceptionObject}\n");
@@ -317,6 +342,48 @@ public partial class App : Application {
 
         // Return nothing
         return null;
+
+    }
+
+    private static void CheckForUpdate() {
+
+        if (!Update.IsNewVersion()) return;
+
+        // Null check
+        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+            return;
+        }
+
+        Application.Current.Dispatcher.Invoke(() => {
+
+            // Do modal
+            YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
+
+                // Check return value
+                if (resault is not ModalDialogResult.Confirm) {
+                    return;
+                }
+
+                Coroutine.StartCoroutine(RunUpdate(mControl));
+
+            }, "New Update", "New update detected. Do you want to download?");
+
+        });
+
+    }
+
+    private static IEnumerator RunUpdate(ModalControl control) {
+
+        yield return new WaitTimespan(TimeSpan.FromSeconds(0.5));
+        Application.Current.Dispatcher.Invoke(() => {
+            // Create downloadInProgress
+            var downloadInProgress = new DownloadInProgressViewModel();
+
+            // Show modal
+            control.ShowModal(downloadInProgress);
+        });
+        yield return new WaitTimespan(TimeSpan.FromSeconds(1.0));
+        Update.UpdateApplication();
 
     }
 

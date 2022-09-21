@@ -96,7 +96,7 @@ public partial class MainWindow : Window {
         var target = this.RightContent.Content is FrameworkElement fe ? fe.DataContext : this.RightContent.Content;
 
         // Get current rhs
-        if (target is LobbyModel lobby) {
+        if (target is LobbyModel lobby && !lobby.IsLocal) {
             e.Cancel = true;
             YesNoDialogViewModel.ShowModal(this.ModalView, (_, res) => {
                 if (res is ModalDialogResult.Confirm) {

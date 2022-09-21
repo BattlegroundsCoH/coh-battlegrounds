@@ -17,11 +17,14 @@ public class JsonLobbyTeam : ILobbyTeam {
 
     public ILobbyHandle Handle => this.m_handle ?? throw new InvalidOperationException();
 
+    public string TeamRole { get; set; }
+
     [JsonConstructor]
-    public JsonLobbyTeam(ILobbySlot[] Slots, int TeamID, int Capacity) { 
+    public JsonLobbyTeam(ILobbySlot[] Slots, int TeamID, int Capacity, string TeamRole) { 
         this.Slots = Slots;
         this.TeamID = TeamID;
         this.Capacity = Capacity;
+        this.TeamRole = TeamRole;
     }
 
     public void SetHandle(ILobbyHandle handle) {

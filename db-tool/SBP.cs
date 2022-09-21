@@ -101,7 +101,8 @@ namespace CoH2XML2JSON {
                     this.SquadCost = null;
                 }
                 this.Entities = squadLoadoutData.ToArray();
-                this.FemaleChance = float.Parse(squadLoadout.GetValue("//float [@name='squad_female_chance']")) / 10.0f;
+                var temp = squadLoadout.GetValue("//float [@name='squad_female_chance']");
+                this.FemaleChance = Program.GetFloat(squadLoadout.GetValue("//float [@name='squad_female_chance']")) / 10.0f;
                 this.HasCrew = tmpEbpCollect.Any(x => x?.Drivers?.Length > 0);
             }
 
@@ -124,7 +125,7 @@ namespace CoH2XML2JSON {
                 foreach (XmlElement rank in ranks) {
                     ranks_data.Add(new(
                         rank.FindSubnode("locstring", "screen_name").GetAttribute("value"),
-                        float.Parse(rank.FindSubnode("float", "experience_value").GetAttribute("value"))
+                        (float)double.Parse(rank.FindSubnode("float", "experience_value").GetAttribute("value"))
                         ));
                 }
                 this.Veterancy = ranks_data.ToArray();

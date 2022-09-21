@@ -9,13 +9,17 @@ using System.Windows;
 using System.Windows.Media;
 
 using Battlegrounds;
+using Battlegrounds.AI;
 using Battlegrounds.Functional;
-using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 
 using BattlegroundsApp.Lobby.MatchHandling;
+using BattlegroundsApp.Lobby.MVVM.Views;
+
+using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
@@ -31,21 +35,23 @@ public class LobbyHostModel : LobbyModel {
 
     private ModPackage? m_package;
 
+    public override LobbyMutButton SwapRoles { get; }
+
     public override LobbyMutButton StartMatchButton { get; }
 
-    public override LobbyDropdown<ScenOp> MapDropdown { get; }
+    public override LobbySetting<ScenOp> MapDropdown { get; }
 
-    public override LobbyDropdown<IGamemode> GamemodeDropdown { get; }
+    public override LobbySetting<IGamemode> GamemodeDropdown { get; }
 
-    public override LobbyDropdown<IGamemodeOption> GamemodeOptionDropdown { get; }
+    public override LobbySetting<IGamemodeOption> GamemodeOptionDropdown { get; }
 
-    public override LobbyDropdown<OnOffOption> WeatherDropdown { get; }
+    public override LobbySetting<OnOffOption> WeatherDropdown { get; }
 
-    public override LobbyDropdown<OnOffOption> SupplySystemDropdown { get; }
+    public override LobbySetting<OnOffOption> SupplySystemDropdown { get; }
 
-    public override LobbyDropdown<ModPackageOption> ModPackageDropdown { get; }
+    public override LobbySetting<ModPackageOption> ModPackageDropdown { get; }
 
-    public ImageSource? SelectedMatchScenario { get; set; }
+    public override ModPackage ModPackage => this.m_package ?? throw new Exception("No Mod Package Defined");
 
     public LobbyHostModel(ILobbyHandle handle, ILobbyTeam allies, ILobbyTeam axis) : base(handle, allies, axis) {
 
@@ -54,6 +60,7 @@ public class LobbyHostModel : LobbyModel {
             Title = LOCSTR_START(),
             NotificationVisible = Visibility.Hidden
         };
+        this.SwapRoles = new(new(this.SwapTeamRoles), Visibility.Collapsed);
 
         // Get scenario list
         var _scenlist = ScenarioList.GetList()
@@ -66,7 +73,7 @@ public class LobbyHostModel : LobbyModel {
         ModManager.EachPackage(x => tunlist.Add(new ModPackageOption(x)));
 
         // Init mod package dropdown
-        this.ModPackageDropdown = new(true, Visibility.Visible, new(tunlist), this.ModPackageSelectionChanged);
+        this.ModPackageDropdown = LobbySetting<ModPackageOption>.NewDropdown("LobbyView_SettingTuning", new(tunlist), this.ModPackageSelectionChanged);
 
         // Set default package
         this.m_package = this.ModPackageDropdown.Items[0].ModPackage;
@@ -75,11 +82,19 @@ public class LobbyHostModel : LobbyModel {
         ObservableCollection<OnOffOption> onOfflist = new(new[] { new OnOffOption(true), new OnOffOption(false) });
 
         // Init dropdowns 
-        this.MapDropdown = new(true, Visibility.Visible, new(scenlist), this.MapSelectionChanged);
-        this.GamemodeDropdown = new(true, Visibility.Visible, new(), this.GamemodeSelectionChanged);
-        this.GamemodeOptionDropdown = new(true, Visibility.Visible, new(), this.GamemodeOptionSelectionChanged);
-        this.WeatherDropdown = new(true, Visibility.Visible, onOfflist, this.WeatherSelectionChanged);
-        this.SupplySystemDropdown = new(true, Visibility.Visible, onOfflist, this.SupplySystemSelectionChanged);
+        this.MapDropdown = LobbySetting<ScenOp>.NewDropdown("LobbyView_SettingScenario", new(scenlist), this.MapSelectionChanged);
+        this.GamemodeDropdown = LobbySetting<IGamemode>.NewDropdown("LobbyView_SettingGamemode", new(), this.GamemodeSelectionChanged);
+        this.GamemodeOptionDropdown = LobbySetting<IGamemodeOption>.NewDropdown("LobbyView_SettingOption", new(), this.GamemodeOptionSelectionChanged);
+        this.WeatherDropdown = LobbySetting<OnOffOption>.NewDropdown("LobbyView_SettingWeather", onOfflist, this.WeatherSelectionChanged);
+        this.SupplySystemDropdown = LobbySetting<OnOffOption>.NewDropdown("LobbyView_SettingSupply", onOfflist, this.SupplySystemSelectionChanged);
+
+        // Add dropdowns
+        this.MapSetting.Add(this.MapDropdown);
+        this.MapSetting.Add(this.GamemodeDropdown);
+        this.GamemodeSettings.Add(this.GamemodeOptionDropdown);
+        this.AuxSettings.Add(this.WeatherDropdown);
+        this.AuxSettings.Add(this.SupplySystemDropdown);
+        this.AuxSettings.Add(this.ModPackageDropdown);
 
         // Set dropdown index, cascade effect
         this.MapDropdown.Selected = 0;
@@ -97,7 +112,7 @@ public class LobbyHostModel : LobbyModel {
         this.m_handle.SetLobbyState(LobbyState.InLobby);
 
         // Inform others
-        if (this.TryGetSelf() is ILobbySlot self && self.Occupant is not null) {
+        if (this.GetSelf() is ILobbySlot self && self.Occupant is not null) {
             this.m_handle.MemberState(self.Occupant.MemberID, self.TeamID, self.SlotID, LobbyMemberState.Waiting);
         }
 
@@ -121,6 +136,7 @@ public class LobbyHostModel : LobbyModel {
 
         // Skip check if not host
         if (!this.m_handle.IsHost) {
+            Trace.WriteLine($"Attempt to invoke '{nameof(RefreshPlayability)}' but is not host!.", nameof(LobbyHostModel));
             return;
         }
 
@@ -160,50 +176,87 @@ public class LobbyHostModel : LobbyModel {
 
     private void BeginMatchSetup() {
 
+        // Log being match setup
+        Trace.WriteLine("Begin match setup button pressed.", nameof(LobbyHostModel));
+
         // If not host -> bail.
-        if (!this.m_handle.IsHost)
-            return;
-
-        // Bail if no chat model
-        if (this.m_chatModel is null)
-            return;
-
-        // Bail if no package defined
-        if (this.m_package is null)
-            return; // TODO: Show error
-
-        // Bail if not ready
-        if (!this.IsReady()) {
-            // TODO: Inform user
+        if (!this.m_handle.IsHost) {
+            Trace.WriteLine($"Attempt to invoke '{nameof(BeginMatchSetup)}' but is not host!.", nameof(LobbyHostModel));
             return;
         }
 
-        // Do on a worker thread
+        // Bail if no chat model
+        if (this.m_chatModel is null) {
+            Trace.WriteLine($"Attempt to invoke '{nameof(BeginMatchSetup)}' but chat model was null!.", nameof(LobbyHostModel));
+            return;
+        }
+
+        // Bail if no package defined
+        if (this.m_package is null) {
+            this.m_chatModel.SystemMessage("Mod package not set.", Colors.Gray);
+            return;
+        }
+
+        // Bail if not ready
+        if (!this.IsReady()) {
+            this.m_chatModel.SystemMessage("Cannot start match (Host not ready).", Colors.Yellow);
+            return;
+        }
+
+        // Grab gamemode
+        var gamemode = this.m_package.Gamemodes[this.GamemodeDropdown.Selected];
+
+        // Do on a worker thread (especially needed now that AI planning is added -- which can take ~1-3s to generate *some* plan).
         Task.Run(() => {
 
+            // Log startup on new thread
+            Trace.WriteLine("Conducting startup poll.", nameof(LobbyHostModel));
+
             // Get status from other participants
-            if (!this.m_handle.ConductPoll("ready_check", 1.5)) {
-                Trace.WriteLine("Someone didn't report back positively!", nameof(LobbyHostModel));
+            if (!this.m_handle.ConductPoll("ready_check", 2)) {
+                this.m_chatModel.SystemMessage("One or more lobby members are not ready.", Colors.Gray);
                 return;
             }
 
-            // Set starting flag
-            this.m_isStarting = true;
+            // Decide what to do, based on planning
+            if (gamemode.Planning) {
 
-            // Set lobby status here
-            this.m_handle.SetLobbyState(LobbyState.Starting);
+                // Log Screen change
+                Trace.WriteLine("Changing screen to planning phase.", nameof(LobbyHostModel));
 
-            // Get play model
-            var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, this.UploadGamemodeCallback);
+                // Inform others we're entering the planning phase
+                this.m_handle.NotifyScreen("planning");
 
-            // prepare
-            play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
+                // Begin plan match
+                Application.Current.Dispatcher.Invoke(this.PlanMatch);
+
+            } else {
+
+                // Log startup
+                Trace.WriteLine("Starting play model selection and preparation.", nameof(LobbyHostModel));
+
+                // Set starting flag
+                this.m_isStarting = true;
+
+                // Set lobby status here
+                this.m_handle.SetLobbyState(LobbyState.Starting);
+
+                // Get play model
+                var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, 5, this.UploadGamemodeCallback);
+
+                // Log Screen change
+                Trace.WriteLine($"{nameof(PlayModelFactory)} picked play model '{play.GetType().Name}'.", nameof(LobbyHostModel));
+
+                // prepare
+                play.Prepare(this.m_package, this.BeginMatch, x => this.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));
+
+            }
 
         });
 
     }
 
-    private void BeginMatch(IPlayModel model) {
+    internal void BeginMatch(IPlayModel model) {
 
         // Set lobby status here
         this.m_handle.SetLobbyState(LobbyState.Playing);
@@ -213,7 +266,7 @@ public class LobbyHostModel : LobbyModel {
 
     }
 
-    private void UploadGamemodeCallback(int curr, int exp, bool cancelled) {
+    internal void UploadGamemodeCallback(int curr, int exp, bool cancelled) {
 
         // Calculate percentage
         int p = Math.Min(100, (int)(curr / (double)exp * 100.0));
@@ -224,7 +277,7 @@ public class LobbyHostModel : LobbyModel {
         // Update visually
         Application.Current.Dispatcher.Invoke(() => {
             if (p == 100) {
-                this.StartMatchButton.Title = LOCSTR_PLAYING();
+                this.StartMatchButton.Title = LobbyVisualsLookup.LOCSTR_PLAYING();
             } else {
                 this.StartMatchButton.Title = LOCSTR_GAMEMODEUPLOAD(p);
             }
@@ -237,12 +290,12 @@ public class LobbyHostModel : LobbyModel {
         // Notify
         Application.Current.Dispatcher.Invoke(() => {
             this.StartMatchButton.IsEnabled = false;
-            this.StartMatchButton.Title = LOCSTR_PLAYING();
+            this.StartMatchButton.Title = LobbyVisualsLookup.LOCSTR_PLAYING();
         });
 
     }
 
-    private void EndMatch(IPlayModel model) {
+    internal void EndMatch(IPlayModel model) {
 
         // Set lobby status here
         this.m_handle.SetLobbyState(LobbyState.InLobby);
@@ -255,7 +308,7 @@ public class LobbyHostModel : LobbyModel {
 
     }
 
-    private void MapSelectionChanged(int newIndex, int oldIndex) {
+    private void MapSelectionChanged(int newIndex, int oldIndex, object value) {
 
         // Get scenario
         var scen = this.MapDropdown.Items[newIndex].Scenario;
@@ -270,36 +323,46 @@ public class LobbyHostModel : LobbyModel {
             return;
         }
 
-        // Update label
-        this.MapDropdown.LabelContent = scen.Name;
+        // Update
+        this.Scenario = scen;
+        this.NotifyProperty(nameof(Scenario));
 
-        // Try get image
-        this.ScenarioPreview = LobbySettingsLookup.TryGetMapSource(scen);
+        // Update last played
+        BattlegroundsInstance.LastPlayedMap = scen.RelativeFilename;
 
         // Update gamemode
         this.UpdateGamemodeAndOptionsSelection(scen);
-
-        // Notify change
-        this.NotifyProperty(nameof(ScenarioPreview));
 
         // Update lobby
         this.m_handle.SetLobbySetting(LobbyConstants.SETTING_MAP, scen.RelativeFilename);
 
     }
 
-    private void GamemodeSelectionChanged(int newIndex, int oldIndex) {
+    private void GamemodeSelectionChanged(int newIndex, int _, object value) {
+
+        // Grab gamemode
+        var gamemode = this.GamemodeDropdown.Items[newIndex];
 
         // Get gamemode options
-        var options = this.GamemodeDropdown.Items[newIndex].Options;
+        var options = gamemode.Options;
 
         // Clear available options
         this.GamemodeOptionDropdown.Items.Clear();
 
+        // Clear options
+        this.GamemodeSettings.Clear();
+
+        // Update team names
+        this.m_handle.SetTeamRoles(gamemode.TeamName1 ?? "Team_Allies", gamemode.TeamName2 ?? "Team_Axis");
+
+        // If gamemode has fixed positions, allow us to swap
+        this.SwapRoles.Visibility = gamemode.RequireFixed ? Visibility.Visible : Visibility.Collapsed;
+
+        // Set gamemode
+        this.Gamemode = this.ModPackage.Gamemodes[newIndex];
+
         // Hide options
         if (options is null || options.Length is 0) {
-
-            // Set visibility to hidden
-            this.GamemodeOptionDropdown.Visibility = Visibility.Hidden;
 
             // Set setting to empty (Hidden)
             this.m_handle.SetLobbySetting(LobbyConstants.SETTING_GAMEMODEOPTION, string.Empty);
@@ -307,24 +370,57 @@ public class LobbyHostModel : LobbyModel {
         } else {
 
             // Update options
-            _ = options.ForEach(x => this.GamemodeOptionDropdown.Items.Add(x));
+            options.ForEach(this.GamemodeOptionDropdown.Items.Add);
 
             // TODO: Set gamemode option that was last selected
             this.GamemodeOptionDropdown.Selected = 0;
-            // Update label
-            this.GamemodeOptionDropdown.LabelContent = this.GamemodeOptionDropdown.Items[0].Title;
 
             // Set visibility to visible
-            this.GamemodeOptionDropdown.Visibility = Visibility.Visible;
+            this.GamemodeSettings.Add(this.GamemodeOptionDropdown);
+
+            // Add aux operations
+            for (int i = 0; i < gamemode.AuxiliaryOptions.Length; i++) {
+
+                // Grab option
+                var custom = gamemode.AuxiliaryOptions[i];
+
+                // Create handler
+                void handler(int _, int __, object v) => this.GamemodeAuxOptionSelectionchanged(custom.Name, v);
+
+                // Grab name and convert it to a direct LocaleValueKey --> Only do this when merging UCS and BGLOC stuff.
+                var name = new LocaleValueKey(custom.Title.ToString().ToUpperInvariant());
+
+                // Create control
+                LobbySetting settingControl = custom.OptionInputType switch {
+                    AuxiliaryOptionType.Dropdown => 
+                        LobbySetting<IGamemodeOption>.NewDropdown(name, new(custom.Options.OrderBy(x => x.Value)), handler, custom.GetNumber("def")),
+                    AuxiliaryOptionType.Slider => 
+                        LobbySetting<int>.NewSlider(name, custom.GetNumber("min"), custom.GetNumber("max"), custom.GetNumber("step"), custom.GetNumber("def"), custom.Format, handler),
+                    _ => throw new Exception()
+                };
+
+                // Trigger a default set
+                this.GamemodeAuxOptionSelectionchanged(custom.Name, custom.GetNumber("def"));
+
+                // Add
+                this.GamemodeSettings.Add(settingControl);
+
+            }
 
         }
 
         // Update lobby
         this.m_handle.SetLobbySetting(LobbyConstants.SETTING_GAMEMODE, this.GamemodeDropdown.Items[newIndex].Name);
 
+        // Update options
+        this.NotifyProperty(nameof(ShowScrollbarForSettings));
+
     }
 
-    private void GamemodeOptionSelectionChanged(int newIndex, int oldIndex) {
+    private void GamemodeAuxOptionSelectionchanged(string option, object v)
+        => this.m_handle.SetLobbySetting(option, v?.ToString() ?? "0");
+
+    private void GamemodeOptionSelectionChanged(int newIndex, int _, object value) {
 
         // Bail
         if (newIndex == -1) {
@@ -337,36 +433,27 @@ public class LobbyHostModel : LobbyModel {
 
     }
 
-    private void WeatherSelectionChanged(int newIndex, int oldIndex) {
+    private void WeatherSelectionChanged(int newIndex, int _, object value) {
 
-        // Update label
-        this.WeatherDropdown.LabelContent = this.WeatherDropdown.Items[newIndex].IsOn.ToString();
-    
         // Update lobby
         this.m_handle.SetLobbySetting(LobbyConstants.SETTING_WEATHER, this.WeatherDropdown.Items[newIndex].IsOn ? "1" : "0");
 
     }
 
-    private void SupplySystemSelectionChanged(int newIndex, int oldIndex) {
-
-        // Update label
-        this.SupplySystemDropdown.LabelContent = this.SupplySystemDropdown.Items[newIndex].IsOn.ToString();
+    private void SupplySystemSelectionChanged(int newIndex, int _, object value) {
 
         // Update lobby
         this.m_handle.SetLobbySetting(LobbyConstants.SETTING_LOGISTICS, this.SupplySystemDropdown.Items[newIndex].IsOn ? "1" : "0");
 
     }
 
-    private void ModPackageSelectionChanged(int newIndex, int oldIndex) {
+    private void ModPackageSelectionChanged(int newIndex, int oldIndex, object value) {
 
         // Set package
         this.m_package = this.ModPackageDropdown.Items[newIndex].ModPackage;
 
-        // Update label
-        this.ModPackageDropdown.LabelContent = this.ModPackageDropdown.Items[newIndex].ModPackage.PackageName;
-
         // Update lobby
-        this.m_handle.SetLobbySetting(LobbyConstants.SETTING_MODPACK, this.ModPackageDropdown.Items[newIndex].ModPackage.ID);
+        this.m_handle.SetLobbySetting(LobbyConstants.SETTING_MODPACK, this.m_package.ID);
 
     }
 
@@ -387,15 +474,19 @@ public class LobbyHostModel : LobbyModel {
 
             // Clear current gamemode selection
             this.GamemodeDropdown.Items.Clear();
-            gamemodes.ForEach(x => this.GamemodeDropdown.Items.Add(x));
+            gamemodes.ForEach(this.GamemodeDropdown.Items.Add);
 
-            // TODO: Set gamemode that was last selected
+            // Set gamemode
             this.GamemodeDropdown.Selected = 0;
 
-            // Update label
-            this.GamemodeDropdown.LabelContent = this.GamemodeDropdown.Items[0].Name;
-
         }
+
+    }
+
+    private void SwapTeamRoles() {
+
+        // Swap roles in handle
+        this.m_handle.SwapTeamRoles();
 
     }
 

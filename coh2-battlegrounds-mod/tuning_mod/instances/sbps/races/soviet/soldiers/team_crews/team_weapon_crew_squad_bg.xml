@@ -16,7 +16,7 @@
 						<icon name="minimap_texture" value="" />
 						<instance_reference name="modal_ability" value="" />
 						<bool name="reveal_for_decryption" value="True" />
-						<locstring name="screen_name" value="11006679" />
+						<locstring name="screen_name" value="79" mod="142b113740474c82a60b0a428bd553d5" />
 						<string name="selection_group" value="rifleman" />
 						<group name="speaker_generic">
 							<string name="code_1" value="gs" />
@@ -50,7 +50,7 @@
 						<icon name="portrait_name_summer" value="Icons_portraits_unit_soviet_conscript_s_portrait" />
 						<float name="minimap_texture_scale" value="1" />
 						<locstring name="brief_text" value="11038704" />
-						<locstring name="screen_name_short" value="11045776" />
+						<locstring name="screen_name_short" value="0" />
 						<enum name="map_rotation_type_override" value="no_override" />
 						<bool name="decoratable" value="True" />
 						<bool name="show_in_build_log" value="True" />
@@ -161,7 +161,7 @@
 		<template_reference name="squadexts" value="sbpextensions\squad_loadout_ext">
 			<list name="unit_list">
 				<group name="loadout_data">
-					<float name="num" value="4" />
+					<float name="num" value="5" />
 					<instance_reference name="type" value="ebps\races\soviet\soldiers\weapon_crew\soviet_weapon_crew_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				</group>
 			</list>

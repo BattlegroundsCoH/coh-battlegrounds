@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Database.Management;
@@ -23,14 +25,19 @@ public enum SquadCategory {
     Infantry,
 
     /// <summary>
-    /// Support weapon/vehicle category (aka team weapon).
+    /// Support weapon/vehicle category (aka team weapon). Also includes support vehicles such as supply trucks.
     /// </summary>
     Support,
 
     /// <summary>
     /// Vehicle category.
     /// </summary>
-    Vehicle
+    Vehicle,
+
+    /// <summary>
+    /// Leader category
+    /// </summary>
+    Leader,
 
 }
 
@@ -58,7 +65,7 @@ public sealed class SquadBlueprint : Blueprint, IUIBlueprint {
     /// <summary>
     /// Get the army the <see cref="SquadBlueprint"/> can be used by.
     /// </summary>
-    public Faction Army { get; }
+    public Faction? Army { get; }
 
     /// <summary>
     /// Get the UI extension.
@@ -151,7 +158,7 @@ public sealed class SquadBlueprint : Blueprint, IUIBlueprint {
     /// <param name="canPickup"></param>
     /// <param name="isTeamWpn"></param>
     /// <param name="femaleChance"></param>
-    public SquadBlueprint(string name, BlueprintUID pbgid, Faction faction,
+    public SquadBlueprint(string name, BlueprintUID pbgid, Faction? faction,
         UIExtension ui, CostExtension cost, LoadoutExtension loadout, VeterancyExtension veterancy,
         string[] types, string[] abilities, string[] upgrades, string[] appliedUpgrades,
         int upgradeCapacity, int slotCapacity, bool canPickup, bool isTeamWpn, bool hasCrew, float femaleChance) {
@@ -189,12 +196,26 @@ public sealed class SquadBlueprint : Blueprint, IUIBlueprint {
             return null;
         }
 
+        // Set faction
+        faction ??= this.Army;
+
+        // Bail if still null
+        if (faction is not Faction f)
+            return null;
+
         // Loop over entities in loadout
         for (int i = 0; i < this.Loadout.Count; i++) {
+            
+            // Get loadout entity and skip if null
             var e = this.Loadout.GetEntity(i);
+            if (e is null)
+                continue;
+
+            // Check for driver extension
             if (e.Drivers is DriverExtension drivers) {
-                return faction is null ? drivers.GetSquad(this.Army) : drivers.GetSquad(faction);
+                return faction is null ? drivers.GetSquad(f) : drivers.GetSquad(faction);
             }
+
         }
 
         // No driver was found
@@ -280,6 +301,8 @@ public sealed class SquadBlueprint : Blueprint, IUIBlueprint {
             return SquadCategory.Support;
         } else if (types.Contains("vehicle")) {
             return SquadCategory.Vehicle;
+        } else if (types.IsCommandUnit) {
+            return SquadCategory.Leader;
         }
         return SquadCategory.Infantry;
     }
@@ -294,16 +317,16 @@ public class SquadBlueprintConverter : JsonConverter<SquadBlueprint> {
     public override SquadBlueprint Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
         Dictionary<string, object> __lookup = new();
         while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
-            string prop = reader.ReadProperty();
+            string prop = reader.ReadProperty() ?? throw new ObjectPropertyNotFoundException();
             __lookup[prop] = prop switch {
                 "SquadCost" => CostExtension.FromJson(ref reader),
                 "Display" => UIExtension.FromJson(ref reader),
                 "Entities" => LoadoutExtension.FromJson(ref reader),
                 "Veterancy" => VeterancyExtension.FromJson(ref reader),
                 "PBGID" => reader.GetUInt64(),
-                "Name" => reader.GetString(),
-                "Army" => reader.GetString(),
-                "ModGUID" => reader.GetString(),
+                "Name" => reader.GetString() ?? string.Empty,
+                "Army" => reader.GetString() ?? string.Empty,
+                "ModGUID" => reader.GetString() ?? string.Empty,
                 "IsSyncWeapon" => reader.GetBoolean(),
                 "Abilities" => reader.GetStringArray(),
                 "Types" => reader.GetStringArray(),
@@ -317,8 +340,8 @@ public class SquadBlueprintConverter : JsonConverter<SquadBlueprint> {
                 _ => throw new NotImplementedException(prop)
             };
         }
-        Faction fac = __lookup.GetCastValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetCastValueOrDefault("Army", "NULL"));
-        ModGuid modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid(__lookup["ModGUID"] as string) : ModGuid.BaseGame;
+        Faction? fac = Faction.TryGetFromName(__lookup.GetCastValueOrDefault("Army", "NULL"));
+        ModGuid modguid = __lookup.ContainsKey("ModGUID") ? ModGuid.FromGuid((string)__lookup["ModGUID"]) : ModGuid.BaseGame;
         BlueprintUID pbgid = new BlueprintUID(__lookup.GetCastValueOrDefault("PBGID", 0ul), modguid);
         return new(__lookup.GetCastValueOrDefault("Name", string.Empty),
             pbgid,
