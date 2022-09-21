@@ -109,14 +109,21 @@ public sealed class ServerConnection : IConnection {
 
     private List<Message>? ReceiveMessages() {
 
+        // Store slice
+        byte[] slice = Array.Empty<byte>();
+        int received = this.m_socket.ReceiveBufferSize;
+
+        // Create list 
+        List<Message> messages = new List<Message>();
+
+        // Try receive
         try {
 
             // Define big buffer list
             List<byte> bigBuffer = new();
 
             // Exhaust incoming data buffer
-            int received = this.m_socket.ReceiveBufferSize;
-            while (received == this.m_socket.ReceiveBufferSize) {
+            while (this.m_socket.Available > 0) {
 
                 // Prepare fresh buffer
                 byte[] buffer = new byte[this.m_socket.ReceiveBufferSize];
@@ -132,11 +139,8 @@ public sealed class ServerConnection : IConnection {
 
             }
 
-            // Create list 
-            List<Message> messages = new List<Message>();
-
             // Start interpreting messages
-            byte[] slice = bigBuffer.ToArray();
+            slice = bigBuffer.ToArray();
             while (slice.Length > 0) {
 
                 // Read next message in data

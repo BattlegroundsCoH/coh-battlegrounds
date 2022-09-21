@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
@@ -114,8 +115,11 @@ public sealed class OnlineLobbyPlanner : ILobbyPlanningHandle {
 
     public ILobbyPlanElement? GetPlanElement(int planElementId) => this.m_remote.Call<JsonPlanElement>("GetPlanElement", planElementId);
 
-    public ILobbyPlanElement[] GetPlanningElements(byte teamIndex)
-        => this.m_remote.Call<JsonPlanElement[]>("GetPlanElements", teamIndex) ?? Array.Empty<JsonPlanElement>();
+    public ILobbyPlanElement[] GetPlanningElements(byte teamIndex) {
+        var result = this.m_remote.Call<JsonPlanElement[]>("GetPlanElements", teamIndex) ?? Array.Empty<JsonPlanElement>();
+        Trace.WriteLine($"Server returned {result.Length} plan elements for tid = {teamIndex}", nameof(OnlineLobbyPlanner));
+        return result;
+    }
 
     public void RemovePlanElement(int planElementId)
         => this.m_remote.Call("RemovePlanElement", planElementId);

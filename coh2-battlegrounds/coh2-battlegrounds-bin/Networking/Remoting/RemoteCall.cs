@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Networking.Communication.Connections;
@@ -55,6 +56,7 @@ internal class RemoteCall<THandle> {
                     }
                     return content;
                 }
+                Trace.WriteLine($"Failed to unmarshal return raw response bytes of length '{response.Raw.Length}'", nameof(RemoteCall<T>));
             }
         }
 
