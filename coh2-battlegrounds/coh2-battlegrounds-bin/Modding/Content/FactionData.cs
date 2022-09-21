@@ -101,11 +101,10 @@ public class FactionData {
         this.TowTransports = TowTransports;
         this.CanHaveGliderInCompanies = CanHaveGliderInCompanies;
         this.CanHaveParadropInCompanies = CanHaveParadropInCompanies;
-        this.Companies = Companies;
         this.TeamWeaponCrew = TeamWeaponCrew;
-
-        // Fixup companies
-        this.Companies.Types.ForEach(x => x.FactionData = this);
+        this.Companies = Companies with { 
+            Types = Companies.Types.ForEach(x => x.FactionData = this) 
+        };
 
     }
 

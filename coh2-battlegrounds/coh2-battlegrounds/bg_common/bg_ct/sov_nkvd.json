@@ -33,7 +33,7 @@
   ],
   "CostModifiers": {
     "penal_battalion_bg": {
-      "Manpower": 20
+      "Manpower": -60
     }
   },
   "Phases": {
@@ -61,13 +61,13 @@
         "penal_battalion_bg",
         "combat_engineer_squad_bg",
         "tank_buster_bg",
-        "nkvd_squad_bg",
         "t_34_76_squad_bg",
         "t_34_85_squad_bg",
         "t-70m_bg",
         "valentine_lend_lease_bg",
         "valentine_lend_lease_command_bg",
-        "m1937_152mm_ml_20_artillery_bg"
+        "m1937_152mm_ml_20_artillery_bg",
+        "zis_6_supply_truck_bg"
       ]
     },
     "PhaseC": {
@@ -86,8 +86,7 @@
       "Unlocks": [
         "kv-1_bg",
         "su-85_bg",
-        "katyusha_rocket_truck_bg",
-        "zis_6_supply_truck_bg"
+        "katyusha_rocket_truck_bg"
       ]
     }
   },

@@ -363,4 +363,6 @@ public class FactionCompanyType : IChecksumElement {
 
     internal void ChangeId(string id) => this.m_typeId = id;
 
+    public override string ToString() => this.m_typeId;
+
 }

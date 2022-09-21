@@ -11,6 +11,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Modding.Content.Companies;
+using Battlegrounds.Modding.Verifier;
 
 namespace Battlegrounds.Modding.Loaders;
 
@@ -89,7 +90,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
         package.FactionSettings.Values.ForEach(x => {
             x.Package = package;
             x.Companies = x.Companies with {
-                Types = x.Companies.Types.Map(LoadCompanyTypeFromSource)
+                Types = x.Companies.Types.Map(LoadCompanyTypeFromSource).Filter(CompanyTypeWarnings.CheckCompanyType, CompanyTypeState.Valid)
             };
         });
 
@@ -121,6 +122,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
                 if (JsonSerializer.Deserialize<FactionCompanyType>(fs) is FactionCompanyType fct) {
                     Trace.WriteLine(logstr, nameof(ModPackageLoader));
                     fct.ChangeId(original.Id);
+                    fct.FactionData = original.FactionData;
                     return fct;
                 }
             } catch (Exception ex) {
