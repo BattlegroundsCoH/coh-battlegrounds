@@ -49,7 +49,7 @@
             HorizontalAlignment="Right"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
-            Content="Return To Lobby"
+            Content="{Binding ReturnLobbyText, FallbackValue='Return To Lobby'}"
             Command="{Binding ReturnLobbyCommand}"
             Background="{StaticResource BackgroundDeepRedBrush}"
             Foreground="#FFFFFF"
@@ -203,7 +203,8 @@
                     Height="512"
                     x:Name="PlanningCanvas"
                     MouseLeftButtonUp="PlanningCanvas_MouseLeftButtonUp"
-                    MouseMove="PlanningCanvas_MouseMove">
+                    MouseMove="PlanningCanvas_MouseMove"
+                    SizeChanged="PlanningCanvas_SizeChanged">
                     <Rectangle
                         Width="512"
                         Height="512"
@@ -399,9 +400,9 @@
             HorizontalAlignment="Right"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
-            Content="{Binding StartMatchButton.Title}"
+            Content="{Binding StartLobbyText, FallbackValue='Start Match'}"
             ToolTip="{Binding StartMatchButton.Tooltip}"
-            IsEnabled="{Binding StartMatchButton.IsEnabled}"
+            IsEnabled="{Binding CanStart}"
             Command="{Binding BeginMatchCommand}"
             Background="{StaticResource BackgroundLightBlueBrush}"
             Foreground="#FFFFFF"

@@ -25,7 +25,9 @@ function Battlegrounds_CheckPlayerValidity(player)
     else
 
         local refID = BGAI_GetAIPlayerID(player);
-        tableCheck = _bg_aiData[refID].company.units;
+        if _bg_aiData[refID] ~= nil then
+            tableCheck = _bg_aiData[refID].company.units;
+        end
 
     end
 

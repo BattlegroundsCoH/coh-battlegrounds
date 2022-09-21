@@ -137,7 +137,7 @@ public class SessionCompiler : ISessionCompiler {
                 ["uid"] = player.PlayerIngameIndex
             };
             if (player.Difficulty is AIDifficulty.Human) {
-                data["steam_index"] = player.GetID().ToString(); // Store as string (Not sure Lua can handle steam ids, 64-bit unsigned integers)
+                data["steam_index"] = player.GetId().ToString(); // Store as string (Not sure Lua can handle steam ids, 64-bit unsigned integers)
             }
             result.Add(data);
         }

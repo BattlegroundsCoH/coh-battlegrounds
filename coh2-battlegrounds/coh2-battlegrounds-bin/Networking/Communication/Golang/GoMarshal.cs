@@ -39,6 +39,13 @@ public static class GoMarshal {
     /// <exception cref="NotSupportedException"/>
     /// <exception cref="JsonException"/>
     public static T? JsonUnmarshal<T>(byte[] input) {
+        if (input.Length is 0) {
+            return default;
+        }
+        if (input[0] is 0) {
+            File.WriteAllBytes("errpackage.json.dat", input);
+            Trace.WriteLine("Halting unmarshal process before attempt to parse opening '0x0' byte.", "Networking.json");
+        }
         try {
             return JsonSerializer.Deserialize<T>(input);
         } catch (Exception e) {
@@ -63,7 +70,7 @@ public static class GoMarshal {
             ulong target = BitConverter.ToUInt64(span[5..13]);
             ulong sender = BitConverter.ToUInt64(span[13..21]);
             ushort len = BitConverter.ToUInt16(span[21..23]);
-            byte[] content = input[23..(23 + len)];
+            byte[] content = len == 0 ? Array.Empty<byte>() : input[23..(23 + len)];
             remaining = input[(23 + len)..];
             return new Message() {
                 CID = cid,
@@ -78,4 +85,3 @@ public static class GoMarshal {
     }
 
 }
-

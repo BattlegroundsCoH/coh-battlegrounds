@@ -214,6 +214,9 @@ public class LobbyChatSpectatorModel : ViewModelBase {
             // Create full message
             var fullMessage = $"[System] {message}";
 
+            // Also log this in the log file (for debuggning, in case the user miss this visually or for some reason cannot see it)
+            Trace.WriteLine(fullMessage, nameof(SystemMessage));
+
             // Create paragraph to append
             Paragraph p = new() {
                 Margin = new(0)

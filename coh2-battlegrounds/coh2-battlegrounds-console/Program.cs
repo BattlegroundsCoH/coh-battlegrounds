@@ -30,6 +30,8 @@ using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Networking;
 using Battlegrounds.Verification;
 
+using Renci.SshNet;
+
 namespace coh2_battlegrounds_console;
 
 class Program {
@@ -765,6 +767,80 @@ class Program {
 
     }
 
+    class SSHCmd : Command {
+
+        public SSHCmd() : base("ssh", "The program will enter into a SSH mode to the remote server") { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            Console.Clear();
+            Console.WriteLine("====== Entering SSH Mode ======");
+            Console.Write("Username: ");
+            string? username = Console.ReadLine();
+
+            // Bail if username is not vlaid
+            if (string.IsNullOrEmpty(username)) {
+                Console.WriteLine("Username not valid");
+                return;
+            }
+
+            // Read password
+            Console.Write("Password: ");
+            string? passwrd = Console.ReadLine();
+
+            // Bail if username is not vlaid
+            if (string.IsNullOrEmpty(passwrd)) {
+                Console.WriteLine("Password not valid");
+                return;
+            }
+
+            // Create info
+            var info = new ConnectionInfo("194.37.80.249", username, new PasswordAuthenticationMethod(username, passwrd));
+
+            using var client = new SshClient(info);
+
+            try {
+
+                // Try connect
+                client.Connect();
+
+                // Run while asked
+                bool runClient = true;
+                while (runClient) {
+
+                    string? cmd = Console.ReadLine();
+                    if (string.IsNullOrEmpty(cmd)) {
+                        continue;
+                    }
+
+                    switch (cmd) {
+                        case "exit":
+                            runClient = false;
+                            break;
+                        case "@script":
+                            break;
+                        default:
+
+                            // Run command and write out result
+                            var result = client.RunCommand(cmd);
+                            Console.WriteLine(result.Result);
+
+                            break;
+                    }
+
+                }
+
+                // Disconnect
+                client.Disconnect();
+
+            } catch (Exception e) {
+                Console.WriteLine(e);
+            }
+
+        }
+
+    }
+
     class Repl : Command {
 
         public Repl() : base("repl", "The program will enter a repl mode and allow for various inputs.") { }
@@ -826,6 +902,7 @@ class Program {
         flags.RegisterCommand<Echo>();
         flags.RegisterCommand<Repl>();
 #if DEBUG
+        flags.RegisterCommand<SSHCmd>();
         flags.RegisterCommand<Update>();
         flags.RegisterCommand<CreateInstaller>();
         flags.RegisterCommand<ExecutableFirewall>();

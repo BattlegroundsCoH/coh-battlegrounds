@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Media;
@@ -27,6 +28,8 @@ public class LobbyPlanningContextHandler {
     private readonly ILobbyPlanningHandle m_handle;
     private readonly Scenario m_scenario;
     private PlacementCase? m_currentPlacement;
+
+    public Size MinimapRenderSize { get; set; }
 
     public bool HasPlaceElement {
         get => this.m_currentPlacement is not null;
@@ -84,6 +87,9 @@ public class LobbyPlanningContextHandler {
         // Init fields
         this.m_objectiveElements = new();
 
+        // Init base case
+        this.MinimapRenderSize = new Size(512, 512);
+
     }
 
     public void PickPlaceElement(EntityBlueprint ebp, FactionDefence defence) {
@@ -112,8 +118,8 @@ public class LobbyPlanningContextHandler {
         var self = this.m_handle.Handle.Self.ID;
 
         // Translate points
-        GamePosition spawn = this.m_scenario.FromMinimapPosition(mmSize.Width, mmSize.Height, point.X, mmSize.Height - point.Y);
-        GamePosition? lookat = other is null ? null : this.m_scenario.FromMinimapPosition(mmSize.Width, mmSize.Height, other.Value.X, mmSize.Height - other.Value.Y);
+        GamePosition spawn = this.m_scenario.FromMinimapPosition(mmSize.Width, mmSize.Height, point.X, point.Y);
+        GamePosition? lookat = other is null ? null : this.m_scenario.FromMinimapPosition(mmSize.Width, mmSize.Height, other.Value.X, other.Value.Y);
 
         // Define placed index
         int i = -1;
@@ -124,17 +130,25 @@ public class LobbyPlanningContextHandler {
             // Grab index
             i = this.m_handle.CreatePlanningStructure(self, ep.Ebp.Name, ep.Def.IsDirectional, spawn, lookat);
 
+            // Add planning structure
             this.Elements.Add(new(i, self, ep.Ebp, point, other, ep.Def.IsLinePlacement));
             this.m_currentPlacement = null;
 
         } else if (this.m_currentPlacement is SquadPlacement sp) {
 
-            this.PreplacableUnits.Pick(x => x.CompanyId == this.PlaceElementSquadId);
+            // Pick
+            var poolItem = this.PreplacableUnits.Find(x => x.CompanyId == this.PlaceElementSquadId);
+            if (poolItem is null)
+                return -1;
+
+            // Pick
+            this.PreplacableUnits.Pick(poolItem);
 
             // Grab index
             i = this.m_handle.CreatePlanningSquad(self, sp.Sbp.Name, this.PlaceElementSquadId, spawn, lookat);
 
-            this.Elements.Add(new(i, self, sp.Sbp, point, other));
+            // Add squad placement
+            this.Elements.Add(new(i, self, sp.Sbp, point, other, companyId: sp.Cid) { ClientTag = poolItem });
             this.m_currentPlacement = null;
 
         } else if (this.m_currentPlacement is ObjectivePlacement op) {
@@ -158,56 +172,67 @@ public class LobbyPlanningContextHandler {
     }
 
     public void RemoveElement(int elemId) {
+        
+        // Remove visual
         this.RemoveElementVisuals(elemId);
+
+        // Remove from handler
         this.m_handle.RemovePlanElement(elemId);
+        
+        // Log
+        Trace.WriteLine($"Removing plan element {elemId}", nameof(LobbyPlanningContextHandler));
+
+        // Correct object order
         if (this.m_objectiveElements.IndexOf(elemId) is int i && i >= 0) {
             this.m_objectiveElements.RemoveAt(i);
             for (int j = i; j < this.m_objectiveElements.Count; j++) {
                 this.m_handle.GetPlanElement(this.m_objectiveElements[j])?.SetObjectiveOrder(j);
             }
         }
+
     }
 
     public void RemoveElementVisuals(int elemId) {
+        
         for (int i = 0; i < this.Elements.Count; i++) {
             if (this.Elements[i].ObjectId == elemId) {
                 this.Elements.RemoveAt(i);
                 break;
             }
         }
+
     }
 
-    public void AddElementVisuals(ILobbyPlanElement planElement) {
+    public void AddElementVisuals(Size mmSize, ILobbyPlanElement planElement) {
 
+        // extract 'spawn' position
+        var spawn = this.m_scenario.ToMinimapPosition(mmSize.Width, mmSize.Height, planElement.SpawnPosition).ToPoint();
+        Point? lookat = planElement.LookatPosition is GamePosition p ? this.m_scenario.ToMinimapPosition(mmSize.Width, mmSize.Height, p).ToPoint() : null;
+
+        // Determine placement type and add
         if (planElement.ObjectiveType is not PlanningObjectiveType.None) {
 
-            // objective
-            var spawn = this.m_scenario.ToMinimapPosition(768, 768, planElement.SpawnPosition);
-
             // Add element
-            this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, spawn.ToPoint(), planElement.ObjectiveType, planElement.ObjectiveOrder));
+            this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, spawn, planElement.ObjectiveType, planElement.ObjectiveOrder));
 
         } else if (planElement.IsEntity) {
             
             // entity
             var ebp = BlueprintManager.FromBlueprintName<EntityBlueprint>(planElement.Blueprint);
-            var spawn = this.m_scenario.ToMinimapPosition(768, 768, planElement.SpawnPosition);
-            Point? lookat = planElement.LookatPosition is GamePosition p ? this.m_scenario.ToMinimapPosition(768, 768, p).ToPoint() : null;
         
             // Add element
-            this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, ebp, spawn.ToPoint(), lookat));
+            this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, ebp, spawn, lookat, !planElement.IsDirectional));
         
         } else {
             
             // squad
             var sbp = BlueprintManager.FromBlueprintName<SquadBlueprint>(planElement.Blueprint);
-            var spawn = this.m_scenario.ToMinimapPosition(768, 768, planElement.SpawnPosition);
-            Point? lookat = planElement.LookatPosition is GamePosition p ? this.m_scenario.ToMinimapPosition(768, 768, p).ToPoint() : null;
             
             // Add element
-            this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, sbp, spawn.ToPoint(), lookat));
+            this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, sbp, spawn, lookat, companyId: planElement.CompanyId));
 
         }
+
     }
 
 }

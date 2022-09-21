@@ -169,9 +169,19 @@ public sealed class ServerConnection : IConnection {
 
             // If null; connection was lost to server
             if (messages is null) {
-                this.OnConnectionLost?.Invoke(true);
-                this.m_listen = false;
-                return;
+                try {
+                    if (!this.m_socket.Connected) {
+                        this.OnConnectionLost?.Invoke(true);
+                        this.m_listen = false;
+                        return;
+                    }
+                } catch (Exception e) {
+                    Trace.WriteLine(e, nameof(ServerConnection));
+                    this.OnConnectionLost?.Invoke(true);
+                    this.m_listen = false;
+                    return;
+                }
+                continue;
             }
 
             // Get lock

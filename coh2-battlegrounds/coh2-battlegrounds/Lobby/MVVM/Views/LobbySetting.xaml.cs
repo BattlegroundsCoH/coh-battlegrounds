@@ -3,13 +3,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-using Battlegrounds;
-
 using StringOrKey = Battlegrounds.Functional.Either<string, Battlegrounds.Locale.LocaleKey>;
 
 namespace BattlegroundsApp.Lobby.MVVM.Views;
 
-public delegate void SettingChanged(int newIndex, int oldIndex);
+public delegate void SettingChanged(int newIndex, int oldIndex, object value);
 
 /// <summary>
 /// Interaction logic for LobbySetting.xaml
@@ -28,7 +26,7 @@ public partial class LobbySetting : UserControl {
 
     public string Format {
         get;
-        private set;
+        set;
     }
 
     public SettingChanged? UpdateIndex { get; set; }
@@ -51,10 +49,10 @@ public partial class LobbySetting : UserControl {
     }
 
     private void DropdownOptions_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-        this.UpdateIndex?.Invoke(this.Selected, -1);
+        this.UpdateIndex?.Invoke(this.Selected, -1, this.Selected);
     }
 
-    public void ShowSlider(int min, int max, int step, string format) {
+    public void ShowSlider(int min, int max, int val, int step, string format) {
 
         // Set visibilities
         this.DropdownOptions.Visibility = Visibility.Collapsed;
@@ -64,6 +62,7 @@ public partial class LobbySetting : UserControl {
         // Set slider
         this.SliderValue.Minimum = min;
         this.SliderValue.Maximum = max;
+        this.SliderValue.Value = val;
         this.SliderValue.TickFrequency = step;
         this.SliderValue.TickPlacement = TickPlacement.None;
 
@@ -82,6 +81,10 @@ public partial class LobbySetting : UserControl {
         this.SliderContainer.Visibility = Visibility.Collapsed;
         this.ParticipantValue.Visibility = Visibility.Visible;
 
+        // Show formatted value
+        if (!string.IsNullOrEmpty(this.Format)) {
+            this.Label = string.Format(this.Format, this.Label);
+        }
 
     }
 
@@ -91,7 +94,7 @@ public partial class LobbySetting : UserControl {
         int num = (int)e.NewValue;
 
         // Report value
-        this.UpdateIndex?.Invoke(num, -1);
+        this.UpdateIndex?.Invoke(num, -1, this.SliderValue.Value);
         
         // Update text value
         this.SliderTextValue.Content = string.Format(this.Format, num);
@@ -123,17 +126,21 @@ public class LobbySetting<T> : LobbySetting {
         return setting;
     }
 
-    public static LobbySetting<T> NewSlider(StringOrKey settingName, int min, int max, int step, string format, SettingChanged? changedCallback = null) {
+    public static LobbySetting<T> NewSlider(StringOrKey settingName, int min, int max, int step, int def, string format, SettingChanged? changedCallback = null) {
         var setting = new LobbySetting<T>() {
-            UpdateIndex = changedCallback
+            UpdateIndex = changedCallback,
         };
         setting.SettingName.LocKey = settingName;
-        setting.ShowSlider(min, max, step, format);
+        setting.ShowSlider(min, max, def, step, format);
         return setting;
     }
 
-    public static LobbySetting<T> NewValue(StringOrKey settingName, string value) {
-        var setting = new LobbySetting<T>();
+    public static LobbySetting<T> NewValue(StringOrKey settingName, string value, object? tag = null, string format = "") {
+        var setting = new LobbySetting<T>() {
+            Tag = tag,
+            Label = value,
+            Format = format
+        };
         setting.SettingName.LocKey = settingName;
         setting.ShowValue();
         return setting;

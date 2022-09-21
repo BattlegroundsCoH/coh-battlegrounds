@@ -237,6 +237,7 @@ english:
  DashboardView_Title: "Dashboard"
  DashboardView_Statistics: "Statistics"
  DashboardView_MostPlayedCompany: "Most Played Company"
+ DashboardView_Misc: "Other"
  STARTUP_BEGIN: "Auto-Detect"
  STARTUP_CONTINUE: "Continue"
  STARTUP_MESSAGE: ""

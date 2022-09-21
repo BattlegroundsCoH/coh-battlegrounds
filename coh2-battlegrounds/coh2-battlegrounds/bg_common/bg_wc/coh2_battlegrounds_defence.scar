@@ -46,6 +46,10 @@ function BattlegroundsDefence_InitGamemode()
 			if player == Game_GetLocalPlayer() then
 				DefenceSettingsData.IsLocalDefender = true
 			end
+			local defenderData = BG_GetPlayerData(player);
+			if defenderData ~= nil then
+				defenderData.deploy_initials = false;
+			end
 		end
 	end
 
@@ -209,11 +213,11 @@ function BattlegroundsDefence_UpdatePoints()
 end
 
 function BattlegroundsDefence_SetTickers(attackers, defenders)
-	if DefenceSettingsData.IsLocalDefender then
+	--if DefenceSettingsData.IsLocalDefender then
 		WinWarning_SetTickers(defenders, attackers)
-	else
-		WinWarning_SetTickers(attackers, defenders)
-	end
+	--else
+		--WinWarning_SetTickers(attackers, defenders)
+	--end
 end
 
 function BattlegroundsDefence_CheckTime()
@@ -299,8 +303,6 @@ function BattlegroundsDefence_InitDefence()
 		squad.pos = World_GetNearestInteractablePoint(World_Pos(squad.pos.x, squad.pos.y, squad.pos.z))
 		if squad.target ~= nil then
 			squad.target = World_GetNearestInteractablePoint(World_Pos(squad.target.x, squad.target.y, squad.target.z))
-		else
-			squad.target = Player_GetNearestMapEntry(Player_FindFirstEnemyPlayer(owner), squad.pos)
 		end
 
 		-- Check if valid spawn point
@@ -724,6 +726,9 @@ function BattlegroundsDefence_CheckObjectives()
 end
 
 function BattlegroundsDefence_TriggerDefender(obj, func)
+	if func == nil then
+		return -- Bail if nil (Nothing to call)
+	end
 	for _, player in pairs(DefenceSettingsData.Defenders) do
 		if player == Game_GetLocalPlayer() then
 			func(obj)
