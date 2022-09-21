@@ -42,9 +42,6 @@
     }
   ],
   "CostModifiers": {
-    "penal_battalion_bg": {
-      "Manpower": 20
-    }
   },
   "Phases": {
     "PhaseA": {
