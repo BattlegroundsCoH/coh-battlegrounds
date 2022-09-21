@@ -249,7 +249,7 @@
                             <!-- Wehrmacht Games -->
                             <InlineUIContainer>
                                 <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
-                                    <TextBlock Text="Wehrmacht Games:" />
+                                    <TextBlock Text="Wehrmacht Games Played:" />
                                     <TextBlock Text="{Binding WehrmachtGames, FallbackValue='N/A'}"
                                                TextAlignment="Right" 
                                                Margin="0, 0, 8, 0" />
@@ -259,7 +259,7 @@
                             <!-- Soviet Games -->
                             <InlineUIContainer>
                                 <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
-                                    <TextBlock Text="Soviet Games:" />
+                                    <TextBlock Text="Soviet Games Played:" />
                                     <TextBlock Text="{Binding SovietGames, FallbackValue='N/A'}"
                                                TextAlignment="Right" 
                                                Margin="0, 0, 8, 0" />
@@ -269,7 +269,7 @@
                             <!-- USF Games -->
                             <InlineUIContainer>
                                 <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
-                                    <TextBlock Text="USF Games:" />
+                                    <TextBlock Text="USF Games Played:" />
                                     <TextBlock Text="{Binding USFGames, FallbackValue='N/A'}"
                                                TextAlignment="Right" 
                                                Margin="0, 0, 8, 0" />
@@ -279,7 +279,7 @@
                             <!-- UKF Games -->
                             <InlineUIContainer>
                                 <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
-                                    <TextBlock Text="UKF Games:" />
+                                    <TextBlock Text="UKF Games Played:" />
                                     <TextBlock Text="{Binding UKFGames, FallbackValue='N/A'}"
                                                TextAlignment="Right" 
                                                Margin="0, 0, 8, 0" />
@@ -289,14 +289,42 @@
                             <!-- OKW Games -->
                             <InlineUIContainer>
                                 <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
-                                    <TextBlock Text="OKW Games:" />
+                                    <TextBlock Text="OKW Games Played:" />
                                     <TextBlock Text="{Binding OKWGames, FallbackValue='N/A'}"
                                                TextAlignment="Right" 
                                                Margin="0, 0, 8, 0" />
                                 </Grid>
                             </InlineUIContainer>
 
-
+                            <!-- Total Games -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="Total Games Played:" />
+                                    <TextBlock Text="{Binding TotalGamesPlayed, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
+                            
+                            <!-- Favorite Gamemode -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="Most Played Gamemode:" />
+                                    <TextBlock Text="{Binding MostPlayedGamemode, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
+                            
+                            <!-- Favorite Map -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="Most Played Map:" />
+                                    <TextBlock Text="{Binding MostPlayedMap, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
 
                         </TextBlock>
 
