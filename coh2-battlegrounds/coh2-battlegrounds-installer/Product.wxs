@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	
-	<!-- Give product a unique ID per platform -->
-	<!-- DO NOT CHANGE THE GUID -->
-	<?if $(var.Platform) = x64 ?>
-	<?define ProductCode = "{29119749-CAA0-4DED-86D9-690A8C677299}" ?>
-	<?else?>
-	<?define ProductCode = "{60F0DA7D-C2F4-4C40-8E46-34198CBF1CC3}" ?>
-	<?endif?>
-	
 	<!-- Fixed upgrade Id -->
 	<!-- DO NOT CHANGE THE GUID -->
 	<?define UpgradeCode = "{28C10320-3E7C-44D4-8A18-FD90035A4689}" ?>
@@ -16,10 +8,8 @@
 	<!-- Website to a support platform -->
 	<?define SupportLink = "https://discord.gg/Hr7yTbSv25" ?>
 	
-	<?define BuildVersion = 1.0.0.0 ?>
-	
 	<!-- Define main product -->
-	<Product Id="$(var.ProductCode)" 
+	<Product Id="*" 
 			 Name="!(loc.ProductName_$(var.Platform))" 
 			 Language="!(loc.Language)" 
 			 Version="$(var.BuildVersion)" 
@@ -38,7 +28,7 @@
 				 Languages="!(loc.Language)" />
 		
 		<!-- Downgrade error message -->
-		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" />
+		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" Schedule="afterInstallValidate"/>
 		
 		<!-- Include .cab file into .msi file -->
 		<MediaTemplate EmbedCab="yes" />
@@ -53,7 +43,21 @@
 		<Property Id="ARPURLINFOABOUT">$(var.SupportLink)</Property>
 	
 		<!-- Create a basic UI for the installer -->
-		<UIRef Id="WixUI_Minimal"/>
+		<UI>
+			<UIRef Id="WixUI_InstallDir"/>
+			<Publish Dialog="ExitDialog"
+					 Control="Finish"
+					 Event="DoAction"
+					 Value="LaunchApplication">
+				WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed
+			</Publish>
+		</UI>
+		
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="!(loc.LaunchApp)" />
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+
+		<Property Id="WixShellExecTarget" Value="[INSTALLFOLDER]coh2-battlegrounds.exe" />
+		<CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
 		<!--
 		<WixVariable Id="WixUIDialogBmp" Value="$(var.ProjectDir)\Assets\Background.bmp" />
 		<WixVariable Id="WixUIBannerBmp" Value="$(var.ProjectDir)\Assets\Banner.bmp" />
@@ -64,6 +68,7 @@
 		<Feature Id="ProductFeature" Title="Battlegrounds" Level="1">
 			
 			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentGroupRef Id="PublishedComponents" />
 		
 		</Feature>
 		

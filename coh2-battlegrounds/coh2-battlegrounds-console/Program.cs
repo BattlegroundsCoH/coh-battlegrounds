@@ -6,7 +6,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -196,6 +199,112 @@ class Program {
 
     }
 
+    class CreateInstaller : Command {
+
+        const string msbuild_path = @"C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin";
+
+        public static readonly Argument<string> PLATFORM = new Argument<string>("-p", "Specifies the build platform", "x64");
+
+        public CreateInstaller() : base("create-installer", "Creates a .msi file", PLATFORM) { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            string platform = argumentList.GetValue(PLATFORM);
+            if (platform != "x64" && platform != "x86") {
+                Console.WriteLine("Invalid platform");
+                return;
+            }
+
+            string workdir = Path.GetFullPath("..\\..\\..\\..\\");
+
+            // Create publish files 
+            ProcessStartInfo createPublishFiles = new ProcessStartInfo() {
+                UseShellExecute = false,
+                FileName = Path.Combine(workdir, "coh2-battlegrounds-console\\bin\\Debug\\net6.0\\coh2-battlegrounds-console.exe"),
+                Arguments = $"mki -p {platform} -dz",
+                WorkingDirectory = Path.Combine(workdir, "coh2-battlegrounds-console\\bin\\Debug\\net6.0\\"),
+            };
+
+            Process? createPublishFilesProcess = Process.Start(createPublishFiles);
+            if (createPublishFilesProcess is null) {
+                Console.WriteLine($"Failed to create coh2-battlegrounds-console.exe mki -p {platform} -dz process");
+                return;
+            }
+
+            createPublishFilesProcess!.WaitForExit();
+
+            if (!CompileProject("coh2-battlegrounds-installer.wixproj", Path.Combine(workdir, "coh2-battlegrounds-installer"), platform)) {
+                return;
+            }
+
+        }
+
+        private bool CompileProject(string project, string projectDir, string platform) {
+
+            // Firstly we trigger MSBuild.exe on our solution file
+            ProcessStartInfo msbuild_bin = new ProcessStartInfo() {
+                UseShellExecute = false,
+                FileName = $"{msbuild_path}\\MSBuild.exe",
+                Arguments = $"{project} -property:Configuration=Release -property:Platform={platform}",
+                WorkingDirectory = projectDir,
+            };
+
+            // Trigger compile
+            Process? binbuilder = Process.Start(msbuild_bin);
+            if (binbuilder is null) {
+                Console.WriteLine("Failed to create MS build process");
+                return false;
+            }
+
+            // Grab io
+            binbuilder.OutputDataReceived += (s, e) => {
+                Console.WriteLine($"msbuild: {e.Data}");
+            };
+            binbuilder.ErrorDataReceived += (s, e) => {
+                Console.WriteLine($"error: {e.Data}");
+            };
+
+            // Wait for exit
+            binbuilder.WaitForExit();
+
+            // Return OK
+            return true;
+
+        }
+
+    }
+
+    class ExecutableFirewall : Command {
+
+        public ExecutableFirewall() : base("add-firewallexeption", "Adds FirewallExceptio to executable") { }
+
+        public override void Execute(CommandArgumentList argumentList) {
+
+            string workdir = Path.GetFullPath("..\\..\\..\\..\\");
+
+            string oldHeader = "<Wix xmlns=\"http://schemas.microsoft.com/wix/2006/wi\">";
+            string newHeader = "<Wix xmlns=\"http://schemas.microsoft.com/wix/2006/wi\" xmlns:fire=\"http://schemas.microsoft.com/wix/FirewallExtension\">";
+
+            string oldComponent = "<File Id=\"filC3836236C73ECA8506FB24920C9B8D22\" KeyPath=\"yes\" Source=\"$(var.BasePath)\\coh2-battlegrounds.exe\" />";
+            string newComponent = "<File Id=\"filC3836236C73ECA8506FB24920C9B8D22\" KeyPath=\"yes\" Source=\"$(var.BasePath)\\coh2-battlegrounds.exe\"><fire:FirewallException Id=\"ExeFirewall\" Name=\"!(loc.ProductNameFolder)\" Port=\"11000\" Protocol=\"tcp\" Profile=\"public\" Scope=\"any\"/></File>";
+
+            string file = Path.Combine(workdir, "coh2-battlegrounds-installer\\ComponentsGen.wxs");
+
+            StreamReader reader = new(file);
+            string content = reader.ReadToEnd();
+            reader.Close();
+
+            content = content.Replace(oldHeader, newHeader);
+            content = content.Replace(oldComponent, newComponent);
+
+            StreamWriter writer = new(file);
+            writer.Write(content);
+            writer.Close();
+
+        }
+
+    }
+
     class Update : Command {
         
         public static readonly string ChecksumPath = Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\checksum.txt");
@@ -207,18 +316,27 @@ class Program {
         public static readonly Argument<string> TOOL = 
             new Argument<string>("-t", "Specifies the full path to the tools folder", @"C:\Program Files (x86)\Steam\steamapps\common\Company of Heroes 2 Tools");
 
-        public Update() : base("update", "Will update specified elements of the source build.", TARGET, MOD, TOOL) { }
+        public static readonly Argument<string> PLATFORM = new Argument<string>("-p", "Specifies build platform", "x64");
+
+        public Update() : base("update", "Will update specified elements of the source build.", PLATFORM, TARGET, MOD, TOOL) { }
 
         private ConsoleColor m_col;
 
         public override void Execute(CommandArgumentList argumentList) {
+            // Flag to set the build platform
+            string platform = argumentList.GetValue(PLATFORM);
+            if (platform != "x64" && platform != "x86") {
+                Console.WriteLine("Invalid platform");
+                return;
+            }
+
             this.m_col = Console.ForegroundColor;
             switch (argumentList.GetValue(TARGET)) {
                 case "db":
                     this.UpdateDatabase(argumentList);
                     break;
                 case "checksum":
-                    ComputeChecksum();
+                    ComputeChecksum(platform);
                     break;
                 default:
                     Console.WriteLine("Undefined update target.");
@@ -240,7 +358,7 @@ class Program {
             string mod = args.GetValue(MOD);
 
             // Get path to xaml to json tool
-            string xmlreader = Path.GetFullPath("..\\..\\..\\..\\..\\db-tool\\bin\\debug\\net5.0\\CoH2XML2JSON.exe");
+            string xmlreader = Path.GetFullPath("..\\..\\..\\..\\..\\db-tool\\bin\\debug\\net6.0\\CoH2XML2JSON.exe");
 
             // Verify
             if (!File.Exists(xmlreader)) {
@@ -295,10 +413,10 @@ class Program {
 
         }
 
-        internal static void ComputeChecksum() {
+        internal static void ComputeChecksum(string platform) {
 
             // Get path to release build
-            string releaseExe = Path.GetFullPath("..\\..\\..\\..\\coh2-battlegrounds\\bin\\Release\\net6.0-windows\\coh2-battlegrounds.exe");
+            string releaseExe = Path.GetFullPath($"..\\..\\..\\..\\coh2-battlegrounds\\bin\\Release\\net6.0-windows\\win-{platform}\\publish\\coh2-battlegrounds.exe");
 
             // Log
             Console.WriteLine($"Checksum file: {ChecksumPath}");
@@ -353,22 +471,34 @@ class Program {
 
     }
 
-    class CreateInstaller : Command {
+    class CreateInstallFiles : Command {
 
-        const string msbuild_path = @"C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin";
+        const string dotnet_path = @"C:\Program Files\dotnet";
 
         public static readonly Argument<bool> SKIP_COMPILE = new Argument<bool>("-c", "Skip compilation (must be handled by user then)", false);
+        public static readonly Argument<bool> DONT_ZIP = new Argument<bool>("-dz", "Don't zip the file", false);
+        public static readonly Argument<string> PLATFORM = new Argument<string>("-p", "Specifies the build platform", "x64");
 
-        public CreateInstaller() : base("mki", "Makes an installer file (Zips the release build folder).", SKIP_COMPILE) { }
+        public CreateInstallFiles() : base("mki", "Makes an installer file (Zips the release build folder).", PLATFORM, SKIP_COMPILE, DONT_ZIP) { }
 
         public override void Execute(CommandArgumentList argumentList) {
 
             // Flag to check if compilation should be skipped
             bool skipFlag = argumentList.GetValue(SKIP_COMPILE);
 
+            // Flag to check if we should zip
+            bool zipFlag = argumentList.GetValue(DONT_ZIP);
+
+            // Flag to set the build platform
+            string platform = argumentList.GetValue(PLATFORM);
+            if (platform != "x64" && platform != "x86") {
+                Console.WriteLine("Invalid platform");
+                return;
+            }
+
             // Make sure msbuild exists
-            if (!File.Exists(msbuild_path + "\\msbuild.exe")) {
-                Console.WriteLine("Failed to locate msbuild.exe");
+            if (!File.Exists(dotnet_path + "\\dotnet.exe")) {
+                Console.WriteLine("Failed to locate dotnet.exe");
                 Console.WriteLine("Create install data file anyways (y/n)?");
                 if (Console.Read() is (int)'Y' or (int)'y') {
                     skipFlag = true;
@@ -384,61 +514,79 @@ class Program {
             if (!skipFlag) {
 
                 // Compile aux library and bail if failure
-                if (!CompileProject("coh2-battlegrounds-bin.csproj", Path.Combine(workdir, "coh2-battlegrounds-bin"))) {
+                if (!CompileProject("coh2-battlegrounds-bin.csproj", Path.Combine(workdir, "coh2-battlegrounds-bin"), platform)) {
                     return;
                 }
 
                 // Compile main app
-                if (!CompileProject("coh2-battlegrounds.csproj", Path.Combine(workdir, "coh2-battlegrounds"))) {
+                if (!CompileProject("coh2-battlegrounds.csproj", Path.Combine(workdir, "coh2-battlegrounds"), platform)) {
                     return;
                 }
 
             }
 
             // Update checksum
-            Update.ComputeChecksum();
+            Update.ComputeChecksum(platform);
 
             // Log
             Console.WriteLine();
             Console.WriteLine("Copying checksum file to release directory");
 
             // Copy
-            File.Copy(Update.ChecksumPath, Path.Combine(workdir, "coh2-battlegrounds\\bin\\Release\\net6.0-windows\\checksum.txt"), true);
-            Console.WriteLine("Copied checksum file to release directory:");
-            Console.WriteLine("\tNow packing into zipfile...");
+            File.Copy(Update.ChecksumPath, Path.Combine(workdir, $"coh2-battlegrounds\\bin\\Release\\net6.0-windows\\win-{platform}\\publish\\checksum.txt"), true);
+            Console.WriteLine("Copied checksum file to release directory");
 
-            // Define zip path
-            const string zippy = "bg-release.zip";
-            if (File.Exists(zippy)) {
-                File.Delete(zippy);
+            if (zipFlag) {
+
+                const string dir = "bg-release";
+                if (Directory.Exists(dir)) {
+                    Directory.Delete(dir, true);
+                }
+
+                Directory.CreateDirectory(dir);
+
+                Helpers.CopyFilesRecursively(Path.Combine(workdir, $"coh2-battlegrounds\\bin\\Release\\net6.0-windows\\win-{platform}\\publish"), dir);
+                Console.WriteLine($"Created {dir} successfully");
+
+
+            } else {
+
+                Console.WriteLine("\tNow packing into zipfile...");
+
+                // Define zip path
+                const string zippy = "bg-release.zip";
+                if (File.Exists(zippy)) {
+                    File.Delete(zippy);
+                }
+
+                // Creaste zip
+                ZipFile.CreateFromDirectory(Path.Combine(workdir, $"coh2-battlegrounds\\bin\\Release\\net6.0-windows\\win-{platform}\\publish"), zippy);
+                Console.WriteLine("Zip file created");
+
             }
-
-            // Creaste zip
-            ZipFile.CreateFromDirectory(Path.Combine(workdir, "coh2-battlegrounds\\bin\\Release\\net6.0-windows"), zippy);
-            Console.WriteLine("Zip file created");
 
         }
 
-        private static bool CompileProject(string project, string projectDir) {
+        private static bool CompileProject(string project, string projectDir, string platform) {
 
             // Firstly we trigger MSBuild.exe on our solution file
             ProcessStartInfo msbuild_bin = new ProcessStartInfo() {
                 UseShellExecute = false,
-                FileName = $"{msbuild_path}\\MSBuild.exe",
-                Arguments = $"{project} -property:Configuration=Release",
+                FileName = $"{dotnet_path}\\dotnet.exe",
+                Arguments = $"publish {project} -r win-{platform} -c Release",
                 WorkingDirectory = projectDir,
             };
 
             // Trigger compile
             Process? binbuilder = Process.Start(msbuild_bin);
             if (binbuilder is null) {
-                Console.WriteLine("Failed to create MS build process");
+                Console.WriteLine("Failed to create DOTNET build process");
                 return false;
             }
 
             // Grab io
             binbuilder.OutputDataReceived += (s, e) => {
-                Console.WriteLine($"msbuild: {e.Data}");
+                Console.WriteLine($"dotnet: {e.Data}");
             };
             binbuilder.ErrorDataReceived += (s, e) => {
                 Console.WriteLine($"error: {e.Data}");
@@ -748,7 +896,7 @@ class Program {
         flags.RegisterCommand<ReplayAnalysis>();
         flags.RegisterCommand<ServerCheck>();
         flags.RegisterCommand<MinimapperCommand>();
-        flags.RegisterCommand<CreateInstaller>();
+        flags.RegisterCommand<CreateInstallFiles>();
         flags.RegisterCommand<AIDefenceAnalyser>();
         flags.RegisterCommand<AIDefencePlannerTest>();
         flags.RegisterCommand<Echo>();
@@ -756,6 +904,8 @@ class Program {
 #if DEBUG
         flags.RegisterCommand<SSHCmd>();
         flags.RegisterCommand<Update>();
+        flags.RegisterCommand<CreateInstaller>();
+        flags.RegisterCommand<ExecutableFirewall>();
 #endif
 
         // Parse (and dispatch)
