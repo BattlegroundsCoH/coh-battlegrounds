@@ -77,6 +77,7 @@ public partial class CompanyCard : UserControl {
             infantryKillsValue.Text = "N/A";
             vehicleKillsValue.Text = "N/A";
             killDeathRatioValue.Text = "N/A";
+            gamesPlayedValue.Text = "N/A";
             return;
         }
 
@@ -94,6 +95,7 @@ public partial class CompanyCard : UserControl {
         infantryKillsValue.Text = "N/A"; // TODO : This data is not currently being tracked
         vehicleKillsValue.Text = "N/A"; // TODO : This data is not currently being tracked
         killDeathRatioValue.Text = "N/A"; // TODO : This data is not currently being tracked
+        gamesPlayedValue.Text = company.Statistics.TotalMatchCount.ToString();
 
 
     }

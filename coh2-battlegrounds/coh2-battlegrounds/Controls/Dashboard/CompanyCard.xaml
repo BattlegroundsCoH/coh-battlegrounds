@@ -57,13 +57,23 @@
         <Border Grid.Row="1"
                 Grid.Column="0"
                 Width="275"
-                Margin="0, 0, 0, 40">
+                Margin="0, 0, 0, 13">
 
             <TextBlock TextWrapping="Wrap"
                        Foreground="White"
                        FontSize="16"
                        LineHeight="26"
                        Margin="8, 5, 0, 5">
+                
+                <!-- Games played -->
+                <InlineUIContainer>
+                    <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                        <TextBlock Text="Games Played:" />
+                        <TextBlock x:Name="gamesPlayedValue"
+                                   TextAlignment="Right" 
+                                   Margin="0, 0, 8, 0" />
+                    </Grid>
+                </InlineUIContainer>
                 
                 <!-- Win Ratio -->
                 <InlineUIContainer>
