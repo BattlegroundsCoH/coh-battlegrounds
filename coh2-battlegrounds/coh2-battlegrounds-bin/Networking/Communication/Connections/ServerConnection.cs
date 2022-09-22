@@ -213,11 +213,13 @@ public sealed class ServerConnection : IConnection {
             this.m_rwlock.ExitWriteLock();
 
             // Loop over events and invoke sequentially (on new thread)
-            Task.Run(() => {
-                foreach (var baseMsg in eventList) {
-                    this.MessageReceived?.Invoke(baseMsg.CID, baseMsg.Sender, GoMarshal.JsonUnmarshal<ContentMessage>(baseMsg.Content));
-                }
-            });
+            if (eventList.Count > 0) {
+                Task.Run(() => {
+                    foreach (var baseMsg in eventList) {
+                        this.MessageReceived?.Invoke(baseMsg.CID, baseMsg.Sender, GoMarshal.JsonUnmarshal<ContentMessage>(baseMsg.Content));
+                    }
+                });
+            }
 
         }
 
