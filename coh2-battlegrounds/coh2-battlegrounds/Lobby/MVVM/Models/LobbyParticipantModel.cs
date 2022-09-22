@@ -444,7 +444,7 @@ public class LobbyParticipantModel : LobbyModel {
                     var val = settings.GetOrDefault(k, v.Min.ToString());
 
                     // Grab setting
-                    var setting = LobbySetting<string>.NewValue(name, GetAdditionalGamemodeValue(v, val), k, v.Value);
+                    var setting = LobbySetting<string>.NewValue(name, GetAdditionalGamemodeValue(v, val), k);
                     
                     // Add setting
                     this.GamemodeSettings.Add(setting);
