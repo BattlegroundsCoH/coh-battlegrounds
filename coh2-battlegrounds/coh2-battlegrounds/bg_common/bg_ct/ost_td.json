@@ -1,8 +1,8 @@
 {
   "Icon": "ct_td",
-  "MaxInfantry": 20,
-  "MaxTeamWeapons": 10,
-  "MaxVehicles": 8,
+  "MaxInfantry": 12,
+  "MaxTeamWeapons": 14,
+  "MaxVehicles": 12,
   "MaxLeaders": 2,
   "MaxAbilities": 4,
   "Exclude": [],
@@ -13,7 +13,19 @@
   "DeployBlueprints": [
     {
       "Blueprint": "opel_blitz_transport_squad_bg",
-      "CostModifier": 1,
+      "CostModifier": 1.05,
+      "Tow": true,
+      "TowCostModifier": 1
+    },
+    {
+      "Blueprint": "sdkfz_250_halftrack_bg",
+      "CostModifier": 1.065,
+      "Tow": true,
+      "TowCostModifier": 1
+    },
+    {
+      "Blueprint": "sdkfz_251_halftrack_squad_bg",
+      "CostModifier": 1.1,
       "Tow": true,
       "TowCostModifier": 1
     }
@@ -36,7 +48,9 @@
         "Munitions": 1,
         "Fuel": 1
       },
-      "Unlocks": []
+      "Unlocks": [
+        "elefant_tank_destroyer_squad_bg"
+      ]
     },
     "PhaseC": {
       "ActivationTime": 660,
@@ -46,7 +60,9 @@
         "Munitions": 1,
         "Fuel": 1
       },
-      "Unlocks": []
+      "Unlocks": [
+        "brummbar_squad_bg"
+      ]
     }
   },
   "abilities": [

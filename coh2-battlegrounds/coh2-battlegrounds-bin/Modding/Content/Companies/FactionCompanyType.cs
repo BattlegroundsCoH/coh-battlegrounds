@@ -256,6 +256,11 @@ public class FactionCompanyType : IChecksumElement {
     public string SourceFile { get; init; }
 
     /// <summary>
+    /// Get or init if the company type is currently hidden (should be ignored)
+    /// </summary>
+    public bool Hidden { get; init; }
+
+    /// <summary>
     /// Initialise a new <see cref="FactionCompanyType"/> instance.
     /// </summary>
     /// <param name="Id"></param>
@@ -274,7 +279,7 @@ public class FactionCompanyType : IChecksumElement {
     public FactionCompanyType(string Id, string Icon, 
         int MaxInfantry, int MaxTeamWeapons, int MaxVehicles, int MaxLeaders, int MaxAbilities, int MaxInitialPhase,
         string[] Exclude, string[] DeployTypes, TransportOption[] DeployBlueprints, Dictionary<string, Phase> Phases,
-        string TeamWeaponCrew, string SourceFile) {
+        string TeamWeaponCrew, string SourceFile, bool Hidden) {
 
         // Set properties
         this.m_typeId = Id;
@@ -291,6 +296,7 @@ public class FactionCompanyType : IChecksumElement {
         this.Phases = Phases;
         this.TeamWeaponCrew = TeamWeaponCrew;
         this.SourceFile = SourceFile;
+        this.Hidden = Hidden;
 
         // Init internals
         this.m_unitUnlocks = new();

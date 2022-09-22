@@ -13,7 +13,7 @@ public class BasicCompanyType : FactionCompanyType {
     public BasicCompanyType(TransportOption[] DeployBlueprints, Dictionary<string, Phase> Phases) 
         : base("base", "undefined", 12, 12, 12, 4, 4, Company.DEFAULT_INITIAL, 
             Array.Empty<string>(), 
-            new string[] { "DeployAndExit", "DeployAndStay" }, DeployBlueprints, Phases, "", "") {
+            new string[] { "DeployAndExit", "DeployAndStay" }, DeployBlueprints, Phases, "", "", false) {
     }
 
 }

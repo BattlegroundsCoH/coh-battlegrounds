@@ -71,6 +71,11 @@ public static class CompanyTypeWarnings {
                 intersect.ForEach(x => Trace.WriteLine($"Company type '{companyType.Id}' has unit '{x}' in exclusion list and in phase '{k}'.", nameof(CompanyTypeWarnings)));
             }
             for (int i = 0; i < v.Unlocks.Length; i++) {
+                if (string.IsNullOrEmpty(v.Unlocks[i])) {
+                    Trace.WriteLine($"(Fatal) Company type '{companyType.Id}' phase '{k}' contains the empty string at index {i+1}.", nameof(CompanyTypeWarnings));
+                    state = CompanyTypeState.Invalid;
+                    continue;
+                }
                 if (!dupl.Add(v.Unlocks[i])) {
                     Trace.WriteLine($"Company type '{companyType.Id}' has unit '{v.Unlocks[i]}' in phase '{k}' put is also in a different phase.", nameof(CompanyTypeWarnings));
                 }

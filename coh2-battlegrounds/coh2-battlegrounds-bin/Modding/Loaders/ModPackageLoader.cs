@@ -90,7 +90,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
         package.FactionSettings.Values.ForEach(x => {
             x.Package = package;
             x.Companies = x.Companies with {
-                Types = x.Companies.Types.Map(LoadCompanyTypeFromSource).Filter(CompanyTypeWarnings.CheckCompanyType, CompanyTypeState.Valid)
+                Types = x.Companies.Types.Filter(x => x.Hidden, false).Map(LoadCompanyTypeFromSource).Filter(CompanyTypeWarnings.CheckCompanyType, CompanyTypeState.Valid)
             };
         });
 

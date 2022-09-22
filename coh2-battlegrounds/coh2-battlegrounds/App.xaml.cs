@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Windows.Threading;
 using System.Diagnostics;
 using System.Windows;
 using System.Globalization;
@@ -26,9 +27,6 @@ using Battlegrounds.Update;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.Modals.DownloadInProgress.MVVM.Models;
 using Battlegrounds.Util.Coroutines;
-using System.Threading;
-using System.Windows.Controls;
-using System.Windows.Threading;
 
 namespace BattlegroundsApp;
 

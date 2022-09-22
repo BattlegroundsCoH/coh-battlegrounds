@@ -370,6 +370,7 @@
         "Types": [
           {
             "Id": "sov_airborne",
+            "Hidden": true,
             "SourceFile": "Common:bg_ct\\sov_airborne"
           },
           {
@@ -378,6 +379,7 @@
           },
           {
             "Id": "sov_arty",
+            "Hidden": true,
             "SourceFile": "Common:bg_ct\\sov_arty"
           },
           {
@@ -394,6 +396,7 @@
           },
           {
             "Id": "sov_nkvd",
+            "Hidden": true,
             "SourceFile": "Common:bg_ct\\sov_nkvd"
           },
           {
@@ -638,14 +641,17 @@
           },
           {
             "Id": "ost_airborne",
+            "Hidden": true,
             "SourceFile": "Common:bg_ct\\ost_airborne"
           },
           {
             "Id": "ost_arty",
+            "Hidden": true,
             "SourceFile": "Common:bg_ct\\ost_arty"
           },
           {
             "Id": "ost_eng",
+            "Hidden": true,
             "SourceFile": "Common:bg_ct\\ost_eng"
           },
           {
@@ -654,6 +660,7 @@
           },
           {
             "Id": "ost_sturm",
+            "Hidden": true,
             "SourceFile": "Common:bg_ct\\ost_sturm"
           }
         ]
