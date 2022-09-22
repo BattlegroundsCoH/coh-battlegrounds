@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-
+using System.Text.RegularExpressions;
 using Battlegrounds;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -55,11 +55,7 @@ public static class PlayerCompanies {
             foreach (string companypath in companies) {
                 try {
                     Company? company = CompanySerializer.GetCompanyFromFile(companypath, true);
-                    if (company?.Name?.Replace(" ", "_")?.CompareTo(Path.GetFileNameWithoutExtension(companypath)) == 0) {
-                        __companies.Add(company);
-                    } else {
-                        Trace.WriteLine($"Failed to verify company \"{companypath}\" (Name Mismatch)", nameof(PlayerCompanies));
-                    }
+                    __companies.Add(company);
                 } catch (ChecksumViolationException checksumViolation) {
                     Trace.WriteLine($"Failed to verify company \"{companypath}\" ({checksumViolation.Message})", nameof(PlayerCompanies));
                 }
@@ -108,7 +104,7 @@ public static class PlayerCompanies {
     /// <param name="company">The <see cref="Company"/> instance to save.</param>
     public static void SaveCompany(Company company) {
         try {
-            string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{company.Name.Replace(" ", "_")}.json");
+            string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{Regex.Replace(company.Name, @"[$&+,:;=?@#|'<>.^\\/""*()%!-]", " ").Replace(" ", "")}.json");
             if (File.Exists(filename)) {
                 Trace.WriteLine($"Deleting existing player company '{company.Name}'", nameof(PlayerCompanies));
                 File.Delete(filename);
@@ -134,7 +130,7 @@ public static class PlayerCompanies {
     /// </summary>
     /// <param name="company">The company to delete.</param>
     public static void DeleteCompany(Company company) {
-        string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{company.Name.Replace(" ", "_")}.json");
+        string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{Regex.Replace(company.Name, @"[$&+,:;=?@#|'<>.^\\/""*()%!-]", " ").Replace(" ", "")}.json");
         if (File.Exists(filename)) {
             File.Delete(filename);
         }
