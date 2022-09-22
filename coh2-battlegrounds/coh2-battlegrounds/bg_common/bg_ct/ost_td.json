@@ -1,5 +1,9 @@
 {
-  "Icon": "ct_td",
+  "UIData": {
+    "Icon": "ct_td",
+    "HighlightUnits": [],
+    "HighlightAbilities": []
+  },
   "MaxInfantry": 12,
   "MaxTeamWeapons": 14,
   "MaxVehicles": 12,

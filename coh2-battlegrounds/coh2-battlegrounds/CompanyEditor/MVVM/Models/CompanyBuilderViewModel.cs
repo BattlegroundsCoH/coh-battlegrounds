@@ -207,7 +207,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.CompanyFaction = company.Army;
         this.CompanyGUID = company.TuningGUID;
         this.CompanyType = BattlegroundsInstance.Localize.GetString(company.Type.Id);
-        this.CompanyTypeIcon = company.Type.Icon;
+        this.CompanyTypeIcon = company.Type.UIData.Icon;
 
         // Load database and display
         this.LoadFactionDatabase();
@@ -226,7 +226,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.CompanyFaction = faction;
         this.CompanyGUID = modGuid;
         this.CompanyType = BattlegroundsInstance.Localize.GetString(type.Id);
-        this.CompanyTypeIcon = type.Icon;
+        this.CompanyTypeIcon = type.UIData.Icon;
 
         // Load database and display
         this.LoadFactionDatabase();

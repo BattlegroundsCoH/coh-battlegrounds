@@ -1,5 +1,9 @@
 {
-  "Icon": "ct_sov_nkvd",
+  "UIData": {
+    "Icon": "ct_sov_nkvd",
+    "HighlightUnits": [],
+    "HighlightAbilities": []
+  },
   "MaxInfantry": 20,
   "MaxTeamWeapons": 10,
   "MaxVehicles": 8,

@@ -1,5 +1,17 @@
 {
-  "Icon": "ct_infantry",
+  "UIData": {
+    "Icon": "ct_infantry",
+    "HighlightUnits": [
+      "conscript_squad_bg",
+      "penal_battalion_bg",
+      "kv-1_bg"
+    ],
+    "HighlightAbilities": [
+      "soviet_air_recon",
+      "soviet_air_recon",
+      "soviet_air_recon"
+    ]
+  },
   "MaxInfantry": 20,
   "MaxTeamWeapons": 10,
   "MaxVehicles": 8,

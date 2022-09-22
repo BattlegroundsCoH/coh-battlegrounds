@@ -170,6 +170,40 @@ public class FactionCompanyType : IChecksumElement {
 
     }
 
+    /// <summary>
+    /// Readonly struct representing UI elements for the faction company type.
+    /// </summary>
+    public struct UI {
+
+        /// <summary>
+        /// Get or initialise the type icon.
+        /// </summary>
+        public string Icon { get; init; }
+
+        /// <summary>
+        /// Get or initialise the array of units to highlight.
+        /// </summary>
+        public string[] HighlightUnits { get; init; }
+
+        /// <summary>
+        /// Get or initialise the array of abilities to highlight.
+        /// </summary>
+        public string[] HighlightAbilities { get; init; }
+
+        /// <summary>
+        /// Initialise a new <see cref="UI"/> instance.
+        /// </summary>
+        /// <param name="Icon">The icon.</param>
+        /// <param name="HighlightUnits">Highlight units.</param>
+        /// <param name="HighlightAbilities">Highlight abilities.</param>
+        public UI(string? Icon, string[]? HighlightUnits, string[]? HighlightAbilities) {
+            this.Icon = string.IsNullOrEmpty(Icon) ? "ct_unspecified" : Icon;
+            this.HighlightAbilities = HighlightAbilities ?? Array.Empty<string>();
+            this.HighlightUnits = HighlightUnits ?? Array.Empty<string>();
+        }
+
+    }
+
     private readonly Dictionary<string, DeploymentPhase> m_unitUnlocks;
     private string m_typeId;
 
@@ -177,11 +211,6 @@ public class FactionCompanyType : IChecksumElement {
     /// 
     /// </summary>
     public string Id => this.m_typeId;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public string Icon { get; init; }
 
     /// <summary>
     /// 
@@ -261,10 +290,15 @@ public class FactionCompanyType : IChecksumElement {
     public bool Hidden { get; init; }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public UI UIData { get; init; }
+
+    /// <summary>
     /// Initialise a new <see cref="FactionCompanyType"/> instance.
     /// </summary>
     /// <param name="Id"></param>
-    /// <param name="Icon"></param>
+    /// <param name="UIData"></param>
     /// <param name="MaxInfantry"></param>
     /// <param name="MaxTeamWeapons"></param>
     /// <param name="MaxVehicles"></param>
@@ -276,14 +310,14 @@ public class FactionCompanyType : IChecksumElement {
     /// <param name="DeployBlueprints"></param>
     /// <param name="Phases"></param>
     [JsonConstructor]
-    public FactionCompanyType(string Id, string Icon, 
+    public FactionCompanyType(string Id, UI UIData, 
         int MaxInfantry, int MaxTeamWeapons, int MaxVehicles, int MaxLeaders, int MaxAbilities, int MaxInitialPhase,
         string[] Exclude, string[] DeployTypes, TransportOption[] DeployBlueprints, Dictionary<string, Phase> Phases,
         string TeamWeaponCrew, string SourceFile, bool Hidden) {
 
         // Set properties
         this.m_typeId = Id;
-        this.Icon = Icon;
+        this.UIData = UIData;
         this.MaxLeaders = MaxLeaders;
         this.MaxInfantry = MaxInfantry;
         this.MaxVehicles = MaxVehicles;

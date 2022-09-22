@@ -1,5 +1,17 @@
 {
-  "Icon": "ct_mechanized",
+  "UIData": {
+    "Icon": "ct_mechanized",
+    "HighlightUnits": [
+      "panzer_grenadier_squad_bg",
+      "sdkfz_251_halftrack_squad_bg",
+      "panther_squad_bg"
+    ],
+    "HighlightAbilities": [
+      "german_light_support_artillery",
+      "german_light_support_artillery",
+      "german_light_support_artillery"
+    ]
+  },
   "MaxInfantry": 19,
   "MaxTeamWeapons": 9,
   "MaxVehicles": 10,

@@ -57,6 +57,18 @@ public static class CompanyTypeWarnings {
             state = CompanyTypeState.Invalid;
         }
 
+        // UI Warning regarding highlighted units
+        if (companyType.UIData.HighlightUnits.Length is not 3) {
+            Trace.WriteLine($"Company type '{companyType.Id}' has more or less than 3 highlighted units.", nameof(CompanyTypeWarnings));
+        } else if (companyType.UIData.HighlightUnits.Intersect(companyType.Exclude).Length is not 0) {
+            Trace.WriteLine($"Company type '{companyType.Id}' highlighted units in exclusion list.", nameof(CompanyTypeWarnings));
+        }
+
+        // UI Warning regarding highlighted units
+        if (companyType.UIData.HighlightAbilities.Length is not 3) {
+            Trace.WriteLine($"Company type '{companyType.Id}' has more or less than 3 highlighted abilities.", nameof(CompanyTypeWarnings));
+        }
+
         // Verify there are phases
         if (companyType.Phases.Count is 0) {
             Trace.WriteLine($"Company type '{companyType.Id}' has no phases defined.", nameof(CompanyTypeWarnings));

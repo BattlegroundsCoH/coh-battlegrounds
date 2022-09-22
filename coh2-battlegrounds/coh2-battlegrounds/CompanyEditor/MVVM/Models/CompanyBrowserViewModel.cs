@@ -136,7 +136,7 @@ public class CompanyBrowserViewModel : ViewModelBase {
             }
 
             // Create view model
-            CompanyBuilderViewModel companyBuilder = new CompanyBuilderViewModel(vm.SelectedName, vm.SelectedFaction, vm.SelectedType.Type, vm.Package.TuningGUID);
+            CompanyBuilderViewModel companyBuilder = new CompanyBuilderViewModel(vm.SelectedName, vm.SelectedFaction.Self, vm.SelectedType.Type, vm.Package.TuningGUID);
 
             // Display it
             App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, companyBuilder);

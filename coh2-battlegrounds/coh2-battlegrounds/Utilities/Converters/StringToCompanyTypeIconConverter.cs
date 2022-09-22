@@ -37,7 +37,7 @@ public class StringToCompanyTypeIconConverter : IValueConverter {
 
     public static ImageSource GetFromType(string t) => Icons.GetValueOrDefault(t, Icons[string.Empty]);
 
-    public static ImageSource GetFromType(FactionCompanyType t) => Icons.GetValueOrDefault(t.Icon, Icons[string.Empty]);
+    public static ImageSource GetFromType(FactionCompanyType? t) => Icons.GetValueOrDefault(t?.UIData.Icon ?? "", Icons[string.Empty]);
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
 

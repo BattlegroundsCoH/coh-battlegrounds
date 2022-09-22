@@ -1,5 +1,17 @@
 {
-  "Icon": "ct_motorized",
+  "UIData": {
+    "Icon": "ct_motorized",
+    "HighlightUnits": [
+      "panzer_grenadier_squad_bg",
+      "opel_blitz_transport_squad_bg",
+      "brummbar_squad_bg"
+    ],
+    "HighlightAbilities": [
+      "german_light_support_artillery",
+      "german_light_support_artillery",
+      "german_light_support_artillery"
+    ]
+  },
   "MaxInfantry": 20,
   "MaxTeamWeapons": 9,
   "MaxVehicles": 9,
