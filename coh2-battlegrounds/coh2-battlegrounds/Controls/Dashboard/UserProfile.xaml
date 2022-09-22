@@ -8,9 +8,11 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="0, 50, 0, 50">
 
-        <Image Height="175"
-               Width="175"
-               Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/unknown_user.png"/>
+        <Ellipse Width="150" Height="150">
+            <Ellipse.Fill>
+                <ImageBrush ImageSource="pack://application:,,,/coh2-battlegrounds;component/Resources/app/unknown_user.png"/>
+            </Ellipse.Fill>
+        </Ellipse>
 
         <TextBlock x:Name="username"
                    Text="{Binding PlayerName}"
