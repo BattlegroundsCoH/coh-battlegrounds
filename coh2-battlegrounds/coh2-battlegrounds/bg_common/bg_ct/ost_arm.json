@@ -1,8 +1,16 @@
 {
   "UIData": {
     "Icon": "ct_armoured",
-    "HighlightUnits": [],
-    "HighlightAbilities": []
+    "HighlightUnits": [
+      "panzer_grenadier_squad_bg",
+      "sdkfz_250_halftrack_bg",
+      "tiger_squad_bg"
+    ],
+    "HighlightAbilities": [
+      "german_light_support_artillery",
+      "german_light_support_artillery",
+      "german_light_support_artillery"
+    ]
   },
   "MaxInfantry": 12,
   "MaxTeamWeapons": 12,
@@ -38,21 +46,21 @@
   ],
   "CostModifiers": {
   },
-  "Phases": {
-    "PhaseA": {
-      "ResourceIncomeModifier": {
+  "Roles": {
+    "DirectCommand": {
+      "UnitCostModifier": {
         "Manpower": 1,
         "Munitions": 1,
-        "Fuel": 1
+        "Fuel": 1,
+        "FieldTime": 1
       }
     },
-    "PhaseB": {
-      "ActivationTime": 420,
-      "DeployDelay": 1,
-      "ResourceIncomeModifier": {
+    "SupportRole": {
+      "UnitCostModifier": {
         "Manpower": 1,
         "Munitions": 1,
-        "Fuel": 1
+        "Fuel": 1,
+        "FieldTime": 1
       },
       "Unlocks": [
         "sniper_squad_bg",
@@ -60,22 +68,21 @@
         "panzer_iv_command_squad_bg"
       ]
     },
-    "PhaseC": {
-      "ActivationTime": 660,
-      "DeployDelay": 1,
-      "ResourceIncomeModifier": {
+    "ReserveRole": {
+      "UnitCostModifier": {
         "Manpower": 1,
         "Munitions": 1,
-        "Fuel": 1
+        "Fuel": 1,
+        "FieldTime": 1
       },
       "Unlocks": [
         "panther_command_squad_bg"
       ]
     }
   },
-  "abilities": [
+  "Abilities": [
     {
-      "ID": "german_light_support_artillery",
+      "Id": "german_light_support_artillery",
       "CostModifier": 1
     }
   ]

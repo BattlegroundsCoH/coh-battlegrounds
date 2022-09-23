@@ -28,6 +28,7 @@ public class UnitBuilder : IBuilder<Squad> {
         EntityBlueprint? SyncWeapon,
         DeploymentMethod DeploymentMethod,
         DeploymentPhase DeploymentPhase,
+        DeploymentRole DeploymentRole,
         UnitBuilder? CrewBuilder,
         UpgradeBlueprint[] Upgrades,
         SlotItemBlueprint[] Items,
@@ -70,6 +71,16 @@ public class UnitBuilder : IBuilder<Squad> {
         };
         public BuildableSquad Undo(BuildableSquad target) => target with {
             DeploymentPhase = this.m_prevPhase
+        };
+    }
+
+    public sealed record RoleAction(DeploymentRole Role) : IEditAction<BuildableSquad> {
+        private DeploymentRole m_prevRole;
+        public BuildableSquad Apply(BuildableSquad target) => target with {
+            DeploymentRole = this.Role.And(() => this.m_prevRole = target.DeploymentRole)
+        };
+        public BuildableSquad Undo(BuildableSquad target) => target with {
+            DeploymentRole = this.m_prevRole
         };
     }
 
@@ -212,14 +223,19 @@ public class UnitBuilder : IBuilder<Squad> {
     public SquadBlueprint? Transport => this.m_target.Transport;
 
     /// <summary>
-    /// 
+    /// Get the deployment phase of the unit.
     /// </summary>
     public DeploymentPhase Phase => this.m_target.DeploymentPhase;
 
     /// <summary>
-    /// 
+    /// Get the deployment method of the unit.
     /// </summary>
     public DeploymentMethod DeployMethod => this.m_target.DeploymentMethod;
+
+    /// <summary>
+    /// Get the deployment role of the unit.
+    /// </summary>
+    public DeploymentRole Role => this.m_target.DeploymentRole;
 
     /// <summary>
     /// 
@@ -347,6 +363,14 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <returns>The modified instance the method is invoked with.</returns>
     public virtual UnitBuilder SetDeploymentPhase(DeploymentPhase phase)
         => this.ApplyAction(new PhaseAction(phase));
+
+    /// <summary>
+    /// Set the <see cref="DeploymentRole"/> of the <see cref="Squad"/> instance; dictacting the cost and deployment delay of units.
+    /// </summary>
+    /// <param name="role">The <see cref="DeploymentRole"/> to set.</param>
+    /// <returns>The modified instance the method is invoked with.</returns>
+    public virtual UnitBuilder SetDeploymentRole(DeploymentRole role)
+        => this.ApplyAction(new RoleAction(role));
 
     /// <summary>
     /// 
@@ -478,13 +502,6 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <summary>
     /// 
     /// </summary>
-    /// <returns></returns>
-    public CostExtension GetCost()
-        => Squad.ComputeFullCost(this.Blueprint, this.Rank, this.Upgrades, this.Transport, this.DeployMethod, this.Phase);
-
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="builder"></param>
     /// <returns></returns>
     public IList<SquadBlueprint> GetTransportUnits(CompanyBuilder builder)
@@ -515,7 +532,7 @@ public class UnitBuilder : IBuilder<Squad> {
         // Create actual squad
         Squad squad = new Squad(id, null, this.Blueprint);
         squad.SetName(this.m_target.CustomName);
-        squad.SetDeploymentMethod(this.Transport, this.DeployMethod, this.Phase);
+        squad.SetDeploymentMethod(this.Transport, this.DeployMethod, this.Phase, this.Role);
         squad.SetVeterancy(this.Rank, this.Experience);
         squad.SetCombatTime(this.CombatTime);
         squad.SetIsCrew(this.IsCrew);
@@ -609,7 +626,7 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <returns></returns>
     /// <exception cref="ObjectNotFoundException"></exception>
     public static UnitBuilder NewUnit(SquadBlueprint sbp)
-        => new(new BuildableSquad(0, 0.0f, false, string.Empty, sbp, null, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, 
+        => new(new BuildableSquad(0, 0.0f, false, string.Empty, sbp, null, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, DeploymentRole.ReserveRole,
             sbp.HasCrew ? NewCrew(sbp.GetCrewBlueprint() ?? throw new ObjectNotFoundException($"Crew blueprint not found for blueprint '{sbp}'.")) : null,
             Array.Empty<UpgradeBlueprint>(), Array.Empty<SlotItemBlueprint>(), Array.Empty<Modifier>()));
 
@@ -619,7 +636,7 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <param name="sbp"></param>
     /// <returns></returns>
     public static UnitBuilder NewCrew(SquadBlueprint sbp)
-        => new(new BuildableSquad(0, 0.0f, true, string.Empty, sbp, null, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, null,
+        => new(new BuildableSquad(0, 0.0f, true, string.Empty, sbp, null, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, DeploymentRole.ReserveRole, null,
             Array.Empty<UpgradeBlueprint>(), Array.Empty<SlotItemBlueprint>(), Array.Empty<Modifier>()));
 
     /// <summary>
@@ -637,7 +654,7 @@ public class UnitBuilder : IBuilder<Squad> {
         var buildable = new BuildableSquad(squad.VeterancyRank, squad.VeterancyProgress, squad.IsCrew, squad.CustomName, 
             squad.SBP, squad.SupportBlueprint as SquadBlueprint,
             squad.SyncWeapon,
-            squad.DeploymentMethod, squad.DeploymentPhase,
+            squad.DeploymentMethod, squad.DeploymentPhase, squad.DeploymentRole,
             squad.Crew is not null ? EditUnit(squad.Crew) : null,
             upgrades, items, squad.Modifiers.ToArray());
 

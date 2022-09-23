@@ -176,7 +176,7 @@
             "MaxPlacement": 16,
             "PreGarrisonUnitTypes": [],
             "PlacementType": 2,
-            "Width": 34
+            "Width": 6
           },
           {
             "EntityBlueprint": "barbed_wire_fence_bg",
@@ -185,7 +185,7 @@
             "MaxPlacement": -1,
             "PreGarrisonUnitTypes": [],
             "PlacementType": 2,
-            "Width": 4
+            "Width": 5
           }
         ]
       }
@@ -384,6 +384,7 @@
           },
           {
             "Id": "sov_eng",
+            "Hidden": true,
             "SourceFile": "Common:bg_ct\\sov_eng"
           },
           {

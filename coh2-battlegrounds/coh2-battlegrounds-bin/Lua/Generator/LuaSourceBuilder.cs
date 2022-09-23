@@ -13,6 +13,13 @@ namespace Battlegrounds.Lua.Generator;
 /// </summary>
 public sealed class LuaSourceBuilder {
 
+    private readonly Stack<object?> m_contextObjects;
+
+    /// <summary>
+    /// Get the current context object
+    /// </summary>
+    public object? Context => this.m_contextObjects.Count > 0 ? this.m_contextObjects.Peek() : null;
+
     /// <summary>
     /// Get the underlying writer instance that handles the concrete code generation.
     /// </summary>
@@ -29,7 +36,10 @@ public sealed class LuaSourceBuilder {
     /// <summary>
     /// 
     /// </summary>
-    public LuaSourceBuilder() => this.Writer = new();
+    public LuaSourceBuilder() {
+        this.Writer = new();
+        this.m_contextObjects = new();
+    }
 
     /// <summary>
     /// 
@@ -272,12 +282,19 @@ public sealed class LuaSourceBuilder {
 
         // Loop over entries
         foreach (DictionaryEntry entry in dictionary) {
-            if (entry.Value is null && this.Options.ExplicitNullAsNilValues) {
-                table[this.GetKeyName(entry.Key)] = LuaNil.Nil;
-            } else if (entry.Value is not null && this.GetTableValue(entry.Value) is LuaValue lv) {
-                table[this.GetKeyName(entry.Key)] = lv;
+            if (entry.Key is "__@luacontext") {
+                this.m_contextObjects.Push(entry.Value);
+            } else {
+                if (entry.Value is null && this.Options.ExplicitNullAsNilValues) {
+                    table[this.GetKeyName(entry.Key)] = LuaNil.Nil;
+                } else if (entry.Value is not null && this.GetTableValue(entry.Value) is LuaValue lv) {
+                    table[this.GetKeyName(entry.Key)] = lv;
+                }
             }
         }
+
+        // Reset context object
+        this.m_contextObjects.Pop();
 
         // Return result
         return table;
@@ -357,7 +374,7 @@ public sealed class LuaSourceBuilder {
     private static bool HasConverter(object obj, [NotNullWhen(true)] out LuaConverter? luaConverter) {
         if (obj.GetType().GetCustomAttribute<LuaConverterAttribute>() is LuaConverterAttribute luaConverterAttribute) {
             luaConverter = luaConverterAttribute.CreateConverter();
-            return true;
+            return luaConverter is not null;
         }
         luaConverter = null;
         return false;

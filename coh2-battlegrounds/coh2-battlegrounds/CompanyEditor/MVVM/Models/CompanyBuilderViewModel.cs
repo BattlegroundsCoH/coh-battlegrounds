@@ -415,7 +415,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
     private void AddUnitToDisplay(UnitBuilder builder) {
 
         // Create display
-        SquadSlotViewModel unitSlot = new(builder, this.OnUnitClicked, this.OnUnitRemoveClicked);
+        SquadSlotViewModel unitSlot = new(builder, this.Builder.CompanyType, this.OnUnitClicked, this.OnUnitRemoveClicked);
         unitSlot.PropertyChanged += (sender, args) => {
             if (args.PropertyName is nameof(SquadSlotViewModel.SquadPhase)) { // Refresh order 
                 var collection = GetUnitCollection(builder);
@@ -745,7 +745,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         var earliestPhase = this.Builder.CompanyType.GetEarliestPhase(sbp);
 
         // Determine the initial phase of the unit
-        var basicPhase = this.Builder.IsPhaseAvailable(DeploymentPhase.PhaseInitial) && earliestPhase is DeploymentPhase.PhaseA ?
+        var basicPhase = this.Builder.IsPhaseAvailable(DeploymentPhase.PhaseInitial) && earliestPhase is DeploymentPhase.PhaseStandard ?
             DeploymentPhase.PhaseInitial : earliestPhase;
 
         // Get the default phase
@@ -756,7 +756,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         }
 
         // Create squad (in initial phase or in phase A)
-        var unitBuilder = UnitBuilder.NewUnit(sbp).SetDeploymentPhase(defaultPhase);
+        var unitBuilder = UnitBuilder.NewUnit(sbp).SetDeploymentPhase(defaultPhase).SetDeploymentRole(this.Builder.CompanyType.GetUnitRole(sbp));
 
         // If heavy arty add tow
         if (sbp.Types.IsHeavyArtillery && !sbp.Types.IsAntiTank)

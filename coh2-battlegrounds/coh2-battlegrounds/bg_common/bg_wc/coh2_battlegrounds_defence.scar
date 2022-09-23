@@ -92,6 +92,7 @@ function BattlegroundsDefence_InitGamemode()
 			local pid = Player_GetID(p);
 			DefenceSettingsData.LockedSquads[pid] = SGroup_CreateIfNotFound("sg_deflocksquads" .. pid);
 			BGAI_SetAIPlayerEnabled(p, false);
+			BGAI_SetAIDuplicatesEnabled(p, true);
 		end
 
 	end

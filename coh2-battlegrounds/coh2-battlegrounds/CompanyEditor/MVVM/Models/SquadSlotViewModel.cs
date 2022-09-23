@@ -7,6 +7,7 @@ using System.Windows.Media.Imaging;
 using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Modding.Content.Companies;
 
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Resources;
@@ -51,22 +52,19 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
 
     public string SquadPhase => this.BuilderInstance.Phase switch {
         DeploymentPhase.PhaseInitial => "I",
-        DeploymentPhase.PhaseA => "A",
-        DeploymentPhase.PhaseB => "B",
-        DeploymentPhase.PhaseC => "C",
         _ => string.Empty
     };
 
-    public Brush PhaseBackground => this.BuilderInstance.Phase switch {
-        DeploymentPhase.PhaseInitial => (SolidColorBrush)App.Current.FindResource("BackgroundBlueBrush"),
-        DeploymentPhase.PhaseB => (SolidColorBrush)App.Current.FindResource("BackgroundPurpleBrush"),
-        DeploymentPhase.PhaseC => (SolidColorBrush)App.Current.FindResource("BackgroundDarkishGreenBrush"),
+    public Brush PhaseBackground => this.BuilderInstance.Role switch {
+        DeploymentRole.DirectCommand => (SolidColorBrush)App.Current.FindResource("BackgroundLightBlueBrush"),
+        DeploymentRole.SupportRole => (SolidColorBrush)App.Current.FindResource("BackgroundPurpleBrush"),
+        DeploymentRole.ReserveRole => (SolidColorBrush)App.Current.FindResource("BackgroundDarkishGreenBrush"),
         _ => (SolidColorBrush)App.Current.FindResource("BackgroundLightBlueBrush"),
     };
 
-    public Brush PhaseBackgroundHover => this.BuilderInstance.Phase switch {
-        DeploymentPhase.PhaseB => (SolidColorBrush)App.Current.FindResource("BackgroundLightPurpleBrush"),
-        DeploymentPhase.PhaseC => (SolidColorBrush)App.Current.FindResource("BackgroundGreenBrush"),
+    public Brush PhaseBackgroundHover => this.BuilderInstance.Role switch {
+        DeploymentRole.SupportRole => (SolidColorBrush)App.Current.FindResource("BackgroundLightPurpleBrush"),
+        DeploymentRole.ReserveRole => (SolidColorBrush)App.Current.FindResource("BackgroundGreenBrush"),
         _ => (SolidColorBrush)App.Current.FindResource("BackgroundLightGrayBrush"),
     };
 
@@ -78,10 +76,15 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
 
     public SquadSlotViewModelEvent RemoveClick { get; }
 
-    public SquadSlotViewModel(UnitBuilder builder, SquadSlotViewModelEvent onClick, SquadSlotViewModelEvent onRemove) {
+    public FactionCompanyType CompanyType { get; }
+
+    public SquadSlotViewModel(UnitBuilder builder, FactionCompanyType companyType, SquadSlotViewModelEvent onClick, SquadSlotViewModelEvent onRemove) {
 
         // Set squad instance
         this.BuilderInstance = builder;
+
+        // Set company type
+        this.CompanyType = companyType;
 
         // Set events
         this.Click = onClick;
@@ -101,7 +104,7 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
 
         // Set basic info
         this.SquadName = GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ScreenName);
-        this.SquadCost = this.BuilderInstance.GetCost();
+        this.SquadCost = this.CompanyType.GetUnitCost(this.BuilderInstance.Blueprint, this.BuilderInstance.Rank, this.BuilderInstance.Role, this.BuilderInstance.Transport);
 
         // Get rank
         var rankLevel = this.BuilderInstance.Rank;

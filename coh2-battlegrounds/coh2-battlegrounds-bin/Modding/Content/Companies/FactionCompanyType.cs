@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Lua.Generator.RuntimeServices;
+using Battlegrounds.Modding.Verifier;
+using Battlegrounds.Util;
 using Battlegrounds.Verification;
 
 namespace Battlegrounds.Modding.Content.Companies;
@@ -26,33 +29,41 @@ public class FactionCompanyType : IChecksumElement {
         /// <summary>
         /// Get the manpower modifier.
         /// </summary>
-        [LuaName("manpower")]
         public float Manpower { get; }
 
         /// <summary>
         /// Get the munition modifier.
         /// </summary>
-        [LuaName("munition")]
-        public float Munition { get; }
+        public float Munitions { get; }
 
         /// <summary>
         /// Get the fuel modifier.
         /// </summary>
-        [LuaName("fuel")]
         public float Fuel { get; }
+
+        /// <summary>
+        /// Get the fuel modifier.
+        /// </summary>
+        public float FieldTime { get; }
 
         /// <summary>
         /// Initialise a new <see cref="CostModifier"/>.
         /// </summary>
         /// <param name="Manpower">The manpower modifier.</param>
-        /// <param name="Munition">The munition modifier.</param>
+        /// <param name="Munitions">The munition modifier.</param>
         /// <param name="Fuel">The fuel modifier.</param>
+        /// <param name="FieldTime">The fieldtime modifier.</param>
         [JsonConstructor]
-        public CostModifier(float Manpower, float Munition, float Fuel) {
+        public CostModifier(float Manpower, float Munitions, float Fuel, float FieldTime) {
             this.Manpower = Manpower;
-            this.Munition = Munition;
+            this.Munitions = Munitions;
             this.Fuel = Fuel;
+            this.FieldTime = FieldTime;
         }
+
+        public static implicit operator CostExtension(CostModifier modifier)
+            => new(modifier.Manpower, modifier.Munitions, modifier.Fuel, modifier.FieldTime);
+
     }
 
     /// <summary>
@@ -112,24 +123,36 @@ public class FactionCompanyType : IChecksumElement {
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public readonly struct CompanyAbility {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Id { get; init; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public float CostModifier { get; init; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="CostModifier"></param>
+        public CompanyAbility(string Id, float CostModifier) {
+            this.Id = Id;
+            this.CostModifier = CostModifier;
+        }
+
+    }
+
+    /// <summary>
     /// Class representing phase specific data.
     /// </summary>
-    public class Phase {
-
-        /// <summary>
-        /// Get or initialise when the phase is activated.
-        /// </summary>
-        public int ActivationTime { get; init; }
-
-        /// <summary>
-        /// Get the additional deployment delay applied to unlocked units.
-        /// </summary>
-        public float DeployDelay { get; init; }
-
-        /// <summary>
-        /// Get or initialise the income modifier given to the player when entering the phase.
-        /// </summary>
-        public CostModifier ResourceIncomeModifier { get; init; }
+    public class CommandLevel {
 
         /// <summary>
         /// Get the cost modifier applied to units that are unlocked in the previous phase.
@@ -152,17 +175,11 @@ public class FactionCompanyType : IChecksumElement {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="ActivationTime"></param>
-        /// <param name="DeployDelay"></param>
-        /// <param name="ResourceIncomeModifier"></param>
         /// <param name="UnitCostModifier"></param>
         /// <param name="Unlocks"></param>
+        /// <param name="MaxPhase"></param>
         [JsonConstructor]
-        public Phase(int ActivationTime, float DeployDelay, CostModifier ResourceIncomeModifier, CostModifier UnitCostModifier, 
-            string[] Unlocks, int MaxPhase) {
-            this.ActivationTime = ActivationTime;
-            this.DeployDelay = DeployDelay;
-            this.ResourceIncomeModifier = ResourceIncomeModifier;
+        public CommandLevel(CostModifier UnitCostModifier, string[] Unlocks, int MaxPhase) {
             this.UnitCostModifier = UnitCostModifier;
             this.Unlocks = Unlocks ?? Array.Empty<string>();
             this.MaxPhase = MaxPhase <= 0 ? (Company.MAX_SIZE / 3 + 1) : MaxPhase;
@@ -173,7 +190,7 @@ public class FactionCompanyType : IChecksumElement {
     /// <summary>
     /// Readonly struct representing UI elements for the faction company type.
     /// </summary>
-    public struct UI {
+    public readonly struct UI {
 
         /// <summary>
         /// Get or initialise the type icon.
@@ -204,7 +221,9 @@ public class FactionCompanyType : IChecksumElement {
 
     }
 
-    private readonly Dictionary<string, DeploymentPhase> m_unitUnlocks;
+    private readonly Dictionary<string, DeploymentRole> m_unitUnlocks;
+    private readonly Dictionary<string, int> m_unitTransports;
+    private readonly Dictionary<DeploymentRole, CostModifier> m_roleModifier;
     private string m_typeId;
 
     /// <summary>
@@ -260,7 +279,12 @@ public class FactionCompanyType : IChecksumElement {
     /// <summary>
     /// 
     /// </summary>
-    public Dictionary<string, Phase> Phases { get; init; }
+    public Dictionary<string, CommandLevel> Roles { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public Dictionary<string, CostModifier> CostModifiers { get; init; }
 
     /// <summary>
     /// Get or initialise the blueprint to use when recrewing team weapons
@@ -290,9 +314,14 @@ public class FactionCompanyType : IChecksumElement {
     public bool Hidden { get; init; }
 
     /// <summary>
-    /// 
+    /// Get or init the UI data for the company type.
     /// </summary>
     public UI UIData { get; init; }
+
+    /// <summary>
+    /// Get or init the ability data for the company type.
+    /// </summary>
+    public CompanyAbility[] Abilities { get; init; }
 
     /// <summary>
     /// Initialise a new <see cref="FactionCompanyType"/> instance.
@@ -310,39 +339,50 @@ public class FactionCompanyType : IChecksumElement {
     /// <param name="DeployBlueprints"></param>
     /// <param name="Phases"></param>
     [JsonConstructor]
-    public FactionCompanyType(string Id, UI UIData, 
+    public FactionCompanyType(string Id, UI UIData, CompanyAbility[]? Abilities,
         int MaxInfantry, int MaxTeamWeapons, int MaxVehicles, int MaxLeaders, int MaxAbilities, int MaxInitialPhase,
-        string[] Exclude, string[] DeployTypes, TransportOption[] DeployBlueprints, Dictionary<string, Phase> Phases,
-        string TeamWeaponCrew, string SourceFile, bool Hidden) {
+        string[]? Exclude, string[]? DeployTypes, TransportOption[]? DeployBlueprints, Dictionary<string, CommandLevel>? Roles,
+        Dictionary<string, CostModifier>? CostModifiers, string TeamWeaponCrew, string SourceFile, bool Hidden) {
 
         // Set properties
         this.m_typeId = Id;
         this.UIData = UIData;
+        this.Abilities = Abilities ?? Array.Empty<CompanyAbility>();
         this.MaxLeaders = MaxLeaders;
         this.MaxInfantry = MaxInfantry;
         this.MaxVehicles = MaxVehicles;
         this.MaxTeamWeapons = MaxTeamWeapons;
         this.MaxAbilities = MaxAbilities;
         this.MaxInitialPhase = MaxInitialPhase > 0 ? MaxInitialPhase : Company.DEFAULT_INITIAL;
-        this.Exclude = Exclude;
-        this.DeployTypes = DeployTypes;
-        this.DeployBlueprints = DeployBlueprints;
-        this.Phases = Phases;
+        this.Exclude = Exclude ?? Array.Empty<string>();
+        this.DeployTypes = DeployTypes ?? Array.Empty<string>();
+        this.DeployBlueprints = DeployBlueprints ?? Array.Empty<TransportOption>();
+        this.Roles = Roles ?? new();
+        this.CostModifiers = CostModifiers ?? new();
         this.TeamWeaponCrew = TeamWeaponCrew;
         this.SourceFile = SourceFile;
         this.Hidden = Hidden;
 
         // Init internals
         this.m_unitUnlocks = new();
-        if (this.Phases is not null) {
-            foreach (var (phasename, phase) in this.Phases) {
-                DeploymentPhase p = Enum.Parse<DeploymentPhase>(phasename);
+        this.m_roleModifier = new();
+        this.m_unitTransports = new();
+        if (this.Roles is not null) {
+            foreach (var (phasename, phase) in this.Roles) {
+                if (!Enum.TryParse(phasename, out DeploymentRole p)) {
+                    Trace.WriteLine($"Company type '{this.Id}' has an invalid role '{phasename}'.", nameof(CompanyTypeWarnings));
+                    continue;
+                }
                 for (int i = 0; i < phase.Unlocks.Length; i++) {
                     this.m_unitUnlocks[phase.Unlocks[i]] = p;
                 }
+                this.m_roleModifier[p] = phase.UnitCostModifier;
+            }
+            for (int i = 0; i < this.DeployBlueprints.Length; i++) {
+                this.m_unitTransports[this.DeployBlueprints[i].Blueprint] = i;
             }
         } else {
-            this.Phases = new();
+            this.Roles = new();
         }
 
     }
@@ -353,7 +393,7 @@ public class FactionCompanyType : IChecksumElement {
     /// <param name="blueprint">The squad blueprint to get earliest phase for.</param>
     /// <returns>
     /// The earliest phase for the unit. If the unit is excluded <see cref="DeploymentPhase.PhaseNone"/> is returned.
-    /// If no unlock phase is specified for a unit, <see cref="DeploymentPhase.PhaseA"/>; Otherwise the specified <see cref="DeploymentPhase"/>.
+    /// If no unlock phase is specified for a unit, <see cref="DeploymentPhase.PhaseStandard"/>; Otherwise the specified <see cref="DeploymentPhase"/>.
     /// </returns>
     public DeploymentPhase GetEarliestPhase(SquadBlueprint blueprint) {
 
@@ -361,12 +401,31 @@ public class FactionCompanyType : IChecksumElement {
         if (this.Exclude.Any(x => x == blueprint.Name))
             return DeploymentPhase.PhaseNone;
 
+        // Return Phase A ==> Available by default
+        return DeploymentPhase.PhaseStandard;
+
+    }
+
+    /// <summary>
+    /// Get the role a unit is available in.
+    /// </summary>
+    /// <param name="blueprint">The squad blueprint to get role for.</param>
+    /// <returns>
+    /// The role for the unit. If the unit is excluded <see cref="DeploymentRole.ReserveRole"/> is returned.
+    /// If no role is specified for a unit, <see cref="DeploymentRole.DirectCommand"/>; Otherwise the specified <see cref="DeploymentRole"/>.
+    /// </returns>
+    public DeploymentRole GetUnitRole(SquadBlueprint blueprint) {
+
+        // Ignore if excluded
+        if (this.Exclude.Any(x => x == blueprint.Name))
+            return DeploymentRole.ReserveRole;
+
         // Try and look up in unit unlocks
-        if (this.m_unitUnlocks.TryGetValue(blueprint.Name, out DeploymentPhase p))
+        if (this.m_unitUnlocks.TryGetValue(blueprint.Name, out DeploymentRole p))
             return p;
 
         // Return Phase A ==> Available by default
-        return DeploymentPhase.PhaseA;
+        return DeploymentRole.DirectCommand;
 
     }
 
@@ -383,7 +442,7 @@ public class FactionCompanyType : IChecksumElement {
     /// <param name="phase"></param>
     /// <returns></returns>
     public int GetMaxInPhase(DeploymentPhase phase) {
-        if (this.Phases.TryGetValue(phase.ToString(), out Phase? p)) {
+        if (this.Roles.TryGetValue(phase.ToString(), out CommandLevel? p)) {
             return p.MaxPhase;
         }
         return Company.MAX_SIZE / 3 + 1;
@@ -399,6 +458,49 @@ public class FactionCompanyType : IChecksumElement {
             return BlueprintManager.FromBlueprintName<SquadBlueprint>(this.FactionData?.TeamWeaponCrew ?? throw new ObjectNotFoundException("Weapons crew squad is unspecified."));
         }
         return BlueprintManager.FromBlueprintName<SquadBlueprint>(this.TeamWeaponCrew);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sbp"></param>
+    /// <param name="rank"></param>
+    /// <param name="role"></param>
+    /// <param name="transport"></param>
+    /// <returns></returns>
+    public CostExtension GetUnitCost(SquadBlueprint sbp, byte rank, DeploymentRole role, SquadBlueprint? transport) {
+        
+        // Get basic cost
+        var result = sbp.Cost;
+        
+        // Add flat cost modifier
+        if (this.CostModifiers.TryGetValue(sbp.Name, out CostModifier? mod)) {
+            result += mod;
+        }
+
+        // Compute veterancy modifier
+        float rankModifier = rank.Fold(1.0f, (_, v) => v + BattlegroundsDefine.VET_COSTMODIFIER);
+
+        // Modify by rank
+        result *= rankModifier;
+
+        // Modify by role modifier if not limited to specified role
+        if (this.GetUnitRole(sbp) >= role)
+            result *= this.m_roleModifier[role];
+        
+        // Apply transport costs (if any)
+        if (transport is SquadBlueprint tbp) {
+            if (this.m_unitTransports.TryGetValue(tbp.Name, out int i)) {
+                if (sbp.IsTeamWeapon)
+                    result *= this.DeployBlueprints[i].TowCostModifier;
+                else
+                    result *= this.DeployBlueprints[i].CostModifier;
+            }
+        }
+
+        // Return resulting cost
+        return result;
+
     }
 
     internal void ChangeId(string id) => this.m_typeId = id;

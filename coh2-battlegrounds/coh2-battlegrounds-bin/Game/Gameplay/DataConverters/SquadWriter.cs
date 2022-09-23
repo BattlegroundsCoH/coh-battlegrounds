@@ -9,13 +9,13 @@ using Battlegrounds.Game.DataCompany;
 
 using Battlegrounds.Modding;
 
-using Battlegrounds.Verification;
 using Battlegrounds.Functional;
 
 using Battlegrounds.Lua.Generator.RuntimeServices;
 using Battlegrounds.Lua.Generator;
 using System.Globalization;
 using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Modding.Content.Companies;
 
 namespace Battlegrounds.Game.Gameplay.DataConverters;
 
@@ -31,20 +31,25 @@ public static class SquadWriter {
 
         public override void Write(LuaSourceBuilder luaSourceBuilder, Squad value) {
 
+            // Grab cost
+            var cost = luaSourceBuilder.Context switch {
+                FactionCompanyType ft => ft.GetUnitCost(value.SBP, value.VeterancyRank, value.DeploymentRole, value.SupportBlueprint as SquadBlueprint),
+                _ => value.SBP.Cost
+            };
+
             // Get base data
             Dictionary<string, object> data = new() {
                 ["bp_name"] = value.SBP.GetScarName(),
                 ["company_id"] = value.SquadID,
                 ["symbol"] = value.SBP.UI.Symbol,
                 ["category"] = value.GetCategory(true),
-                ["phase"] = (byte)(value.DeploymentPhase - 1),
                 ["veterancy_rank"] = value.VeterancyRank,
                 ["veterancy_progress"] = value.VeterancyProgress,
                 ["upgrades"] = value.Upgrades.Cast<UpgradeBlueprint>().Select(GetBlueprintWithSymbol),
                 ["slot_items"] = value.SlotItems.Cast<SlotItemBlueprint>().Select(GetBlueprintWithSymbol),
                 ["modifiers"] = value.Modifiers,
                 ["spawned"] = false,
-                ["cost"] = value.GetCost()
+                ["cost"] = cost
             };
 
             // Write support if any
@@ -135,6 +140,7 @@ public static class SquadWriter {
             var unitBuilder = UnitBuilder.NewUnit(sbpName, modGuid);
             unitBuilder.SetCustomName(ReadStringPropertyIfThere(ref reader, nameof(Squad.CustomName), string.Empty));
             unitBuilder.SetDeploymentPhase(Enum.Parse<DeploymentPhase>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentPhase), nameof(DeploymentPhase.PhaseNone))));
+            unitBuilder.SetDeploymentRole(Enum.Parse<DeploymentRole>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentRole), nameof(DeploymentRole.ReserveRole))));
             unitBuilder.SetCombatTime(TimeSpan.Parse(ReadStringPropertyIfThere(ref reader, nameof(Squad.CombatTime), TimeSpan.Zero.ToString()), CultureInfo.InvariantCulture));
 
             // Get deployment method
@@ -258,6 +264,9 @@ public static class SquadWriter {
                 writer.WriteString(nameof(Squad.DeploymentPhase), value.DeploymentPhase.ToString());
             }
 
+            // Write deployment role
+            writer.WriteString(nameof(Squad.DeploymentRole), value.DeploymentRole.ToString());
+
             // Write combat time
             if (value.CombatTime.TotalSeconds > 0) {
                 writer.WriteString(nameof(Squad.CombatTime), value.CombatTime.ToString("c", CultureInfo.InvariantCulture));
@@ -327,4 +336,3 @@ public static class SquadWriter {
     }
 
 }
-

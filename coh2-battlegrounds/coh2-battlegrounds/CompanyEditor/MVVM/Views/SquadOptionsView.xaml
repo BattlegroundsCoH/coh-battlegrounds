@@ -73,7 +73,10 @@
                 </DockPanel>
             </DockPanel>
 
-            <Grid Grid.Row="1">
+            <Grid 
+                Grid.Row="1"
+                Margin="4"
+                Background="{StaticResource BackgroundDeepBlueBrush}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -152,7 +155,11 @@
             </Grid>
 
             <!-- Unit Data -->
-            <StackPanel Grid.Row="2" VerticalAlignment="Top">
+            <StackPanel 
+                Grid.Row="2" 
+                Margin="5"
+                Background="{StaticResource BackgroundDeepBlueBrush}"
+                VerticalAlignment="Top">
 
                 <!-- Unit Abilities -->
                 <StackPanel Visibility="{Binding ShowAbilities}">
@@ -273,226 +280,164 @@
                     </ItemsControl>
                 </StackPanel>
 
-                <!-- Unit Deployment and phase -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition Height="96"/>
-                    </Grid.RowDefinitions>
-
-                    <controls:LocLabel
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="{Binding LowerSpan}"
-                        Foreground="White"
-                        HorizontalAlignment="Center"
-                        LocKey="CompanySquadView_Phases"/>
-                    <controls:LocLabel
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        Foreground="White"
-                        HorizontalAlignment="Center"
-                        Visibility="{Binding DeployMethodsVisible}"
-                        LocKey="CompanySquadView_Methods"/>
-                    <ItemsControl Grid.Column="0"
-                              Grid.Row="1"
-                                  Grid.ColumnSpan="{Binding LowerSpan}"
-                              ItemsSource="{Binding Phases}"
-                              HorizontalAlignment="Center"
-                              VerticalAlignment="Top">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Canvas x:Name="__canv" Width="48" Height="48"
-                                    MouseUp="{mvvm:EventBinding Handler=Clicked}">
-                                    <Image Width="48" Height="48"
-                                   Source="{Binding Icon}"
-                                   Margin="2.5"/>
-                                    <Rectangle Width="48" Height="48"
-                                           x:Name="__overlay"
-                                           Fill="Black"
-                                           Opacity="0.35"/>
-                                    <Canvas.ToolTip>
-                                        <ToolTip Style="{StaticResource BlueTooltip}">
-                                            <Border BorderThickness="1.15"
-                                                Background="#212d3a"
-                                                BorderBrush="#3d4854"
-                                                    Padding="7.45">
-                                                <StackPanel>
-                                                    <TextBlock Text="{Binding Title, Mode=OneWay}"
-                                                               FontSize="14"
-                                                               Foreground="White"/>
-                                                    <TextBlock Text="{Binding Desc, Mode=OneWay}"
-                                                           TextWrapping="Wrap"
-                                                           MaxWidth="256"
-                                                               FontSize="11"
-                                                               Foreground="White"/>
-                                                </StackPanel>
-                                            </Border>
-                                        </ToolTip>
-                                    </Canvas.ToolTip>
-                                </Canvas>
-                                <DataTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
-                                             Value="True">
-                                        <Setter TargetName="__overlay"
-                                            Property="Opacity"
-                                            Value="0.125"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsPickable}"
-                                             Value="False">
-                                        <Setter TargetName="__overlay"
-                                            Property="Opacity"
-                                            Value="0.75"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsActivePhase}"
-                                             Value="True">
-                                        <Setter TargetName="__overlay"
-                                            Property="Opacity"
-                                            Value="0"/>
-                                    </DataTrigger>
-                                </DataTemplate.Triggers>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    <ItemsControl Grid.Column="1"
-                              Grid.Row="1"
-                              ItemsSource="{Binding DeploySettings}"
-                              HorizontalAlignment="Center"
-                              VerticalAlignment="Top"
-                        Visibility="{Binding DeployMethodsVisible}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Canvas x:Name="__canv" Width="48" Height="48"
-                                    MouseUp="{mvvm:EventBinding Handler=Clicked}">
-                                    <Image Width="48" Height="48"
-                                   Source="{Binding Icon}"
-                                   Margin="2.5"/>
-                                    <Rectangle Width="48" Height="48"
-                                           x:Name="__overlay"
-                                           Fill="Black"
-                                           Opacity="0.35"/>
-                                    <ItemsControl ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:SquadOptionsView}, Mode=FindAncestor}, Path=DataContext.DeployUnits}"
-                                              Canvas.Top="52"
-                                              x:Name="__items"
-                                              Visibility="Collapsed">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Horizontal"/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Canvas Width="32" Height="32" 
-                                                    Margin="1.25"
-                                                    x:Name="__canv"
-                                                    MouseUp="{mvvm:EventBinding Handler=Clicked}">
-                                                    <Image Width="32"
-                                                       Height="32"
-                                                       Source="{Binding Icon}"/>
-                                                    <Rectangle
+                <controls:LocLabel
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Foreground="White"
+                    HorizontalAlignment="Center"
+                    Visibility="{Binding DeployMethodsVisible}"
+                    LocKey="CompanySquadView_Methods"/>
+                
+                <!-- Deployment Methods -->
+                <ItemsControl 
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    ItemsSource="{Binding DeploySettings}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Visibility="{Binding DeployMethodsVisible}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Canvas 
+                                x:Name="__canv" 
+                                Width="48" 
+                                Height="48"
+                                MouseUp="{mvvm:EventBinding Handler=Clicked}">
+                                <Image 
+                                    Width="48" 
+                                    Height="48"
+                                    Source="{Binding Icon}"
+                                    Margin="2.5"/>
+                                <Rectangle 
+                                    Width="48" 
+                                    Height="48"
+                                    x:Name="__overlay"
+                                    Fill="Black"
+                                    Opacity="0.35"/>
+                                <ItemsControl 
+                                    ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:SquadOptionsView}, Mode=FindAncestor}, Path=DataContext.DeployUnits}"
+                                    Canvas.Top="52"
+                                    x:Name="__items"
+                                    Visibility="Collapsed">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Canvas 
+                                                Width="32" 
+                                                Height="32" 
+                                                Margin="1.25"
+                                                x:Name="__canv"
+                                                MouseUp="{mvvm:EventBinding Handler=Clicked}">
+                                                <Image 
+                                                    Width="32"
+                                                    Height="32"
+                                                     Source="{Binding Icon}"/>
+                                                <Rectangle
                                                     Width="32"
                                                     Height="32"
                                                     x:Name="__overlay"
                                                     Fill="Black"
                                                     Opacity="0.5"/>
-                                                    <Canvas.ToolTip>
-                                                        <ToolTip Style="{StaticResource BlueTooltip}">
-                                                            <Border BorderThickness="1.15"
-                                                Background="#212d3a"
-                                                BorderBrush="#3d4854"
-                                                    Padding="7.45">
-                                                                <StackPanel>
-                                                                    <TextBlock Text="{Binding Title, Mode=OneWay}"
-                                                               FontSize="14"
-                                                               Foreground="White"/>
-                                                                    <TextBlock Text="{Binding Desc, Mode=OneWay}"
-                                                           TextWrapping="Wrap"
-                                                           MaxWidth="256"
-                                                               FontSize="11"
-                                                               Foreground="White"/>
-                                                                    <companybuildercontrols:CostControl
-                                                    Cost="{Binding Cost}"
-                                                    HorizontalAlignment="Right"/>
-                                                                </StackPanel>
-                                                            </Border>
-                                                        </ToolTip>
-                                                    </Canvas.ToolTip>
-                                                </Canvas>
-                                                <DataTemplate.Triggers>
-                                                    <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
-                                                             Value="True">
-                                                        <Setter TargetName="__overlay"
-                                                            Property="Opacity"
-                                                            Value="0.125"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsActiveMethod}"
-                                                             Value="True">
-                                                        <Setter TargetName="__overlay"
-                                                            Property="Opacity"
-                                                            Value="0"/>
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                    <Canvas.ToolTip>
-                                        <ToolTip Style="{StaticResource BlueTooltip}">
-                                            <Border BorderThickness="1.15"
-                                                Background="#212d3a"
-                                                BorderBrush="#3d4854"
-                                                    Padding="7.45">
-                                                <StackPanel>
-                                                    <TextBlock Text="{Binding Title, Mode=OneWay}"
-                                                               FontSize="14"
-                                                               Foreground="White"/>
-                                                    <TextBlock Text="{Binding Desc, Mode=OneWay}"
-                                                           TextWrapping="Wrap"
-                                                           MaxWidth="256"
-                                                               FontSize="11"
-                                                               Foreground="White"/>
-                                                </StackPanel>
-                                            </Border>
-                                        </ToolTip>
-                                    </Canvas.ToolTip>
-                                </Canvas>
-                                <DataTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
-                                             Value="True">
-                                        <Setter TargetName="__overlay"
-                                            Property="Opacity"
-                                            Value="0.125"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsActiveMethod}"
-                                             Value="True">
-                                        <Setter TargetName="__overlay"
-                                            Property="Opacity"
-                                            Value="0"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsTransportOptionsVisible}"
-                                             Value="True">
-                                        <Setter TargetName="__items"
-                                            Property="Visibility"
-                                            Value="Visible"/>
-                                    </DataTrigger>
-                                </DataTemplate.Triggers>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Grid>
+                                                <Canvas.ToolTip>
+                                                    <ToolTip 
+                                                        Style="{StaticResource BlueTooltip}">
+                                                        <Border 
+                                                            BorderThickness="1.15"
+                                                            Background="#212d3a"
+                                                            BorderBrush="#3d4854"
+                                                            Padding="7.45">
+                                                            <StackPanel>
+                                                                <TextBlock 
+                                                                    Text="{Binding Title, Mode=OneWay}"
+                                                                    FontSize="14"
+                                                                    Foreground="White"/>
+                                                                <TextBlock 
+                                                                    Text="{Binding Desc, Mode=OneWay}"
+                                                                    TextWrapping="Wrap"
+                                                                    MaxWidth="256"
+                                                                    FontSize="11"
+                                                                    Foreground="White"/>
+                                                                <companybuildercontrols:CostControl
+                                                                    Cost="{Binding Cost}"
+                                                                    HorizontalAlignment="Right"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </ToolTip>
+                                                </Canvas.ToolTip>
+                                            </Canvas>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger 
+                                                    Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
+                                                    Value="True">
+                                                    <Setter 
+                                                        TargetName="__overlay"
+                                                        Property="Opacity"
+                                                        Value="0.125"/>
+                                                </DataTrigger>
+                                                <DataTrigger 
+                                                    Binding="{Binding IsActiveMethod}"
+                                                    Value="True">
+                                                    <Setter 
+                                                        TargetName="__overlay"
+                                                        Property="Opacity"
+                                                        Value="0"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <Canvas.ToolTip>
+                                    <ToolTip Style="{StaticResource BlueTooltip}">
+                                        <Border BorderThickness="1.15"
+                                            Background="#212d3a"
+                                            BorderBrush="#3d4854"
+                                                Padding="7.45">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Title, Mode=OneWay}"
+                                                           FontSize="14"
+                                                           Foreground="White"/>
+                                                <TextBlock Text="{Binding Desc, Mode=OneWay}"
+                                                       TextWrapping="Wrap"
+                                                       MaxWidth="256"
+                                                           FontSize="11"
+                                                           Foreground="White"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </ToolTip>
+                                </Canvas.ToolTip>
+                            </Canvas>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
+                                         Value="True">
+                                    <Setter TargetName="__overlay"
+                                        Property="Opacity"
+                                        Value="0.125"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsActiveMethod}"
+                                         Value="True">
+                                    <Setter TargetName="__overlay"
+                                        Property="Opacity"
+                                        Value="0"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsTransportOptionsVisible}"
+                                         Value="True">
+                                    <Setter TargetName="__items"
+                                        Property="Visibility"
+                                        Value="Visible"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
             </StackPanel>
 

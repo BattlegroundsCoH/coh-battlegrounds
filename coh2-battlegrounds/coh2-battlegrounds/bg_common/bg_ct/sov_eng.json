@@ -1,8 +1,14 @@
 {
   "UIData": {
     "Icon": "ct_engineer",
-    "HighlightUnits": [],
-    "HighlightAbilities": []
+    "HighlightUnits": [
+
+    ],
+    "HighlightAbilities": [
+      "soviet_air_recon",
+      "soviet_air_recon",
+      "soviet_air_recon"
+    ]
   },
   "MaxInfantry": 20,
   "MaxTeamWeapons": 10,

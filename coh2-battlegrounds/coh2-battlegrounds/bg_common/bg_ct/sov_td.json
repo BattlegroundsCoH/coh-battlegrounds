@@ -1,8 +1,16 @@
 {
   "UIData": {
     "Icon": "ct_td",
-    "HighlightUnits": [],
-    "HighlightAbilities": []
+    "HighlightUnits": [
+      "tank_buster_bg",
+      "su-85_bg",
+      "isu-152_bg"
+    ],
+    "HighlightAbilities": [
+      "soviet_air_recon",
+      "soviet_air_recon",
+      "soviet_air_recon"
+    ]
   },
   "MaxInfantry": 20,
   "MaxTeamWeapons": 10,
@@ -41,26 +49,21 @@
       "Manpower": 20
     }
   },
-  "Phases": {
-    "PhaseA": {
-      "ResourceIncomeModifier": {
-        "Manpower": 1,
-        "Munitions": 1,
-        "Fuel": 1
-      }
-    },
-    "PhaseB": {
-      "ActivationTime": 420,
-      "DeployDelay": 1,
-      "ResourceIncomeModifier": {
-        "Manpower": 1,
-        "Munitions": 1,
-        "Fuel": 1
-      },
+  "Roles": {
+    "DirectCommand": {
       "UnitCostModifier": {
         "Manpower": 1,
         "Munitions": 1,
-        "Fuel": 1
+        "Fuel": 1,
+        "FieldTime": 1
+      }
+    },
+    "SupportRole": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
       },
       "Unlocks": [
         "penal_battalion_bg",
@@ -73,18 +76,12 @@
         "isu-152_bg"
       ]
     },
-    "PhaseC": {
-      "ActivationTime": 660,
-      "DeployDelay": 1,
-      "ResourceIncomeModifier": {
-        "Manpower": 1,
-        "Munitions": 1,
-        "Fuel": 1
-      },
+    "ReserveRole": {
       "UnitCostModifier": {
         "Manpower": 1,
         "Munitions": 1,
-        "Fuel": 1
+        "Fuel": 1,
+        "FieldTime": 1
       },
       "Unlocks": [
         "kv-1_bg",
@@ -93,9 +90,9 @@
       ]
     }
   },
-  "abilities": [
+  "Abilities": [
     {
-      "ID": "soviet_air_recon",
+      "Id": "soviet_air_recon",
       "CostModifier": 1
     }
   ]
