@@ -7,6 +7,7 @@ using System.Windows.Media;
 using Battlegrounds.AI;
 using Battlegrounds.AI.Lobby;
 using Battlegrounds.Functional;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
@@ -177,9 +178,9 @@ internal abstract class BasePlayModel {
             var mode = package.Gamemodes.FirstOrDefault(x => x.ID == gamemodeInstance.Name, new());
 
             // Invoke helper functions
-            sessionGoals = CreatePlanningGoals(participants, elements);
-            sessionEntities = CreatePlanningEntities(participants,elements, mode);
-            sessionSquads = CreatePlanningSquads(participants, elements);
+            sessionGoals = CreatePlanningGoals(participants, elements, (int)scen.PlayableSize.Z);
+            sessionEntities = CreatePlanningEntities(participants,elements, (int)scen.PlayableSize.Z, mode);
+            sessionSquads = CreatePlanningSquads(participants, elements, (int)scen.PlayableSize.Z);
 
             // Determine if there's need for AI planning
             this.CreateAIPlans(scen, revflag ? allies : axis, (byte)(revflag ? 0 : 1), ref sessionSquads, ref sessionEntities, sessionGoals, mode);
@@ -255,7 +256,12 @@ internal abstract class BasePlayModel {
 
     }
 
-    protected static SessionPlanEntityInfo[] CreatePlanningEntities(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements, Gamemode gamemode) {
+    private static GamePosition InvertPosition(GamePosition position, int axisLen)
+        => position with {
+            Z = axisLen - position.Z
+        };
+
+    protected static SessionPlanEntityInfo[] CreatePlanningEntities(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements, int height, Gamemode gamemode) {
 
         // Grab planning entities
         var planEntities = planElements.Filter(x => x.IsEntity && x.ObjectiveType is PlanningObjectiveType.None);
@@ -274,8 +280,8 @@ internal abstract class BasePlayModel {
                 TeamOwner = (int)p.TeamIndex,
                 TeamMemberOwner = p.PlayerIndexOnTeam,
                 Blueprint = BlueprintManager.FromBlueprintName<EntityBlueprint>(planEntities[i].Blueprint),
-                Spawn = planEntities[i].SpawnPosition,
-                Lookat = planEntities[i].LookatPosition,
+                Spawn = InvertPosition(planEntities[i].SpawnPosition, height),
+                Lookat = planEntities[i].LookatPosition is GamePosition look ? InvertPosition(look, height) : null,
                 IsDirectional = planEntities[i].IsDirectional,
                 Width = gamemode.GetPlanningEntity(planEntities[i].Blueprint).Width
             };
@@ -287,7 +293,7 @@ internal abstract class BasePlayModel {
 
     }
 
-    protected static SessionPlanSquadInfo[] CreatePlanningSquads(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements) {
+    protected static SessionPlanSquadInfo[] CreatePlanningSquads(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements, int height) {
 
         // Grab planning squads
         var planSquads = planElements.Filter(x => !x.IsEntity && x.ObjectiveType is PlanningObjectiveType.None);
@@ -306,8 +312,8 @@ internal abstract class BasePlayModel {
                 TeamOwner = (int)p.TeamIndex,
                 TeamMemberOwner = p.PlayerIndexOnTeam,
                 SpawnId = planSquads[i].CompanyId,
-                Spawn = planSquads[i].SpawnPosition,
-                Lookat = planSquads[i].LookatPosition
+                Spawn = InvertPosition(planSquads[i].SpawnPosition, height),
+                Lookat = planSquads[i].LookatPosition is GamePosition look ? InvertPosition(look, height) : null
             };
 
         }
@@ -317,7 +323,7 @@ internal abstract class BasePlayModel {
 
     }
 
-    protected static SessionPlanGoalInfo[] CreatePlanningGoals(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements) {
+    protected static SessionPlanGoalInfo[] CreatePlanningGoals(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements, int height) {
 
         // Grab all goals
         var planGoals = planElements.Filter(x => x.ObjectiveType is not PlanningObjectiveType.None);
@@ -337,7 +343,7 @@ internal abstract class BasePlayModel {
                 ObjectivePlayer = p.PlayerIndexOnTeam,
                 ObjectiveType = (byte)planGoals[i].ObjectiveType,
                 ObjectiveIndex = (byte)planGoals[i].ObjectiveOrder,
-                ObjectivePosition = planGoals[i].SpawnPosition
+                ObjectivePosition = InvertPosition(planGoals[i].SpawnPosition, height)
             };
 
         }
