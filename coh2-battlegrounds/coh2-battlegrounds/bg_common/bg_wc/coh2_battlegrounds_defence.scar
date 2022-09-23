@@ -64,7 +64,7 @@ function BattlegroundsDefence_InitGamemode()
 	Timer_Start(DefenceSettingsData.Counter, DefenceSettingsData.Time)
 
 	-- Add interval to update points
-	Rule_AddInterval(BattlegroundsDefence_UpdatePoints, 3);
+	Rule_AddInterval(BattlegroundsDefence_UpdatePoints, 5);
 	Rule_Add(BattlegroundsDefence_CheckTime);
 
 	-- Grant additional resources to the attacking team.
@@ -379,12 +379,16 @@ function BattlegroundsDefence_SpawnLine(owner, bp, startpos, endpos, width)
 		local currPos = Util_GetPositionFromAtoB(startpos, endpos, current)
 		local nextPos = Util_GetPositionFromAtoB(startpos, endpos, current + step)
 
+		-- Correct y-pos
+		currPos.y = World_GetHeightAt(currPos.x, currPos.z)
+
 		-- Grab heading
 		local dir = { x = nextPos.x - currPos.x, z = nextPos.z - currPos.z };
 		dir.x, dir.z = dir.z, -dir.x
 
 		-- Get lookat position
 		local lookat = Util_ScarPos(currPos.x + dir.x, currPos.z + dir.z)
+		lookat.y = World_GetHeightAt(lookat.x, lookat.z)
 
 		-- Create entity
 		local entity = BattlegroundsDefence_CreateEntity(bp, owner, currPos, lookat)

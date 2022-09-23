@@ -64,11 +64,11 @@ function BG_Init()
     -- Setup map data
     BG_PrepareMapdata();
 
-    -- Properly set up win condition data
-    BG_SetupWincondition();
-
     -- Setup optional BG systems
     BG_SetupWeatherAndSupply();
+
+    -- Properly set up win condition data
+    BG_SetupWincondition();
 
     -- Create the UI
     UI_AddSetupFunction(function()
