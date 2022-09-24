@@ -352,23 +352,6 @@ public class CompanyBuilder : IBuilder<Company> {
     };
 
     /// <summary>
-    /// Get if the phase has capacity for more units in specified phase.
-    /// </summary>
-    /// <param name="phase">The phase to check if new units can be assiged to.</param>
-    /// <returns>If phase has capaciy <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
-    public virtual bool IsRoleAvailable(DeploymentRole role, SquadBlueprint? blueprint = null) => (role, this.CountUnitsInRole(role)) switch {
-        // Basic check on phases
-        (DeploymentRole.DirectCommand, int x) when x < this.CompanyType.GetMaxInPhase(DeploymentPhase.PhaseStandard) =>
-            (blueprint is null || (blueprint is not null && this.CompanyType.GetUnitRole(blueprint) is <= DeploymentRole.DirectCommand)),
-        (DeploymentRole.SupportRole, int x) when x < this.CompanyType.GetMaxInPhase(DeploymentPhase.PhaseStandard) =>
-            (blueprint is null || (blueprint is not null && this.CompanyType.GetUnitRole(blueprint) is <= DeploymentRole.SupportRole)),
-        (DeploymentRole.ReserveRole, int x) when x < this.CompanyType.GetMaxInPhase(DeploymentPhase.PhaseStandard) =>
-            (blueprint is null || (blueprint is not null && this.CompanyType.GetUnitRole(blueprint) is <= DeploymentRole.ReserveRole)),
-        // Default to not available
-        _ => false
-    };
-
-    /// <summary>
     /// Get the first deployment phase not fully occupied.
     /// </summary>
     /// <param name="minPhase">The minimum phase to begin checking from.</param>

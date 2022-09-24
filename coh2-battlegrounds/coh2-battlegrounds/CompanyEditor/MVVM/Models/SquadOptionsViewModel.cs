@@ -36,70 +36,8 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
         public CostExtension Cost => this.Ubp.Cost;
     }
 
-    public record PhaseButton(DeploymentPhase Phase, Func<bool> IsActive, CapacityValue? PhaseCap, EventCommand Clicked) : INotifyPropertyChanged {
-        public bool IsActivePhase => this.IsActive();
-        public bool IsPickable { get; set; }
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public ImageSource? Icon => this.Phase switch {
-            DeploymentPhase.PhaseInitial => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_01"),
-            DeploymentPhase.PhaseStandard => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_02"),
-            //DeploymentPhase.PhaseB => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_03"),
-            //DeploymentPhase.PhaseC => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_04"),
-            _ => throw new InvalidEnumArgumentException()
-        };
-        public string Title => this.Phase switch {
-            DeploymentPhase.PhaseInitial => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseI"),
-            DeploymentPhase.PhaseStandard => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseA"),
-            //DeploymentPhase.PhaseB => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseB"),
-            //DeploymentPhase.PhaseC => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseC"),
-            _ => throw new InvalidEnumArgumentException()
-        };
-        public string Desc => this.Phase switch {
-            DeploymentPhase.PhaseInitial => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseI_Desc", PhaseCap?.ToArgs() ?? Array.Empty<object>()),
-            DeploymentPhase.PhaseStandard => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseA_Desc"),
-            //DeploymentPhase.PhaseB => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseB_Desc"),
-            //DeploymentPhase.PhaseC => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseC_Desc"),
-            _ => throw new InvalidEnumArgumentException()
-        };
-        public void Update(bool pickable) {
-            this.IsPickable = pickable;
-            this.PropertyChanged?.Invoke(this, new(nameof(IsPickable)));
-            this.PropertyChanged?.Invoke(this, new(nameof(IsActivePhase)));
-        }
-    }
-
-    public record RoleButton(DeploymentRole Role, Func<bool> IsActive, CapacityValue? PhaseCap, EventCommand Clicked) : INotifyPropertyChanged {
-        public bool IsActiveRole => this.IsActive();
-        public bool IsPickable { get; set; }
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public ImageSource? Icon => this.Role switch {
-            DeploymentRole.DirectCommand => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_01"),
-            DeploymentRole.SupportRole => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_02"),
-            DeploymentRole.ReserveRole => App.ResourceHandler.GetIcon("phase_icons", "Icons_research_german_battle_phase_03"),
-            _ => throw new InvalidEnumArgumentException()
-        };
-        public string Title => this.Role switch {
-            DeploymentRole.DirectCommand => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseA"),
-            DeploymentRole.SupportRole => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseB"),
-            DeploymentRole.ReserveRole => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseC"),
-            _ => throw new InvalidEnumArgumentException()
-        };
-        public string Desc => this.Role switch {
-            DeploymentRole.DirectCommand => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseA_Desc", PhaseCap?.ToArgs() ?? Array.Empty<object>()),
-            DeploymentRole.SupportRole => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseB_Desc"),
-            DeploymentRole.ReserveRole => BattlegroundsInstance.Localize.GetString("CompanySquadView_PhaseC_Desc"),
-            _ => throw new InvalidEnumArgumentException()
-        };
-        public void Update(bool pickable) {
-            this.IsPickable = pickable;
-            this.PropertyChanged?.Invoke(this, new(nameof(IsPickable)));
-            this.PropertyChanged?.Invoke(this, new(nameof(IsActiveRole)));
-        }
-    }
-
     public record DeployButton(DeploymentMethod Method, Func<bool> IsActive, EventCommand Clicked) : INotifyPropertyChanged {
         public bool IsActiveMethod => this.IsActive();
-        public bool IsTransportOptionsVisible => this.IsActiveMethod && this.Method is not DeploymentMethod.None;
         public event PropertyChangedEventHandler? PropertyChanged;
         public ImageSource? Icon => this.Method switch {
             DeploymentMethod.None => App.ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_none"),
@@ -107,21 +45,8 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
             DeploymentMethod.DeployAndStay => App.ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_drop_stay"),
             _ => throw new InvalidEnumArgumentException()
         };
-        public string Title => this.Method switch {
-            DeploymentMethod.None => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_None"),
-            DeploymentMethod.DeployAndExit => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Exit"),
-            DeploymentMethod.DeployAndStay => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Stay"),
-            _ => throw new InvalidEnumArgumentException()
-        };
-        public string Desc => this.Method switch {
-            DeploymentMethod.None => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_None_Desc"),
-            DeploymentMethod.DeployAndExit => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Exit_Desc"),
-            DeploymentMethod.DeployAndStay => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Stay_Desc"),
-            _ => throw new InvalidEnumArgumentException()
-        };
         public void Update() {
             this.PropertyChanged?.Invoke(this, new(nameof(IsActiveMethod)));
-            this.PropertyChanged?.Invoke(this, new(nameof(IsTransportOptionsVisible)));
         }
     }
 
@@ -137,7 +62,7 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
         }
     }
 
-    private static string RankToStart(int i, int rank) => i < rank
+    private static string RankToStar(int i, int rank) => i < rank
         ? "pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/vet/vstar_yes.png"
         : "pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/vet/vstar_no.png";
 
@@ -155,11 +80,27 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     public string UnitHelpText => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ShortDescription);
 
+    public string DeployMethodTitle => this.BuilderInstance.DeployMethod switch {
+        DeploymentMethod.None => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_None"),
+        DeploymentMethod.DeployAndExit => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Exit"),
+        DeploymentMethod.DeployAndStay => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Stay"),
+        _ => throw new InvalidEnumArgumentException()
+    };
+
+    public string DeployMethodDesc => this.BuilderInstance.DeployMethod switch {
+        DeploymentMethod.None => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_None_Desc"),
+        DeploymentMethod.DeployAndExit => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Exit_Desc"),
+        DeploymentMethod.DeployAndStay => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Stay_Desc"),
+        _ => throw new InvalidEnumArgumentException()
+    };
+
+    public Visibility DeployUnitVisible => this.BuilderInstance.DeployMethod is DeploymentMethod.None ? Visibility.Collapsed : Visibility.Visible;
+
     public ImageSource? UnitPortrait => App.ResourceHandler.GetIcon("portraits", this.BuilderInstance.Blueprint.UI.Portrait);
 
     public string UnitSymbol => this.BuilderInstance.Blueprint.UI.Symbol;
 
-    public ObservableCollection<string> Veterancy => new ObservableCollection<string>(Enumerable.Range(0, 5).Select(x => RankToStart(x, this.BuilderInstance.Rank)));
+    public ObservableCollection<string> Veterancy => new ObservableCollection<string>(Enumerable.Range(0, 5).Select(x => RankToStar(x, this.BuilderInstance.Rank)));
 
     public ObservableCollection<AbilityButton> Abilities { get; }
 
@@ -168,10 +109,6 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
     public ObservableCollection<UpgradeButton> Upgrades { get; }
 
     public Visibility ShowUpgrades => this.Upgrades.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
-
-    public ObservableCollection<RoleButton> Roles { get; }
-
-    public ObservableCollection<PhaseButton> Phases { get; }
 
     public ObservableCollection<DeployButton> DeploySettings { get; }
 
@@ -188,8 +125,6 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
     public ProgressValue Experience => new ProgressValue(this.BuilderInstance.Experience, this.BuilderInstance.Blueprint.Veterancy.MaxExperience);
 
     public CapacityValue UpgradeCapacity { get; }
-
-    public CapacityValue PhaseICap { get; }
 
     public int LowerSpan => this.BuilderInstance.Blueprint.Category is SquadCategory.Vehicle ? 2 : 1;
 
@@ -215,32 +150,6 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
         // Collect all upgrades        
         this.Upgrades = new();
         this.RefreshUpgrades();
-
-        // Create phase capacity
-        this.PhaseICap = new(this.CompanyBuilder.CompanyType.MaxInitialPhase, () => this.CompanyBuilder.CountUnitsInPhase(DeploymentPhase.PhaseInitial));
-
-        // Create phase buttons
-        this.Phases = new ObservableCollection<PhaseButton>() {
-            new PhaseButton(DeploymentPhase.PhaseInitial, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseInitial, this.PhaseICap, new EventCommand<MouseEventArgs>(this.PhaseCommand)) {
-                IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseInitial, this.BuilderInstance.Blueprint)
-            },
-            new PhaseButton(DeploymentPhase.PhaseStandard, () => this.BuilderInstance.Phase == DeploymentPhase.PhaseStandard, null, new EventCommand<MouseEventArgs>(this.PhaseCommand)){
-                IsPickable = this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseStandard, this.BuilderInstance.Blueprint)
-            },
-        };
-
-        // Create role buttons
-        this.Roles = new ObservableCollection<RoleButton>() {
-            new RoleButton(DeploymentRole.DirectCommand, () => this.BuilderInstance.Role == DeploymentRole.DirectCommand, null, new EventCommand<MouseEventArgs>(this.RoleCommand)) {
-                IsPickable = this.CompanyBuilder.IsRoleAvailable(DeploymentRole.DirectCommand, this.BuilderInstance.Blueprint)
-            },
-            new RoleButton(DeploymentRole.SupportRole, () => this.BuilderInstance.Role == DeploymentRole.SupportRole, null, new EventCommand<MouseEventArgs>(this.RoleCommand)){
-                IsPickable = this.CompanyBuilder.IsRoleAvailable(DeploymentRole.SupportRole, this.BuilderInstance.Blueprint)
-            },
-            new RoleButton(DeploymentRole.ReserveRole, () => this.BuilderInstance.Role == DeploymentRole.ReserveRole, null, new EventCommand<MouseEventArgs>(this.RoleCommand)){
-                IsPickable = this.CompanyBuilder.IsRoleAvailable(DeploymentRole.ReserveRole, this.BuilderInstance.Blueprint)
-            }
-        };
 
         // Create event command
         var dcmd = new EventCommand<MouseEventArgs>(this.DeployCommand);
@@ -313,62 +222,6 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     }
 
-    private void RoleCommand(object sender, MouseEventArgs args) {
-
-        // Bail if null
-        if (sender is not FrameworkElement frameworkElement)
-            return;
-
-        // Grab model
-        if (frameworkElement.DataContext is not PhaseButton model) {
-            return;
-        }
-
-        // Do nothing if not pickable
-        if (!model.IsPickable)
-            return;
-
-        // Set phase
-        this.BuilderInstance.SetDeploymentPhase(model.Phase);
-
-        // Refresh all
-        foreach (var phase in this.Phases) {
-            phase.Update(this.CompanyBuilder.IsPhaseAvailable(phase.Phase));
-        }
-
-        // Update phase cap
-        this.PhaseICap.Update(this);
-
-    }
-
-    private void PhaseCommand(object sender, MouseEventArgs args) {
-
-        // Bail if null
-        if (sender is not FrameworkElement frameworkElement)
-            return;
-
-        // Grab model
-        if (frameworkElement.DataContext is not PhaseButton model) {
-            return;
-        }
-
-        // Do nothing if not pickable
-        if (!model.IsPickable)
-            return;
-
-        // Set phase
-        this.BuilderInstance.SetDeploymentPhase(model.Phase);
-
-        // Refresh all
-        foreach (var phase in this.Phases) {
-            phase.Update(this.CompanyBuilder.IsPhaseAvailable(phase.Phase));
-        }
-
-        // Update phase cap
-        this.PhaseICap.Update(this);
-
-    }
-
     private void DeployCommand(object sender, MouseEventArgs args) {
 
         // Bail if null
@@ -393,10 +246,23 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
             }
         } 
 
-        // Refresh all
+        // Refresh all settings
         foreach (var method in this.DeploySettings) {
             method.Update();
         }
+
+        // Refresh all units
+        foreach (var unit in this.DeployUnits) {
+            unit.Update();
+        }
+
+        // Update cost
+        this.PropertyChanged?.Invoke(this, new(nameof(Cost)));
+
+        // Update UI
+        this.PropertyChanged?.Invoke(this, new(nameof(DeployMethodTitle)));
+        this.PropertyChanged?.Invoke(this, new(nameof(DeployMethodDesc)));
+        this.PropertyChanged?.Invoke(this, new(nameof(DeployUnitVisible)));
 
     }
 
@@ -419,6 +285,9 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
             bp.Update();
         }
 
+        // Update cost
+        this.PropertyChanged?.Invoke(this, new(nameof(Cost)));
+
     }
 
     /// <summary>
@@ -431,11 +300,18 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public void CloseModal() {
         this.OnClose();
         App.ViewManager.GetRightsideModalControl()?.CloseModal();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="text"></param>
     public void SetCustomName(string text)
         => this.BuilderInstance.SetCustomName(text);
 

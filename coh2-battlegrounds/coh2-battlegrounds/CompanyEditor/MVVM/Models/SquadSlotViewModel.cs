@@ -32,7 +32,8 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
 
     public string SquadSymbol { get; set; }
 
-    public CostExtension SquadCost { get; set; }
+    public CostExtension SquadCost 
+        => this.CompanyType.GetUnitCost(this.BuilderInstance.Blueprint, this.BuilderInstance.Rank, this.BuilderInstance.Role, this.BuilderInstance.Transport);
 
     public bool SquadIsTransported { get; set; }
 
@@ -104,7 +105,6 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
 
         // Set basic info
         this.SquadName = GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ScreenName);
-        this.SquadCost = this.CompanyType.GetUnitCost(this.BuilderInstance.Blueprint, this.BuilderInstance.Rank, this.BuilderInstance.Role, this.BuilderInstance.Transport);
 
         // Get rank
         var rankLevel = this.BuilderInstance.Rank;
