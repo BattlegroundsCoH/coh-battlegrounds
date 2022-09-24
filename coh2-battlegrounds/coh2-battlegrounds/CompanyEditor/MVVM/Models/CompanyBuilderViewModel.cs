@@ -651,13 +651,25 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     private bool CanAddBlueprint(Blueprint bp) {
         if (bp is SquadBlueprint sbp) {
-            return !this.UnitCapacity.IsAtCapacity && sbp.Category switch {
+            
+            // Collect initial data
+            var role = this.Builder.CompanyType.GetUnitRole(sbp);
+            int roleCount = this.Builder.CountUnitsInRole(role);
+            int roleMax = this.Builder.CompanyType.GetMaxInRole(role);
+
+            // Define check flags
+            bool companyNotFull = !this.UnitCapacity.IsAtCapacity;
+            bool compayRoleCap = roleCount < roleMax;
+
+            // Return if company not full, role cap allows, and category allows
+            return companyNotFull && compayRoleCap && sbp.Category switch {
                 SquadCategory.Infantry => !this.InfantryCapacity.IsAtCapacity,
                 SquadCategory.Support => !this.SupportCapacity.IsAtCapacity,
                 SquadCategory.Vehicle => !this.VehicleCapacity.IsAtCapacity,
                 SquadCategory.Leader => !this.LeaderCapacity.IsAtCapacity,
                 _ => false
             };
+
         } else if (bp is AbilityBlueprint abp) {
             return !this.AbilityCapacity.IsAtCapacity;
         }
@@ -741,22 +753,15 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     private void NewUnit(SquadBlueprint sbp) {
 
-        // Get earliest phase
-        var earliestPhase = this.Builder.CompanyType.GetEarliestPhase(sbp);
+        // Get the unit role
+        var role = this.Builder.CompanyType.GetUnitRole(sbp);
 
         // Determine the initial phase of the unit
-        var basicPhase = this.Builder.IsPhaseAvailable(DeploymentPhase.PhaseInitial) && earliestPhase is DeploymentPhase.PhaseStandard ?
-            DeploymentPhase.PhaseInitial : earliestPhase;
-
-        // Get the default phase
-        var defaultPhase = this.Builder.GetFirstAvailablePhase(basicPhase);
-        if (defaultPhase is DeploymentPhase.PhaseNone) {
-            // TODO: Show warning for user
-            return;
-        }
+        var defaultPhase = this.Builder.IsPhaseAvailable(DeploymentPhase.PhaseInitial) && role is DeploymentRole.DirectCommand ?
+            DeploymentPhase.PhaseInitial : DeploymentPhase.PhaseStandard;
 
         // Create squad (in initial phase or in phase A)
-        var unitBuilder = UnitBuilder.NewUnit(sbp).SetDeploymentPhase(defaultPhase).SetDeploymentRole(this.Builder.CompanyType.GetUnitRole(sbp));
+        var unitBuilder = UnitBuilder.NewUnit(sbp).SetDeploymentPhase(defaultPhase).SetDeploymentRole(role);
 
         // If heavy arty add tow
         if (sbp.Types.IsHeavyArtillery && !sbp.Types.IsAntiTank)

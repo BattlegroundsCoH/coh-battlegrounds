@@ -94,7 +94,7 @@ public class FactionCompanyType : IChecksumElement {
         /// <summary>
         /// Get the name of the phase this transport method first becomes available.
         /// </summary>
-        public string AvailableInPhase { get; }
+        public string? AvailableInRole { get; }
 
         /// <summary>
         /// Get the list of units that can be transported. If null or empty, all units are allowed.
@@ -111,14 +111,17 @@ public class FactionCompanyType : IChecksumElement {
         /// <param name="AvailableInPhase"></param>
         /// <param name="Units"></param>
         [JsonConstructor]
-        public TransportOption(string Blueprint, float CostModifier, bool Tow, float TowCostModifier, string AvailableInPhase, string[] Units) {
-            this.AvailableInPhase = AvailableInPhase;
+        public TransportOption(string Blueprint, float CostModifier, bool Tow, float TowCostModifier, string? AvailableInRole, string[]? Units) {
+            this.AvailableInRole = AvailableInRole;
             this.Blueprint = Blueprint;
             this.CostModifier = CostModifier;
             this.Tow = Tow;
             this.TowCostModifier = TowCostModifier;
             this.Units = Units ?? Array.Empty<string>();
         }
+
+        public bool SupportsRole(DeploymentRole role) 
+            => string.IsNullOrEmpty(this.AvailableInRole) || (role.ToString() == this.AvailableInRole);
 
     }
 
@@ -168,9 +171,9 @@ public class FactionCompanyType : IChecksumElement {
         /// Get or initialise the maximum amount of unts in this phase.
         /// </summary>
         /// <remarks>
-        /// If none is specified the value is (<see cref="Company.MAX_SIZE"/> / 3) + 1
+        /// If none is specified the value is <see cref="BattlegroundsDefine.COMPANY_ROLE_MAX"/>
         /// </remarks>
-        public int MaxPhase { get; init; }
+        public int MaxRole { get; init; }
 
         /// <summary>
         /// 
@@ -179,10 +182,10 @@ public class FactionCompanyType : IChecksumElement {
         /// <param name="Unlocks"></param>
         /// <param name="MaxPhase"></param>
         [JsonConstructor]
-        public CommandLevel(CostModifier UnitCostModifier, string[] Unlocks, int MaxPhase) {
+        public CommandLevel(CostModifier UnitCostModifier, string[] Unlocks, int MaxRole) {
             this.UnitCostModifier = UnitCostModifier;
             this.Unlocks = Unlocks ?? Array.Empty<string>();
-            this.MaxPhase = MaxPhase <= 0 ? (Company.MAX_SIZE / 3 + 1) : MaxPhase;
+            this.MaxRole = MaxRole <= 0 ? BattlegroundsDefine.COMPANY_ROLE_MAX : MaxRole;
         }
 
     }
@@ -388,25 +391,6 @@ public class FactionCompanyType : IChecksumElement {
     }
 
     /// <summary>
-    /// Get the earliest phase a unit is available in.
-    /// </summary>
-    /// <param name="blueprint">The squad blueprint to get earliest phase for.</param>
-    /// <returns>
-    /// The earliest phase for the unit. If the unit is excluded <see cref="DeploymentPhase.PhaseNone"/> is returned.
-    /// If no unlock phase is specified for a unit, <see cref="DeploymentPhase.PhaseStandard"/>; Otherwise the specified <see cref="DeploymentPhase"/>.
-    /// </returns>
-    public DeploymentPhase GetEarliestPhase(SquadBlueprint blueprint) {
-
-        // Ignore if excluded
-        if (this.Exclude.Any(x => x == blueprint.Name))
-            return DeploymentPhase.PhaseNone;
-
-        // Return Phase A ==> Available by default
-        return DeploymentPhase.PhaseStandard;
-
-    }
-
-    /// <summary>
     /// Get the role a unit is available in.
     /// </summary>
     /// <param name="blueprint">The squad blueprint to get role for.</param>
@@ -441,11 +425,11 @@ public class FactionCompanyType : IChecksumElement {
     /// </summary>
     /// <param name="phase"></param>
     /// <returns></returns>
-    public int GetMaxInPhase(DeploymentPhase phase) {
-        if (this.Roles.TryGetValue(phase.ToString(), out CommandLevel? p)) {
-            return p.MaxPhase;
+    public int GetMaxInRole(DeploymentRole role) {
+        if (this.Roles.TryGetValue(role.ToString(), out CommandLevel? p)) {
+            return p.MaxRole;
         }
-        return Company.MAX_SIZE / 3 + 1;
+        return BattlegroundsDefine.COMPANY_ROLE_MAX;
     }
 
     /// <summary>
@@ -498,6 +482,9 @@ public class FactionCompanyType : IChecksumElement {
                     result *= this.DeployBlueprints[i].CostModifier;
             }
         }
+
+        // Add upgrade costs
+        result += ubps.Fold(new CostExtension(), (s, x) => s + x.Cost);
 
         // Return resulting cost
         return result;

@@ -346,8 +346,7 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <returns>If phase has capaciy <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
     public virtual bool IsPhaseAvailable(DeploymentPhase phase, SquadBlueprint? blueprint = null) => (phase, this.CountUnitsInPhase(phase)) switch {
         // Check if there's space in initial AND the unit is under direct command
-        (DeploymentPhase.PhaseInitial, int x) => 
-            x < this.CompanyType.MaxInitialPhase && (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseStandard)),
+        (DeploymentPhase.PhaseInitial, int x) => x < this.CompanyType.MaxInitialPhase,
         _ => true
     };
 
@@ -371,21 +370,6 @@ public class CompanyBuilder : IBuilder<Company> {
         if (IsPhaseAvailable((DeploymentPhase)minPhase))
             return (DeploymentPhase)minPhase;
         return minPhase is (int)DeploymentPhase.PhaseStandard ? DeploymentPhase.PhaseNone : GetFirstAvailablePhase(minPhase + 1);
-    }
-
-    /// <summary>
-    /// Get a list of available transport units based on the settings of the <see cref="CompanyBuilder"/>.
-    /// </summary>
-    /// <param name="isTow">Flag setting whether transport units should be for towing or not.</param>
-    /// <returns>Array of blueprints for transport use.</returns>
-    public virtual IList<SquadBlueprint> GetTransports(bool isTow) {
-
-        // Grab list from company type
-        var transports = isTow ? this.CompanyType.GetTowTransports() : this.CompanyType.DeployBlueprints.Map(v => BlueprintManager.FromBlueprintName<SquadBlueprint>(v.Blueprint));
-
-        // Return the transports
-        return transports;
-
     }
 
     /// <summary>

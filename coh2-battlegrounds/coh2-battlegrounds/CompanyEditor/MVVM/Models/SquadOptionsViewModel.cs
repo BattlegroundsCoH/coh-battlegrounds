@@ -195,7 +195,7 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
         // Create deploy unit buttons
         this.DeployUnits = new();
-        this.BuilderInstance.GetTransportUnits(this.CompanyBuilder)
+        this.BuilderInstance.GetTransportUnits(this.CompanyBuilder.CompanyType)
             .Map(x => new DeployUnitButton(x, () => this.BuilderInstance.Transport == x, new EventCommand<MouseEventArgs>(this.DeployUnitCommand)))
             .ForEach(this.DeployUnits.Add);
 

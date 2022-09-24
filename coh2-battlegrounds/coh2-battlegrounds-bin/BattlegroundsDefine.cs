@@ -10,4 +10,14 @@ public static class BattlegroundsDefine {
     /// </summary>
     public static readonly float VET_COSTMODIFIER = .005f;
 
+    /// <summary>
+    /// Maximum amount of units that can be in a company.
+    /// </summary>
+    public static readonly int COMPANY_MAX = 40;
+
+    /// <summary>
+    /// Maximum amount of units allowed in a role by default.
+    /// </summary>
+    public static readonly int COMPANY_ROLE_MAX = int.MaxValue;
+
 }

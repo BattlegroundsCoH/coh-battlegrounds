@@ -10,6 +10,7 @@ using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany.Builder;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Content.Companies;
 
 namespace Battlegrounds.Game.DataCompany;
 
@@ -504,8 +505,21 @@ public class UnitBuilder : IBuilder<Squad> {
     /// </summary>
     /// <param name="builder"></param>
     /// <returns></returns>
-    public IList<SquadBlueprint> GetTransportUnits(CompanyBuilder builder)
-        => builder.GetTransports(this.Blueprint.Types.IsHeavyArtillery || this.Blueprint.Types.IsAntiTank);
+    public SquadBlueprint[] GetTransportUnits(FactionCompanyType companyType) {
+
+        // Get transports
+        var transports = companyType.DeployBlueprints.ToArray()
+            .Filter(x => x.Units.Length is 0 || (!x.Units.Any(y => y == this.Blueprint.Name)))
+            .Filter(x => x.SupportsRole(this.Role)); ;
+
+        // Filter to tow only
+        if (this.Blueprint.Types.IsHeavyArtillery || this.Blueprint.Types.IsAntiTank)
+            transports = transports.Filter(x => x.Tow);
+
+        // Map to proper transports
+        return transports.Map(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x.Blueprint));
+
+    }
 
     /// <summary>
     /// 
