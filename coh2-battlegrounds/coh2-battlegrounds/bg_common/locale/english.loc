@@ -217,6 +217,7 @@ english:
  CompanySquadView_Phases: "Deployment Phase"
  CompanySquadView_Settings: "Deployment Settings"
  CompanySquadView_Methods: "Transportation"
+ CompanySquadView_Initial: "Starting Unit"
  CompanySquadView_Close: "Close"
  CompanySquadView_PhaseA: "Phase A"
  CompanySquadView_PhaseB: "Phase B"

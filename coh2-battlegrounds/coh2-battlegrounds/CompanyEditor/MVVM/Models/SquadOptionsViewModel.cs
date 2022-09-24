@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -152,6 +151,12 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     public Visibility DeployMethodsVisible => this.LowerSpan == 1 ? Visibility.Visible : Visibility.Collapsed;
 
+    public EventCommand<MouseEventArgs> RallyClick { get; }
+
+    public bool CanSetStarting => this.CompanyBuilder.IsPhaseAvailable(DeploymentPhase.PhaseInitial) && this.BuilderInstance.Role is DeploymentRole.DirectCommand;
+
+    public bool IsStarting => this.BuilderInstance.Phase is DeploymentPhase.PhaseInitial;
+
     public SquadOptionsViewModel(SquadSlotViewModel triggerer, CompanyBuilder companyBuilder) {
         
         // Store trigger and instance refs
@@ -159,8 +164,9 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
         this.BuilderInstance = triggerer.BuilderInstance;
         this.CompanyBuilder = companyBuilder;
 
-        // Create relay command
+        // Create relay and event commands
         this.SaveExitCommand = new(this.CloseModal);
+        this.RallyClick = new EventCommand<MouseEventArgs>(this.RallyCommand);
 
         // Collect all abilities
         var abilities = this.BuilderInstance.Abilities.Filter(x => x.UI.Icon is not "").Filter(x => App.ResourceHandler.HasIcon("ability_icons", x.UI.Icon));
@@ -341,6 +347,28 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     internal void RefreshName() {
         this.PropertyChanged?.Invoke(this, new(nameof(this.UnitName)));
+    }
+
+    private void RallyCommand(object sender, MouseEventArgs args) {
+
+        // Bail if null
+        if (sender is not FrameworkElement frameworkElement)
+            return;
+
+        // Update
+        if (this.BuilderInstance.Phase is not DeploymentPhase.PhaseStandard) {
+            this.BuilderInstance.SetDeploymentPhase(DeploymentPhase.PhaseStandard);
+        } else if (this.CanSetStarting) {
+            this.BuilderInstance.SetDeploymentPhase(DeploymentPhase.PhaseInitial);
+        }
+
+        // Update starting flag
+        this.PropertyChanged?.Invoke(this, new(nameof(CanSetStarting)));
+        this.PropertyChanged?.Invoke(this, new(nameof(IsStarting)));
+
+        // Mark as handled
+        args.Handled = true;
+
     }
 
 }

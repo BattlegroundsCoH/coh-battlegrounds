@@ -10,18 +10,69 @@
                xmlns:controls="clr-namespace:BattlegroundsApp.Controls" 
                xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM" xmlns:companybuildercontrols="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
                mc:Ignorable="d" 
-             d:DesignHeight="636" 
+             d:DesignHeight="660" 
              d:DesignWidth="620"
               Background="#212d3a">
     <Border Width="620"
             BorderBrush="#3d4854"
             BorderThickness="1.25">
         <Grid>
+            <Grid.Resources>
+                <Style x:Key="StateIcon" TargetType="ContentPresenter">
+                    <Setter Property="ContentTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <Canvas 
+                                    Width="32" 
+                                    Height="32"
+                                    x:Name="__canv">
+                                    <Image 
+                                        Width="32"
+                                        Height="32"
+                                        Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/rally_icon.png"/>
+                                    <Rectangle
+                                        Width="32"
+                                        Height="32"
+                                        x:Name="__overlay"
+                                        Fill="Black"
+                                        Opacity="0.5"/>
+                                </Canvas>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger 
+                                        Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
+                                        Value="True">
+                                        <Setter 
+                                            TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0.125"/>
+                                    </DataTrigger>
+                                    <DataTrigger 
+                                        Binding="{Binding CanSetStarting}"
+                                        Value="False">
+                                        <Setter 
+                                            TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0.5"/>
+                                    </DataTrigger>
+                                    <DataTrigger 
+                                        Binding="{Binding IsStarting}"
+                                        Value="True">
+                                        <Setter 
+                                            TargetName="__overlay"
+                                            Property="Opacity"
+                                            Value="0"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Grid.Resources>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="136"/>
+                <RowDefinition Height="160"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
                 <RowDefinition Height="64"/>
@@ -38,7 +89,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="76"/>
                         <ColumnDefinition/>
-                        <ColumnDefinition Width="116"/>
+                        <ColumnDefinition Width="128"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
@@ -125,8 +176,8 @@
                         Grid.RowSpan="3">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition/>
+                            <RowDefinition Height="46"/>
+                            <RowDefinition Height="48"/>
                         </Grid.RowDefinitions>
                         <StackPanel
                                 Grid.Row="0">
@@ -170,6 +221,7 @@
                             <controls:LocLabel
                                 HorizontalAlignment="Center"
                                 Foreground="White"
+                                FontSize="10"
                                 LocKey="CompanySquadView_ServiceTime"/>
                             <controls:LocLabel 
                                 Grid.Column="2"
@@ -181,7 +233,36 @@
                                 LocKey="{Binding CombatTime, FallbackValue='00:00s'}">
                             </controls:LocLabel>
                         </StackPanel>
-                        
+
+                        <!-- Initial Unit Button -->
+                        <Grid
+                            Grid.Row="3"
+                            Margin="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="36"/>
+                            </Grid.ColumnDefinitions>
+                            <controls:LocLabel
+                                Foreground="White"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                FontFamily="Open Sans"
+                                LocKey="CompanySquadView_Initial"/>
+                            <Border
+                                Grid.Column="1"
+                                CornerRadius="2"
+                                BorderThickness="0.7"
+                                Width="32"
+                                Height="32"
+                                BorderBrush="Gray">
+                                <ContentPresenter 
+                                    Content="{Binding}"
+                                    DataContext="{Binding}"
+                                    Style="{StaticResource StateIcon}"
+                                    MouseUp="{mvvm:EventBinding Handler=RallyClick}"/>
+                            </Border>
+                        </Grid>
+
                     </Grid>
                 </Grid>
             </Border>
@@ -464,8 +545,7 @@
                                             <Image 
                                                 Width="48" 
                                                 Height="48"
-                                                Source="{Binding Icon}"
-                                                Margin="2.5"/>
+                                                Source="{Binding Icon}"/>
                                             <Rectangle 
                                                 Width="48" 
                                                 Height="48"
@@ -549,7 +629,7 @@
                                                 <Image 
                                                     Width="32"
                                                     Height="32"
-                                                     Source="{Binding Icon}"/>
+                                                    Source="{Binding Icon}"/>
                                                 <Rectangle
                                                     Width="32"
                                                     Height="32"
@@ -606,6 +686,7 @@
                                 </ItemsControl>
                             </Grid>
                         </Border>
+
                     </Grid>                    
                 </Border>
 

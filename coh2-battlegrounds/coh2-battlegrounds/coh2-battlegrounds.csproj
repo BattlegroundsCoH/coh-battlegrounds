@@ -94,6 +94,7 @@
     <None Remove="Resources\app\objective_icons\ot_support.png" />
     <None Remove="Resources\app\padlock_locked.png" />
     <None Remove="Resources\app\padlock_open.png" />
+    <None Remove="Resources\app\rally_icon.png" />
     <None Remove="Resources\app\refresh.png" />
     <None Remove="Resources\app\unknown_user.png" />
     <None Remove="Resources\campaign\icon_attrition.png" />
@@ -213,6 +214,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\app\rally_icon.png" />
     <Resource Include="Resources\app\refresh.png" />
     <Resource Include="Resources\app\unknown_user.png" />
     <Resource Include="Resources\campaign\icon_attrition.png" />
