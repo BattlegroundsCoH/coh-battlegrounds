@@ -247,6 +247,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
                                 FontFamily="Open Sans"
+                                FontSize="10"
                                 LocKey="CompanySquadView_Initial"/>
                             <Border
                                 Grid.Column="1"

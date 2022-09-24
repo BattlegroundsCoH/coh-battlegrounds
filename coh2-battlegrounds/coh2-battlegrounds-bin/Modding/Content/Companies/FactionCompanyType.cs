@@ -8,7 +8,6 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding.Verifier;
 using Battlegrounds.Util;
@@ -120,6 +119,11 @@ public class FactionCompanyType : IChecksumElement {
             this.Units = Units ?? Array.Empty<string>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="role"></param>
+        /// <returns></returns>
         public bool SupportsRole(DeploymentRole role) 
             => string.IsNullOrEmpty(this.AvailableInRole) || (role.ToString() == this.AvailableInRole);
 
@@ -356,7 +360,7 @@ public class FactionCompanyType : IChecksumElement {
         this.MaxVehicles = MaxVehicles;
         this.MaxTeamWeapons = MaxTeamWeapons;
         this.MaxAbilities = MaxAbilities;
-        this.MaxInitialPhase = MaxInitialPhase > 0 ? MaxInitialPhase : Company.DEFAULT_INITIAL;
+        this.MaxInitialPhase = MaxInitialPhase > 0 ? MaxInitialPhase : BattlegroundsDefine.COMPANY_DEFAULT_INITIAL;
         this.Exclude = Exclude ?? Array.Empty<string>();
         this.DeployTypes = DeployTypes ?? Array.Empty<string>();
         this.DeployBlueprints = DeployBlueprints ?? Array.Empty<TransportOption>();

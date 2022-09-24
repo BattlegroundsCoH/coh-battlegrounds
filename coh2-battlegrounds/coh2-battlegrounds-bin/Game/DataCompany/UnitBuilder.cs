@@ -501,10 +501,10 @@ public class UnitBuilder : IBuilder<Squad> {
     }
 
     /// <summary>
-    /// 
+    /// Get available transport units for the unit.
     /// </summary>
-    /// <param name="builder"></param>
-    /// <returns></returns>
+    /// <param name="companyType">The faction type that dictates available transports.</param>
+    /// <returns>An array of valid transports.</returns>
     public SquadBlueprint[] GetTransportUnits(FactionCompanyType companyType) {
 
         // Get transports

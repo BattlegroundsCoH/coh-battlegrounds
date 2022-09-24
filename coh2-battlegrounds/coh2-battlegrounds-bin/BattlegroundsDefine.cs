@@ -20,4 +20,9 @@ public static class BattlegroundsDefine {
     /// </summary>
     public static readonly int COMPANY_ROLE_MAX = int.MaxValue;
 
+    /// <summary>
+    /// The max amount of initially deployed units.
+    /// </summary>
+    public static readonly int COMPANY_DEFAULT_INITIAL = 6;
+
 }
