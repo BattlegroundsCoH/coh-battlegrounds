@@ -33,7 +33,8 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
     public string SquadSymbol { get; set; }
 
     public CostExtension SquadCost 
-        => this.CompanyType.GetUnitCost(this.BuilderInstance.Blueprint, this.BuilderInstance.Rank, this.BuilderInstance.Role, this.BuilderInstance.Transport);
+        => this.CompanyType.GetUnitCost(
+            this.BuilderInstance.Blueprint, this.BuilderInstance.Upgrades, this.BuilderInstance.Rank, this.BuilderInstance.Role, this.BuilderInstance.Transport);
 
     public bool SquadIsTransported { get; set; }
 

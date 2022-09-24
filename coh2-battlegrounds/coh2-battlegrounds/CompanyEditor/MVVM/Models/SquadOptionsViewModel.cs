@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -29,11 +30,18 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
         public CostExtension Cost => this.Abp.Cost;
     }
 
-    public record UpgradeButton(UpgradeBlueprint Ubp, bool IsApplied, bool IsAvailable, EventCommand Clicked) {
+    public record UpgradeButton(UpgradeBlueprint Ubp, Func<bool> CheckApplied, Func<bool> CheckAvailable, EventCommand Clicked) : INotifyPropertyChanged {
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public bool IsApplied => this.CheckApplied();
+        public bool IsAvailable => this.CheckAvailable();
         public ImageSource? Icon => App.ResourceHandler.GetIcon("upgrade_icons", this.Ubp.UI.Icon);
         public string Title => GameLocale.GetString(this.Ubp.UI.ScreenName);
         public string Desc => GameLocale.GetString(this.Ubp.UI.LongDescription);
         public CostExtension Cost => this.Ubp.Cost;
+        public void Update() {
+            this.PropertyChanged?.Invoke(this, new(nameof(IsAvailable)));
+            this.PropertyChanged?.Invoke(this, new(nameof(IsApplied)));
+        }
     }
 
     public record DeployButton(DeploymentMethod Method, Func<bool> IsActive, EventCommand Clicked) : INotifyPropertyChanged {
@@ -68,6 +76,8 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     public UnitBuilder BuilderInstance { get; }
 
+    public UnitBuilder? CrewBuilderInstance => this.BuilderInstance.CrewBuilder;
+
     public CompanyBuilder CompanyBuilder { get; }
 
     public SquadSlotViewModel TriggerModel { get; }
@@ -79,6 +89,16 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
     public string UnitDesc => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.LongDescription);
 
     public string UnitHelpText => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ShortDescription);
+
+    public ImageSource? UnitPortrait => App.ResourceHandler.GetIcon("portraits", this.BuilderInstance.Blueprint.UI.Portrait);
+
+    public string CrewTitle => this.CrewBuilderInstance is not null ? GameLocale.GetString(this.CrewBuilderInstance.Blueprint.UI.ScreenName) : "";
+
+    public string CrewDesc => this.CrewBuilderInstance is not null ? GameLocale.GetString(this.CrewBuilderInstance.Blueprint.UI.LongDescription) : "";
+
+    public string CrewHelperDesc => this.CrewBuilderInstance is not null ? GameLocale.GetString(this.CrewBuilderInstance.Blueprint.UI.ShortDescription) : "";
+
+    public ImageSource? CrewPortrait => this.CrewBuilderInstance is not null ? App.ResourceHandler.GetIcon("portraits", this.CrewBuilderInstance.Blueprint.UI.Portrait) : null;
 
     public string DeployMethodTitle => this.BuilderInstance.DeployMethod switch {
         DeploymentMethod.None => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_None"),
@@ -96,11 +116,11 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     public Visibility DeployUnitVisible => this.BuilderInstance.DeployMethod is DeploymentMethod.None ? Visibility.Collapsed : Visibility.Visible;
 
-    public ImageSource? UnitPortrait => App.ResourceHandler.GetIcon("portraits", this.BuilderInstance.Blueprint.UI.Portrait);
-
     public string UnitSymbol => this.BuilderInstance.Blueprint.UI.Symbol;
 
     public ObservableCollection<string> Veterancy => new ObservableCollection<string>(Enumerable.Range(0, 5).Select(x => RankToStar(x, this.BuilderInstance.Rank)));
+
+    public ObservableCollection<string> CrewVeterancy => new ObservableCollection<string>(Enumerable.Range(0, 5).Select(x => RankToStar(x, this.CrewBuilderInstance?.Rank ?? 0)));
 
     public ObservableCollection<AbilityButton> Abilities { get; }
 
@@ -109,6 +129,8 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
     public ObservableCollection<UpgradeButton> Upgrades { get; }
 
     public Visibility ShowUpgrades => this.Upgrades.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+
+    public Visibility ShowCrew => this.BuilderInstance.CrewBuilder is not null ? Visibility.Visible : Visibility.Collapsed;
 
     public ObservableCollection<DeployButton> DeploySettings { get; }
 
@@ -149,7 +171,13 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
         // Collect all upgrades        
         this.Upgrades = new();
-        this.RefreshUpgrades();
+
+        // Collect all upgrades
+        this.BuilderInstance.Blueprint.Upgrades
+            .Map(BlueprintManager.FromBlueprintName<UpgradeBlueprint>)
+            .Filter(x => x.UI.Icon is not "" && App.ResourceHandler.HasIcon("upgrade_icons", x.UI.Icon))
+            .Map(x => new UpgradeButton(x, () => this.BuilderInstance.Upgrades.Contains(x), () => !this.UpgradeCapacity.IsAtCapacity, new EventCommand<MouseEventArgs>(this.UpgradeCommand)))
+            .ForEach(this.Upgrades.Add);
 
         // Create event command
         var dcmd = new EventCommand<MouseEventArgs>(this.DeployCommand);
@@ -186,39 +214,29 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
             return;
         }
 
-        // Bail if at capacity
-        if (this.UpgradeCapacity.IsAtCapacity)
-            return;
-
         // Grab bp
         var bp = model.Ubp;
 
         // Decide what to do
         if (model.IsApplied) {
             this.BuilderInstance.RemoveUpgrade(bp);
-        } else {
+        } else if (!this.UpgradeCapacity.IsAtCapacity) {
             this.BuilderInstance.AddUpgrade(bp);
         }
 
         // Refresh
         this.UpgradeCapacity.Update(this);
 
-        // Refresh upgrades
-        this.RefreshUpgrades();
+        // Loop over
+        foreach (var upg in this.Upgrades) {
+            upg.Update();
+        }
 
-    }
+        // Update cost
+        this.PropertyChanged?.Invoke(this, new(nameof(Cost)));
 
-    private void RefreshUpgrades() {
-
-        // Clear upgrades
-        this.Upgrades.Clear();
-
-        // Collect all upgrades
-        var upgrades = this.BuilderInstance.Blueprint.Upgrades
-            .Map(BlueprintManager.FromBlueprintName<UpgradeBlueprint>)
-            .Filter(x => x.UI.Icon is not "" && App.ResourceHandler.HasIcon("upgrade_icons", x.UI.Icon))
-            .Map(x => new UpgradeButton(x, this.BuilderInstance.Upgrades.Contains(x), !this.UpgradeCapacity.IsAtCapacity, new EventCommand<MouseEventArgs>(this.UpgradeCommand)))
-            .ForEach(this.Upgrades.Add);
+        // Mark as handled
+        args.Handled = true;
 
     }
 
@@ -264,6 +282,9 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
         this.PropertyChanged?.Invoke(this, new(nameof(DeployMethodDesc)));
         this.PropertyChanged?.Invoke(this, new(nameof(DeployUnitVisible)));
 
+        // Mark as handled
+        args.Handled = true;
+
     }
 
     private void DeployUnitCommand(object sender, MouseEventArgs args) {
@@ -287,6 +308,9 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
         // Update cost
         this.PropertyChanged?.Invoke(this, new(nameof(Cost)));
+
+        // Mark as handled
+        args.Handled = true;
 
     }
 

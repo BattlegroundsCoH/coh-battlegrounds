@@ -33,9 +33,9 @@
   "DeployBlueprints": [
     {
       "Blueprint": "opel_blitz_transport_squad_bg",
-      "CostModifier": 1.1,
+      "CostModifier": 1.05,
       "Tow": true,
-      "TowCostModifier": 1.2
+      "TowCostModifier": 1.0
     }
   ],
   "CostModifiers": {

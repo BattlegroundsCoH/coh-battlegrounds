@@ -38,7 +38,7 @@
   "DeployBlueprints": [
     {
       "Blueprint": "zis_6_transport_truck_bg",
-      "CostModifier": 1,
+      "CostModifier": 1.05,
       "Tow": true,
       "TowCostModifier": 1
     }

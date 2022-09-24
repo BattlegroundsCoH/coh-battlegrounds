@@ -10,7 +10,7 @@
                xmlns:controls="clr-namespace:BattlegroundsApp.Controls" 
                xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM" xmlns:companybuildercontrols="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
                mc:Ignorable="d" 
-             d:DesignHeight="800" 
+             d:DesignHeight="636" 
              d:DesignWidth="620"
               Background="#212d3a">
     <Border Width="620"
@@ -302,13 +302,15 @@
                     BorderThickness="0.8"
                     Visibility="{Binding ShowUpgrades}">
                     <StackPanel>
-                        <controls:LocLabel HorizontalAlignment="Center"
-                           Foreground="White"
-                                           Arguments="{Binding UpgradeCapacity}">
-                            CompanySquadView_Upgrades
-                        </controls:LocLabel>
-                        <ItemsControl ItemsSource="{Binding Upgrades}"
-                                  HorizontalAlignment="Center">
+                        <controls:LocLabel 
+                            HorizontalAlignment="Center"
+                            Foreground="White"
+                            Arguments="{Binding UpgradeCapacity}"
+                            LocKey="CompanySquadView_Upgrades"/>
+                        <ItemsControl 
+                            ItemsSource="{Binding Upgrades}"
+                            HorizontalAlignment="Center"
+                            Margin="8">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Horizontal"/>
@@ -340,23 +342,27 @@
                                                 Fill="Black"
                                                 Opacity="0.35"/>
                                             <Canvas.ToolTip>
-                                                <ToolTip Style="{StaticResource BlueTooltip}">
-                                                    <Border BorderThickness="1.15"
+                                                <ToolTip 
+                                                    Style="{StaticResource BlueTooltip}">
+                                                    <Border 
+                                                        BorderThickness="1.15"
                                                         Background="#212d3a"
                                                         BorderBrush="#3d4854"
-                                                            Padding="7.45">
+                                                        Padding="7.45">
                                                         <StackPanel>
-                                                            <TextBlock Text="{Binding Title, Mode=OneWay}"
-                                                                       FontSize="14"
-                                                                       Foreground="White"/>
-                                                            <TextBlock Text="{Binding Desc, Mode=OneWay}"
-                                                                   TextWrapping="Wrap"
-                                                                   MaxWidth="256"
-                                                                       FontSize="11"
-                                                                       Foreground="White"/>
+                                                            <TextBlock 
+                                                                Text="{Binding Title, Mode=OneWay}"
+                                                                FontSize="14"
+                                                                Foreground="White"/>
+                                                            <TextBlock 
+                                                                Text="{Binding Desc, Mode=OneWay}"
+                                                                TextWrapping="Wrap"
+                                                                MaxWidth="256"
+                                                                FontSize="11"
+                                                                Foreground="White"/>
                                                             <companybuildercontrols:CostControl
-                                                            Cost="{Binding Cost}"
-                                                            HorizontalAlignment="Right"/>
+                                                                Cost="{Binding Cost}"
+                                                                HorizontalAlignment="Right"/>
                                                         </StackPanel>
                                                     </Border>
                                                 </ToolTip>
@@ -364,21 +370,27 @@
                                         </Canvas>
                                     </Border>
                                     <DataTemplate.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
-                                                 Value="True">
-                                            <Setter TargetName="__overlay"
+                                        <DataTrigger 
+                                            Binding="{Binding ElementName=__canv, Path=IsMouseOver}"
+                                            Value="True">
+                                            <Setter 
+                                                TargetName="__overlay"
                                                 Property="Opacity"
                                                 Value="0.125"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsAvailable}"
-                                                 Value="False">
-                                            <Setter TargetName="__overlay"
+                                        <DataTrigger 
+                                            Binding="{Binding IsAvailable}"
+                                            Value="False">
+                                            <Setter 
+                                                TargetName="__overlay"
                                                 Property="Opacity"
                                                 Value="0.5"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsApplied}"
-                                                 Value="True">
-                                            <Setter TargetName="__overlay"
+                                        <DataTrigger 
+                                            Binding="{Binding IsApplied}"
+                                            Value="True">
+                                            <Setter 
+                                                TargetName="__overlay"
                                                 Property="Opacity"
                                                 Value="0"/>
                                         </DataTrigger>
@@ -597,6 +609,129 @@
                     </Grid>                    
                 </Border>
 
+                <!-- Crew Settings -->
+                <Border
+                    Margin="4"
+                    Height="128"
+                    BorderBrush="{StaticResource SeperatorGrayBrush}"
+                    Background="{StaticResource BackgroundDeepBlueBrush}"
+                    BorderThickness="0.8"
+                    Padding="4"
+                    Visibility="{Binding ShowCrew}">
+
+                    <Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="76"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="116"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Grid.Column="0"
+                                Grid.RowSpan="3"
+                                Width="68"
+                                Height="106">
+                                <Canvas
+                                    ClipToBounds="True">
+                                    <Image
+                                        Canvas.Left="-16"
+                                        Canvas.Top="-8"
+                                        Width="96"
+                                        Stretch="Uniform"
+                                        Source="{Binding CrewPortrait, FallbackValue='pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/test_unit_portrait.png'}"/>
+                                </Canvas>
+                            </Border>
+                            <DockPanel 
+                                Grid.Column="1"
+                                Grid.Row="0"
+                                Margin="2.5"
+                                Height="18">
+                                <TextBlock 
+                                    DockPanel.Dock="Top"
+                                    FontSize="14"
+                                    Foreground="White"
+                                    FontFamily="Open Sans"
+                                    Text="{Binding CrewTitle, FallbackValue='Soviet Vehicle Crew'}"/>
+                            </DockPanel>
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="2.5"
+                                VerticalAlignment="Top"
+                                TextWrapping="Wrap"
+                                Foreground="White"
+                                FontFamily="Open Sans"
+                                FontSize="12"
+                                Text="{Binding CrewDesc, Mode=OneWay, FallbackValue='Long description of the vehicle crew squad with all the relevant unit information.'}"/>
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="2.5"
+                                VerticalAlignment="Top"
+                                TextWrapping="Wrap"
+                                Foreground="White"
+                                FontFamily="Open Sans"
+                                FontSize="10"
+                                FontStyle="Italic"
+                                Text="{Binding CrewHelperDesc, Mode=OneWay, FallbackValue='Short helper description of the crew.'}"/>
+                            <Grid
+                                Grid.Column="2"
+                                Grid.RowSpan="3">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <StackPanel
+                                    Grid.Row="0">
+                                    <ItemsControl
+                                        ItemsSource="{Binding CrewVeterancy}"                          
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Image
+                                                    Width="16"
+                                                    Height="16"
+                                                    Source="{Binding}"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <ProgressBar 
+                                        Width="78"
+                                        Height="4"
+                                        Foreground="#c6b24a"
+                                        Background="#334252"
+                                        BorderThickness="0"
+                                        BorderBrush="Transparent"
+                                        Margin="0,5,0,1"
+                                        Value="{Binding Experience.Value, Mode=OneWay}"
+                                        Maximum="{Binding Experience.Max}"/>
+                                    <Label 
+                                        HorizontalAlignment="Center"
+                                        Foreground="#c6b24a"
+                                        FontFamily="Open Sans"
+                                        FontSize="10"
+                                        Content="{Binding Experience, FallbackValue='0/0'}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    
+                </Border>
+                
             </StackPanel>
 
             <!-- Save, close buttons -->

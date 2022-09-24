@@ -33,7 +33,8 @@ public static class SquadWriter {
 
             // Grab cost
             var cost = luaSourceBuilder.Context switch {
-                FactionCompanyType ft => ft.GetUnitCost(value.SBP, value.VeterancyRank, value.DeploymentRole, value.SupportBlueprint as SquadBlueprint),
+                FactionCompanyType ft => 
+                    ft.GetUnitCost(value.SBP, value.Upgrades.ToArray().MapNotNull(x => x as UpgradeBlueprint), value.VeterancyRank, value.DeploymentRole, value.SupportBlueprint as SquadBlueprint),
                 _ => value.SBP.Cost
             };
 

@@ -464,11 +464,12 @@ public class FactionCompanyType : IChecksumElement {
     /// 
     /// </summary>
     /// <param name="sbp"></param>
+    /// <param name="ubps"></param>
     /// <param name="rank"></param>
     /// <param name="role"></param>
     /// <param name="transport"></param>
     /// <returns></returns>
-    public CostExtension GetUnitCost(SquadBlueprint sbp, byte rank, DeploymentRole role, SquadBlueprint? transport) {
+    public CostExtension GetUnitCost(SquadBlueprint sbp, UpgradeBlueprint[] ubps, byte rank, DeploymentRole role, SquadBlueprint? transport) {
         
         // Get basic cost
         var result = sbp.Cost;
