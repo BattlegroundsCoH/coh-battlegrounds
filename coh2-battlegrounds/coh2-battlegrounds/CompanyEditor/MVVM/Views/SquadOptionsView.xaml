@@ -11,9 +11,9 @@
                xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM" xmlns:companybuildercontrols="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
                mc:Ignorable="d" 
              d:DesignHeight="450" 
-             d:DesignWidth="512"
+             d:DesignWidth="620"
               Background="#212d3a">
-    <Border Width="512"
+    <Border Width="620"
             BorderBrush="#3d4854"
             BorderThickness="1.25">
         <Grid>
@@ -21,138 +21,274 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="96"/>
-                <RowDefinition Height="86"/>
+                <RowDefinition Height="136"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition/>
                 <RowDefinition Height="64"/>
             </Grid.RowDefinitions>
 
             <!-- Basic unit info -->
-            <DockPanel>
-                <editor:Portrait DockPanel.Dock="Left" 
-                             VerticalAlignment="Top"
-                             IsSelected="True"
-                                 PortraitName="{Binding UnitPortrait}"
-                                 SymbolName="{Binding UnitSymbol}"/>
-                <DockPanel Margin="2.5">
-                    <TextBlock DockPanel.Dock="Top"
-                               FontSize="14"
-                               Foreground="White"
-                               FontFamily="Open Sans">
-                        <Run
-                            x:Name="RunName"
-                            Text="{Binding UnitName, Mode=OneWay}"/>
-                        <InlineUIContainer
-                            BaselineAlignment="Center">
-                            <TextBox
-                                x:Name="EditName"
-                                Width="172"
-                                Tag="{Binding UnitRawName}"
-                                Style="{StaticResource WaterMarkTextBox}"
-                                KeyUp="EditName_KeyUp"
-                                Visibility="Collapsed"/>
-                        </InlineUIContainer>
-                        <InlineUIContainer BaselineAlignment="Center">
-                            <Button 
-                                x:Name="EditSquadName"
-                                Content="Edit"
-                                Style="{StaticResource StandardGreenButton}"
-                                FontSize="12"
-                                Width="36"
-                                Height="16"
-                                Visibility="{Binding NameButtonVisibility}"
-                                Click="EditSquadName_Click"/>
-                        </InlineUIContainer>
-                    </TextBlock>
-                    <TextBlock TextWrapping="Wrap"
-                           Foreground="White"
-                           FontFamily="Open Sans"
-                           FontSize="11"
-                           FontStyle="Italic"
-                           Text="{Binding UnitDesc, Mode=OneWay}"/>
-                </DockPanel>
-            </DockPanel>
-
-            <Grid 
-                Grid.Row="1"
+            <Border
                 Margin="4"
+                Padding="5"
+                BorderBrush="{StaticResource SeperatorGrayBrush}"
+                BorderThickness="0.8"
                 Background="{StaticResource BackgroundDeepBlueBrush}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="56"/>
-                </Grid.RowDefinitions>
-
-                <controls:LocLabel HorizontalAlignment="Center"
-                       Foreground="White"
-                   Grid.Column="0">
-                    CompanySquadView_Cost
-                </controls:LocLabel>
-                <controls:LocLabel HorizontalAlignment="Center"
-                       Foreground="White"
-                   Grid.Column="1">
-                    CompanySquadView_Veterancy
-                </controls:LocLabel>
-                <controls:LocLabel HorizontalAlignment="Center"
-                       Foreground="White"
-                   Grid.Column="2">
-                    CompanySquadView_ServiceTime
-                </controls:LocLabel>
-
-                <companybuildercontrols:CostControl
-                          HorizontalAlignment="Center"
-                               VerticalAlignment="Top"
-                Cost="{Binding Cost}"
-                Grid.Row="1"/>
-
-                <StackPanel Grid.Column="1"
-                          Grid.Row="1">
-                    <ItemsControl ItemsSource="{Binding Veterancy}"
-                          
-                          VerticalAlignment="Center"
-                          HorizontalAlignment="Center">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Image
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="76"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="116"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Grid.Column="0"
+                        Grid.RowSpan="3"
+                        Width="68"
+                        Height="106">
+                        <Canvas
+                            ClipToBounds="True">
+                            <Image
+                                Canvas.Left="-16"
+                                Canvas.Top="-8"
+                                Width="96"
+                                Stretch="Uniform"
+                                Source="{Binding UnitPortrait, FallbackValue='pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/test_unit_portrait.png'}"/>
+                        </Canvas>
+                    </Border>
+                    <DockPanel 
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Margin="2.5"
+                        Height="18">
+                        <TextBlock 
+                            DockPanel.Dock="Top"
+                            FontSize="14"
+                            Foreground="White"
+                            FontFamily="Open Sans">
+                            <Run
+                                x:Name="RunName"
+                                Text="{Binding UnitName, Mode=OneWay, FallbackValue='Conscript Squad'}"/>
+                            <InlineUIContainer
+                                BaselineAlignment="Center">
+                                <TextBox
+                                    x:Name="EditName"
+                                    Width="172"
+                                    Tag="{Binding UnitRawName}"
+                                    Style="{StaticResource WaterMarkTextBox}"
+                                    KeyUp="EditName_KeyUp"
+                                    Visibility="Collapsed"/>
+                            </InlineUIContainer>
+                            <InlineUIContainer 
+                                BaselineAlignment="Center">
+                                <Button 
+                                    x:Name="EditSquadName"
+                                    Content="Edit"
+                                    Style="{StaticResource StandardGreenButton}"
+                                    FontSize="12"
+                                    Width="36"
+                                    Height="16"
+                                    Visibility="{Binding NameButtonVisibility}"
+                                    Click="EditSquadName_Click"/>
+                            </InlineUIContainer>
+                        </TextBlock>
+                    </DockPanel>
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="2.5"
+                        VerticalAlignment="Top"
+                        TextWrapping="Wrap"
+                        Foreground="White"
+                        FontFamily="Open Sans"
+                        FontSize="12"
+                        Text="{Binding UnitDesc, Mode=OneWay, FallbackValue='Long description of the conscript infantry squad with all the relevant unit information.'}"/>
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Margin="2.5"
+                        VerticalAlignment="Top"
+                        TextWrapping="Wrap"
+                        Foreground="White"
+                        FontFamily="Open Sans"
+                        FontSize="10"
+                        FontStyle="Italic"
+                        Text="{Binding UnitHelpText, Mode=OneWay, FallbackValue='Short helper description of the conscript infantry.'}"/>
+                    <Grid
+                        Grid.Column="2"
+                        Grid.RowSpan="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <StackPanel
+                                Grid.Row="0">
+                            <ItemsControl
+                                ItemsSource="{Binding Veterancy}"                          
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Image
                                             Width="16"
                                             Height="16"
-                                            Source="pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/vet/vstar_yes.png"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    <ProgressBar Width="78"
-                             Height="4"
-                             Foreground="#c6b24a"
-                             Background="#334252"
-                             BorderThickness="0"
-                             BorderBrush="Transparent"
-                             Margin="0,5,0,1"
-                             Value="{Binding Experience.Value, Mode=OneWay}"
-                             Maximum="{Binding Experience.Max}"/>
-                    <Label HorizontalAlignment="Center"
-                       Foreground="#c6b24a"
-                       FontFamily="Open Sans"
-                       FontSize="10"
-                       Content="{Binding Experience}"/>
-                </StackPanel>
-                <controls:LocLabel Grid.Column="2"
-                               Grid.Row="1"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Top"
-                               Foreground="White"
-                               LocKey="{Binding CombatTime}">
-                </controls:LocLabel>
+                                            Source="{Binding}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <ProgressBar 
+                                Width="78"
+                                Height="4"
+                                Foreground="#c6b24a"
+                                Background="#334252"
+                                BorderThickness="0"
+                                BorderBrush="Transparent"
+                                Margin="0,5,0,1"
+                                Value="{Binding Experience.Value, Mode=OneWay}"
+                                Maximum="{Binding Experience.Max}"/>
+                            <Label 
+                                HorizontalAlignment="Center"
+                                Foreground="#c6b24a"
+                                FontFamily="Open Sans"
+                                FontSize="10"
+                                Content="{Binding Experience, FallbackValue='0/0'}"/>
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Row="1">
+                            <controls:LocLabel
+                                HorizontalAlignment="Center"
+                                Foreground="White"
+                                LocKey="CompanySquadView_ServiceTime"/>
+                            <controls:LocLabel 
+                                Grid.Column="2"
+                                Grid.Row="1"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                Foreground="White"
+                                FontSize="10"           
+                                LocKey="{Binding CombatTime, FallbackValue='00:00s'}">
+                            </controls:LocLabel>
+                        </StackPanel>
+                        
+                    </Grid>
+                </Grid>
+            </Border>
 
-            </Grid>
+            <Border
+                Grid.Row="1"
+                Margin="4"
+                BorderBrush="{StaticResource SeperatorGrayBrush}"
+                Background="{StaticResource BackgroundDeepBlueBrush}"
+                BorderThickness="0.8">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="36"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Cost Component -->
+                    <controls:LocLabel 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="White"
+                        Grid.Column="0"
+                        LocKey="CompanySquadView_Cost">
+                    </controls:LocLabel>
+                    <Border
+                        Grid.Row="1"
+                        BorderBrush="{StaticResource SeperatorGrayBrush}"
+                        BorderThickness="0.8"
+                        Margin="8,0,4,8"
+                        Height="64"
+                        VerticalAlignment="Top"
+                        Background="{StaticResource BackgroundBlueBrush}">
+                        <controls:UnitCost
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Cost="{Binding Cost}"
+                            ShowTime="True"/>
+                    </Border>
+
+                    <!-- Unit Abilities -->
+                    <controls:LocLabel
+                        Grid.Column="1"
+                        Foreground="White"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        LocKey="CompanySquadView_Abilities"/>
+                    <Border
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        BorderBrush="{StaticResource SeperatorGrayBrush}"
+                        BorderThickness="0.8"
+                        Margin="4,0,8,8"
+                        Background="{StaticResource BackgroundBlueBrush}">
+                        <ItemsControl 
+                            ItemsSource="{Binding Abilities}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Image 
+                                        Width="32" 
+                                        Height="32"
+                                        Source="{Binding Icon}"
+                                        Margin="2.5">
+                                        <Image.ToolTip>
+                                            <ToolTip 
+                                                Style="{StaticResource BlueTooltip}">
+                                                <Border 
+                                                    BorderThickness="1.15"
+                                                    Background="#212d3a"
+                                                    BorderBrush="#3d4854"
+                                                    Padding="7.45">
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding Title, Mode=OneWay}"
+                                                               FontSize="14"
+                                                               Foreground="White"/>
+                                                        <TextBlock Text="{Binding Desc, Mode=OneWay}"
+                                                           TextWrapping="Wrap"
+                                                           MaxWidth="256"
+                                                               FontSize="11"
+                                                               Foreground="White"/>
+                                                        <companybuildercontrols:CostControl
+                                                        Cost="{Binding Cost}"
+                                                        HorizontalAlignment="Right"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </ToolTip>
+                                        </Image.ToolTip>
+                                    </Image>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+
+                </Grid>
+            </Border>
+            
 
             <!-- Unit Data -->
             <StackPanel 
@@ -160,52 +296,6 @@
                 Margin="5"
                 Background="{StaticResource BackgroundDeepBlueBrush}"
                 VerticalAlignment="Top">
-
-                <!-- Unit Abilities -->
-                <StackPanel Visibility="{Binding ShowAbilities}">
-                    <controls:LocLabel
-                    Foreground="White"
-                    HorizontalAlignment="Center"
-                    LocKey="CompanySquadView_Abilities"/>
-                    <ItemsControl ItemsSource="{Binding Abilities}"
-                              HorizontalAlignment="Center">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Image Width="48" Height="48"
-                                   Source="{Binding Icon}"
-                                   Margin="2.5">
-                                    <Image.ToolTip>
-                                        <ToolTip Style="{StaticResource BlueTooltip}">
-                                            <Border BorderThickness="1.15"
-                                                Background="#212d3a"
-                                                BorderBrush="#3d4854"
-                                                    Padding="7.45">
-                                                <StackPanel>
-                                                    <TextBlock Text="{Binding Title, Mode=OneWay}"
-                                                               FontSize="14"
-                                                               Foreground="White"/>
-                                                    <TextBlock Text="{Binding Desc, Mode=OneWay}"
-                                                           TextWrapping="Wrap"
-                                                           MaxWidth="256"
-                                                               FontSize="11"
-                                                               Foreground="White"/>
-                                                    <companybuildercontrols:CostControl
-                                                    Cost="{Binding Cost}"
-                                                    HorizontalAlignment="Right"/>
-                                                </StackPanel>
-                                            </Border>
-                                        </ToolTip>
-                                    </Image.ToolTip>
-                                </Image>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
 
                 <!-- Unit Upgrades -->
                 <StackPanel Visibility="{Binding ShowUpgrades}">

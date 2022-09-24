@@ -137,6 +137,10 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
         }
     }
 
+    private static string RankToStart(int i, int rank) => i < rank
+        ? "pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/vet/vstar_yes.png"
+        : "pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/vet/vstar_no.png";
+
     public UnitBuilder BuilderInstance { get; }
 
     public CompanyBuilder CompanyBuilder { get; }
@@ -149,11 +153,13 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     public string UnitDesc => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.LongDescription);
 
-    public string UnitPortrait => this.BuilderInstance.Blueprint.UI.Portrait;
+    public string UnitHelpText => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ShortDescription);
+
+    public ImageSource? UnitPortrait => App.ResourceHandler.GetIcon("portraits", this.BuilderInstance.Blueprint.UI.Portrait);
 
     public string UnitSymbol => this.BuilderInstance.Blueprint.UI.Symbol;
 
-    public ObservableCollection<object> Veterancy => new ObservableCollection<object>( Enumerable.Range(0, this.BuilderInstance.Rank).Select(x => (object)x) );
+    public ObservableCollection<string> Veterancy => new ObservableCollection<string>(Enumerable.Range(0, 5).Select(x => RankToStart(x, this.BuilderInstance.Rank)));
 
     public ObservableCollection<AbilityButton> Abilities { get; }
 
