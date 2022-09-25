@@ -103,7 +103,7 @@
             "EntityBlueprint": "barbed_wire_fence_bg",
             "IsDirectional": false,
             "IsLinePlacement": true,
-            "MaxPlacement": -1,
+            "MaxPlacement": 32,
             "PreGarrisonUnitTypes": [],
             "PlacementType": 2,
             "Width": 4
@@ -112,7 +112,7 @@
             "EntityBlueprint": "barbed_wire_field_bg",
             "IsDirectional": false,
             "IsLinePlacement": false,
-            "MaxPlacement": -1,
+            "MaxPlacement": 6,
             "PreGarrisonUnitTypes": [],
             "PlacementType": 0
           },

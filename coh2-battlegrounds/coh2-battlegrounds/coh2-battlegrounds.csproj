@@ -151,6 +151,7 @@
     <None Remove="Resources\ingame\vet\vstar_yes.png" />
     <None Remove="Resources\ingame\west_german.png" />
     <None Remove="Resources\profanities.json" />
+    <None Remove="Resources\shaders\ColourOverlayEffect.ps" />
   </ItemGroup>
 
   <ItemGroup>
@@ -270,6 +271,7 @@
     <Resource Include="Resources\ingame\vet\vstar_yes.png" />
     <Resource Include="Resources\ingame\west_german.png" />
     <Resource Include="Resources\profanities.json" />
+    <Resource Include="Resources\shaders\ColourOverlayEffect.ps" />
   </ItemGroup>
 
   <ItemGroup>

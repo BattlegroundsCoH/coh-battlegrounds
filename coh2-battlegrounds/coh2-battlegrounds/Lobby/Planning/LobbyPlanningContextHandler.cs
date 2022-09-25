@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -27,6 +28,7 @@ public class LobbyPlanningContextHandler {
     private readonly List<int> m_objectiveElements;
     private readonly ILobbyPlanningHandle m_handle;
     private readonly Scenario m_scenario;
+    private readonly Dictionary<string, CapacityValue> m_entityCapacities;
     private PlacementCase? m_currentPlacement;
 
     public Size MinimapRenderSize { get; set; }
@@ -60,6 +62,8 @@ public class LobbyPlanningContextHandler {
 
     public bool IsLinePlacement => this.m_currentPlacement is EntityPlacement e && e.Def.IsLinePlacement;
 
+    public int PlacementWidth => this.m_currentPlacement is EntityPlacement e ? e.Def.Width : 1;
+
     public EntityBlueprint? PlaceElementBlueprint => this.m_currentPlacement is EntityPlacement e ?  e.Ebp : null;
 
     public SquadBlueprint? PlaceElementSquadBlueprint => this.m_currentPlacement is SquadPlacement s ? s.Sbp : null;
@@ -87,13 +91,40 @@ public class LobbyPlanningContextHandler {
         // Init fields
         this.m_objectiveElements = new();
 
+        // Init base capacity handlers
+        this.m_entityCapacities = new();
+
         // Init base case
         this.MinimapRenderSize = new Size(512, 512);
 
     }
 
+    public CapacityValue GetSelfCapacity(string ebp)
+        => this.m_entityCapacities.GetValueOrDefault(ebp, new(0, 0));
+
+    public void SetSelfCapacity(string ebp, CapacityValue cap)
+        => this.m_entityCapacities[ebp] = cap;
+
+    public int GetSelfPlaceCount(EntityBlueprint ebp) {
+        int count = 0;
+        for (int i = 0; i < this.Elements.Count; i++) {
+            if (this.Elements[i].Owner == this.SelfId && this.Elements[i].Blueprint == ebp)
+                count += this.Elements[i].Weight;
+        }
+        return count;
+    }
+
     public void PickPlaceElement(EntityBlueprint ebp, FactionDefence defence) {
+
+        // Bail if already at capacity
+        var cap = this.GetSelfCapacity(ebp.Name);
+        if (cap.IsAtCapacity) {
+            return;
+        }
+
+        // Set placement
         this.m_currentPlacement = new EntityPlacement(ebp, defence);
+
     }
 
     public void PickPlaceElement(SquadBlueprint sbp, ushort cid) {
@@ -110,6 +141,27 @@ public class LobbyPlanningContextHandler {
 
     public void PickPlaceElement(PlanningObjectiveType objectiveType) {
         this.m_currentPlacement = new ObjectivePlacement(objectiveType);
+    }
+
+    public int GetIngameCount(Point start, Point end, int cellWidth) {
+
+        // Compute ingame positions
+        GamePosition spawn = this.m_scenario.FromMinimapPosition(this.MinimapRenderSize.Width, this.MinimapRenderSize.Height, start.X, start.Y);
+        GamePosition lookat = this.m_scenario.FromMinimapPosition(this.MinimapRenderSize.Width, this.MinimapRenderSize.Height, end.X, end.Y);
+
+        // Compute distance
+        return GetIngameCount(spawn, lookat, cellWidth);
+
+    }
+
+    public static int GetIngameCount(GamePosition spawn, GamePosition lookat, int cellWidth) {
+
+        // Compute distance
+        double distance = spawn.DistanceTo(lookat);
+
+        // Return
+        return (int)Math.Floor(distance / cellWidth);
+
     }
 
     public int PlaceElement(Size mmSize, Point point, Point? other = null) {
@@ -130,8 +182,11 @@ public class LobbyPlanningContextHandler {
             // Grab index
             i = this.m_handle.CreatePlanningStructure(self, ep.Ebp.Name, ep.Def.IsDirectional, spawn, lookat);
 
+            // Grab ingame count
+            int count = ep.Def.IsLinePlacement ? GetIngameCount(spawn, lookat!.Value, ep.Def.Width) : 1;
+
             // Add planning structure
-            this.Elements.Add(new(i, self, ep.Ebp, point, other, ep.Def.IsLinePlacement));
+            this.Elements.Add(new(i, self, ep.Ebp, point, other, ep.Def.IsLinePlacement, weight: count));
             this.m_currentPlacement = null;
 
         } else if (this.m_currentPlacement is SquadPlacement sp) {

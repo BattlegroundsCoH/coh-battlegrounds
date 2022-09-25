@@ -72,7 +72,12 @@ public class LobbyPlanningObject {
     /// <summary>
     /// Get or set the clientside tag
     /// </summary>
-    public object ClientTag { get; set; }
+    public object? ClientTag { get; set; }
+
+    /// <summary>
+    /// Get the placement weight of the object
+    /// </summary>
+    public int Weight { get; }
 
     /// <summary>
     /// Iniialise a new squad/entity planning object instance.
@@ -84,7 +89,7 @@ public class LobbyPlanningObject {
     /// <param name="end">The end position</param>
     /// <param name="isLine">flag if line placement.</param>
     /// <param name="companyId">The company ID</param>
-    public LobbyPlanningObject(int id, ulong owner, Blueprint blueprint, Point start, Point? end, bool isLine = false, ushort companyId = 0) {
+    public LobbyPlanningObject(int id, ulong owner, Blueprint blueprint, Point start, Point? end, bool isLine = false, ushort companyId = 0, int weight = 1) {
 
         // Verify blueprint type
         if (blueprint is not SquadBlueprint and not EntityBlueprint) {
@@ -98,7 +103,8 @@ public class LobbyPlanningObject {
         this.VisualPosStart = start;
         this.VisualPointEnd = end;
         this.IsLine = isLine;
-        
+        this.Weight = weight;
+
     }
 
     /// <summary>
@@ -110,12 +116,15 @@ public class LobbyPlanningObject {
     /// <param name="objectiveType">The objective type</param>
     /// <param name="objectiveOrder">The objective order</param>
     public LobbyPlanningObject(int id, ulong owner, Point start, PlanningObjectiveType objectiveType, int objectiveOrder) {
+        
         this.ObjectId = id;
         this.Owner = owner;
         this.Blueprint = null;
         this.VisualPosStart = start;
+        
         this.ObjectiveType = objectiveType;
         this.ObjectiveOrder = objectiveOrder;
+
     }
 
 }

@@ -558,4 +558,17 @@ public static class FunctionalArray {
         return values[..k];
     }
 
+    /// <summary>
+    /// Get input array in reverse order.
+    /// </summary>
+    /// <typeparam name="T">The array instance type.</typeparam>
+    /// <param name="array">The array to return reverse order from.</param>
+    /// <returns>The reverse order array</returns>
+    public static T[] Reverse<T>(this T[] array) {
+        T[] result = new T[array.Length];
+        for (int i = 0; i < array.Length; i++)
+            result[array.Length - 1 - i] = array[i];
+        return result;
+    }
+
 }

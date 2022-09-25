@@ -15,6 +15,7 @@ using BattlegroundsApp.Controls;
 using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.Lobby.Planning;
 using BattlegroundsApp.Utilities;
+using BattlegroundsApp.Utilities.Graphics;
 
 using static BattlegroundsApp.Lobby.MVVM.Models.LobbyPlanningOverviewModel;
 
@@ -24,6 +25,8 @@ namespace BattlegroundsApp.Lobby.MVVM.Views;
 /// Interaction logic for LobbyPlanningOverview.xaml
 /// </summary>
 public partial class LobbyPlanningOverview : UserControl {
+
+    private static readonly ColourOverlayEffect __PlacementNotAllowedEffect = new ColourOverlayEffect(Colors.Red);
 
     private record HelperElement(FrameworkElement Element, TranslateTransform Translation, RotateTransform Rotation, Vector OffsetVector, int ElementId);
 
@@ -67,8 +70,10 @@ public partial class LobbyPlanningOverview : UserControl {
         // Grab click position
         var clickPos = e.GetPosition(this.PlanningCanvas);
 
+        // Check if a second position is required
         if (this.ContextHandler.RequiresSecond) {
             
+            // Place start point?
             if (this.m_points.Count is 0) {
 
                 this.m_points.Push(clickPos);
@@ -80,6 +85,20 @@ public partial class LobbyPlanningOverview : UserControl {
 
                 // Grab element
                 var placeElement = this.m_points.Pop();
+
+                // Check if placement is valid
+                if (this.ContextHandler.IsLinePlacement && this.ContextHandler.PlaceElementBlueprint is EntityBlueprint ebp) {
+
+                    // Grab amount of ingame items
+                    int ingameCount = this.ContextHandler.GetIngameCount(placeElement, clickPos, this.ContextHandler.PlacementWidth);
+
+                    // Perform placement test
+                    if (!this.ContextHandler.GetSelfCapacity(ebp.Name).Test(ingameCount)) {
+                        this.m_points.Push(placeElement); // Push it back in
+                        return;
+                    }
+
+                }
 
                 // Place
                 this.ContextHandler.PlaceElement(this.PlanningCanvas.RenderSize, placeElement, clickPos);
@@ -102,20 +121,20 @@ public partial class LobbyPlanningOverview : UserControl {
             // Place the element
             this.ContextHandler.PlaceElement(this.PlanningCanvas.RenderSize, clickPos);
 
-        }        
+        }
 
     }
 
     private HelperElement CreateSelectedMarker(Point p, int elementId) {
         if (this.ContextHandler.PlaceElementBlueprint is not null) {
-            return CreateEntityMarker(this.ContextHandler.PlaceElementBlueprint, p, elementId);
+            return CreateEntityMarker(this.ContextHandler.PlaceElementBlueprint, p, elementId, true);
         } else if (this.ContextHandler.PlaceElementSquadBlueprint is not null) {
             return CreateSquadMarker(this.ContextHandler.PlaceElementSquadBlueprint, p, elementId);
         }
         return CreateObjectiveMarker(this.ContextHandler.PlaceElemtObjectiveType, p, elementId);
     }
 
-    private static HelperElement CreateEntityMarker(EntityBlueprint ebp, Point p, int elementId) {
+    private static HelperElement CreateEntityMarker(EntityBlueprint ebp, Point p, int elementId, bool legalPlacement) {
 
         // Grab blueprint
         var sym = App.ResourceHandler.GetIcon("entity_symbols", ebp.UI.Symbol);
@@ -124,7 +143,15 @@ public partial class LobbyPlanningOverview : UserControl {
         }
 
         // Create marker
-        return CreateSomeMarker(sym, p, sym.Width, sym.Height, elementId);
+        var marker = CreateSomeMarker(sym, p, sym.Width * 0.8, sym.Height * 0.8, elementId);
+
+        // Add overlay if not legal placement
+        if (!legalPlacement && marker.Element is Image img) {
+            img.Effect = __PlacementNotAllowedEffect;
+        }
+
+        // Create marker
+        return marker;
 
     }
 
@@ -137,7 +164,7 @@ public partial class LobbyPlanningOverview : UserControl {
         }
 
         // Create marker
-        return CreateSomeMarker(sym, p, sym.Width, sym.Height, elementId);
+        return CreateSomeMarker(sym, p, sym.Width * 0.7, sym.Height * 0.7, elementId);
 
     }
 
@@ -155,7 +182,7 @@ public partial class LobbyPlanningOverview : UserControl {
         }
 
         // Create marker
-        return CreateSomeMarker(sym, p, 28, 28, elementId);
+        return CreateSomeMarker(sym, p, 24, 24, elementId);
 
     }
 
@@ -187,7 +214,7 @@ public partial class LobbyPlanningOverview : UserControl {
     private static HelperElement CreateMarker(Point p) {
 
         // Create translate
-        var translate = new TranslateTransform(p.X - 0.5 * 30, p.Y - 0.5 * 25);
+        var translate = new TranslateTransform(p.X - 0.5 * 20, p.Y - 0.5 * 15);
         var rotate = new RotateTransform();
 
         // Create marker
@@ -195,8 +222,8 @@ public partial class LobbyPlanningOverview : UserControl {
             Fill = Brushes.Blue,
             Stroke = Brushes.Black,
             StrokeThickness = 2.5,
-            Width = 30,
-            Height = 25,
+            Width = 20,
+            Height = 15,
             RenderTransformOrigin = new(0.5,0.5),
             RenderTransform = new TransformGroup() {
                 Children = new() { rotate, translate }
@@ -221,8 +248,12 @@ public partial class LobbyPlanningOverview : UserControl {
         // If helper, rotate if directional
         if (this.m_planningHelper is not null) {
 
+            // Grab origin
+            var originTransform = this.m_planningHelper.Translation;
+            var origin = new Point(originTransform.X, originTransform.Y);
+
             // Calc vectors
-            var v0 = Vectors.FromTransform(this.m_planningHelper.Translation) + this.m_planningHelper.OffsetVector;
+            var v0 = Vectors.FromTransform(originTransform) + this.m_planningHelper.OffsetVector;
             var v1 = Vectors.FromPoint(p);
 
             // Get if line
@@ -238,13 +269,24 @@ public partial class LobbyPlanningOverview : UserControl {
                 this.m_lineHelpers.ForEach(this.PlanningCanvas.Children.Remove);
                 this.m_lineHelpers.Clear();
 
+                // Grab amount of ingame items
+                int ingameCount = this.ContextHandler.GetIngameCount(origin, p, this.ContextHandler.PlacementWidth);
+
+                // Perform placement test
+                bool allowPlacement = this.ContextHandler.GetSelfCapacity(ebp.Name).Test(ingameCount);
+
                 // Get display elements
-                LineTo(angle, ebp, v0, v1, this.m_planningHelper.OffsetVector, -1).ForEach(x => {
+                LineTo(angle, ebp, v0, v1, this.m_planningHelper.OffsetVector, -1, allowPlacement).ForEach(x => {
                     this.m_lineHelpers.Add(x.Element);
                     this.PlanningCanvas.Children.Add(x.Element);
                     x.Element.MouseLeftButtonUp += this.PlanningCanvas_MouseLeftButtonUp;
                     x.Element.MouseRightButtonUp += this.UserControl_MouseRightButtonUp;
                 });
+
+                // Update root
+                if (this.m_planningHelper.Element is Image rootElem) {
+                    rootElem.Effect = allowPlacement ? null : __PlacementNotAllowedEffect;
+                }
 
             }
 
@@ -268,7 +310,7 @@ public partial class LobbyPlanningOverview : UserControl {
 
     }
 
-    private static List<HelperElement> LineTo(double angle, EntityBlueprint ebp, Vector origin, Vector target, Vector offset, int elementId) {
+    private static List<HelperElement> LineTo(double angle, EntityBlueprint ebp, Vector origin, Vector target, Vector offset, int elementId, bool allowPlacement) {
 
         // Create container
         var ls = new List<HelperElement>();
@@ -288,7 +330,7 @@ public partial class LobbyPlanningOverview : UserControl {
             var v = Vectors.Interpolate(origin, target, i * stepSize);
 
             // Create helper
-            var helper = CreateEntityMarker(ebp, v.ToPoint(), elementId);
+            var helper = CreateEntityMarker(ebp, v.ToPoint(), elementId, allowPlacement);
             helper.Rotation.Angle = angle;
 
             // Add
@@ -310,6 +352,9 @@ public partial class LobbyPlanningOverview : UserControl {
 
         // Clear stack and helper
         this.m_points.Clear();
+        if (this.m_planningHelper?.Element is FrameworkElement fe) {
+            this.PlanningCanvas.Children.Remove(fe);
+        }
         this.m_planningHelper = null;
 
         // Clear line helpers (if any)
@@ -386,7 +431,7 @@ public partial class LobbyPlanningOverview : UserControl {
                     var ebp = (EntityBlueprint)planningObject.Blueprint;
 
                     // Grab marker
-                    var marker = CreateEntityMarker(ebp, planningObject.VisualPosStart, planningObject.ObjectId);
+                    var marker = CreateEntityMarker(ebp, planningObject.VisualPosStart, planningObject.ObjectId, true);
                     marker.Element.Tag = marker;
 
                     // Lookat at target
@@ -395,7 +440,7 @@ public partial class LobbyPlanningOverview : UserControl {
                         var v1 = Vectors.FromPoint(lookat);
                         var angle = Lookat(marker.Rotation, v0, v1, planningObject.IsLine ? 0 : 90.0);
                         if (planningObject.IsLine) {
-                            LineTo(angle, ebp, v0, v1, marker.OffsetVector, planningObject.ObjectId).ForEach(x => {
+                            LineTo(angle, ebp, v0, v1, marker.OffsetVector, planningObject.ObjectId, true).ForEach(x => {
                                 this.PlanningCanvas.Children.Add(x.Element);
                                 markers.Add(x);
                             });

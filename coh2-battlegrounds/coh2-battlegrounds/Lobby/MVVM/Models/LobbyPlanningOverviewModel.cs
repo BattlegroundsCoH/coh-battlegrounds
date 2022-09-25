@@ -240,6 +240,9 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
                 // Add
                 this.DefenceStructures.Add(planData);
 
+                // Register capacity value
+                this.ContextHandler.SetSelfCapacity(data.EntityBlueprint, new CapacityValue(data.MaxPlacement, () => this.m_planningContext.GetSelfPlaceCount(ebp)));
+
             }
 
             // Get company
@@ -391,12 +394,12 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         // Map attackers
         (ValRef<int> i, ValRef<int> j) = (0,0);
         attackers.Slots.Filter(x => x.IsOccupied)
-            .MapNotNull(x => x.Occupant).Map(x => OccupantToDisplay(x, i, j, false, posIndex[x])).ForEach(this.Attackers.Add);
+            .MapNotNull(x => x.Occupant).Map(x => OccupantToDisplay(x, i, j, false, posIndex[x])).Reverse().ForEach(this.Attackers.Add);
 
         // Map defenders
         (i, j) = (0, 0);
         defenders.Slots.Filter(x => x.IsOccupied)
-            .MapNotNull(x => x.Occupant).Map(x => OccupantToDisplay(x, i, j, true, posIndex[x])).ForEach(this.Defenders.Add);
+            .MapNotNull(x => x.Occupant).Map(x => OccupantToDisplay(x, i, j, true, posIndex[x])).Reverse().ForEach(this.Defenders.Add);
 
     }
 
