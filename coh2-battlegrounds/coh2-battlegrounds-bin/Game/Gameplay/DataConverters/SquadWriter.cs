@@ -43,6 +43,7 @@ public static class SquadWriter {
                 ["bp_name"] = value.SBP.GetScarName(),
                 ["company_id"] = value.SquadID,
                 ["symbol"] = value.SBP.UI.Symbol,
+                ["phase"] = (int)value.DeploymentPhase,
                 ["category"] = value.GetCategory(true),
                 ["veterancy_rank"] = value.VeterancyRank,
                 ["veterancy_progress"] = value.VeterancyProgress,

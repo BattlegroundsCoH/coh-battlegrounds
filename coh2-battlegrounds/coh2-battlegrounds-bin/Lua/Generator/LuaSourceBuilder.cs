@@ -279,11 +279,13 @@ public sealed class LuaSourceBuilder {
 
         // Create table
         LuaTable table = new();
+        bool pop = false;
 
         // Loop over entries
         foreach (DictionaryEntry entry in dictionary) {
             if (entry.Key is "__@luacontext") {
                 this.m_contextObjects.Push(entry.Value);
+                pop = true;
             } else {
                 if (entry.Value is null && this.Options.ExplicitNullAsNilValues) {
                     table[this.GetKeyName(entry.Key)] = LuaNil.Nil;
@@ -293,8 +295,9 @@ public sealed class LuaSourceBuilder {
             }
         }
 
-        // Reset context object
-        this.m_contextObjects.Pop();
+        // Reset context object if any was pushed
+        if (pop)
+            this.m_contextObjects.Pop();
 
         // Return result
         return table;

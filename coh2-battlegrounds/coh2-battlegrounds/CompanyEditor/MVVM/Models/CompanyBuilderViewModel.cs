@@ -346,6 +346,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
                 .Filter(x => !x.Types.IsVehicleCrew)
                 .Filter(x => !type.Exclude.Contains(x.Name))
                 .Filter(x => !hidden.Contains(x.Name))
+                .Filter(x => !this.m_activeModPackage.GetCaptureSquads().Contains(x.Name))
                 .ForEach(this.m_availableSquads.Add);
 
             // Get faction data
