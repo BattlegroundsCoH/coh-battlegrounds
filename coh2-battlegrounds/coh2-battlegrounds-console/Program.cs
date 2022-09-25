@@ -362,8 +362,11 @@ class Program {
 
             // Verify
             if (!File.Exists(xmlreader)) {
-                this.Err("Fatal Error: Failed to locate xml2json executable");
-                return;
+                xmlreader = Path.GetFullPath("..\\..\\..\\..\\..\\db-tool\\bin\\debug\\net5.0\\CoH2XML2JSON.exe");
+                if (!File.Exists(xmlreader)) {
+                    this.Err("Fatal Error: Failed to locate xml2json executable");
+                    return;
+                }
             }
 
             // Store recent
