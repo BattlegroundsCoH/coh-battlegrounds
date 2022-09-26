@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 using Battlegrounds.Functional;
@@ -116,9 +117,25 @@ public sealed class OnlineLobbyPlanner : ILobbyPlanningHandle {
     public ILobbyPlanElement? GetPlanElement(int planElementId) => this.m_remote.Call<JsonPlanElement>("GetPlanElement", planElementId);
 
     public ILobbyPlanElement[] GetPlanningElements(byte teamIndex) {
-        var result = this.m_remote.Call<JsonPlanElement[]>("GetPlanElements", teamIndex) ?? Array.Empty<JsonPlanElement>();
-        Trace.WriteLine($"Server returned {result.Length} plan elements for tid = {teamIndex}", nameof(OnlineLobbyPlanner));
-        return result;
+
+        // Grab iterator
+        var itt = this.m_remote.Call<OnlineIterator<JsonPlanElement>>("GetPlanElements", teamIndex);
+        if (itt is null) {
+            Trace.WriteLine($"Failed to get plan element iterator!", nameof(OnlineLobbyPlanner));
+            return Array.Empty<ILobbyPlanElement>();
+        }
+
+        // Create list to fill
+        List<ILobbyPlanElement> result = new();
+
+        // Empty iterator into result
+        while (itt.MoveNext()) {
+            result.Add(itt.Current);
+        }
+
+        // Return result
+        return result.ToArray();
+
     }
 
     public void RemovePlanElement(int planElementId)

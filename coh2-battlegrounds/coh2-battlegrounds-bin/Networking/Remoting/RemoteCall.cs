@@ -9,23 +9,21 @@ using Battlegrounds.Util;
 
 namespace Battlegrounds.Networking.Remoting;
 
-internal class RemoteCall<THandle> {
+internal class RemoteCall {
 
-    private readonly THandle m_source;
-    private uint m_cid;
+    protected uint m_cid;
 
     public IConnection Connection { get; }
 
-    public RemoteCall(THandle source, IConnection connection) {
+    public RemoteCall(IConnection connection) {
         this.m_cid = 10000;
-        this.m_source = source;
         this.Connection = connection;
     }
 
-    public T? Call<T>(string method, params object[] args)
+    public virtual T? Call<T>(string method, params object[] args)
         => this.CallWithTime<T>(method, args);
 
-    public T? CallWithTime<T>(string method, object[] args, TimeSpan? waitTime = null) {
+    public virtual T? CallWithTime<T>(string method, object[] args, TimeSpan? waitTime = null) {
 
         // Create message
         Message msg = new Message() {
@@ -51,9 +49,6 @@ internal class RemoteCall<THandle> {
                 });
             } else {
                 if (GoMarshal.JsonUnmarshal<T>(response.Raw) is T content) {
-                    if (content is IHandleObject<THandle> handleObject) {
-                        handleObject.SetHandle(this.m_source);
-                    }
                     return content;
                 }
                 Trace.WriteLine($"Failed to unmarshal return raw response bytes of length '{response.Raw.Length}'", nameof(RemoteCall<T>));
@@ -78,6 +73,33 @@ internal class RemoteCall<THandle> {
 
         // Send but ignore response
         this.Connection.SendMessage(msg);
+
+    }
+
+}
+
+internal class RemoteCall<THandle> : RemoteCall {
+
+    private readonly THandle m_source;
+
+    public RemoteCall(THandle source, IConnection connection) : base(connection) {
+        this.m_source = source;
+    }
+
+    public new T? Call<T>(string method, params object[] args) {
+        return this.CallWithTime<T>(method, args);
+    }
+
+    public new T? CallWithTime<T>(string method, object[] args, TimeSpan? waitTime = null) {
+
+        // Get result from base
+        var res = base.CallWithTime<T>(method, args, waitTime);
+        if (res is IHandleObject<THandle> handleObj) {
+            handleObj.SetHandle(this.m_source);
+        }
+
+        // Return result
+        return res;
 
     }
 
