@@ -210,8 +210,7 @@
                         Height="512"
                         Fill="Black"
                         Opacity="0.65"
-                        ClipToBounds="True"
-                        />
+                        ClipToBounds="True"/>
                     <Image                    
                         Width="512"
                         Height="512"
@@ -224,6 +223,31 @@
                         Height="512"
                         x:Name="ScenarioCanvas"
                         ClipToBounds="True"/>
+                    <Border
+                        BorderBrush="Gray"
+                        BorderThickness="0.8"
+                        x:Name="LinePlacementHelperBox"
+                        ClipToBounds="False"
+                        Panel.ZIndex="1"
+                        Visibility="Collapsed"
+                        Background="{StaticResource BackgroundDeepBlueBrush}">
+                        <StackPanel>
+                            <Label
+                                FontSize="12"
+                                FontFamily="Open Sans"
+                                FontWeight="DemiBold"
+                                x:Name="LinePlacementHelperBoxTitle"
+                                Foreground="White"
+                                Content="Barbed Wire"/>
+                            <Label
+                                FontSize="11"
+                                FontFamily="Open Sans"
+                                FontStyle="Italic"
+                                x:Name="LinePlacementHelperBoxCapacity"
+                                Foreground="White"
+                                Content="Placing: 128/128"/>
+                        </StackPanel>
+                    </Border>
                 </Canvas>
             </Grid>
         </Border>

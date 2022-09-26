@@ -181,6 +181,7 @@ english:
  LobbyPlanning_Objectives: "Objectives"
  LobbyPlanning_Defences: "Defences"
  LobbyPlanning_Deployments: "{0} ({1}/{2})"
+ LobbyPlanning_LinePlacing: "Placing {0}/{1}"
  CompanyBuilder_Units: "Units ({0}/{1})"
  CompanyBuilder_Abilities: "Abilities ({0}/{1})"
  CompanyBuilder_Storage: "Inventory"

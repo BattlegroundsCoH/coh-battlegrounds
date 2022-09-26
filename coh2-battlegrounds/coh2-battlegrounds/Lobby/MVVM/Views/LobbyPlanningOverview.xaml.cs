@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
+using Battlegrounds;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Util;
@@ -14,6 +15,7 @@ using Battlegrounds.Util;
 using BattlegroundsApp.Controls;
 using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.Lobby.Planning;
+using BattlegroundsApp.Resources;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Utilities.Graphics;
 
@@ -81,6 +83,16 @@ public partial class LobbyPlanningOverview : UserControl {
                 this.m_planningHelper = marker;
                 this.PlanningCanvas.Children.Add(marker.Element);
 
+                // Show line helper
+                if (this.ContextHandler.IsLinePlacement) {
+                    this.LinePlacementHelperBox.Visibility = Visibility.Visible;
+                    this.LinePlacementHelperBox.SetValue(Canvas.TopProperty, clickPos.Y);
+                    this.LinePlacementHelperBox.SetValue(Canvas.LeftProperty, clickPos.X);
+                    this.LinePlacementHelperBoxTitle.Content = GameLocale.GetString(this.ContextHandler.PlaceElementBlueprint!.UI.ScreenName);
+                } else {
+                    this.LinePlacementHelperBox.Visibility = Visibility.Collapsed;
+                }
+
             } else if (this.m_planningHelper is not null) {
 
                 // Grab element
@@ -113,6 +125,9 @@ public partial class LobbyPlanningOverview : UserControl {
                 // Clear line helpers
                 this.m_lineHelpers.ForEach(this.PlanningCanvas.Children.Remove);
                 this.m_lineHelpers.Clear();
+
+                // Clear line helper
+                this.LinePlacementHelperBox.Visibility = Visibility.Collapsed;
 
             }
 
@@ -273,7 +288,8 @@ public partial class LobbyPlanningOverview : UserControl {
                 int ingameCount = this.ContextHandler.GetIngameCount(origin, p, this.ContextHandler.PlacementWidth);
 
                 // Perform placement test
-                bool allowPlacement = this.ContextHandler.GetSelfCapacity(ebp.Name).Test(ingameCount);
+                var selfCap = this.ContextHandler.GetSelfCapacity(ebp.Name);
+                bool allowPlacement = selfCap.Test(ingameCount);
 
                 // Get display elements
                 LineTo(angle, ebp, v0, v1, this.m_planningHelper.OffsetVector, -1, allowPlacement).ForEach(x => {
@@ -287,6 +303,12 @@ public partial class LobbyPlanningOverview : UserControl {
                 if (this.m_planningHelper.Element is Image rootElem) {
                     rootElem.Effect = allowPlacement ? null : __PlacementNotAllowedEffect;
                 }
+
+                // Show line helper
+                this.LinePlacementHelperBox.SetValue(Canvas.TopProperty, p.Y);
+                this.LinePlacementHelperBox.SetValue(Canvas.LeftProperty, p.X + 8);
+                this.LinePlacementHelperBoxCapacity.Content = BattlegroundsInstance.Localize.GetString("LobbyPlanning_LinePlacing", selfCap.Current + ingameCount, selfCap.Capacity);
+                this.LinePlacementHelperBoxCapacity.Foreground = allowPlacement ? Brushes.White : Brushes.Red;
 
             }
 
@@ -362,6 +384,9 @@ public partial class LobbyPlanningOverview : UserControl {
             this.m_lineHelpers.ForEach(this.PlanningCanvas.Children.Remove);
             this.m_lineHelpers.Clear();
         }
+
+        // Hide line placement helper if visible
+        this.LinePlacementHelperBox.Visibility = Visibility.Collapsed;
 
     }
 

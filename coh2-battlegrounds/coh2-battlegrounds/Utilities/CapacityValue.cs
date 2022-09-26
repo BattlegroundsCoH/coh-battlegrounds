@@ -56,7 +56,7 @@ public class CapacityValue : ILocLabelArgumentsObject, INotifyPropertyChanged {
     /// Test if the capacity is still within bounds if the specified <paramref name="amount"/> of elements are added.
     /// </summary>
     /// <param name="amount">The amount of elements to add to existing elements to test capacity.</param>
-    /// <returns>The the computed test value is less within the capacity, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
+    /// <returns>When the computed test value is within the capacity, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
     public bool Test(int amount) => this.Current + amount <= this.Capacity;
 
     public object[] ToArgs() => new object[] { Current, Capacity };

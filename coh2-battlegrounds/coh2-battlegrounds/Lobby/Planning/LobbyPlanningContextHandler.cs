@@ -118,7 +118,7 @@ public class LobbyPlanningContextHandler {
 
         // Bail if already at capacity
         var cap = this.GetSelfCapacity(ebp.Name);
-        if (cap.IsAtCapacity) {
+        if (!cap.Test(1)) {
             return;
         }
 
