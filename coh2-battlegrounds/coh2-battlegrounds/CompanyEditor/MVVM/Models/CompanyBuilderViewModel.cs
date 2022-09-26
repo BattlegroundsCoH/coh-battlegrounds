@@ -100,6 +100,8 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     public Visibility AvailableItemsVisibility { get; set; }
 
+    public Visibility CommanyCommandVisibility => this.SelectedMainTab == 0 ? Visibility.Visible : Visibility.Collapsed;
+
     public CompanyBuilderViewModelEvent Drop => this.OnItemDrop;
     public CompanyBuilderViewModelEvent Change => this.OnTabChange;
 
@@ -116,6 +118,21 @@ public class CompanyBuilderViewModel : ViewModelBase {
     public CapacityValue VehicleCapacity { get; }
 
     public CapacityValue LeaderCapacity { get; }
+
+    public CapacityValue CommandUnitCapacity { get; }
+
+    public CapacityValue SupportUnitCapacity { get; }
+
+    public CapacityValue ReserveUnitCapacity { get; }
+
+    public string CommandUnitLocKey => this.Builder.CompanyType.GetMaxInRole(DeploymentRole.DirectCommand) == BattlegroundsDefine.COMPANY_ROLE_MAX ?
+        "CompanyBuilder_RoleCommand_01" : "CompanyBuilder_RoleCommand_02";
+
+    public string SupportUnitLocKey => this.Builder.CompanyType.GetMaxInRole(DeploymentRole.DirectCommand) == BattlegroundsDefine.COMPANY_ROLE_MAX ?
+        "CompanyBuilder_RoleSupport_01" : "CompanyBuilder_RoleSupport_02";
+
+    public string ReserveUnitLocKey => this.Builder.CompanyType.GetMaxInRole(DeploymentRole.DirectCommand) == BattlegroundsDefine.COMPANY_ROLE_MAX ?
+        "CompanyBuilder_RoleReserve_01" : "CompanyBuilder_RoleReserve_02";
 
     public IViewModel? ReturnTo { get; set; }
 
@@ -192,6 +209,9 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.SupportCapacity = new CapacityValue(0, 0, () => this.Builder?.SupportCount ?? 0);
         this.VehicleCapacity = new CapacityValue(0, 0, () => this.Builder?.VehicleCount ?? 0);
         this.LeaderCapacity = new CapacityValue(0, 0, () => this.Builder?.LeaderCount ?? 0);
+        this.CommandUnitCapacity = new(0, 0, () => this.Builder.CountUnitsInRole(DeploymentRole.DirectCommand));
+        this.SupportUnitCapacity = new(0, 0, () => this.Builder.CountUnitsInRole(DeploymentRole.SupportRole));
+        this.ReserveUnitCapacity = new(0, 0, () => this.Builder.CountUnitsInRole(DeploymentRole.ReserveRole));
 
         // Set fields
         this.m_activeModPackage = ModManager.GetPackageFromGuid(guid) ?? throw new Exception("Attempt to create company builder vm without a valid mod package");
@@ -232,7 +252,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         this.LoadFactionDatabase();
         this.ShowCompany();
 
-        this.AvailableInfantrySquads.ForEach(x => this.AvailableItems.Add(x));
+        this.AvailableInfantrySquads.ForEach(this.AvailableItems.Add);
 
         // Update capacity values
         this.SetCapacityValues();
@@ -432,6 +452,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         // Notify change
         this.UnitCapacity.Update(this);
         this.GetUnitCapacity(builder).Update(this);
+        this.GetUnitRole(builder).Update(this);
 
     }
 
@@ -448,6 +469,13 @@ public class CompanyBuilderViewModel : ViewModelBase {
         SquadCategory.Support => this.SupportCapacity,
         SquadCategory.Vehicle => this.VehicleCapacity,
         SquadCategory.Leader => this.LeaderCapacity,
+        _ => throw new InvalidEnumArgumentException()
+    };
+
+    private CapacityValue GetUnitRole(UnitBuilder builder) => builder.Role switch {
+        DeploymentRole.DirectCommand => this.CommandUnitCapacity,
+        DeploymentRole.SupportRole => this.SupportUnitCapacity,
+        DeploymentRole.ReserveRole => this.ReserveUnitCapacity,
         _ => throw new InvalidEnumArgumentException()
     };
 
@@ -503,6 +531,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         // Refresh capacities
         this.UnitCapacity.Update(this);
         this.GetUnitCapacity(unitBuilder).Update(this);
+        this.GetUnitRole(unitBuilder).Update(this);
 
         // Loop over items and refresh (Expensive call!)
         this.UpdateAvailableItems();
@@ -679,6 +708,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     private void UpdateAvailableItems() {
 
+        // Clear available items
         this.AvailableItems.Clear();
 
         if (this.SelectedMainTab == 0) {
@@ -706,7 +736,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
             switch (this.SelectedAbilityTabItem) {
                 case 0:
                     this.AvailableItemsVisibility = Visibility.Visible;
-                    this.AvailableAbilities.ForEach(x => this.AvailableItems.Add(x));
+                    this.AvailableAbilities.ForEach(this.AvailableItems.Add);
                     break;
                 case 1:
                     this.AvailableItemsVisibility = Visibility.Hidden;
@@ -738,12 +768,16 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
             }
 
+            // Update company command
+            this.Notify(nameof(CommanyCommandVisibility));
+
         }
 
     }
 
     private void RefreshAbilityDisplay() {
 
+        // Clear abilities
         this.CompanyAbilities.Clear();
         this.CompanyUnitAbilities.Clear();
 

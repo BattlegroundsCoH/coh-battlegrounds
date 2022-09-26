@@ -5,7 +5,6 @@ using System.Windows.Media;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Extensions;
 
-using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Resources;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;

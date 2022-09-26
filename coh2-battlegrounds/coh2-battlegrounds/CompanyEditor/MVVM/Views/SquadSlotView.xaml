@@ -9,7 +9,8 @@
              xmlns:convertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="78" d:DesignWidth="250"
-             Background="{Binding PhaseBackground, FallbackValue=#334252}" x:Name="Self">
+             Background="{Binding PhaseBackground, FallbackValue=#334252}" 
+             x:Name="Self">
 
     <UserControl.Resources>
         <convertor:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>

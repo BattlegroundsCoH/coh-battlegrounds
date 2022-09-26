@@ -103,7 +103,7 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
 
     }
 
-    [MemberNotNull(nameof(SquadName), nameof(SquadCost))]
+    [MemberNotNull(nameof(SquadName))]
     public void RefreshData() {
 
         // Set basic info

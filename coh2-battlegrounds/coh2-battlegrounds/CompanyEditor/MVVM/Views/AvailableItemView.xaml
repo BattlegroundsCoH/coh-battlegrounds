@@ -7,53 +7,58 @@
              xmlns:cost="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
              mc:Ignorable="d" 
              d:DesignHeight="50" 
-             d:DesignWidth="260" 
-             x:Name="Self"
-             Background="#334252">
+             d:DesignWidth="260">
 
     <Border BorderBrush="Transparent"
             BorderThickness="0"
-            Width="260"
-            Height="50">
-        <Canvas>
+            Height="50"
+            Background="{StaticResource BackgroundLightBlueBrush}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="32"/>
+                <ColumnDefinition Width="36"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
 
-            <Button Height="50"
-                    Width="20"
-                    Canvas.Left="0"
-                    Style="{StaticResource StandardGreenButton}"
-                    IsEnabled="{Binding CanAdd}"
-                    BorderThickness="0"
-                    Content="&lt;"
-                    Click="AddButton_Click"/>
+            <Button 
+                Height="50"
+                Width="20"
+                HorizontalAlignment="Left"
+                Style="{StaticResource StandardGreenButton}"
+                IsEnabled="{Binding CanAdd}"
+                BorderThickness="0"
+                Content="&lt;"
+                Click="AddButton_Click"/>
 
-            <Image Width="24"
-                   Height="24" 
-                   Canvas.Left="32"
-                   Canvas.Top="12"
-                   Source="{Binding ItemSymbol}"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"/>
+            <Image 
+                Width="24"
+                Height="24" 
+                Grid.Column="1"
+                Source="{Binding ItemSymbol}"/>
 
-            <TextBlock Canvas.Left="60"
-                       Canvas.Top="10"
-                       Foreground="White"
-                       FontWeight="DemiBold"
-                       FontSize="12"
-                       Width="110"
-                       TextWrapping="WrapWithOverflow"
-                       TextAlignment="Center">
-                
-                <Run Text="{Binding ItemName, Mode=OneWay}" BaselineAlignment="Center"/>
-
+            <TextBlock 
+                Grid.Column="2"
+                Foreground="White"
+                FontWeight="DemiBold"
+                FontSize="12"
+                Width="110"
+                VerticalAlignment="Center"
+                TextWrapping="WrapWithOverflow"
+                TextAlignment="Center">
+                <Run 
+                    Text="{Binding ItemName, Mode=OneWay}" 
+                    BaselineAlignment="Center"/>
             </TextBlock>
 
-            <cost:CostControl Canvas.Top="5"
-                              Canvas.Left="170"
-                              Height="40"
-                              Width="92.5"
-                              Cost="{Binding ItemCost}"/>
+            <cost:CostControl 
+                Grid.Column="3"
+                Height="40"
+                Width="92.5"
+                HorizontalAlignment="Right"
+                Cost="{Binding ItemCost}"/>
 
-        </Canvas>
+        </Grid>
     </Border>
     
 </UserControl>

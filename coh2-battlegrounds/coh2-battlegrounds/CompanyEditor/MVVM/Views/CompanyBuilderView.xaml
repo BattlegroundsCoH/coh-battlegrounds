@@ -76,7 +76,7 @@
                 Width="150"
                 Height="35"
                 Style="{StaticResource StandardRedLocButton}" 
-                Margin="10,0,18,0"
+                Margin="10,0,0,0"
                 Grid.Row="0"
                 Grid.Column="2"
                 HorizontalAlignment="Right"
@@ -533,21 +533,13 @@
                     HorizontalAlignment="Right"
                     Margin="55,0,0,0">
 
-            <Button x:Name="resetButton"
-                    Content="CompanyBuilder_Reset"
-                    Width="105"
-                    Height="35"
-                    Visibility="Collapsed"
-                    Style="{StaticResource StandardBlueLocButton}">
-            </Button>
-
             <Button 
                 x:Name="saveButton" 
                 Content="CompanyBuilder_Save" 
                 Width="150"
-                Height="35"
+                Height="28"
                 Style="{StaticResource StandardBlueLocButton}" 
-                Margin="10,0,18,0"
+                Margin="10,0,0,8"
                 Click="saveButton_Click">
                 <Button.RenderTransform>
                     <TranslateTransform/>
@@ -581,30 +573,118 @@
         </StackPanel>
 
         <!-- Row 2 :: Available Items -->
-        <ScrollViewer VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Disabled"
-                      Height="665"
-                      Grid.Row="2"
-                      Grid.Column="2"
-                      Margin="10, 0, 0, 0"
-                      Visibility="{Binding AvailableItemsVisibility}">
-            
-            <StackPanel HorizontalAlignment="Right">
-                <StackPanel.Resources>
-                    <Style TargetType="{x:Type views:AvailableItemView}">
-                        <Setter Property="Margin" Value="0, 5, 0, 0"/>
-                    </Style>
-                </StackPanel.Resources>
-                <ItemsControl ItemsSource="{Binding AvailableItems}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Vertical"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </StackPanel>
+        <DockPanel
+            Margin="10, 0, 0, 0"
+            Grid.Row="2"
+            Grid.Column="2">
 
-        </ScrollViewer>
+            <Border
+                Background="{StaticResource BackgroundDarkBlueBrush}"
+                Visibility="{Binding CommanyCommandVisibility}"
+                Padding="4"
+                Margin="0,0,0,4"
+                DockPanel.Dock="Top">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="24"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <controls:LocLabel
+                        HorizontalAlignment="Center"
+                        FontFamily="Open Sans"
+                        FontSize="14"
+                        Foreground="White"
+                        Grid.Row="0"
+                        Grid.ColumnSpan="2"
+                        LocKey="CompanyBuilder_RoleExplanation"/>
+
+                    <!-- Under Command -->
+                    <Border
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        CornerRadius="16"
+                        Width="12"
+                        Height="12"
+                        BorderThickness="0.8"
+                        BorderBrush="Gray"
+                        Background="{StaticResource BackgroundLightBlueBrush}"/>
+                    <controls:LocLabel
+                        FontFamily="Open Sans"
+                        FontSize="14"
+                        Foreground="White"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Arguments="{Binding CommandUnitCapacity}"
+                        LocKey="{Binding CommandUnitLocKey, FallbackValue='CompanyBuilder_RoleCommand_01'}"/>
+                    
+                    <!-- In Support -->
+                    <Border
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        CornerRadius="16"
+                        Width="12"
+                        Height="12"
+                        BorderThickness="0.8"
+                        BorderBrush="Gray"
+                        Background="{StaticResource BackgroundPurpleBrush}"/>
+                    <controls:LocLabel
+                        FontFamily="Open Sans"
+                        FontSize="14"
+                        Foreground="White"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Arguments="{Binding SupportUnitCapacity}"
+                        LocKey="{Binding SupportUnitLocKey, FallbackValue='CompanyBuilder_RoleSupport_01'}"/>
+                    
+                    <!-- In Reserve -->
+                    <Border
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        CornerRadius="16"
+                        Width="12"
+                        Height="12"
+                        BorderThickness="0.8"
+                        BorderBrush="Gray"
+                        Background="{StaticResource BackgroundDarkishGreenBrush}"/>
+                    <controls:LocLabel
+                        FontFamily="Open Sans"
+                        FontSize="14"
+                        Foreground="White"
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Arguments="{Binding ReserveUnitCapacity}"
+                        LocKey="{Binding ReserveUnitLocKey, FallbackValue='CompanyBuilder_RoleReserve_01'}"/>
+                    
+                </Grid>
+            </Border>
+
+            <!-- Actual item display -->
+            <ScrollViewer 
+                VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Disabled"
+                Visibility="{Binding AvailableItemsVisibility}">
+                <ItemsControl 
+                    ItemsSource="{Binding AvailableItems}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                Margin="0,4,0,0">
+                                <ContentPresenter
+                                    Content="{Binding}"/>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+        </DockPanel>
 
     </Grid>
 </UserControl>
