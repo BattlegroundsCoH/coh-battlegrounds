@@ -273,17 +273,14 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid Margin="2">
-                                <Button
-                                    Style="{StaticResource EntityIconButton2}"
-                                    Command="{Binding Click}"
-                                    ToolTip="{Binding Name}">
-                                    <Image
-                                        Width="32"
-                                        Height="32"
-                                        Source="{Binding Icon}"/>
-                                </Button>
-                            </Grid>
+                            <Button
+                                Style="{StaticResource EntityIconButton2}"
+                                Command="{Binding Click}">
+                                <Image
+                                    Width="32"
+                                    Height="32"
+                                    Source="{Binding Icon}"/>
+                            </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -325,19 +322,27 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid>
-                                <Button
-                                    Style="{StaticResource EntityIconButton2}"
-                                    Command="{Binding Click}">
-                                    <Image
-                                        Width="36"
-                                        Height="36"
-                                        Source="{Binding Icon}"/>
-                                </Button>
-                            </Grid>
+                            <Button
+                                Margin="4,0,0,0"
+                                Style="{StaticResource EntityIconButton2}"
+                                Command="{Binding Click}"
+                                MouseEnter="DefenceIcon_MouseEnter"
+                                MouseLeave="DefenceIcon_MouseLeave">
+                                <Image
+                                    Width="32"
+                                    Height="32"
+                                    Source="{Binding Icon}"/>
+                            </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                <Label
+                    x:Name="DefenceTooltip"
+                    Foreground="White"
+                    FontStyle="Italic"
+                    FontWeight="DemiBold"
+                    Content="Left-Click to select defence"
+                    Visibility="Hidden"/>
                 <!-- TOOD: Localise -->
                 <TextBlock 
                     Margin="0,8"

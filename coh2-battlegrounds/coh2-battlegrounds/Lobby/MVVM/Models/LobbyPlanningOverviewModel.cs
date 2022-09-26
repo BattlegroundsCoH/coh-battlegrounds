@@ -53,7 +53,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         };
     }
 
-    public record LobbyPlanningDefence(ImageSource? Icon, string Name, RelayCommand Click);
+    public record LobbyPlanningDefence(ImageSource? Icon, string Name, RelayCommand Click, Func<CapacityValue> CapacityFetcher);
 
     public record LobbyPlanningParticipantDisplay(ImageSource? ArmyIcon, string Name, string CompanyName, int Row, int Column, ImageSource? SpawnPosIcon);
 
@@ -235,7 +235,9 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
                 // Create display data from mod data
                 var handler = () => this.m_planningContext.PickPlaceElement(ebp, data);
-                var planData = new LobbyPlanningDefence(App.ResourceHandler.GetIcon("entity_icons", ebp.UI.Icon), ebp.UI.ScreenName, new(handler));
+                var planData = new LobbyPlanningDefence(
+                    App.ResourceHandler.GetIcon("entity_icons", ebp.UI.Icon), ebp.UI.ScreenName, new(handler), 
+                    () => this.m_planningContext.GetSelfCapacity(ebp.Name));
 
                 // Add
                 this.DefenceStructures.Add(planData);

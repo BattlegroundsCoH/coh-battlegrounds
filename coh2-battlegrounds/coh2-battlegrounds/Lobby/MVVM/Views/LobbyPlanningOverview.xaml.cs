@@ -549,6 +549,18 @@ public partial class LobbyPlanningOverview : UserControl {
         }
     }
 
+    private void DefenceIcon_MouseEnter(object sender, MouseEventArgs e) {
+        if (sender is FrameworkElement fe && fe.DataContext is LobbyPlanningDefence def) {
+            var cap = def.CapacityFetcher();
+            this.DefenceTooltip.Content = $"{GameLocale.GetString(def.Name)} ({cap.Current}/{cap.Capacity})";
+            this.DefenceTooltip.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void DefenceIcon_MouseLeave(object sender, MouseEventArgs e) {
+        this.DefenceTooltip.Visibility = Visibility.Hidden;
+    }
+
     private void RegisterRemoveEvent(UIElement e, int index) => e.MouseRightButtonUp += (a, b) => {
         if (a is FrameworkElement element && element.Tag is HelperElement helper) {
             for (int i = 0; i < this.PlanningCanvas.Children.Count; i++) {
