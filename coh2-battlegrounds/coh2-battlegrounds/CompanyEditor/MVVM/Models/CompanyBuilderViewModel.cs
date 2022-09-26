@@ -128,10 +128,10 @@ public class CompanyBuilderViewModel : ViewModelBase {
     public string CommandUnitLocKey => this.Builder.CompanyType.GetMaxInRole(DeploymentRole.DirectCommand) == BattlegroundsDefine.COMPANY_ROLE_MAX ?
         "CompanyBuilder_RoleCommand_01" : "CompanyBuilder_RoleCommand_02";
 
-    public string SupportUnitLocKey => this.Builder.CompanyType.GetMaxInRole(DeploymentRole.DirectCommand) == BattlegroundsDefine.COMPANY_ROLE_MAX ?
+    public string SupportUnitLocKey => this.Builder.CompanyType.GetMaxInRole(DeploymentRole.SupportRole) == BattlegroundsDefine.COMPANY_ROLE_MAX ?
         "CompanyBuilder_RoleSupport_01" : "CompanyBuilder_RoleSupport_02";
 
-    public string ReserveUnitLocKey => this.Builder.CompanyType.GetMaxInRole(DeploymentRole.DirectCommand) == BattlegroundsDefine.COMPANY_ROLE_MAX ?
+    public string ReserveUnitLocKey => this.Builder.CompanyType.GetMaxInRole(DeploymentRole.ReserveRole) == BattlegroundsDefine.COMPANY_ROLE_MAX ?
         "CompanyBuilder_RoleReserve_01" : "CompanyBuilder_RoleReserve_02";
 
     public IViewModel? ReturnTo { get; set; }

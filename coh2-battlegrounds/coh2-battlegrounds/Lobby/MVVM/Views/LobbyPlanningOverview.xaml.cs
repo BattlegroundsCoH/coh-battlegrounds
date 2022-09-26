@@ -441,6 +441,7 @@ public partial class LobbyPlanningOverview : UserControl {
                         var angle = Lookat(marker.Rotation, v0, v1, planningObject.IsLine ? 0 : 90.0);
                         if (planningObject.IsLine) {
                             LineTo(angle, ebp, v0, v1, marker.OffsetVector, planningObject.ObjectId, true).ForEach(x => {
+                                x.Element.Tag = marker;
                                 this.PlanningCanvas.Children.Add(x.Element);
                                 markers.Add(x);
                             });

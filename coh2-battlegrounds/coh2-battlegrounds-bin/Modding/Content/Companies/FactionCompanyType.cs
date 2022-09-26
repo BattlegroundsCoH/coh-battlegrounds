@@ -474,9 +474,8 @@ public class FactionCompanyType : IChecksumElement {
         result *= rankModifier;
 
         // Modify by role modifier if not limited to specified role
-        if (this.GetUnitRole(sbp) >= role)
-            result *= this.m_roleModifier[role];
-        
+        result *= this.m_roleModifier[role];
+
         // Apply transport costs (if any)
         if (transport is SquadBlueprint tbp) {
             if (this.m_unitTransports.TryGetValue(tbp.Name, out int i)) {
