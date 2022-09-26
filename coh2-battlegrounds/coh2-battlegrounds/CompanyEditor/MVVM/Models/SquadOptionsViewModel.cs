@@ -157,6 +157,8 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     public bool IsStarting => this.BuilderInstance.Phase is DeploymentPhase.PhaseInitial;
 
+    public bool CanSetStartingVisual => this.IsStarting || this.CanSetStarting;
+
     public SquadOptionsViewModel(SquadSlotViewModel triggerer, CompanyBuilder companyBuilder) {
         
         // Store trigger and instance refs

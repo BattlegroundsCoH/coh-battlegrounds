@@ -24,6 +24,8 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
     public static readonly ImageSource VetRankNotAchieved
         = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar_no.png"));
 
+    public static readonly ImageSource RallyIcon = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/rally_icon.png"));
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public string SquadName { get; set; }
@@ -52,9 +54,9 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
 
     public ImageSource Rank5 { get; private set; } = VetRankNotAchieved;
 
-    public string SquadPhase => this.BuilderInstance.Phase switch {
-        DeploymentPhase.PhaseInitial => "I",
-        _ => string.Empty
+    public ImageSource? SquadPhase => this.BuilderInstance.Phase switch {
+        DeploymentPhase.PhaseInitial => RallyIcon,
+        _ => null
     };
 
     public Brush PhaseBackground => this.BuilderInstance.Role switch {

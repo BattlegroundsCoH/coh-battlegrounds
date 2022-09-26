@@ -13,9 +13,12 @@
 
     <UserControl.Resources>
         <convertor:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <convertor:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
     </UserControl.Resources>
 
-    <Canvas Height="78" Width="250">
+    <Canvas 
+        Height="78" 
+        Width="250">
         
         <!-- Name -->
         <Label Content="{Binding SquadName}"
@@ -31,27 +34,35 @@
             x:Name="PortraitElement"/>
 
         <!-- Cost -->
-        <cost:CostControl Canvas.Top="38"
-                              Canvas.Left="52"
-                              Height="44"
-                              Cost="{Binding SquadCost}"
-                          HorizontalAlignment="Left"/>
+        <cost:CostControl 
+            Canvas.Top="38"
+            Canvas.Left="52"
+            Height="44"
+            Cost="{Binding SquadCost}"
+            HorizontalAlignment="Left"/>
 
         <!-- Phase -->
-        <Label Canvas.Bottom="4"
-               Canvas.Right="16"
-               FontFamily="Open Sans"
-               Foreground="White"
-            Content="{Binding SquadPhase}"/>
-
+        <Border
+            Canvas.Bottom="4"
+            Canvas.Right="20"
+            BorderBrush="Gray"            
+            CornerRadius="16"
+            BorderThickness="0.8"
+            Visibility="{Binding SquadPhase, Converter={StaticResource NullVisibilityConverter}}"
+            Background="{StaticResource BackgroundDarkBlueBrush}">
+            <Image 
+                Width="24"
+                Height="24"
+                Source="{Binding SquadPhase}">
+            </Image>
+        </Border>
+        
         <!-- Transport -->
-        <Image Canvas.Right="32" Canvas.Bottom="4" 
+        <Image Canvas.Right="48" Canvas.Bottom="4" 
                Visibility="{Binding SquadIsTransported, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}"
                Source="{Binding SquadTransportIcon}"
                Width="24"
                Height="24"/>
-
-        
         
         <!-- Veterancy -->
         <StackPanel Orientation="Horizontal"
