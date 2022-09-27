@@ -40,18 +40,27 @@ internal class RemoteCall {
                 string e = response.StrMsg is null ? "Received error message from server with no description" : response.StrMsg;
                 throw new Exception(e);
             }
-            if (response.StrMsg == "Primitive") {
-                // It feels nasty using 'dynamic'
-                return (T)(dynamic)(response.DotNetType switch {
-                    nameof(Boolean) => response.Raw[0] == 1,
-                    nameof(UInt32) => response.Raw.ConvertBigEndian(BitConverter.ToUInt32),
-                    _ => throw new NotImplementedException($"Support for primitive response of type '{response.DotNetType}' not implemented.")
-                });
-            } else {
-                if (GoMarshal.JsonUnmarshal<T>(response.Raw) is T content) {
-                    return content;
-                }
-                Trace.WriteLine($"Failed to unmarshal return raw response bytes of length '{response.Raw.Length}'", nameof(RemoteCall<T>));
+            switch (response.StrMsg) {
+                case "Primitive":
+                    // It feels nasty using 'dynamic'
+                    return (T)(dynamic)(response.DotNetType switch {
+                        nameof(Boolean) => response.Raw[0] == 1,
+                        nameof(UInt32) => response.Raw.ConvertBigEndian(BitConverter.ToUInt32),
+                        _ => throw new NotImplementedException($"Support for primitive response of type '{response.DotNetType}' not implemented.")
+                    });
+                case "IteratorResult":
+                    if (Activator.CreateInstance(typeof(T), response.Who, this) is T itt) {
+                        return itt;
+                    } else {
+                        Trace.WriteLine($"Failed to unmarshal iterator. The type '{typeof(T).Name}' is not a valid iterator type.", nameof(RemoteCall));
+                        break;
+                    }
+                default:
+                    if (GoMarshal.JsonUnmarshal<T>(response.Raw) is T content) {
+                        return content;
+                    }
+                    Trace.WriteLine($"Failed to unmarshal return raw response bytes of length '{response.Raw.Length}'", nameof(RemoteCall));
+                    break;
             }
         }
 
