@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 namespace Battlegrounds.Networking.Remoting;
 
+/// <summary>
+/// Supports the iterator pattern over an online connection.
+/// </summary>
+/// <typeparam name="T">The collection element type.</typeparam>
 public class OnlineIterator<T> : IEnumerator<T> {
 
     private readonly struct OnlineIteratorResponse {
@@ -70,7 +74,7 @@ public class OnlineIterator<T> : IEnumerator<T> {
                     this.m_buffered.AddRange(result.Data[1..]);
                 }
 
-                // Return false
+                // Return true => can return more
                 return true;
 
             }
