@@ -119,7 +119,7 @@ public sealed class OnlineLobbyPlanner : ILobbyPlanningHandle {
     public ILobbyPlanElement[] GetPlanningElements(byte teamIndex) {
 
         // Grab iterator
-        var itt = this.m_remote.Call<OnlineIterator<JsonPlanElement>>("GetPlanElements", teamIndex);
+        using var itt = this.m_remote.Call<OnlineIterator<JsonPlanElement>>("GetPlanElements", teamIndex);
         if (itt is null) {
             Trace.WriteLine($"Failed to get plan element iterator!", nameof(OnlineLobbyPlanner));
             return Array.Empty<ILobbyPlanElement>();

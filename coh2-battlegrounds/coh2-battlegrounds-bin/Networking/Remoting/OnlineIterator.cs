@@ -20,8 +20,10 @@ public class OnlineIterator<T> : IEnumerator<T> {
     private T? m_current;
 
     private bool m_isDone;
+    private bool m_isDisposed;
 
-    public T Current => this.m_current ?? throw new Exception();
+    public T Current 
+        => this.m_isDisposed ? throw new ObjectDisposedException(nameof(OnlineIterator<T>)) : (this.m_current ?? throw new Exception());
 
     object? IEnumerator.Current => this.m_current;
 
@@ -34,11 +36,27 @@ public class OnlineIterator<T> : IEnumerator<T> {
     }
 
     public void Dispose() {
+        
+        // Suppress this
         GC.SuppressFinalize(this);
-        // TODO: Send dispose to server
+        
+        // Inform server we're done
+        this.m_remoter.Call("Iterator_Done", this.IteratorUID);
+
+        // Clear buffered if any
+        this.m_buffered.Clear();
+
+        // Set disposed flag
+        this.m_isDisposed = true;
+
     }
 
     public bool MoveNext() {
+
+        // Error if disposed
+        if (this.m_isDisposed) {
+            throw new ObjectDisposedException(nameof(OnlineIterator<T>));
+        }
 
         // Decide if we should move to next buffered element or make a request online
         if (this.m_buffered.Count > 0) {
@@ -82,10 +100,22 @@ public class OnlineIterator<T> : IEnumerator<T> {
             // Return false
             return false;
         }
+
     }
 
     public void Reset() {
-        throw new NotSupportedException("Cannot reset an online iterator.");
+
+        // Error if disposed
+        if (this.m_isDisposed) {
+            throw new ObjectDisposedException(nameof(OnlineIterator<T>));
+        }
+
+        // Invoke reset on server
+        this.m_remoter.Call("Iterator_Reset", this.IteratorUID);
+
+        // Clear buffer
+        this.m_buffered.Clear();
+
     }
 
 }
