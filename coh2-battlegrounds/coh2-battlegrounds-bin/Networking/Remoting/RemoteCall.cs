@@ -82,7 +82,9 @@ internal class RemoteCall {
                         _ => throw new RemoteCallException(method, args, $"Server returned primitive type '{response.DotNetType}' which is not implemented.")
                     });
                 case "IteratorResult":
-                    if (Activator.CreateInstance(typeof(T), response.Who, this) is T itt) {
+                    var elemtype = typeof(T).GenericTypeArguments[0];
+                    var itter = OnlineIteratorFactory.CreateIterator(elemtype, response.Who, this);
+                    if (itter is T itt) {
                         return itt;
                     } else {
                         Trace.WriteLine($"Error in call '{method}({string.Join(',', args)})':\n\tFailed to unmarshal iterator. The type '{typeof(T).Name}' is not a valid iterator type.", nameof(RemoteCall));

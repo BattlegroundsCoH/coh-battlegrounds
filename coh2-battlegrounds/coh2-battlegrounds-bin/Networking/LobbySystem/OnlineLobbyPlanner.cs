@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -119,8 +120,7 @@ public sealed class OnlineLobbyPlanner : ILobbyPlanningHandle {
     public ILobbyPlanElement[] GetPlanningElements(byte teamIndex) {
 
         // Grab iterator
-        using var itt = this.m_remote.Call<OnlineIterator<JsonPlanElement>>("GetPlanElements", teamIndex);
-        if (itt is null) {
+        if (this.m_remote.Call<IEnumerator<JsonPlanElement>>("GetPlanElements", teamIndex) is not OnlineIterator<JsonPlanElement> itt) {
             Trace.WriteLine($"Failed to get plan element iterator!", nameof(OnlineLobbyPlanner));
             return Array.Empty<ILobbyPlanElement>();
         }
