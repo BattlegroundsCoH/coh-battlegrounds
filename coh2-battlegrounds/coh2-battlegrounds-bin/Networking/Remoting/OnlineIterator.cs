@@ -5,17 +5,33 @@ using System.Collections.Generic;
 namespace Battlegrounds.Networking.Remoting;
 
 /// <summary>
+/// 
+/// </summary>
+public class OnlineIterator {
+
+    private RemoteCall? m_remoter;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    internal RemoteCall? Remoter {
+        get => this.m_remoter;
+        set => this.m_remoter = value;
+    }
+
+}
+
+/// <summary>
 /// Supports the iterator pattern over an online connection.
 /// </summary>
 /// <typeparam name="T">The collection element type.</typeparam>
-public class OnlineIterator<T> : IEnumerator<T> {
+public sealed class OnlineIterator<T> : OnlineIterator, IEnumerator<T> {
 
     private readonly struct OnlineIteratorResponse {
         public readonly T[] Data { get; init; }
         public readonly bool IsDone { get; init; }
     }
 
-    private readonly RemoteCall m_remoter;
     private readonly List<T> m_buffered;
     private T? m_current;
 
@@ -29,19 +45,23 @@ public class OnlineIterator<T> : IEnumerator<T> {
 
     public ulong IteratorUID { get; }
 
-    internal OnlineIterator(ulong iteratorUID, RemoteCall remoter) {
+    public OnlineIterator(ulong iteratorUID) {
         this.IteratorUID = iteratorUID;
-        this.m_remoter = remoter;
         this.m_buffered = new();
     }
 
     public void Dispose() {
         
+        // Bail if remoter not defined or already disposed
+        if (this.Remoter is null || this.m_isDisposed) {
+            return;
+        }
+
         // Suppress this
         GC.SuppressFinalize(this);
         
         // Inform server we're done
-        this.m_remoter.Call("Iterator_Done", this.IteratorUID);
+        this.Remoter.Call("Iterator_Done", this.IteratorUID);
 
         // Clear buffered if any
         this.m_buffered.Clear();
@@ -49,12 +69,15 @@ public class OnlineIterator<T> : IEnumerator<T> {
         // Set disposed flag
         this.m_isDisposed = true;
 
+        // Mark null
+        this.Remoter = null;
+
     }
 
     public bool MoveNext() {
 
         // Error if disposed
-        if (this.m_isDisposed) {
+        if (this.m_isDisposed || this.Remoter is null) {
             throw new ObjectDisposedException(nameof(OnlineIterator<T>));
         }
 
@@ -78,7 +101,7 @@ public class OnlineIterator<T> : IEnumerator<T> {
             }
 
             // Send request for more
-            var result = this.m_remoter.Call<OnlineIteratorResponse>("Iterator_MoveNext", this.IteratorUID);
+            var result = this.Remoter.Call<OnlineIteratorResponse>("Iterator_MoveNext", this.IteratorUID);
             this.m_isDone = result.IsDone;
             
             // Check if any was received
@@ -106,12 +129,12 @@ public class OnlineIterator<T> : IEnumerator<T> {
     public void Reset() {
 
         // Error if disposed
-        if (this.m_isDisposed) {
+        if (this.m_isDisposed || this.Remoter is null) {
             throw new ObjectDisposedException(nameof(OnlineIterator<T>));
         }
 
         // Invoke reset on server
-        this.m_remoter.Call("Iterator_Reset", this.IteratorUID);
+        this.Remoter.Call("Iterator_Reset", this.IteratorUID);
 
         // Clear buffer
         this.m_buffered.Clear();
