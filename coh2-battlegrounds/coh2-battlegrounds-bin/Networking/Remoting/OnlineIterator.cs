@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Battlegrounds.Networking.Remoting;
 
@@ -30,6 +31,12 @@ public sealed class OnlineIterator<T> : OnlineIterator, IEnumerator<T> {
     private readonly struct OnlineIteratorResponse {
         public readonly T[] Data { get; init; }
         public readonly bool IsDone { get; init; }
+        [JsonConstructor]
+        public OnlineIteratorResponse(T[] Data, bool IsDone) {
+            this.Data = Data;
+            this.IsDone = IsDone;
+        }
+
     }
 
     private readonly List<T> m_buffered;
