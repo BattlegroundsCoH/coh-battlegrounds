@@ -4,8 +4,8 @@ using System.Windows.Media;
 
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Extensions;
-
-using BattlegroundsApp.Resources;
+using Battlegrounds.Locale;
+using Battlegrounds.Resources;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
@@ -39,14 +39,14 @@ public class AvailableItemViewModel : INotifyPropertyChanged {
         if (bp is SquadBlueprint sbp) {
 
             this.ItemName = GameLocale.GetString(sbp.UI.ScreenName);
-            this.ItemSymbol = App.ResourceHandler.GetIcon("symbol_icons", sbp.UI.Symbol);
+            this.ItemSymbol = ResourceHandler.GetIcon("symbol_icons", sbp.UI.Symbol);
             this.Blueprint = sbp;
             this.ItemCost = sbp.Cost;
 
         } else if (bp is AbilityBlueprint abp) {
 
             this.ItemName = GameLocale.GetString(abp.UI.ScreenName);
-            this.ItemSymbol = App.ResourceHandler.GetIcon("symbol_icons", abp.UI.Symbol);
+            this.ItemSymbol = ResourceHandler.GetIcon("symbol_icons", abp.UI.Symbol);
             this.Blueprint = abp;
             this.ItemCost = abp.Cost;
 

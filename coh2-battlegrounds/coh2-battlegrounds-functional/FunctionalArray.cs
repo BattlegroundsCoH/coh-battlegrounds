@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Battlegrounds.Functional;
+﻿namespace Battlegrounds.Functional;
 
 /// <summary>
 /// Functional helper functions for arrays.
@@ -268,17 +264,6 @@ public static class FunctionalArray {
         Array.Copy(other, 0, buffer, array.Length, other.Length);
         return buffer;
     }
-
-    /// <summary>
-    /// Pick a random element from array.
-    /// </summary>
-    /// <typeparam name="T">The type the elements in the array are of.</typeparam>
-    /// <param name="array">The array to pick element from</param>
-    /// <param name="min">Smallest index in array to pick from.</param>
-    /// <param name="max">Largest index in array to pick from.</param>
-    /// <returns>A uniformly picked element from <paramref name="array"/>.</returns>
-    public static T Random<T>(this T[] array, int min = 0, int max = int.MaxValue)
-        => Random(array, BattlegroundsInstance.RNG, min, max);
 
     /// <summary>
     /// Pick a random element from array.

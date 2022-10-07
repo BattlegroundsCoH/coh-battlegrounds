@@ -6,6 +6,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Resources;
 
 using BattlegroundsApp.Lobby;
 
@@ -140,7 +141,7 @@ public partial class Minimap : UserControl {
         Image img = new() {
             Width = size,
             Height = size,
-            Source = App.ResourceHandler.GetIcon("minimap_icons", ico),
+            Source = ResourceHandler.GetIcon("minimap_icons", ico),
             RenderTransformOrigin = new(0.5, 0.5)
         };
 

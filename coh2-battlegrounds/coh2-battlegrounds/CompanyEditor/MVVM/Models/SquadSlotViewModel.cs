@@ -7,10 +7,11 @@ using System.Windows.Media.Imaging;
 using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content.Companies;
+using Battlegrounds.Resources;
 
 using BattlegroundsApp.MVVM;
-using BattlegroundsApp.Resources;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
@@ -122,8 +123,8 @@ public class SquadSlotViewModel : IViewModel, INotifyPropertyChanged {
         // Set transport
         var transportBp = this.BuilderInstance.Transport;
         this.SquadIsTransported = transportBp is not null;
-        if (this.SquadIsTransported && App.ResourceHandler.HasIcon("symbol_icons", transportBp!.UI.Symbol)) {
-            this.SquadTransportIcon = App.ResourceHandler.GetIcon("symbol_icons", transportBp!.UI.Symbol);
+        if (this.SquadIsTransported && ResourceHandler.HasIcon("symbol_icons", transportBp!.UI.Symbol)) {
+            this.SquadTransportIcon = ResourceHandler.GetIcon("symbol_icons", transportBp!.UI.Symbol);
         }
 
         // Refresh

@@ -3,8 +3,8 @@ using System.Windows.Input;
 
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Locale;
 
-using BattlegroundsApp.Resources;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;

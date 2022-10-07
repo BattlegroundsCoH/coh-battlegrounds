@@ -16,7 +16,6 @@ using Battlegrounds.Verification;
 using Battlegrounds.Functional;
 
 using BattlegroundsApp.LocalData;
-using BattlegroundsApp.Resources;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
@@ -27,6 +26,8 @@ using Battlegrounds.Update;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.Modals.DownloadInProgress.MVVM.Models;
 using Battlegrounds.Util.Coroutines;
+using Battlegrounds.Resources;
+using System.Reflection;
 
 namespace BattlegroundsApp;
 
@@ -36,7 +37,6 @@ namespace BattlegroundsApp;
 public partial class App : Application {
 
     private static AppViewManager? __viewManager;
-    private static ResourceHandler? __handler;
 
     private static LeftMenu? __lmenu;
     private static SettingsViewModel? __settings;
@@ -44,18 +44,15 @@ public partial class App : Application {
     private static LobbyBrowserViewModel? __lobbyBrowser;
     private static CompanyBrowserViewModel? __companyBrowser;
 
-    public static ResourceHandler ResourceHandler 
-        => IsStarted ? __handler : throw new InvalidOperationException("Cannot get resource handler before application window has initialised.");
-
     public static AppViewManager ViewManager 
         => IsStarted ? __viewManager : throw new InvalidOperationException("Cannot get view manager before application window has initialised.");
 
-    [MemberNotNullWhen(true, nameof(__viewManager), nameof(__handler))]
+    [MemberNotNullWhen(true, nameof(__viewManager))]
     public static bool IsStarted { get; private set; }
 
     public static new Dispatcher Dispatcher => App.Current.Dispatcher;
 
-    [MemberNotNull(nameof(__viewManager), nameof(__handler))]
+    [MemberNotNull(nameof(__viewManager))]
     private void App_Startup(object sender, StartupEventArgs e) {
 
         // Check args
@@ -76,7 +73,8 @@ public partial class App : Application {
         VerifyIntegrity();
 
         // Setup resource handler
-        __handler = new();
+        //ResourceHandler.LoadAllResources(null);
+        ResourceHandler.LoadAllResources(Assembly.GetExecutingAssembly());
 
         // Load BG .dll instance*
         BattlegroundsInstance.LoadInstance();
@@ -116,7 +114,7 @@ public partial class App : Application {
         this.MainWindow.Show();
 
         // Load filter
-        Task.Run(ProfanityFilter.LoadFilter);
+        //Task.Run(ProfanityFilter.LoadFilter);
 
         // Load more low priority stuff down here
 

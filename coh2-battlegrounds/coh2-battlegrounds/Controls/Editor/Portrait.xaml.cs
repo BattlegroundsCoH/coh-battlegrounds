@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Resources;
 
 namespace BattlegroundsApp.Controls.Editor;
 
@@ -117,18 +118,13 @@ public partial class Portrait : UserControl {
             return;
         }
 
-        // If resource handler is missing for some reason, bail
-        if (App.ResourceHandler is null) {
-            return;
-        }
-
         // do nothing if icon is invalid
-        if (!App.ResourceHandler.HasIcon(source, name)) {
+        if (!ResourceHandler.HasIcon(source, name)) {
             return;
         }
 
         // Set source
-        img.Source = App.ResourceHandler.GetIcon(source, name);
+        img.Source = ResourceHandler.GetIcon(source, name);
 
     }
 

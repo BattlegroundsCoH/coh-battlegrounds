@@ -1,10 +1,9 @@
-﻿using System;
+﻿using System.Windows.Media.Imaging;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 using Battlegrounds.Gfx;
 
-namespace BattlegroundsApp.Resources; 
+namespace Battlegrounds.Resources.Imaging;
 
 public sealed class TgaImageSource : ICloneable {
 

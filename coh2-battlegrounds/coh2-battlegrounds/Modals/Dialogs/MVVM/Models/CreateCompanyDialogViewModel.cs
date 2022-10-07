@@ -4,10 +4,11 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content.Companies;
+using Battlegrounds.Resources;
 
-using BattlegroundsApp.Resources;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Utilities.Converters;
 
@@ -27,12 +28,12 @@ public class CreateCompanyDialogViewModel : INotifyPropertyChanged {
         private AbilityBlueprint[]? m_abilities;
         public string Desc => BattlegroundsInstance.Localize.GetString($"{this.Name}_desc");
         public ImageSource Icon => StringToCompanyTypeIconConverter.GetFromType(this.Type);
-        public ImageSource? Unit01 => App.ResourceHandler.GetIcon("unit_icons", this.m_squads![0].UI.Icon);
-        public ImageSource? Unit02 => App.ResourceHandler.GetIcon("unit_icons", this.m_squads![1].UI.Icon);
-        public ImageSource? Unit03 => App.ResourceHandler.GetIcon("unit_icons", this.m_squads![2].UI.Icon);
-        public ImageSource? Ability01 => App.ResourceHandler.GetIcon("ability_icons", this.m_abilities![0].UI.Icon);
-        public ImageSource? Ability02 => App.ResourceHandler.GetIcon("ability_icons", this.m_abilities![1].UI.Icon);
-        public ImageSource? Ability03 => App.ResourceHandler.GetIcon("ability_icons", this.m_abilities![2].UI.Icon);
+        public ImageSource? Unit01 => ResourceHandler.GetIcon("unit_icons", this.m_squads![0].UI.Icon);
+        public ImageSource? Unit02 => ResourceHandler.GetIcon("unit_icons", this.m_squads![1].UI.Icon);
+        public ImageSource? Unit03 => ResourceHandler.GetIcon("unit_icons", this.m_squads![2].UI.Icon);
+        public ImageSource? Ability01 => ResourceHandler.GetIcon("ability_icons", this.m_abilities![0].UI.Icon);
+        public ImageSource? Ability02 => ResourceHandler.GetIcon("ability_icons", this.m_abilities![1].UI.Icon);
+        public ImageSource? Ability03 => ResourceHandler.GetIcon("ability_icons", this.m_abilities![2].UI.Icon);
         public override string ToString() => BattlegroundsInstance.Localize.GetString(this.Name);
         public CompanyType CacheDisplay() {
 

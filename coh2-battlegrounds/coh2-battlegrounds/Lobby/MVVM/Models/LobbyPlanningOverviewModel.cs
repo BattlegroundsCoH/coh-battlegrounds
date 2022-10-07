@@ -17,6 +17,7 @@ using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
+using Battlegrounds.Resources;
 using Battlegrounds.Util;
 
 using BattlegroundsApp.Controls;
@@ -236,7 +237,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
                 // Create display data from mod data
                 var handler = () => this.m_planningContext.PickPlaceElement(ebp, data);
                 var planData = new LobbyPlanningDefence(
-                    App.ResourceHandler.GetIcon("entity_icons", ebp.UI.Icon), ebp.UI.ScreenName, new(handler), 
+                    ResourceHandler.GetIcon("entity_icons", ebp.UI.Icon), ebp.UI.ScreenName, new(handler), 
                     () => this.m_planningContext.GetSelfCapacity(ebp.Name));
 
                 // Add
@@ -262,7 +263,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
                 var handler = () => this.m_planningContext.PickPlaceElement(unit.SBP, unit.SquadID);
 
                 // Grab icon
-                var ico = App.ResourceHandler.GetIcon("unit_icons", unit.SBP.UI.Icon);
+                var ico = ResourceHandler.GetIcon("unit_icons", unit.SBP.UI.Icon);
 
                 // Add
                 this.PreplacableUnits.Register(new(unit.SquadID, ico, unit.GetName(), unit.VeterancyRank, new(handler)));
@@ -427,7 +428,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         int c = columInverse ? (1 - col) : col;
 
         // Get pos icon
-        var p = App.ResourceHandler.GetIcon("minimap_icons", $"Icons_minimap_mm_starting_point_{pid+1}");
+        var p = ResourceHandler.GetIcon("minimap_icons", $"Icons_minimap_mm_starting_point_{pid+1}");
 
         // Make sure we have a valid company to get remaining data from
         if (occupant.Company is ILobbyCompany company) {

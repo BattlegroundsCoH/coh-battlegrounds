@@ -19,12 +19,12 @@ using Battlegrounds.Functional;
 using BattlegroundsApp.Lobby.MVVM.Views;
 using BattlegroundsApp.LocalData;
 
-using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.MVVM;
 using Battlegrounds.Locale;
-using BattlegroundsApp.Resources;
 using Battlegrounds.Modding.Content;
+
+using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 

@@ -29,7 +29,6 @@ using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
-using BattlegroundsApp.Resources;
 
 using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
 

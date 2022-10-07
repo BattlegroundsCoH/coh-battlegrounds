@@ -2,9 +2,8 @@
 using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content;
-
-using BattlegroundsApp.Resources;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 

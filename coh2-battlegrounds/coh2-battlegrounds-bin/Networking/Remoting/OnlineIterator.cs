@@ -6,14 +6,14 @@ using System.Text.Json.Serialization;
 namespace Battlegrounds.Networking.Remoting;
 
 /// <summary>
-/// 
+/// Base class for a <see cref="OnlineIterator{T}"/> instance.
 /// </summary>
 public class OnlineIterator {
 
     private RemoteCall? m_remoter;
 
     /// <summary>
-    /// 
+    /// Get or set the <see cref="RemoteCall"/> instance responsible for performing the remote operations.
     /// </summary>
     internal RemoteCall? Remoter {
         get => this.m_remoter;

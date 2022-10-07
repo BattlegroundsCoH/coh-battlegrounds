@@ -150,7 +150,6 @@
     <None Remove="Resources\ingame\vet\vstar_no.png" />
     <None Remove="Resources\ingame\vet\vstar_yes.png" />
     <None Remove="Resources\ingame\west_german.png" />
-    <None Remove="Resources\profanities.json" />
     <None Remove="Resources\shaders\ColourOverlayEffect.ps" />
   </ItemGroup>
 
@@ -212,6 +211,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-functional\coh2-battlegrounds-functional.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-resources\coh2-battlegrounds-resources.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -270,7 +271,6 @@
     <Resource Include="Resources\ingame\vet\vstar_no.png" />
     <Resource Include="Resources\ingame\vet\vstar_yes.png" />
     <Resource Include="Resources\ingame\west_german.png" />
-    <Resource Include="Resources\profanities.json" />
     <Resource Include="Resources\shaders\ColourOverlayEffect.ps" />
   </ItemGroup>
 

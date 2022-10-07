@@ -13,9 +13,10 @@ using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Locale;
+using Battlegrounds.Resources;
 
 using BattlegroundsApp.MVVM;
-using BattlegroundsApp.Resources;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
@@ -23,7 +24,7 @@ namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     public record AbilityButton(AbilityBlueprint Abp) {
-        public ImageSource? Icon => App.ResourceHandler.GetIcon("ability_icons", this.Abp.UI.Icon);
+        public ImageSource? Icon => ResourceHandler.GetIcon("ability_icons", this.Abp.UI.Icon);
         public string Title => GameLocale.GetString(this.Abp.UI.ScreenName);
         public string Desc => GameLocale.GetString(this.Abp.UI.LongDescription);
         public CostExtension Cost => this.Abp.Cost;
@@ -33,7 +34,7 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
         public event PropertyChangedEventHandler? PropertyChanged;
         public bool IsApplied => this.CheckApplied();
         public bool IsAvailable => this.CheckAvailable();
-        public ImageSource? Icon => App.ResourceHandler.GetIcon("upgrade_icons", this.Ubp.UI.Icon);
+        public ImageSource? Icon => ResourceHandler.GetIcon("upgrade_icons", this.Ubp.UI.Icon);
         public string Title => GameLocale.GetString(this.Ubp.UI.ScreenName);
         public string Desc => GameLocale.GetString(this.Ubp.UI.LongDescription);
         public CostExtension Cost => this.Ubp.Cost;
@@ -47,9 +48,9 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
         public bool IsActiveMethod => this.IsActive();
         public event PropertyChangedEventHandler? PropertyChanged;
         public ImageSource? Icon => this.Method switch {
-            DeploymentMethod.None => App.ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_none"),
-            DeploymentMethod.DeployAndExit => App.ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_drop_exit"),
-            DeploymentMethod.DeployAndStay => App.ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_drop_stay"),
+            DeploymentMethod.None => ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_none"),
+            DeploymentMethod.DeployAndExit => ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_drop_exit"),
+            DeploymentMethod.DeployAndStay => ResourceHandler.GetIcon("deploy_icons", "Icons_bg_deploy_drop_stay"),
             _ => throw new InvalidEnumArgumentException()
         };
         public void Update() {
@@ -60,7 +61,7 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
     public record DeployUnitButton(SquadBlueprint Blueprint, Func<bool> IsActive, EventCommand Clicked) : INotifyPropertyChanged {
         public bool IsActiveMethod => this.IsActive();
         public event PropertyChangedEventHandler? PropertyChanged;
-        public ImageSource? Icon => App.ResourceHandler.GetIcon("unit_icons", this.Blueprint.UI.Icon);
+        public ImageSource? Icon => ResourceHandler.GetIcon("unit_icons", this.Blueprint.UI.Icon);
         public string Title => GameLocale.GetString(this.Blueprint.UI.ScreenName);
         public string Desc => GameLocale.GetString(this.Blueprint.UI.LongDescription);
         public CostExtension Cost => this.Blueprint.Cost;
@@ -89,7 +90,7 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     public string UnitHelpText => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ShortDescription);
 
-    public ImageSource? UnitPortrait => App.ResourceHandler.GetIcon("portraits", this.BuilderInstance.Blueprint.UI.Portrait);
+    public ImageSource? UnitPortrait => ResourceHandler.GetIcon("portraits", this.BuilderInstance.Blueprint.UI.Portrait);
 
     public string CrewTitle => this.CrewBuilderInstance is not null ? GameLocale.GetString(this.CrewBuilderInstance.Blueprint.UI.ScreenName) : "";
 
@@ -97,7 +98,7 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     public string CrewHelperDesc => this.CrewBuilderInstance is not null ? GameLocale.GetString(this.CrewBuilderInstance.Blueprint.UI.ShortDescription) : "";
 
-    public ImageSource? CrewPortrait => this.CrewBuilderInstance is not null ? App.ResourceHandler.GetIcon("portraits", this.CrewBuilderInstance.Blueprint.UI.Portrait) : null;
+    public ImageSource? CrewPortrait => this.CrewBuilderInstance is not null ? ResourceHandler.GetIcon("portraits", this.CrewBuilderInstance.Blueprint.UI.Portrait) : null;
 
     public string DeployMethodTitle => this.BuilderInstance.DeployMethod switch {
         DeploymentMethod.None => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_None"),
@@ -171,7 +172,7 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
         this.RallyClick = new EventCommand<MouseEventArgs>(this.RallyCommand);
 
         // Collect all abilities
-        var abilities = this.BuilderInstance.Abilities.Filter(x => x.UI.Icon is not "").Filter(x => App.ResourceHandler.HasIcon("ability_icons", x.UI.Icon));
+        var abilities = this.BuilderInstance.Abilities.Filter(x => x.UI.Icon is not "").Filter(x => ResourceHandler.HasIcon("ability_icons", x.UI.Icon));
         this.Abilities = new ObservableCollection<AbilityButton>(abilities.Map(x => new AbilityButton(x)));
 
         // Create upgrade cap
@@ -183,7 +184,7 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
         // Collect all upgrades
         this.BuilderInstance.Blueprint.Upgrades
             .Map(BlueprintManager.FromBlueprintName<UpgradeBlueprint>)
-            .Filter(x => x.UI.Icon is not "" && App.ResourceHandler.HasIcon("upgrade_icons", x.UI.Icon))
+            .Filter(x => x.UI.Icon is not "" && ResourceHandler.HasIcon("upgrade_icons", x.UI.Icon))
             .Map(x => new UpgradeButton(x, () => this.BuilderInstance.Upgrades.Contains(x), () => !this.UpgradeCapacity.IsAtCapacity, new EventCommand<MouseEventArgs>(this.UpgradeCommand)))
             .ForEach(this.Upgrades.Add);
 

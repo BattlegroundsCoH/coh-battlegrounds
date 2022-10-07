@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
-using Battlegrounds;
 using Battlegrounds.Functional;
 
-namespace BattlegroundsApp.Resources;
+namespace Battlegrounds.Resources;
 
 /// <summary>
 /// Static utility class for filtering profanities
@@ -30,17 +27,14 @@ public static class ProfanityFilter {
     public static void LoadFilter() {
 
         // Get filter from resources
-        var rawBytes = App.ResourceHandler.GetResourceAndUnload(ResourceHandler.ResourceType.ProfanityFilter);
+        var rawBytes = ResourceHandler.GetResourceAndUnload(ResourceType.ProfanityFilter);
         if (rawBytes is null) {
             return;
         }
 
         // Try parse
         try {
-            __filters = JsonSerializer.Deserialize<Dictionary<string, FilterContent>>(rawBytes);
-            if (__filters is null) {
-                __filters = new Dictionary<string, FilterContent>();
-            }
+            __filters = JsonSerializer.Deserialize<Dictionary<string, FilterContent>>(rawBytes) ?? new();
             // Mark as loaded
             __isFilterLoaded = true;
         } catch (Exception e) {

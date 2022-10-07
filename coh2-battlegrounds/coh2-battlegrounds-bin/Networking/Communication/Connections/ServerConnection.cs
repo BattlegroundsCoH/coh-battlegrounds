@@ -99,13 +99,6 @@ public sealed class ServerConnection : IConnection {
 
     }
     
-    /// <summary>
-    /// Stop listening to remote endpoint.
-    /// </summary>
-    public void StopListen() {
-        this.m_listen = false;
-    }
-
     private List<Message>? ReceiveMessages() {
 
         // Store slice
@@ -118,28 +111,13 @@ public sealed class ServerConnection : IConnection {
         // Try receive
         try {
 
-            // Define big buffer list
-            List<byte> bigBuffer = new();
-
-            // Exhaust incoming data buffer
-            while (this.m_socket.Available > 0) {
-
-                // Prepare fresh buffer
-                byte[] buffer = new byte[this.m_socket.ReceiveBufferSize];
-
-                // Receive bytes
-                received = this.m_socket.Receive(buffer);
-                if (received == 0) { // EOF
-                    return null;
-                }
-
-                // Add read bytes to big buffer
-                bigBuffer.AddRange(buffer[..received]);
-
-            }
+            // Read incoming
+            received = this.m_socket.ReceiveAll(out byte[] bigBuffer);
+            if (received is 0)
+                return null;
 
             // Start interpreting messages
-            slice = bigBuffer.ToArray();
+            slice = bigBuffer;
             while (slice.Length > 0) {
 
                 // Read next message in data
@@ -153,18 +131,19 @@ public sealed class ServerConnection : IConnection {
 
             }
 
-            // Return found messages
-            return messages;
-
         } catch (Exception ex) {
             Trace.WriteLine(ex, nameof(ServerConnection));
             return null;
         }
 
+        // Return found messages
+        return messages;
+
     }
 
     private void Listen() {
 
+        // While listening
         while (this.m_listen) {
 
             // Get next message queue
@@ -258,7 +237,7 @@ public sealed class ServerConnection : IConnection {
         this.m_rwlock.ExitWriteLock();
 
         // Actually send
-        this.m_socket.Send(buffer.ToArray());
+        this.m_socket.SendAll(buffer.ToArray());
 
     }
 
@@ -333,13 +312,10 @@ public sealed class ServerConnection : IConnection {
             byte[] intro = GoMarshal.JsonMarshal(introduction);
 
             // Send
-            socket.Send(intro);
-
-            // Get response
-            byte[] response = new byte[1024];
+            socket.SendAll(intro);
 
             // Wait for response
-            int received = socket.Receive(response);
+            int received = socket.ReceiveAll(out var response);
             if (received > 0) {
 
                 // Unmarshal

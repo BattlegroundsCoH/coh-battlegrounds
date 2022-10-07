@@ -4,8 +4,8 @@ using System.Windows.Controls;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Locale;
 
-using BattlegroundsApp.Resources;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Popups {

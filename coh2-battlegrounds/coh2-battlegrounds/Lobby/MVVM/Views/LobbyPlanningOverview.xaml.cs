@@ -9,13 +9,14 @@ using System.Windows.Shapes;
 
 using Battlegrounds;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Locale;
 using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.Resources;
 using Battlegrounds.Util;
 
 using BattlegroundsApp.Controls;
 using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.Lobby.Planning;
-using BattlegroundsApp.Resources;
 using BattlegroundsApp.Utilities;
 using BattlegroundsApp.Utilities.Graphics;
 
@@ -152,7 +153,7 @@ public partial class LobbyPlanningOverview : UserControl {
     private static HelperElement CreateEntityMarker(EntityBlueprint ebp, Point p, int elementId, bool legalPlacement) {
 
         // Grab blueprint
-        var sym = App.ResourceHandler.GetIcon("entity_symbols", ebp.UI.Symbol);
+        var sym = ResourceHandler.GetIcon("entity_symbols", ebp.UI.Symbol);
         if (sym is null) {
             return CreateMarker(p);
         }
@@ -173,7 +174,7 @@ public partial class LobbyPlanningOverview : UserControl {
     private static HelperElement CreateSquadMarker(SquadBlueprint sbp, Point p, int elementId) {
 
         // Grab blueprint
-        var sym = App.ResourceHandler.GetIcon("symbol_icons", sbp.UI.Symbol);
+        var sym = ResourceHandler.GetIcon("symbol_icons", sbp.UI.Symbol);
         if (sym is null) {
             return CreateMarker(p);
         }

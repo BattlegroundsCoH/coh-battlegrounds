@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 using System.IO;
 
-using Battlegrounds.Functional;
 using Battlegrounds.Game.DataSource;
-using Battlegrounds.Modding;
 
-namespace BattlegroundsApp.Resources;
+using Battlegrounds.Modding;
+using Battlegrounds.Functional;
+
+namespace Battlegrounds.Locale;
 
 /// <summary>
 /// Static utility class for localizing ingame strings.

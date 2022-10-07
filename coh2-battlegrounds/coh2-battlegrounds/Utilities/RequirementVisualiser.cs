@@ -8,8 +8,7 @@ using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Database.Extensions.RequirementTypes;
 using Battlegrounds.Game.DataSource;
 using Battlegrounds.Game.Gameplay;
-
-using BattlegroundsApp.Resources;
+using Battlegrounds.Locale;
 
 namespace BattlegroundsApp.Utilities;
 
