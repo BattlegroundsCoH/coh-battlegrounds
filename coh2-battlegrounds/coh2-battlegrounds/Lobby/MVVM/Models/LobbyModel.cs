@@ -21,6 +21,9 @@ using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
+using Battlegrounds.UI;
+using Battlegrounds.UI.Modals;
+using Battlegrounds.UI.Modals.Prompts;
 
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Lobby.MVVM.Views;
@@ -299,17 +302,8 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
 
     protected void LeaveLobby() {
 
-        // Null check
-        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
-            return;
-        }
-
-        // Lookup strings
-        string title = BattlegroundsInstance.Localize.GetString(__leaveTitle);
-        string desc = BattlegroundsInstance.Localize.GetString(__leaveDesc);
-
         // Do modal
-        YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
+        YesNoPrompt.Show((vm, resault) => {
 
             // Check return value
             if (resault is not ModalDialogResult.Confirm) {
@@ -330,7 +324,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
                 App.ViewManager.DestroyView(this.m_chatModel);
             }
 
-        }, title, desc);
+        }, __leaveTitle, __leaveDesc);
 
     }
 

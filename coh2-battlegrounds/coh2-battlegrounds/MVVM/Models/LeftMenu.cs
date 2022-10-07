@@ -2,6 +2,8 @@
 using System.Windows.Input;
 
 using Battlegrounds.Locale;
+using Battlegrounds.UI;
+
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
 using BattlegroundsApp.Utilities;

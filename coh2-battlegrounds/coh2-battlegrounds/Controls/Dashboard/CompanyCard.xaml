@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Controls.Dashboard"
              mc:Ignorable="d"
-             xmlns:converter="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             xmlns:uinum="clr-namespace:Battlegrounds.UI.Converters.Numeric;assembly=coh2-battlegrounds-ui"
              d:DesignHeight="175" d:DesignWidth="350"
              Background="{StaticResource BackgroundDarkBlueBrush}">
     
@@ -21,7 +21,7 @@
         <Grid>
 
             <Grid.Resources>
-                <converter:WinRateToColorConverter x:Key="winRateToColorConverter"/>
+                <uinum:WinrateToColour x:Key="winRateToColorConverter"/>
             </Grid.Resources>
 
             <Grid.RowDefinitions>

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:localeConvertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             xmlns:uiloc="clr-namespace:Battlegrounds.UI.Converters.Locale;assembly=coh2-battlegrounds-ui"
              mc:Ignorable="d" 
              d:DesignHeight="850" d:DesignWidth="300" MaxWidth="300">
     <UserControl.Background>
@@ -16,7 +16,7 @@
     <Grid>
         <Grid.Resources>
             <!-- LocaleConverter -->
-            <localeConvertor:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+            <uiloc:LocaleKeyString x:Key="LocaleConvertor"/>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>

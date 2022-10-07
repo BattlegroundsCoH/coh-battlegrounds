@@ -1,9 +1,10 @@
 ﻿using Battlegrounds;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Steam;
+using Battlegrounds.UI;
+
 using BattlegroundsApp.LocalData;
-using BattlegroundsApp.MVVM;
+
 using System;
 using System.Linq;
 
@@ -22,7 +23,7 @@ public enum CompanyDataType {
     FactionGames
 }
 
-public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
+public class DashboardViewModel : ViewModelBase {
 
     #region Private member
 
@@ -112,7 +113,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         get => this.m_playerName;
         set {
             this.m_playerName = value;
-            OnPropertyChanged(nameof(PlayerName));
+            this.Notify();
         }
     }
 
@@ -123,7 +124,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         get => this.m_totalWins;
         set {
             this.m_totalWins = value;
-            OnPropertyChanged(nameof(TotalWins));
+            this.Notify();
         }
     }
 
@@ -134,7 +135,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         get => this.m_totalLosses;
         set {
             this.m_totalLosses = value;
-            OnPropertyChanged(nameof(TotalLosses));
+            this.Notify();
         }
     }
 
@@ -147,7 +148,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         }
         set {
             this.m_totalGames = value;
-            OnPropertyChanged(nameof(TotalGamesPlayed));
+            this.Notify();
         }
     }
 
@@ -158,7 +159,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         get => this.m_winRate;
         set {
             this.m_winRate = value;
-            OnPropertyChanged(nameof(WinRate));
+            this.Notify();
         }
     }
 
@@ -169,7 +170,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         get => this.m_totalInfantryKills;
         set {
             this.m_totalInfantryKills = value;
-            OnPropertyChanged(nameof(TotalInfantryKills));
+            this.Notify();
         }
     }
 
@@ -180,7 +181,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         get => this.m_totalVehicleKills;
         set {
             this.m_totalVehicleKills = value;
-            OnPropertyChanged(nameof(TotalVehicleKills));
+            this.Notify();
         }
     }
 
@@ -191,7 +192,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         get => this.m_totalInfantryLosses;
         set {
             this.m_totalInfantryLosses = value;
-            OnPropertyChanged(nameof(TotalInfantryLosses));
+            this.Notify();
         }
     }
 
@@ -202,7 +203,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         get => this.m_totalVehicleLosses;
         set {
             this.m_totalVehicleLosses = value;
-            OnPropertyChanged(nameof(TotalVehicleLosses));
+            this.Notify();
         }
     }
 
@@ -214,7 +215,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
             return (this.TotalInfantryLosses + this.TotalVehicleLosses) > 0 ? (this.TotalInfantryKills + this.TotalVehicleKills) / (this.TotalInfantryLosses + this.TotalVehicleLosses) : 0;
         }
         set {
-            OnPropertyChanged(nameof(KillDeathRatio));
+            this.Notify();
         }
     }
 
@@ -225,7 +226,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         get => this.m_wehrmachtGames;
         set {
             this.m_wehrmachtGames = value;
-            OnPropertyChanged(nameof(WehrmachtGames));
+            this.Notify();
         }
     }
 
@@ -236,7 +237,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         get => this.m_sovietGames;
         set {
             this.m_sovietGames = value;
-            OnPropertyChanged(nameof(SovietGames));
+            this.Notify();
         }
     }
 
@@ -247,7 +248,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         get => this.m_usfGames;
         set {
             this.m_usfGames = value;
-            OnPropertyChanged(nameof(USFGames));
+            this.Notify();
         }
     }
 
@@ -258,7 +259,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         get => this.m_ukfGames;
         set {
             this.m_ukfGames = value;
-            OnPropertyChanged(nameof(UKFGames));
+            this.Notify();
         }
     }
 
@@ -269,7 +270,7 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         get => this.m_okwGames;
         set {
             this.m_okwGames = value;
-            OnPropertyChanged(nameof(OKWGames));
+            this.Notify();
         }
     }
 
@@ -280,13 +281,13 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
         get => this.m_mostPlayedCompany;
         set {
             this.m_mostPlayedCompany = value;
-            OnPropertyChanged(nameof(MostPlayedCompany));
+            this.Notify();
         }
     }
 
-    public bool SingleInstanceOnly => true;
+    public override bool SingleInstanceOnly => true;
 
-    public bool KeepAlive => false;
+    public override bool KeepAlive => false;
 
     #endregion
 
@@ -350,16 +351,11 @@ public class DashboardViewModel : ViewModels.ViewModelBase, IViewModel {
     // TODO : Add return for KD rate
     private double DataAverage(CompanyDataType type) => type switch {
         CompanyDataType.WinRate => PlayerCompanies.GetAllCompanies().Select(x => x.Statistics.WinRate).Average(),
+        _ => throw new Exception()
     };
 
     private Company? GetMostPlayedCompany() => PlayerCompanies.GetAllCompanies().Select(x => (x, x.Units.Aggregate(TimeSpan.Zero, (a, b) => a + b.CombatTime)))
                                                                                 .OrderByDescending(y => y.Item2)
                                                                                 .Select(z => z.x).FirstOrDefault();
     
-    public void UnloadViewModel(OnModelClosed closeCallback, bool destroy) => closeCallback(false);
-
-    public void Swapback() {
-
-    }
-
 }

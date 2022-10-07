@@ -4,7 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.MVVM.Views"
-             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters" 
+             xmlns:ui="clr-namespace:Battlegrounds.UI;assembly=coh2-battlegrounds-ui"
+             xmlns:uiloc="clr-namespace:Battlegrounds.UI.Converters.Locale;assembly=coh2-battlegrounds-ui"
+             xmlns:uinum="clr-namespace:Battlegrounds.UI.Converters.Numeric;assembly=coh2-battlegrounds-ui"
+             xmlns:uiico="clr-namespace:Battlegrounds.UI.Converters.Icons;assembly=coh2-battlegrounds-ui"
              xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM" xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              mc:Ignorable="d" Background="#273441"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -12,15 +15,15 @@
 
         <Grid.Resources>
             <!-- Locale Converter -->
-            <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+            <uiloc:LocaleKeyString x:Key="LocaleConvertor"/>
             <!-- Faction to Icon Converter -->
-            <converters:StringToFactionIconConverter x:Key="FactionIconConverter"/>
+            <uiico:StringToFactionIcon x:Key="FactionIconConverter"/>
             <!-- Company Type to Icon Converter -->
-            <converters:StringToCompanyTypeIconConverter x:Key="TypeToIconConverter"/>
+            <uiico:StringToCompanyTypeIcon x:Key="TypeToIconConverter"/>
             <!-- FactionToAllianceConverter -->
-            <converters:FactionToAllianceConverter x:Key="FactionToAllianceConverter"/>
+            <uiloc:FactionToAlliance x:Key="FactionToAllianceConverter"/>
             <!-- FactionToAllianceConverter -->
-            <converters:DoubleToRatingConverter x:Key="RatingConverter"/>
+            <uinum:DoubleToRating x:Key="RatingConverter"/>
         </Grid.Resources>
 
         <Grid.RowDefinitions>
@@ -59,7 +62,7 @@
                   Margin="15, 7.5, 15, 2"
                   ItemsSource="{Binding Companies}"
                   SelectedItem="{Binding SelectedCompany}"
-                  MouseDoubleClick="{mvvm:EventBinding Handler=EditCompanyDirectly}"
+                  MouseDoubleClick="{ui:EventBinding Handler=EditCompanyDirectly}"
                   Style="{StaticResource StandardBlueListViewStyle}"
                   ItemContainerStyle="{StaticResource StandardBlueListViewItem}">
             <ListView.Resources>

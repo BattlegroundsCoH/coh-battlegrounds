@@ -3,7 +3,8 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
-using BattlegroundsApp.Utilities;
+using Battlegrounds.UI;
+using Battlegrounds.UI.Modals;
 
 namespace BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views"
-             xmlns:convertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             xmlns:uiconv="clr-namespace:Battlegrounds.UI.Converters.Visibility;assembly=coh2-battlegrounds-ui"
              xmlns:cost="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
              xmlns:icon="clr-namespace:BattlegroundsApp.Controls.Editor"
              mc:Ignorable="d" 
@@ -13,7 +13,7 @@
              x:Name="Self">
 
     <UserControl.Resources>
-        <convertor:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <uiconv:BooleanToVisibility x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
 
     <Canvas Height="64"

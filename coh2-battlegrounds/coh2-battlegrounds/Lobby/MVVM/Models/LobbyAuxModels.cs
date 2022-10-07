@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 
-using BattlegroundsApp.Utilities;
+using Battlegrounds.UI;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 

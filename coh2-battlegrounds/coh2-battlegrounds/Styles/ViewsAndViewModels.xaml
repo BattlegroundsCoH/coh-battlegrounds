@@ -1,20 +1,21 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:BattlegroundsApp"
-                    xmlns:views="clr-namespace:BattlegroundsApp.MVVM.Views"
-                    xmlns:models="clr-namespace:BattlegroundsApp.MVVM.Models"
-                    xmlns:lobbyviews="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views"
-                    xmlns:lobbymodels="clr-namespace:BattlegroundsApp.Lobby.MVVM.Models"
-                    xmlns:companyEditorViews="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views"
-                    xmlns:companyEditorModels="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Models"
-                    xmlns:dashboardViews="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Views"
-                    xmlns:dashboardModels="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Models"
-                    xmlns:dialogViews="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Views"
-                    xmlns:dialogModels="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Models" 
-                    xmlns:startupViews="clr-namespace:BattlegroundsApp.Modals.Startup.MVVM.Views"
-                    xmlns:startupModels="clr-namespace:BattlegroundsApp.Modals.Startup.MVVM.Models"
-                    xmlns:downloadViews="clr-namespace:BattlegroundsApp.Modals.DownloadInProgress.MVVM.Views"
-                    xmlns:downloadModels="clr-namespace:BattlegroundsApp.Modals.DownloadInProgress.MVVM.Models">
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:BattlegroundsApp"
+    xmlns:views="clr-namespace:BattlegroundsApp.MVVM.Views"
+    xmlns:models="clr-namespace:BattlegroundsApp.MVVM.Models"
+    xmlns:lobbyviews="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views"
+    xmlns:lobbymodels="clr-namespace:BattlegroundsApp.Lobby.MVVM.Models"
+    xmlns:companyEditorViews="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views"
+    xmlns:companyEditorModels="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Models"
+    xmlns:dashboardViews="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Views"
+    xmlns:dashboardModels="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Models"
+    xmlns:dialogViews="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Views"
+    xmlns:dialogModels="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Models" 
+    xmlns:startupViews="clr-namespace:BattlegroundsApp.Modals.Startup.MVVM.Views"
+    xmlns:startupModels="clr-namespace:BattlegroundsApp.Modals.Startup.MVVM.Models"
+    xmlns:downloadViews="clr-namespace:BattlegroundsApp.Modals.DownloadInProgress.MVVM.Views"
+    xmlns:downloadModels="clr-namespace:BattlegroundsApp.Modals.DownloadInProgress.MVVM.Models">
     
     <!-- Download modal -->
     <DataTemplate DataType="{x:Type downloadModels:DownloadInProgressViewModel}">
@@ -85,10 +86,6 @@
 
     <DataTemplate DataType="{x:Type dialogModels:HostGameDialogViewModel}">
         <dialogViews:HostGameDialogView/>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type dialogModels:YesNoDialogViewModel}">
-        <dialogViews:YesNoDialogView/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type dialogModels:LobbyJoinDialogViewModel}">

@@ -4,8 +4,7 @@ using System.Windows;
 
 using Battlegrounds;
 using Battlegrounds.Networking.LobbySystem;
-
-using BattlegroundsApp.Utilities;
+using Battlegrounds.UI;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 

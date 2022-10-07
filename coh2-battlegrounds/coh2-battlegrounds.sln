@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-resource
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-functional", "coh2-battlegrounds-functional\coh2-battlegrounds-functional.csproj", "{E7D3CC68-944C-4192-A30A-1DD931D237BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-ui", "coh2-battlegrounds-ui\coh2-battlegrounds-ui.csproj", "{A80982E9-ACBD-4013-892E-E71E7D32FCF8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,18 @@ Global
 		{E7D3CC68-944C-4192-A30A-1DD931D237BD}.Release|x64.Build.0 = Release|Any CPU
 		{E7D3CC68-944C-4192-A30A-1DD931D237BD}.Release|x86.ActiveCfg = Release|Any CPU
 		{E7D3CC68-944C-4192-A30A-1DD931D237BD}.Release|x86.Build.0 = Release|Any CPU
+		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Debug|x64.Build.0 = Debug|Any CPU
+		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Debug|x86.Build.0 = Debug|Any CPU
+		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Release|x64.ActiveCfg = Release|Any CPU
+		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Release|x64.Build.0 = Release|Any CPU
+		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Release|x86.ActiveCfg = Release|Any CPU
+		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

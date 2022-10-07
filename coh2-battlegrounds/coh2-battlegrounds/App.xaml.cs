@@ -6,35 +6,35 @@ using System.Windows;
 using System.Globalization;
 using System.Collections;
 using System.Threading.Tasks;
+using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
 
 using Battlegrounds;
+using Battlegrounds.UI;
+using Battlegrounds.UI.Modals;
+using Battlegrounds.UI.Modals.Prompts;
 using Battlegrounds.Networking;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.ErrorHandling;
 using Battlegrounds.Verification;
+using Battlegrounds.Update;
 using Battlegrounds.Functional;
+using Battlegrounds.Util.Coroutines;
+using Battlegrounds.Resources;
 
 using BattlegroundsApp.LocalData;
-using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
-using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Startup.MVVM.Models;
-using Battlegrounds.Update;
-using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.Modals.DownloadInProgress.MVVM.Models;
-using Battlegrounds.Util.Coroutines;
-using Battlegrounds.Resources;
-using System.Reflection;
 
 namespace BattlegroundsApp;
 
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : Application {
+public partial class App : Application, IResourceResolver {
 
     private static AppViewManager? __viewManager;
 
@@ -318,9 +318,9 @@ public partial class App : Application {
     /// </summary>
     /// <param name="type">The type to try and find data template for.</param>
     /// <returns>If found, the linked <see cref="DataTemplate"/> instance; Otherwise <see langword="null"/> if not found.</returns>
-    public static DataTemplate? TryFindDataTemplate(Type type) => TryFindDataTemplate(Current.Resources, type);
+    public DataTemplate? TryFindDataTemplate(Type type) => this.TryFindDataTemplate(Current.Resources, type);
 
-    private static DataTemplate? TryFindDataTemplate(ResourceDictionary dictionary, Type type) {
+    private DataTemplate? TryFindDataTemplate(ResourceDictionary dictionary, Type type) {
 
         // Loop through basic entry
         foreach (DictionaryEntry res in dictionary) {
@@ -353,7 +353,7 @@ public partial class App : Application {
         Application.Current.Dispatcher.Invoke(() => {
 
             // Do modal
-            YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
+            YesNoPrompt.Show(mControl, (vm, resault) => {
 
                 // Check return value
                 if (resault is not ModalDialogResult.Confirm) {

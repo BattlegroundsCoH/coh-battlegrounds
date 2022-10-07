@@ -1,18 +1,17 @@
-﻿using Battlegrounds;
-using BattlegroundsApp.Utilities;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
+
+using Battlegrounds;
+using Battlegrounds.UI;
+using Battlegrounds.UI.Modals;
 
 namespace BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 
 public class HostGameDialogViewModel : INotifyPropertyChanged {
 
     private string _lobbyName = $"{BattlegroundsInstance.Steam.User.Name}'s Lobby";
+
     public string LobbyName {
         get => this._lobbyName;
         set {
@@ -21,9 +20,9 @@ public class HostGameDialogViewModel : INotifyPropertyChanged {
         }
     }
 
-    private string _lobbyPassword;
+    private string? _lobbyPassword;
     public string LobbyPassword {
-        get => this._lobbyPassword;
+        get => this._lobbyPassword ?? string.Empty;
         set {
             this._lobbyPassword = value;
             this.OnPropertyChanged(nameof(this.LobbyPassword));
@@ -31,7 +30,7 @@ public class HostGameDialogViewModel : INotifyPropertyChanged {
 
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public virtual void OnPropertyChanged(string propertyName)
             => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -5,9 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views" 
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls" 
-             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
-             xmlns:utilities="clr-namespace:BattlegroundsApp.Utilities" 
-             xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM"
+             xmlns:ui="clr-namespace:Battlegrounds.UI;assembly=coh2-battlegrounds-ui"
+             xmlns:uiloc="clr-namespace:Battlegrounds.UI.Converters.Locale;assembly=coh2-battlegrounds-ui"
              mc:Ignorable="d" 
              d:DesignHeight="850" d:DesignWidth="300">
     <UserControl.Resources>
@@ -25,7 +24,7 @@
     </UserControl.Resources>
     <Grid>
         <Grid.Resources>
-            <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+            <uiloc:LocaleKeyString x:Key="LocaleConvertor"/>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -58,7 +57,7 @@
             <controls:BGTextbox Height="36" Grid.ColumnSpan="2"
                                 Style="{StaticResource StandardTextBox}"
                                 Text="{Binding MessageContent, Mode=TwoWay}"
-                                KeyDownEvent="{mvvm:EventBinding Handler=EnterKey}"
+                                KeyDownEvent="{ui:EventBinding Handler=EnterKey}"
                                 />
             <ComboBox Grid.Row="1" Width="132" Height="28" 
                       HorizontalAlignment="Left"

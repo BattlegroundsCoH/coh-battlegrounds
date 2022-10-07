@@ -9,9 +9,9 @@ using System.Windows.Media;
 using Battlegrounds;
 using Battlegrounds.Locale;
 using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.UI;
 
 using BattlegroundsApp.Controls;
-using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;

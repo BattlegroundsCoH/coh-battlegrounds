@@ -1,10 +1,9 @@
-﻿using BattlegroundsApp.Utilities;
-using BattlegroundsApp.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Battlegrounds.UI;
+
+using BattlegroundsApp.Utilities;
+
+using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 
@@ -15,7 +14,7 @@ public class MainWindowViewModel : ViewModelBase {
     /// <summary>
     /// The window that this view model controls
     /// </summary>
-    private Window m_window;
+    private readonly Window m_window;
 
     /// <summary>
     /// The margin around the window to allow drop shadow
@@ -30,7 +29,7 @@ public class MainWindowViewModel : ViewModelBase {
     /// <summary>
     /// The application version
     /// </summary>
-    private string m_version;
+    private readonly string? m_version;
 
     /// <summary>
     /// The window title
@@ -121,6 +120,10 @@ public class MainWindowViewModel : ViewModelBase {
     /// </summary>
     public ICommand MenuCommand { get; set; }
 
+    public override bool SingleInstanceOnly => true;
+
+    public override bool KeepAlive => true;
+
     /// <summary>
     /// Default Constrictor
     /// </summary>
@@ -128,8 +131,8 @@ public class MainWindowViewModel : ViewModelBase {
     public MainWindowViewModel(Window window) {
 
         // Get version
-        System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-        System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+        Assembly assembly = Assembly.GetExecutingAssembly();
+        FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
         this.m_version = fvi.FileVersion;
 
         this.Title = $"Company of Heroes 2: Battlegrounds Mod Launcher | v{this.m_version}";
@@ -139,23 +142,23 @@ public class MainWindowViewModel : ViewModelBase {
         // Listen for the window resizing
         this.m_window.StateChanged += (sender, e) => {
 
-            OnPropertyChanged(nameof(ResizeBorderThickness));
-            OnPropertyChanged(nameof(OuterMarginSize));
-            OnPropertyChanged(nameof(OuterMarginThickness));
-            OnPropertyChanged(nameof(WindowRadius));
-            OnPropertyChanged(nameof(WindowCornerRadius));
+            this.Notify(nameof(ResizeBorderThickness));
+            this.Notify(nameof(OuterMarginSize));
+            this.Notify(nameof(OuterMarginThickness));
+            this.Notify(nameof(WindowRadius));
+            this.Notify(nameof(WindowCornerRadius));
 
         };
 
         // Create commands
-        this.MinimizeCommand = new RelayCommand(() => m_window.WindowState = WindowState.Minimized);
-        this.MaximizeCommand = new RelayCommand(() => m_window.WindowState ^= WindowState.Maximized);
+        this.MinimizeCommand = new RelayCommand(() => this.m_window.WindowState = WindowState.Minimized);
+        this.MaximizeCommand = new RelayCommand(() => this.m_window.WindowState ^= WindowState.Maximized);
         // TODO : Move closing logic from View here
-        this.CloseCommand = new RelayCommand(() => m_window.Close());
-        this.MenuCommand = new RelayCommand(() => SystemCommands.ShowSystemMenu(m_window, GetMousePosition()));
+        this.CloseCommand = new RelayCommand(() => this.m_window.Close());
+        this.MenuCommand = new RelayCommand(() => SystemCommands.ShowSystemMenu(this.m_window, GetMousePosition()));
 
         // Fix window resize issue
-        var resizer = new WindowResizer(m_window);
+        var resizer = new WindowResizer(this.m_window);
 
     }
 
@@ -166,12 +169,11 @@ public class MainWindowViewModel : ViewModelBase {
     private Point GetMousePosition() {
 
         // Get position of the mouse relative to the window
-        var position = Mouse.GetPosition(m_window);
+        var position = Mouse.GetPosition(this.m_window);
 
         // Add the window position so its to screen
-        return new Point(position.X + m_window.Left, position.Y + m_window.Top);
+        return new Point(position.X + this.m_window.Left, position.Y + this.m_window.Top);
 
     }
-
 
 }

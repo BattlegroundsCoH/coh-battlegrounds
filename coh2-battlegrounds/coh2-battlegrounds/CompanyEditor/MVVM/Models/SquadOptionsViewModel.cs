@@ -15,8 +15,8 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Resources;
+using Battlegrounds.UI;
 
-using BattlegroundsApp.MVVM;
 using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;

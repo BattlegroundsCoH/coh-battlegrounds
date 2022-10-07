@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Media;
 
 using Battlegrounds;
+using Battlegrounds.UI;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
@@ -20,7 +21,6 @@ using BattlegroundsApp.Lobby.MVVM.Views;
 using BattlegroundsApp.LocalData;
 
 using BattlegroundsApp.Utilities;
-using BattlegroundsApp.MVVM;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content;
 

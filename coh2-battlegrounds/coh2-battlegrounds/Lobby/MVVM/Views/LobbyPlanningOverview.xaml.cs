@@ -12,13 +12,13 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Locale;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Resources;
+using Battlegrounds.UI.Graphics;
 using Battlegrounds.Util;
 
 using BattlegroundsApp.Controls;
 using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.Lobby.Planning;
 using BattlegroundsApp.Utilities;
-using BattlegroundsApp.Utilities.Graphics;
 
 using static BattlegroundsApp.Lobby.MVVM.Models.LobbyPlanningOverviewModel;
 

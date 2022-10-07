@@ -25,4 +25,19 @@ public static class BattlegroundsDefine {
     /// </summary>
     public static readonly int COMPANY_DEFAULT_INITIAL = 6;
 
+    /// <summary>
+    /// Rating value to acheive before no longer being considered part of rating D
+    /// </summary>
+    public const double COMPANY_RATING_D = 0.3;
+
+    /// <summary>
+    /// Rating value to acheive before no longer being considered part of rating C
+    /// </summary>
+    public const double COMPANY_RATING_C = 0.5;
+
+    /// <summary>
+    /// Rating value to acheive before no longer being considered part of rating B
+    /// </summary>
+    public const double COMPANY_RATING_B = 0.8;
+
 }

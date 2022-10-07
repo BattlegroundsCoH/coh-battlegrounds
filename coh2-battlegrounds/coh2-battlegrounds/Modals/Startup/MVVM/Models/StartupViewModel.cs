@@ -9,8 +9,9 @@ using Battlegrounds;
 using Battlegrounds.Locale;
 using Battlegrounds.Steam;
 
+using Battlegrounds.UI;
+
 using BattlegroundsApp.Controls;
-using BattlegroundsApp.Utilities;
 
 using Microsoft.Win32;
 

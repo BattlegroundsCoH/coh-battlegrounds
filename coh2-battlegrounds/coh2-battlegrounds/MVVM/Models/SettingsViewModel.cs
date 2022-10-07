@@ -3,6 +3,8 @@ using Battlegrounds.Locale;
 using Battlegrounds.Functional;
 
 using BattlegroundsApp.Utilities;
+using Battlegrounds.UI;
+
 using Microsoft.Win32;
 
 namespace BattlegroundsApp.MVVM.Models;

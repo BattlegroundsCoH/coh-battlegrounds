@@ -18,6 +18,9 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content.Companies;
+using Battlegrounds.UI;
+using Battlegrounds.UI.Modals;
+using Battlegrounds.UI.Modals.Prompts;
 
 using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
@@ -320,7 +323,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
                 App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
                 return;
             }
-            YesNoDialogViewModel.ShowModal(mc, (_, res) => {
+            YesNoPrompt.Show(mc, (_, res) => {
                 if (res is not ModalDialogResult.Cancel) {
 
                     // Then goback
@@ -855,7 +858,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
             }
 
             // Ask user to confirm change
-            YesNoDialogViewModel.ShowModal(mc, (_, res) => {
+            YesNoPrompt.Show(mc, (_, res) => {
                 closeCallback(res is ModalDialogResult.Cancel);
             }, "Unsaved Changes", "You have unsaved changes that will be lost if you leave the company builder. Are you sure you want to leave?");
         

@@ -18,6 +18,7 @@ using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.Resources;
+using Battlegrounds.UI;
 using Battlegrounds.Util;
 
 using BattlegroundsApp.Controls;

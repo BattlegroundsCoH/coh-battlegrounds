@@ -14,7 +14,6 @@
         </Setter>
     </Style>
 
-
     <Style x:Key="StandardBlueDropdownScrollbarPageButton" TargetType="{x:Type RepeatButton}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -192,14 +191,17 @@
     </Style>
 
 
-    <Style x:Key="StandardBlueDropdown" TargetType="{x:Type ComboBox}">
+    <Style 
+        x:Key="StandardBlueDropdown" 
+        TargetType="{x:Type ComboBox}">
         <Setter Property="IsEditable" Value="False"/>
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
         <Setter Property="ItemContainerStyle" Value="{StaticResource StandardBlueDropdownItemContainer}"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ComboBox}">
+                <ControlTemplate 
+                    TargetType="{x:Type ComboBox}">
                     <ControlTemplate.Resources>
                         <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
                     </ControlTemplate.Resources>
@@ -228,16 +230,22 @@
                             <ContentPresenter x:Name="ContentSite" 
                                                   Content="{TemplateBinding SelectedItem}"/>
                         </controls:IconToggleButton>
-                        <Popup x:Name="Popup"
-                                   Placement="Bottom"
-                                   IsOpen="{TemplateBinding IsDropDownOpen}"
-                                   AllowsTransparency="True"
-                                   Focusable="False"
-                                   PopupAnimation="Slide"
-                                   Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
-                                   MaxHeight="170">
-                            <Border Background="#536375" BorderBrush="#212d3a" BorderThickness="1">
-                                <ScrollViewer Background="#536375" Style="{StaticResource StandardBlueDropdownScrollViewer}">
+                        <Popup 
+                            x:Name="Popup"
+                            Placement="Bottom"
+                            IsOpen="{TemplateBinding IsDropDownOpen}"
+                            AllowsTransparency="True"
+                            Focusable="False"
+                            PopupAnimation="Slide"
+                            Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                            MaxHeight="170">
+                            <Border 
+                                Background="#536375" 
+                                BorderBrush="#212d3a" 
+                                BorderThickness="1">
+                                <ScrollViewer 
+                                    Background="#536375" 
+                                    Style="{StaticResource StandardBlueDropdownScrollViewer}">
                                     <StackPanel IsItemsHost="True"/>
                                 </ScrollViewer>
                             </Border>
@@ -248,9 +256,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="StandardBlueListViewGridColumnGripper" TargetType="{x:Type Thumb}">
-
-    </Style>
+    <Style x:Key="StandardBlueListViewGridColumnGripper" TargetType="{x:Type Thumb}"/>
 
     <Style x:Key="StandardBlueListViewStyle" TargetType="{x:Type ListView}">
         <Setter Property="Background" Value="#212d3a"/>
@@ -270,12 +276,13 @@
             <Setter.Value>
                 <ControlTemplate TargetType="GridViewColumnHeader">
                     <Grid Background="#334252">
-                        <ContentPresenter x:Name="HeaderContent"
-                              Margin="0,0,0,1"
-                              RecognizesAccessKey="True"
-                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        <ContentPresenter 
+                            x:Name="HeaderContent"
+                            Margin="0,0,0,1"
+                            RecognizesAccessKey="True"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

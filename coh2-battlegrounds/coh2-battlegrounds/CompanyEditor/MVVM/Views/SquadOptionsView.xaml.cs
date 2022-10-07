@@ -2,8 +2,9 @@
 using System.Windows.Documents;
 using System.Windows.Input;
 
+using Battlegrounds.UI.Modals;
+
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
-using BattlegroundsApp.Modals;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Views;
 

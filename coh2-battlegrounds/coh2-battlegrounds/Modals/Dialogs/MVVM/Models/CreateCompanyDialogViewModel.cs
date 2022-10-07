@@ -8,9 +8,9 @@ using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Resources;
-
-using BattlegroundsApp.Utilities;
-using BattlegroundsApp.Utilities.Converters;
+using Battlegrounds.UI;
+using Battlegrounds.UI.Converters.Icons;
+using Battlegrounds.UI.Modals;
 
 using System;
 using System.Collections.ObjectModel;
@@ -27,7 +27,7 @@ public class CreateCompanyDialogViewModel : INotifyPropertyChanged {
         private SquadBlueprint[]? m_squads;
         private AbilityBlueprint[]? m_abilities;
         public string Desc => BattlegroundsInstance.Localize.GetString($"{this.Name}_desc");
-        public ImageSource Icon => StringToCompanyTypeIconConverter.GetFromType(this.Type);
+        public ImageSource Icon => StringToCompanyTypeIcon.GetFromType(this.Type);
         public ImageSource? Unit01 => ResourceHandler.GetIcon("unit_icons", this.m_squads![0].UI.Icon);
         public ImageSource? Unit02 => ResourceHandler.GetIcon("unit_icons", this.m_squads![1].UI.Icon);
         public ImageSource? Unit03 => ResourceHandler.GetIcon("unit_icons", this.m_squads![2].UI.Icon);
@@ -61,7 +61,7 @@ public class CreateCompanyDialogViewModel : INotifyPropertyChanged {
     }
 
     public record FactionType(Faction Self) {
-        public ImageSource Icon => StringToFactionIconConverter.GetIcon(this.Self);
+        public ImageSource Icon => StringToFactionIcon.GetIcon(this.Self);
         public override string ToString() => GameLocale.GetString(this.Self.NameKey);
     }
 

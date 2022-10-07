@@ -17,6 +17,8 @@ using Battlegrounds.Modding;
 using Battlegrounds.Networking;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
+using Battlegrounds.UI;
+using Battlegrounds.UI.Modals;
 
 using BattlegroundsApp.Lobby;
 using BattlegroundsApp.Lobby.MVVM.Models;
@@ -330,11 +332,6 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
     }
 
     private static void LocalButton() {
-
-        // Null check
-        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
-            return;
-        }
 
         // Create dummy model
         LocalLobbyHandle localHandle = new(BattlegroundsInstance.Steam.User);

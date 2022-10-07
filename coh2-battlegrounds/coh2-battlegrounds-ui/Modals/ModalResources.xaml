@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:prompts="clr-namespace:Battlegrounds.UI.Modals.Prompts">
+    
+    <!-- Yes/No Prompt -->
+    <DataTemplate DataType="{x:Type prompts:YesNoPrompt}">
+        <prompts:YesNoPromptView/>
+    </DataTemplate>
+    
+</ResourceDictionary>

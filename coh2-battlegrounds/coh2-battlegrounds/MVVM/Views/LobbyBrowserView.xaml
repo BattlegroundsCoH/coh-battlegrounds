@@ -4,14 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.MVVM.Views" 
-             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters" xmlns:mvvm="clr-namespace:BattlegroundsApp.MVVM" xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
+             xmlns:ui="clr-namespace:Battlegrounds.UI;assembly=coh2-battlegrounds-ui"
+             xmlns:uiloc="clr-namespace:Battlegrounds.UI.Converters.Locale;assembly=coh2-battlegrounds-ui"
+             xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              mc:Ignorable="d" Background="#273441"
              d:DesignHeight="850" d:DesignWidth="1100">
     <Grid>
 
         <Grid.Resources>
             <!-- LocaleConverter -->
-            <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+            <uiloc:LocaleKeyString x:Key="LocaleConvertor"/>
         </Grid.Resources>
 
         <Grid.RowDefinitions>
@@ -63,7 +65,7 @@
                   ItemsSource="{Binding Lobbies}"
                   SelectedIndex="{Binding SelectedLobbyIndex, Mode=TwoWay}"
                   SelectedItem="{Binding SelectedLobby, Mode=TwoWay}"
-                  MouseDoubleClick="{mvvm:EventBinding Handler=JoinLobbyDirectly}"
+                  MouseDoubleClick="{ui:EventBinding Handler=JoinLobbyDirectly}"
                   Style="{StaticResource StandardBlueListViewStyle}"
                   ItemContainerStyle="{StaticResource StandardBlueListViewItem}"
                   SelectionChanged="GameLobbyList_SelectionChanged"

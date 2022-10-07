@@ -5,18 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views"
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls" 
-             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="32" d:DesignWidth="800">
-    <Grid Height="36">
+    <Grid Height="36" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="180"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.Resources>
-            <!-- LocaleConverter -->
-            <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
-            <converters:ArrayIndexer x:Key="ArrayIndexer"/>
             <Style x:Key="SettingLabel" TargetType="Label">
                 <Setter Property="Foreground" Value="#747c84"/>
                 <Setter Property="FontSize" Value="12"/>
@@ -50,7 +46,7 @@
             x:Name="DropdownOptions"
             Style="{StaticResource StandardBlueDropdown}"/>
         <DockPanel 
-            Grid.Column="1" 
+            Grid.Column="1"
             LastChildFill="True"
             x:Name="SliderContainer">
             <Label

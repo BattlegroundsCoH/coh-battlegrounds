@@ -1,20 +1,19 @@
-﻿using BattlegroundsApp.Utilities;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
+
+using Battlegrounds.UI;
+using Battlegrounds.UI.Modals;
 
 namespace BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 
 public class LobbyJoinDialogViewModel : INotifyPropertyChanged {
 
-    private string _password;
+    private string? _password;
+
     public string Password {
         get {
-            return this._password;
+            return this._password ?? string.Empty;
         }
 
         set {
@@ -23,7 +22,7 @@ public class LobbyJoinDialogViewModel : INotifyPropertyChanged {
         }
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public virtual void OnPropertyChanged(string propertyName)
             => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

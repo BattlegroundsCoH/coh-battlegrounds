@@ -10,8 +10,7 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Resources;
-
-using BattlegroundsApp.MVVM;
+using Battlegrounds.UI;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 

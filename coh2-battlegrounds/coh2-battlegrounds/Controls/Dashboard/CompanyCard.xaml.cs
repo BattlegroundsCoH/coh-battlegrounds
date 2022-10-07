@@ -1,23 +1,15 @@
 ﻿using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
-
-using BattlegroundsApp.Utilities.Converters;
+using Battlegrounds.UI.Converters.Icons;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BattlegroundsApp.Controls.Dashboard;
 
@@ -54,9 +46,9 @@ public partial class CompanyCard : UserControl {
         this.TrySetCompanyData();
     }
 
-    private void TrySetCompanyData() => this.TrySetData(Company ?? null);
+    private void TrySetCompanyData() => this.TrySetData(this.Company ?? null);
 
-    private void TrySetData(Company company) {
+    private void TrySetData(Company? company) {
 
         // Do nothing if company is null
         if (company is null) {
@@ -78,7 +70,7 @@ public partial class CompanyCard : UserControl {
         companyName.Text = company.Name;
 
         // Set company type
-        typeIcon.Source = StringToCompanyTypeIconConverter.GetFromType(company.Type);
+        typeIcon.Source = StringToCompanyTypeIcon.GetFromType(company.Type);
 
         // Set company data
         winRateValue.Text = company.Statistics.WinRate is 0 ? "0%" : $"{Math.Round(company.Statistics.WinRate * 100)}%";

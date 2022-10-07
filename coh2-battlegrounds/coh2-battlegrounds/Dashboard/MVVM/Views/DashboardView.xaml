@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Views"
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
              xmlns:card="clr-namespace:BattlegroundsApp.Controls.Dashboard"
-             xmlns:converter="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             xmlns:uinum="clr-namespace:Battlegrounds.UI.Converters.Numeric;assembly=coh2-battlegrounds-ui"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800" SnapsToDevicePixels="True" UseLayoutRounding="True">
     <UserControl.Background>
@@ -20,7 +20,7 @@
     <Grid>
 
         <Grid.Resources>
-            <converter:WinRateToColorConverter x:Key="winRateToColorConverter"/>
+            <uinum:WinrateToColour x:Key="winRateToColorConverter"/>
         </Grid.Resources>
 
         <Grid.RowDefinitions>

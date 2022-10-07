@@ -1,4 +1,5 @@
-﻿<modals:Modal  xmlns:modals="clr-namespace:BattlegroundsApp.Modals"
+﻿<modals:Modal 
+    xmlns:modals="clr-namespace:Battlegrounds.UI.Modals;assembly=coh2-battlegrounds-ui"
                x:Class="BattlegroundsApp.Modals.Startup.MVVM.Views.StartupView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

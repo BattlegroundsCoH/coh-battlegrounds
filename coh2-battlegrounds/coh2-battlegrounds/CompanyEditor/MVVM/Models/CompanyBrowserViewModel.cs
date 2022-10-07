@@ -1,20 +1,15 @@
 ﻿using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Locale;
+using Battlegrounds.UI;
+using Battlegrounds.UI.Modals;
+using Battlegrounds.UI.Modals.Prompts;
 
 using BattlegroundsApp.LocalData;
-using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
-using BattlegroundsApp.MVVM;
-using BattlegroundsApp.Utilities;
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
@@ -190,13 +185,8 @@ public class CompanyBrowserViewModel : ViewModelBase {
         if (this.SelectedCompany is null)
             return;
 
-        // Null check
-        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
-            return;
-        }
-
         // Do modal
-        YesNoDialogViewModel.ShowModal(mControl, (vm, resault) => {
+        YesNoPrompt.Show((vm, resault) => {
 
             // Check return value
             if (resault is not ModalDialogResult.Confirm) {

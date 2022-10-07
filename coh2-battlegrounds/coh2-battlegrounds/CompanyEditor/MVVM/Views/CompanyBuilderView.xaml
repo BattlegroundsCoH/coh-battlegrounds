@@ -4,7 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BattlegroundsApp.MVVM.Views"
-             xmlns:converters="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             xmlns:converters="clr-namespace:Battlegrounds.UI.Converters;assembly=coh2-battlegrounds-ui"
+             xmlns:uiform="clr-namespace:Battlegrounds.UI.Converters.Formatting;assembly=coh2-battlegrounds-ui"
+             xmlns:uiloc="clr-namespace:Battlegrounds.UI.Converters.Locale;assembly=coh2-battlegrounds-ui"
+             xmlns:uiico="clr-namespace:Battlegrounds.UI.Converters.Icons;assembly=coh2-battlegrounds-ui"
              xmlns:card="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
              xmlns:dropArea="clr-namespace:BattlegroundsApp.Controls.DropArea" 
              xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
@@ -18,19 +21,19 @@
 
         <Grid.Resources>
             <!-- Locale Converter -->
-            <converters:LocaleKeyToStringConverter x:Key="LocaleConvertor"/>
+            <uiloc:LocaleKeyString x:Key="LocaleConvertor"/>
 
             <!-- Locale & Case Converter -->
             <converters:ValueConverterGroup x:Key="LocaleAndCaseConvertor">
-                <converters:LocaleKeyToStringConverter/>
-                <converters:CaseConverter/>
+                <uiloc:LocaleKeyString/>
+                <uiform:StringCase/>
             </converters:ValueConverterGroup>
 
             <!-- Case Converter -->
-            <converters:CaseConverter x:Key="CaseConverter"/>
+            <uiform:StringCase x:Key="CaseConverter"/>
 
             <!-- Company Icon Converter -->
-            <converters:StringToCompanyTypeIconConverter 
+            <uiico:StringToCompanyTypeIcon 
                 x:Key="CompanyTypeConverter"/>
 
         </Grid.Resources>

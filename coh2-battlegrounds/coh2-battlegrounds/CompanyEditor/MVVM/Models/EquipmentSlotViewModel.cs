@@ -4,8 +4,7 @@ using System.Windows.Input;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Locale;
-
-using BattlegroundsApp.Utilities;
+using Battlegrounds.UI;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 

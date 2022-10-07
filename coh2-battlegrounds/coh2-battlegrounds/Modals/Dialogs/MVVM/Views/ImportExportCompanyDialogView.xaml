@@ -1,5 +1,5 @@
 ﻿<modals:Modal  
-    xmlns:modals="clr-namespace:BattlegroundsApp.Modals"
+    xmlns:modals="clr-namespace:Battlegrounds.UI.Modals;assembly=coh2-battlegrounds-ui"
     x:Class="BattlegroundsApp.Modals.Dialogs.MVVM.Views.ImportExportCompanyDialogView"             
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"             
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"             

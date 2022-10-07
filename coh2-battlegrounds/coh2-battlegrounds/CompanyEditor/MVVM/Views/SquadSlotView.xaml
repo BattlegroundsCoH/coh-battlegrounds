@@ -6,15 +6,15 @@
              xmlns:local="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views"
              xmlns:portrait="clr-namespace:BattlegroundsApp.Controls.Editor"
              xmlns:cost="clr-namespace:BattlegroundsApp.Controls.CompanyBuilderControls"
-             xmlns:convertor="clr-namespace:BattlegroundsApp.Utilities.Converters"
+             xmlns:uiconv="clr-namespace:Battlegrounds.UI.Converters.Visibility;assembly=coh2-battlegrounds-ui"
              mc:Ignorable="d" 
              d:DesignHeight="78" d:DesignWidth="250"
              Background="{Binding PhaseBackground, FallbackValue=#334252}" 
              x:Name="Self">
 
     <UserControl.Resources>
-        <convertor:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-        <convertor:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
+        <uiconv:BooleanToVisibility x:Key="BoolToVisibilityConverter"/>
+        <uiconv:NullVisibility x:Key="NullVisibilityConverter"/>
     </UserControl.Resources>
 
     <Canvas 
