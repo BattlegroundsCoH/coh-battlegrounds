@@ -7,7 +7,7 @@ using Battlegrounds.Locale;
 
 namespace Battlegrounds.UI.Converters.Locale;
 
-public class LocaleKeyString : IValueConverter {
+public sealed class LocaleKeyString : IValueConverter {
 
     public static readonly DependencyProperty LocalizerProperty = DependencyProperty.Register(nameof(Localizer), typeof(Localize), typeof(LocaleKeyString));
 

@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace Battlegrounds.UI.Converters.Visibility;
 
-public class BooleanToVisibility : IValueConverter {
+public sealed class BooleanToVisibility : IValueConverter {
 
     public object? Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
         value switch {

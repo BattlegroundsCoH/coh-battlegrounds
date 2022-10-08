@@ -9,7 +9,7 @@ using Battlegrounds.Modding.Content.Companies;
 
 namespace Battlegrounds.UI.Converters.Icons;
 
-public class StringToCompanyTypeIcon : IValueConverter {
+public sealed class StringToCompanyTypeIcon : IValueConverter {
 
     private static readonly Dictionary<string, ImageSource> Icons = new() {
         ["ct_infantry"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_infantry.png")),

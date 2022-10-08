@@ -1,9 +1,8 @@
 ﻿using Battlegrounds;
+using Battlegrounds.DataLocal;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.UI;
-
-using BattlegroundsApp.LocalData;
 
 using System;
 using System.Linq;
@@ -296,7 +295,7 @@ public class DashboardViewModel : ViewModelBase {
     /// </summary>
     public DashboardViewModel() {
 
-        PlayerCompanies.PlayerCompaniesLoaded += OnPlayerCompaniesLoaded;
+        Companies.PlayerCompaniesLoaded += OnPlayerCompaniesLoaded;
 
     }
 
@@ -338,23 +337,23 @@ public class DashboardViewModel : ViewModelBase {
 
     // TODO : Add returns for Infantry & Vehicle kills
     private ulong SumerizeData(CompanyDataType type, string faction = "") => type switch {
-        CompanyDataType.Games => PlayerCompanies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalMatchCount),
-        CompanyDataType.Wins => PlayerCompanies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalMatchWinCount),
-        CompanyDataType.Losses => PlayerCompanies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalMatchLossCount),
-        CompanyDataType.InfantryLosses => PlayerCompanies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalInfantryLosses),
-        CompanyDataType.VehicleLosses => PlayerCompanies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalVehicleLosses),
-        CompanyDataType.FactionGames => PlayerCompanies.GetAllCompanies().Where(x => x.Army == Faction.FromName(faction))
+        CompanyDataType.Games => Companies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalMatchCount),
+        CompanyDataType.Wins => Companies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalMatchWinCount),
+        CompanyDataType.Losses => Companies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalMatchLossCount),
+        CompanyDataType.InfantryLosses => Companies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalInfantryLosses),
+        CompanyDataType.VehicleLosses => Companies.GetAllCompanies().Aggregate(0ul, (a, b) => a + b.Statistics.TotalVehicleLosses),
+        CompanyDataType.FactionGames => Companies.GetAllCompanies().Where(x => x.Army == Faction.FromName(faction))
                                                        .Aggregate(0ul, (a, b) => a + b.Statistics.TotalMatchCount),
         _ => 0,
     };
 
     // TODO : Add return for KD rate
     private double DataAverage(CompanyDataType type) => type switch {
-        CompanyDataType.WinRate => PlayerCompanies.GetAllCompanies().Select(x => x.Statistics.WinRate).Average(),
+        CompanyDataType.WinRate => Companies.GetAllCompanies().Select(x => x.Statistics.WinRate).Average(),
         _ => throw new Exception()
     };
 
-    private Company? GetMostPlayedCompany() => PlayerCompanies.GetAllCompanies().Select(x => (x, x.Units.Aggregate(TimeSpan.Zero, (a, b) => a + b.CombatTime)))
+    private Company? GetMostPlayedCompany() => Companies.GetAllCompanies().Select(x => (x, x.Units.Aggregate(TimeSpan.Zero, (a, b) => a + b.CombatTime)))
                                                                                 .OrderByDescending(y => y.Item2)
                                                                                 .Select(z => z.x).FirstOrDefault();
     

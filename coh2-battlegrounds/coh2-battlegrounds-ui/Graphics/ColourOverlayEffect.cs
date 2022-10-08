@@ -8,7 +8,7 @@ namespace Battlegrounds.UI.Graphics;
 /// <summary>
 /// Shader effect adding a colour overlay on top of the underlying element.
 /// </summary>
-public class ColourOverlayEffect : ShaderEffect {
+public sealed class ColourOverlayEffect : ShaderEffect {
 
     private static readonly PixelShader __shader = new PixelShader() {
         UriSource = new Uri("pack://application:,,,/coh2-battlegrounds-ui;component/Graphics/Shaders/ColourOverlayEffect.ps")

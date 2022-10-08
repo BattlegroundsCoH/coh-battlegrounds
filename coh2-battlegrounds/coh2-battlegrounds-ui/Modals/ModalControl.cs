@@ -32,8 +32,7 @@ public enum ModalBackgroundBehaviour {
 /// <summary>
 /// Provides a generic implementation for <see cref="UserControl"/> classes that require support for modals.
 /// </summary>
-public class ModalControl : UserControl {
-
+public sealed class ModalControl : UserControl {
 
     /// <summary>
     /// Identifies the <see cref="Modal"/> attached property.

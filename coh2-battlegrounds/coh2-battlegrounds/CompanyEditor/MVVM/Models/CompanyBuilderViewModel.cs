@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 
 using Battlegrounds;
+using Battlegrounds.DataLocal;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
@@ -23,7 +24,6 @@ using Battlegrounds.UI;
 using Battlegrounds.UI.Modals;
 using Battlegrounds.UI.Modals.Prompts;
 
-using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.MVVM;
@@ -287,7 +287,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
             var company = this.Builder.Commit().Result;
 
             // Save
-            PlayerCompanies.SaveCompany(company);
+            Companies.SaveCompany(company);
 
             // Set status
             this.SaveStatus = 1;

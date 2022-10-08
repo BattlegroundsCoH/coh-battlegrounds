@@ -21,8 +21,9 @@ using Battlegrounds.Update;
 using Battlegrounds.Functional;
 using Battlegrounds.Util.Coroutines;
 using Battlegrounds.Resources;
+using Battlegrounds.DataLocal;
+using Battlegrounds.DataLocal.Generator;
 
-using BattlegroundsApp.LocalData;
 using BattlegroundsApp.MVVM.Models;
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
@@ -176,7 +177,7 @@ public partial class App : Application, IResourceResolver {
                 this.LoadNext();
 
                 // Create initial data
-                InitialDataCreator.Init();
+                InitialCompanyCreator.Init();
 
                 // Save all changes
                 BattlegroundsInstance.SaveInstance();
@@ -279,11 +280,11 @@ public partial class App : Application, IResourceResolver {
         }
 
         // Load all companies used by the player
-        PlayerCompanies.LoadAll();
+        Companies.LoadAll();
 
         // Load all installed and active campaigns
-        PlayerCampaigns.GetInstalledCampaigns();
-        PlayerCampaigns.LoadActiveCampaigns();
+        //PlayerCampaigns.GetInstalledCampaigns();
+        //PlayerCampaigns.LoadActiveCampaigns();
 
     }
 

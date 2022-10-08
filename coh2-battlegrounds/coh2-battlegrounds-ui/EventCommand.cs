@@ -34,7 +34,7 @@ public class EventCommand {
 /// Using this event command requires an event compliant with a (sender: object, arg: EventArgs) even handler type.
 /// </remarks>
 /// <typeparam name="T">The specific <see cref="EventArgs"/> type to use as argument.</typeparam>
-public class EventCommand<T> : EventCommand where T : EventArgs {
+public sealed class EventCommand<T> : EventCommand where T : EventArgs {
 
     /// <summary>
     /// Initialise a new <see cref="EventCommand"/> instance with specified <paramref name="action"/>.

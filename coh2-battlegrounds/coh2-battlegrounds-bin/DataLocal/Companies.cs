@@ -4,19 +4,23 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Battlegrounds;
+
+using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Verification;
 
-namespace BattlegroundsApp.LocalData;
+namespace Battlegrounds.DataLocal;
 
+/// <summary>
+/// 
+/// </summary>
 public delegate void LocalCompaniesLoadedHandler();
 
 /// <summary>
 /// Static utility class for handling local player companies.
 /// </summary>
-public static class PlayerCompanies {
+public static class Companies {
 
     /// <summary>
     /// 
@@ -54,19 +58,19 @@ public static class PlayerCompanies {
 
             foreach (string companypath in companies) {
                 try {
-                    Company? company = CompanySerializer.GetCompanyFromFile(companypath, true);
-                    __companies.Add(company);
+                    if (CompanySerializer.GetCompanyFromFile(companypath, true) is Company company)
+                        __companies.Add(company);
                 } catch (ChecksumViolationException checksumViolation) {
-                    Trace.WriteLine($"Failed to verify company \"{companypath}\" ({checksumViolation.Message})", nameof(PlayerCompanies));
+                    Trace.WriteLine($"Failed to verify company \"{companypath}\" ({checksumViolation.Message})", nameof(Companies));
                 }
             }
 
             PlayerCompaniesLoaded?.Invoke();
 
-            Trace.WriteLine($"Loaded {__companies.Count} user companies", nameof(PlayerCompanies));
+            Trace.WriteLine($"Loaded {__companies.Count} user companies", nameof(Companies));
 
         } catch (Exception ex) {
-            Trace.WriteLine(ex, nameof(PlayerCompanies));
+            Trace.WriteLine(ex, nameof(Companies));
         }
 
     }
@@ -92,7 +96,7 @@ public static class PlayerCompanies {
     /// <param name="name">The fully qualified name of the company.</param>
     /// <param name="faction">The faction the company will belong to.</param>
     /// <returns>The company with <paramref name="name"/> and <paramref name="faction"/> if found; Otherwise <see langword="null"/> is returned.</returns>
-    public static Company? FromNameAndFaction(string name, Faction faction) 
+    public static Company? FromNameAndFaction(string name, Faction faction)
         => FindAll(x => x.Name == name && x.Army == faction).FirstOrDefault();
 
     /// <summary>
@@ -106,19 +110,19 @@ public static class PlayerCompanies {
         try {
             string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{Regex.Replace(company.Name, @"[$&+,:;=?@#|'<>.^\\/""*()%!-]", " ").Replace(" ", "")}.json");
             if (File.Exists(filename)) {
-                Trace.WriteLine($"Deleting existing player company '{company.Name}'", nameof(PlayerCompanies));
+                Trace.WriteLine($"Deleting existing player company '{company.Name}'", nameof(Companies));
                 File.Delete(filename);
             }
             CompanySerializer.SaveCompanyToFile(company, filename);
-            Trace.WriteLine($"Saved player company '{company.Name}'.", nameof(PlayerCompanies));
+            Trace.WriteLine($"Saved player company '{company.Name}'.", nameof(Companies));
         } catch (IOException ioex) {
-            Trace.WriteLine($"Failed to save player company '{company.Name}'. ", nameof(PlayerCompanies));
-            Trace.WriteLine(ioex, nameof(PlayerCompanies));
+            Trace.WriteLine($"Failed to save player company '{company.Name}'. ", nameof(Companies));
+            Trace.WriteLine(ioex, nameof(Companies));
         } finally {
             Company? oldCompany = __companies.FirstOrDefault(x => x.Name == company.Name && x.Army == company.Army);
             if (oldCompany is not null && oldCompany != company) { // If new reference
                 __companies[__companies.IndexOf(oldCompany)] = company;
-                Trace.WriteLine($"Updated player company '{company.Name}' object", nameof(PlayerCompanies));
+                Trace.WriteLine($"Updated player company '{company.Name}' object", nameof(Companies));
             } else if (oldCompany is null) {
                 __companies.Add(company);
             }

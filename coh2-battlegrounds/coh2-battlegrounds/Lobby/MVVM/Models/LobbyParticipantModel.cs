@@ -17,7 +17,6 @@ using Battlegrounds.Networking.Server;
 using Battlegrounds.Functional;
 
 using BattlegroundsApp.Lobby.MVVM.Views;
-using BattlegroundsApp.LocalData;
 
 using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content;
@@ -25,6 +24,7 @@ using Battlegrounds.Modding.Content;
 using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
 using Battlegrounds.Misc.Collections;
 using Battlegrounds.Game.Scenarios;
+using Battlegrounds.DataLocal;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
@@ -212,7 +212,7 @@ public class LobbyParticipantModel : LobbyModel {
                     if (CompanySerializer.GetCompanyFromJson(Encoding.UTF8.GetString(data)) is Company company) {
 
                         // Save it
-                        PlayerCompanies.SaveCompany(company);
+                        Companies.SaveCompany(company);
 
                     } else {
 

@@ -9,7 +9,7 @@ using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.UI.Converters.Icons;
 
-public class StringToFactionIcon : IValueConverter {
+public sealed class StringToFactionIcon : IValueConverter {
 
     private static readonly Dictionary<Faction, ImageSource> Flags = new() {
         [Faction.Soviet] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/soviet.png")),

@@ -31,7 +31,7 @@ public enum ModalDialogResult {
 /// <summary>
 /// Class represent a modal close event.
 /// </summary>
-public class ModalCloseEventArgs : EventArgs {
+public sealed class ModalCloseEventArgs : EventArgs {
 
     /// <summary>
     /// Get or set if the modal close event should cancel.

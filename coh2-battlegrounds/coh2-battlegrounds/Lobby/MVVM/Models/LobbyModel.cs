@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using Battlegrounds;
+using Battlegrounds.DataLocal;
 using Battlegrounds.Game;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -27,10 +28,7 @@ using Battlegrounds.UI.Modals.Prompts;
 
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Lobby.MVVM.Views;
-using BattlegroundsApp.LocalData;
-using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
-using BattlegroundsApp.MVVM;
 using BattlegroundsApp.MVVM.Models;
 
 using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
@@ -357,7 +355,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             Faction faction = Faction.FromName(self.Occupant.Company.Army);
 
             // Get company
-            var company = PlayerCompanies.FromNameAndFaction(companyName, faction);
+            var company = Companies.FromNameAndFaction(companyName, faction);
             if (company is null) {
                 Trace.WriteLine($"Failed to fetch company json file (Company '{companyName}' not found).", nameof(LobbyModel));
                 return null;

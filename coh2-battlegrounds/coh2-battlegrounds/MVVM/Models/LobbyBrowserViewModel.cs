@@ -10,6 +10,7 @@ using System.Windows.Media;
 
 using Battlegrounds;
 using Battlegrounds.AI;
+using Battlegrounds.DataLocal;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Locale;
@@ -22,7 +23,6 @@ using Battlegrounds.UI.Modals;
 
 using BattlegroundsApp.Lobby;
 using BattlegroundsApp.Lobby.MVVM.Models;
-using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 
 namespace BattlegroundsApp.MVVM.Models;
@@ -130,15 +130,15 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         this.Refresh = new(new RelayCommand(this.RefreshButton), () => true);
 
         // Create join
-        this.Join = new(new RelayCommand(this.JoinButton), () => PlayerCompanies.HasCompanyForBothAlliances() && this.SelectedLobbyIndex is not -1);
+        this.Join = new(new RelayCommand(this.JoinButton), () => Companies.HasCompanyForBothAlliances() && this.SelectedLobbyIndex is not -1);
 
         // Create host
-        this.Host = new(new RelayCommand(this.HostButton), PlayerCompanies.HasCompanyForBothAlliances);
-        this.Local = new(new RelayCommand(LocalButton), PlayerCompanies.HasCompanyForBothAlliances);
+        this.Host = new(new RelayCommand(this.HostButton), Companies.HasCompanyForBothAlliances);
+        this.Local = new(new RelayCommand(LocalButton), Companies.HasCompanyForBothAlliances);
 
         // Create double-click
         this.JoinLobbyDirectly = new EventCommand<MouseButtonEventArgs>((sender, args) => {
-            if (!PlayerCompanies.HasCompanyForBothAlliances()) {
+            if (!Companies.HasCompanyForBothAlliances()) {
                 return; // Bail on attempt to join when no companies are available.
             }
             this.JoinLobby(sender, args);
@@ -518,7 +518,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
     }
 
     public bool CanJoinLobby
-        => PlayerCompanies.HasCompanyForBothAlliances() && this.SelectedLobby is not null;
+        => Companies.HasCompanyForBothAlliances() && this.SelectedLobby is not null;
 
     private static List<ServerLobby> GetLobbiesFromServer() {
 

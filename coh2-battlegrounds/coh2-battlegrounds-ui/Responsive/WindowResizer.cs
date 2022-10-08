@@ -27,7 +27,7 @@ public enum WindowDockPosition {
 /// <summary>
 /// Fixes the issue with Windows of Style <see cref="WindowStyle.None"/> covering the taskbar
 /// </summary>
-public class WindowResizer {
+public sealed class WindowResizer {
     #region Private Members
 
     /// <summary>

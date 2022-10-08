@@ -1,15 +1,12 @@
-﻿using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Management;
+﻿using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
-namespace BattlegroundsApp.LocalData;
+namespace Battlegrounds.DataLocal.Generator;
 
-/// <summary>
-/// Static utility class for creating initial data on first startup
-/// </summary>
-public static class InitialDataCreator {
+public static class InitialCompanyCreator {
 
     public static void Init() {
 
@@ -87,7 +84,7 @@ public static class InitialDataCreator {
         AddUnit(builder, "shock_troops_bg", DeploymentPhase.PhaseStandard, DeploymentRole.ReserveRole);
 
         // Save
-        PlayerCompanies.SaveCompany(builder.Commit().Result);
+        Companies.SaveCompany(builder.Commit().Result);
 
     }
 
@@ -151,7 +148,7 @@ public static class InitialDataCreator {
         AddUnit(builder, "tiger_command_squad_bg", DeploymentPhase.PhaseStandard, DeploymentRole.ReserveRole);
 
         // Save
-        PlayerCompanies.SaveCompany(builder.Commit().Result);
+        Companies.SaveCompany(builder.Commit().Result);
 
     }
 

@@ -6,6 +6,7 @@ using System.Windows.Media;
 
 using Battlegrounds.AI;
 using Battlegrounds.AI.Lobby;
+using Battlegrounds.DataLocal;
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
@@ -25,7 +26,6 @@ using Battlegrounds.Util;
 using Battlegrounds.Verification;
 
 using BattlegroundsApp.Lobby.MVVM.Models;
-using BattlegroundsApp.LocalData;
 
 namespace BattlegroundsApp.Lobby.MatchHandling;
 
@@ -243,14 +243,14 @@ internal abstract class BasePlayModel {
             if (aiCompany is null) {
                 throw new StartupException("AI startup company was null!");
             }
-            var c = aiCompany.IsAuto ? null : PlayerCompanies.FromNameAndFaction(aiCompany.Name, Faction.FromName(aiCompany.Army));
+            var c = aiCompany.IsAuto ? null : Companies.FromNameAndFaction(aiCompany.Name, Faction.FromName(aiCompany.Army));
             return new SessionParticipant((AIDifficulty)participant.AILevel, c, team, tIndex, pIndex);
         } else {
             if (participant.MemberID == this.m_handle.Self.ID) {
                 if (participant.Company is not ILobbyCompany c) {
                     throw new StartupException("Invalid startup company.");
                 }
-                this.m_selfCompany = PlayerCompanies.FromNameAndFaction(c.Name, Faction.FromName(participant.Company.Army));
+                this.m_selfCompany = Companies.FromNameAndFaction(c.Name, Faction.FromName(participant.Company.Army));
             }
             return new SessionParticipant(participant.DisplayName, participant.MemberID, null, team, tIndex, pIndex);
         }
@@ -437,7 +437,7 @@ internal abstract class BasePlayModel {
         try {
 
             // Save the company
-            PlayerCompanies.SaveCompany(company);
+            Companies.SaveCompany(company);
 
         } catch (ChecksumViolationException checksumViolation) {
 

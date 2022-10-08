@@ -7,9 +7,9 @@ using Battlegrounds.Misc.Locale;
 namespace Battlegrounds.Misc.Values;
 
 /// <summary>
-/// 
+/// Class representing a value with a maximum obtainable value.
 /// </summary>
-public class CapacityValue : ILocaleArgumentsObject, INotifyPropertyChanged {
+public sealed class CapacityValue : ILocaleArgumentsObject, INotifyPropertyChanged {
 
     private Func<int>? m_eval;
     private int m_value;
@@ -20,7 +20,7 @@ public class CapacityValue : ILocaleArgumentsObject, INotifyPropertyChanged {
     public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
-    /// 
+    /// Get or set the current value. Does not verify if new value is within capacity value.
     /// </summary>
     public int Current {
         get => this.m_eval is null ? this.m_value : this.m_eval.Invoke();
@@ -28,21 +28,21 @@ public class CapacityValue : ILocaleArgumentsObject, INotifyPropertyChanged {
     }
 
     /// <summary>
-    /// 
+    /// Get or set the capacity value.
     /// </summary>
     public int Capacity { get; set; }
 
     /// <summary>
-    /// 
+    /// Get if the value is equal to the capacity value.
     /// </summary>
     public bool IsAtCapacity => this.Current >= this.Capacity;
 
     /// <summary>
-    /// 
+    /// Initialise a new <see cref="CapacityValue"/> instance with a current value and a maximum value.
     /// </summary>
-    /// <param name="curr"></param>
-    /// <param name="max"></param>
-    /// <param name="eval"></param>
+    /// <param name="curr">The current value.</param>
+    /// <param name="max">The maximum value.</param>
+    /// <param name="eval">The evaluation function to fetch updated values.</param>
     public CapacityValue(int curr, int max, Func<int>? eval = null) {
         this.Current = curr;
         this.Capacity = max;
@@ -50,10 +50,10 @@ public class CapacityValue : ILocaleArgumentsObject, INotifyPropertyChanged {
     }
 
     /// <summary>
-    /// 
+    /// Initialise a new <see cref="CapacityValue"/> instance with a maximum value and a function to retrieve the current value.
     /// </summary>
-    /// <param name="max"></param>
-    /// <param name="eval"></param>
+    /// <param name="max">The maximum value.</param>
+    /// <param name="eval">The evaluation function to fetch updated values.</param>
     public CapacityValue(int max, Func<int> eval) {
         this.Current = eval();
         this.Capacity = max;
@@ -61,16 +61,16 @@ public class CapacityValue : ILocaleArgumentsObject, INotifyPropertyChanged {
     }
 
     /// <summary>
-    /// 
+    /// Set the function that evaluates the current value.
     /// </summary>
-    /// <param name="eval"></param>
+    /// <param name="eval">The new evaluation function.</param>
     public void BindCurrent(Func<int> eval)
         => this.m_eval = eval;
 
     /// <summary>
-    /// 
+    /// Update the capacity value.
     /// </summary>
-    /// <param name="sender"></param>
+    /// <param name="sender">The object that triggered the update.</param>
     public void Update(object sender) {
         if (this.m_eval is not null) {
             int next = this.Current;

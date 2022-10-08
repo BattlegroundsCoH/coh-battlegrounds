@@ -1,16 +1,18 @@
-﻿using Battlegrounds.Game.DataCompany;
+﻿
+using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Locale;
 using Battlegrounds.UI;
 using Battlegrounds.UI.Modals;
 using Battlegrounds.UI.Modals.Prompts;
 
-using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Input;
+
+using static Battlegrounds.DataLocal.Companies;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
@@ -167,10 +169,10 @@ public class CompanyBrowserViewModel : ViewModelBase {
         RenameDialogViewModel.ShowModal(mControl, "Rename Company", x => {
 
             // Delete old company
-            PlayerCompanies.DeleteCompany(this.SelectedCompany);
+            DeleteCompany(this.SelectedCompany);
 
             // Save new company
-            PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(x).Commit().Result);
+            SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(x).Commit().Result);
 
             // Trigger refresh of company
             UpdateCompanyList();
@@ -193,8 +195,10 @@ public class CompanyBrowserViewModel : ViewModelBase {
                 return;
             }
 
-            PlayerCompanies.DeleteCompany(SelectedCompany);
+            // Delete the company
+            DeleteCompany(SelectedCompany);
 
+            // Update company list
             UpdateCompanyList();
 
         }, "Delete Company", "This action can not be undone. Are you sure?");
@@ -216,7 +220,7 @@ public class CompanyBrowserViewModel : ViewModelBase {
         RenameDialogViewModel.ShowModal(mControl, "Copy Company", x => {
 
             // 'edit' company but immediately commit and save result
-            PlayerCompanies.SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(x).Commit().Result);
+            SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(x).Commit().Result);
 
             // Trigger refresh of company
             UpdateCompanyList();
@@ -257,7 +261,7 @@ public class CompanyBrowserViewModel : ViewModelBase {
                 if (CompanyTemplate.FromTemplate(name, template, out Company? company)) {
 
                     // Save
-                    PlayerCompanies.SaveCompany(company);
+                    SaveCompany(company);
 
                     // Trigger refresh of company
                     UpdateCompanyList();
@@ -287,10 +291,10 @@ public class CompanyBrowserViewModel : ViewModelBase {
         this.Companies.Clear();
 
         // Locad companies
-        PlayerCompanies.LoadAll();
+        LoadAll();
 
         // Update companies
-        foreach (var company in PlayerCompanies.GetAllCompanies()) {
+        foreach (var company in GetAllCompanies()) {
             this.Companies.Add(company);
         }
 

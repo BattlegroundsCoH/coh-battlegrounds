@@ -7,7 +7,7 @@ using Battlegrounds.Locale;
 
 namespace Battlegrounds.UI.Converters.Locale;
 
-public class FactionToAlliance : IValueConverter {
+public sealed class FactionToAlliance : IValueConverter {
 
     public LocaleKey Alliance { get; set; }
     public LocaleKeyString Convertor { get; set; }

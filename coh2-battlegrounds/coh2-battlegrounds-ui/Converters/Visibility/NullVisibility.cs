@@ -7,7 +7,7 @@ namespace Battlegrounds.UI.Converters.Visibility;
 /// <summary>
 /// Class to convert a null value into an appropriate visibility value.
 /// </summary>
-public class NullVisibility : IValueConverter {
+public sealed class NullVisibility : IValueConverter {
 
     public object Convert(object? value, Type targetType, object parameter, CultureInfo culture) {
         if (value is null)

@@ -7,7 +7,7 @@ namespace Battlegrounds.UI.Converters;
 /// <summary>
 /// Converter class that can retrieve an array value.
 /// </summary>
-public class ArrayIndexer : IValueConverter {
+public sealed class ArrayIndexer : IValueConverter {
 
     public object? Convert(object value, Type targetType, object parameter, CultureInfo culture) {
 

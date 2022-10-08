@@ -5,7 +5,7 @@ using System.Windows.Data;
 
 namespace Battlegrounds.UI.Converters.Formatting;
 
-public class StringCase : IValueConverter {
+public sealed class StringCase : IValueConverter {
 
     public CharacterCasing Case { get; set; }
 

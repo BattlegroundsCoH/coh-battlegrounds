@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace Battlegrounds.UI.Converters.Numeric;
 
-public class DoubleToRating : IValueConverter {
+public sealed class DoubleToRating : IValueConverter {
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         => value switch {
