@@ -1,4 +1,4 @@
-﻿namespace BattlegroundsApp.MVVM;
+﻿namespace Battlegrounds.Data;
 
 /// <summary>
 /// Event handler for objects that have changed.

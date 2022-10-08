@@ -12,7 +12,6 @@ using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.UI;
 
 using BattlegroundsApp.Controls;
-using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 

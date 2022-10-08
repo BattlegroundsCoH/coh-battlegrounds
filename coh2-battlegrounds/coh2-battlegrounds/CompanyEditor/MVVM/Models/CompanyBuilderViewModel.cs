@@ -16,6 +16,7 @@ using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
+using Battlegrounds.Misc.Values;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.UI;
@@ -26,7 +27,6 @@ using BattlegroundsApp.LocalData;
 using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.MVVM;
-using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 

@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Media;
 
 using Battlegrounds.AI;
+using Battlegrounds.Data;
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
@@ -15,6 +16,8 @@ using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Misc.Collections;
+using Battlegrounds.Misc.Locale;
+using Battlegrounds.Misc.Values;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
@@ -23,11 +26,8 @@ using Battlegrounds.Resources;
 using Battlegrounds.UI;
 using Battlegrounds.Util;
 
-using BattlegroundsApp.Controls;
 using BattlegroundsApp.Lobby.MatchHandling;
 using BattlegroundsApp.Lobby.Planning;
-using BattlegroundsApp.MVVM;
-using BattlegroundsApp.Utilities;
 
 using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
 
@@ -63,7 +63,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
 
     public record LobbyPlanningMinimapItem(EntityBlueprint EntityBlueprint, ushort Owner, GamePosition WorldPos, Scenario Scenario);
 
-    public class LobbyPlanningCompanyDisplay : ILocLabelArgumentsObject, INotifyPropertyChanged {
+    public class LobbyPlanningCompanyDisplay : ILocaleArgumentsObject, INotifyPropertyChanged {
         public event ObjectChangedEventHandler? ObjectChanged;
         public event PropertyChangedEventHandler? PropertyChanged;
 

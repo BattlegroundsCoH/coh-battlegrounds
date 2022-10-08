@@ -23,9 +23,7 @@ using Battlegrounds.UI.Modals;
 using BattlegroundsApp.Lobby;
 using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.LocalData;
-using BattlegroundsApp.Modals;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
-using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.MVVM.Models;
 

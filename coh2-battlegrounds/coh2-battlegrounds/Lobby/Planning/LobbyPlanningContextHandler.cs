@@ -11,11 +11,10 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Misc.Collections;
+using Battlegrounds.Misc.Values;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.UI;
-
-using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.Lobby.Planning;
 

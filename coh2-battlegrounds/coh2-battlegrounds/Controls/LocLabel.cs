@@ -5,26 +5,12 @@ using System.Windows.Controls;
 using System.Windows.Markup;
 
 using Battlegrounds;
+using Battlegrounds.Data;
 using Battlegrounds.Functional;
 using Battlegrounds.Locale;
-
-using BattlegroundsApp.MVVM;
-using BattlegroundsApp.Utilities;
+using Battlegrounds.Misc.Locale;
 
 namespace BattlegroundsApp.Controls;
-
-/// <summary>
-/// Interface for objects that can be converted into a localised string argument list.
-/// </summary>
-public interface ILocLabelArgumentsObject : IObjectChanged {
-
-    /// <summary>
-    /// Get object as locale arguments.
-    /// </summary>
-    /// <returns>Array of arguments for localised string formatting.</returns>
-    object[] ToArgs();
-
-}
 
 /// <summary>
 /// Class representing a localised label using the <see cref="BattlegroundsInstance.Localize"/> instance to localise text. Extends <see cref="Label"/>.
@@ -101,15 +87,15 @@ public class LocLabel : Label {
         if (dependencyObject is LocLabel loc) {
             loc.Arguments = e.NewValue;
             loc.RefreshDisplay();
-            if (e.NewValue is CapacityValue capNew) {
-                capNew.ObjectChanged += loc.OnArgumentsObjectChanged;
+            if (e.NewValue is IObjectChanged objNew) {
+                objNew.ObjectChanged += loc.OnArgumentsObjectChanged;
             } else if (e.NewValue is INotifyPropertyChanged changed) {
                 changed.PropertyChanged += (a, b) => {
                     loc.RefreshDisplay();
                 };
             }
-            if (e.OldValue is CapacityValue capOld) {
-                capOld.ObjectChanged -= loc.OnArgumentsObjectChanged;
+            if (e.OldValue is IObjectChanged objOld) {
+                objOld.ObjectChanged -= loc.OnArgumentsObjectChanged;
             }
         }
     }
@@ -135,7 +121,7 @@ public class LocLabel : Label {
                 return new[] { BattlegroundsInstance.Localize.GetString(k) };
             } else if (args is string s) {
                 return new[] { BattlegroundsInstance.Localize.GetString(s) ?? s };
-            } else if (args is ILocLabelArgumentsObject obj) {
+            } else if (args is ILocaleArgumentsObject obj) {
                 return obj.ToArgs();
             }
         }

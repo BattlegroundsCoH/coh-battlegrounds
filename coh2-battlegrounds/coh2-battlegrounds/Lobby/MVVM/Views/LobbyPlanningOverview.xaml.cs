@@ -18,7 +18,6 @@ using Battlegrounds.Util;
 using BattlegroundsApp.Controls;
 using BattlegroundsApp.Lobby.MVVM.Models;
 using BattlegroundsApp.Lobby.Planning;
-using BattlegroundsApp.Utilities;
 
 using static BattlegroundsApp.Lobby.MVVM.Models.LobbyPlanningOverviewModel;
 

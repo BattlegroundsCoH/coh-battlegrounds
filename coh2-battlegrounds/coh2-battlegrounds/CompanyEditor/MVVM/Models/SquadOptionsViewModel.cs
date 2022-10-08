@@ -18,8 +18,6 @@ using Battlegrounds.Misc.Values;
 using Battlegrounds.Resources;
 using Battlegrounds.UI;
 
-using BattlegroundsApp.Utilities;
-
 namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
 
 public class SquadOptionsViewModel : INotifyPropertyChanged {

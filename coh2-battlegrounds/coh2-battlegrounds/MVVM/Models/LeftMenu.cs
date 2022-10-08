@@ -6,7 +6,6 @@ using Battlegrounds.UI;
 
 using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
-using BattlegroundsApp.Utilities;
 
 namespace BattlegroundsApp.MVVM.Models;
 

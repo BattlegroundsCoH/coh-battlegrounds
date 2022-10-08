@@ -6,8 +6,6 @@ using Battlegrounds.Functional;
 using Battlegrounds.Misc.Collections;
 using Battlegrounds.Networking.LobbySystem;
 
-using BattlegroundsApp.Utilities;
-
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 
 public class LobbyParticipantSlotModel : LobbySlot {

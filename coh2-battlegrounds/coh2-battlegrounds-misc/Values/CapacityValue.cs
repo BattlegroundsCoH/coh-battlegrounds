@@ -1,12 +1,15 @@
 ﻿using System;
 using System.ComponentModel;
 
-using BattlegroundsApp.Controls;
-using BattlegroundsApp.MVVM;
+using Battlegrounds.Data;
+using Battlegrounds.Misc.Locale;
 
-namespace BattlegroundsApp.Utilities;
+namespace Battlegrounds.Misc.Values;
 
-public class CapacityValue : ILocLabelArgumentsObject, INotifyPropertyChanged {
+/// <summary>
+/// 
+/// </summary>
+public class CapacityValue : ILocaleArgumentsObject, INotifyPropertyChanged {
 
     private Func<int>? m_eval;
     private int m_value;
@@ -16,30 +19,58 @@ public class CapacityValue : ILocLabelArgumentsObject, INotifyPropertyChanged {
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public int Current {
         get => this.m_eval is null ? this.m_value : this.m_eval.Invoke();
         set => this.m_value = value;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public int Capacity { get; set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public bool IsAtCapacity => this.Current >= this.Capacity;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="curr"></param>
+    /// <param name="max"></param>
+    /// <param name="eval"></param>
     public CapacityValue(int curr, int max, Func<int>? eval = null) {
         this.Current = curr;
         this.Capacity = max;
         this.m_eval = eval;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="max"></param>
+    /// <param name="eval"></param>
     public CapacityValue(int max, Func<int> eval) {
         this.Current = eval();
         this.Capacity = max;
         this.m_eval = eval;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="eval"></param>
     public void BindCurrent(Func<int> eval)
         => this.m_eval = eval;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
     public void Update(object sender) {
         if (this.m_eval is not null) {
             int next = this.Current;

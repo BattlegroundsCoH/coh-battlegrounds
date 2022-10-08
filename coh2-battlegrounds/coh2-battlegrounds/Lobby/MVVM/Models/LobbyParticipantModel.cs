@@ -19,7 +19,6 @@ using Battlegrounds.Functional;
 using BattlegroundsApp.Lobby.MVVM.Views;
 using BattlegroundsApp.LocalData;
 
-using BattlegroundsApp.Utilities;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content;
 
