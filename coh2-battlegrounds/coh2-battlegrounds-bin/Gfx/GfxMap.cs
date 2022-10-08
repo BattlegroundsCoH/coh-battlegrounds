@@ -5,8 +5,8 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 
+using Battlegrounds.Data;
 using Battlegrounds.ErrorHandling.IO;
-using Battlegrounds.Lua;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Gfx;
@@ -343,7 +343,7 @@ public sealed class GfxMap {
     /// <param name="gfxTable"></param>
     /// <param name="gfxFolder"></param>
     /// <returns></returns>
-    public static GfxMap FromLua(LuaTable gfxTable, string gfxFolder) {
+    public static GfxMap FromLua(Table gfxTable, string gfxFolder) {
 
         // Create atlas
         var gfxMap = new GfxMap(gfxTable.Size);
@@ -355,17 +355,17 @@ public sealed class GfxMap {
         gfxTable.Pairs((k, v) => {
 
             // Get string
-            string gfxID = k.Str();
+            string gfxID = k.ToString()!;
 
             // If actual resource table
-            if (v is LuaTable vt) {
+            if (v is Table vt) {
 
                 // Get dimensions
-                double width = vt["width"].As<LuaNumber>();
-                double height = vt["height"].As<LuaNumber>();
+                double width = vt.As<double>("width");
+                double height = vt.As<double>("height");
 
                 // Get gfx source
-                string source = vt["gfx"].Str().Replace('/', '\\'); ;
+                string source = vt["gfx"]!.ToString()!.Replace('/', '\\'); ;
 
                 // Get GFX source path
                 string sourcePath = Path.Combine(gfxFolder, source);

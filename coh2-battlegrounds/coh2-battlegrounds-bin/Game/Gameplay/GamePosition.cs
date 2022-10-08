@@ -2,8 +2,8 @@
 using System.Globalization;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.Data.Generators.Lua.RuntimeServices;
 using Battlegrounds.Game.Gameplay.DataConverters;
-using Battlegrounds.Lua.Generator.RuntimeServices;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Game;

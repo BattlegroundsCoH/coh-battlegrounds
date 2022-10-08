@@ -11,7 +11,7 @@ using System.Windows.Media;
 using Battlegrounds;
 using Battlegrounds.AI;
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking;

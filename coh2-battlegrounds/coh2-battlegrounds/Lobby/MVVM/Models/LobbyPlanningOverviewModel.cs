@@ -13,6 +13,8 @@ using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.Scenarios;
+using Battlegrounds.Misc.Collections;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;

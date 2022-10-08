@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 
 using Battlegrounds;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Gfx;
 
 namespace coh2_battlegrounds_console;

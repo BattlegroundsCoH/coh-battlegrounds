@@ -9,7 +9,6 @@ using System.Windows.Media;
 using Battlegrounds;
 using Battlegrounds.UI;
 using Battlegrounds.Compiler;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match.Play;
 using Battlegrounds.Modding;
@@ -25,6 +24,8 @@ using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content;
 
 using static BattlegroundsApp.Lobby.MVVM.Models.LobbyAuxModels;
+using Battlegrounds.Misc.Collections;
+using Battlegrounds.Game.Scenarios;
 
 namespace BattlegroundsApp.Lobby.MVVM.Models;
 

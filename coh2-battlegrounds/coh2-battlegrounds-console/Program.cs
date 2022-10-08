@@ -24,6 +24,7 @@ using Battlegrounds.Game.DataSource.Replay;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Game.Match.Data;
+using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Gfx;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content.Companies;

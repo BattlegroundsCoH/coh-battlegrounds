@@ -1,6 +1,5 @@
 ﻿using Battlegrounds.UI;
-
-using BattlegroundsApp.Utilities;
+using Battlegrounds.UI.Responsive;
 
 using System.Diagnostics;
 using System.Reflection;

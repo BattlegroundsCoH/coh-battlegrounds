@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Misc.Collections;
 using Battlegrounds.Networking.LobbySystem;
 
 using BattlegroundsApp.Utilities;

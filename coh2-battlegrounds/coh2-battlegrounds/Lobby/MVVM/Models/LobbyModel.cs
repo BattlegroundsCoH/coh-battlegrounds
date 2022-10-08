@@ -12,9 +12,9 @@ using System.Windows.Media;
 
 using Battlegrounds;
 using Battlegrounds.Game;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content;

@@ -8,7 +8,7 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay.DataConverters;
 using Battlegrounds.Functional;
 using Battlegrounds.Verification;
-using Battlegrounds.Lua.Generator.RuntimeServices;
+using Battlegrounds.Data.Generators.Lua.RuntimeServices;
 
 namespace Battlegrounds.Game.Gameplay;
 

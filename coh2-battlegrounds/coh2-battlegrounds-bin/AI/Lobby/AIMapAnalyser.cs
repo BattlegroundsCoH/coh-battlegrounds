@@ -7,7 +7,7 @@ using System.Numerics;
 using Battlegrounds.ErrorHandling;
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Gfx;
 
 namespace Battlegrounds.AI.Lobby;

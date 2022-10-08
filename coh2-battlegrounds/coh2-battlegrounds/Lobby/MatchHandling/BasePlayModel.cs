@@ -17,6 +17,7 @@ using Battlegrounds.Game.Match.Analyze;
 using Battlegrounds.Game.Match.Composite;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Startup;
+using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;

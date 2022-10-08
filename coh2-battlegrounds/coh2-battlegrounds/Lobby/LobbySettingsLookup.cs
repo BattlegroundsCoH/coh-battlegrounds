@@ -7,6 +7,7 @@ using System.Windows.Media.Imaging;
 
 using Battlegrounds;
 using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Resources.Imaging;

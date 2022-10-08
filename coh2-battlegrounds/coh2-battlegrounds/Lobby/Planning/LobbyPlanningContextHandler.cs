@@ -9,6 +9,8 @@ using System.Windows.Media;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.Scenarios;
+using Battlegrounds.Misc.Collections;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.UI;

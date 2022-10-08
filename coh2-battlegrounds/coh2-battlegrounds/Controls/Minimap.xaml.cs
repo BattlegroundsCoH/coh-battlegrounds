@@ -6,6 +6,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Resources;
 
 using BattlegroundsApp.Lobby;

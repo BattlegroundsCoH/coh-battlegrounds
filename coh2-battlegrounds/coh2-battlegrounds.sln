@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-function
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-ui", "coh2-battlegrounds-ui\coh2-battlegrounds-ui.csproj", "{A80982E9-ACBD-4013-892E-E71E7D32FCF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-misc", "coh2-battlegrounds-misc\coh2-battlegrounds-misc.csproj", "{8264C3CF-F2C5-4229-98BD-9C696ECF717F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-scripting", "coh2-battlegrounds-scripting\coh2-battlegrounds-scripting.csproj", "{77252AB3-1A16-4763-84EF-D49EF273154A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +111,30 @@ Global
 		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Release|x64.Build.0 = Release|Any CPU
 		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Release|x86.ActiveCfg = Release|Any CPU
 		{A80982E9-ACBD-4013-892E-E71E7D32FCF8}.Release|x86.Build.0 = Release|Any CPU
+		{8264C3CF-F2C5-4229-98BD-9C696ECF717F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8264C3CF-F2C5-4229-98BD-9C696ECF717F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8264C3CF-F2C5-4229-98BD-9C696ECF717F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8264C3CF-F2C5-4229-98BD-9C696ECF717F}.Debug|x64.Build.0 = Debug|Any CPU
+		{8264C3CF-F2C5-4229-98BD-9C696ECF717F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8264C3CF-F2C5-4229-98BD-9C696ECF717F}.Debug|x86.Build.0 = Debug|Any CPU
+		{8264C3CF-F2C5-4229-98BD-9C696ECF717F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8264C3CF-F2C5-4229-98BD-9C696ECF717F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8264C3CF-F2C5-4229-98BD-9C696ECF717F}.Release|x64.ActiveCfg = Release|Any CPU
+		{8264C3CF-F2C5-4229-98BD-9C696ECF717F}.Release|x64.Build.0 = Release|Any CPU
+		{8264C3CF-F2C5-4229-98BD-9C696ECF717F}.Release|x86.ActiveCfg = Release|Any CPU
+		{8264C3CF-F2C5-4229-98BD-9C696ECF717F}.Release|x86.Build.0 = Release|Any CPU
+		{77252AB3-1A16-4763-84EF-D49EF273154A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77252AB3-1A16-4763-84EF-D49EF273154A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77252AB3-1A16-4763-84EF-D49EF273154A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{77252AB3-1A16-4763-84EF-D49EF273154A}.Debug|x64.Build.0 = Debug|Any CPU
+		{77252AB3-1A16-4763-84EF-D49EF273154A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{77252AB3-1A16-4763-84EF-D49EF273154A}.Debug|x86.Build.0 = Debug|Any CPU
+		{77252AB3-1A16-4763-84EF-D49EF273154A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77252AB3-1A16-4763-84EF-D49EF273154A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77252AB3-1A16-4763-84EF-D49EF273154A}.Release|x64.ActiveCfg = Release|Any CPU
+		{77252AB3-1A16-4763-84EF-D49EF273154A}.Release|x64.Build.0 = Release|Any CPU
+		{77252AB3-1A16-4763-84EF-D49EF273154A}.Release|x86.ActiveCfg = Release|Any CPU
+		{77252AB3-1A16-4763-84EF-D49EF273154A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

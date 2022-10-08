@@ -10,6 +10,7 @@ using Battlegrounds.Util;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Functional;
 using System.Diagnostics.CodeAnalysis;
+using Battlegrounds.Game.Scenarios;
 
 namespace Battlegrounds.Game.DataSource.Replay;
 

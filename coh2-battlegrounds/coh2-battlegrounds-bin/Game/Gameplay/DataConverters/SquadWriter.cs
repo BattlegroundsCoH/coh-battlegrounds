@@ -10,12 +10,11 @@ using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Modding;
 
 using Battlegrounds.Functional;
-
-using Battlegrounds.Lua.Generator.RuntimeServices;
-using Battlegrounds.Lua.Generator;
 using System.Globalization;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Modding.Content.Companies;
+using Battlegrounds.Data.Generators.Lua;
+using Battlegrounds.Data.Generators.Lua.RuntimeServices;
 
 namespace Battlegrounds.Game.Gameplay.DataConverters;
 
