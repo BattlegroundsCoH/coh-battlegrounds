@@ -210,6 +210,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-editor\coh2-battlegrounds-editor.csproj" />
     <ProjectReference Include="..\coh2-battlegrounds-resources\coh2-battlegrounds-resources.csproj" />
     <ProjectReference Include="..\coh2-battlegrounds-ui\coh2-battlegrounds-ui.csproj" />
   </ItemGroup>
@@ -925,9 +926,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\data\mod_bg-wbp-db.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="plugins\README.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

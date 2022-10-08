@@ -20,7 +20,7 @@
             Width="250">
         
         <!-- Name -->
-        <Label Content="{Binding AbilityName}"
+        <Label Content="{Binding AbilityName, FallbackValue='Hello World'}"
                Canvas.Left="75"
                MaxWidth="180"
                Foreground="White"

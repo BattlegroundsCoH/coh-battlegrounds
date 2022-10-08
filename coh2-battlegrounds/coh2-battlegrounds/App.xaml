@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="Styles/Windows.xaml" />
                 <ResourceDictionary Source="Styles/ViewsAndViewModels.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds-ui;component/UIResources.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds-editor;component/Link.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

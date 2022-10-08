@@ -2,28 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <RootNamespace>Battlegrounds.UI</RootNamespace>
+    <RootNamespace>Battlegrounds.Editor</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Graphics\Shaders\ColourOverlayEffect.ps" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-functional\coh2-battlegrounds-functional.csproj" />
     <ProjectReference Include="..\coh2-battlegrounds-misc\coh2-battlegrounds-misc.csproj" />
     <ProjectReference Include="..\coh2-battlegrounds-resources\coh2-battlegrounds-resources.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-ui\coh2-battlegrounds-ui.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Graphics\Shaders\ColourOverlayEffect.ps" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Themes\" />
+    <Folder Include="Modals\" />
+    <Folder Include="Pages\" />
   </ItemGroup>
 
 </Project>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -130,7 +131,7 @@ public class LobbyChatSpectatorModel : ViewModelBase {
     }
 
     public void SendEnter(object sender, KeyEventArgs args) {
-        if (sender is not BGTextbox tb) {
+        if (sender is not TextBox tb) {
             return;
         }
         if (args.Key is Key.Enter) {

@@ -11,15 +11,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-console"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "coh2-battlegrounds-installer", "coh2-battlegrounds-installer\coh2-battlegrounds-installer.wixproj", "{3E8286BB-B500-4714-8891-99E973A39B1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-resources", "coh2-battlegrounds-resources\coh2-battlegrounds-resources.csproj", "{05C35883-465C-4AB1-9D9E-296C216644C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-resources", "coh2-battlegrounds-resources\coh2-battlegrounds-resources.csproj", "{05C35883-465C-4AB1-9D9E-296C216644C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-functional", "coh2-battlegrounds-functional\coh2-battlegrounds-functional.csproj", "{E7D3CC68-944C-4192-A30A-1DD931D237BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-functional", "coh2-battlegrounds-functional\coh2-battlegrounds-functional.csproj", "{E7D3CC68-944C-4192-A30A-1DD931D237BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-ui", "coh2-battlegrounds-ui\coh2-battlegrounds-ui.csproj", "{A80982E9-ACBD-4013-892E-E71E7D32FCF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-ui", "coh2-battlegrounds-ui\coh2-battlegrounds-ui.csproj", "{A80982E9-ACBD-4013-892E-E71E7D32FCF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-misc", "coh2-battlegrounds-misc\coh2-battlegrounds-misc.csproj", "{8264C3CF-F2C5-4229-98BD-9C696ECF717F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-misc", "coh2-battlegrounds-misc\coh2-battlegrounds-misc.csproj", "{8264C3CF-F2C5-4229-98BD-9C696ECF717F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-scripting", "coh2-battlegrounds-scripting\coh2-battlegrounds-scripting.csproj", "{77252AB3-1A16-4763-84EF-D49EF273154A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-scripting", "coh2-battlegrounds-scripting\coh2-battlegrounds-scripting.csproj", "{77252AB3-1A16-4763-84EF-D49EF273154A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-editor", "coh2-battlegrounds-editor\coh2-battlegrounds-editor.csproj", "{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -135,6 +137,18 @@ Global
 		{77252AB3-1A16-4763-84EF-D49EF273154A}.Release|x64.Build.0 = Release|Any CPU
 		{77252AB3-1A16-4763-84EF-D49EF273154A}.Release|x86.ActiveCfg = Release|Any CPU
 		{77252AB3-1A16-4763-84EF-D49EF273154A}.Release|x86.Build.0 = Release|Any CPU
+		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Debug|x64.Build.0 = Debug|Any CPU
+		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Debug|x86.Build.0 = Debug|Any CPU
+		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Release|x64.ActiveCfg = Release|Any CPU
+		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Release|x64.Build.0 = Release|Any CPU
+		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Release|x86.ActiveCfg = Release|Any CPU
+		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
