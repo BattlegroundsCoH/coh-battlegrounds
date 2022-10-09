@@ -85,7 +85,7 @@ public class LeftMenu : ViewModelBase {
 
     private void DashboardButton() {
 
-        App.ViewManager.UpdateDisplay<DashboardViewModel>(AppDisplayTarget.Right);
+        App.Views.UpdateDisplay<DashboardViewModel>(AppDisplayTarget.Right);
 
     }
 
@@ -96,7 +96,7 @@ public class LeftMenu : ViewModelBase {
     private void BuilderButton() {
 
         // Get browser
-        App.ViewManager.UpdateDisplay<CompanyBrowserViewModel>(AppDisplayTarget.Right, browser => {
+        App.Views.UpdateDisplay<CompanyBrowserViewModel>(AppDisplayTarget.Right, browser => {
             if (browser is CompanyBrowserViewModel vm) {
                 vm.UpdateCompanyList();
             }
@@ -111,7 +111,7 @@ public class LeftMenu : ViewModelBase {
     private void MatchFinderButton() {
 
         // Set RHS to lobby browser
-        App.ViewManager.UpdateDisplay<LobbyBrowserViewModel>(AppDisplayTarget.Right, browser => {
+        App.Views.UpdateDisplay<LobbyBrowserViewModel>(AppDisplayTarget.Right, browser => {
             if (browser is LobbyBrowserViewModel vm) {
                 vm.RefreshLobbies();
             }
@@ -122,7 +122,7 @@ public class LeftMenu : ViewModelBase {
     private void SettingsButton() {
 
         // Set display
-        App.ViewManager.UpdateDisplay<SettingsViewModel>(AppDisplayTarget.Right);
+        App.Views.UpdateDisplay<SettingsViewModel>(AppDisplayTarget.Right);
 
     }
 

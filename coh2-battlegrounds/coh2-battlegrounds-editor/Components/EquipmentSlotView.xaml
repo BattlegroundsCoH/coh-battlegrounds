@@ -1,18 +1,18 @@
 ﻿<UserControl 
-    x:Class="BattlegroundsApp.CompanyEditor.MVVM.Views.EquipmentSlotView"
+    x:Class="Battlegrounds.Editor.Components.EquipmentSlotView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:local="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views" 
-    xmlns:icon="clr-namespace:BattlegroundsApp.Controls.Editor" 
+    xmlns:local="clr-namespace:Battlegrounds.Editor.Components"
     xmlns:uiico="clr-namespace:Battlegrounds.UI.Converters.Icons;assembly=coh2-battlegrounds-ui"
+    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=coh2-battlegrounds-ui"
     mc:Ignorable="d" 
-    d:DesignHeight="78" 
-    d:DesignWidth="250"
-    Background="#334252">
-
-    <Canvas Height="78" Width="250">
+    d:DesignHeight="78" d:DesignWidth="250"
+    Background="{StaticResource BackgroundLightBlueBrush}">
+    <Canvas 
+        Height="78" 
+        Width="250">
         <Canvas.Resources>
             <uiico:StringToFactionIcon x:Key="Str2Fac"/>
         </Canvas.Resources>
@@ -26,7 +26,7 @@
             FontWeight="DemiBold"/>
 
         <!-- Portrait -->
-        <icon:Portrait 
+        <controls:GamePortrait 
             PortraitName="{Binding Portrait}"
             SymbolName=""
             x:Name="PortraitElement"/>

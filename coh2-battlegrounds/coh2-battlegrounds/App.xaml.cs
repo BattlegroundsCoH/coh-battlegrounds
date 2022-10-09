@@ -35,7 +35,7 @@ namespace BattlegroundsApp;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : Application, IResourceResolver {
+public partial class App : Application, IResourceResolver, IViewController {
 
     private static AppViewManager? __viewManager;
 
@@ -45,8 +45,10 @@ public partial class App : Application, IResourceResolver {
     private static LobbyBrowserViewModel? __lobbyBrowser;
     private static CompanyBrowserViewModel? __companyBrowser;
 
-    public static AppViewManager ViewManager 
+    public static AppViewManager Views 
         => IsStarted ? __viewManager : throw new InvalidOperationException("Cannot get view manager before application window has initialised.");
+
+    public AppViewManager ViewManager => __viewManager ?? throw new InvalidOperationException("Cannot get view manager before application window has initialised.");
 
     [MemberNotNullWhen(true, nameof(__viewManager))]
     public static bool IsStarted { get; private set; }
@@ -163,7 +165,7 @@ public partial class App : Application, IResourceResolver {
         if (BattlegroundsInstance.IsFirstRun) {
 
             // Grab modal control
-            if (ViewManager.GetModalControl() is not ModalControl fullModal) {
+            if (Views.GetModalControl() is not ModalControl fullModal) {
                 MessageBox.Show("The application failed to launch properly and will now exit.", "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Environment.Exit(0);
                 return;
@@ -347,7 +349,7 @@ public partial class App : Application, IResourceResolver {
         if (!Update.IsNewVersion()) return;
 
         // Null check
-        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+        if (App.Views.GetModalControl() is not ModalControl mControl) {
             return;
         }
 

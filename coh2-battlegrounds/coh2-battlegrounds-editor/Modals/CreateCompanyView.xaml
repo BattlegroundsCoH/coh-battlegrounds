@@ -1,0 +1,201 @@
+﻿<modals:Modal  
+    xmlns:modals="clr-namespace:Battlegrounds.UI.Modals;assembly=coh2-battlegrounds-ui"
+    x:Class="Battlegrounds.Editor.Modals.CreateCompanyView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:Battlegrounds.Editor.Modals"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" 
+    d:DesignWidth="450"
+    Background="{StaticResource BackgroundDarkBlueBrush}">
+    <Grid Width="450" Height="450">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Row 0 :: Headline -->
+        <Label Grid.Column="0"
+               Grid.Row="0"
+               Content="Create Company"
+               VerticalContentAlignment="Center"
+               HorizontalContentAlignment="Center"
+               Foreground="#EEE"
+               FontSize="22"
+               FontWeight="DemiBold"
+               FontFamily="Open Sans"
+               Margin="0, 25, 0, 25"/>
+
+        <!-- Row 1 :: Form -->
+        <StackPanel 
+            Grid.Row="1"
+            Orientation="Vertical"
+            HorizontalAlignment="Center"
+            Width="260">
+
+            <TextBox 
+                Margin="0, 0, 0, 7"
+                Text="{Binding SelectedName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                Style="{StaticResource WaterMarkTextBox}"
+                Tag="Company Name"
+                FontFamily="Open Sans"
+                Height="25"
+                x:Name="companyName"/>
+
+            <Grid
+                Margin="0, 0, 0, 7">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="36"/>
+                    <ColumnDefinition Width="224"/>
+                </Grid.ColumnDefinitions>
+
+                <Image 
+                    Height="28"
+                    Source="{Binding SelectedFaction.Icon}"/>
+
+                <ComboBox 
+                    Style="{StaticResource StandardBlueDropdown}"
+                    Grid.Column="1"
+                    ItemsSource="{Binding AvailableFactions}"
+                    SelectedItem="{Binding SelectedFaction, Mode=TwoWay}"
+                    FontFamily="Open Sans"
+                    ItemContainerStyle="{StaticResource StandardBlueDropdownIconItemContainer}">
+                </ComboBox>
+
+            </Grid>
+
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="2"
+            Orientation="Vertical"
+            HorizontalAlignment="Center"
+            Width="420">
+
+            <Grid
+                Width="260"
+                Margin="0, 0, 0, 7">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="36"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Image 
+                    Height="28"
+                    Source="{Binding SelectedType.Icon}"/>
+
+                <ComboBox 
+                    Style="{StaticResource StandardBlueDropdown}"
+                    Grid.Column="1"
+                    ItemsSource="{Binding AvailableTypes}"
+                    SelectedItem="{Binding SelectedType, Mode=TwoWay}"
+                    FontFamily="Open Sans"
+                    ItemContainerStyle="{StaticResource StandardBlueDropdownIconItemContainer}">
+                </ComboBox>
+
+            </Grid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <TextBlock 
+                    Text="{Binding SelectedType.Desc, FallbackValue='Long description of the company and what it is all about.'}"
+                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                    FontFamily="Open Sans"
+                    FontStyle="Italic"
+                    FontSize="12"
+                    TextWrapping="Wrap"
+                    TextAlignment="Center"
+                    Grid.ColumnSpan="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
+
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Content="Unique Units"
+                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                    HorizontalAlignment="Center"/>
+
+                <WrapPanel
+                    Grid.Row="2"
+                    HorizontalAlignment="Center">
+                    <Image 
+                        Width="48"
+                        Height="48"
+                        Margin="5"
+                        Source="{Binding SelectedType.Unit01}"/>
+                    <Image 
+                        Width="48"
+                        Height="48"
+                        Margin="5"
+                        Source="{Binding SelectedType.Unit02}"/>
+                    <Image 
+                        Width="48"
+                        Height="48"
+                        Margin="5"
+                        Source="{Binding SelectedType.Unit03}"/>
+                </WrapPanel>
+
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Content="Commander Abilities"
+                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                    HorizontalAlignment="Center"/>
+
+                <WrapPanel
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center">
+                    <Image 
+                        Width="48"
+                        Height="48"
+                        Margin="5"
+                        Source="{Binding SelectedType.Ability01}"/>
+                    <Image 
+                        Width="48"
+                        Height="48"
+                        Margin="5"
+                        Source="{Binding SelectedType.Ability02}"/>
+                    <Image 
+                        Width="48"
+                        Height="48"
+                        Margin="5"
+                        Source="{Binding SelectedType.Ability03}"/>
+                </WrapPanel>
+
+            </Grid>
+
+        </StackPanel>
+
+        <Button 
+            Content="CompanyView_Create"
+            Width="260"
+            Style="{StaticResource StandardBlueLocButton}"
+            Margin="0, 7, 0, 0"
+            Command="{Binding CreateCommand}"
+            IsEnabled="{Binding CanCreate}"
+            Grid.Row="3"
+            VerticalAlignment="Center"/>
+
+
+    </Grid>
+</modals:Modal>

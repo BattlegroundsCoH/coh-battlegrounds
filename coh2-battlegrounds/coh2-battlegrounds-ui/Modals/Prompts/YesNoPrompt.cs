@@ -17,7 +17,7 @@ public delegate void YesNoPromptCallback(YesNoPrompt sender, ModalDialogResult d
 /// <summary>
 /// Class representing a yes/no prompt.
 /// </summary>
-public class YesNoPrompt {
+public sealed class YesNoPrompt {
 
     /// <summary>
     /// Get the prompt title.

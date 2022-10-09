@@ -5,42 +5,62 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows;
 
-using Battlegrounds;
 using Battlegrounds.DataLocal;
-using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Misc.Values;
-using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content.Companies;
-using Battlegrounds.UI;
-using Battlegrounds.UI.Modals;
+using Battlegrounds.Modding;
 using Battlegrounds.UI.Modals.Prompts;
+using Battlegrounds.UI.Modals;
+using Battlegrounds.UI;
+using Battlegrounds.Editor.Components;
+using Battlegrounds.Editor.Modals;
+using Battlegrounds.Functional;
 
-using BattlegroundsApp.Modals;
-using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
-using BattlegroundsApp.MVVM;
+namespace Battlegrounds.Editor.Pages;
 
-namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
+using static Battlegrounds.UI.AppContext;
 
-public delegate void CompanyBuilderViewModelEvent(object sender, CompanyBuilderViewModel companyBuilderViewModel, object? args = null);
+/// <summary>
+/// 
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="companyBuilderViewModel"></param>
+/// <param name="args"></param>
+public delegate void CompanyBuilderViewModelEvent(object sender, CompanyEditor companyBuilderViewModel, object? args = null);
 
+/// <summary>
+/// 
+/// </summary>
+/// <param name="Click"></param>
+/// <param name="Text"></param>
+/// <param name="Tooltip"></param>
 public record CompanyBuilderButton(ICommand Click, LocaleKey? Text, LocaleKey? Tooltip);
 
+/// <summary>
+/// 
+/// </summary>
+/// <param name="Click"></param>
+/// <param name="Tooltip"></param>
+/// <param name="VisibleFetcher"></param>
 public record CompanyBuilderButton2(ICommand Click, LocaleKey? Tooltip, Func<Visibility> VisibleFetcher) {
     public Visibility Visibility {
         get => this.VisibleFetcher();
     }
 }
 
-public class CompanyBuilderViewModel : ViewModelBase {
+/// <summary>
+/// 
+/// </summary>
+public sealed class CompanyEditor : ViewModelBase {
 
     public override bool KeepAlive => false;
 
@@ -60,22 +80,22 @@ public class CompanyBuilderViewModel : ViewModelBase {
     private readonly List<SquadBlueprint> m_availableSquads;
     private readonly List<AbilityBlueprint> m_abilities;
 
-    public ObservableCollection<AvailableItemViewModel> AvailableItems { get; set; }
+    public ObservableCollection<AvailableItem> AvailableItems { get; set; }
 
-    public List<AvailableItemViewModel> AvailableInfantrySquads { get; }
-    public List<AvailableItemViewModel> AvailableSupportSquads { get; }
-    public List<AvailableItemViewModel> AvailableVehicleSquads { get; }
-    public List<AvailableItemViewModel> AvailableLeaderSquads { get; }
-    public List<AvailableItemViewModel> AvailableAbilities { get; }
+    public List<AvailableItem> AvailableInfantrySquads { get; }
+    public List<AvailableItem> AvailableSupportSquads { get; }
+    public List<AvailableItem> AvailableVehicleSquads { get; }
+    public List<AvailableItem> AvailableLeaderSquads { get; }
+    public List<AvailableItem> AvailableAbilities { get; }
 
-    public ObservableCollection<SquadSlotViewModel> CompanyInfantrySquads { get; set; }
-    public ObservableCollection<SquadSlotViewModel> CompanySupportSquads { get; set; }
-    public ObservableCollection<SquadSlotViewModel> CompanyVehicleSquads { get; set; }
-    public ObservableCollection<SquadSlotViewModel> CompanyLeaderSquads { get; set; }
+    public ObservableCollection<SquadSlot> CompanyInfantrySquads { get; set; }
+    public ObservableCollection<SquadSlot> CompanySupportSquads { get; set; }
+    public ObservableCollection<SquadSlot> CompanyVehicleSquads { get; set; }
+    public ObservableCollection<SquadSlot> CompanyLeaderSquads { get; set; }
 
-    public ObservableCollection<AbilitySlotViewModel> CompanyAbilities { get; set; }
-    public ObservableCollection<AbilitySlotViewModel> CompanyUnitAbilities { get; set; }
-    public ObservableCollection<EquipmentSlotViewModel> CompanyEquipment { get; set; }
+    public ObservableCollection<AbilitySlot> CompanyAbilities { get; set; }
+    public ObservableCollection<AbilitySlot> CompanyUnitAbilities { get; set; }
+    public ObservableCollection<EquipmentSlot> CompanyEquipment { get; set; }
 
     public CompanyBuilder Builder => this.m_builder ?? throw new Exception("Expected a valid instance of a company builder but found none (Invalid call tree!)");
 
@@ -146,7 +166,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         set => this.m_builder?.SetAutoReinforce(value);
     }
 
-    private CompanyBuilderViewModel(ModGuid guid) {
+    private CompanyEditor(ModGuid guid) {
 
         // Create save
         this.Save = new(new RelayCommand(this.SaveButton), null, null);
@@ -221,7 +241,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     }
 
-    public CompanyBuilderViewModel(Company company) : this(company.TuningGUID) {
+    public CompanyEditor(Company company) : this(company.TuningGUID) {
 
         // Set company information
         this.m_builder = CompanyBuilder.EditCompany(company);
@@ -241,7 +261,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     }
 
-    public CompanyBuilderViewModel(string companyName, Faction faction, FactionCompanyType type, ModGuid modGuid) : this(modGuid) {
+    public CompanyEditor(string companyName, Faction faction, FactionCompanyType type, ModGuid modGuid) : this(modGuid) {
 
         // Set properties
         this.m_builder = CompanyBuilder.NewCompany(companyName, type, CompanyAvailabilityType.MultiplayerOnly, faction, modGuid);
@@ -295,7 +315,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         } catch (Exception e) {
 
             // Log error
-            Trace.WriteLine(e, nameof(CompanyBrowserViewModel));
+            Trace.WriteLine(e, nameof(CompanyEditor));
 
             // Set not saved
             this.SaveStatus = 0;
@@ -317,37 +337,40 @@ public class CompanyBuilderViewModel : ViewModelBase {
             return;
         }
 
+        // Get view manager
+        var viewManager = GetViewManager();
+
         // Check if any changes were applied
         if (this.Builder.IsChanged) {
-            if (App.Views.GetRightsideModalControl() is not ModalControl mc) {
-                App.Views.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
+            if (viewManager.GetRightsideModalControl() is not ModalControl mc) {
+                viewManager.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
                 return;
             }
             YesNoPrompt.Show(mc, (_, res) => {
                 if (res is not ModalDialogResult.Cancel) {
 
                     // Then goback
-                    App.Views.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
+                    viewManager.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
 
                 }
             }, "Unsaved Changes", "You have unsaved changes that will be lost if you leave the company builder. Are you sure you want to leave?");
         } else {
 
             // Then goback
-            App.Views.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
+            viewManager.UpdateDisplay(AppDisplayTarget.Right, new(this.ReturnTo));
 
         }
 
     }
 
-    private void FillAvailableItemSlot<TBlueprint>(IEnumerable<TBlueprint> source, List<AvailableItemViewModel> target) where TBlueprint : Blueprint {
+    private void FillAvailableItemSlot<TBlueprint>(IEnumerable<TBlueprint> source, List<AvailableItem> target) where TBlueprint : Blueprint {
 
         foreach (var element in source) {
 
-            var slot = new AvailableItemViewModel(element, this.OnItemAddClicked, this.OnItemMove, this.CanAddBlueprint);
+            var slot = new AvailableItem(element, this.OnItemAddClicked, this.OnItemMove, this.CanAddBlueprint);
 
             target.Add(slot);
- 
+
         }
 
     }
@@ -439,9 +462,9 @@ public class CompanyBuilderViewModel : ViewModelBase {
     private void AddUnitToDisplay(UnitBuilder builder) {
 
         // Create display
-        SquadSlotViewModel unitSlot = new(builder, this.Builder.CompanyType, this.OnUnitClicked, this.OnUnitRemoveClicked);
+        SquadSlot unitSlot = new(builder, this.Builder.CompanyType, this.OnUnitClicked, this.OnUnitRemoveClicked);
         unitSlot.PropertyChanged += (sender, args) => {
-            if (args.PropertyName is nameof(SquadSlotViewModel.SquadPhase)) { // Refresh order 
+            if (args.PropertyName is nameof(SquadSlot.SquadPhase)) { // Refresh order 
                 var collection = GetUnitCollection(builder);
                 var backup = collection.ToArray();
                 collection.Clear();
@@ -459,7 +482,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     }
 
-    private ObservableCollection<SquadSlotViewModel> GetUnitCollection(UnitBuilder builder) => builder.Blueprint.Category switch {
+    private ObservableCollection<SquadSlot> GetUnitCollection(UnitBuilder builder) => builder.Blueprint.Category switch {
         SquadCategory.Infantry => this.CompanyInfantrySquads,
         SquadCategory.Support => this.CompanySupportSquads,
         SquadCategory.Vehicle => this.CompanyVehicleSquads,
@@ -485,7 +508,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
     private void AddAbilityToDisplay(Ability ability, bool isUnitAbility) {
 
         // Create display
-        AbilitySlotViewModel abilitySlot = new(ability, this.OnAbilityClicked, this.OnAbilityRemoveClicked);
+        AbilitySlot abilitySlot = new(ability, this.OnAbilityClicked, this.OnAbilityRemoveClicked);
 
         // If is unit ability, then update
         if (isUnitAbility) {
@@ -503,24 +526,24 @@ public class CompanyBuilderViewModel : ViewModelBase {
     private void AddEquipmentToDisplay(CompanyItem item) {
 
         // Create display
-        var equipmentSlot = new EquipmentSlotViewModel(item, this.OnEquipmentClicked, this.CanEquipItem);
+        var equipmentSlot = new EquipmentSlot(item, this.OnEquipmentClicked, this.CanEquipItem);
 
         // Add to equipment list
         this.CompanyEquipment.Add(equipmentSlot);
 
     }
 
-    private void OnUnitClicked(object sender, SquadSlotViewModel squadViewModel) {
+    private void OnUnitClicked(object sender, SquadSlot squadViewModel) {
 
         // Create options view model
-        var model = new SquadOptionsViewModel(squadViewModel, this.Builder);
+        var model = new SquadSettings(squadViewModel, this.Builder);
 
         // Display modal
-        App.Views.GetRightsideModalControl()?.ShowModal(model);
+        GetRightsideModalControl().ShowModal(model);
 
     }
 
-    private void OnUnitRemoveClicked(object sender, SquadSlotViewModel squadSlot) {
+    private void OnUnitRemoveClicked(object sender, SquadSlot squadSlot) {
 
         // Grab squad
         var unitBuilder = squadSlot.BuilderInstance;
@@ -530,7 +553,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
         // Remove view model
         this.GetUnitCollection(unitBuilder).Remove(squadSlot);
-        
+
         // Refresh capacities
         this.UnitCapacity.Update(this);
         this.GetUnitCapacity(unitBuilder).Update(this);
@@ -541,11 +564,11 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     }
 
-    private void OnAbilityClicked(object sender, AbilitySlotViewModel abilityViewModel) {
+    private void OnAbilityClicked(object sender, AbilitySlot abilityViewModel) {
 
     }
 
-    private void OnAbilityRemoveClicked(object sender, AbilitySlotViewModel abilitySlot) {
+    private void OnAbilityRemoveClicked(object sender, AbilitySlot abilitySlot) {
 
         // Grab ability
         var ability = abilitySlot.AbilityInstance;
@@ -555,13 +578,13 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
         // Remove view model
         this.CompanyAbilities.Remove(abilitySlot);
-        
+
         // Loop over items and refresh (Expensive call!)
         this.UpdateAvailableItems();
 
     }
 
-    private void OnItemAddClicked(object sender, AvailableItemViewModel itemBlueprint, object? arg) {
+    private void OnItemAddClicked(object sender, AvailableItem itemBlueprint, object? arg) {
 
         if (itemBlueprint.Blueprint is SquadBlueprint sbp) {
 
@@ -573,10 +596,10 @@ public class CompanyBuilderViewModel : ViewModelBase {
             // Trigger new ability
             this.NewAbility(abp);
         }
-        
+
     }
 
-    private bool CanEquipItem(EquipmentSlotViewModel equipmentSlot) {
+    private bool CanEquipItem(EquipmentSlot equipmentSlot) {
         if (equipmentSlot.Item.Item is SquadBlueprint sbp) {
             return sbp.Category switch {
                 SquadCategory.Infantry => !this.InfantryCapacity.IsAtCapacity,
@@ -590,7 +613,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
         return false;
     }
 
-    private void OnEquipmentClicked(EquipmentSlotViewModel equipmentSlot) {
+    private void OnEquipmentClicked(EquipmentSlot equipmentSlot) {
 
         try {
 
@@ -627,7 +650,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     }
 
-    private void OnItemMove(object sender, AvailableItemViewModel itemSlot, object? arg) {
+    private void OnItemMove(object sender, AvailableItem itemSlot, object? arg) {
 
         if (arg is MouseEventArgs mEvent) {
 
@@ -654,7 +677,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     }
 
-    private void OnItemDrop(object sender, CompanyBuilderViewModel squadSlot, object? arg) {
+    private void OnItemDrop(object sender, CompanyEditor _, object? arg) {
 
         if (arg is DragEventArgs dEvent) {
 
@@ -684,7 +707,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     private bool CanAddBlueprint(Blueprint bp) {
         if (bp is SquadBlueprint sbp) {
-            
+
             // Collect initial data
             var role = this.Builder.CompanyType.GetUnitRole(sbp);
             int roleCount = this.Builder.CountUnitsInRole(role);
@@ -761,7 +784,7 @@ public class CompanyBuilderViewModel : ViewModelBase {
 
     }
 
-    private void OnTabChange(object sender, CompanyBuilderViewModel squadSlot, object? arg) {
+    private void OnTabChange(object sender, CompanyEditor _, object? arg) {
 
         if (arg is SelectionChangedEventArgs sEvent) {
 
@@ -842,17 +865,20 @@ public class CompanyBuilderViewModel : ViewModelBase {
     }
 
     public override void UnloadViewModel(OnModelClosed closeCallback, bool destroy) {
-        
+
+        // Get view
+        var vm = GetViewManager(); // TODO: 'UnloadViewModel' should probably return the view manager with it...
+
         // Destroy if requested
         if (destroy) {
-            App.Views.DestroyView(this);
+            vm.DestroyView(this);
         }
-        
+
         // Check if any changes
         if (this.HasChanges) {
 
             // If modal control not found, bail
-            if (App.Views.GetRightsideModalControl() is not ModalControl mc) {
+            if (GetRightsideModalControl() is not ModalControl mc) {
                 closeCallback(false);
                 return;
             }
@@ -861,9 +887,9 @@ public class CompanyBuilderViewModel : ViewModelBase {
             YesNoPrompt.Show(mc, (_, res) => {
                 closeCallback(res is ModalDialogResult.Cancel);
             }, "Unsaved Changes", "You have unsaved changes that will be lost if you leave the company builder. Are you sure you want to leave?");
-        
+
         } else {
-            
+
             // Invoke callback now
             closeCallback(false);
 

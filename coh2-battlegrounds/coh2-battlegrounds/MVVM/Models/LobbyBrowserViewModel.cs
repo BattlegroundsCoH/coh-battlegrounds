@@ -345,15 +345,15 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         lobbyModel.SetChatModel(chatMode);
 
         // Display it
-        App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
-        App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
+        App.Views.UpdateDisplay(AppDisplayTarget.Left, chatMode);
+        App.Views.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
 
     }
 
     public void HostButton() {
 
         // Null check
-        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+        if (App.Views.GetModalControl() is not ModalControl mControl) {
             Trace.WriteLine("Failed to show host modal (No Modal Control)", nameof(LobbyBrowserViewModel));
             return;
         }
@@ -410,8 +410,8 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
                 lobbyModel.SetChatModel(chatMode);
 
                 // Display it
-                App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
-                App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
+                App.Views.UpdateDisplay(AppDisplayTarget.Left, chatMode);
+                App.Views.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
 
             });
 
@@ -451,7 +451,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
             if (lobby.IsPasswrodProtected) {
 
                 // Null check
-                if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+                if (App.Views.GetModalControl() is not ModalControl mControl) {
                     return;
                 }
 
@@ -500,8 +500,8 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
                 lobbyModel.SetChatModel(chatMode);
 
                 // Display it
-                App.ViewManager.UpdateDisplay(AppDisplayTarget.Left, chatMode);
-                App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
+                App.Views.UpdateDisplay(AppDisplayTarget.Left, chatMode);
+                App.Views.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
 
             });
 

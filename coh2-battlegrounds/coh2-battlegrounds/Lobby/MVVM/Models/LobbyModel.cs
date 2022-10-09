@@ -208,7 +208,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         // Check if a destroy command is requested.
         if (requestDestroyed) {
             // Destroy this isntance (to avoid annoying stuff, like trying to reconnect to an existing one...)
-            App.ViewManager.DestroyView(this);
+            App.Views.DestroyView(this);
         }
 
         // use default here, since we cannot exit unless exit lobby button is pressed or hard exit
@@ -235,7 +235,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             };
 
             // Set RHS
-            App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, builder, false);
+            App.Views.UpdateDisplay(AppDisplayTarget.Right, builder, false);
 
             // Inform others
             if (this.GetSelf() is ILobbySlot self && self.Occupant is not null) {
@@ -289,7 +289,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         var planner = new LobbyPlanningOverviewModel(new(this, this.m_chatModel, this.m_handle));
 
         // Set RHS
-        App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, planner, false);
+        App.Views.UpdateDisplay(AppDisplayTarget.Right, planner, false);
 
         // Inform others
         if (this.GetSelf() is ILobbySlot self && self.Occupant is not null) {
@@ -315,11 +315,11 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
             Task.Run(this.m_handle.CloseHandle);
 
             // Go back to browser view
-            App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
+            App.Views.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
 
             // Destroy chat
             if (this.m_chatModel is not null) {
-                App.ViewManager.DestroyView(this.m_chatModel);
+                App.Views.DestroyView(this.m_chatModel);
             }
 
         }, __leaveTitle, __leaveDesc);
@@ -428,7 +428,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
     private void OnConnectionLost(string reason) {
 
         // Null check
-        if (App.ViewManager.GetModalControl() is not ModalControl mControl) {
+        if (App.Views.GetModalControl() is not ModalControl mControl) {
             return;
         }
 
@@ -463,11 +463,11 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
                 }
 
                 // Go back to browser view
-                App.ViewManager.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
+                App.Views.SetDisplay(AppDisplayState.LeftRight, typeof(LeftMenu), typeof(LobbyBrowserViewModel));
 
                 // Destroy chat
                 if (this.m_chatModel is not null) {
-                    App.ViewManager.DestroyView(this.m_chatModel);
+                    App.Views.DestroyView(this.m_chatModel);
                 }
 
             }, modalTitle, modalDesc);

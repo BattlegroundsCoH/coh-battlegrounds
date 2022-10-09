@@ -113,7 +113,7 @@ public class LobbyParticipantModel : LobbyModel {
                 case "lobby":
 
                     // Change our view back to this
-                    App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, this);
+                    App.Views.UpdateDisplay(AppDisplayTarget.Right, this);
 
                     break;
                 default:

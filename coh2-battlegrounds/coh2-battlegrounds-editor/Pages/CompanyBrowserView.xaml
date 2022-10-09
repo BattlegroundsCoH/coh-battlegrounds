@@ -1,16 +1,19 @@
-﻿<UserControl x:Class="BattlegroundsApp.CompanyEditor.MVVM.Views.CompanyBrowserView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.MVVM.Views"
-             xmlns:ui="clr-namespace:Battlegrounds.UI;assembly=coh2-battlegrounds-ui"
-             xmlns:uiloc="clr-namespace:Battlegrounds.UI.Converters.Locale;assembly=coh2-battlegrounds-ui"
-             xmlns:uinum="clr-namespace:Battlegrounds.UI.Converters.Numeric;assembly=coh2-battlegrounds-ui"
-             xmlns:uiico="clr-namespace:Battlegrounds.UI.Converters.Icons;assembly=coh2-battlegrounds-ui"
-             xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
-             mc:Ignorable="d" Background="#273441"
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl 
+    x:Class="Battlegrounds.Editor.Pages.CompanyBrowserView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:Battlegrounds.Editor.Pages"
+    xmlns:ui="clr-namespace:Battlegrounds.UI;assembly=coh2-battlegrounds-ui"
+    xmlns:uiloc="clr-namespace:Battlegrounds.UI.Converters.Locale;assembly=coh2-battlegrounds-ui"
+    xmlns:uinum="clr-namespace:Battlegrounds.UI.Converters.Numeric;assembly=coh2-battlegrounds-ui"
+    xmlns:uiico="clr-namespace:Battlegrounds.UI.Converters.Icons;assembly=coh2-battlegrounds-ui"
+    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=coh2-battlegrounds-ui"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" 
+    d:DesignWidth="800"
+    Background="{StaticResource BackgroundBlueBrush}">
     <Grid>
 
         <Grid.Resources>
@@ -43,9 +46,9 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-        
+
         <!-- Row 0 -->
-        <controls:LocLabel
+        <controls:LocalisedLabel
             LocKey="CompanyView_Title"
             Foreground="#d8dbde"
             FontSize="28"
@@ -141,7 +144,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        
+
         <!-- Do not delete this, it's used for fitting sizes -->
         <Grid Visibility="Hidden"
               Grid.Row="1"
@@ -158,11 +161,11 @@
             <Grid x:Name="firstColumnSize"
                   Grid.Column="1"/>
         </Grid>
-        
+
         <!-- Row 2 -->
         <Separator Grid.Row="2" Grid.ColumnSpan="8"
                    Margin="15, 5, 15, 5"/>
-        
+
         <!-- Row 3 -->
         <Button x:Name="createCompanyButton"
                 Grid.Row="3"
@@ -172,7 +175,7 @@
                 Command="{Binding Create.Click}"
                 Style="{StaticResource StandardBlueLocButton}"
                 Width="100"/>
-        
+
         <Button x:Name="editCompanyButton"
                 Grid.Row="3"
                 Grid.Column="2"

@@ -7,4 +7,14 @@
         <prompts:YesNoPromptView/>
     </DataTemplate>
     
+    <!-- Rename Prompt -->
+    <DataTemplate DataType="{x:Type prompts:RenamePrompt}">
+        <prompts:RenamePromptView/>
+    </DataTemplate>
+
+    <!-- OK Prompt -->
+    <DataTemplate DataType="{x:Type prompts:OKPrompt}">
+        <prompts:OKPromptView/>
+    </DataTemplate>
+
 </ResourceDictionary>

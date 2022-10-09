@@ -253,7 +253,7 @@ public class StartupViewModel : INotifyPropertyChanged {
         this.m_closeCallback?.Invoke();
 
         // Close modal
-        App.ViewManager.GetModalControl()?.CloseModal();
+        App.Views.GetModalControl()?.CloseModal();
 
     }
 

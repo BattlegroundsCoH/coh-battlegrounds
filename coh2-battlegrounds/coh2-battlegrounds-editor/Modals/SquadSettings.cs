@@ -3,24 +3,31 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Input;
 
-using Battlegrounds;
-using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+
 using Battlegrounds.Locale;
+
 using Battlegrounds.Misc.Values;
+
 using Battlegrounds.Resources;
+
 using Battlegrounds.UI;
+using Battlegrounds.UI.Modals;
 
-namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
+using Battlegrounds.Editor.Components;
 
-public class SquadOptionsViewModel : INotifyPropertyChanged {
+using Battlegrounds.Functional;
+
+namespace Battlegrounds.Editor.Modals;
+
+public class SquadSettings : ModalBase, INotifyPropertyChanged {
 
     public record AbilityButton(AbilityBlueprint Abp) {
         public ImageSource? Icon => ResourceHandler.GetIcon("ability_icons", this.Abp.UI.Icon);
@@ -79,7 +86,7 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     public CompanyBuilder CompanyBuilder { get; }
 
-    public SquadSlotViewModel TriggerModel { get; }
+    public SquadSlot TriggerModel { get; }
 
     public string UnitName => GameLocale.GetString(this.BuilderInstance.GetName());
 
@@ -159,8 +166,8 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
 
     public bool CanSetStartingVisual => this.IsStarting || this.CanSetStarting;
 
-    public SquadOptionsViewModel(SquadSlotViewModel triggerer, CompanyBuilder companyBuilder) {
-        
+    public SquadSettings(SquadSlot triggerer, CompanyBuilder companyBuilder) {
+
         // Store trigger and instance refs
         this.TriggerModel = triggerer;
         this.BuilderInstance = triggerer.BuilderInstance;
@@ -270,7 +277,7 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
                     bp.Update();
                 }
             }
-        } 
+        }
 
         // Refresh all settings
         foreach (var method in this.DeploySettings) {
@@ -335,9 +342,9 @@ public class SquadOptionsViewModel : INotifyPropertyChanged {
     /// <summary>
     /// 
     /// </summary>
-    public void CloseModal() {
+    public new void CloseModal() {
         this.OnClose();
-        App.Views.GetRightsideModalControl()?.CloseModal();
+        base.CloseModal();
     }
 
     /// <summary>

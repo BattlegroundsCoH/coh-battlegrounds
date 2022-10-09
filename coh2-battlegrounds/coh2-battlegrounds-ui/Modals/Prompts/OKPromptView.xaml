@@ -1,0 +1,59 @@
+﻿<modals:Modal  
+    xmlns:modals="clr-namespace:Battlegrounds.UI.Modals"
+    x:Class="Battlegrounds.UI.Modals.Prompts.OKPromptView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:Battlegrounds.UI.Modals.Prompts"
+    mc:Ignorable="d" 
+    d:DesignHeight="225" 
+    d:DesignWidth="450" 
+    Background="{StaticResource BackgroundDarkBlueBrush}">
+    <Grid Width="450" Height="225">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Row 0 :: Title -->
+        <Label Grid.Column="0"
+               Grid.Row="0"
+               Content="{Binding DialogTitle, FallbackValue='OK Title'}"
+               VerticalContentAlignment="Center"
+               HorizontalContentAlignment="Center"
+               Foreground="#EEE"
+               FontSize="22"
+               FontWeight="DemiBold"
+               FontFamily="Open Sans"
+               Margin="0, 25, 0, 25"/>
+
+        <!-- Row 1 :: Content -->
+        <StackPanel Grid.Column="0"
+                    Grid.Row="1"
+                    Orientation="Vertical"
+                    HorizontalAlignment="Center"
+                    Width="350">
+
+            <TextBlock Margin="0, 0, 0, 7"
+                       Text="{Binding DialogMessage, FallbackValue='OK Descriptive Message'}"
+                       Foreground="#EEE"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center"
+                       FontSize="14"/>
+
+            <Button Content="OKDialogView_OK"
+                    Style="{StaticResource StandardBlueLocButton}"
+                    Command="{Binding OKCommand}" 
+                    Width="100"
+                    Margin="0, 7, 0, 0"/>
+
+        </StackPanel>
+
+    </Grid>
+</modals:Modal>

@@ -1,27 +1,24 @@
-﻿
+﻿using System;
+using System.Diagnostics;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
+
+using Battlegrounds.Editor.Modals;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Locale;
+
 using Battlegrounds.UI;
 using Battlegrounds.UI.Modals;
 using Battlegrounds.UI.Modals.Prompts;
 
-using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
-
-using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Input;
-
 using static Battlegrounds.DataLocal.Companies;
+using static Battlegrounds.UI.AppContext;
 
-namespace BattlegroundsApp.CompanyEditor.MVVM.Models;
+namespace Battlegrounds.Editor.Pages;
 
-public class CompanyBrowserButton {
-    public ICommand? Click { get; init; }
-    public LocaleKey? Tooltip { get; init; }
-}
+public record CompanyBrowserButton(ICommand? Click, LocaleKey? Tooltip = null);
 
-public class CompanyBrowserViewModel : ViewModelBase {
+public class CompanyBrowser : ViewModelBase {
 
     public CompanyBrowserButton Create { get; }
 
@@ -57,44 +54,30 @@ public class CompanyBrowserViewModel : ViewModelBase {
 
     public override bool KeepAlive => true;
 
-    public CompanyBrowserViewModel() {
+    public CompanyBrowser() {
 
         // TODO: Change the LOCALE strings names to 'CompanyBrowserView_...'
 
         // Create create
-        this.Create = new() {
-            Click = new RelayCommand(this.CreateButton)
-        };
+        this.Create = new(new RelayCommand(this.CreateButton));
 
         // Create edit
-        this.Edit = new() {
-            Click = new RelayCommand(this.EditButton)
-        };
+        this.Edit = new(new RelayCommand(this.EditButton));
 
         // Create rename
-        this.Rename = new() {
-            Click = new RelayCommand(this.RenameButton)
-        };
+        this.Rename = new(new RelayCommand(this.RenameButton));
 
         // Create delete
-        this.Delete = new() {
-            Click = new RelayCommand(this.DeleteButton)
-        };
+        this.Delete = new(new RelayCommand(this.DeleteButton));
 
         // Create copy
-        this.Copy = new() {
-            Click = new RelayCommand(this.CopyButton)
-        };
+        this.Copy = new(new RelayCommand(this.CopyButton));
 
         // Create export
-        this.Export = new() {
-            Click = new RelayCommand(this.ExportButton)
-        };
+        this.Export = new(new RelayCommand(this.ExportButton));
 
         // Create import
-        this.Import = new() {
-            Click = new RelayCommand(this.ImportButton)
-        };
+        this.Import = new(new RelayCommand(this.ImportButton));
 
         // Create double-click
         this.EditCompanyDirectly = new EventCommand<MouseButtonEventArgs>(this.EditCompany);
@@ -113,14 +96,9 @@ public class CompanyBrowserViewModel : ViewModelBase {
 
     public void CreateButton() {
 
-        // Null check
-        if (App.Views.GetModalControl() is not ModalControl mControl) {
-            return;
-        }
-
         // Do modal
-        CreateCompanyDialogViewModel.ShowModal(mControl, (vm, result) => {
-            
+        CreateCompany.Show((vm, result) => {
+
             // Check return value
             if (result is not ModalDialogResult.Confirm) {
                 return;
@@ -128,15 +106,15 @@ public class CompanyBrowserViewModel : ViewModelBase {
 
             // Check return value
             if (vm.SelectedType.Type is null) {
-                Trace.WriteLine($"Fatal error: Tried to create new company with no valid type: '{vm.SelectedType.Name}'", nameof(CompanyBrowserViewModel));
+                Trace.WriteLine($"Fatal error: Tried to create new company with no valid type: '{vm.SelectedType.Name}'", nameof(CompanyBrowser));
                 return;
             }
 
             // Create view model
-            CompanyBuilderViewModel companyBuilder = new CompanyBuilderViewModel(vm.SelectedName, vm.SelectedFaction.Self, vm.SelectedType.Type, vm.Package.TuningGUID);
+            CompanyEditor editor = new CompanyEditor(vm.SelectedName, vm.SelectedFaction.Self, vm.SelectedType.Type, vm.Package.TuningGUID);
 
             // Display it
-            App.Views.UpdateDisplay(AppDisplayTarget.Right, companyBuilder);
+            GetViewManager().UpdateDisplay(AppDisplayTarget.Right, editor);
 
         });
 
@@ -150,7 +128,7 @@ public class CompanyBrowserViewModel : ViewModelBase {
         }
 
         // Goto edit view
-        App.Views.UpdateDisplay(AppDisplayTarget.Right, new CompanyBuilderViewModel(SelectedCompany));
+        GetViewManager().UpdateDisplay(AppDisplayTarget.Right, new CompanyEditor(SelectedCompany));
 
     }
 
@@ -160,13 +138,8 @@ public class CompanyBrowserViewModel : ViewModelBase {
         if (this.SelectedCompany is null)
             return;
 
-        // Null check
-        if (App.Views.GetModalControl() is not ModalControl mControl) {
-            return;
-        }
-
         // Do rename modal
-        RenameDialogViewModel.ShowModal(mControl, "Rename Company", x => {
+        RenamePrompt.Show("Rename Company", (_, _, x) => {
 
             // Delete old company
             DeleteCompany(this.SelectedCompany);
@@ -211,13 +184,8 @@ public class CompanyBrowserViewModel : ViewModelBase {
         if (this.SelectedCompany is null)
             return;
 
-        // Null check
-        if (App.Views.GetModalControl() is not ModalControl mControl) {
-            return;
-        }
-
         // Do rename modal
-        RenameDialogViewModel.ShowModal(mControl, "Copy Company", x => {
+        RenamePrompt.Show("Copy Company", (_, _, x) => {
 
             // 'edit' company but immediately commit and save result
             SaveCompany(CompanyBuilder.EditCompany(this.SelectedCompany).ChangeName(x).Commit().Result);
@@ -235,25 +203,15 @@ public class CompanyBrowserViewModel : ViewModelBase {
         if (this.SelectedCompany is null)
             return;
 
-        // Null check
-        if (App.Views.GetModalControl() is not ModalControl mControl) {
-            return;
-        }
-
         // Show export
-        ImportExportCompanyDialogViewModel.ShowExport(mControl, "Export Company", CompanyTemplate.FromCompany(this.SelectedCompany).ToString(), this.SelectedCompany.Name);
+        ImportExport.ShowExport("Export Company", CompanyTemplate.FromCompany(this.SelectedCompany).ToString(), this.SelectedCompany.Name);
 
     }
 
     public void ImportButton() {
 
-        // Null check
-        if (App.Views.GetModalControl() is not ModalControl mControl) {
-            return;
-        }
-
         // Do import
-        ImportExportCompanyDialogViewModel.ShowImport(mControl, "Import Company", (name, template) => {
+        ImportExport.ShowImport("Import Company", (name, template) => {
 
             try {
 
@@ -272,11 +230,11 @@ public class CompanyBrowserViewModel : ViewModelBase {
                 }
 
             } catch (Exception e) { // Catch any error
-                Trace.WriteLine(e, nameof(CompanyBrowserViewModel));
+                Trace.WriteLine(e, nameof(CompanyBrowser));
             }
 
             // Catch all situation
-            OKDialogViewModel.ShowModal(mControl, (_, _) => { }, "Import Failed", "Failed to create company from the given template string (Error dumped to log).");
+            OKPrompt.Show(OKPrompt.Nothing, "Import Failed", "Failed to create company from the given template string (Error dumped to log).");
 
         });
 

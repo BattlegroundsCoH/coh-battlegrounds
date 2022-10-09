@@ -163,6 +163,9 @@ public sealed class ModalControl : UserControl {
         if (content is Modal templatedModal) {
             templatedModal.DataContext = modal;
             this.ShowModal(templatedModal);
+            if (modal is ModalBase mBase) {
+                mBase.ShowModal(this);
+            }
             return;
         }
 
@@ -214,6 +217,10 @@ public sealed class ModalControl : UserControl {
         if (!this.IsModalActive) {
             return;
         }
+
+        // Inform the modal base it's being closed
+        if (this.m_currentModal is Modal m && m.DataContext is ModalBase mb)
+            mb.CloseModal();
 
         // Remove reference to current modal
         this.m_currentModal = null;

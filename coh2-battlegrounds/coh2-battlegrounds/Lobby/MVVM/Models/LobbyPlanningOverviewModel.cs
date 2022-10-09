@@ -363,7 +363,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         } else {
             
             // Change our view
-            App.ViewManager.UpdateDisplay(AppDisplayTarget.Right, this.m_data.Model);
+            App.Views.UpdateDisplay(AppDisplayTarget.Right, this.m_data.Model);
 
             // Inform members to change back
             this.m_data.Handle.NotifyScreen("lobby");
@@ -506,7 +506,7 @@ public class LobbyPlanningOverviewModel : ViewModelBase {
         if (requestDestroyed) {
 
             // Destroy this isntance (to avoid annoying stuff, like trying to reconnect to an existing one...)
-            App.ViewManager.DestroyView(this);
+            App.Views.DestroyView(this);
 
         }
 
