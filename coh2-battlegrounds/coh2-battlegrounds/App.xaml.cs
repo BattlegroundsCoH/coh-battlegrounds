@@ -25,10 +25,10 @@ using Battlegrounds.DataLocal;
 using Battlegrounds.DataLocal.Generator;
 
 using BattlegroundsApp.MVVM.Models;
-using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
 using BattlegroundsApp.Modals.Startup.MVVM.Models;
 using BattlegroundsApp.Modals.DownloadInProgress.MVVM.Models;
+using Battlegrounds.Editor.Pages;
 
 namespace BattlegroundsApp;
 
@@ -43,7 +43,7 @@ public partial class App : Application, IResourceResolver, IViewController {
     private static SettingsViewModel? __settings;
     private static DashboardViewModel? __dashboard;
     private static LobbyBrowserViewModel? __lobbyBrowser;
-    private static CompanyBrowserViewModel? __companyBrowser;
+    private static CompanyBrowser? __companyBrowser;
 
     public static AppViewManager Views 
         => IsStarted ? __viewManager : throw new InvalidOperationException("Cannot get view manager before application window has initialised.");
@@ -228,7 +228,7 @@ public partial class App : Application, IResourceResolver, IViewController {
         __dashboard!.UpdateSteamUser();
 
         // Create other views that are directly accessible from LHS
-        __companyBrowser = __viewManager.CreateDisplayIfNotFound<CompanyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create company browser view model!");
+        __companyBrowser = __viewManager.CreateDisplayIfNotFound<CompanyBrowser>(() => new()) ?? throw new Exception("Failed to create company browser view model!");
         __lobbyBrowser = __viewManager.CreateDisplayIfNotFound<LobbyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create lobby browser view model!");
         __settings = __viewManager.CreateDisplayIfNotFound<SettingsViewModel>(() => new()) ?? throw new Exception("Failed to create settings view model!");
 

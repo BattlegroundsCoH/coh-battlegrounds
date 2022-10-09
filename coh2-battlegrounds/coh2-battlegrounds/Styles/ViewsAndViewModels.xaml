@@ -6,8 +6,6 @@
     xmlns:models="clr-namespace:BattlegroundsApp.MVVM.Models"
     xmlns:lobbyviews="clr-namespace:BattlegroundsApp.Lobby.MVVM.Views"
     xmlns:lobbymodels="clr-namespace:BattlegroundsApp.Lobby.MVVM.Models"
-    xmlns:companyEditorViews="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Views"
-    xmlns:companyEditorModels="clr-namespace:BattlegroundsApp.CompanyEditor.MVVM.Models"
     xmlns:dashboardViews="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Views"
     xmlns:dashboardModels="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Models"
     xmlns:dialogViews="clr-namespace:BattlegroundsApp.Modals.Dialogs.MVVM.Views"
@@ -45,45 +43,7 @@
         <views:LobbyBrowserView/>
     </DataTemplate>
 
-    <!-- New CompanyBrowser-View Models -->
-    <DataTemplate DataType="{x:Type companyEditorModels:CompanyBrowserViewModel}">
-        <companyEditorViews:CompanyBrowserView/>
-    </DataTemplate>
-
-    <!-- New CompanyBuilder-View Models -->
-    <DataTemplate DataType="{x:Type companyEditorModels:CompanyBuilderViewModel}">
-        <companyEditorViews:CompanyBuilderView/>
-    </DataTemplate>
-
-    <!-- Squad MVVM -->
-    <DataTemplate DataType="{x:Type companyEditorModels:SquadSlotViewModel}">
-        <companyEditorViews:SquadSlotView/>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type companyEditorModels:SquadOptionsViewModel}">
-        <companyEditorViews:SquadOptionsView/>
-    </DataTemplate>
-
-    <!-- Ability MVVM -->
-    <DataTemplate DataType="{x:Type companyEditorModels:AbilitySlotViewModel}">
-        <companyEditorViews:AbilitySlotView/>
-    </DataTemplate>
-
-    <!-- New AvailableSquad-View Models -->
-    <DataTemplate DataType="{x:Type companyEditorModels:AvailableItemViewModel}">
-        <companyEditorViews:AvailableItemView/>
-    </DataTemplate>
-
-    <!-- Item MVVM -->
-    <DataTemplate DataType="{x:Type companyEditorModels:EquipmentSlotViewModel}">
-        <companyEditorViews:EquipmentSlotView/>
-    </DataTemplate>
-
     <!-- DIALOGS START -->
-    <DataTemplate DataType="{x:Type dialogModels:CreateCompanyDialogViewModel}">
-        <dialogViews:CreateCompanyDialogView/>
-    </DataTemplate>
-
     <DataTemplate DataType="{x:Type dialogModels:HostGameDialogViewModel}">
         <dialogViews:HostGameDialogView/>
     </DataTemplate>
@@ -92,17 +52,6 @@
         <dialogViews:LobbyJoinDialogView/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type dialogModels:OKDialogViewModel}">
-        <dialogViews:OKDialogView/>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type dialogModels:RenameDialogViewModel}">
-        <dialogViews:RenameDialogView/>
-    </DataTemplate>
-    
-    <DataTemplate DataType="{x:Type dialogModels:ImportExportCompanyDialogViewModel}">
-        <dialogViews:ImportExportCompanyDialogView/>
-    </DataTemplate>
     <!-- DIALOGS END -->
 
     <DataTemplate DataType="{x:Type lobbymodels:LobbyChatSpectatorModel}">

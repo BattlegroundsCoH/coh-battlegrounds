@@ -20,6 +20,7 @@ using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.Server;
 using Battlegrounds.UI;
 using Battlegrounds.UI.Modals;
+using Battlegrounds.UI.Modals.Prompts;
 
 using BattlegroundsApp.Lobby;
 using BattlegroundsApp.Lobby.MVVM.Models;
@@ -362,7 +363,7 @@ public class LobbyBrowserViewModel : IViewModel, INotifyPropertyChanged {
         if (NetworkInterface.APIObject is null) {
 
             // Show error modal
-            OKDialogViewModel.ShowModal(mControl, (_, _) => {}, 
+            OKPrompt.Show(mControl, OKPrompt.Nothing, 
                 "Network Failure", "No network connection was established to the Battlegrounds Server (NetworkInterface.APIObject=<NULL>).");
 
         } else {

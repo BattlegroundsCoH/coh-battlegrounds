@@ -44,5 +44,10 @@
     <DataTemplate DataType="{x:Type pages:CompanyBrowser}">
         <pages:CompanyBrowserView/>
     </DataTemplate>
+
+    <!-- Company Editor Page -->
+    <DataTemplate DataType="{x:Type pages:CompanyEditor}">
+        <pages:CompanyEditorView/>
+    </DataTemplate>
     
 </ResourceDictionary>

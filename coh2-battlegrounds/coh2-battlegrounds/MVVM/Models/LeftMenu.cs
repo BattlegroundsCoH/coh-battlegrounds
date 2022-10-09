@@ -1,10 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
+using Battlegrounds.Editor.Pages;
 using Battlegrounds.Locale;
 using Battlegrounds.UI;
 
-using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Dashboard.MVVM.Models;
 
 namespace BattlegroundsApp.MVVM.Models;
@@ -96,8 +96,8 @@ public class LeftMenu : ViewModelBase {
     private void BuilderButton() {
 
         // Get browser
-        App.Views.UpdateDisplay<CompanyBrowserViewModel>(AppDisplayTarget.Right, browser => {
-            if (browser is CompanyBrowserViewModel vm) {
+        App.Views.UpdateDisplay<CompanyBrowser>(AppDisplayTarget.Right, browser => {
+            if (browser is CompanyBrowser vm) {
                 vm.UpdateCompanyList();
             }
         });

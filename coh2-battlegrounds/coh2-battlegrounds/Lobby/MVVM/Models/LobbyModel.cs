@@ -12,6 +12,7 @@ using System.Windows.Media;
 
 using Battlegrounds;
 using Battlegrounds.DataLocal;
+using Battlegrounds.Editor.Pages;
 using Battlegrounds.Game;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
@@ -26,7 +27,6 @@ using Battlegrounds.UI;
 using Battlegrounds.UI.Modals;
 using Battlegrounds.UI.Modals.Prompts;
 
-using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using BattlegroundsApp.Lobby.MVVM.Views;
 using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using BattlegroundsApp.MVVM.Models;
@@ -230,7 +230,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         if (this.TryGetSelectedCompany(out var _) is Company company) {
 
             // Create company builder
-            var builder = new CompanyBuilderViewModel(company) {
+            var builder = new CompanyEditor(company) {
                 ReturnTo = this
             };
 
@@ -455,7 +455,7 @@ public abstract class LobbyModel : IViewModel, INotifyPropertyChanged {
         Application.Current.Dispatcher.Invoke(() => {
 
             // Do modal
-            OKDialogViewModel.ShowModal(mControl, (vm, resault) => {
+            OKPrompt.Show(mControl, (vm, resault) => {
 
                 // Check return value
                 if (resault is not ModalDialogResult.Confirm) {

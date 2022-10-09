@@ -7,8 +7,8 @@ using Battlegrounds.UI;
 using Battlegrounds.UI.Modals;
 
 using BattlegroundsApp.Lobby.MVVM.Models;
-using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using Battlegrounds.UI.Modals.Prompts;
+using Battlegrounds.Editor.Pages;
 
 namespace BattlegroundsApp;
 
@@ -111,7 +111,7 @@ public partial class MainWindow : Window, IMainWindow {
                 }
             }, "Leave Lobby?", "Are you sure you want to leave the lobby?");
             return;
-        } else if (target is CompanyBuilderViewModel cb) {
+        } else if (target is CompanyEditor cb) {
             if (cb.HasChanges) {
                 e.Cancel = true;
                 YesNoPrompt.Show(this.ModalView, (_, res) => {

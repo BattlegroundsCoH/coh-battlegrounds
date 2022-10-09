@@ -116,8 +116,6 @@
 
                         <Border
                             Background="#212d3a"
-                            BorderThickness="1.5"
-                            BorderBrush="Black"
                             AllowDrop="True"
                             Drop="OnItemDrop"
                             x:Name="InfantryCanvas" 
@@ -150,9 +148,8 @@
                              Style="{StaticResource CompanyBuilderSecondaryTabItem}"
                              x:Name="SupportTab">
                         <Border
-                            BorderThickness="1.5"
-                            BorderBrush="Black"
                             Drop="OnItemDrop"
+                            AllowDrop="True"
                             x:Name="SupportCanvas"
                             ClipToBounds="True"
                             IsHitTestVisible="True"
@@ -183,8 +180,7 @@
                              Style="{StaticResource CompanyBuilderSecondaryTabItem}"
                              x:Name="VehicleTab">
                         <Border
-                            BorderThickness="1.5"
-                            BorderBrush="Black"
+                            AllowDrop="True"
                             Drop="OnItemDrop"
                             x:Name="VehicleCanvas"
                             ClipToBounds="True"
@@ -216,9 +212,8 @@
                              Style="{StaticResource CompanyBuilderSecondaryTabItem}"
                              x:Name="LeaderTab">
                         <Border
-                            BorderThickness="1.5"
-                            BorderBrush="Black"
                             Drop="OnItemDrop"
+                            AllowDrop="True"
                             x:Name="LeaderCanvas"
                             ClipToBounds="True"
                             IsHitTestVisible="True"
@@ -263,8 +258,7 @@
                              Style="{StaticResource CompanyBuilderSecondaryTabItem}"
                              x:Name="CommanderAbilityTab">
                         <Border 
-                            BorderThickness="1.5"
-                            BorderBrush="Black"
+                            AllowDrop="True"
                             Drop="OnItemDrop"
                             ClipToBounds="True"
                             IsHitTestVisible="True"

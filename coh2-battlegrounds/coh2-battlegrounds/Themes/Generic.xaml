@@ -3,6 +3,5 @@
     <ResourceDictionary.MergedDictionaries>
         <!-- Go die in a fire WPF -->
         <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds;component/Controls/IconButtonStyle.xaml"/>
-        <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds;component/Controls/DropArea/DropAreaStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
