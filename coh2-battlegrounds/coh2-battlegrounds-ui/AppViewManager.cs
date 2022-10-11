@@ -60,6 +60,7 @@ public sealed class AppViewManager {
 
     private readonly HashSet<IViewModel> m_alive;
     private readonly Dictionary<string, IViewModel?> m_models;
+    private readonly Dictionary<string, Func<object?, IViewModel>> m_viewFactories;
     private readonly IMainWindow m_window;
 
     /// <summary>
@@ -70,6 +71,7 @@ public sealed class AppViewManager {
         this.m_models = new();
         this.m_window = window;
         this.m_alive = new();
+        this.m_viewFactories = new();
     }
 
     /// <summary>
@@ -254,5 +256,29 @@ public sealed class AppViewManager {
     /// <returns>The <see cref="ModalControl"/> covering the entire window or <see langword="null"/> if none is defined.</returns>
     public ModalControl? GetRightsideModalControl()
         => this.m_window.GetRightsideModalControl();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="factory"></param>
+    public void RegisterFactory<T>(Func<object?, T> factory) where T : IViewModel {
+        IViewModel safeType(object? x) => factory(x);
+        this.m_viewFactories[typeof(T).Name] = safeType;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="viewName"></param>
+    /// <param name="factoryArgument"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public IViewModel CreateView(string viewName, object? factoryArgument = null) {
+        if (this.m_viewFactories.TryGetValue(viewName, out var func)) {
+            return func(factoryArgument);
+        }
+        throw new Exception();
+    }
 
 }

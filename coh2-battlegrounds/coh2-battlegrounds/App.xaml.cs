@@ -14,6 +14,7 @@ using Battlegrounds.UI;
 using Battlegrounds.UI.Modals;
 using Battlegrounds.UI.Modals.Prompts;
 using Battlegrounds.Networking;
+using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.ErrorHandling;
 using Battlegrounds.Verification;
@@ -29,6 +30,7 @@ using BattlegroundsApp.Dashboard.MVVM.Models;
 using BattlegroundsApp.Modals.Startup.MVVM.Models;
 using BattlegroundsApp.Modals.DownloadInProgress.MVVM.Models;
 using Battlegrounds.Editor.Pages;
+using Battlegrounds.Lobby.Pages;
 
 namespace BattlegroundsApp;
 
@@ -42,7 +44,7 @@ public partial class App : Application, IResourceResolver, IViewController {
     private static LeftMenu? __lmenu;
     private static SettingsViewModel? __settings;
     private static DashboardViewModel? __dashboard;
-    private static LobbyBrowserViewModel? __lobbyBrowser;
+    private static LobbyBrowser? __lobbyBrowser;
     private static CompanyBrowser? __companyBrowser;
 
     public static AppViewManager Views 
@@ -100,6 +102,9 @@ public partial class App : Application, IResourceResolver, IViewController {
         // Create app view manager
         __viewManager = new(window);
         __viewManager.SetDisplay(AppDisplayState.LeftRight, __lmenu, __dashboard);
+
+        // Add view manager factories
+        __viewManager.RegisterFactory(x => x is Company c ? new CompanyEditor(c) : throw new Exception());
 
         // Set as started
         IsStarted = true;
@@ -229,7 +234,7 @@ public partial class App : Application, IResourceResolver, IViewController {
 
         // Create other views that are directly accessible from LHS
         __companyBrowser = __viewManager.CreateDisplayIfNotFound<CompanyBrowser>(() => new()) ?? throw new Exception("Failed to create company browser view model!");
-        __lobbyBrowser = __viewManager.CreateDisplayIfNotFound<LobbyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create lobby browser view model!");
+        __lobbyBrowser = __viewManager.CreateDisplayIfNotFound<LobbyBrowser>(() => new()) ?? throw new Exception("Failed to create lobby browser view model!");
         __settings = __viewManager.CreateDisplayIfNotFound<SettingsViewModel>(() => new()) ?? throw new Exception("Failed to create settings view model!");
 
     }

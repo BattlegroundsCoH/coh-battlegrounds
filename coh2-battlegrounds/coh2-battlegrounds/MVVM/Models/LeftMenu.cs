@@ -2,6 +2,7 @@
 using System.Windows.Input;
 
 using Battlegrounds.Editor.Pages;
+using Battlegrounds.Lobby.Pages;
 using Battlegrounds.Locale;
 using Battlegrounds.UI;
 
@@ -111,8 +112,8 @@ public class LeftMenu : ViewModelBase {
     private void MatchFinderButton() {
 
         // Set RHS to lobby browser
-        App.Views.UpdateDisplay<LobbyBrowserViewModel>(AppDisplayTarget.Right, browser => {
-            if (browser is LobbyBrowserViewModel vm) {
+        App.Views.UpdateDisplay<LobbyBrowser>(AppDisplayTarget.Right, browser => {
+            if (browser is LobbyBrowser vm) {
                 vm.RefreshLobbies();
             }
         });

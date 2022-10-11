@@ -58,9 +58,9 @@ public record CompanyBuilderButton2(ICommand Click, LocaleKey? Tooltip, Func<Vis
 }
 
 /// <summary>
-/// 
+/// Class responsible for handling the editing companies.
 /// </summary>
-public sealed class CompanyEditor : ViewModelBase {
+public sealed class CompanyEditor : ViewModelBase, IReturnable {
 
     public override bool KeepAlive => false;
 

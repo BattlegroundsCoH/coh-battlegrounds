@@ -22,8 +22,4 @@
     <Resource Include="Graphics\Shaders\ColourOverlayEffect.ps" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Themes\" />
-  </ItemGroup>
-
 </Project>

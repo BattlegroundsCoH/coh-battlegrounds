@@ -1,0 +1,126 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls">
+
+    <!-- STANDARD BLUE LOCALE BUTTON -->
+    <Style x:Key="StandardBlueLocalisedButton" TargetType="{x:Type Button}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid x:Name="Gridbackground" Background="{StaticResource BackgroundLightBlueBrush}">
+                        <controls:LocalisedLabel
+                                LocKey="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+                                Foreground="White"
+                                FontSize="18"
+                                FontFamily="Open Sans"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Gridbackground" Property="Background" Value="{StaticResource BackgroundLightGrayBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.65"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- STANDARD BLUE LOCALE BUTTON (Adheres to font size) -->
+    <Style x:Key="StandardBlueLocalisedSizeButton" TargetType="{x:Type Button}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid x:Name="Gridbackground" Background="{StaticResource BackgroundLightBlueBrush}">
+                        <controls:LocalisedLabel
+                                LocKey="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+                                Foreground="White"
+                                FontSize="{Binding FontSize, RelativeSource={RelativeSource TemplatedParent}}"
+                                FontFamily="Open Sans"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Gridbackground" Property="Background" Value="{StaticResource BackgroundLightGrayBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.65"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- STANDARD RED LOCALE BUTTON -->
+    <Style x:Key="StandardRedLocalisedButton" TargetType="{x:Type Button}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid x:Name="Gridbackground" Background="{StaticResource BackgroundDarkRedBrush}">
+                        <controls:LocalisedLabel
+                                LocKey="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+                                Foreground="White"
+                                FontSize="18"
+                                FontFamily="Open Sans"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Gridbackground" Property="Background" Value="{StaticResource BackgroundLightRedBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.65"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- STANDARD GREEN LOCALE BUTTON -->
+    <Style x:Key="StandardGreenLocalisedButton" TargetType="{x:Type Button}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid x:Name="Gridbackground" Background="{StaticResource BackgroundGreenBrush}">
+                        <controls:LocalisedLabel
+                                LocKey="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+                                Foreground="White"
+                                FontSize="18"
+                                FontFamily="Open Sans"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Gridbackground" Property="Background" Value="{StaticResource BackgroundLightGreenBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.65"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

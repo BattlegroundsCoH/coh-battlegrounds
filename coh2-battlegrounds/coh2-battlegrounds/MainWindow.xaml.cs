@@ -6,9 +6,9 @@ using System.Windows.Controls;
 using Battlegrounds.UI;
 using Battlegrounds.UI.Modals;
 
-using BattlegroundsApp.Lobby.MVVM.Models;
 using Battlegrounds.UI.Modals.Prompts;
 using Battlegrounds.Editor.Pages;
+using Battlegrounds.Lobby.Pages;
 
 namespace BattlegroundsApp;
 
@@ -102,7 +102,7 @@ public partial class MainWindow : Window, IMainWindow {
         var target = this.RightContent.Content is FrameworkElement fe ? fe.DataContext : this.RightContent.Content;
 
         // Get current rhs
-        if (target is LobbyModel lobby && !lobby.IsLocal) {
+        if (target is BaseLobby lobby && !lobby.IsLocal) {
             e.Cancel = true;
             YesNoPrompt.Show(this.ModalView, (_, res) => {
                 if (res is ModalDialogResult.Confirm) {

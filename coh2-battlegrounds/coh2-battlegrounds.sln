@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-misc", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-scripting", "coh2-battlegrounds-scripting\coh2-battlegrounds-scripting.csproj", "{77252AB3-1A16-4763-84EF-D49EF273154A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-editor", "coh2-battlegrounds-editor\coh2-battlegrounds-editor.csproj", "{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-editor", "coh2-battlegrounds-editor\coh2-battlegrounds-editor.csproj", "{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-lobby", "coh2-battlegrounds-lobby\coh2-battlegrounds-lobby.csproj", "{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -149,6 +151,18 @@ Global
 		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Release|x64.Build.0 = Release|Any CPU
 		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Release|x86.ActiveCfg = Release|Any CPU
 		{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}.Release|x86.Build.0 = Release|Any CPU
+		{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}.Debug|x64.Build.0 = Debug|Any CPU
+		{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}.Debug|x86.Build.0 = Debug|Any CPU
+		{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}.Release|x64.ActiveCfg = Release|Any CPU
+		{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}.Release|x64.Build.0 = Release|Any CPU
+		{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}.Release|x86.ActiveCfg = Release|Any CPU
+		{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
