@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BattlegroundsApp.Dashboard.MVVM.Views;
+namespace Battlegrounds.UI.Application.Pages;
 /// <summary>
 /// Interaction logic for DashboardView.xaml
 /// </summary>

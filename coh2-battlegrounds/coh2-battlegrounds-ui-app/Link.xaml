@@ -1,0 +1,22 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:components="clr-namespace:Battlegrounds.UI.Application.Components"
+    xmlns:pages="clr-namespace:Battlegrounds.UI.Application.Pages">
+
+    <!-- Left Menu Component -->
+    <DataTemplate DataType="{x:Type components:LeftMenu}">
+        <components:LeftMenuView/>
+    </DataTemplate>
+
+    <!-- Dashboard Page -->
+    <DataTemplate DataType="{x:Type pages:Dashboard}">
+        <pages:DashboardView/>
+    </DataTemplate>
+
+    <!-- Settings Page -->
+    <DataTemplate DataType="{x:Type pages:Settings}">
+        <pages:SettingsView/>
+    </DataTemplate>
+
+</ResourceDictionary>

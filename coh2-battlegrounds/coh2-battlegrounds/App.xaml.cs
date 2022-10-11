@@ -14,7 +14,6 @@ using Battlegrounds.UI;
 using Battlegrounds.UI.Modals;
 using Battlegrounds.UI.Modals.Prompts;
 using Battlegrounds.Networking;
-using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.ErrorHandling;
 using Battlegrounds.Verification;
@@ -25,12 +24,15 @@ using Battlegrounds.Resources;
 using Battlegrounds.DataLocal;
 using Battlegrounds.DataLocal.Generator;
 
-using BattlegroundsApp.MVVM.Models;
-using BattlegroundsApp.Dashboard.MVVM.Models;
 using BattlegroundsApp.Modals.Startup.MVVM.Models;
 using BattlegroundsApp.Modals.DownloadInProgress.MVVM.Models;
 using Battlegrounds.Editor.Pages;
 using Battlegrounds.Lobby.Pages;
+using Battlegrounds.Lobby;
+using Battlegrounds.UI.Application.Components;
+using Battlegrounds.Editor;
+using Battlegrounds.UI.Application;
+using Battlegrounds.UI.Application.Pages;
 
 namespace BattlegroundsApp;
 
@@ -41,9 +43,13 @@ public partial class App : Application, IResourceResolver, IViewController {
 
     private static AppViewManager? __viewManager;
 
+    private static IUIModule? __editorModule;
+    private static IUIModule? __lobbyModule;
+    private static IUIModule? __appModule;
+
     private static LeftMenu? __lmenu;
-    private static SettingsViewModel? __settings;
-    private static DashboardViewModel? __dashboard;
+    private static Settings? __settings;
+    private static Dashboard? __dashboard;
     private static LobbyBrowser? __lobbyBrowser;
     private static CompanyBrowser? __companyBrowser;
 
@@ -96,15 +102,31 @@ public partial class App : Application, IResourceResolver, IViewController {
         window.Closed += this.MainWindow_Closed;
 
         // Create initial left/right views
-        __lmenu = new();
         __dashboard = new();
 
         // Create app view manager
         __viewManager = new(window);
-        __viewManager.SetDisplay(AppDisplayState.LeftRight, __lmenu, __dashboard);
 
-        // Add view manager factories
-        __viewManager.RegisterFactory(x => x is Company c ? new CompanyEditor(c) : throw new Exception());
+        // Create left menu
+        __lmenu = new(__viewManager);
+        
+        // Create lobby module and register it
+        __lobbyModule = new LobbyModule();
+        __lobbyModule.RegisterMenuCallbacks(__lmenu);
+        __lobbyModule.RegisterViewFactories(__viewManager);
+
+        // Create editor module and register it
+        __editorModule = new EditorModule();
+        __editorModule.RegisterMenuCallbacks(__lmenu);
+        __editorModule.RegisterViewFactories(__viewManager);
+
+        // Create app module and register it
+        __appModule = new ApplicationModule();
+        __appModule.RegisterMenuCallbacks(__lmenu);
+        __appModule.RegisterViewFactories(__viewManager);
+
+        // Set view manager
+        __viewManager.SetDisplay(AppDisplayState.LeftRight, __lmenu, __dashboard);
 
         // Set as started
         IsStarted = true;
@@ -235,7 +257,7 @@ public partial class App : Application, IResourceResolver, IViewController {
         // Create other views that are directly accessible from LHS
         __companyBrowser = __viewManager.CreateDisplayIfNotFound<CompanyBrowser>(() => new()) ?? throw new Exception("Failed to create company browser view model!");
         __lobbyBrowser = __viewManager.CreateDisplayIfNotFound<LobbyBrowser>(() => new()) ?? throw new Exception("Failed to create lobby browser view model!");
-        __settings = __viewManager.CreateDisplayIfNotFound<SettingsViewModel>(() => new()) ?? throw new Exception("Failed to create settings view model!");
+        __settings = __viewManager.CreateDisplayIfNotFound<Settings>(() => new()) ?? throw new Exception("Failed to create settings view model!");
 
     }
 

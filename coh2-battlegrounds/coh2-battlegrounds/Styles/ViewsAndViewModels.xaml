@@ -2,10 +2,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:BattlegroundsApp"
-    xmlns:views="clr-namespace:BattlegroundsApp.MVVM.Views"
-    xmlns:models="clr-namespace:BattlegroundsApp.MVVM.Models"
-    xmlns:dashboardViews="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Views"
-    xmlns:dashboardModels="clr-namespace:BattlegroundsApp.Dashboard.MVVM.Models"
     xmlns:startupViews="clr-namespace:BattlegroundsApp.Modals.Startup.MVVM.Views"
     xmlns:startupModels="clr-namespace:BattlegroundsApp.Modals.Startup.MVVM.Models"
     xmlns:downloadViews="clr-namespace:BattlegroundsApp.Modals.DownloadInProgress.MVVM.Views"
@@ -21,21 +17,6 @@
         <startupViews:StartupView/>
     </DataTemplate>
     
-    <!-- New Dashboard-View Models -->
-    <DataTemplate DataType="{x:Type dashboardModels:DashboardViewModel}">
-        <dashboardViews:DashboardView/>
-    </DataTemplate>
-
-    <!-- New Setting-View Models -->
-    <DataTemplate DataType="{x:Type models:SettingsViewModel}">
-        <views:SettingsVew/>
-    </DataTemplate>
-
-    <!-- New Lobby-View Models -->
-    <DataTemplate DataType="{x:Type models:LeftMenu}">
-        <views:LeftMenuView/>
-    </DataTemplate>
-
     <!-- DIALOGS END -->
 
 </ResourceDictionary>

@@ -1,9 +1,10 @@
-﻿<UserControl x:Class="BattlegroundsApp.MVVM.Views.LeftMenuView"
+﻿<UserControl x:Class="Battlegrounds.UI.Application.Components.LeftMenuView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:uiloc="clr-namespace:Battlegrounds.UI.Converters.Locale;assembly=coh2-battlegrounds-ui"
+             xmlns:local="clr-namespace:Battlegrounds.UI.Application.Components"
              mc:Ignorable="d" 
              d:DesignHeight="850" d:DesignWidth="300" MaxWidth="300">
     <UserControl.Background>
@@ -26,7 +27,7 @@
 
         <!-- Row 1 -->
         <Image Grid.Row="0" 
-               Source="pack://application:,,,/Resources/app/logo_main.png"
+               Source="pack://application:,,,/coh2-battlegrounds-ui-app;component/Resources/Logo.png"
                Width="300"/>
 
         <!-- Row 2-->
@@ -99,6 +100,6 @@
                     Command="{Binding Exit.Click}" 
                     ToolTip="Exit the application"
                     Style="{StaticResource MainButtonStyle}"/>
-        
+
     </Grid>
 </UserControl>

@@ -213,6 +213,7 @@
     <ProjectReference Include="..\coh2-battlegrounds-editor\coh2-battlegrounds-editor.csproj" />
     <ProjectReference Include="..\coh2-battlegrounds-lobby\coh2-battlegrounds-lobby.csproj" />
     <ProjectReference Include="..\coh2-battlegrounds-resources\coh2-battlegrounds-resources.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-ui-app\coh2-battlegrounds-ui-app.csproj" />
     <ProjectReference Include="..\coh2-battlegrounds-ui\coh2-battlegrounds-ui.csproj" />
   </ItemGroup>
 

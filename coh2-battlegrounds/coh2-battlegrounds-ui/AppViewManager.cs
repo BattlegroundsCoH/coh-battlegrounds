@@ -56,7 +56,7 @@ public enum AppDisplayTarget {
 /// <summary>
 /// Class responsible for managing the views being displayed in the application.
 /// </summary>
-public sealed class AppViewManager {
+public sealed class AppViewManager : IViewManager {
 
     private readonly HashSet<IViewModel> m_alive;
     private readonly Dictionary<string, IViewModel?> m_models;

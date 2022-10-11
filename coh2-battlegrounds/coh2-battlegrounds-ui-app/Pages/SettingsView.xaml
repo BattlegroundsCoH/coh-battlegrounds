@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="BattlegroundsApp.MVVM.Views.SettingsVew"
+﻿<UserControl x:Class="Battlegrounds.UI.Application.Pages.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BattlegroundsApp.MVVM.Views" 
-             xmlns:controls="clr-namespace:BattlegroundsApp.Controls"
-             mc:Ignorable="d" Background="#273441"
+             xmlns:local="clr-namespace:Battlegrounds.UI.Application.Pages"
+             xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=coh2-battlegrounds-ui"
+             mc:Ignorable="d" Background="{StaticResource BackgroundBlueBrush}"
              d:DesignHeight="850" d:DesignWidth="1100">
     <Grid>
         <Grid.RowDefinitions>
@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
 
         <!-- Row 0 -->
-        <controls:LocLabel
+        <controls:LocalisedLabel
             Foreground="#d8dbde"
             FontSize="32"
             FontFamily="Open Sans"
@@ -82,13 +82,13 @@
                     </Style>
                 </Grid.Resources>
                 <!-- App Settings -->
-                <controls:LocLabel LocKey="SettingsView_App"
+                <controls:LocalisedLabel LocKey="SettingsView_App"
                                    Style="{StaticResource Header1}"
                                    HorizontalAlignment="Center"
                                    Grid.ColumnSpan="3"/>
 
                 <!-- Language settings -->
-                <controls:LocLabel LocKey="SettingsView_Language"
+                <controls:LocalisedLabel LocKey="SettingsView_Language"
                                    Style="{StaticResource Header2}"
                                    HorizontalAlignment="Center"
                                    Grid.ColumnSpan="3"
@@ -139,14 +139,14 @@
                 </StackPanel>
 
                 <!-- Path Settings -->
-                <controls:LocLabel LocKey="SettingsView_Paths"
+                <controls:LocalisedLabel LocKey="SettingsView_Paths"
                                    Style="{StaticResource Header2}"
                                    HorizontalAlignment="Center"
                                    Grid.ColumnSpan="3"
                                    Grid.Row="3"/>
 
                 <!-- Steam Path -->
-                <controls:LocLabel LocKey="SettingsView_SteamPath"
+                <controls:LocalisedLabel LocKey="SettingsView_SteamPath"
                                    Style="{StaticResource Header3}"
                                    Grid.Row="4"/>
                 <TextBox Style="{StaticResource WaterMarkTextBox}"
@@ -180,7 +180,7 @@
                 </Button>
 
                 <!-- CoH2 Path -->
-                <controls:LocLabel LocKey="SettingsView_CoHPath"
+                <controls:LocalisedLabel LocKey="SettingsView_CoHPath"
                                    Style="{StaticResource Header3}"
                                    Grid.Row="6"/>
                 <TextBox Style="{StaticResource WaterMarkTextBox}"
@@ -204,7 +204,7 @@
                 <!--TODO: Show if archive.exe is missing-->
 
                 <!-- Telemetry Settings -->
-                <controls:LocLabel LocKey="SettingsView_Telemetry"
+                <controls:LocalisedLabel LocKey="SettingsView_Telemetry"
                                    Style="{StaticResource Header2}"
                                    HorizontalAlignment="Center"
                                    Grid.ColumnSpan="3"
@@ -212,16 +212,16 @@
 
 
                 <!-- Auto-Update -->
-                <controls:LocLabel LocKey="SettingsView_TmAutoUpdate"
+                <controls:LocalisedLabel LocKey="SettingsView_TmAutoUpdate"
                                    Style="{StaticResource Header3}"
                                    Grid.Row="9">
-                    <controls:LocLabel.ToolTip>
+                    <controls:LocalisedLabel.ToolTip>
                         <ToolTip>
-                            <controls:LocLabel LocKey="SettingsView_TmPerformance_tt"
+                            <controls:LocalisedLabel LocKey="SettingsView_TmPerformance_tt"
                                                Style="{StaticResource TooltipText}"/>
                         </ToolTip>
-                    </controls:LocLabel.ToolTip>
-                </controls:LocLabel>
+                    </controls:LocalisedLabel.ToolTip>
+                </controls:LocalisedLabel>
                 <CheckBox Grid.Row="9"
                           Grid.Column="1"
                           VerticalAlignment="Center"
@@ -230,7 +230,7 @@
                           IsChecked="{Binding AutoUpdate, Mode=TwoWay}"/>
 
                 <!-- Performance Report -->
-                <controls:LocLabel LocKey="SettingsView_TmPerformance"
+                <controls:LocalisedLabel LocKey="SettingsView_TmPerformance"
                                    Style="{StaticResource Header3}"
                                    Grid.Row="10"/>
                 <CheckBox Grid.Row="10"
@@ -239,9 +239,9 @@
                           HorizontalAlignment="Right"
                           IsEnabled="False"
                           IsChecked="{Binding AutoCollectData, Mode=TwoWay}"/>
-                
+
                 <!-- Autp-Workshop -->
-                <controls:LocLabel LocKey="SettingsView_TmAutoWorkshop"
+                <controls:LocalisedLabel LocKey="SettingsView_TmAutoWorkshop"
                                    Style="{StaticResource Header3}"
                                    Grid.Row="11"/>
                 <CheckBox Grid.Row="11"
@@ -249,9 +249,9 @@
                           VerticalAlignment="Center"
                           HorizontalAlignment="Right"
                           IsChecked="{Binding AutoCollectWorkshop, Mode=TwoWay}"/>
-                
+
                 <!-- Auto-Report Scar -->
-                <controls:LocLabel LocKey="SettingsView_TmAutoReportScar"
+                <controls:LocalisedLabel LocKey="SettingsView_TmAutoReportScar"
                                    Style="{StaticResource Header3}"
                                    Grid.Row="12"/>
                 <CheckBox Grid.Row="12"
@@ -260,16 +260,16 @@
                           HorizontalAlignment="Right"
                           IsEnabled="False"
                           IsChecked="{Binding AutoReportScarErrors, Mode=TwoWay}"/>
-                
+
                 <!-- Ingame Settings -->
-                <controls:LocLabel LocKey="SettingsView_Ingame"
+                <controls:LocalisedLabel LocKey="SettingsView_Ingame"
                                    Style="{StaticResource Header1}"
                                    HorizontalAlignment="Center"
                                    Grid.ColumnSpan="3"
                                    Grid.Row="13"/>
-                
+
                 <!-- Zoom Settings -->
-                <controls:LocLabel LocKey="SettingsView_Zoom"
+                <controls:LocalisedLabel LocKey="SettingsView_Zoom"
                                    Style="{StaticResource Header3}"
                                    Grid.Row="14"/>
                 <Slider
@@ -284,7 +284,7 @@
 
                 <Button
                     Content="SettingsView_SaveSettings"
-                    Style="{StaticResource StandardGreenLocButton}"
+                    Style="{StaticResource StandardGreenLocalisedButton}"
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
                     Grid.Row="15"
@@ -295,5 +295,4 @@
             </Grid>
         </ScrollViewer>
     </Grid>
-    
 </UserControl>

@@ -1,9 +1,4 @@
-﻿using Battlegrounds.Functional;
-using Battlegrounds.Game.DataCompany;
-using Battlegrounds.Game.Gameplay;
-using Battlegrounds.UI.Converters.Icons;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -11,7 +6,12 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace BattlegroundsApp.Controls.Dashboard;
+using Battlegrounds.Functional;
+using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.Gameplay;
+using Battlegrounds.UI.Converters.Icons;
+
+namespace Battlegrounds.UI.Application.Components;
 
 /// <summary>
 /// Interaction logic for CompanyCard.xaml
@@ -28,7 +28,7 @@ public partial class CompanyCard : UserControl {
         [Faction.British] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/british.png"))
     };
 
-    public static readonly DependencyProperty CompanyProperty 
+    public static readonly DependencyProperty CompanyProperty
         = DependencyProperty.Register(nameof(Company), typeof(Company), typeof(CompanyCard),
                                       new FrameworkPropertyMetadata(null,
                                       (a, b) => a.Cast<CompanyCard>(x => x.Company = b.NewValue as Company)));
@@ -42,9 +42,9 @@ public partial class CompanyCard : UserControl {
     }
 
     public CompanyCard() {
-        this.InitializeComponent();
-        this.TrySetCompanyData();
+        InitializeComponent();
     }
+
 
     private void TrySetCompanyData() => this.TrySetData(this.Company ?? null);
 

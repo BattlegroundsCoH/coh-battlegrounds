@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="profanities.json" />
+    <EmbeddedResource Include="profanities.json" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -17,16 +17,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
+		<PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
 	</ItemGroup>
-	
-  <ItemGroup>
-    <ProjectReference Include="..\coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj" />
-    <ProjectReference Include="..\coh2-battlegrounds-functional\coh2-battlegrounds-functional.csproj" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="profanities.json" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj" />
+		<ProjectReference Include="..\coh2-battlegrounds-functional\coh2-battlegrounds-functional.csproj" />
+	</ItemGroup>
 
 </Project>

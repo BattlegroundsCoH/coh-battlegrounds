@@ -13,12 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BattlegroundsApp.MVVM.Views;
+namespace Battlegrounds.UI.Application.Components;
 /// <summary>
-/// Interaction logic for SettingsVew.xaml
+/// Interaction logic for LeftMenuView.xaml
 /// </summary>
-public partial class SettingsVew : UserControl {
-    public SettingsVew() {
+public partial class LeftMenuView : UserControl {
+    public LeftMenuView() {
         InitializeComponent();
     }
 }

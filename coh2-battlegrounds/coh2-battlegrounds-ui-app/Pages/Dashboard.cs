@@ -1,13 +1,12 @@
-﻿using Battlegrounds;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
 using Battlegrounds.DataLocal;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.UI;
 
-using System;
-using System.Linq;
-
-namespace BattlegroundsApp.Dashboard.MVVM.Models;
+namespace Battlegrounds.UI.Application.Pages;
 
 public enum CompanyDataType {
     Games,
@@ -22,7 +21,10 @@ public enum CompanyDataType {
     FactionGames
 }
 
-public class DashboardViewModel : ViewModelBase {
+/// <summary>
+/// 
+/// </summary>
+public sealed class Dashboard : ViewModelBase {
 
     #region Private member
 
@@ -108,7 +110,7 @@ public class DashboardViewModel : ViewModelBase {
     /// <summary>
     /// The name of the currently "loged" in player
     /// </summary>
-    public string PlayerName { 
+    public string PlayerName {
         get => this.m_playerName;
         set {
             this.m_playerName = value;
@@ -119,7 +121,7 @@ public class DashboardViewModel : ViewModelBase {
     /// <summary>
     /// The number of wins sumerized
     /// </summary>
-    public ulong TotalWins { 
+    public ulong TotalWins {
         get => this.m_totalWins;
         set {
             this.m_totalWins = value;
@@ -130,7 +132,7 @@ public class DashboardViewModel : ViewModelBase {
     /// <summary>
     /// The number of losses sumerized
     /// </summary>
-    public ulong TotalLosses { 
+    public ulong TotalLosses {
         get => this.m_totalLosses;
         set {
             this.m_totalLosses = value;
@@ -141,7 +143,7 @@ public class DashboardViewModel : ViewModelBase {
     /// <summary>
     /// The number of games played sumerized
     /// </summary>
-    public ulong TotalGamesPlayed { 
+    public ulong TotalGamesPlayed {
         get {
             return this.m_totalGames;
         }
@@ -165,7 +167,7 @@ public class DashboardViewModel : ViewModelBase {
     /// <summary>
     /// The number of infantry kills sumerized
     /// </summary>
-    public ulong TotalInfantryKills { 
+    public ulong TotalInfantryKills {
         get => this.m_totalInfantryKills;
         set {
             this.m_totalInfantryKills = value;
@@ -176,7 +178,7 @@ public class DashboardViewModel : ViewModelBase {
     /// <summary>
     /// The number of vehicle kills sumerized
     /// </summary>
-    public ulong TotalVehicleKills { 
+    public ulong TotalVehicleKills {
         get => this.m_totalVehicleKills;
         set {
             this.m_totalVehicleKills = value;
@@ -187,7 +189,7 @@ public class DashboardViewModel : ViewModelBase {
     /// <summary>
     /// The number of infantry losses sumerized
     /// </summary>
-    public ulong TotalInfantryLosses { 
+    public ulong TotalInfantryLosses {
         get => this.m_totalInfantryLosses;
         set {
             this.m_totalInfantryLosses = value;
@@ -198,7 +200,7 @@ public class DashboardViewModel : ViewModelBase {
     /// <summary>
     /// The number of vehicle losses sumerized
     /// </summary>
-    public ulong TotalVehicleLosses { 
+    public ulong TotalVehicleLosses {
         get => this.m_totalVehicleLosses;
         set {
             this.m_totalVehicleLosses = value;
@@ -209,7 +211,7 @@ public class DashboardViewModel : ViewModelBase {
     /// <summary>
     /// The total kill/death ratio
     /// </summary>
-    public double KillDeathRatio { 
+    public double KillDeathRatio {
         get {
             return (this.TotalInfantryLosses + this.TotalVehicleLosses) > 0 ? (this.TotalInfantryKills + this.TotalVehicleKills) / (this.TotalInfantryLosses + this.TotalVehicleLosses) : 0;
         }
@@ -276,7 +278,7 @@ public class DashboardViewModel : ViewModelBase {
     /// <summary>
     /// The most played company
     /// </summary>
-    public Company? MostPlayedCompany { 
+    public Company? MostPlayedCompany {
         get => this.m_mostPlayedCompany;
         set {
             this.m_mostPlayedCompany = value;
@@ -293,16 +295,12 @@ public class DashboardViewModel : ViewModelBase {
     /// <summary>
     /// Default constructor
     /// </summary>
-    public DashboardViewModel() {
-
+    public Dashboard() {
         Companies.PlayerCompaniesLoaded += OnPlayerCompaniesLoaded;
-
     }
 
     public void UpdateSteamUser() {
-
         this.PlayerName = BattlegroundsInstance.Steam.User.Name;
-
     }
 
     private void OnPlayerCompaniesLoaded() {
@@ -356,5 +354,5 @@ public class DashboardViewModel : ViewModelBase {
     private Company? GetMostPlayedCompany() => Companies.GetAllCompanies().Select(x => (x, x.Units.Aggregate(TimeSpan.Zero, (a, b) => a + b.CombatTime)))
                                                                                 .OrderByDescending(y => y.Item2)
                                                                                 .Select(z => z.x).FirstOrDefault();
-    
+
 }

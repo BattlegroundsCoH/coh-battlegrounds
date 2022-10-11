@@ -1,14 +1,14 @@
-﻿using Battlegrounds;
-using Battlegrounds.Locale;
-using Battlegrounds.Functional;
+﻿using System;
+using System.Diagnostics;
 
-using Battlegrounds.UI;
+using Battlegrounds.Functional;
+using Battlegrounds.Locale;
 
 using Microsoft.Win32;
 
-namespace BattlegroundsApp.MVVM.Models;
+namespace Battlegrounds.UI.Application.Pages;
 
-public class SettingsViewModel : ViewModelBase {
+public sealed class Settings : ViewModelBase {
 
     private LocaleLanguage m_selectedLang;
 
@@ -42,8 +42,8 @@ public class SettingsViewModel : ViewModelBase {
 
     public string SteamUserContent { get; set; }
 
-    public SettingsViewModel() {
-        
+    public Settings() {
+
         // Create buttons
         this.LanguageButton = new(this.SetLanguage);
         this.BrowseCoHButton = new(this.BrowseCoH);
@@ -57,7 +57,7 @@ public class SettingsViewModel : ViewModelBase {
 
         // Set steam data
         var steamData = BattlegroundsInstance.Steam;
-        this.SteamUserContent = steamData.HasUser ? 
+        this.SteamUserContent = steamData.HasUser ?
             BattlegroundsInstance.Localize.GetString("SettingsView_SteamContentFound", steamData.User.Name) :
             BattlegroundsInstance.Localize.GetString("SettingsView_SteamContentNotFound");
 
@@ -169,8 +169,14 @@ public class SettingsViewModel : ViewModelBase {
         // Restart if required
         if (requiresRestart) {
 
-            // Restart
-            App.Restart();
+            // Close log
+            BattlegroundsInstance.Log?.SaveAndClose(0);
+
+            // Create new process
+            Process.Start("coh2-battlegrounds.exe");
+
+            // Close this
+            Environment.Exit(0);
 
         }
 
