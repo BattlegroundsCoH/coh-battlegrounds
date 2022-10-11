@@ -173,7 +173,7 @@
                 Content="CompanyView_Create"
                 Margin="0,5,5,8"
                 Command="{Binding Create.Click}"
-                Style="{StaticResource StandardBlueLocButton}"
+                Style="{StaticResource StandardBlueLocalisedButton}"
                 Width="100"/>
 
         <Button x:Name="editCompanyButton"
@@ -182,7 +182,7 @@
                 Content="CompanyView_Edit"
                 Margin="5,5,5,8"
                 Command="{Binding Edit.Click}"
-                Style="{StaticResource StandardBlueLocButton}"
+                Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
                 Width="100"/>
 
@@ -192,7 +192,7 @@
                 Content="CompanyView_Rename"
                 Margin="5,5,5,8"
                 Command="{Binding Rename.Click}"
-                Style="{StaticResource StandardBlueLocButton}"
+                Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
                 Width="100"/>
 
@@ -202,7 +202,7 @@
                 Content="CompanyView_Delete"
                 Margin="5,5,5,8"
                 Command="{Binding Delete.Click}"
-                Style="{StaticResource StandardBlueLocButton}"
+                Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
                 Width="100"/>
 
@@ -212,7 +212,7 @@
                 Content="CompanyView_Copy"
                 Margin="5,5,5,8"
                 Command="{Binding Copy.Click}"
-                Style="{StaticResource StandardBlueLocButton}"
+                Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
                 Width="100"/>
 
@@ -222,7 +222,7 @@
                 Content="CompanyView_Export"
                 Margin="5,5,5,8"
                 Command="{Binding Export.Click}"
-                Style="{StaticResource StandardBlueLocButton}"
+                Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
                 Width="100"/>
 
@@ -232,7 +232,7 @@
                 Content="CompanyView_Import"
                 Margin="5,5,15,8"
                 Command="{Binding Import.Click}"
-                Style="{StaticResource StandardBlueLocButton}"
+                Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="True"
                 Width="100"/>
 

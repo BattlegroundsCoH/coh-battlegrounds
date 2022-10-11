@@ -1,6 +1,6 @@
 ﻿using Battlegrounds.UI.Modals;
 
-namespace BattlegroundsApp.Modals.Startup.MVVM.Views;
+namespace Battlegrounds.UI.Application.Modals;
 
 /// <summary>
 /// Interaction logic for StartupView.xaml

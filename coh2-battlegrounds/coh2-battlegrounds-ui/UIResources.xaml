@@ -1,8 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Themes/Fonts.xaml"/>
+        <ResourceDictionary Source="Themes/Buttons.xaml"/>
+        <ResourceDictionary Source="Themes/Textblocks.xaml"/>
+        <ResourceDictionary Source="Themes/Separators.xaml"/>
+        <ResourceDictionary Source="Themes/Misc.xaml"/>
         <ResourceDictionary Source="Modals/ModalResources.xaml"/>
-        <ResourceDictionary Source="Themes/LocaleButtons.xaml"/>
-        <ResourceDictionary Source="Controls/IconButtonDefaultStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds-ui;component/Controls/IconButtonStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

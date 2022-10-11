@@ -1,9 +1,10 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 using Battlegrounds.Functional;
 
-namespace BattlegroundsApp.Controls;
+namespace Battlegrounds.UI.Controls;
 
 public enum SpinnerStatus {
     Spinning,
@@ -19,7 +20,7 @@ public partial class SpinnerCheck : UserControl {
     private SpinnerStatus m_spinnerStatus;
 
     public static readonly DependencyProperty StatusProperty =
-        DependencyProperty.Register(nameof(Status), typeof(SpinnerStatus), typeof(SpinnerCheck), new(SpinnerStatus.Spinning, (a,b) => a.Cast<SpinnerCheck>(x => x.Status = (SpinnerStatus)b.NewValue)));
+        DependencyProperty.Register(nameof(Status), typeof(SpinnerStatus), typeof(SpinnerCheck), new(SpinnerStatus.Spinning, (a, b) => a.Cast<SpinnerCheck>(x => x.Status = (SpinnerStatus)b.NewValue)));
 
     public SpinnerStatus Status {
         get => this.m_spinnerStatus;

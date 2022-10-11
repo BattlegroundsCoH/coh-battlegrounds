@@ -77,7 +77,7 @@
                 Content="CompanyBuilder_Return" 
                 Width="150"
                 Height="35"
-                Style="{StaticResource StandardRedLocButton}" 
+                Style="{StaticResource StandardRedLocalisedButton}" 
                 Margin="10,0,0,0"
                 Grid.Row="0"
                 Grid.Column="2"
@@ -523,7 +523,7 @@
                 Content="CompanyBuilder_Save" 
                 Width="150"
                 Height="28"
-                Style="{StaticResource StandardBlueLocButton}" 
+                Style="{StaticResource StandardBlueLocalisedButton}" 
                 Margin="10,0,0,8"
                 Click="saveButton_Click">
                 <Button.RenderTransform>

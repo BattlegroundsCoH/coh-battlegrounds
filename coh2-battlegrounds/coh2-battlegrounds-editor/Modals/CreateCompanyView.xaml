@@ -189,7 +189,7 @@
         <Button 
             Content="CompanyView_Create"
             Width="260"
-            Style="{StaticResource StandardBlueLocButton}"
+            Style="{StaticResource StandardBlueLocalisedButton}"
             Margin="0, 7, 0, 0"
             Command="{Binding CreateCommand}"
             IsEnabled="{Binding CanCreate}"

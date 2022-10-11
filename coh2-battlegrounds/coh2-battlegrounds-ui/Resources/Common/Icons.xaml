@@ -1,0 +1,62 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Geometry x:Key="SwapGeometry1">F1 M62,80z M0,0z M21,49.5L11,49.5 11,19.5 0.5,19.5 16,0.5 31.5,19.5 21,19.5z</Geometry>
+  <Geometry x:Key="SwapGeometry2">F1 M62,80z M0,0z M41,30.5L51,30.5 51,60.5 61.5,60.5 46,79.5 30.5,60.5 41,60.5z</Geometry>
+  <DrawingGroup x:Key="SwapDrawingGroup" ClipGeometry="M-0.5,-0.5 V79.5 H61.5 V-0.5 H-0.5 Z">
+    <DrawingGroup.Transform>
+      <TranslateTransform X="0.5" Y="0.5" />
+    </DrawingGroup.Transform>
+    <DrawingGroup Opacity="1">
+      <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource SwapGeometry1}">
+        <GeometryDrawing.Pen>
+          <Pen Brush="#FFFFFFFF" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" MiterLimit="10" />
+        </GeometryDrawing.Pen>
+      </GeometryDrawing>
+      <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource SwapGeometry2}">
+        <GeometryDrawing.Pen>
+          <Pen Brush="#FFFFFFFF" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" MiterLimit="10" />
+        </GeometryDrawing.Pen>
+      </GeometryDrawing>
+    </DrawingGroup>
+  </DrawingGroup>
+  <DrawingImage x:Key="SwapDrawingImage" Drawing="{StaticResource SwapDrawingGroup}" />
+  <Geometry x:Key="ExclamationGeometry">F1 M51.772,46.86z M0,0z M28,46.86A2.965,2.965,0,0,1,25.382,45.326L2.5,4.466A3,3,0,0,1,5.118,0L50.882,0A3,3,0,0,1,53.5,4.466L30.617,45.326A2.963,2.963,0,0,1,28,46.86z M28,32A4,4,0,1,0,32,36A4,4,0,0,0,28,32z M28,3A4,4,0,0,0,24,7L24,25A4,4,0,0,0,32,25L32,7A4.005,4.005,0,0,0,28,3z</Geometry>
+  <DrawingGroup x:Key="ExclamationDrawingGroup" ClipGeometry="M0,0 V46.86 H51.772 V0 H0 Z">
+    <DrawingGroup.Transform>
+      <TranslateTransform X="0" Y="5.794982627094214E-08" />
+    </DrawingGroup.Transform>
+    <DrawingGroup Transform="1,0,0,1,-2.114,0">
+      <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource ExclamationGeometry}" />
+    </DrawingGroup>
+  </DrawingGroup>
+  <DrawingImage x:Key="ExclamationDrawingImage" Drawing="{StaticResource ExclamationDrawingGroup}" />
+  <Geometry x:Key="EditCompanyIconGeometry">F1 M35.842,35.842z M0,0z M3,24.283L3,29.883 8.6,29.883 25.118,13.366 19.518,7.766z M29.449,9.035A1.487,1.487,0,0,0,29.449,6.929L25.954,3.434A1.487,1.487,0,0,0,23.848,3.434L21.115,6.167 26.715,11.767 29.448,9.034z</Geometry>
+  <DrawingGroup x:Key="EditCompanyIconDrawingGroup" ClipGeometry="M0,0 V35.842 H35.842 V0 H0 Z">
+    <DrawingGroup Transform="1,0,0,1,1.48,1.479">
+      <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource EditCompanyIconGeometry}" />
+    </DrawingGroup>
+  </DrawingGroup>
+  <DrawingImage x:Key="EditCompanyIconDrawingImage" Drawing="{StaticResource EditCompanyIconDrawingGroup}" />
+  <Geometry x:Key="ArrowDropdownGeometry">F1 M51.93,51.93z M0,0z M7,10L17.819,20.819 28.638,10z</Geometry>
+  <DrawingGroup x:Key="ArrowDropdownDrawingGroup" ClipGeometry="M0,0 V51.93 H51.93 V0 H0 Z">
+    <DrawingGroup Transform="1,0,0,1,8.146,11.638">
+      <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource ArrowDropdownGeometry}" />
+    </DrawingGroup>
+  </DrawingGroup>
+  <DrawingImage x:Key="ArrowDropdownDrawingImage" Drawing="{StaticResource ArrowDropdownDrawingGroup}" />
+  <Geometry x:Key="ExitLobbyIconGeometry">F1 M55.782,56.928z M0,0z M17.98,30.4L20.959,33.469 31.523,22.589 20.959,11.706 17.98,14.775 23.431,20.412 3,20.412 3,24.765 23.431,24.765z M36.805,3L7.226,3A4.29,4.29,0,0,0,3,7.353L3,16.059 7.226,16.059 7.226,7.353 36.806,7.353 36.806,37.825 7.226,37.825 7.226,29.118 3,29.118 3,37.824A4.29,4.29,0,0,0,7.226,42.177L36.806,42.177A4.3,4.3,0,0,0,41.032,37.824L41.032,7.353A4.3,4.3,0,0,0,36.805,3z</Geometry>
+  <DrawingGroup x:Key="ExitLobbyIconDrawingGroup" ClipGeometry="M0,0 V56.928 H55.782 V0 H0 Z">
+    <DrawingGroup Opacity="1" Transform="-1,1.22460635382238E-16,-1.22460635382238E-16,-1,55.782,56.928">
+      <DrawingGroup Transform="1,0,0,1,5.875,5.875">
+        <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource ExitLobbyIconGeometry}" />
+      </DrawingGroup>
+    </DrawingGroup>
+  </DrawingGroup>
+  <DrawingImage x:Key="ExitLobbyIconDrawingImage" Drawing="{StaticResource ExitLobbyIconDrawingGroup}" />
+  <Geometry x:Key="SendMessageGeometry">F1 M46.353,41.155z M0,0z M2.021,39.7L46.121,21.35 2.021,3 2,17.272 33.518,21.35 2,25.427z</Geometry>
+  <DrawingGroup x:Key="SendMessageDrawingGroup" ClipGeometry="M0,0 V41.155 H46.353 V0 H0 Z">
+    <DrawingGroup Transform="1,0,0,1,-0.515,-0.772">
+      <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource SendMessageGeometry}" />
+    </DrawingGroup>
+  </DrawingGroup>
+  <DrawingImage x:Key="SendMessageDrawingImage" Drawing="{StaticResource SendMessageDrawingGroup}" />
+</ResourceDictionary>

@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Modals\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\coh2-battlegrounds-ui\coh2-battlegrounds-ui.csproj" />
   </ItemGroup>
 

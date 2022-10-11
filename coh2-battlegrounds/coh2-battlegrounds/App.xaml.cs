@@ -13,6 +13,10 @@ using Battlegrounds;
 using Battlegrounds.UI;
 using Battlegrounds.UI.Modals;
 using Battlegrounds.UI.Modals.Prompts;
+using Battlegrounds.UI.Application;
+using Battlegrounds.UI.Application.Pages;
+using Battlegrounds.UI.Application.Modals;
+using Battlegrounds.UI.Application.Components;
 using Battlegrounds.Networking;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.ErrorHandling;
@@ -23,16 +27,10 @@ using Battlegrounds.Util.Coroutines;
 using Battlegrounds.Resources;
 using Battlegrounds.DataLocal;
 using Battlegrounds.DataLocal.Generator;
-
-using BattlegroundsApp.Modals.Startup.MVVM.Models;
-using BattlegroundsApp.Modals.DownloadInProgress.MVVM.Models;
+using Battlegrounds.Editor;
 using Battlegrounds.Editor.Pages;
 using Battlegrounds.Lobby.Pages;
 using Battlegrounds.Lobby;
-using Battlegrounds.UI.Application.Components;
-using Battlegrounds.Editor;
-using Battlegrounds.UI.Application;
-using Battlegrounds.UI.Application.Pages;
 
 namespace BattlegroundsApp;
 
@@ -159,22 +157,6 @@ public partial class App : Application, IResourceResolver, IViewController {
 
     }
 
-    /// <summary>
-    /// Restarts the application.
-    /// </summary>
-    public static void Restart() {
-
-        // Close log
-        BattlegroundsInstance.Log?.SaveAndClose(0);
-
-        // Create new process
-        Process.Start("coh2-battlegrounds.exe");
-
-        // Close this
-        Environment.Exit(0);
-
-    }
-
     private static void VerifyIntegrity() {
 
         // Burn if checksum is not available
@@ -199,7 +181,7 @@ public partial class App : Application, IResourceResolver, IViewController {
             }
 
             // Create sstartup
-            var startup = new StartupViewModel();
+            var startup = new Startup();
             startup.OnClose(() => {
 
                 // Load next
@@ -373,7 +355,9 @@ public partial class App : Application, IResourceResolver, IViewController {
 
     private static void CheckForUpdate() {
 
-        if (!Update.IsNewVersion()) return;
+        // Check for newer version
+        if (!Update.IsNewVersion()) 
+            return;
 
         // Null check
         if (App.Views.GetModalControl() is not ModalControl mControl) {
@@ -403,7 +387,7 @@ public partial class App : Application, IResourceResolver, IViewController {
         yield return new WaitTimespan(TimeSpan.FromSeconds(0.5));
         Application.Current.Dispatcher.Invoke(() => {
             // Create downloadInProgress
-            var downloadInProgress = new DownloadInProgressViewModel();
+            var downloadInProgress = new UpdateDownloader();
 
             // Show modal
             control.ShowModal(downloadInProgress);

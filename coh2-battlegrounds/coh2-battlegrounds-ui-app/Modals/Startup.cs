@@ -1,23 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-using Battlegrounds;
 using Battlegrounds.Locale;
+
 using Battlegrounds.Steam;
-
-using Battlegrounds.UI;
-
-using BattlegroundsApp.Controls;
+using Battlegrounds.UI.Controls;
+using Battlegrounds.UI.Modals;
 
 using Microsoft.Win32;
 
-namespace BattlegroundsApp.Modals.Startup.MVVM.Models;
+namespace Battlegrounds.UI.Application.Modals;
 
-public class StartupViewModel : INotifyPropertyChanged {
+public sealed class Startup : ModalBase, INotifyPropertyChanged {
 
     private bool m_browseSteam = true;
     private bool m_broswCoH = true;
@@ -74,7 +75,7 @@ public class StartupViewModel : INotifyPropertyChanged {
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public StartupViewModel() {
+    public Startup() {
         this.m_isAutoAvailable = true;
         this.BeginAuto = new(this.TryAutoDetect);
         this.BrowseSteampath = new(this.BrowseSteam);
@@ -253,7 +254,7 @@ public class StartupViewModel : INotifyPropertyChanged {
         this.m_closeCallback?.Invoke();
 
         // Close modal
-        App.Views.GetModalControl()?.CloseModal();
+        base.CloseModal();
 
     }
 

@@ -1,8 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:BattlegroundsApp"
-                    xmlns:controls="clr-namespace:BattlegroundsApp.Controls">
-    
+                    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls">
+
     <!-- MAIN BUTTON -->
     <Style x:Key="MainButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -55,9 +54,10 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+
     <!-- STANDARD BLUE LOCALE BUTTON -->
-    <Style x:Key="StandardBlueLocButton" TargetType="{x:Type Button}">
+    <Style x:Key="StandardBlueLocalisedButton" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="UseLayoutRounding" Value="True"/>
         <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -65,7 +65,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Grid x:Name="Gridbackground" Background="{StaticResource BackgroundLightBlueBrush}">
-                        <controls:LocLabel
+                        <controls:LocalisedLabel
                                 LocKey="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
                                 Foreground="White"
                                 FontSize="18"
@@ -86,8 +86,9 @@
         </Setter>
     </Style>
 
+
     <!-- STANDARD BLUE LOCALE BUTTON (Adheres to font size) -->
-    <Style x:Key="StandardBlueLocSizeButton" TargetType="{x:Type Button}">
+    <Style x:Key="StandardBlueLocalisedSizeButton" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="UseLayoutRounding" Value="True"/>
         <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -95,7 +96,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Grid x:Name="Gridbackground" Background="{StaticResource BackgroundLightBlueBrush}">
-                        <controls:LocLabel
+                        <controls:LocalisedLabel
                                 LocKey="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
                                 Foreground="White"
                                 FontSize="{Binding FontSize, RelativeSource={RelativeSource TemplatedParent}}"
@@ -141,9 +142,10 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+
     <!-- STANDARD RED LOCALE BUTTON -->
-    <Style x:Key="StandardRedLocButton" TargetType="{x:Type Button}">
+    <Style x:Key="StandardRedLocalisedButton" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="UseLayoutRounding" Value="True"/>
         <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -151,7 +153,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Grid x:Name="Gridbackground" Background="{StaticResource BackgroundDarkRedBrush}">
-                        <controls:LocLabel
+                        <controls:LocalisedLabel
                                 LocKey="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
                                 Foreground="White"
                                 FontSize="18"
@@ -171,7 +173,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <!-- STANDARD GREEN BUTTON -->
     <Style x:Key="StandardGreenButton" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -197,9 +199,10 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+
     <!-- STANDARD GREEN LOCALE BUTTON -->
-    <Style x:Key="StandardGreenLocButton" TargetType="{x:Type Button}">
+    <Style x:Key="StandardGreenLocalisedButton" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="UseLayoutRounding" Value="True"/>
         <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -207,7 +210,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Grid x:Name="Gridbackground" Background="{StaticResource BackgroundGreenBrush}">
-                        <controls:LocLabel
+                        <controls:LocalisedLabel
                                 LocKey="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
                                 Foreground="White"
                                 FontSize="18"
@@ -227,7 +230,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <!-- WINDOW CONTROL BUTTON -->
     <Style x:Key="WindowControlButton" TargetType="{x:Type Button}">
         <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
@@ -256,7 +259,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <!-- WINDOW CONTROL RED BUTTON -->
     <Style x:Key="WindowControlRedButton" TargetType="{x:Type Button}" BasedOn="{StaticResource WindowControlButton}">
         <Style.Triggers>
@@ -265,7 +268,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <!-- HOVERLESS -->
     <Style x:Key="Hoverless" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="Transparent" />
@@ -280,7 +283,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <!-- SYSTEM ICON BUTTON -->
     <Style x:Key="SystemIconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Hoverless}">
         <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
@@ -313,7 +316,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <!-- Entity Icon Buton 2.0 -->
     <Style x:Key="EntityIconButton2" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -338,5 +341,5 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
 </ResourceDictionary>

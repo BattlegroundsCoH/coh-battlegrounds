@@ -14,10 +14,7 @@ namespace Battlegrounds.UI.Controls;
 public class IconButton : Button {
 
     static IconButton() {
-        try {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(IconButton), new FrameworkPropertyMetadata(typeof(IconButton)));
-        } catch {
-        }
+        DefaultStyleKeyProperty.OverrideMetadata(typeof(IconButton), new FrameworkPropertyMetadata(typeof(IconButton)));
     }
 
     public static readonly DependencyProperty ImageWidthProperty =

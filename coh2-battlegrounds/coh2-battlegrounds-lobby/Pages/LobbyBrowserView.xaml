@@ -318,7 +318,7 @@
                 Margin="0,5,5,8" 
                 Width="128"
                 Command="{Binding Refresh.Click}"
-                Style="{StaticResource StandardBlueLocButton}"
+                Style="{StaticResource StandardBlueLocalisedButton}"
                 Content="GameBrowserView_Refresh"/>
 
         <Button x:Name="hostGameButton" 
@@ -327,7 +327,7 @@
                 Margin="5,5,5,8"
                 Width="128"
                 Command="{Binding Host.Click}"
-                Style="{StaticResource StandardBlueLocButton}"
+                Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="{Binding Host.IsEnabled}"
                 Content="GameBrowserView_Host_Game"/>
 
@@ -337,7 +337,7 @@
                 Margin="5,5,5,8"
                 Width="128"
                 Command="{Binding Local.Click}"
-                Style="{StaticResource StandardBlueLocButton}"
+                Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="{Binding Local.IsEnabled}"
                 Content="GameBrowserView_Local_Game"/>
 
@@ -348,7 +348,7 @@
                 Width="128"
                 Command="{Binding Join.Click}"
                 IsEnabled="{Binding Join.IsEnabled}"
-                Style="{StaticResource StandardBlueLocButton}"
+                Style="{StaticResource StandardBlueLocalisedButton}"
                 Content="GameBrowserView_Join_Game"/>
 
     </Grid>
