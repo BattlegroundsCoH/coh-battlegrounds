@@ -48,7 +48,7 @@
                        FontSize="14"/>
 
             <Button Content="OKDialogView_OK"
-                    Style="{StaticResource StandardBlueLocButton}"
+                    Style="{StaticResource StandardBlueLocalisedButton}"
                     Command="{Binding OKCommand}" 
                     Width="100"
                     Margin="0, 7, 0, 0"/>

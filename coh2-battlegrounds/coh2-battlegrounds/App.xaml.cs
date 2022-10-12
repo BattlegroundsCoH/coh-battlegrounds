@@ -81,12 +81,11 @@ public partial class App : Application, IResourceResolver, IViewController {
         // Verify
         VerifyIntegrity();
 
-        // Setup resource handler
-        //ResourceHandler.LoadAllResources(null);
-        ResourceHandler.LoadAllResources(Assembly.GetExecutingAssembly());
-
         // Load BG .dll instance*
         BattlegroundsInstance.LoadInstance();
+
+        // Setup resource handler
+        LoadResources();
 
         // Load BG networking .dll instance*
         NetworkInterface.Setup();
@@ -154,6 +153,17 @@ public partial class App : Application, IResourceResolver, IViewController {
 
         // Check for new updates
         Task.Run(CheckForUpdate);
+
+    }
+
+    private static void LoadResources() {
+
+        // Load Resources
+        //ResourceHandler.LoadAllResources(null);
+        ResourceHandler.LoadAllResources(Assembly.GetExecutingAssembly());
+
+        // Load additional resources
+        ResourceLoader.LoadAllPackagedResources();
 
     }
 

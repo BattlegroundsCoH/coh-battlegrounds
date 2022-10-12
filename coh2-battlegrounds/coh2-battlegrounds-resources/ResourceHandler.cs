@@ -19,19 +19,7 @@ public enum ResourceType {
 public static class ResourceHandler {
 
     private static string[] _resourceNames;
-    private static readonly string[] __iconResourceFileNames = {
-        "ability_icons",
-        "item_icons",
-        "symbol_icons",
-        "unit_icons",
-        "upgrade_icons",
-        "phase_icons",
-        "deploy_icons",
-        "portraits",
-        "minimap_icons",
-        "entity_icons",
-        "entity_symbols"
-    };
+    
     private static readonly string[] __iconResourceFiles = {
         "resources/ingame/ability_icons.dat",
         "resources/ingame/entity_icons.dat",
@@ -47,13 +35,14 @@ public static class ResourceHandler {
     };
 
     private static readonly Dictionary<string, ImageSource> _cache;
-    private static readonly Dictionary<string, GfxMap> _gfxMaps;
     private static MemoryStream? _profanityFilter;
+
+    public static readonly Dictionary<string, GfxMap> GfxMaps;
 
     static ResourceHandler() {
         
         _cache = new();
-        _gfxMaps = new();
+        GfxMaps = new();
         _profanityFilter = null;
         _resourceNames = Array.Empty<string>();
 
@@ -83,8 +72,7 @@ public static class ResourceHandler {
                     continue;
                 }
                 if (__iconResourceFiles.Contains(resource.Key as string)) {
-                    var gfxmap = GfxMap.FromBinary(ToMemoryStream(datastream));
-                    _gfxMaps[name] = gfxmap;
+                    var gfxmap = GfxMaps[name] = GfxMap.FromBinary(ToMemoryStream(datastream));
                     Trace.WriteLine($"Loaded gfx map {name}(v:0x{gfxmap.BinaryVersion:X2}) with {gfxmap.Resources.Length} gfx files.", nameof(ResourceHandler));
                 } else if (resource.Key is "resources/profanities.json") {
                     _profanityFilter = ToMemoryStream(datastream);
@@ -108,7 +96,7 @@ public static class ResourceHandler {
         if (_cache.TryGetValue(iconName, out var source)) {
             return source;
         }
-        if (_gfxMaps[iconType] is GfxMap gfx && gfx.GetResource(iconName) is GfxResource rs) {
+        if (GfxMaps[iconType] is GfxMap gfx && gfx.GetResource(iconName) is GfxResource rs) {
             using (var stream = rs.Open()) {
                 BitmapImage bitmapImage = new();
                 bitmapImage.BeginInit();
@@ -123,7 +111,7 @@ public static class ResourceHandler {
     }
 
     public static bool HasIcon(string iconType, string iconName)
-        => _cache.ContainsKey(iconName) || (_gfxMaps[iconType] is GfxMap gfx && gfx.GetResource(iconName) is not null);
+        => _cache.ContainsKey(iconName) || (GfxMaps[iconType] is GfxMap gfx && gfx.GetResource(iconName) is not null);
 
     public static bool HasResource(string resourceName) => _resourceNames.Contains(resourceName.ToLowerInvariant());
 

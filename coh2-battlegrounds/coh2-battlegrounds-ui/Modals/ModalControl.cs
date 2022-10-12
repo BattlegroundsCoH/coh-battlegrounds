@@ -219,8 +219,8 @@ public sealed class ModalControl : UserControl {
         }
 
         // Inform the modal base it's being closed
-        if (this.m_currentModal is Modal m && m.DataContext is ModalBase mb)
-            mb.CloseModal();
+        /*if (this.m_currentModal is Modal m && m.DataContext is ModalBase mb)
+            mb.CloseModal();*/
 
         // Remove reference to current modal
         this.m_currentModal = null;

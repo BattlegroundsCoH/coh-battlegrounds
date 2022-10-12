@@ -25,4 +25,44 @@
 		<ProjectReference Include="..\coh2-battlegrounds-functional\coh2-battlegrounds-functional.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Gfx\Icons\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Gfx\Icons\ability_icons.dat">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Gfx\Icons\deploy_icons.dat">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Gfx\Icons\entity_icons.dat">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Gfx\Icons\entity_symbols.dat">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Gfx\Icons\item_icons.dat">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Gfx\Icons\minimap_icons.dat">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Gfx\Icons\phase_icons.dat">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Gfx\Icons\portraits.dat">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Gfx\Icons\symbol_icons.dat">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Gfx\Icons\unit_icons.dat">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Gfx\Icons\upgrade_icons.dat">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>

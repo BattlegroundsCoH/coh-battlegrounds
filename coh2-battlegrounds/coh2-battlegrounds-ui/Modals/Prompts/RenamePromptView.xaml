@@ -52,7 +52,7 @@
 
             <Button 
                 Content="{Binding AcceptTitle, FallbackValue='Rename'}"
-                Style="{StaticResource StandardBlueLocButton}"
+                Style="{StaticResource StandardBlueLocalisedButton}"
                 Margin="0, 7, 0, 0"
                 Command="{Binding Accept}"
                 IsEnabled="{Binding ElementName=renameValue, Path=Text.Length, Mode=OneWay}"/>
