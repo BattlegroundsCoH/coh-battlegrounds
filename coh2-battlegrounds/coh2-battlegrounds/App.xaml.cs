@@ -346,7 +346,7 @@ public partial class App : Application, IResourceResolver, IViewController {
 
         // Loop through basic entry
         foreach (DictionaryEntry res in dictionary) {
-            if (res.Value is DataTemplate template && template.DataType.Equals(type)) {
+            if (res.Value is DataTemplate template && template.DataType is not null && template.DataType.Equals(type)) {
                 return template;
             }
         }

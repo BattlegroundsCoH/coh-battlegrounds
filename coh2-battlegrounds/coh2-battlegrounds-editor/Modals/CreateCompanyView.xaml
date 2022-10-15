@@ -63,7 +63,7 @@
                     Source="{Binding SelectedFaction.Icon}"/>
 
                 <ComboBox 
-                    Style="{StaticResource StandardBlueDropdown}"
+                    Style="{StaticResource BlueDropdown}"
                     Grid.Column="1"
                     ItemsSource="{Binding AvailableFactions}"
                     SelectedItem="{Binding SelectedFaction, Mode=TwoWay}"
@@ -94,7 +94,7 @@
                     Source="{Binding SelectedType.Icon}"/>
 
                 <ComboBox 
-                    Style="{StaticResource StandardBlueDropdown}"
+                    Style="{StaticResource BlueDropdown}"
                     Grid.Column="1"
                     ItemsSource="{Binding AvailableTypes}"
                     SelectedItem="{Binding SelectedType, Mode=TwoWay}"

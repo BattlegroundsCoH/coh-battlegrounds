@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Diagnostics;
 
 using Battlegrounds.Gfx;
 
 namespace Battlegrounds.Resources;
 
 /// <summary>
-/// 
+/// Static utility class for <b><i>dynamically</i></b> loaded resources.
 /// </summary>
 public static class ResourceLoader {
 
@@ -41,10 +35,10 @@ public static class ResourceLoader {
     }
 
     /// <summary>
-    /// 
+    /// Load the contents of the specified file and attempt to load it into the resource context defined by the <paramref name="identifier"/>.
     /// </summary>
-    /// <param name="identifier"></param>
-    /// <param name="filepath"></param>
+    /// <param name="identifier">The identifier to load resource data into.</param>
+    /// <param name="filepath">The filepath to load the resource data from.</param>
     public static void LoadResourceFile(string identifier, string filepath) {
 
         if (!File.Exists(filepath))
@@ -98,11 +92,11 @@ public static class ResourceLoader {
     }
 
     /// <summary>
-    /// 
+    /// Load all the file contents in a directory into the resource context defined by the <paramref name="identifier"/>.
     /// </summary>
-    /// <param name="identifier"></param>
-    /// <param name="path"></param>
-    /// <param name="shouldPackage"></param>
+    /// <param name="identifier">The identifier to load resource data into.</param>
+    /// <param name="path">The directory path to load resources from.</param>
+    /// <param name="shouldPackage">Should the call emit warnings that the folder should be packaged and not have loose files.</param>
     public static void LoadResourceFolder(string identifier, string path, bool shouldPackage = true) {
 
         if (!Directory.Exists(path))
@@ -126,7 +120,7 @@ public static class ResourceLoader {
     }
 
     /// <summary>
-    /// 
+    /// Load all the resources that have been packaged with the application.
     /// </summary>
     public static void LoadAllPackagedResources() {
 

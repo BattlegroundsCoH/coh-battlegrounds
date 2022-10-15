@@ -42,10 +42,11 @@
         </StackPanel>
         <ComboBox
             Grid.Column="1"
-            Height="32"
+            Height="28"
             VerticalAlignment="Center"
             x:Name="DropdownOptions"
-            Style="{StaticResource StandardBlueDropdown}"/>
+            Style="{StaticResource BlueDropdown}"
+            ItemContainerStyle="{StaticResource BlueDropdownItem}"/>
         <DockPanel 
             Grid.Column="1"
             LastChildFill="True"

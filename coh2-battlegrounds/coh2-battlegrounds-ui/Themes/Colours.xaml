@@ -40,6 +40,9 @@
     <Color x:Key="BackgroundLightGray">#536375</Color>
     <SolidColorBrush x:Key="BackgroundLightGrayBrush" Color="{StaticResource BackgroundLightGray}" />
 
+    <Color x:Key="BackgroundDarkGray">#323b46</Color>
+    <SolidColorBrush x:Key="BackgroundDarkGrayBrush" Color="{StaticResource BackgroundDarkGray}" />
+
     <Color x:Key="SeperatorGray">#4a545f</Color>
     <SolidColorBrush x:Key="SeperatorGrayBrush" Color="{StaticResource SeperatorGray}" />
 
