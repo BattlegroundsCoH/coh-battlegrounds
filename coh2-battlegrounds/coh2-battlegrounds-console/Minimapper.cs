@@ -25,8 +25,8 @@ public static class Minimapper {
         using var g = Graphics.FromImage(bmp);
         g.Clear(Color.Transparent);
 
-        var xs = (bmp.Width / scenario.TerrainSize.X) * 2;
-        var ys = (bmp.Height / scenario.TerrainSize.Y) * 2;
+        var xs = (bmp.Width / scenario.TerrainSize.Width) * 2;
+        var ys = (bmp.Height / scenario.TerrainSize.Length) * 2;
 
         var ox = (bmp.Width * 0.5);
         var oy = (bmp.Height * 0.5);

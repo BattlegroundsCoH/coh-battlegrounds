@@ -166,19 +166,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 384,
-      "Z": 0
+      "Width": 384,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 576,
-      "Y": 576,
-      "Z": 0
+      "Width": 576,
+      "Length": 576
     },
     "MinimapSize": {
-      "X": 352,
-      "Y": 352,
-      "Z": 0
+      "Width": 352,
+      "Length": 352
     }
   },
   {
@@ -366,19 +363,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 352,
-      "Y": 352,
-      "Z": 0
+      "Width": 352,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 544,
-      "Y": 544,
-      "Z": 0
+      "Width": 544,
+      "Length": 544
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -566,19 +560,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 352,
-      "Y": 352,
-      "Z": 0
+      "Width": 352,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 544,
-      "Y": 544,
-      "Z": 0
+      "Width": 544,
+      "Length": 544
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -766,19 +757,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 320,
-      "Z": 0
+      "Width": 320,
+      "Length": 320
     },
     "TerrainSize": {
-      "X": 576,
-      "Y": 576,
-      "Z": 0
+      "Width": 576,
+      "Length": 576
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -966,19 +954,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 320,
-      "Z": 0
+      "Width": 320,
+      "Length": 320
     },
     "TerrainSize": {
-      "X": 640,
-      "Y": 640,
-      "Z": 0
+      "Width": 640,
+      "Length": 640
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -1166,19 +1151,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 352,
-      "Y": 352,
-      "Z": 0
+      "Width": 352,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 672,
-      "Y": 672,
-      "Z": 0
+      "Width": 672,
+      "Length": 672
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -1366,19 +1348,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 256,
-      "Y": 288,
-      "Z": 0
+      "Width": 256,
+      "Length": 288
     },
     "TerrainSize": {
-      "X": 352,
-      "Y": 320,
-      "Z": 0
+      "Width": 352,
+      "Length": 320
     },
     "MinimapSize": {
-      "X": 672,
-      "Y": 768,
-      "Z": 0
+      "Width": 672,
+      "Length": 768
     }
   },
   {
@@ -1566,19 +1545,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 352,
-      "Y": 352,
-      "Z": 0
+      "Width": 352,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 576,
-      "Y": 576,
-      "Z": 0
+      "Width": 576,
+      "Length": 576
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -1748,19 +1724,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 256,
-      "Y": 320,
-      "Z": 0
+      "Width": 256,
+      "Length": 320
     },
     "TerrainSize": {
-      "X": 576,
-      "Y": 512,
-      "Z": 0
+      "Width": 576,
+      "Length": 512
     },
     "MinimapSize": {
-      "X": 614,
-      "Y": 768,
-      "Z": 0
+      "Width": 614,
+      "Length": 768
     }
   },
   {
@@ -1948,19 +1921,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 352,
-      "Y": 352,
-      "Z": 0
+      "Width": 352,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 544,
-      "Y": 544,
-      "Z": 0
+      "Width": 544,
+      "Length": 544
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -2148,19 +2118,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 448,
-      "Y": 448,
-      "Z": 0
+      "Width": 448,
+      "Length": 448
     },
     "TerrainSize": {
-      "X": 704,
-      "Y": 704,
-      "Z": 0
+      "Width": 704,
+      "Length": 704
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -2357,19 +2324,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 352,
-      "Y": 352,
-      "Z": 0
+      "Width": 352,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 672,
-      "Y": 672,
-      "Z": 0
+      "Width": 672,
+      "Length": 672
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -2557,19 +2521,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 352,
-      "Y": 352,
-      "Z": 0
+      "Width": 352,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 544,
-      "Y": 544,
-      "Z": 0
+      "Width": 544,
+      "Length": 544
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -2757,19 +2718,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 320,
-      "Z": 0
+      "Width": 320,
+      "Length": 320
     },
     "TerrainSize": {
-      "X": 640,
-      "Y": 640,
-      "Z": 0
+      "Width": 640,
+      "Length": 640
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -2975,19 +2933,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 384,
-      "Z": 0
+      "Width": 384,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 704,
-      "Y": 704,
-      "Z": 0
+      "Width": 704,
+      "Length": 704
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -3175,19 +3130,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 384,
-      "Z": 0
+      "Width": 384,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 640,
-      "Y": 640,
-      "Z": 0
+      "Width": 640,
+      "Length": 640
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -3375,19 +3327,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 384,
-      "Z": 0
+      "Width": 384,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 704,
-      "Y": 704,
-      "Z": 0
+      "Width": 704,
+      "Length": 704
     },
     "MinimapSize": {
-      "X": 260,
-      "Y": 260,
-      "Z": 0
+      "Width": 260,
+      "Length": 260
     }
   },
   {
@@ -3575,19 +3524,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 384,
-      "Z": 0
+      "Width": 384,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 704,
-      "Y": 704,
-      "Z": 0
+      "Width": 704,
+      "Length": 704
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -3775,19 +3721,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 384,
-      "Z": 0
+      "Width": 384,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 704,
-      "Y": 704,
-      "Z": 0
+      "Width": 704,
+      "Length": 704
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -3957,19 +3900,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 320,
-      "Z": 0
+      "Width": 320,
+      "Length": 320
     },
     "TerrainSize": {
-      "X": 640,
-      "Y": 640,
-      "Z": 0
+      "Width": 640,
+      "Length": 640
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -4157,19 +4097,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 256,
-      "Y": 384,
-      "Z": 0
+      "Width": 256,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 640,
-      "Y": 512,
-      "Z": 0
+      "Width": 640,
+      "Length": 512
     },
     "MinimapSize": {
-      "X": 512,
-      "Y": 768,
-      "Z": 0
+      "Width": 512,
+      "Length": 768
     }
   },
   {
@@ -4357,19 +4294,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 352,
-      "Y": 352,
-      "Z": 0
+      "Width": 352,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -4557,19 +4491,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 416,
-      "Z": 0
+      "Width": 320,
+      "Length": 416
     },
     "TerrainSize": {
-      "X": 736,
-      "Y": 640,
-      "Z": 0
+      "Width": 736,
+      "Length": 640
     },
     "MinimapSize": {
-      "X": 590,
-      "Y": 768,
-      "Z": 0
+      "Width": 590,
+      "Length": 768
     }
   },
   {
@@ -4775,19 +4706,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 320,
-      "Z": 0
+      "Width": 320,
+      "Length": 320
     },
     "TerrainSize": {
-      "X": 544,
-      "Y": 544,
-      "Z": 0
+      "Width": 544,
+      "Length": 544
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -4975,19 +4903,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 320,
-      "Z": 0
+      "Width": 320,
+      "Length": 320
     },
     "TerrainSize": {
-      "X": 576,
-      "Y": 576,
-      "Z": 0
+      "Width": 576,
+      "Length": 576
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -5175,19 +5100,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 320,
-      "Z": 0
+      "Width": 320,
+      "Length": 320
     },
     "TerrainSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -5375,19 +5297,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 320,
-      "Z": 0
+      "Width": 320,
+      "Length": 320
     },
     "TerrainSize": {
-      "X": 544,
-      "Y": 544,
-      "Z": 0
+      "Width": 544,
+      "Length": 544
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -5575,19 +5494,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 352,
-      "Y": 480,
-      "Z": 0
+      "Width": 352,
+      "Length": 480
     },
     "TerrainSize": {
-      "X": 800,
-      "Y": 672,
-      "Z": 0
+      "Width": 800,
+      "Length": 672
     },
     "MinimapSize": {
-      "X": 563,
-      "Y": 768,
-      "Z": 0
+      "Width": 563,
+      "Length": 768
     }
   },
   {
@@ -5775,19 +5691,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 416,
-      "Y": 416,
-      "Z": 0
+      "Width": 416,
+      "Length": 416
     },
     "TerrainSize": {
-      "X": 736,
-      "Y": 736,
-      "Z": 0
+      "Width": 736,
+      "Length": 736
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -5975,19 +5888,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 480,
-      "Y": 480,
-      "Z": 0
+      "Width": 480,
+      "Length": 480
     },
     "TerrainSize": {
-      "X": 800,
-      "Y": 800,
-      "Z": 0
+      "Width": 800,
+      "Length": 800
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -6175,19 +6085,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 320,
-      "Z": 0
+      "Width": 320,
+      "Length": 320
     },
     "TerrainSize": {
-      "X": 640,
-      "Y": 640,
-      "Z": 0
+      "Width": 640,
+      "Length": 640
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -6375,19 +6282,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 448,
-      "Z": 0
+      "Width": 384,
+      "Length": 448
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 704,
-      "Z": 0
+      "Width": 768,
+      "Length": 704
     },
     "MinimapSize": {
-      "X": 658,
-      "Y": 768,
-      "Z": 0
+      "Width": 658,
+      "Length": 768
     }
   },
   {
@@ -6593,19 +6497,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 448,
-      "Z": 0
+      "Width": 512,
+      "Length": 448
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 832,
-      "Z": 0
+      "Width": 768,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -6811,19 +6712,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 288,
-      "Z": 0
+      "Width": 512,
+      "Length": 288
     },
     "TerrainSize": {
-      "X": 512,
-      "Y": 736,
-      "Z": 0
+      "Width": 512,
+      "Length": 736
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 432,
-      "Z": 0
+      "Width": 768,
+      "Length": 432
     }
   },
   {
@@ -6903,19 +6801,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 384,
-      "Z": 0
+      "Width": 384,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 704,
-      "Y": 704,
-      "Z": 0
+      "Width": 704,
+      "Length": 704
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -7121,19 +7016,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 384,
-      "Z": 0
+      "Width": 384,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 448,
-      "Y": 448,
-      "Z": 0
+      "Width": 448,
+      "Length": 448
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -7339,19 +7231,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 480,
-      "Y": 352,
-      "Z": 0
+      "Width": 480,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 608,
-      "Y": 736,
-      "Z": 0
+      "Width": 608,
+      "Length": 736
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 563,
-      "Z": 0
+      "Width": 768,
+      "Length": 563
     }
   },
   {
@@ -7575,19 +7464,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 576,
-      "Z": 0
+      "Width": 512,
+      "Length": 576
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     },
     "MinimapSize": {
-      "X": 687,
-      "Y": 777,
-      "Z": 0
+      "Width": 687,
+      "Length": 777
     }
   },
   {
@@ -7793,19 +7679,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 352,
-      "Y": 352,
-      "Z": 0
+      "Width": 352,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 544,
-      "Y": 544,
-      "Z": 0
+      "Width": 544,
+      "Length": 544
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -8011,19 +7894,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 416,
-      "Y": 416,
-      "Z": 0
+      "Width": 416,
+      "Length": 416
     },
     "TerrainSize": {
-      "X": 736,
-      "Y": 736,
-      "Z": 0
+      "Width": 736,
+      "Length": 736
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -8229,19 +8109,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 448,
-      "Z": 0
+      "Width": 512,
+      "Length": 448
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 832,
-      "Z": 0
+      "Width": 768,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -8447,19 +8324,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 352,
-      "Z": 0
+      "Width": 320,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 576,
-      "Y": 544,
-      "Z": 0
+      "Width": 576,
+      "Length": 544
     },
     "MinimapSize": {
-      "X": 698,
-      "Y": 768,
-      "Z": 0
+      "Width": 698,
+      "Length": 768
     }
   },
   {
@@ -8665,19 +8539,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 800,
-      "Y": 800,
-      "Z": 0
+      "Width": 800,
+      "Length": 800
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -8865,19 +8736,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 448,
-      "Y": 512,
-      "Z": 0
+      "Width": 448,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 832,
-      "Y": 768,
-      "Z": 0
+      "Width": 832,
+      "Length": 768
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -9083,19 +8951,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 448,
-      "Y": 480,
-      "Z": 0
+      "Width": 448,
+      "Length": 480
     },
     "TerrainSize": {
-      "X": 672,
-      "Y": 640,
-      "Z": 0
+      "Width": 672,
+      "Length": 640
     },
     "MinimapSize": {
-      "X": 716,
-      "Y": 768,
-      "Z": 0
+      "Width": 716,
+      "Length": 768
     }
   },
   {
@@ -9346,19 +9211,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 416,
-      "Y": 448,
-      "Z": 0
+      "Width": 416,
+      "Length": 448
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 736,
-      "Z": 0
+      "Width": 768,
+      "Length": 736
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -9573,19 +9435,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 416,
-      "Y": 512,
-      "Z": 0
+      "Width": 416,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 832,
-      "Y": 704,
-      "Z": 0
+      "Width": 832,
+      "Length": 704
     },
     "MinimapSize": {
-      "X": 296,
-      "Y": 366,
-      "Z": 0
+      "Width": 296,
+      "Length": 366
     }
   },
   {
@@ -9791,19 +9650,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 416,
-      "Y": 352,
-      "Z": 0
+      "Width": 416,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 608,
-      "Y": 672,
-      "Z": 0
+      "Width": 608,
+      "Length": 672
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 649,
-      "Z": 0
+      "Width": 768,
+      "Length": 649
     }
   },
   {
@@ -10009,19 +9865,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 448,
-      "Z": 0
+      "Width": 384,
+      "Length": 448
     },
     "TerrainSize": {
-      "X": 544,
-      "Y": 480,
-      "Z": 0
+      "Width": 544,
+      "Length": 480
     },
     "MinimapSize": {
-      "X": 658,
-      "Y": 768,
-      "Z": 0
+      "Width": 658,
+      "Length": 768
     }
   },
   {
@@ -10227,19 +10080,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 416,
-      "Z": 0
+      "Width": 320,
+      "Length": 416
     },
     "TerrainSize": {
-      "X": 736,
-      "Y": 640,
-      "Z": 0
+      "Width": 736,
+      "Length": 640
     },
     "MinimapSize": {
-      "X": 590,
-      "Y": 768,
-      "Z": 0
+      "Width": 590,
+      "Length": 768
     }
   },
   {
@@ -10445,19 +10295,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 448,
-      "Y": 384,
-      "Z": 0
+      "Width": 448,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 672,
-      "Y": 672,
-      "Z": 0
+      "Width": 672,
+      "Length": 672
     },
     "MinimapSize": {
-      "X": 268,
-      "Y": 227,
-      "Z": 0
+      "Width": 268,
+      "Length": 227
     }
   },
   {
@@ -10663,19 +10510,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 448,
-      "Y": 384,
-      "Z": 0
+      "Width": 448,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 672,
-      "Y": 672,
-      "Z": 0
+      "Width": 672,
+      "Length": 672
     },
     "MinimapSize": {
-      "X": 268,
-      "Y": 227,
-      "Z": 0
+      "Width": 268,
+      "Length": 227
     }
   },
   {
@@ -10872,19 +10716,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 448,
-      "Y": 448,
-      "Z": 0
+      "Width": 448,
+      "Length": 448
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -11090,19 +10931,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 480,
-      "Y": 352,
-      "Z": 0
+      "Width": 480,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 640,
-      "Y": 736,
-      "Z": 0
+      "Width": 640,
+      "Length": 736
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 563,
-      "Z": 0
+      "Width": 768,
+      "Length": 563
     }
   },
   {
@@ -11308,19 +11146,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 448,
-      "Y": 448,
-      "Z": 0
+      "Width": 448,
+      "Length": 448
     },
     "TerrainSize": {
-      "X": 704,
-      "Y": 704,
-      "Z": 0
+      "Width": 704,
+      "Length": 704
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -11517,19 +11352,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 544,
-      "Y": 544,
-      "Z": 0
+      "Width": 544,
+      "Length": 544
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -11726,19 +11558,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 352,
-      "Z": 0
+      "Width": 512,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 672,
-      "Y": 832,
-      "Z": 0
+      "Width": 672,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 250,
-      "Y": 170,
-      "Z": 0
+      "Width": 250,
+      "Length": 170
     }
   },
   {
@@ -11989,19 +11818,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 352,
-      "Z": 0
+      "Width": 512,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 672,
-      "Y": 832,
-      "Z": 0
+      "Width": 672,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 250,
-      "Y": 170,
-      "Z": 0
+      "Width": 250,
+      "Length": 170
     }
   },
   {
@@ -12198,19 +12024,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 416,
-      "Y": 416,
-      "Z": 0
+      "Width": 416,
+      "Length": 416
     },
     "TerrainSize": {
-      "X": 736,
-      "Y": 736,
-      "Z": 0
+      "Width": 736,
+      "Length": 736
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -12416,19 +12239,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 576,
-      "Y": 384,
-      "Z": 0
+      "Width": 576,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 704,
-      "Y": 928,
-      "Z": 0
+      "Width": 704,
+      "Length": 928
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 512,
-      "Z": 0
+      "Width": 768,
+      "Length": 512
     }
   },
   {
@@ -12634,19 +12454,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 352,
-      "Y": 480,
-      "Z": 0
+      "Width": 352,
+      "Length": 480
     },
     "TerrainSize": {
-      "X": 800,
-      "Y": 672,
-      "Z": 0
+      "Width": 800,
+      "Length": 672
     },
     "MinimapSize": {
-      "X": 564,
-      "Y": 768,
-      "Z": 0
+      "Width": 564,
+      "Length": 768
     }
   },
   {
@@ -12870,19 +12687,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 416,
-      "Y": 416,
-      "Z": 0
+      "Width": 416,
+      "Length": 416
     },
     "TerrainSize": {
-      "X": 736,
-      "Y": 736,
-      "Z": 0
+      "Width": 736,
+      "Length": 736
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -13079,19 +12893,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 480,
-      "Y": 320,
-      "Z": 0
+      "Width": 480,
+      "Length": 320
     },
     "TerrainSize": {
-      "X": 576,
-      "Y": 736,
-      "Z": 0
+      "Width": 576,
+      "Length": 736
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 512,
-      "Z": 0
+      "Width": 768,
+      "Length": 512
     }
   },
   {
@@ -13297,19 +13108,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 480,
-      "Y": 480,
-      "Z": 0
+      "Width": 480,
+      "Length": 480
     },
     "TerrainSize": {
-      "X": 640,
-      "Y": 640,
-      "Z": 0
+      "Width": 640,
+      "Length": 640
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -13515,19 +13323,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 480,
-      "Y": 480,
-      "Z": 0
+      "Width": 480,
+      "Length": 480
     },
     "TerrainSize": {
-      "X": 800,
-      "Y": 800,
-      "Z": 0
+      "Width": 800,
+      "Length": 800
     },
     "MinimapSize": {
-      "X": 360,
-      "Y": 360,
-      "Z": 0
+      "Width": 360,
+      "Length": 360
     }
   },
   {
@@ -13733,19 +13538,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 480,
-      "Y": 480,
-      "Z": 0
+      "Width": 480,
+      "Length": 480
     },
     "TerrainSize": {
-      "X": 800,
-      "Y": 800,
-      "Z": 0
+      "Width": 800,
+      "Length": 800
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -13951,19 +13753,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 416,
-      "Y": 512,
-      "Z": 0
+      "Width": 416,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 1024,
-      "Y": 1024,
-      "Z": 0
+      "Width": 1024,
+      "Length": 1024
     },
     "MinimapSize": {
-      "X": 624,
-      "Y": 768,
-      "Z": 0
+      "Width": 624,
+      "Length": 768
     }
   },
   {
@@ -14169,19 +13968,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 416,
-      "Y": 416,
-      "Z": 0
+      "Width": 416,
+      "Length": 416
     },
     "TerrainSize": {
-      "X": 544,
-      "Y": 544,
-      "Z": 0
+      "Width": 544,
+      "Length": 544
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -14423,19 +14219,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 832,
-      "Y": 832,
-      "Z": 0
+      "Width": 832,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 300,
-      "Y": 300,
-      "Z": 0
+      "Width": 300,
+      "Length": 300
     }
   },
   {
@@ -14659,19 +14452,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 448,
-      "Z": 0
+      "Width": 512,
+      "Length": 448
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 832,
-      "Z": 0
+      "Width": 768,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -14913,19 +14703,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 640,
-      "Y": 384,
-      "Z": 0
+      "Width": 640,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 576,
-      "Y": 832,
-      "Z": 0
+      "Width": 576,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 460,
-      "Z": 0
+      "Width": 768,
+      "Length": 460
     }
   },
   {
@@ -15149,19 +14936,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 640,
-      "Y": 544,
-      "Z": 0
+      "Width": 640,
+      "Length": 544
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 864,
-      "Z": 0
+      "Width": 768,
+      "Length": 864
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 652,
-      "Z": 0
+      "Width": 768,
+      "Length": 652
     }
   },
   {
@@ -15385,19 +15169,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 448,
-      "Y": 480,
-      "Z": 0
+      "Width": 448,
+      "Length": 480
     },
     "TerrainSize": {
-      "X": 672,
-      "Y": 640,
-      "Z": 0
+      "Width": 672,
+      "Length": 640
     },
     "MinimapSize": {
-      "X": 716,
-      "Y": 768,
-      "Z": 0
+      "Width": 716,
+      "Length": 768
     }
   },
   {
@@ -15657,19 +15438,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 832,
-      "Y": 832,
-      "Z": 0
+      "Width": 832,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -15929,19 +15707,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 800,
-      "Y": 800,
-      "Z": 0
+      "Width": 800,
+      "Length": 800
     },
     "MinimapSize": {
-      "X": 360,
-      "Y": 360,
-      "Z": 0
+      "Width": 360,
+      "Length": 360
     }
   },
   {
@@ -16165,19 +15940,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 800,
-      "Y": 800,
-      "Z": 0
+      "Width": 800,
+      "Length": 800
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -16401,19 +16173,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 480,
-      "Y": 480,
-      "Z": 0
+      "Width": 480,
+      "Length": 480
     },
     "TerrainSize": {
-      "X": 800,
-      "Y": 800,
-      "Z": 0
+      "Width": 800,
+      "Length": 800
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -16637,19 +16406,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 576,
-      "Y": 416,
-      "Z": 0
+      "Width": 576,
+      "Length": 416
     },
     "TerrainSize": {
-      "X": 512,
-      "Y": 768,
-      "Z": 0
+      "Width": 512,
+      "Length": 768
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 560,
-      "Z": 0
+      "Width": 768,
+      "Length": 560
     }
   },
   {
@@ -16909,19 +16675,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 384,
-      "Z": 0
+      "Width": 384,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 640,
-      "Y": 640,
-      "Z": 0
+      "Width": 640,
+      "Length": 640
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -17181,19 +16944,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 640,
-      "Y": 384,
-      "Z": 0
+      "Width": 640,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 576,
-      "Y": 832,
-      "Z": 0
+      "Width": 576,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 460,
-      "Z": 0
+      "Width": 768,
+      "Length": 460
     }
   },
   {
@@ -17435,19 +17195,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 640,
-      "Y": 544,
-      "Z": 0
+      "Width": 640,
+      "Length": 544
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 864,
-      "Z": 0
+      "Width": 768,
+      "Length": 864
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 652,
-      "Z": 0
+      "Width": 768,
+      "Length": 652
     }
   },
   {
@@ -17698,19 +17455,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 544,
-      "Y": 608,
-      "Z": 0
+      "Width": 544,
+      "Length": 608
     },
     "TerrainSize": {
-      "X": 928,
-      "Y": 864,
-      "Z": 0
+      "Width": 928,
+      "Length": 864
     },
     "MinimapSize": {
-      "X": 240,
-      "Y": 262,
-      "Z": 0
+      "Width": 240,
+      "Length": 262
     }
   },
   {
@@ -17988,19 +17742,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 544,
-      "Y": 608,
-      "Z": 0
+      "Width": 544,
+      "Length": 608
     },
     "TerrainSize": {
-      "X": 928,
-      "Y": 864,
-      "Z": 0
+      "Width": 928,
+      "Length": 864
     },
     "MinimapSize": {
-      "X": 240,
-      "Y": 262,
-      "Z": 0
+      "Width": 240,
+      "Length": 262
     }
   },
   {
@@ -18260,19 +18011,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 480,
-      "Y": 480,
-      "Z": 0
+      "Width": 480,
+      "Length": 480
     },
     "TerrainSize": {
-      "X": 800,
-      "Y": 800,
-      "Z": 0
+      "Width": 800,
+      "Length": 800
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -18550,19 +18298,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 832,
-      "Y": 832,
-      "Z": 0
+      "Width": 832,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -18804,19 +18549,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 800,
-      "Y": 800,
-      "Z": 0
+      "Width": 800,
+      "Length": 800
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -19076,19 +18818,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 544,
-      "Y": 448,
-      "Z": 0
+      "Width": 544,
+      "Length": 448
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 864,
-      "Z": 0
+      "Width": 768,
+      "Length": 864
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 632,
-      "Z": 0
+      "Width": 768,
+      "Length": 632
     }
   },
   {
@@ -19348,19 +19087,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 480,
-      "Z": 0
+      "Width": 512,
+      "Length": 480
     },
     "TerrainSize": {
-      "X": 736,
-      "Y": 768,
-      "Z": 0
+      "Width": 736,
+      "Length": 768
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 720,
-      "Z": 0
+      "Width": 768,
+      "Length": 720
     }
   },
   {
@@ -19656,19 +19392,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -19910,19 +19643,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 480,
-      "Y": 480,
-      "Z": 0
+      "Width": 480,
+      "Length": 480
     },
     "TerrainSize": {
-      "X": 800,
-      "Y": 800,
-      "Z": 0
+      "Width": 800,
+      "Length": 800
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -20164,19 +19894,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 480,
-      "Y": 480,
-      "Z": 0
+      "Width": 480,
+      "Length": 480
     },
     "TerrainSize": {
-      "X": 800,
-      "Y": 800,
-      "Z": 0
+      "Width": 800,
+      "Length": 800
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -20418,19 +20145,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 544,
-      "Y": 384,
-      "Z": 0
+      "Width": 544,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 640,
-      "Y": 832,
-      "Z": 0
+      "Width": 640,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 542,
-      "Z": 0
+      "Width": 768,
+      "Length": 542
     }
   },
   {
@@ -20690,19 +20414,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 608,
-      "Y": 608,
-      "Z": 0
+      "Width": 608,
+      "Length": 608
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -20962,19 +20683,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 448,
-      "Y": 704,
-      "Z": 0
+      "Width": 448,
+      "Length": 704
     },
     "TerrainSize": {
-      "X": 1024,
-      "Y": 864,
-      "Z": 0
+      "Width": 1024,
+      "Length": 864
     },
     "MinimapSize": {
-      "X": 488,
-      "Y": 768,
-      "Z": 0
+      "Width": 488,
+      "Length": 768
     }
   },
   {
@@ -21234,19 +20952,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 448,
-      "Y": 576,
-      "Z": 0
+      "Width": 448,
+      "Length": 576
     },
     "TerrainSize": {
-      "X": 736,
-      "Y": 608,
-      "Z": 0
+      "Width": 736,
+      "Length": 608
     },
     "MinimapSize": {
-      "X": 276,
-      "Y": 338,
-      "Z": 0
+      "Width": 276,
+      "Length": 338
     }
   },
   {
@@ -21461,19 +21176,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 416,
-      "Y": 416,
-      "Z": 0
+      "Width": 416,
+      "Length": 416
     },
     "TerrainSize": {
-      "X": 736,
-      "Y": 736,
-      "Z": 0
+      "Width": 736,
+      "Length": 736
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -21724,19 +21436,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 448,
-      "Z": 0
+      "Width": 512,
+      "Length": 448
     },
     "TerrainSize": {
-      "X": 704,
-      "Y": 768,
-      "Z": 0
+      "Width": 704,
+      "Length": 768
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 696,
-      "Z": 0
+      "Width": 768,
+      "Length": 696
     }
   },
   {
@@ -21852,19 +21561,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 448,
-      "Y": 512,
-      "Z": 0
+      "Width": 448,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 704,
-      "Z": 0
+      "Width": 768,
+      "Length": 704
     },
     "MinimapSize": {
-      "X": 672,
-      "Y": 768,
-      "Z": 0
+      "Width": 672,
+      "Length": 768
     }
   },
   {
@@ -22124,19 +21830,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -22378,19 +22081,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 544,
-      "Y": 384,
-      "Z": 0
+      "Width": 544,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 640,
-      "Y": 832,
-      "Z": 0
+      "Width": 640,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 542,
-      "Z": 0
+      "Width": 768,
+      "Length": 542
     }
   },
   {
@@ -22578,19 +22278,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 384,
-      "Z": 0
+      "Width": 320,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 704,
-      "Y": 640,
-      "Z": 0
+      "Width": 704,
+      "Length": 640
     },
     "MinimapSize": {
-      "X": 640,
-      "Y": 768,
-      "Z": 0
+      "Width": 640,
+      "Length": 768
     }
   },
   {
@@ -22796,19 +22493,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 320,
-      "Z": 0
+      "Width": 320,
+      "Length": 320
     },
     "TerrainSize": {
-      "X": 544,
-      "Y": 544,
-      "Z": 0
+      "Width": 544,
+      "Length": 544
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -23014,19 +22708,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 320,
-      "Y": 320,
-      "Z": 0
+      "Width": 320,
+      "Length": 320
     },
     "TerrainSize": {
-      "X": 544,
-      "Y": 544,
-      "Z": 0
+      "Width": 544,
+      "Length": 544
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -23070,19 +22761,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 800,
-      "Y": 800,
-      "Z": 0
+      "Width": 800,
+      "Length": 800
     },
     "TerrainSize": {
-      "X": 832,
-      "Y": 832,
-      "Z": 0
+      "Width": 832,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -23270,19 +22958,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 416,
-      "Y": 416,
-      "Z": 0
+      "Width": 416,
+      "Length": 416
     },
     "TerrainSize": {
-      "X": 672,
-      "Y": 672,
-      "Z": 0
+      "Width": 672,
+      "Length": 672
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -23470,19 +23155,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 384,
-      "Z": 0
+      "Width": 384,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -23670,19 +23352,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 352,
-      "Y": 352,
-      "Z": 0
+      "Width": 352,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 608,
-      "Y": 608,
-      "Z": 0
+      "Width": 608,
+      "Length": 608
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -23879,19 +23558,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 352,
-      "Y": 352,
-      "Z": 0
+      "Width": 352,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 672,
-      "Y": 672,
-      "Z": 0
+      "Width": 672,
+      "Length": 672
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -24079,19 +23755,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 320,
-      "Z": 0
+      "Width": 384,
+      "Length": 320
     },
     "TerrainSize": {
-      "X": 512,
-      "Y": 576,
-      "Z": 0
+      "Width": 512,
+      "Length": 576
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 640,
-      "Z": 0
+      "Width": 768,
+      "Length": 640
     }
   },
   {
@@ -24297,19 +23970,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 448,
-      "Y": 384,
-      "Z": 0
+      "Width": 448,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 704,
-      "Y": 768,
-      "Z": 0
+      "Width": 704,
+      "Length": 768
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -24497,19 +24167,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 352,
-      "Y": 352,
-      "Z": 0
+      "Width": 352,
+      "Length": 352
     },
     "TerrainSize": {
-      "X": 672,
-      "Y": 672,
-      "Z": 0
+      "Width": 672,
+      "Length": 672
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -24715,19 +24382,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 416,
-      "Y": 384,
-      "Z": 0
+      "Width": 416,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 640,
-      "Y": 672,
-      "Z": 0
+      "Width": 640,
+      "Length": 672
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -24933,19 +24597,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 384,
-      "Z": 0
+      "Width": 384,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 704,
-      "Y": 704,
-      "Z": 0
+      "Width": 704,
+      "Length": 704
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -25151,19 +24812,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 384,
-      "Y": 416,
-      "Z": 0
+      "Width": 384,
+      "Length": 416
     },
     "TerrainSize": {
-      "X": 736,
-      "Y": 672,
-      "Z": 0
+      "Width": 736,
+      "Length": 672
     },
     "MinimapSize": {
-      "X": 708,
-      "Y": 768,
-      "Z": 0
+      "Width": 708,
+      "Length": 768
     }
   },
   {
@@ -25369,19 +25027,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 416,
-      "Y": 416,
-      "Z": 0
+      "Width": 416,
+      "Length": 416
     },
     "TerrainSize": {
-      "X": 736,
-      "Y": 736,
-      "Z": 0
+      "Width": 736,
+      "Length": 736
     },
     "MinimapSize": {
-      "X": 360,
-      "Y": 360,
-      "Z": 0
+      "Width": 360,
+      "Length": 360
     }
   },
   {
@@ -25605,19 +25260,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 384,
-      "Z": 0
+      "Width": 512,
+      "Length": 384
     },
     "TerrainSize": {
-      "X": 704,
-      "Y": 832,
-      "Z": 0
+      "Width": 704,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 576,
-      "Z": 0
+      "Width": 768,
+      "Length": 576
     }
   },
   {
@@ -25850,19 +25502,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 832,
-      "Y": 832,
-      "Z": 0
+      "Width": 832,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -26068,19 +25717,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 448,
-      "Y": 512,
-      "Z": 0
+      "Width": 448,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 832,
-      "Y": 768,
-      "Z": 0
+      "Width": 832,
+      "Length": 768
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -26322,19 +25968,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 544,
-      "Y": 448,
-      "Z": 0
+      "Width": 544,
+      "Length": 448
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 864,
-      "Z": 0
+      "Width": 768,
+      "Length": 864
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 632,
-      "Z": 0
+      "Width": 768,
+      "Length": 632
     }
   },
   {
@@ -26576,19 +26219,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 480,
-      "Y": 512,
-      "Z": 0
+      "Width": 480,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 832,
-      "Y": 800,
-      "Z": 0
+      "Width": 832,
+      "Length": 800
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -26839,19 +26479,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 480,
-      "Y": 480,
-      "Z": 0
+      "Width": 480,
+      "Length": 480
     },
     "TerrainSize": {
-      "X": 800,
-      "Y": 800,
-      "Z": 0
+      "Width": 800,
+      "Length": 800
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -27102,19 +26739,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 832,
-      "Y": 832,
-      "Z": 0
+      "Width": 832,
+      "Length": 832
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   },
   {
@@ -27374,19 +27008,16 @@
       }
     ],
     "PlayableSize": {
-      "X": 512,
-      "Y": 512,
-      "Z": 0
+      "Width": 512,
+      "Length": 512
     },
     "TerrainSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     },
     "MinimapSize": {
-      "X": 768,
-      "Y": 768,
-      "Z": 0
+      "Width": 768,
+      "Length": 768
     }
   }
 ]

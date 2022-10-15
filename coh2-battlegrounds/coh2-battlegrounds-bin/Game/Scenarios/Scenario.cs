@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Scripting.Lua.Interpreter;
 using Battlegrounds.Util;
 
@@ -142,17 +143,17 @@ public sealed class Scenario {
     /// <summary>
     /// Get the width and length of the playable world.
     /// </summary>
-    public GamePosition PlayableSize { get; set; }
+    public GameSize PlayableSize { get; set; }
 
     /// <summary>
     /// Get or set the width and length of the terrain.
     /// </summary>
-    public GamePosition TerrainSize { get; set; }
+    public GameSize TerrainSize { get; set; }
 
     /// <summary>
     /// Get or set the width and length of the terrain.
     /// </summary>
-    public GamePosition MinimapSize { get; set; }
+    public GameSize MinimapSize { get; set; }
 
     public Scenario() {
         SgaName = INVALID_SGA;
@@ -162,9 +163,9 @@ public sealed class Scenario {
         Description = "Undefined";
         RelativeFilename = "INVALID_FILENAME";
         Points = Array.Empty<PointPosition>();
-        PlayableSize = GamePosition.Naught;
-        TerrainSize = GamePosition.Naught;
-        MinimapSize = GamePosition.Naught;
+        PlayableSize = GameSize.Naught;
+        TerrainSize = GameSize.Naught;
+        MinimapSize = GameSize.Naught;
     }
 
     /// <summary>
@@ -228,7 +229,7 @@ public sealed class Scenario {
         scen.PlayableSize = ReadSize(headerInfo["mapsize"].As<LuaTable>());
 
         // Read world points
-        scen.Points = headerInfo["point_positions"].As<LuaTable>().ToArray().Map(x => (scen.PlayableSize, x.As<LuaTable>())).Map(ReadPoint);
+        scen.Points = headerInfo["point_positions"].As<LuaTable>().ToArray().Map(x => x.As<LuaTable>()).Map(ReadPoint);
 
         // Read is visible
         scen.IsVisibleInLobby = (scenarioState._G["visible_in_lobby"] as LuaBool)?.IsTrue ?? true;
@@ -268,25 +269,25 @@ public sealed class Scenario {
 
     }
 
-    private static GamePosition ReadSize(LuaTable? table)
-        => table is null ? GamePosition.Naught : new(table[1].As<LuaNumber>().ToInt(), table[2].As<LuaNumber>().ToInt());
+    private static GameSize ReadSize(LuaTable? table)
+        => table is null ? GameSize.Naught : new(table[1].As<LuaNumber>().ToInt(), table[2].As<LuaNumber>().ToInt());
 
-    private static PointPosition ReadPoint((GamePosition ws, LuaTable table) _) {
-        double y = _.table["y"].As<LuaNumber>();
-        double x = _.table["x"].As<LuaNumber>();
-        ushort owner = (ushort)_.table["owner_id"].As<LuaNumber>().ToInt();
-        string ebp = _.table["ebp_name"].Str();
+    private static PointPosition ReadPoint(LuaTable table) {
+        double y = table["y"].As<LuaNumber>();
+        double x = table["x"].As<LuaNumber>();
+        ushort owner = (ushort)table["owner_id"].As<LuaNumber>().ToInt();
+        string ebp = table["ebp_name"].Str();
         return new(new(x, y), owner, ebp);
     }
     public GamePosition ToMinimapPosition(double minimapWidth, double minimapHeight, GamePosition worldPos) {
 
         // Bring into standard coordinate system
-        double x = worldPos.X + PlayableSize.X * .5;
-        double y = worldPos.Y + PlayableSize.Y * .5;
+        double x = worldPos.X + PlayableSize.Width * .5;
+        double y = worldPos.Y + PlayableSize.Length * .5;
 
         // Calculate u,v coords
-        double u = x / PlayableSize.X;
-        double v = y / PlayableSize.Y;
+        double u = x / PlayableSize.Width;
+        double v = y / PlayableSize.Length;
 
         // Return position
         return new(u * minimapWidth, v * minimapHeight);
@@ -300,11 +301,11 @@ public sealed class Scenario {
         double v = y / minimapHeight;
 
         // Get into world coords
-        double _x = u * PlayableSize.X;
-        double _y = v * PlayableSize.Y;
+        double _x = u * PlayableSize.Width;
+        double _y = v * PlayableSize.Length;
 
         // Return position in CoH2 world coordinates
-        return new(_x - PlayableSize.X * .5, _y - PlayableSize.Y * .5);
+        return new(_x - PlayableSize.Width * .5, _y - PlayableSize.Length * .5);
 
     }
 

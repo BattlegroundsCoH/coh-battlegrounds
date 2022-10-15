@@ -179,9 +179,9 @@ public abstract class BasePlayModel {
             var mode = package.Gamemodes.FirstOrDefault(x => x.ID == gamemodeInstance.Name, new());
 
             // Invoke helper functions
-            sessionGoals = CreatePlanningGoals(participants, elements, (int)scen.PlayableSize.Z);
-            sessionEntities = CreatePlanningEntities(participants, elements, (int)scen.PlayableSize.Z, mode);
-            sessionSquads = CreatePlanningSquads(participants, elements, (int)scen.PlayableSize.Z);
+            sessionGoals = CreatePlanningGoals(participants, elements, (int)scen.PlayableSize.Length);
+            sessionEntities = CreatePlanningEntities(participants, elements, (int)scen.PlayableSize.Length, mode);
+            sessionSquads = CreatePlanningSquads(participants, elements, (int)scen.PlayableSize.Length);
 
             // Determine if there's need for AI planning
             this.CreateAIPlans(scen, revflag ? allies : axis, (byte)(revflag ? 0 : 1), ref sessionSquads, ref sessionEntities, sessionGoals, mode);
@@ -259,7 +259,7 @@ public abstract class BasePlayModel {
 
     private static GamePosition InvertPosition(GamePosition position, int axisLen)
         => position with {
-            Z = axisLen - position.Z
+            Y = axisLen - position.Y
         };
 
     protected static SessionPlanEntityInfo[] CreatePlanningEntities(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements, int height, Gamemode gamemode) {

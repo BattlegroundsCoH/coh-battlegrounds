@@ -50,7 +50,7 @@ public struct GamePosition {
     /// </summary>
     /// <param name="x">The X-coordinate</param>
     /// <param name="y">The Y-coordinate</param>
-    public GamePosition(double x, double y) : this() {
+    public GamePosition(double x, double y) {
         this.m_x = x;
         this.m_y = y;
     }
