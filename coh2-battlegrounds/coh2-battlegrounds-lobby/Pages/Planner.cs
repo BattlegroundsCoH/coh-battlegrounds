@@ -76,10 +76,14 @@ public sealed class Planner : ViewModelBase {
         public LobbyPlanningCompanyDisplay(string CompanyName, CapacityValue Cap) {
             this.Name = CompanyName;
             this.Cap = Cap;
-            this.Cap.ObjectChanged += (a, b) => this.ObjectChanged?.Invoke(a, b);
+            this.Cap.ObjectChanged += this.ObjectUpdate;
         }
         public object[] ToArgs() => this.Cap.ToArgs().Prepend(this.Name);
         public void Update() {
+            this.Cap.Update(this);
+        }
+        private void ObjectUpdate(object sender, IObjectChanged obj) {
+            this.ObjectChanged?.Invoke(sender, obj);
             this.PropertyChanged?.Invoke(this, new(nameof(Cap)));
         }
     }
