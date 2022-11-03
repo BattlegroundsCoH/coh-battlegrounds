@@ -257,7 +257,7 @@ public abstract class BasePlayModel {
 
     }
 
-    private static GamePosition InvertPosition(GamePosition position, int axisLen)
+    private static GamePosition InvertPosition(GamePosition position)
         => position with {
             Y = -position.Y
         };
@@ -281,8 +281,8 @@ public abstract class BasePlayModel {
                 TeamOwner = (int)p.TeamIndex,
                 TeamMemberOwner = p.PlayerIndexOnTeam,
                 Blueprint = BlueprintManager.FromBlueprintName<EntityBlueprint>(planEntities[i].Blueprint),
-                Spawn = InvertPosition(planEntities[i].SpawnPosition, height),
-                Lookat = planEntities[i].LookatPosition is GamePosition look ? InvertPosition(look, height) : null,
+                Spawn = InvertPosition(planEntities[i].SpawnPosition),
+                Lookat = planEntities[i].LookatPosition is GamePosition look ? InvertPosition(look) : null,
                 IsDirectional = planEntities[i].IsDirectional,
                 Width = gamemode.GetPlanningEntity(planEntities[i].Blueprint).Width
             };
@@ -313,8 +313,8 @@ public abstract class BasePlayModel {
                 TeamOwner = (int)p.TeamIndex,
                 TeamMemberOwner = p.PlayerIndexOnTeam,
                 SpawnId = planSquads[i].CompanyId,
-                Spawn = InvertPosition(planSquads[i].SpawnPosition, height),
-                Lookat = planSquads[i].LookatPosition is GamePosition look ? InvertPosition(look, height) : null
+                Spawn = InvertPosition(planSquads[i].SpawnPosition),
+                Lookat = planSquads[i].LookatPosition is GamePosition look ? InvertPosition(look) : null
             };
 
         }
@@ -344,7 +344,7 @@ public abstract class BasePlayModel {
                 ObjectivePlayer = p.PlayerIndexOnTeam,
                 ObjectiveType = (byte)planGoals[i].ObjectiveType,
                 ObjectiveIndex = (byte)planGoals[i].ObjectiveOrder,
-                ObjectivePosition = InvertPosition(planGoals[i].SpawnPosition, height)
+                ObjectivePosition = InvertPosition(planGoals[i].SpawnPosition)
             };
 
         }
