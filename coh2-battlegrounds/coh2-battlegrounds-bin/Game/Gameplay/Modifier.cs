@@ -1,5 +1,5 @@
-﻿using Battlegrounds.Game.Gameplay.DataConverters;
-using Battlegrounds.Lua.Generator.RuntimeServices;
+﻿using Battlegrounds.Data.Generators.Lua.RuntimeServices;
+using Battlegrounds.Game.Gameplay.DataConverters;
 
 namespace Battlegrounds.Game.Gameplay;
 

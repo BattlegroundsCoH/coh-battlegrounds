@@ -29,9 +29,6 @@ function BG_CreateCallInUI(player)
     -- Create the company view
     BG_CreateCompanyView();
 
-    -- Create Special Company abilities selector
-    --BG_CreateCompanyAbilityView(_bg_playerData[bgPlayerID].company);
-
     -- Add a function update deployment
     Rule_AddInterval(BG_UpdateCompanyUIValues, _BG_UI_UpdateInterval);
 
@@ -192,41 +189,6 @@ function BG_HideCompanyView()
     bg_companyView:setPos(-9999, -9999);
 end
 
-function BG_CreateCompanyAbilityView(playerData) -- For special abilities requiring modal phases
-
-    local specialPanel = Panel();
-    specialPanel:setPos(-34, 0);
-    specialPanel:add(Icon("ModIcons_6a0a13b89555402ca75b85dc30f5cb04_special_bkg", 38, 103, 0, 0));
-    -- TODO: Implement sized-icons etc. such that the player can't select a building with no available abilities.
-    local xOffset = 8;
-    local yOffset = 12;
-    local icoSize = 28;
-
-    playerData.specials.artilleryButton = Button(nil, "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_icon_artillery");
-    playerData.specials.artilleryButton:setBounds(xOffset, yOffset, icoSize, icoSize);
-    playerData.specials.artilleryButton:setTag("artillery_support");
-    playerData.specials.artilleryButton:setCallback(BG_SpecialAbilitiesClicked);
-    specialPanel:add(playerData.specials.artilleryButton);
-    yOffset = yOffset + icoSize - 2;
-
-    playerData.specials.airButton = Button(nil, "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_icon_air_support");
-    playerData.specials.airButton:setBounds(xOffset, yOffset, icoSize, icoSize);
-    playerData.specials.airButton:setTag("air_support");
-    playerData.specials.airButton:setCallback(BG_SpecialAbilitiesClicked);
-    specialPanel:add(playerData.specials.airButton);
-    yOffset = yOffset + icoSize - 2;
-
-    playerData.specials.reinforcementsButton = Button(nil, "ModIcons_6a0a13b89555402ca75b85dc30f5cb04_icon_paratrooper");
-    playerData.specials.reinforcementsButton:setBounds(xOffset, yOffset, icoSize, icoSize);
-    playerData.specials.reinforcementsButton:setTag("air_reinforcements");
-    playerData.specials.reinforcementsButton:setCallback(BG_SpecialAbilitiesClicked);
-    specialPanel:add(playerData.specials.reinforcementsButton);
-    yOffset = yOffset + icoSize - 2;
-
-    bg_call_ui:add(specialPanel);
-
-end
-
 function BG_ShowCompanyPage(units, category)
 
     -- Clear the container
@@ -267,7 +229,7 @@ function BG_UpdatePageIndex(units, category)
     local page = 1;
 
     for i = 1, #units do
-        if units[i].category == category and units[i].phase <= _bg_custom.phase_current and not units[i].spawned then
+        if units[i].category == category and not units[i].spawned then
             units[i].page_index = page;
             counter = counter + 1;
             if counter > 14 then
@@ -566,14 +528,4 @@ end
 
 function BG_UpdateCompanyButtonView(player, name)
     bg_show_company:setText(Util_CreateLocString(name .. " (" .. tostring(Player_GetSquadCount(player)) .. "/" .. tostring(_bg_custom.max_squad_count) ..")"));
-end
-
-function BG_SpecialAbilitiesClicked(type)
-    local pid = BG_GetPlayerID(Game_GetLocalPlayer());
-    if pid ~= -1 then
-        local e = _bg_playerData[pid].special_ability_entities[type];
-        if e ~= nil then
-            Misc_SelectEntity(e);
-        end
-    end
 end

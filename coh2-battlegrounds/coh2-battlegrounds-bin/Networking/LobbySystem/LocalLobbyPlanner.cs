@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Battlegrounds.Functional;
@@ -138,8 +139,12 @@ public class LocalLobbyPlanner : ILobbyPlanningHandle {
     /// </summary>
     /// <param name="teamIndex"></param>
     /// <returns></returns>
-    public ILobbyPlanElement[] GetPlanningElements(byte teamIndex)
-        => this.m_elements.Where(x => (teamIndex is 0 ? this.Handle.Allies : this.Handle.Axis).GetSlotOfMember(x.ElementOwnerId) is not null).ToArray();
+    public ILobbyPlanElement[] GetPlanningElements(byte teamIndex) => teamIndex switch {
+        0 => this.m_elements.Where(x => this.Handle.Allies.GetSlotOfMember(x.ElementOwnerId) is not null).ToArray(),
+        1 => this.m_elements.Where(x => this.Handle.Axis.GetSlotOfMember(x.ElementOwnerId) is not null).ToArray(),
+        4 => this.m_elements.ToArray(),
+        _ => Array.Empty<ILobbyPlanElement>()
+    };
 
     /// <summary>
     /// 

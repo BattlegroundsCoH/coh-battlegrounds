@@ -1,77 +1,87 @@
 {
-    "Icon": "ct_infantry",
-    "MaxInfantry": 20,
-    "MaxTeamWeapons": 10,
-    "MaxVehicles": 8,
-    "MaxLeaders": 2,
-    "MaxAbilities": 4,
-    "Exclude": [
-      "is-2_bg"
+  "UIData": {
+    "Icon": "ct_engineer",
+    "HighlightUnits": [
+
     ],
-    "DeployTypes": [
-      "DeployAndExit",
-      "DeployAndStay"
-    ],
-    "DeployBlueprints": [
-      {
-        "Blueprint": "zis_6_transport_truck_bg",
-        "CostModifier": 1,
-        "Tow": true,
-        "TowCostModifier": 1
-      }
-    ],
-    "CostModifiers": {
-      "penal_battalion_bg": {
-        "Manpower": 20
-      }
-    },
-    "Phases": {
-      "PhaseA": {
-        "ResourceIncomeModifier": {
-          "Manpower": 1,
-          "Munitions": 1,
-          "Fuel": 1
-        }
-      },
-      "PhaseB": {
-        "ActivationTime": 420,
-        "DeployDelay": 1,
-        "ResourceIncomeModifier": {
-          "Manpower": 1,
-          "Munitions": 1,
-          "Fuel": 1
-        },
-        "UnitCostModifier": {
-          "Manpower": 1,
-          "Munitions": 1,
-          "Fuel": 1
-        },
-        "Unlocks": [
-          "penal_battalion_bg"
-        ]
-      },
-      "PhaseC": {
-        "ActivationTime": 660,
-        "DeployDelay": 1,
-        "ResourceIncomeModifier": {
-          "Manpower": 1,
-          "Munitions": 1,
-          "Fuel": 1
-        },
-        "UnitCostModifier": {
-          "Manpower": 1,
-          "Munitions": 1,
-          "Fuel": 1
-        },
-        "Unlocks": [
-          "kv-1_bg"
-        ]
-      }
-    },
-    "abilities": [
-      {
-        "ID": "soviet_air_recon",
-        "CostModifier": 1
-      }
+    "HighlightAbilities": [
+      "soviet_air_recon",
+      "soviet_air_recon",
+      "soviet_air_recon"
     ]
+  },
+  "MaxInfantry": 20,
+  "MaxTeamWeapons": 10,
+  "MaxVehicles": 8,
+  "MaxLeaders": 2,
+  "MaxAbilities": 4,
+  "Exclude": [
+    "is-2_bg"
+  ],
+  "DeployTypes": [
+    "DeployAndExit",
+    "DeployAndStay"
+  ],
+  "DeployBlueprints": [
+    {
+      "Blueprint": "zis_6_transport_truck_bg",
+      "CostModifier": 1,
+      "Tow": true,
+      "TowCostModifier": 1
+    }
+  ],
+  "CostModifiers": {
+    "penal_battalion_bg": {
+      "Manpower": 20
+    }
+  },
+  "Phases": {
+    "PhaseA": {
+      "ResourceIncomeModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1
+      }
+    },
+    "PhaseB": {
+      "ActivationTime": 420,
+      "DeployDelay": 1,
+      "ResourceIncomeModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1
+      },
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1
+      },
+      "Unlocks": [
+        "penal_battalion_bg"
+      ]
+    },
+    "PhaseC": {
+      "ActivationTime": 660,
+      "DeployDelay": 1,
+      "ResourceIncomeModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1
+      },
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1
+      },
+      "Unlocks": [
+        "kv-1_bg"
+      ]
+    }
+  },
+  "abilities": [
+    {
+      "ID": "soviet_air_recon",
+      "CostModifier": 1
+    }
+  ]
 }

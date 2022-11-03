@@ -211,7 +211,7 @@ public enum BrokerRequestType : byte {
 	[Obsolete("Should use a direct broker call.")]
 	Update = 1
 
-    }
+}
 
 /// <summary>
 /// Represents the value to ask broker to update.
@@ -389,13 +389,13 @@ public enum ContentMessgeType : int {
 	/// </summary>
 	[Obsolete("Queries are no longer valid.")]
 	ExecQueryResponse,
-	
+
 	/// <summary>
 	/// Message is to send a chat message
 	/// </summary>
 	SendChatMessage,
 
-    }
+}
 
 /// <summary>
 /// Represents a message containing content.
@@ -450,9 +450,9 @@ public readonly struct ContentMessage {
 	/// <summary>
 	/// Get or init a raw array of bytes.
 	/// </summary>
-	public byte[] Raw { get;init; }
+	public byte[] Raw { get; init; }
 
-    }
+}
 
 /*
  

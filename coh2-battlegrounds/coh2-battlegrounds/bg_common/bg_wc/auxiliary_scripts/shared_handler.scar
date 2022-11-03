@@ -64,11 +64,11 @@ function BG_Init()
     -- Setup map data
     BG_PrepareMapdata();
 
-    -- Properly set up win condition data
-    BG_SetupWincondition();
-
     -- Setup optional BG systems
     BG_SetupWeatherAndSupply();
+
+    -- Properly set up win condition data
+    BG_SetupWincondition();
 
     -- Create the UI
     UI_AddSetupFunction(function()
@@ -89,9 +89,6 @@ function BG_Init()
 
     -- Call in all initial squads
     Rule_AddOneShot(BG_CallInInitials, 1);
-
-    -- Add phase update
-    Rule_AddInterval(BG_PhaseUpdate, 1);
 
     -- Add the broadcast event callback
     Rule_AddGlobalEvent(BG_GameBroadcastMessageReceived, GE_BroadcastMessage);
@@ -323,57 +320,13 @@ function BG_CallInInitials()
         local deploy = _bg_playerData[i].deploy_initials;
         if deploy == nil or deploy == true then
             for _, v in pairs(_bg_playerData[i].company.units) do
-                if v.phase == 0 then
+                if v.phase == 1 then -- 1 == Initial phase
                     BG_DeploySquad(_bg_playerData[i].player, v.company_id);
                 end
             end
         end
     end
 
-end
-
-function BG_PhaseUpdate()
-
-    local phase_complete = 0;
-    for _, v in pairs(_bg_playerData) do
-
-        -- Get phase
-        local p = v.company.typedata[v.phase + 1]
-
-        -- Check
-        if p and World_GetGameTime() >= p.activation then
-
-            -- Goto next phase
-            v.phase = v.phase + 1;
-
-            -- Trigger on enter
-            BG_OnEnterNewPhase(v.player, v.phase, p);
-
-        else
-            phase_complete = phase_complete + 1;
-        end
-
-    end
-
-    -- Stop updating phases if all phases for all players are done
-    if phase_complete == #_bg_playerData then
-        Rule_RemoveMe();
-    end
-
-end
-
-function BG_OnEnterNewPhase(player, newPhase, phase_data)
-    if newPhase == 2 then -- Could do more messages here (Within context of the player's situation)
-        Util_MissionTitle(BG_LocString(16), 3, 8, 2 );
-    else
-        Util_MissionTitle(BG_LocString(17), 3, 8, 2 );
-    end
-    -- TODO: Add resource income modifiers
-    for i=1, World_GetPlayerCount() do
-        if player == Game_GetLocalPlayer() then
-            BG_RefreshCompanyView(); -- Refresh the company view
-        end
-    end
 end
 
 function BG_UpdatePlayerStats(refID)

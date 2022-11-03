@@ -1,15 +1,14 @@
 ﻿using System;
-
-using Battlegrounds;
-
-using BattlegroundsApp.MVVM;
-using BattlegroundsApp.Modals;
-using BattlegroundsApp.Modals.Dialogs.MVVM.Models;
 using System.ComponentModel;
-using BattlegroundsApp.Lobby.MVVM.Models;
-using BattlegroundsApp.CompanyEditor.MVVM.Models;
 using System.Windows;
 using System.Windows.Controls;
+
+using Battlegrounds.UI;
+using Battlegrounds.UI.Modals;
+
+using Battlegrounds.UI.Modals.Prompts;
+using Battlegrounds.Editor.Pages;
+using Battlegrounds.Lobby.Pages;
 
 namespace BattlegroundsApp;
 
@@ -18,7 +17,7 @@ public delegate void OnWindowReady(MainWindow window);
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : Window {
+public partial class MainWindow : Window, IMainWindow {
 
     private AppDisplayState m_displayState;
     private bool m_isReady;
@@ -68,8 +67,13 @@ public partial class MainWindow : Window {
                 return;
             }
 
+            // Grab
+            if (Application.Current is not IResourceResolver resourceResolver) {
+                return;
+            }
+
             // Grab view
-            if (App.TryFindDataTemplate(rhs.GetType()) is DataTemplate viewTemplate) {
+            if (resourceResolver.TryFindDataTemplate(rhs.GetType()) is DataTemplate viewTemplate) {
 
                 // Load view and set datacontext
                 var view = viewTemplate.LoadContent();
@@ -87,6 +91,8 @@ public partial class MainWindow : Window {
         this.Dispatcher.Invoke(() => {
             this.LeftContent.Content = null; // Trigger a clear before we set to lhs
             this.LeftContent.Content = full;
+            this.RightContent.Content = null;
+            this.m_displayState = AppDisplayState.Full;
         });
     }
 
@@ -96,19 +102,19 @@ public partial class MainWindow : Window {
         var target = this.RightContent.Content is FrameworkElement fe ? fe.DataContext : this.RightContent.Content;
 
         // Get current rhs
-        if (target is LobbyModel lobby && !lobby.IsLocal) {
+        if (target is BaseLobby lobby && !lobby.IsLocal) {
             e.Cancel = true;
-            YesNoDialogViewModel.ShowModal(this.ModalView, (_, res) => {
+            YesNoPrompt.Show(this.ModalView, (_, res) => {
                 if (res is ModalDialogResult.Confirm) {
                     this.RightContent.Content = null;
                     Environment.Exit(0);
                 }
             }, "Leave Lobby?", "Are you sure you want to leave the lobby?");
             return;
-        } else if (target is CompanyBuilderViewModel cb) {
+        } else if (target is CompanyEditor cb) {
             if (cb.HasChanges) {
                 e.Cancel = true;
-                YesNoDialogViewModel.ShowModal(this.ModalView, (_, res) => {
+                YesNoPrompt.Show(this.ModalView, (_, res) => {
                     if (res is ModalDialogResult.Confirm) {
                         this.RightContent.Content = null;
                         Environment.Exit(0);
@@ -118,5 +124,13 @@ public partial class MainWindow : Window {
         }
 
     }
+
+    public ContentControl GetLeft() => this.LeftContent;
+
+    public ContentControl GetRight() => this.RightContent;
+
+    public ModalControl? GetModalControl() => this.ModalView;
+
+    public ModalControl? GetRightsideModalControl() => this.RightModalView;
 
 }

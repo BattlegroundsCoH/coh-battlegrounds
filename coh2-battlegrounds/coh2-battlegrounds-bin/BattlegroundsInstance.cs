@@ -260,7 +260,7 @@ public static class BattlegroundsInstance {
     /// <summary>
     /// Get and set the assembly version of coh2-battlegrounds.exe
     /// </summary>
-    public static IAppVersionFetcher Version { get; set; }
+    public static IAppVersionFetcher? Version { get; set; }
 
 #if DEBUG
 

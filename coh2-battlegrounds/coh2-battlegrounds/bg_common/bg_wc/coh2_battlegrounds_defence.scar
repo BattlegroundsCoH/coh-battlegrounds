@@ -57,14 +57,14 @@ function BattlegroundsDefence_InitGamemode()
 	BattlegroundsDefence_InitSectors()
 
 	-- Set points
-	WinWarning_SetMaxTickers(DefenceSettingsData.MaxPoints, DefenceSettingsData.DefenderPoints)
-	WinWarning_SetTickers(DefenceSettingsData.MaxPoints - DefenceSettingsData.DefenderPoints, DefenceSettingsData.DefenderPoints)
+	BattlegroundsDefence_SetMax(DefenceSettingsData.MaxPoints, DefenceSettingsData.MaxPoints);
+	BattlegroundsDefence_SetTickers(DefenceSettingsData.MaxPoints - DefenceSettingsData.DefenderPoints, DefenceSettingsData.DefenderPoints);
 
 	-- Start timer
 	Timer_Start(DefenceSettingsData.Counter, DefenceSettingsData.Time)
 
 	-- Add interval to update points
-	Rule_AddInterval(BattlegroundsDefence_UpdatePoints, 3);
+	Rule_AddInterval(BattlegroundsDefence_UpdatePoints, 5);
 	Rule_Add(BattlegroundsDefence_CheckTime);
 
 	-- Grant additional resources to the attacking team.
@@ -92,6 +92,7 @@ function BattlegroundsDefence_InitGamemode()
 			local pid = Player_GetID(p);
 			DefenceSettingsData.LockedSquads[pid] = SGroup_CreateIfNotFound("sg_deflocksquads" .. pid);
 			BGAI_SetAIPlayerEnabled(p, false);
+			BGAI_SetAIDuplicatesEnabled(p, true);
 		end
 
 	end
@@ -213,11 +214,19 @@ function BattlegroundsDefence_UpdatePoints()
 end
 
 function BattlegroundsDefence_SetTickers(attackers, defenders)
-	--if DefenceSettingsData.IsLocalDefender then
+	if bg_settings.roles_swapped then
 		WinWarning_SetTickers(defenders, attackers)
-	--else
-		--WinWarning_SetTickers(attackers, defenders)
-	--end
+	else
+		WinWarning_SetTickers(attackers, defenders)
+	end
+end
+
+function BattlegroundsDefence_SetMax(attackers, defenders)
+	if bg_settings.roles_swapped then
+		WinWarning_SetMaxTickers(defenders, attackers)
+	else
+		WinWarning_SetMaxTickers(attackers, defenders)
+	end
 end
 
 function BattlegroundsDefence_CheckTime()
@@ -371,12 +380,16 @@ function BattlegroundsDefence_SpawnLine(owner, bp, startpos, endpos, width)
 		local currPos = Util_GetPositionFromAtoB(startpos, endpos, current)
 		local nextPos = Util_GetPositionFromAtoB(startpos, endpos, current + step)
 
+		-- Correct y-pos
+		currPos.y = World_GetHeightAt(currPos.x, currPos.z)
+
 		-- Grab heading
 		local dir = { x = nextPos.x - currPos.x, z = nextPos.z - currPos.z };
 		dir.x, dir.z = dir.z, -dir.x
 
 		-- Get lookat position
 		local lookat = Util_ScarPos(currPos.x + dir.x, currPos.z + dir.z)
+		lookat.y = World_GetHeightAt(lookat.x, lookat.z)
 
 		-- Create entity
 		local entity = BattlegroundsDefence_CreateEntity(bp, owner, currPos, lookat)

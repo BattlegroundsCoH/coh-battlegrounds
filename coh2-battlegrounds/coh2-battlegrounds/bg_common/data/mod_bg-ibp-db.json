@@ -1,6 +1,17 @@
 [
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741829,
+    "Name": "supply_auto_distribute_token",
+    "Army": "NULL",
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    }
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741827,
     "Name": "ptrs_41_anti_tank_rifle_dummy_bg",
     "Army": "soviet",
