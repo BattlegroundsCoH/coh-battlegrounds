@@ -178,7 +178,7 @@
 
         <StackPanel Grid.Row="4" Orientation="Horizontal" 
                     HorizontalAlignment="Center">
-            <Button Style="{StaticResource StandardBlueLocButton}"
+            <Button Style="{StaticResource StandardBlueLocalisedButton}"
                 Height="28" Width="200"
                 Content="STARTUP_BEGIN"
                 Margin="0,5,15,5"
@@ -186,7 +186,7 @@
                 Command="{Binding BeginAuto}"/>
             <Button Content="STARTUP_CONTINUE"
                 Grid.Row="4" Height="28" Width="200"
-                Style="{StaticResource StandardGreenLocButton}"
+                Style="{StaticResource StandardGreenLocalisedButton}"
                     IsEnabled="{Binding IsContinuePossible}"
                     Command="{Binding Continue}"/>
         </StackPanel>
