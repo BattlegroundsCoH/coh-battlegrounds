@@ -82,9 +82,8 @@ public sealed class CompanyTemplate {
         // Define container
         Dictionary<DeploymentPhase, Dictionary<CompanyUnit, int>> templateSetup = new() {
             [DeploymentPhase.PhaseInitial] = new(),
-            [DeploymentPhase.PhaseA] = new(),
-            [DeploymentPhase.PhaseB] = new(),
-            [DeploymentPhase.PhaseC] = new(),
+            [DeploymentPhase.PhaseStandard] = new(),
+            [DeploymentPhase.PhaseStandard] = new(),
         };
 
         // Loop over units and put them into their respective phases

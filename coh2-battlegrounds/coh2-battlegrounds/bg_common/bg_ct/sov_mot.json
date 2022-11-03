@@ -1,8 +1,16 @@
 {
   "UIData": {
     "Icon": "ct_motorized",
-    "HighlightUnits": [],
-    "HighlightAbilities": []
+    "HighlightUnits": [
+      "conscript_squad_bg",
+      "zis_6_transport_truck_bg",
+      "t-70m_bg"
+    ],
+    "HighlightAbilities": [
+      "soviet_air_recon",
+      "soviet_air_recon",
+      "soviet_air_recon"
+    ]
   },
   "MaxInfantry": 18,
   "MaxTeamWeapons": 11,
@@ -47,26 +55,21 @@
       "Manpower": 20
     }
   },
-  "Phases": {
-    "PhaseA": {
-      "ResourceIncomeModifier": {
-        "Manpower": 1,
-        "Munitions": 1,
-        "Fuel": 1
-      }
-    },
-    "PhaseB": {
-      "ActivationTime": 420,
-      "DeployDelay": 1,
-      "ResourceIncomeModifier": {
-        "Manpower": 1,
-        "Munitions": 1,
-        "Fuel": 1
-      },
+  "Roles": {
+    "DirectCommand": {
       "UnitCostModifier": {
         "Manpower": 1,
         "Munitions": 1,
-        "Fuel": 1
+        "Fuel": 1,
+        "FieldTime": 1
+      }
+    },
+    "SupportRole": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
       },
       "Unlocks": [
         "combat_engineer_squad_bg",
@@ -79,18 +82,12 @@
         "m1937_152mm_ml_20_artillery_bg"
       ]
     },
-    "PhaseC": {
-      "ActivationTime": 660,
-      "DeployDelay": 1,
-      "ResourceIncomeModifier": {
-        "Manpower": 1,
-        "Munitions": 1,
-        "Fuel": 1
-      },
+    "ReserveRole": {
       "UnitCostModifier": {
         "Manpower": 1,
         "Munitions": 1,
-        "Fuel": 1
+        "Fuel": 1,
+        "FieldTime": 1
       },
       "Unlocks": [
         "kv-1_bg",
@@ -99,9 +96,9 @@
       ]
     }
   },
-  "abilities": [
+  "Abilities": [
     {
-      "ID": "soviet_air_recon",
+      "Id": "soviet_air_recon",
       "CostModifier": 1
     }
   ]

@@ -1,8 +1,16 @@
 {
   "UIData": {
     "Icon": "ct_mechanized",
-    "HighlightUnits": [],
-    "HighlightAbilities": []
+    "HighlightUnits": [
+      "guards_troops_bg",
+      "m5_halftrack_squad_bg",
+      "t_34_85_squad_bg"
+    ],
+    "HighlightAbilities": [
+      "soviet_air_recon",
+      "soviet_air_recon",
+      "soviet_air_recon"
+    ]
   },
   "MaxInfantry": 19,
   "MaxTeamWeapons": 10,
@@ -15,7 +23,6 @@
     "churchill_lend_lease_squad_bg",
     "shock_troops_bg",
     "m1931_203mm_b-4_howitzer_artillery_bg",
-    "m5_halftrack_squad_bg",
     "kv-8_bg",
     "kv-2_bg",
     "kv-1_bg",
@@ -51,22 +58,15 @@
       "Manpower": 20
     }
   },
-  "Phases": {
-    "PhaseA": {
-      "ResourceIncomeModifier": {
+  "Roles": {
+    "DirectCommand": {
+      "UnitCostModifier": {
         "Manpower": 1,
         "Munitions": 1,
         "Fuel": 1
       }
     },
-    "PhaseB": {
-      "ActivationTime": 420,
-      "DeployDelay": 1,
-      "ResourceIncomeModifier": {
-        "Manpower": 1,
-        "Munitions": 1,
-        "Fuel": 1
-      },
+    "SupportRole": {
       "UnitCostModifier": {
         "Manpower": 1,
         "Munitions": 1,
@@ -83,14 +83,7 @@
         "76mm_sherman_lend_lease_bg"
       ]
     },
-    "PhaseC": {
-      "ActivationTime": 660,
-      "DeployDelay": 1,
-      "ResourceIncomeModifier": {
-        "Manpower": 1,
-        "Munitions": 1,
-        "Fuel": 1
-      },
+    "ReserveRole": {
       "UnitCostModifier": {
         "Manpower": 1,
         "Munitions": 1,
@@ -104,9 +97,9 @@
       ]
     }
   },
-  "abilities": [
+  "Abilities": [
     {
-      "ID": "soviet_air_recon",
+      "Id": "soviet_air_recon",
       "CostModifier": 1
     }
   ]

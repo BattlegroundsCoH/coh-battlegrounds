@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataSource;
@@ -159,6 +160,24 @@ public class ModPackage {
             }
         }
         throw new ObjectNotFoundException($"Failed to find capture squad blueprint for team weapon '{ebp}' for faction '{faction}'.");
+    }
+
+    /// <summary>
+    /// Get a list of all capture squads defiend by the package.
+    /// </summary>
+    /// <remarks>
+    /// Internally filters based on blueprint name containing '_capture_'
+    /// </remarks>
+    /// <returns>Hashset containing all blueprint names of capture squads.</returns>
+    public HashSet<string> GetCaptureSquads() {
+        HashSet<string> result = new HashSet<string>();
+        foreach (var (_, v) in this.TeamWeaponCaptureSquads) {
+            v.Values.ForEach(x => {
+                if (x.Contains("_capture_"))
+                        result.Add(x);
+            });
+        }
+        return result;
     }
 
 }

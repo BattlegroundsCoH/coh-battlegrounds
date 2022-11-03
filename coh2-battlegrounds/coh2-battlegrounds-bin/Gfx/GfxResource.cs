@@ -3,11 +3,11 @@
 /// <summary>
 /// Represents a GFX resource that can be opened into a <see cref="GfxResourceStream"/> for reading.
 /// </summary>
-public class GfxResource {
+public sealed class GfxResource {
 
-    private string m_id;
-    private int m_width, m_height;
-    private byte[] m_raw;
+    private readonly string m_id;
+    private readonly int m_width, m_height;
+    private readonly byte[] m_raw;
 
     /// <summary>
     /// Get the width dimension of the resource.
@@ -18,6 +18,11 @@ public class GfxResource {
     /// Get the height dimension of the resource.
     /// </summary>
     public int Height => this.m_height;
+
+    /// <summary>
+    /// Get the identifier of the resource
+    /// </summary>
+    public string Identifier => this.m_id;
 
     /// <summary>
     /// Initialize a new <see cref="GfxResource"/> class with raw data.
@@ -51,4 +56,3 @@ public class GfxResource {
     }
 
 }
-

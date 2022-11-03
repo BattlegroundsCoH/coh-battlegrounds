@@ -28,6 +28,75 @@
     "Activation": "targeted"
   },
   {
+    "Name": "supply_auto_dis",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741943,
+    "Display": {
+      "LocaleName": "0",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0"
+    },
+    "Army": "NULL",
+    "Activation": "always_on",
+    "Requirements": [
+      {
+        "RequirementType": "required_not",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "requirement_table": [
+            {
+              "RequirementType": "required_in_state",
+              "RequirementReason": "usage",
+              "UIText": "0",
+              "RequirementProperties": {
+                "garrisoned": true,
+                "healed": false,
+                "in_combat_since": -1,
+                "injured": false,
+                "leader": false,
+                "not_moving": false,
+                "not_retreating": false,
+                "pinned": false,
+                "suppressed": false,
+                "camouflaged": false
+              }
+            }
+          ]
+        }
+      },
+      {
+        "RequirementType": "required_in_state",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "garrisoned": false,
+          "healed": false,
+          "in_combat_since": -1,
+          "injured": false,
+          "leader": false,
+          "not_moving": true,
+          "not_retreating": false,
+          "pinned": false,
+          "suppressed": false,
+          "camouflaged": false
+        }
+      },
+      {
+        "RequirementType": "required_slot_item",
+        "RequirementReason": "usage",
+        "UIText": "0",
+        "RequirementProperties": {
+          "check_item_on_entity": false,
+          "display_requirement": false,
+          "max_owned": 0,
+          "min_owned": 0,
+          "slot_item": "supply_auto_distribute_token"
+        }
+      }
+    ]
+  },
+  {
     "Name": "transport_heavy_vehicle_bg",
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741826,
@@ -554,6 +623,20 @@
         }
       }
     ]
+  },
+  {
+    "Name": "auto_truck_supply_disable_bg",
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741944,
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:90",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:91",
+      "LocaleDescriptionShort": "11140663",
+      "Icon": "Icons_abilities_ability_aef_distribute_medical_supplies_off",
+      "Position": 23
+    },
+    "Army": "soviet",
+    "Activation": "toggle"
   },
   {
     "Name": "grenadier_panzerfaust_bg",

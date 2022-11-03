@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Match;

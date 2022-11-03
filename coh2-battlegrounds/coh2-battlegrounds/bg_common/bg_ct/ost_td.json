@@ -1,8 +1,16 @@
 {
   "UIData": {
     "Icon": "ct_td",
-    "HighlightUnits": [],
-    "HighlightAbilities": []
+    "HighlightUnits": [
+      "ost_tankhunter_squad_bg",
+      "stug_iii_squad_bg",
+      "elefant_tank_destroyer_squad_bg"
+    ],
+    "HighlightAbilities": [
+      "german_light_support_artillery",
+      "german_light_support_artillery",
+      "german_light_support_artillery"
+    ]
   },
   "MaxInfantry": 12,
   "MaxTeamWeapons": 14,
@@ -36,42 +44,41 @@
   ],
   "CostModifiers": {
   },
-  "Phases": {
-    "PhaseA": {
-      "ResourceIncomeModifier": {
+  "Roles": {
+    "DirectCommand": {
+      "UnitCostModifier": {
         "Manpower": 1,
         "Munitions": 1,
-        "Fuel": 1
+        "Fuel": 1,
+        "FieldTime": 1
       }
     },
-    "PhaseB": {
-      "ActivationTime": 420,
-      "DeployDelay": 1,
-      "ResourceIncomeModifier": {
+    "SupportRole": {
+      "UnitCostModifier": {
         "Manpower": 1,
         "Munitions": 1,
-        "Fuel": 1
+        "Fuel": 1,
+        "FieldTime": 1
       },
       "Unlocks": [
         "elefant_tank_destroyer_squad_bg"
       ]
     },
-    "PhaseC": {
-      "ActivationTime": 660,
-      "DeployDelay": 1,
-      "ResourceIncomeModifier": {
+    "ReserveRole": {
+      "UnitCostModifier": {
         "Manpower": 1,
         "Munitions": 1,
-        "Fuel": 1
+        "Fuel": 1,
+        "FieldTime": 1
       },
       "Unlocks": [
         "brummbar_squad_bg"
       ]
     }
   },
-  "abilities": [
+  "Abilities": [
     {
-      "ID": "german_light_support_artillery",
+      "Id": "german_light_support_artillery",
       "CostModifier": 1
     }
   ]

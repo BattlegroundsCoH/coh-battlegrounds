@@ -2,6 +2,7 @@
 using System.Diagnostics;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Modding.Content;
 using Battlegrounds.Modding.Content.Companies;
 
 namespace Battlegrounds.Modding.Verifier;
@@ -69,18 +70,17 @@ public static class CompanyTypeWarnings {
             Trace.WriteLine($"Company type '{companyType.Id}' has more or less than 3 highlighted abilities.", nameof(CompanyTypeWarnings));
         }
 
-        // Verify there are phases
-        if (companyType.Phases.Count is 0) {
-            Trace.WriteLine($"Company type '{companyType.Id}' has no phases defined.", nameof(CompanyTypeWarnings));
+        // Verify there are command levels
+        if (companyType.Roles.Count is 0) {
+            Trace.WriteLine($"Company type '{companyType.Id}' has no command levels defined.", nameof(CompanyTypeWarnings));
         }
 
         // Check phases
         var dupl = new HashSet<string>();
-        int time = -1;
-        foreach (var (k, v) in companyType.Phases) {
+        foreach (var (k, v) in companyType.Roles) {
             var intersect = companyType.Exclude.Intersect(v.Unlocks);
             if (intersect.Length > 0) {
-                intersect.ForEach(x => Trace.WriteLine($"Company type '{companyType.Id}' has unit '{x}' in exclusion list and in phase '{k}'.", nameof(CompanyTypeWarnings)));
+                intersect.ForEach(x => Trace.WriteLine($"Company type '{companyType.Id}' has unit '{x}' in exclusion list and in command level '{k}'.", nameof(CompanyTypeWarnings)));
             }
             for (int i = 0; i < v.Unlocks.Length; i++) {
                 if (string.IsNullOrEmpty(v.Unlocks[i])) {
@@ -92,16 +92,16 @@ public static class CompanyTypeWarnings {
                     Trace.WriteLine($"Company type '{companyType.Id}' has unit '{v.Unlocks[i]}' in phase '{k}' put is also in a different phase.", nameof(CompanyTypeWarnings));
                 }
             }
-            if (v.ActivationTime > time) {
-                time = v.ActivationTime;
-            } else {
-                Trace.WriteLine($"(Fatal) Company type '{companyType.Id}' phase '{k}' is activated at time {v.ActivationTime} but previous phase is activated at time {time}.", nameof(CompanyTypeWarnings));
-                state = CompanyTypeState.Invalid;
-            }
         }
 
-        // Verify abilities exist (TODO: When added)
-        //for (int i = 0; i < companyType.)
+        // Verify abilities exist
+        if (companyType.FactionData is FactionData fdata) {
+            for (int i = 0; i < companyType.Abilities.Length; i++) {
+                if (!fdata.Abilities.Any(x => x.Blueprint == companyType.Abilities[i].Id)) {
+                    Trace.WriteLine($"Company type '{companyType.Id}' has ability '{companyType.Abilities[i].Id}' that is not defined for the faction.", nameof(CompanyTypeWarnings));
+                }
+            }
+        }
 
         // Return state
         return state;

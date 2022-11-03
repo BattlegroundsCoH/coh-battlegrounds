@@ -7,15 +7,13 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- ORDER IS IMPORTANT -->
-                <ResourceDictionary Source="Styles/Colors.xaml" />
-                <ResourceDictionary Source="Styles/Fonts.xaml" />
-                <ResourceDictionary Source="Styles/Buttons.xaml" />
-                <ResourceDictionary Source="Styles/Separators.xaml" />
-                <ResourceDictionary Source="Styles/Texts.xaml" />
-                <ResourceDictionary Source="Styles/Misc.xaml" />
-                <ResourceDictionary Source="Styles/Windows.xaml" />
-                <ResourceDictionary Source="Styles/ViewsAndViewModels.xaml" />
+                <!-- ORDER IS IMPORTANT, and yet, somehow not, because WPF sucks arse -->
+                <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds-ui;component/Themes/Colours.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds-ui;component/UIResources.xaml"/>
+                <ResourceDictionary Source="Themes/Windows.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds-ui-app;component/Link.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds-editor;component/Resources.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds-lobby;component/Link.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
