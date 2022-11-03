@@ -259,7 +259,7 @@ public abstract class BasePlayModel {
 
     private static GamePosition InvertPosition(GamePosition position, int axisLen)
         => position with {
-            Y = axisLen - position.Y
+            Y = -position.Y
         };
 
     protected static SessionPlanEntityInfo[] CreatePlanningEntities(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements, int height, Gamemode gamemode) {
