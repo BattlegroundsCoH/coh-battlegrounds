@@ -321,7 +321,7 @@ public abstract class BaseLobby : IViewModel, INotifyPropertyChanged {
             var vm = GetViewManager();
 
             // Go back to browser view
-            vm.SetDisplay(AppDisplayState.LeftRight, "LeftMenu", "LobbyBrowserViewModel");
+            vm.SetDisplay(AppDisplayState.LeftRight, "LeftMenu", "LobbyBrowser");
 
             // Destroy chat
             if (this.m_chatModel is not null) {
