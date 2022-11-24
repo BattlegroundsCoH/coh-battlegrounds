@@ -214,6 +214,12 @@
           }
         ]
       }
+    },
+    {
+      "ID": "bg_attr",
+      "Display": "30",
+      "DisplayDesc": "31",
+      "DefaultOption": 0
     }
   ],
   "CustomOptions": [],

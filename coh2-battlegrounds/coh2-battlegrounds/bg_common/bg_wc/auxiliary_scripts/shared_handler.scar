@@ -354,7 +354,7 @@ function BG_GetCallInPoint(self) -- The intention of this function is to avoid t
     local p = self.last_callin_point;
     local d = t - (self.last_callin_time or 0);
     if d < 15.0 then -- if less than 15s before last call-in, 
-        p = Util_GetRandomPosition(p, d + 10);
+        p = Util_GetRandomPosition(p, d + 25);
     end
     self.last_callin_time = t; -- Update call in time
     return p;
