@@ -17,14 +17,14 @@ function BG_SolveNewUnit(playerData, sid)
 
     -- If vehicle
     if Squad_IsVehicleSquad(squad) then
-        bgdebug("BG_SolveNewUnit: Registering new vehicle "..sid);
+        --bgdebug("BG_SolveNewUnit: Registering new vehicle "..sid);
         -- Get the driver squad
         local driver = Squad_GetVehicleMobileDriverSquad(squad);
         -- If there's a driver squad
 
         -- Bail if no driver squad
         if driver == nil then
-            bgdebug("BG_SolveNewUnit: No driver found -> driver == nil. Blueprint may not support drivers!");
+            --bgdebug("BG_SolveNewUnit: No driver found -> driver == nil. Blueprint may not support drivers!");
             playerData.deployed[sid] = _bg_unitID_RecrewRecapture; -- Mark vehicle as being a recrew or recapture case
             playerData.captured[sid] = { bp = BP_GetName(Squad_GetBlueprint(squad)), tp = "SBP" }; -- Add to captured equipment
             return
@@ -37,21 +37,21 @@ function BG_SolveNewUnit(playerData, sid)
         if playerData.deployed[driverID] ~= nil then
             local vehicle_company_id = BG_FindVehicleFromCrewInCompany(playerData, playerData.deployed[driverID]);
             if vehicle_company_id == nil or vehicleBlueprint ~= BG_FindSquadInCompany(playerData.selfID, vehicle_company_id).bp_name then -- twas captured - add to capture table
-                bgdebug("BG_SolveNewUnit: Detected captured vehicle! " .. sid);
+                --bgdebug("BG_SolveNewUnit: Detected captured vehicle! " .. sid);
                 playerData.captured[sid] = { bp = vehicleBlueprint, tp = "SBP" }; -- Add to captured equipment
                 playerData.tempcrews[sid] = driverID; -- Mark driver squad ID as temporary crew (and point to the captured squad)
                 playerData.deployed[sid] = _bg_unitID_RecrewRecapture; -- Mark vehicle as being a recrew or recapture case
                 Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled); -- Add on death event for squad
             else
-                bgdebug("BG_SolveNewUnit: Crew squad " .. driverID .. " recrewed old vehicle with new id " ..sid);
+                --bgdebug("BG_SolveNewUnit: Crew squad " .. driverID .. " recrewed old vehicle with new id " ..sid);
             end -- else the crew (most likely) recrewed its old vehicle.
         else
-            bgdebug("BG_SolveNewUnit: Crew was not spawned!");
+            --bgdebug("BG_SolveNewUnit: Crew was not spawned!");
             playerData.deployed[sid] = _bg_unitID_NoIdea; -- Mark it as no idea (just so we don't go over this case every time this function is called)
         end
 
     elseif Squad_HasTeamWeapon(squad) then -- if team weapon
-        bgdebug("BG_SolveNewUnit: Registering new team weapon");
+        --bgdebug("BG_SolveNewUnit: Registering new team weapon");
         -- Find a potential "invalid" squad that could have captured this (and save ptr to it so it's not lost).
         local firstAvailableSquad, company_id = BG_FindFirstNonDeadSquadInCompany(playerData.selfID);
         if firstAvailableSquad ~= nil and (company_id or -1) >= 0 then -- Some squad is no longer valid - and most likely the squad capturing this
@@ -61,7 +61,7 @@ function BG_SolveNewUnit(playerData, sid)
         playerData.deployed[sid] = _bg_unitID_RecrewRecapture;
         playerData.captured[sid] = { bp = BP_GetName(Squad_GetBlueprint(squad)), tp = "SBP" }
         -- Add on death event for squad
-        bgdebug("BG_SolveNewUnit: Team Weapon Crew Capture:" ..sid);
+        --bgdebug("BG_SolveNewUnit: Team Weapon Crew Capture:" ..sid);
         Rule_AddSquadEvent(BG_OnSquadDeath, squad, GE_SquadKilled);
     end
 
@@ -266,7 +266,7 @@ function BG_CallInUnit(unit_data, player, gotopos, spawnfrom, ignoreTransport)
 
         end
 
-    else
+    elseif gotopos ~= nil then
 
         -- Give move order
         Command_SquadPos(player, sg_temp, SCMD_Move, gotopos, false )
@@ -463,12 +463,12 @@ function BG_RecallSquad(playerID, squadID)
 
         -- Bail if transport
         if companyID == _bg_unitID_TransportIgnore then
-            bgdebug("BG_RecallSquad: Ignoring recall unit --> Is transport "..gameID)
+            --bgdebug("BG_RecallSquad: Ignoring recall unit --> Is transport "..gameID)
             return
         end
 
         -- Log
-        bgdebug("BG_RecallSquad: Recalling unit "..gameID .. " with associated id " ..companyID)
+        --bgdebug("BG_RecallSquad: Recalling unit "..gameID .. " with associated id " ..companyID)
 
         -- Flag if stats should be reset
         local resetStats = false;
@@ -478,7 +478,7 @@ function BG_RecallSquad(playerID, squadID)
 
             -- Handle captured equipment
             if _bg_playerData[playerID].captured[gameID] ~= nil then
-                bgdebug("BG_RecallSquad: handling equipment capture for unit "..gameID)
+                --bgdebug("BG_RecallSquad: handling equipment capture for unit "..gameID)
                 BG_HandleCapturedEquipment(_bg_playerData[playerID], gameID, squadID);
             end
 

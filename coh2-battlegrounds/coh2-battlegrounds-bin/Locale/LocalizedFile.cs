@@ -167,7 +167,7 @@ public class LocalizedFile {
     public bool LoadFromBinary(MemoryStream stream) {
 
         // Create binary reader
-        using BinaryReader reader = new BinaryReader(stream, Encoding.Unicode, true);
+        using BinaryReader reader = new BinaryReader(stream);
 
         // Read identifier
         string identifier = reader.ReadUnicodeString();

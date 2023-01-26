@@ -1,0 +1,103 @@
+{
+  "UIData": {
+    "Icon": "ct_armoured",
+    "HighlightUnits": [
+      "guards_troops_bg",
+      "churchill_lend_lease_squad_bg",
+      "is-2_bg"
+    ],
+    "HighlightAbilities": [
+      "soviet_air_recon",
+      "soviet_air_recon",
+      "soviet_air_recon"
+    ]
+  },
+  "MaxInfantry": 19,
+  "MaxTeamWeapons": 10,
+  "MaxVehicles": 9,
+  "MaxLeaders": 2,
+  "MaxAbilities": 3,
+  "Exclude": [
+    "penal_battalion_bg",
+    "nkvd_squad_bg",
+    "shock_troops_bg",
+    "m1931_203mm_b-4_howitzer_artillery_bg",
+    "m5_halftrack_squad_bg",
+    "kv-8_bg",
+    "kv-2_bg",
+    "kv-1_bg",
+    "zis_6_supply_truck_bg",
+    "valentine_lend_lease_command_bg"
+  ],
+  "DeployTypes": [
+    "DeployAndExit",
+    "DeployAndStay"
+  ],
+  "DeployBlueprints": [
+    {
+      "Blueprint": "zis_6_transport_truck_bg",
+      "CostModifier": 1,
+      "Tow": true,
+      "TowCostModifier": 1
+    },
+    {
+      "Blueprint": "m5_halftrack_squad_bg",
+      "CostModifier": 1.075,
+      "Tow": true,
+      "TowCostModifier": 1
+    },
+    {
+      "Blueprint": "m3a1_scout_car_squad_bg",
+      "CostModifier": 1.05,
+      "Tow": false,
+      "TowCostModifier": 1
+    }
+  ],
+  "CostModifiers": {
+  },
+  "Roles": {
+    "DirectCommand": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      }
+    },
+    "SupportRole": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      },
+      "Unlocks": [
+        "combat_engineer_squad_bg",
+        "tank_buster_bg",
+        "t_34_85_squad_bg"
+      ]
+    },
+    "ReserveRole": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      },
+      "Unlocks": [
+        "su-85_bg",
+        "isu-152_bg",
+        "katyusha_rocket_truck_bg",
+        "m1937_152mm_ml_20_artillery_bg",
+        "churchill_lend_lease_squad_bg",
+        "is-2_bg"
+      ]
+    }
+  },
+  "Abilities": [
+    {
+      "Id": "soviet_air_recon",
+      "CostModifier": 1
+    }
+  ]
+}

@@ -16,7 +16,7 @@
 						<icon name="minimap_texture" value="Icons_minimap_unit_scout_car" />
 						<instance_reference name="modal_ability" value="" />
 						<bool name="reveal_for_decryption" value="False" />
-						<locstring name="screen_name" value="11035438" />
+						<locstring name="screen_name" value="94" mod="142b113740474c82a60b0a428bd553d5" />
 						<string name="selection_group" value="truck" />
 						<group name="speaker_generic">
 							<string name="code_1" value="" />
@@ -590,6 +590,8 @@
 			<list name="abilities">
 				<instance_reference name="ability" value="abilities\battlegrounds_generic\modal_ability\transport_heavy_vehicle_bg" mod="142b113740474c82a60b0a428bd553d5" />
 				<instance_reference name="ability" value="abilities\battlegrounds_generic\timed_ability\detach_tow_bg" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\battlegrounds_generic\always_on_ability\supply_auto_dis" mod="142b113740474c82a60b0a428bd553d5" />
+				<instance_reference name="ability" value="abilities\soviet\toggle_ability\auto_truck_supply_disable_bg" mod="142b113740474c82a60b0a428bd553d5" />
 			</list>
 			<bool name="allow_targeted_abilities_whilst_moving" value="False" />
 		</template_reference>

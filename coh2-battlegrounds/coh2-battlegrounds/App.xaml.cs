@@ -1,54 +1,67 @@
-﻿using System;
+using System;
 using System.IO;
+using System.Windows.Threading;
 using System.Diagnostics;
 using System.Windows;
 using System.Globalization;
 using System.Collections;
 using System.Threading.Tasks;
+using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
 
 using Battlegrounds;
+using Battlegrounds.UI;
+using Battlegrounds.UI.Modals;
+using Battlegrounds.UI.Modals.Prompts;
+using Battlegrounds.UI.Application;
+using Battlegrounds.UI.Application.Pages;
+using Battlegrounds.UI.Application.Modals;
+using Battlegrounds.UI.Application.Components;
 using Battlegrounds.Networking;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.ErrorHandling;
 using Battlegrounds.Verification;
+using Battlegrounds.Update;
 using Battlegrounds.Functional;
-
-using BattlegroundsApp.LocalData;
-using BattlegroundsApp.Resources;
-using BattlegroundsApp.MVVM;
-using BattlegroundsApp.MVVM.Models;
-using BattlegroundsApp.CompanyEditor.MVVM.Models;
-using BattlegroundsApp.Dashboard.MVVM.Models;
-using BattlegroundsApp.Modals;
-using BattlegroundsApp.Modals.Startup.MVVM.Models;
+using Battlegrounds.Util.Coroutines;
+using Battlegrounds.Resources;
+using Battlegrounds.DataLocal;
+using Battlegrounds.DataLocal.Generator;
+using Battlegrounds.Editor;
+using Battlegrounds.Editor.Pages;
+using Battlegrounds.Lobby.Pages;
+using Battlegrounds.Lobby;
 
 namespace BattlegroundsApp;
 
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : Application {
+public partial class App : Application, IResourceResolver, IViewController {
 
     private static AppViewManager? __viewManager;
-    private static ResourceHandler? __handler;
+
+    private static IUIModule? __editorModule;
+    private static IUIModule? __lobbyModule;
+    private static IUIModule? __appModule;
 
     private static LeftMenu? __lmenu;
-    private static SettingsViewModel? __settings;
-    private static DashboardViewModel? __dashboard;
-    private static LobbyBrowserViewModel? __lobbyBrowser;
-    private static CompanyBrowserViewModel? __companyBrowser;
+    private static Settings? __settings;
+    private static Dashboard? __dashboard;
+    private static LobbyBrowser? __lobbyBrowser;
+    private static CompanyBrowser? __companyBrowser;
 
-    public static ResourceHandler ResourceHandler 
-        => IsStarted ? __handler : throw new InvalidOperationException("Cannot get resource handler before application window has initialised.");
-
-    public static AppViewManager ViewManager 
+    public static AppViewManager Views 
         => IsStarted ? __viewManager : throw new InvalidOperationException("Cannot get view manager before application window has initialised.");
 
-    [MemberNotNullWhen(true, nameof(__viewManager), nameof(__handler))]
+    public AppViewManager ViewManager => __viewManager ?? throw new InvalidOperationException("Cannot get view manager before application window has initialised.");
+
+    [MemberNotNullWhen(true, nameof(__viewManager))]
     public static bool IsStarted { get; private set; }
 
-    [MemberNotNull(nameof(__viewManager), nameof(__handler))]
+    public static new Dispatcher Dispatcher => App.Current.Dispatcher;
+
+    [MemberNotNull(nameof(__viewManager))]
     private void App_Startup(object sender, StartupEventArgs e) {
 
         // Check args
@@ -68,11 +81,11 @@ public partial class App : Application {
         // Verify
         VerifyIntegrity();
 
-        // Setup resource handler
-        __handler = new();
-
         // Load BG .dll instance*
         BattlegroundsInstance.LoadInstance();
+
+        // Setup resource handler
+        LoadResources();
 
         // Load BG networking .dll instance*
         NetworkInterface.Setup();
@@ -86,15 +99,37 @@ public partial class App : Application {
         window.Closed += this.MainWindow_Closed;
 
         // Create initial left/right views
-        __lmenu = new();
         __dashboard = new();
 
         // Create app view manager
         __viewManager = new(window);
+
+        // Create left menu
+        __lmenu = new(__viewManager);
+        
+        // Create lobby module and register it
+        __lobbyModule = new LobbyModule();
+        __lobbyModule.RegisterMenuCallbacks(__lmenu);
+        __lobbyModule.RegisterViewFactories(__viewManager);
+
+        // Create editor module and register it
+        __editorModule = new EditorModule();
+        __editorModule.RegisterMenuCallbacks(__lmenu);
+        __editorModule.RegisterViewFactories(__viewManager);
+
+        // Create app module and register it
+        __appModule = new ApplicationModule();
+        __appModule.RegisterMenuCallbacks(__lmenu);
+        __appModule.RegisterViewFactories(__viewManager);
+
+        // Set view manager
         __viewManager.SetDisplay(AppDisplayState.LeftRight, __lmenu, __dashboard);
 
         // Set as started
         IsStarted = true;
+
+        // Set the application version
+        BattlegroundsInstance.Version = new AppVersionFetcher();
 
         // Load
         if (!BattlegroundsInstance.IsFirstRun) {
@@ -106,25 +141,29 @@ public partial class App : Application {
         this.MainWindow.Show();
 
         // Load filter
-        Task.Run(ProfanityFilter.LoadFilter);
+        //Task.Run(ProfanityFilter.LoadFilter);
 
         // Load more low priority stuff down here
 
+        var updateFolderContents = Directory.GetFiles(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.UPDATE_FOLDER));
+        // Remove update folder
+        if (updateFolderContents.Length > 0) {
+            updateFolderContents.ForEach(File.Delete);
+        }
+
+        // Check for new updates
+        Task.Run(CheckForUpdate);
+
     }
 
-    /// <summary>
-    /// Restarts the application.
-    /// </summary>
-    public static void Restart() {
+    private static void LoadResources() {
 
-        // Close log
-        BattlegroundsInstance.Log?.SaveAndClose(0);
+        // Load Resources
+        //ResourceHandler.LoadAllResources(null);
+        ResourceHandler.LoadAllResources(Assembly.GetExecutingAssembly());
 
-        // Create new process
-        Process.Start("coh2-battlegrounds.exe");
-
-        // Close this
-        Environment.Exit(0);
+        // Load additional resources
+        ResourceLoader.LoadAllPackagedResources();
 
     }
 
@@ -145,21 +184,21 @@ public partial class App : Application {
         if (BattlegroundsInstance.IsFirstRun) {
 
             // Grab modal control
-            if (ViewManager.GetModalControl() is not ModalControl fullModal) {
+            if (Views.GetModalControl() is not ModalControl fullModal) {
                 MessageBox.Show("The application failed to launch properly and will now exit.", "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Environment.Exit(0);
                 return;
             }
 
             // Create sstartup
-            var startup = new StartupViewModel();
+            var startup = new Startup();
             startup.OnClose(() => {
 
                 // Load next
                 this.LoadNext();
 
                 // Create initial data
-                InitialDataCreator.Init();
+                InitialCompanyCreator.Init();
 
                 // Save all changes
                 BattlegroundsInstance.SaveInstance();
@@ -205,10 +244,12 @@ public partial class App : Application {
             return;
         }
 
+        __dashboard!.UpdateSteamUser();
+
         // Create other views that are directly accessible from LHS
-        __companyBrowser = __viewManager.CreateDisplayIfNotFound<CompanyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create company browser view model!");
-        __lobbyBrowser = __viewManager.CreateDisplayIfNotFound<LobbyBrowserViewModel>(() => new()) ?? throw new Exception("Failed to create lobby browser view model!");
-        __settings = __viewManager.CreateDisplayIfNotFound<SettingsViewModel>(() => new()) ?? throw new Exception("Failed to create settings view model!");
+        __companyBrowser = __viewManager.CreateDisplayIfNotFound<CompanyBrowser>(() => new()) ?? throw new Exception("Failed to create company browser view model!");
+        __lobbyBrowser = __viewManager.CreateDisplayIfNotFound<LobbyBrowser>(() => new()) ?? throw new Exception("Failed to create lobby browser view model!");
+        __settings = __viewManager.CreateDisplayIfNotFound<Settings>(() => new()) ?? throw new Exception("Failed to create settings view model!");
 
     }
 
@@ -221,6 +262,9 @@ public partial class App : Application {
 
         // Close networking
         NetworkInterface.Shutdown();
+
+        // Close log
+        BattlegroundsInstance.Log?.SaveAndClose(0);
 
         // Save all changes
         BattlegroundsInstance.SaveInstance();
@@ -257,19 +301,18 @@ public partial class App : Application {
         }
 
         // Load all companies used by the player
-        PlayerCompanies.LoadAll();
+        Companies.LoadAll();
 
         // Load all installed and active campaigns
-        PlayerCampaigns.GetInstalledCampaigns();
-        PlayerCampaigns.LoadActiveCampaigns();
+        //PlayerCampaigns.GetInstalledCampaigns();
+        //PlayerCampaigns.LoadActiveCampaigns();
 
     }
 
     private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) {
 
         // Update
-        if (sender is null)
-            sender = "<<NULL>>";
+        sender ??= "<<NULL>>";
 
         // Log exception
         Trace.WriteLine($"\n\n\n\t*** FATAL APP EXIT ***\n\nException trigger:\n{sender}\n\nException Info:\n{e.ExceptionObject}\n");
@@ -297,13 +340,13 @@ public partial class App : Application {
     /// </summary>
     /// <param name="type">The type to try and find data template for.</param>
     /// <returns>If found, the linked <see cref="DataTemplate"/> instance; Otherwise <see langword="null"/> if not found.</returns>
-    public static DataTemplate? TryFindDataTemplate(Type type) => TryFindDataTemplate(Current.Resources, type);
+    public DataTemplate? TryFindDataTemplate(Type type) => this.TryFindDataTemplate(Current.Resources, type);
 
-    private static DataTemplate? TryFindDataTemplate(ResourceDictionary dictionary, Type type) {
+    private DataTemplate? TryFindDataTemplate(ResourceDictionary dictionary, Type type) {
 
         // Loop through basic entry
         foreach (DictionaryEntry res in dictionary) {
-            if (res.Value is DataTemplate template && template.DataType.Equals(type)) {
+            if (res.Value is DataTemplate template && template.DataType is not null && template.DataType.Equals(type)) {
                 return template;
             }
         }
@@ -317,6 +360,50 @@ public partial class App : Application {
 
         // Return nothing
         return null;
+
+    }
+
+    private static void CheckForUpdate() {
+
+        // Check for newer version
+        if (!Update.IsNewVersion()) 
+            return;
+
+        // Null check
+        if (App.Views.GetModalControl() is not ModalControl mControl) {
+            return;
+        }
+
+        Application.Current.Dispatcher.Invoke(() => {
+
+            // Do modal
+            YesNoPrompt.Show(mControl, (vm, resault) => {
+
+                // Check return value
+                if (resault is not ModalDialogResult.Confirm) {
+                    return;
+                }
+
+                Coroutine.StartCoroutine(RunUpdate(mControl));
+
+            }, "New Update", "New update detected. Do you want to download?");
+
+        });
+
+    }
+
+    private static IEnumerator RunUpdate(ModalControl control) {
+
+        yield return new WaitTimespan(TimeSpan.FromSeconds(0.5));
+        Application.Current.Dispatcher.Invoke(() => {
+            // Create downloadInProgress
+            var downloadInProgress = new UpdateDownloader();
+
+            // Show modal
+            control.ShowModal(downloadInProgress);
+        });
+        yield return new WaitTimespan(TimeSpan.FromSeconds(1.0));
+        Update.UpdateApplication();
 
     }
 

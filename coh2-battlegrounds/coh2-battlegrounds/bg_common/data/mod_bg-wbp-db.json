@@ -871,7 +871,8 @@
     "MagazineSize": 80,
     "FireRate": 16,
     "Category": "smallarms",
-    "SmallArmsType": "heavymachinegun"
+    "SmallArmsType": "heavymachinegun",
+    "CallbackType": "ScarEvent_OnSyncWeaponFired"
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",

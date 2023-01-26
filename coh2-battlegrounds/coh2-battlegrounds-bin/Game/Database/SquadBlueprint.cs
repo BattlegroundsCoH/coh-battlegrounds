@@ -48,6 +48,20 @@ public enum SquadCategory {
 public sealed class SquadBlueprint : Blueprint, IUIBlueprint {
 
     /// <summary>
+    /// Invalid squad blueprint instance with no data associated with it.
+    /// </summary>
+    public static readonly SquadBlueprint Invalid = 
+        new SquadBlueprint("sbp", new BlueprintUID(), null, 
+            new(), 
+            new(), 
+            new(Array.Empty<LoadoutExtension.Entry>()), 
+            new(Array.Empty<VeterancyExtension.Rank>()), 
+            Array.Empty<string>(), 
+            Array.Empty<string>(), 
+            Array.Empty<string>(), 
+            Array.Empty<string>(), 0, 0, false, false, false, 0);
+
+    /// <summary>
     /// Get the unique PropertyBagGroupdID assigned to this blueprint.
     /// </summary>
     public override BlueprintUID PBGID { get; }

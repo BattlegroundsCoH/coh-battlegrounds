@@ -1,0 +1,62 @@
+{
+  "UIData": {
+    "Icon": "ct_airborne",
+    "HighlightUnits": [],
+    "HighlightAbilities": []
+  },
+  "MaxInfantry": 20,
+  "MaxTeamWeapons": 10,
+  "MaxVehicles": 8,
+  "MaxLeaders": 2,
+  "MaxAbilities": 4,
+  "Exclude": [],
+  "DeployTypes": [
+    "DeployAndExit",
+    "DeployAndStay"
+  ],
+  "DeployBlueprints": [
+    {
+      "Blueprint": "opel_blitz_transport_squad_bg",
+      "CostModifier": 1,
+      "Tow": true,
+      "TowCostModifier": 1
+    }
+  ],
+  "CostModifiers": {
+  },
+  "Phases": {
+    "PhaseA": {
+      "ResourceIncomeModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1
+      }
+    },
+    "PhaseB": {
+      "ActivationTime": 420,
+      "DeployDelay": 1,
+      "ResourceIncomeModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1
+      },
+      "Unlocks": []
+    },
+    "PhaseC": {
+      "ActivationTime": 660,
+      "DeployDelay": 1,
+      "ResourceIncomeModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1
+      },
+      "Unlocks": []
+    }
+  },
+  "abilities": [
+    {
+      "ID": "german_light_support_artillery",
+      "CostModifier": 1
+    }
+  ]
+}

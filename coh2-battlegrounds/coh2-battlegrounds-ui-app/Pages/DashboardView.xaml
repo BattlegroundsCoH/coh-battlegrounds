@@ -1,0 +1,342 @@
+﻿<UserControl 
+    x:Class="Battlegrounds.UI.Application.Pages.DashboardView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:Battlegrounds.UI.Application.Pages"
+    xmlns:components="clr-namespace:Battlegrounds.UI.Application.Components"
+    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=coh2-battlegrounds-ui"
+    xmlns:uinum="clr-namespace:Battlegrounds.UI.Converters.Numeric;assembly=coh2-battlegrounds-ui"
+    mc:Ignorable="d" 
+    d:DesignHeight="850" 
+    d:DesignWidth="1100">
+    <UserControl.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="{StaticResource BackgroundDeepBlue}" Offset="0.0" />
+            <GradientStop Color="{StaticResource BackgroundBlue}" Offset="0.25" />
+            <GradientStop Color="{StaticResource BackgroundDeepBlue}" Offset="0.75" />
+            <GradientStop Color="{StaticResource BackgroundDarkBlue}" Offset="1.0" />
+        </LinearGradientBrush>
+    </UserControl.Background>
+    <Grid>
+
+        <Grid.Resources>
+            <uinum:WinrateToColour x:Key="winRateToColorConverter"/>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Row 0 :: Column 0 :: Welcome Message -->
+        <components:UserAvatar
+            Grid.Row="0"
+            Grid.Column="0"
+            Username="{Binding PlayerName}"/>
+
+        <!-- Row 1 :: Column 0 :: Statistics -->
+        <Grid Grid.Row="1" Grid.Column="0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition  Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Row="0"
+                        Grid.Column="0"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+
+                <!-- Statiscits -->
+                <StackPanel Margin="0, 0, 15, 0">
+                    <!-- Statistics Title -->
+                    <Border HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Width="275"
+                            Margin="0, 0, 0, 15"
+                            Background="{StaticResource BackgroundDarkBlueBrush}">
+
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="1" Direction="0"/>
+                        </Border.Effect>
+
+                        <controls:LocalisedLabel Foreground="#d8dbde"
+                                           FontSize="22"
+                                           FontFamily="Open Sans"
+                                           FontWeight="DemiBold"
+                                           VerticalContentAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           LocKey="DashboardView_Statistics"/>
+
+                    </Border>
+
+                    <!-- Statistics Data -->
+                    <Border HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Width="275"
+                            Background="{StaticResource BackgroundDarkBlueBrush}">
+
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="1" Direction="0"/>
+                        </Border.Effect>
+
+                        <TextBlock TextWrapping="Wrap"
+                                   Foreground="White"
+                                   FontSize="16"
+                                   LineHeight="26"
+                                   Margin="8, 5, 0, 5">
+                
+                        <!-- Wins -->
+                        <InlineUIContainer>
+                            <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                <TextBlock Text="Wins:" />
+                                <TextBlock Text="{Binding TotalWins, FallbackValue='N/A'}"
+                                           TextAlignment="Right"
+                                           Foreground="{StaticResource BackgroundGreenBrush}"
+                                           Margin="0, 0, 8, 0" />
+                            </Grid>
+                        </InlineUIContainer>
+                
+                        <!-- Losses -->
+                        <InlineUIContainer>
+                            <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                <TextBlock Text="Losses:" />
+                                <TextBlock Text="{Binding TotalLosses, FallbackValue='N/A'}"
+                                           TextAlignment="Right" 
+                                           Foreground="{StaticResource BackgroundLightRedBrush}"
+                                           Margin="0, 0, 8, 0" />
+                            </Grid>
+                        </InlineUIContainer>
+                
+                        <!-- Win Ratio -->
+                        <InlineUIContainer>
+                            <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                <TextBlock Text="Win Rate:" />
+                                <TextBlock Text="{Binding WinRate, FallbackValue='N/A', StringFormat={}{0}%}"
+                                           TextAlignment="Right"
+                                           Foreground="{Binding WinRate, Converter={StaticResource winRateToColorConverter}}"
+                                           Margin="0, 0, 8, 0" />
+                            </Grid>
+                        </InlineUIContainer>
+                
+                        <!-- Infantry Kills -->
+                        <InlineUIContainer>
+                            <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                <TextBlock Text="Infantry Kills:" />
+                                <TextBlock Text="{Binding TotalInfantryKills, FallbackValue='N/A', StringFormat={}N/A}"
+                                           TextAlignment="Right" 
+                                           Margin="0, 0, 8, 0" />
+                            </Grid>
+                        </InlineUIContainer>
+                
+                        <!-- Vehicle Kills -->
+                        <InlineUIContainer>
+                            <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                <TextBlock Text="Vehicle Kills:" />
+                                <TextBlock Text="{Binding TotalVehicleKills, FallbackValue='N/A', StringFormat={}N/A}"
+                                           TextAlignment="Right" 
+                                           Margin="0, 0, 8, 0" />
+                            </Grid>
+                        </InlineUIContainer>
+                
+                        <!-- Infantry Losses -->
+                        <InlineUIContainer>
+                            <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                <TextBlock Text="Infantry Losses:" />
+                                <TextBlock Text="{Binding TotalInfantryLosses, FallbackValue='N/A', StringFormat={}N/A}"
+                                           TextAlignment="Right" 
+                                           Margin="0, 0, 8, 0" />
+                            </Grid>
+                        </InlineUIContainer>
+                
+                        <!-- Vehicle Losses -->
+                        <InlineUIContainer>
+                            <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                <TextBlock Text="Vehicle Losses:" />
+                                <TextBlock Text="{Binding TotalVehicleLosses, FallbackValue='N/A', StringFormat={}N/A}"
+                                           TextAlignment="Right" 
+                                           Margin="0, 0, 8, 0" />
+                            </Grid>
+                        </InlineUIContainer>
+                
+                        <!-- KD Ratio -->
+                        <InlineUIContainer>
+                            <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                <TextBlock Text="K/D Ratio:" />
+                                <TextBlock Text="{Binding KillDeathRatio, FallbackValue='N/A', StringFormat={}N/A}"
+                                           TextAlignment="Right" 
+                                           Margin="0, 0, 8, 0" />
+                            </Grid>
+                        </InlineUIContainer>
+                
+                    </TextBlock>
+
+                    </Border>
+                </StackPanel>
+
+                <!-- Most Played Company -->
+                <StackPanel Margin="15, 0, 15, 0">
+                    <!-- Company Title -->
+                    <Border HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Width="275"
+                            Margin="0, 0, 0, 15"
+                            Background="{StaticResource BackgroundDarkBlueBrush}">
+
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="1" Direction="0"/>
+                        </Border.Effect>
+
+                        <controls:LocalisedLabel Foreground="#d8dbde"
+                                           FontSize="22"
+                                           FontFamily="Open Sans"
+                                           FontWeight="DemiBold"
+                                           HorizontalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           LocKey="DashboardView_MostPlayedCompany" />
+                    </Border>
+
+                    <!-- Most Played Company Data -->
+                    <components:CompanyCard Company="{Binding MostPlayedCompany}"/>
+                </StackPanel>
+
+                <!-- Misc -->
+                <StackPanel Margin="15, 0, 0, 0">
+                    <!-- Misc Title -->
+                    <Border HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Width="275"
+                            Margin="0, 0, 0, 15"
+                            Background="{StaticResource BackgroundDarkBlueBrush}">
+
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="1" Direction="0"/>
+                        </Border.Effect>
+
+                        <controls:LocalisedLabel Foreground="#d8dbde"
+                                           FontSize="22"
+                                           FontFamily="Open Sans"
+                                           FontWeight="DemiBold"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           LocKey="DashboardView_Misc"/>
+                    </Border>
+
+                    <!-- Misc Data -->
+                    <Border HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Width="275"
+                            Background="{StaticResource BackgroundDarkBlueBrush}">
+
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="1" Direction="0"/>
+                        </Border.Effect>
+
+                        <TextBlock TextWrapping="Wrap"
+                                   Foreground="White"
+                                   FontSize="16"
+                                   LineHeight="26"
+                                   Margin="8, 5, 0, 5">
+                            
+                            <!-- Wehrmacht Games -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="Wehrmacht Games Played:" />
+                                    <TextBlock Text="{Binding WehrmachtGames, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
+                            
+                            <!-- Soviet Games -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="Soviet Games Played:" />
+                                    <TextBlock Text="{Binding SovietGames, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
+                            
+                            <!-- USF Games -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="USF Games Played:" />
+                                    <TextBlock Text="{Binding USFGames, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
+                            
+                            <!-- UKF Games -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="UKF Games Played:" />
+                                    <TextBlock Text="{Binding UKFGames, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
+                            
+                            <!-- OKW Games -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="OKW Games Played:" />
+                                    <TextBlock Text="{Binding OKWGames, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
+
+                            <!-- Total Games -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="Total Games Played:" />
+                                    <TextBlock Text="{Binding TotalGamesPlayed, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
+                            
+                            <!-- Favorite Gamemode -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="Most Played Gamemode:" />
+                                    <TextBlock Text="{Binding MostPlayedGamemode, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
+                            
+                            <!-- Favorite Map -->
+                            <InlineUIContainer>
+                                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=TextBlock}, Path=ActualWidth}">
+                                    <TextBlock Text="Most Played Map:" />
+                                    <TextBlock Text="{Binding MostPlayedMap, FallbackValue='N/A'}"
+                                               TextAlignment="Right" 
+                                               Margin="0, 0, 8, 0" />
+                                </Grid>
+                            </InlineUIContainer>
+
+                        </TextBlock>
+
+                    </Border>
+                </StackPanel>
+
+            </StackPanel>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

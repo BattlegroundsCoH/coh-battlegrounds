@@ -52,7 +52,7 @@ In order to play with this mod you will have to download the external applicatio
 Additionally, you must fullfill the following:
 
 * A valid Steam Account*
-* An up-to-date distribution of the .NET Framework (If you're on Windows 10, it is pre-installed).
+* An up-to-date distribution of the .NET Runtime.
 * A stable internet connection (You will presently experience the best application performance if situated in the EU).
 * No directory read/write restrictions on you Company of Heroes 2 Playback folder.
 

@@ -1,0 +1,85 @@
+{
+  "UIData": {
+    "Icon": "ct_motorized",
+    "HighlightUnits": [
+      "panzer_grenadier_squad_bg",
+      "opel_blitz_transport_squad_bg",
+      "brummbar_squad_bg"
+    ],
+    "HighlightAbilities": [
+      "german_light_support_artillery",
+      "german_light_support_artillery",
+      "german_light_support_artillery"
+    ]
+  },
+  "MaxInfantry": 20,
+  "MaxTeamWeapons": 9,
+  "MaxVehicles": 9,
+  "MaxLeaders": 2,
+  "MaxAbilities": 4,
+  "Exclude": [
+    "ostwind_squad_bg",
+    "panzerwerfer_squad_bg",
+    "panther_command_squad_bg",
+    "panzer_iv_command_squad_bg",
+    "elefant_tank_destroyer_squad_bg"
+  ],
+  "DeployTypes": [
+    "DeployAndExit",
+    "DeployAndStay"
+  ],
+  "DeployBlueprints": [
+    {
+      "Blueprint": "opel_blitz_transport_squad_bg",
+      "CostModifier": 1.05,
+      "Tow": true,
+      "TowCostModifier": 1
+    }
+  ],
+  "CostModifiers": {
+  },
+  "Roles": {
+    "DirectCommand": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      }
+    },
+    "SupportRole": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      },
+      "Unlocks": [
+        "sniper_squad_bg",
+        "mortar_team_81mm_bg",
+        "stug_iii_e_squad_bg",
+        "panzer_iv_squad_bg",
+        "panzer_iv_stubby_squad_bg"
+      ]
+    },
+    "ReserveRole": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      },
+      "Unlocks": [
+        "brummbar_squad_bg",
+        "stug_iii_squad_bg",
+        "panther_squad_bg"
+      ]
+    }
+  },
+  "Abilities": [
+    {
+      "Id": "german_light_support_artillery",
+      "CostModifier": 1
+    }
+  ]
+}

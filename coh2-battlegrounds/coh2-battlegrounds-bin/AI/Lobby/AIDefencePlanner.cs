@@ -7,6 +7,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
+using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.LobbySystem.json;

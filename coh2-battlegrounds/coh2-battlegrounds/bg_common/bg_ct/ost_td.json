@@ -1,0 +1,85 @@
+{
+  "UIData": {
+    "Icon": "ct_td",
+    "HighlightUnits": [
+      "ost_tankhunter_squad_bg",
+      "stug_iii_squad_bg",
+      "elefant_tank_destroyer_squad_bg"
+    ],
+    "HighlightAbilities": [
+      "german_light_support_artillery",
+      "german_light_support_artillery",
+      "german_light_support_artillery"
+    ]
+  },
+  "MaxInfantry": 12,
+  "MaxTeamWeapons": 14,
+  "MaxVehicles": 12,
+  "MaxLeaders": 2,
+  "MaxAbilities": 4,
+  "Exclude": [],
+  "DeployTypes": [
+    "DeployAndExit",
+    "DeployAndStay"
+  ],
+  "DeployBlueprints": [
+    {
+      "Blueprint": "opel_blitz_transport_squad_bg",
+      "CostModifier": 1.05,
+      "Tow": true,
+      "TowCostModifier": 1
+    },
+    {
+      "Blueprint": "sdkfz_250_halftrack_bg",
+      "CostModifier": 1.065,
+      "Tow": true,
+      "TowCostModifier": 1
+    },
+    {
+      "Blueprint": "sdkfz_251_halftrack_squad_bg",
+      "CostModifier": 1.1,
+      "Tow": true,
+      "TowCostModifier": 1
+    }
+  ],
+  "CostModifiers": {
+  },
+  "Roles": {
+    "DirectCommand": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      }
+    },
+    "SupportRole": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      },
+      "Unlocks": [
+        "elefant_tank_destroyer_squad_bg"
+      ]
+    },
+    "ReserveRole": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      },
+      "Unlocks": [
+        "brummbar_squad_bg"
+      ]
+    }
+  },
+  "Abilities": [
+    {
+      "Id": "german_light_support_artillery",
+      "CostModifier": 1
+    }
+  ]
+}

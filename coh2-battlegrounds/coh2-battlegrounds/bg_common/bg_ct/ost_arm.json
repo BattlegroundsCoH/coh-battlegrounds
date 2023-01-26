@@ -1,0 +1,89 @@
+{
+  "UIData": {
+    "Icon": "ct_armoured",
+    "HighlightUnits": [
+      "panzer_grenadier_squad_bg",
+      "sdkfz_250_halftrack_bg",
+      "tiger_squad_bg"
+    ],
+    "HighlightAbilities": [
+      "german_light_support_artillery",
+      "german_light_support_artillery",
+      "german_light_support_artillery"
+    ]
+  },
+  "MaxInfantry": 12,
+  "MaxTeamWeapons": 12,
+  "MaxVehicles": 14,
+  "MaxLeaders": 2,
+  "MaxAbilities": 4,
+  "Exclude": [
+    "elefant_tank_destroyer_squad_bg"
+  ],
+  "DeployTypes": [
+    "DeployAndExit",
+    "DeployAndStay"
+  ],
+  "DeployBlueprints": [
+    {
+      "Blueprint": "opel_blitz_transport_squad_bg",
+      "CostModifier": 1.05,
+      "Tow": true,
+      "TowCostModifier": 1
+    },
+    {
+      "Blueprint": "sdkfz_250_halftrack_bg",
+      "CostModifier": 1.065,
+      "Tow": true,
+      "TowCostModifier": 1
+    },
+    {
+      "Blueprint": "sdkfz_251_halftrack_squad_bg",
+      "CostModifier": 1.1,
+      "Tow": true,
+      "TowCostModifier": 1
+    }
+  ],
+  "CostModifiers": {
+  },
+  "Roles": {
+    "DirectCommand": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      }
+    },
+    "SupportRole": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      },
+      "Unlocks": [
+        "sniper_squad_bg",
+        "mortar_team_81mm_bg",
+        "panzer_iv_command_squad_bg"
+      ]
+    },
+    "ReserveRole": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      },
+      "Unlocks": [
+        "panther_command_squad_bg"
+      ]
+    }
+  },
+  "Abilities": [
+    {
+      "Id": "german_light_support_artillery",
+      "CostModifier": 1
+    }
+  ]
+}

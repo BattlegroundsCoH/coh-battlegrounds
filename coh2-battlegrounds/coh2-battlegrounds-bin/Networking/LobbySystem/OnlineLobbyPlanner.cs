@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
@@ -114,8 +117,26 @@ public sealed class OnlineLobbyPlanner : ILobbyPlanningHandle {
 
     public ILobbyPlanElement? GetPlanElement(int planElementId) => this.m_remote.Call<JsonPlanElement>("GetPlanElement", planElementId);
 
-    public ILobbyPlanElement[] GetPlanningElements(byte teamIndex)
-        => this.m_remote.Call<JsonPlanElement[]>("GetPlanElements", teamIndex) ?? Array.Empty<JsonPlanElement>();
+    public ILobbyPlanElement[] GetPlanningElements(byte teamIndex) {
+
+        // Grab iterator
+        if (this.m_remote.Call<IEnumerator<JsonPlanElement>>("GetPlanElements", teamIndex) is not OnlineIterator<JsonPlanElement> itt) {
+            Trace.WriteLine($"Failed to get plan element iterator!", nameof(OnlineLobbyPlanner));
+            return Array.Empty<ILobbyPlanElement>();
+        }
+
+        // Create list to fill
+        List<ILobbyPlanElement> result = new();
+
+        // Empty iterator into result
+        while (itt.MoveNext()) {
+            result.Add(itt.Current);
+        }
+
+        // Return result
+        return result.ToArray();
+
+    }
 
     public void RemovePlanElement(int planElementId)
         => this.m_remote.Call("RemovePlanElement", planElementId);

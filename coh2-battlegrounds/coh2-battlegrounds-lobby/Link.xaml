@@ -1,0 +1,53 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:components="clr-namespace:Battlegrounds.Lobby.Components"
+    xmlns:hostcomponents="clr-namespace:Battlegrounds.Lobby.Components.Host"
+    xmlns:participantcomponents="clr-namespace:Battlegrounds.Lobby.Components.Participant"
+    xmlns:modals="clr-namespace:Battlegrounds.Lobby.Modals"
+    xmlns:pages="clr-namespace:Battlegrounds.Lobby.Pages"
+    xmlns:hostpages="clr-namespace:Battlegrounds.Lobby.Pages.Host"
+    xmlns:participantpages="clr-namespace:Battlegrounds.Lobby.Pages.Participants">
+
+    <!-- Chat Specator Component -->
+    <DataTemplate DataType="{x:Type components:ChatSpectator}">
+        <components:ChatSpectatorView/>
+    </DataTemplate>
+
+    <!-- Player Slot Component -->
+    <DataTemplate DataType="{x:Type hostcomponents:HostPlayerSlot}">
+        <components:PlayerSlotView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type participantcomponents:ParticipantPlayerSlot}">
+        <components:PlayerSlotView/>
+    </DataTemplate>
+
+    <!-- Host Lobby Dialog -->
+    <DataTemplate DataType="{x:Type modals:HostLobby}">
+        <modals:HostLobbyView/>
+    </DataTemplate>
+
+    <!-- Join Lobby Dialog -->
+    <DataTemplate DataType="{x:Type modals:JoinLobby}">
+        <modals:JoinLobbyView/>
+    </DataTemplate>
+
+    <!-- Lobby Page -->
+    <DataTemplate DataType="{x:Type hostpages:HostLobby}">
+        <pages:LobbyView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type participantpages:ParticipantLobby}">
+        <pages:LobbyView/>
+    </DataTemplate>
+
+    <!-- Planning Page -->
+    <DataTemplate DataType="{x:Type pages:Planner}">
+        <pages:PlannerView/>
+    </DataTemplate>
+
+    <!-- Browser Page -->
+    <DataTemplate DataType="{x:Type pages:LobbyBrowser}">
+        <pages:LobbyBrowserView/>
+    </DataTemplate>
+
+</ResourceDictionary>

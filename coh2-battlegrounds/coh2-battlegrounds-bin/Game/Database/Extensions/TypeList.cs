@@ -107,7 +107,7 @@ public class TypeList : IEnumerable<string> {
         this.m_isHeavyArmour = source.Contains("heavy_tank");
         this.m_isArmour = source.ContainsWithout("vehicle", "light_vehicle") && !this.m_isHeavyArmour;
         this.m_isVehicle = ((!this.m_isArmour && source.Contains("vehicle"))
-            || source.Contains("light_vehicle")) && !source.Contains("250_mortar_halftrack"); // Remove the change of mortar vehicles in this category
+            || source.Contains("light_vehicle"));
         this.m_isCrew = source.Contains("aef_vehicle_crew");
         this.m_isSpecialInfantry = source.Contains("guard_troops") || source.Contains("shock_troops") || source.Contains("stormtrooper");
         this.m_isOfficer = source.Contains("sov_officer");

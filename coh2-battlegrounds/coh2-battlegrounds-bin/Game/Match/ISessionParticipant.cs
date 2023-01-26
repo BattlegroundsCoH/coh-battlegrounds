@@ -75,6 +75,6 @@ public interface ISessionParticipant {
     /// 
     /// </summary>
     /// <returns></returns>
-    ulong GetID();
+    ulong GetId();
 
 }

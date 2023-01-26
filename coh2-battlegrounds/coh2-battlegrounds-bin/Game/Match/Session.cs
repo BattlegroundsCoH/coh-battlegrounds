@@ -7,11 +7,11 @@ using System.Text.Json.Serialization;
 using Battlegrounds.Modding;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 
 using static Battlegrounds.Game.Match.ParticipantTeam;
 using Battlegrounds.AI;
+using Battlegrounds.Game.Scenarios;
 
 namespace Battlegrounds.Game.Match;
 
@@ -309,7 +309,7 @@ public class Session : ISession {
 
             if (allCompanies[i].Army.IsAllied) {
 
-                int j = sessionInfo.Allies.IndexOf(x => x.GetID().ToString().CompareTo(allCompanies[i].Owner) == 0 && x.Difficulty == AIDifficulty.Human);
+                int j = sessionInfo.Allies.IndexOf(x => x.GetId().ToString().CompareTo(allCompanies[i].Owner) == 0 && x.Difficulty == AIDifficulty.Human);
                 if (j >= 0) {
                     allCompanies[i].Owner = sessionInfo.Allies[j].UserDisplayname;
                     sessionInfo.Allies[j] = new SessionParticipant(
@@ -325,7 +325,7 @@ public class Session : ISession {
 
             } else {
 
-                int j = sessionInfo.Axis.IndexOf(x => x.GetID().ToString().CompareTo(allCompanies[i].Owner) == 0 && x.Difficulty == AIDifficulty.Human);
+                int j = sessionInfo.Axis.IndexOf(x => x.GetId().ToString().CompareTo(allCompanies[i].Owner) == 0 && x.Difficulty == AIDifficulty.Human);
                 if (j >= 0) {
                     allCompanies[i].Owner = sessionInfo.Axis[j].UserDisplayname;
                     sessionInfo.Axis[j] = new SessionParticipant(

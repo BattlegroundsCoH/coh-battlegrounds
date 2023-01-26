@@ -103,7 +103,7 @@
             "EntityBlueprint": "barbed_wire_fence_bg",
             "IsDirectional": false,
             "IsLinePlacement": true,
-            "MaxPlacement": -1,
+            "MaxPlacement": 64,
             "PreGarrisonUnitTypes": [],
             "PlacementType": 2,
             "Width": 4
@@ -112,7 +112,7 @@
             "EntityBlueprint": "barbed_wire_field_bg",
             "IsDirectional": false,
             "IsLinePlacement": false,
-            "MaxPlacement": -1,
+            "MaxPlacement": 12,
             "PreGarrisonUnitTypes": [],
             "PlacementType": 0
           },
@@ -120,7 +120,7 @@
             "EntityBlueprint": "machine_gun_nest_bg",
             "IsDirectional": true,
             "IsLinePlacement": false,
-            "MaxPlacement": 8,
+            "MaxPlacement": 4,
             "PreGarrisonUnitTypes": [],
             "PlacementType": 1
           },
@@ -137,23 +137,31 @@
             "EntityBlueprint": "tanktrap_bg",
             "IsDirectional": false,
             "IsLinePlacement": true,
-            "MaxPlacement": 16,
+            "MaxPlacement": 28,
             "PreGarrisonUnitTypes": [],
             "PlacementType": 2,
             "Width": 2
+          },
+          {
+            "EntityBlueprint": "sand_bag_soviet_bg",
+            "IsDirectional": true,
+            "IsLinePlacement": false,
+            "MaxPlacement": 4,
+            "PreGarrisonUnitTypes": [],
+            "PlacementType": 2
           }
         ],
         "german": [
           {
-            "EntityBlueprint": "concrete_bunker_bg",
+            "EntityBlueprint": "makeshift_bunker_mp",
             "IsDirectional": true,
             "IsLinePlacement": false,
-            "MaxPlacement": 2,
+            "MaxPlacement": 4,
             "PreGarrisonUnitTypes": [],
             "PlacementType": 1
           },
           {
-            "EntityBlueprint": "makeshift_bunker_mp",
+            "EntityBlueprint": "concrete_bunker_bg",
             "IsDirectional": true,
             "IsLinePlacement": false,
             "MaxPlacement": 4,
@@ -164,16 +172,25 @@
             "EntityBlueprint": "mine_field_mine_bg",
             "IsDirectional": false,
             "IsLinePlacement": true,
-            "MaxPlacement": 16,
+            "MaxPlacement": 24,
             "PreGarrisonUnitTypes": [],
             "PlacementType": 3,
             "Width": 3
           },
           {
+            "EntityBlueprint": "teller_mine_bg",
+            "IsDirectional": false,
+            "IsLinePlacement": true,
+            "MaxPlacement": 12,
+            "PreGarrisonUnitTypes": [],
+            "PlacementType": 3,
+            "Width": 4
+          },
+          {
             "EntityBlueprint": "slit_trench_german_bg",
             "IsDirectional": false,
             "IsLinePlacement": false,
-            "MaxPlacement": 8,
+            "MaxPlacement": 4,
             "PreGarrisonUnitTypes": [],
             "PlacementType": 0
           },
@@ -184,19 +201,25 @@
             "MaxPlacement": 16,
             "PreGarrisonUnitTypes": [],
             "PlacementType": 2,
-            "Width": 34
+            "Width": 6
           },
           {
             "EntityBlueprint": "barbed_wire_fence_bg",
             "IsDirectional": false,
             "IsLinePlacement": true,
-            "MaxPlacement": -1,
+            "MaxPlacement": 48,
             "PreGarrisonUnitTypes": [],
             "PlacementType": 2,
-            "Width": 4
+            "Width": 5
           }
         ]
       }
+    },
+    {
+      "ID": "bg_attr",
+      "Display": "30",
+      "DisplayDesc": "31",
+      "DefaultOption": 0
     }
   ],
   "CustomOptions": [],
@@ -377,82 +400,44 @@
       "Companies": {
         "Types": [
           {
+            "Id": "sov_airborne",
+            "Hidden": true,
+            "SourceFile": "Common:bg_ct\\sov_airborne"
+          },
+          {
+            "Id": "sov_arm",
+            "SourceFile": "Common:bg_ct\\sov_arm"
+          },
+          {
+            "Id": "sov_arty",
+            "Hidden": true,
+            "SourceFile": "Common:bg_ct\\sov_arty"
+          },
+          {
+            "Id": "sov_eng",
+            "Hidden": true,
+            "SourceFile": "Common:bg_ct\\sov_eng"
+          },
+          {
+            "Id": "sov_mech",
+            "SourceFile": "Common:bg_ct\\sov_mech"
+          },
+          {
+            "Id": "sov_mot",
+            "SourceFile": "Common:bg_ct\\sov_mot"
+          },
+          {
+            "Id": "sov_nkvd",
+            "Hidden": true,
+            "SourceFile": "Common:bg_ct\\sov_nkvd"
+          },
+          {
             "Id": "sov_rifles",
-            "Icon": "ct_infantry",
-            "MaxInfantry": 20,
-            "MaxTeamWeapons": 10,
-            "MaxVehicles": 8,
-            "MaxLeaders": 2,
-            "MaxAbilities": 4,
-            "Exclude": [
-              "is-2_bg"
-            ],
-            "DeployTypes": [
-              "DeployAndExit",
-              "DeployAndStay"
-            ],
-            "DeployBlueprints": [
-              {
-                "Blueprint": "zis_6_transport_truck_bg",
-                "CostModifier": 1,
-                "Tow": true,
-                "TowCostModifier": 1
-              }
-            ],
-            "CostModifiers": {
-              "penal_battalion_bg": {
-                "Manpower": 20
-              }
-            },
-            "Phases": {
-              "PhaseA": {
-                "ResourceIncomeModifier": {
-                  "Manpower": 1,
-                  "Munitions": 1,
-                  "Fuel": 1
-                }
-              },
-              "PhaseB": {
-                "ActivationTime": 420,
-                "DeployDelay": 1,
-                "ResourceIncomeModifier": {
-                  "Manpower": 1,
-                  "Munitions": 1,
-                  "Fuel": 1
-                },
-                "UnitCostModifier": {
-                  "Manpower": 1,
-                  "Munitions": 1,
-                  "Fuel": 1
-                },
-                "Unlocks": [
-                  "penal_battalion_bg"
-                ]
-              },
-              "PhaseC": {
-                "ActivationTime": 660,
-                "DeployDelay": 1,
-                "ResourceIncomeModifier": {
-                  "Manpower": 1,
-                  "Munitions": 1,
-                  "Fuel": 1
-                },
-                "UnitCostModifier": {
-                  "Manpower": 1,
-                  "Munitions": 1,
-                  "Fuel": 1
-                },
-                "Unlocks": [
-                  "kv-1_bg"
-                ]
-              }
-            },
-            "abilities": [
-              {
-                "ID": "soviet_air_recon",
-                "CostModifier": 1
-              }
-            ]
+            "SourceFile": "Common:bg_ct\\sov_rifles"
+          },
+          {
+            "Id": "sov_td",
+            "SourceFile": "Common:bg_ct\\sov_td"
           }
         ]
       }
@@ -672,65 +657,43 @@
         "Types": [
           {
             "Id": "ost_rifles",
-            "Icon": "ct_infantry",
-            "MaxInfantry": 20,
-            "MaxTeamWeapons": 10,
-            "MaxVehicles": 8,
-            "MaxLeaders": 2,
-            "MaxAbilities": 4,
-            "Exclude": [],
-            "DeployTypes": [
-              "DeployAndExit",
-              "DeployAndStay"
-            ],
-            "DeployBlueprints": [
-              {
-                "Blueprint": "opel_blitz_transport_squad_bg",
-                "CostModifier": 1,
-                "Tow": true,
-                "TowCostModifier": 1
-              }
-            ],
-            "CostModifiers": {
-              "penal_battalion_bg": {
-                "Manpower": 20
-              }
-            },
-            "Phases": {
-              "PhaseA": {
-                "ResourceIncomeModifier": {
-                  "Manpower": 1,
-                  "Munitions": 1,
-                  "Fuel": 1
-                }
-              },
-              "PhaseB": {
-                "ActivationTime": 420,
-                "DeployDelay": 1,
-                "ResourceIncomeModifier": {
-                  "Manpower": 1,
-                  "Munitions": 1,
-                  "Fuel": 1
-                },
-                "Unlocks": []
-              },
-              "PhaseC": {
-                "ActivationTime": 660,
-                "DeployDelay": 1,
-                "ResourceIncomeModifier": {
-                  "Manpower": 1,
-                  "Munitions": 1,
-                  "Fuel": 1
-                },
-                "Unlocks": []
-              }
-            },
-            "abilities": [
-              {
-                "ID": "german_light_support_artillery",
-                "CostModifier": 1
-              }
-            ]
+            "SourceFile": "Common:bg_ct\\ost_rifles"
+          },
+          {
+            "Id": "ost_mot",
+            "SourceFile": "Common:bg_ct\\ost_mot"
+          },
+          {
+            "Id": "ost_mech",
+            "SourceFile": "Common:bg_ct\\ost_mech"
+          },
+          {
+            "Id": "ost_arm",
+            "SourceFile": "Common:bg_ct\\ost_arm"
+          },
+          {
+            "Id": "ost_airborne",
+            "Hidden": true,
+            "SourceFile": "Common:bg_ct\\ost_airborne"
+          },
+          {
+            "Id": "ost_arty",
+            "Hidden": true,
+            "SourceFile": "Common:bg_ct\\ost_arty"
+          },
+          {
+            "Id": "ost_eng",
+            "Hidden": true,
+            "SourceFile": "Common:bg_ct\\ost_eng"
+          },
+          {
+            "Id": "ost_td",
+            "SourceFile": "Common:bg_ct\\ost_td"
+          },
+          {
+            "Id": "ost_sturm",
+            "Hidden": true,
+            "SourceFile": "Common:bg_ct\\ost_sturm"
           }
         ]
       }

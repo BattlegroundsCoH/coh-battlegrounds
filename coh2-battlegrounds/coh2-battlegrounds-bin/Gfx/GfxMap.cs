@@ -5,8 +5,8 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 
+using Battlegrounds.Data;
 using Battlegrounds.ErrorHandling.IO;
-using Battlegrounds.Lua;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Gfx;
@@ -31,8 +31,9 @@ public sealed class GfxMap {
     /// </summary>
     public const int GfxBinaryVersion = GfxBinaryVersion2;
 
-    private readonly GfxResource[] m_gfxMapResources;
-    private readonly string[] m_gfxMapResourceIdentifiers;
+    private GfxResource[] m_gfxMapResources;
+    private string[] m_gfxMapResourceIdentifiers;
+    private int m_gfxMapOccupiedSlots;
 
     /// <summary>
     /// Get an array of resource identifiers.
@@ -46,6 +47,16 @@ public sealed class GfxMap {
     /// This value is ignored when invoking <see cref="AsBinary(int)"/> where the version argument will take precedence.
     /// </remarks>
     public int BinaryVersion { get; init; }
+
+    /// <summary>
+    /// Get the available space in the <see cref="GfxMap"/> instance.
+    /// </summary>
+    public int Capacity => this.m_gfxMapResources.Length;
+
+    /// <summary>
+    /// Get the current amount of resources registered within the <see cref="GfxMap"/>.
+    /// </summary>
+    public int Count => this.m_gfxMapOccupiedSlots;
 
     /// <summary>
     /// Initialise a new <see cref="GfxMap"/> instance capable of holding <paramref name="n"/> resource elements.
@@ -260,6 +271,7 @@ public sealed class GfxMap {
 
             // Create resource
             map.CreateResource(i, rawBinary, id, width, height);
+            map.m_gfxMapOccupiedSlots++;
 
             // Jump back
             reader.BaseStream.Position = current;
@@ -332,6 +344,7 @@ public sealed class GfxMap {
 
             // Create resource
             map.CreateResource(i, rawBinary, id, width, height);
+            map.m_gfxMapOccupiedSlots++;
 
         }
 
@@ -343,7 +356,7 @@ public sealed class GfxMap {
     /// <param name="gfxTable"></param>
     /// <param name="gfxFolder"></param>
     /// <returns></returns>
-    public static GfxMap FromLua(LuaTable gfxTable, string gfxFolder) {
+    public static GfxMap FromLua(Table gfxTable, string gfxFolder) {
 
         // Create atlas
         var gfxMap = new GfxMap(gfxTable.Size);
@@ -355,17 +368,17 @@ public sealed class GfxMap {
         gfxTable.Pairs((k, v) => {
 
             // Get string
-            string gfxID = k.Str();
+            string gfxID = k.ToString()!;
 
             // If actual resource table
-            if (v is LuaTable vt) {
+            if (v is Table vt) {
 
                 // Get dimensions
-                double width = vt["width"].As<LuaNumber>();
-                double height = vt["height"].As<LuaNumber>();
+                double width = vt.As<double>("width");
+                double height = vt.As<double>("height");
 
                 // Get gfx source
-                string source = vt["gfx"].Str().Replace('/', '\\'); ;
+                string source = vt["gfx"]!.ToString()!.Replace('/', '\\'); ;
 
                 // Get GFX source path
                 string sourcePath = Path.Combine(gfxFolder, source);
@@ -386,6 +399,90 @@ public sealed class GfxMap {
 
         // Return atlas
         return gfxMap;
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="count"></param>
+    public void Allocate(int count) {
+
+        // Copy into new resource array
+        GfxResource[] gfxResources = new GfxResource[this.Capacity + count];
+        Array.Copy(this.m_gfxMapResources, gfxResources, this.Capacity);
+
+        // Set
+        this.m_gfxMapResources = gfxResources;
+
+        // Copy into new string array
+        string[] identifiers = new string[gfxResources.Length];
+        Array.Copy(this.m_gfxMapResourceIdentifiers, identifiers, this.m_gfxMapResourceIdentifiers.Length);
+
+        // Set
+        this.m_gfxMapResourceIdentifiers = identifiers;
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="resourceID"></param>
+    /// <param name="source"></param>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <returns></returns>
+    public int CreateResource(string resourceID, BinaryReader source, double width, double height) {
+
+        // Allocate space if none is available
+        if (this.Count == this.Capacity)
+            this.Allocate(1);
+
+        // Grab resource id
+        int resourceId = this.Count;
+
+        // Read bytes
+        byte[] data = source.ReadToEnd();
+
+        // Create
+        this.CreateResource(resourceId, data, resourceID, width, height);
+
+        // Increment resource count
+        this.m_gfxMapOccupiedSlots++;
+
+        // Return it
+        return resourceId;
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="resourceName"></param>
+    /// <returns></returns>
+    public bool HasResource(string resourceName) {
+        return Array.IndexOf(this.m_gfxMapResourceIdentifiers, resourceName) != -1;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="gfxResource"></param>
+    public void AddResource(GfxResource gfxResource) {
+
+        // Allocate space if none is available
+        if (this.Count == this.Capacity)
+            this.Allocate(1);
+
+        // Grab resource id
+        int resourceId = this.Count;
+
+        // Assign
+        this.m_gfxMapResourceIdentifiers[resourceId] = gfxResource.Identifier;
+        this.m_gfxMapResources[resourceId] = gfxResource;
+
+        // Increment resource count
+        this.m_gfxMapOccupiedSlots++;
 
     }
 

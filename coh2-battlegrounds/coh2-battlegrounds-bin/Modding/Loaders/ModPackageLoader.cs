@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -9,6 +10,8 @@ using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding.Content;
+using Battlegrounds.Modding.Content.Companies;
+using Battlegrounds.Modding.Verifier;
 
 namespace Battlegrounds.Modding.Loaders;
 
@@ -83,11 +86,58 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
             TeamWeaponCaptureSquads = __lookup.GetCastValueOrDefault("TeamWeaponCaptureSquads", new Dictionary<string, Dictionary<string, string>>())
         };
 
-        // Set faction data owners
-        package.FactionSettings.Values.ForEach(x => x.Package = package);
+        // Set faction data owners and load source files
+        package.FactionSettings.Values.ForEach(x => {
+            x.Package = package;
+            x.Companies = x.Companies with {
+                Types = x.Companies.Types.Filter(x => x.Hidden, false).Map(LoadCompanyTypeFromSource).Filter(CompanyTypeWarnings.CheckCompanyType, CompanyTypeState.Valid)
+            };
+        });
 
         // Return the package
         return package;
+
+    }
+
+    private static FactionCompanyType LoadCompanyTypeFromSource(FactionCompanyType original) {
+
+        // Compile str
+        string logstr = $"Loaded faction type '{original.Id}' for mod '{original.FactionData!.Package!.PackageName}'";
+
+        // Just return input
+        if (string.IsNullOrEmpty(original.SourceFile)) {
+            Trace.WriteLine(logstr, nameof(ModPackageLoader));
+            return original;
+        }
+        
+        // Get relative virt path
+        string abspath = BattlegroundsInstance.GetRelativeVirtualPath(original.SourceFile, ".json");
+        if (File.Exists(abspath)) {
+            
+            // Open read
+            using var fs = File.OpenRead(abspath);
+
+            // Deserialise and return result (or original if failure)
+            try {
+                if (JsonSerializer.Deserialize<FactionCompanyType>(fs) is FactionCompanyType fct) {
+                    Trace.WriteLine(logstr, nameof(ModPackageLoader));
+                    fct.ChangeId(original.Id);
+                    fct.FactionData = original.FactionData;
+                    return fct;
+                }
+            } catch (Exception ex) {
+                Trace.WriteLine($"Failed to read faction company type '{original.Id}'.\n{ex}", nameof(ModPackageLoader));
+            }
+
+        } else {
+            
+            // Log path not found
+            Trace.WriteLine($"Virtual path '{original.SourceFile}' not found", nameof(ModPackageLoader));
+
+        }
+
+        // Return original
+        return original;
 
     }
 

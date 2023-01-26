@@ -17,4 +17,9 @@
     <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\coh2-battlegrounds-functional\coh2-battlegrounds-functional.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-scripting\coh2-battlegrounds-scripting.csproj" />
+  </ItemGroup>
+
 </Project>

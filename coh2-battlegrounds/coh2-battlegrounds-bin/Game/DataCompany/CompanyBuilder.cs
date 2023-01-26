@@ -189,6 +189,11 @@ public class CompanyBuilder : IBuilder<Company> {
     public int VehicleCount => this.m_target.Units.Count(x => x.Blueprint.Category is SquadCategory.Vehicle);
 
     /// <summary>
+    /// Get the current leader count.
+    /// </summary>
+    public int LeaderCount => this.m_target.Units.Count(x => x.Blueprint.Category is SquadCategory.Leader);
+
+    /// <summary>
     /// Get if the company currently has auto-reinforcement enabled
     /// </summary>
     public bool AutoReinforce =>
@@ -327,23 +332,22 @@ public class CompanyBuilder : IBuilder<Company> {
         => this.m_target.Units.Count(x => x.Phase == phase);
 
     /// <summary>
+    /// Get the amount of units in the specified <paramref name="role"/>.
+    /// </summary>
+    /// <param name="role">The role to fetch amount of units from.</param>
+    /// <returns>The amount of units in specific role</returns>
+    public virtual int CountUnitsInRole(DeploymentRole role)
+        => this.m_target.Units.Count(x => x.Role == role);
+
+    /// <summary>
     /// Get if the phase has capacity for more units in specified phase.
     /// </summary>
     /// <param name="phase">The phase to check if new units can be assiged to.</param>
     /// <returns>If phase has capaciy <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
     public virtual bool IsPhaseAvailable(DeploymentPhase phase, SquadBlueprint? blueprint = null) => (phase, this.CountUnitsInPhase(phase)) switch {
-        // Check if there's space in initial AND the unit is available in phase A
-        (DeploymentPhase.PhaseInitial, int x) => 
-            x < this.CompanyType.MaxInitialPhase && (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseA)),
-        // Basic check on phases
-        (DeploymentPhase.PhaseA, int x) when x < this.CompanyType.GetMaxInPhase(DeploymentPhase.PhaseA) => 
-            (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseA)),
-        (DeploymentPhase.PhaseB, int x) when x < this.CompanyType.GetMaxInPhase(DeploymentPhase.PhaseA) => 
-            (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseB)),
-        (DeploymentPhase.PhaseC, int x) when x < this.CompanyType.GetMaxInPhase(DeploymentPhase.PhaseA) => 
-            (blueprint is null || (blueprint is not null && this.CompanyType.GetEarliestPhase(blueprint) is <=DeploymentPhase.PhaseC)),
-        // Default to not available
-        _ => false
+        // Check if there's space in initial AND the unit is under direct command
+        (DeploymentPhase.PhaseInitial, int x) => x < this.CompanyType.MaxInitialPhase,
+        _ => true
     };
 
     /// <summary>
@@ -365,22 +369,7 @@ public class CompanyBuilder : IBuilder<Company> {
     public virtual DeploymentPhase GetFirstAvailablePhase(int minPhase) {
         if (IsPhaseAvailable((DeploymentPhase)minPhase))
             return (DeploymentPhase)minPhase;
-        return minPhase is (int)DeploymentPhase.PhaseC ? DeploymentPhase.PhaseNone : GetFirstAvailablePhase(minPhase + 1);
-    }
-
-    /// <summary>
-    /// Get a list of available transport units based on the settings of the <see cref="CompanyBuilder"/>.
-    /// </summary>
-    /// <param name="isTow">Flag setting whether transport units should be for towing or not.</param>
-    /// <returns>Array of blueprints for transport use.</returns>
-    public virtual IList<SquadBlueprint> GetTransports(bool isTow) {
-
-        // Grab list from company type
-        var transports = isTow ? this.CompanyType.GetTowTransports() : this.CompanyType.DeployBlueprints.Map(v => BlueprintManager.FromBlueprintName<SquadBlueprint>(v.Blueprint));
-
-        // Return the transports
-        return transports;
-
+        return minPhase is (int)DeploymentPhase.PhaseStandard ? DeploymentPhase.PhaseNone : GetFirstAvailablePhase(minPhase + 1);
     }
 
     /// <summary>
@@ -405,7 +394,7 @@ public class CompanyBuilder : IBuilder<Company> {
             SquadBlueprint sbp => UnitBuilder.NewUnit(sbp),
             EntityBlueprint ebp => UnitBuilder.NewUnit(this.CompanyType!.FactionData!.Package!.GetCaptureSquad(ebp, this.m_target.Faction)),
             _ => throw new NotImplementedException()
-        }).SetDeploymentPhase(GetFirstAvailablePhase(DeploymentPhase.PhaseA));
+        }).SetDeploymentPhase(GetFirstAvailablePhase(DeploymentPhase.PhaseStandard));
 
         // Remove item and add unit
         this.m_target = this.m_target with {

@@ -89,7 +89,7 @@ public readonly struct Gamemode {
     public Dictionary<string, FactionDefence[]> PlanningEntities { get; }
 
     [JsonConstructor]
-    public Gamemode(string ID, string Display, string DisplayDesc, int DefaultOption, string[] Files, GamemodeOption[] Options,
+    public Gamemode(string ID, string Display, string DisplayDesc, int DefaultOption, string[]? Files, GamemodeOption[]? Options,
         Dictionary<string, GamemodeAdditionalOption> AdditionalOptions, bool FixedPosition, bool Planning,
         Dictionary<string, string> TeamNames, Dictionary<string, FactionDefence[]>? PlanningEntities) {
 
@@ -97,8 +97,8 @@ public readonly struct Gamemode {
         this.Display = Display;
         this.DisplayDesc = DisplayDesc;
         this.DefaultOption = DefaultOption;
-        this.Files = Files;
-        this.Options = Options;
+        this.Files = Files ?? Array.Empty<string>();
+        this.Options = Options ?? Array.Empty<GamemodeOption>();
         this.AdditionalOptions = AdditionalOptions;
         this.TeamNames = TeamNames;
         this.FixedPosition = FixedPosition;
