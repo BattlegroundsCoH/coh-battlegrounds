@@ -9,7 +9,7 @@
              xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=coh2-battlegrounds-ui"
              mc:Ignorable="d" Background="{StaticResource BackgroundBlueBrush}"
              d:DesignHeight="850" d:DesignWidth="1100">
-    <Grid>
+    <Grid Margin="15">
 
         <Grid.Resources>
             <!-- LocaleConverter -->
@@ -17,7 +17,7 @@
         </Grid.Resources>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="48"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
@@ -38,7 +38,7 @@
             FontSize="32"
             FontFamily="Open Sans"
             FontWeight="Bold"
-            Margin="15, 0, 0, 0"
+            Margin="0, 0, 0, 15"
             VerticalContentAlignment="Center"
             LocKey="GameBrowserView_Title"/>
 
@@ -61,7 +61,7 @@
                   Grid.RowSpan="3"
                   Grid.Column="0" 
                   Grid.ColumnSpan="3"
-                  Margin="15, 7.5, 15, 15"
+                  Margin="0, 0, 0, 15"
                   ItemsSource="{Binding Lobbies}"
                   SelectedIndex="{Binding SelectedLobbyIndex, Mode=TwoWay}"
                   SelectedItem="{Binding SelectedLobby, Mode=TwoWay}"
@@ -179,7 +179,7 @@
                 Visibility="{Binding InfoKeyVisible}"/>
         </Grid>
 
-        <Border Grid.Row="1" Grid.Column="0" Margin="15"
+        <Border Grid.Row="1" Grid.Column="0" Margin="0, 0, 0, 15"
                 Grid.ColumnSpan="5" Height="294"
                 Background="{StaticResource BackgroundDarkBlueBrush}"
                 BorderBrush="{StaticResource BackgroundLightBlueBrush}"
@@ -307,49 +307,62 @@
             </Grid>
         </Border>
 
-        <!-- Row 2 
-        <Separator Grid.Row="2" Grid.ColumnSpan="4"
-                   Margin="15, 5, 15, 5"/>-->
-
         <!-- Row 3 -->
-        <Button x:Name="refreshLobbyListButton" 
-                Grid.Row="3" 
-                Grid.Column="1" 
-                Margin="0,5,5,8" 
+        <Grid Grid.Row="3" Grid.Column="1">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="refreshLobbyListButton" 
+                Grid.Row="0" 
+                Grid.Column="0"
                 Width="128"
+                Height="40"
                 Command="{Binding Refresh.Click}"
                 Style="{StaticResource StandardBlueLocalisedButton}"
                 Content="GameBrowserView_Refresh"/>
 
-        <Button x:Name="hostGameButton" 
-                Grid.Row="3" 
-                Grid.Column="2" 
-                Margin="5,5,5,8"
+            <Button x:Name="hostGameButton" 
+                Grid.Row="0" 
+                Grid.Column="1" 
+                Margin="15, 0, 0, 0"
                 Width="128"
+                Height="40"
                 Command="{Binding Host.Click}"
                 Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="{Binding Host.IsEnabled}"
                 Content="GameBrowserView_Host_Game"/>
 
-        <Button x:Name="hostLocalGameButton" 
-                Grid.Row="3" 
-                Grid.Column="3" 
-                Margin="5,5,5,8"
+            <Button x:Name="hostLocalGameButton" 
+                Grid.Row="0" 
+                Grid.Column="2" 
+                Margin="15, 0, 0, 0"
                 Width="128"
+                Height="40"
                 Command="{Binding Local.Click}"
                 Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="{Binding Local.IsEnabled}"
                 Content="GameBrowserView_Local_Game"/>
 
-        <Button x:Name="joinGameButton" 
-                Grid.Row="3" 
-                Grid.Column="4" 
-                Margin="5,5,15,8" 
+            <Button x:Name="joinGameButton" 
+                Grid.Row="0" 
+                Grid.Column="3" 
+                Margin="15, 0, 0, 0" 
                 Width="128"
+                Height="40"
                 Command="{Binding Join.Click}"
                 IsEnabled="{Binding Join.IsEnabled}"
                 Style="{StaticResource StandardBlueLocalisedButton}"
                 Content="GameBrowserView_Join_Game"/>
+        </Grid>
 
     </Grid>
 </UserControl>
