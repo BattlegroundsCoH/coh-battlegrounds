@@ -31,7 +31,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="85*"/>
+            <RowDefinition Height="90*"/>
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
 
@@ -50,7 +50,7 @@
         <controls:LocalisedLabel
             LocKey="CompanyView_Title"
             Foreground="#d8dbde"
-            FontSize="28"
+            FontSize="32"
             FontFamily="Open Sans"
             FontWeight="Bold"
             VerticalContentAlignment="Center"
