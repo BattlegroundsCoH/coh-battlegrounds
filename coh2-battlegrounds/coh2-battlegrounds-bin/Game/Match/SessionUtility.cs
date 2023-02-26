@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Battlegrounds.Compiler;
 using Battlegrounds.Compiler.Source;
 using Battlegrounds.Functional;
+using Battlegrounds.Game.DataSource.Playback;
 using Battlegrounds.Game.Match.Data;
 
 namespace Battlegrounds.Game.Match;
@@ -178,8 +179,8 @@ public static class SessionUtility {
     /// <summary>
     /// Determine if there is a playback at the expected location
     /// </summary>
-    /// <returns>Returns <see langword="true"/> if there's a file at <see cref="ReplayMatchData.LATEST_REPLAY_FILE"/>. Otherwise <see langword="false"/>.</returns>
+    /// <returns>Returns <see langword="true"/> if there's a file at <see cref="PlaybackLoader.LATEST_COH2_REPLAY_FILE"/>. Otherwise <see langword="false"/>.</returns>
     public static bool HasPlayback()
-        => File.Exists(ReplayMatchData.LATEST_REPLAY_FILE);
+        => File.Exists(PlaybackLoader.LATEST_COH2_REPLAY_FILE);
 
 }

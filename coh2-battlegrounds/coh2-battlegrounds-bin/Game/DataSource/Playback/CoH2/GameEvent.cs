@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text;
 
-namespace Battlegrounds.Game.DataSource.Replay;
+namespace Battlegrounds.Game.DataSource.Playback.CoH2;
 
 /// <summary>
 /// Represents an event that occured in a <see cref="GameTick"/>.
 /// </summary>
-public class GameEvent {
+public sealed class GameEvent : IPlaybackEvent {
 
     /// <summary>
     /// The first <see cref="GamePosition"/> argument given to the <see cref="GameEvent"/>.
@@ -29,9 +28,9 @@ public class GameEvent {
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"/>
     public GameEventType EventType
-        => (this.Type < (byte)GameEventType.EVENT_MAX2) ?
-        ((GameEventType)this.Type) :
-        throw new ArgumentOutOfRangeException($"The event type {this.Type} is out of range and cannot be interpreted.");
+        => Type < (byte)GameEventType.EVENT_MAX2 ?
+        (GameEventType)Type :
+        throw new ArgumentOutOfRangeException($"The event type {Type} is out of range and cannot be interpreted.");
 
     /// <summary>
     /// The byte-ID of the player who triggered or was affected by the <see cref="GameEvent"/>.
@@ -51,7 +50,7 @@ public class GameEvent {
     /// <summary>
     /// The calculated time in which the event occured
     /// </summary>
-    public TimeSpan TimeStamp { get; }
+    public TimeSpan Timestamp { get; }
 
     /// <summary>
     /// The type the issued command will target (??? = ???, 16 = entity, 32 = squad, ??? = ???)
@@ -71,41 +70,41 @@ public class GameEvent {
     public GameEvent(TimeSpan timeStamp, byte[] eventData) {
 
         // Set values to null
-        this.FirstPosition = null;
-        this.SecondPosition = null;
-        this.AttachedMessage = string.Empty;
+        FirstPosition = null;
+        SecondPosition = null;
+        AttachedMessage = string.Empty;
 
         // Add timestamp
-        this.TimeStamp = timeStamp;
+        Timestamp = timeStamp;
 
         // Read the event type (a simple byte)
-        this.Type = eventData[0];
+        Type = eventData[0];
 
         // Read player ID (a simple byte)
-        this.PlayerID = eventData[3];
+        PlayerID = eventData[3];
 
         // The target type
-        this.TargetType = BitConverter.ToUInt16(eventData.AsSpan()[6..8]); // Most likely an enum
-                                                                           // 16 = Entity
-                                                                           // 32 = Squad
-                                                                           // 64 = ???
-                                                                           // ... = ...
-                                                                           // ??? = ???
+        TargetType = BitConverter.ToUInt16(eventData.AsSpan()[6..8]); // Most likely an enum
+                                                                      // 16 = Entity
+                                                                      // 32 = Squad
+                                                                      // 64 = ???
+                                                                      // ... = ...
+                                                                      // ??? = ???
 
         // Log event (to verify we got something)
         //Trace.WriteLine($"[{timeStamp}] {this.Type} {this.PlayerID} {this.TargetType} {eventData.Length}", nameof(GameEvent));
 
         // Read type-specific content
-        if (this.Type < (byte)GameEventType.EVENT_MAX2) {
-            switch (this.EventType) {
+        if (Type < (byte)GameEventType.EVENT_MAX2) {
+            switch (EventType) {
                 case GameEventType.CMD_BuildSquad:
                 case GameEventType.CMD_Upgrade:
                 case GameEventType.SCMD_Upgrade:
-                    this.UnitID = BitConverter.ToUInt16(eventData.AsSpan()[8..10]);
-                    this.BlueprintID = BitConverter.ToUInt32(eventData.AsSpan()[13..17]);
+                    UnitID = BitConverter.ToUInt16(eventData.AsSpan()[8..10]);
+                    BlueprintID = BitConverter.ToUInt32(eventData.AsSpan()[13..17]);
                     break;
                 case GameEventType.SCMD_Move:
-                    this.UnitID = BitConverter.ToUInt16(eventData.AsSpan()[8..10]);
+                    UnitID = BitConverter.ToUInt16(eventData.AsSpan()[8..10]);
                     break;
                 // TODO: Other important cases here
                 // These load unit ID differently:
@@ -116,7 +115,7 @@ public class GameEvent {
                 // ...
                 case GameEventType.PCMD_BroadcastMessage:
                     int messageLength = (int)BitConverter.ToUInt32(eventData.AsSpan()[20..24]);
-                    this.AttachedMessage = Encoding.ASCII.GetString(eventData[24..(24 + messageLength)]);
+                    AttachedMessage = Encoding.ASCII.GetString(eventData[24..(24 + messageLength)]);
                     break;
                 default: break;
             }

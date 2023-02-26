@@ -4,35 +4,35 @@ using System.IO;
 
 using Battlegrounds.Util;
 
-namespace Battlegrounds.Game.DataSource.Replay;
+namespace Battlegrounds.Game.DataSource.Playback.CoH2;
 
 /// <summary>
 /// Class representation of a tick (update) in the game
 /// </summary>
-public sealed class GameTick {
+public sealed class GameTick : IPlaybackTick {
 
     private uint m_tick;
     private uint m_bundleCount;
     private TimeSpan m_tickTime;
 
-    private readonly List<GameEvent> m_events;
+    private readonly List<IPlaybackEvent> m_events;
 
     /// <summary>
     /// The timestamp of the <see cref="GameTick"/>.
     /// </summary>
-    public TimeSpan TimeStamp => this.m_tickTime;
+    public TimeSpan Timestamp => m_tickTime;
 
     /// <summary>
     /// The events that occured within the span of the <see cref="GameTick"/>.
     /// </summary>
-    public List<GameEvent> Events => this.m_events;
+    public IList<IPlaybackEvent> Events => m_events;
 
     /// <summary>
     /// Create a new <see cref="GameTick"/> instance
     /// </summary>
     public GameTick() {
-        this.m_tick = 0;
-        this.m_events = new List<GameEvent>();
+        m_tick = 0;
+        m_events = new List<IPlaybackEvent>();
     }
 
     /// <summary>
@@ -45,19 +45,19 @@ public sealed class GameTick {
         reader.Skip(1);
 
         // Read the tick index
-        this.m_tick = reader.ReadUInt32();
+        m_tick = reader.ReadUInt32();
 
         // Calculate the timestamp
-        this.m_tickTime = new TimeSpan((long)(10000000.0 * this.m_tick / 8.0));
+        m_tickTime = new TimeSpan((long)(10000000.0 * m_tick / 8.0));
 
         // Skip four bytes
         reader.Skip(4);
 
         // Read the amount of bundles
-        this.m_bundleCount = reader.ReadUInt32();
+        m_bundleCount = reader.ReadUInt32();
 
         // Loop through the bundes
-        for (uint i = 0; i < this.m_bundleCount; i++) {
+        for (uint i = 0; i < m_bundleCount; i++) {
 
             // Skip the first eight bytes
             reader.Skip(8);
@@ -81,8 +81,8 @@ public sealed class GameTick {
                     ushort length = reader.ReadUInt16();
 
                     // Parse game event and add to our list of events
-                    GameEvent ge = new GameEvent(this.m_tickTime, reader.ReadBytes(length - 2));
-                    this.m_events.Add(ge);
+                    GameEvent ge = new GameEvent(m_tickTime, reader.ReadBytes(length - 2));
+                    m_events.Add(ge);
 
                     // Increment offset
                     j += length;
@@ -96,4 +96,3 @@ public sealed class GameTick {
     }
 
 }
-

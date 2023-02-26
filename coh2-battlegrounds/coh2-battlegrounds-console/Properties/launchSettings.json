@@ -7,6 +7,10 @@
     "AITest": {
       "commandName": "Project",
       "commandLineArgs": "aipdef"
+    },
+    "Playback": {
+      "commandName": "Project",
+      "commandLineArgs": "playback -coh3 -json"
     }
   }
 }

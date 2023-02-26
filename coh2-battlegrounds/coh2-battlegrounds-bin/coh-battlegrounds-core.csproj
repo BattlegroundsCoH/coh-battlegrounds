@@ -26,4 +26,11 @@
     <ProjectReference Include="..\coh2-battlegrounds-scripting\coh-battlegrounds-scripting.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Game\DataSource\Archive\CoH2\" />
+    <Folder Include="Game\DataSource\Archive\CoH3\" />
+    <Folder Include="Game\DataSource\Binary\CoH2\" />
+    <Folder Include="Game\DataSource\Binary\CoH3\" />
+  </ItemGroup>
+
 </Project>

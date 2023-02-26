@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 
+using Battlegrounds.Game.DataSource.Playback;
 using Battlegrounds.Game.Match.Analyze;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Finalizer;
@@ -118,7 +119,7 @@ public sealed class MultiplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFi
         this.m_hasSuccessAnalysis = false;
 
         // Bind to ReplayMatchData -> Get the latest replay match data here
-        if (matchResults.LoadMatchData(ReplayMatchData.LATEST_REPLAY_FILE)) {
+        if (matchResults.LoadMatchData(PlaybackLoader.LATEST_COH2_REPLAY_FILE)) {
 
             // Parse the match results
             if (matchResults.ParseMatchData()) {

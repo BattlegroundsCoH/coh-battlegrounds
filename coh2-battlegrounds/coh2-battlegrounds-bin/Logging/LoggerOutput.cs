@@ -11,7 +11,7 @@ namespace Battlegrounds.Logging;
 /// </summary>
 public sealed class LoggerOutput : TraceListener {
 
-    private static readonly string OUT_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\coh2-bg.log");
+    private static readonly string OUT_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH\\coh2-bg.log");
 
     private readonly StreamWriter? m_writer;
     private readonly DateTime m_startupTime;

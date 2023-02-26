@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Battlegrounds.Gfx;
 
-namespace coh2_battlegrounds_console;
+namespace Battlegrounds.Developer.Gfx;
 
 public static class GfxFolderCompiler {
 
@@ -48,4 +45,3 @@ public static class GfxFolderCompiler {
     }
 
 }
-

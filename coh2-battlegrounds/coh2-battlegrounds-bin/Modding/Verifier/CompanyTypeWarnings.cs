@@ -59,14 +59,14 @@ public static class CompanyTypeWarnings {
         }
 
         // UI Warning regarding highlighted units
-        if (companyType.UIData.HighlightUnits.Length is not 3) {
+        if (companyType.UIData.HighlightUnits?.Length is not 3) {
             Trace.WriteLine($"Company type '{companyType.Id}' has more or less than 3 highlighted units.", nameof(CompanyTypeWarnings));
-        } else if (companyType.UIData.HighlightUnits.Intersect(companyType.Exclude).Length is not 0) {
+        } else if (companyType.UIData.HighlightUnits?.Intersect(companyType.Exclude).Length is not 0) {
             Trace.WriteLine($"Company type '{companyType.Id}' highlighted units in exclusion list.", nameof(CompanyTypeWarnings));
         }
 
         // UI Warning regarding highlighted units
-        if (companyType.UIData.HighlightAbilities.Length is not 3) {
+        if (companyType.UIData.HighlightAbilities?.Length is not 3) {
             Trace.WriteLine($"Company type '{companyType.Id}' has more or less than 3 highlighted abilities.", nameof(CompanyTypeWarnings));
         }
 

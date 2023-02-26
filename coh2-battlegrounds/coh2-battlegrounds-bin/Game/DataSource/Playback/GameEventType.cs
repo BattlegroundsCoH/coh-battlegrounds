@@ -1,4 +1,4 @@
-﻿namespace Battlegrounds.Game.DataSource.Replay;
+﻿namespace Battlegrounds.Game.DataSource.Playback;
 
 /// <summary>
 /// Represents a game event
@@ -133,4 +133,3 @@ public enum GameEventType : byte {
     EVENT_MAX2
 
 }
-

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -70,7 +71,7 @@ public static class DatabaseManager {
                     Stopwatch stopwatch = Stopwatch.StartNew();
                     BlueprintManager.LoadDatabaseWithMod(x.ID, x.TuningGUID.GUID);
                     stopwatch.Stop();
-                    logger.Info($"Loaded database for package '{x.PackageName}' in {stopwatch.Elapsed.TotalSeconds:0.000}s.");
+                    logger.Info($"Loaded database for package '{x.PackageName}' in {stopwatch.Elapsed.TotalSeconds.ToString("0.00", CultureInfo.InvariantCulture)}s.");
                 });
 
             });

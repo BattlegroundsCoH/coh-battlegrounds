@@ -14,7 +14,7 @@ public class AppVersionFetcher : IAppVersionFetcher {
         Assembly assembly = Assembly.GetExecutingAssembly();
         FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
 
-        return fvi.FileVersion;
+        return fvi.FileVersion ?? string.Empty;
 
     }
 

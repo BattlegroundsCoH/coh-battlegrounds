@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text;
 using System.Linq;
-using System.Diagnostics;
 using System.Collections.Generic;
 
 using Battlegrounds.Game.Gameplay;
@@ -11,33 +10,19 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Functional;
 using System.Diagnostics.CodeAnalysis;
 using Battlegrounds.Game.Scenarios;
+using Battlegrounds.Logging;
 
-namespace Battlegrounds.Game.DataSource.Replay;
-
-/// <summary>
-/// Enum flag marking match type
-/// </summary>
-public enum MatchType {
-
-    /// <summary>
-    /// PVP
-    /// </summary>
-    Multiplayer = 1,
-    
-    /// <summary>
-    /// Skirmish (vs AI)
-    /// </summary>
-    Skirmish = 2,
-
-}
+namespace Battlegrounds.Game.DataSource.Playback.CoH2;
 
 /// <summary>
 /// Represents a CoH2 replay file
 /// </summary>
-public sealed class ReplayFile {
+public sealed class CoH2Playback : IPlayback {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     /// <summary>
-    /// Represents a header of a <see cref="ReplayFile"/>
+    /// Represents a header of a <see cref="CoH2Playback"/>
     /// </summary>
     public struct ReplayHeader {
 
@@ -63,16 +48,32 @@ public sealed class ReplayFile {
         /// <param name="n"></param>
         /// <param name="d"></param>
         public ReplayHeader(uint v, string n, string d) {
-            this.version = v;
-            this.gamename = n;
-            this.date = d;
+            version = v;
+            gamename = n;
+            date = d;
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public readonly struct ChatMessage {
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly TimeSpan TimeStamp { get; init; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly string Sender { get; init; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly string Content { get; init; }
+
     }
 
     private ReplayHeader m_replayHeader;
@@ -91,71 +92,71 @@ public sealed class ReplayFile {
     private bool m_isPartial;
 
     /// <summary>
-    /// Get if the <see cref="ReplayFile"/> has been loaded and parsed.
+    /// Get if the <see cref="CoH2Playback"/> has been loaded and parsed.
     /// </summary>
     [MemberNotNullWhen(true, nameof(m_sdsc), nameof(m_playerlist))]
-    public bool IsParsed => this.m_isParsed;
+    public bool IsParsed => m_isParsed;
 
     /// <summary>
-    /// Get if the <see cref="ReplayFile"/> was partially read
+    /// Get if the <see cref="CoH2Playback"/> was partially read
     /// </summary>
-    public bool IsPartial => this.m_isPartial;
+    public bool IsPartial => m_isPartial;
 
     /// <summary>
     /// The header read when the file was parsed
     /// </summary>
     /// <exception cref="InvalidDataException"/>
     public ReplayHeader Header
-        => (this.m_isParsed) ? this.m_replayHeader : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+        => m_isParsed ? m_replayHeader : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
     /// <summary>
     /// The scenario used in the replay
     /// </summary>
     /// <exception cref="InvalidDataException"/>
     public ScenarioDescription Scenario
-        => (this.IsParsed) ? this.m_sdsc : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+        => IsParsed ? m_sdsc : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
     /// <summary>
     /// Array containing all players in the replay
     /// </summary>
     public Player[] Players
-        => (this.IsParsed) ? this.m_playerlist.ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+        => IsParsed ? m_playerlist.ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
     /// <summary>
     /// Sorted array containing all game ticks in the replay
     /// </summary>
-    public GameTick[] Ticks
-        => (this.m_isParsed) ? this.m_tickList.OrderBy(x => x.TimeStamp).ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
+    public IPlaybackTick[] Ticks
+        => m_isParsed ? m_tickList.OrderBy(x => x.Timestamp).ToArray() : throw new InvalidDataException("Replayfile has not been loaded and parsed sucessfully.");
 
     /// <summary>
     /// Get the length of the match
     /// </summary>
-    public TimeSpan Length => this.m_replayParsedLength;
+    public TimeSpan Length => m_replayParsedLength;
 
     /// <summary>
-    /// New instance of a <see cref="ReplayFile"/> from a given file path
+    /// New instance of a <see cref="CoH2Playback"/> from a given file path
     /// </summary>
     /// <param name="file">The file path to use when loading the file</param>
     /// <exception cref="FileNotFoundException"/>
-    public ReplayFile(string file) {
-        this.m_isParsed = false;
-        this.m_tickList = new List<GameTick>();
-        this.m_chatHistory = new List<ChatMessage>();
+    public CoH2Playback(string file) {
+        m_isParsed = false;
+        m_tickList = new List<GameTick>();
+        m_chatHistory = new List<ChatMessage>();
         if (File.Exists(file)) {
-            this.m_replayfile = file;
+            m_replayfile = file;
         } else {
             throw new FileNotFoundException(null, file);
         }
     }
 
     /// <summary>
-    /// New instance of a <see cref="ReplayFile"/> without a specified replay filepath.
+    /// New instance of a <see cref="CoH2Playback"/> without a specified replay filepath.
     /// </summary>
-    public ReplayFile() {
-        this.m_isParsed = false;
-        this.m_tickList = new List<GameTick>();
-        this.m_chatHistory = new List<ChatMessage>();
-        this.m_replayfile = string.Empty;
+    public CoH2Playback() {
+        m_isParsed = false;
+        m_tickList = new List<GameTick>();
+        m_chatHistory = new List<ChatMessage>();
+        m_replayfile = string.Empty;
     }
 
     /// <summary>
@@ -165,7 +166,7 @@ public sealed class ReplayFile {
     /// <returns>True if no errors occured</returns>
     /// <exception cref="IOException"/>
     public bool LoadReplay(BinaryReader reader) {
-        bool res = this.ParseReplayBinary(reader);
+        bool res = ParseReplayBinary(reader);
         reader.Close();
         return res;
     }
@@ -178,21 +179,23 @@ public sealed class ReplayFile {
     /// <exception cref="ArgumentNullException"/>
     /// <exception cref="FileNotFoundException"/>
     /// <exception cref="IOException"/>
-    public bool LoadReplay() {
+    public bool LoadPlayback() {
 
         // Verify we can do this
-        if (string.IsNullOrEmpty(this.m_replayfile)) {
+        if (string.IsNullOrEmpty(m_replayfile)) {
             throw new ArgumentNullException(nameof(m_replayfile), "Cannot load replay without being given a valid replay file path");
-        } else if (!File.Exists(this.m_replayfile)) {
-            throw new FileNotFoundException(null, this.m_replayfile);
+        }
+        
+        if (!File.Exists(m_replayfile)) {
+            throw new FileNotFoundException(null, m_replayfile);
         }
 
         // Create streams
-        using FileStream fs = File.OpenRead(this.m_replayfile);
+        using FileStream fs = File.OpenRead(m_replayfile);
         using BinaryReader br = new BinaryReader(fs);
 
         // Parse the binary data
-        if (!this.ParseReplayBinary(br)) {
+        if (!ParseReplayBinary(br)) {
             return false;
         }
 
@@ -204,39 +207,39 @@ public sealed class ReplayFile {
     private bool ParseReplayBinary(BinaryReader binaryReader) {
 
         // Parse header
-        if (!this.ParseHeader(binaryReader.ReadBytes(76))) {
-            Trace.WriteLine("Failed to parse replay header data", "ReplayFile");
+        if (!ParseHeader(binaryReader.ReadBytes(76))) {
+            logger.Warning("Failed to parse replay header data");
             return false;
         }
 
         // Read intro information
         var introchunk = new ChunkyFile();
         if (!introchunk.LoadFile(binaryReader)) {
-            Trace.WriteLine("Failed to read replay intro data", "ReplayFile");
+            logger.Warning("Failed to read replay intro data");
             return false;
         }
 
         // Read match outro data
         var datachunk = new ChunkyFile();
         if (!datachunk.LoadFile(binaryReader)) {
-            Trace.WriteLine("Failed to read replay outro data", "ReplayFile");
+            logger.Warning("Failed to read replay outro data");
             return false;
         }
 
         // Read scenario data
-        if (!this.ParseScenarioDescription(datachunk)) {
-            Trace.WriteLine("Failed to read scenario data", "ReplayFile");
+        if (!ParseScenarioDescription(datachunk)) {
+            logger.Warning("Failed to read scenario data");
             return false;
         }
 
         // Read replay data
-        if (!this.ParseReplayContent(datachunk, binaryReader.ReadToEnd())) {
-            Trace.WriteLine("Failed to read raw replay data", "ReplayFile");
+        if (!ParseReplayContent(datachunk, binaryReader.ReadToEnd())) {
+            logger.Warning("Failed to read raw replay data");
             return false;
         }
 
         // Return true (and set parsed flag to true)
-        return this.m_isParsed = true;
+        return m_isParsed = true;
 
     }
 
@@ -262,7 +265,7 @@ public sealed class ReplayFile {
         }
 
         // Create header
-        this.m_replayHeader = new ReplayHeader(version, name, dateBuilder.ToString());
+        m_replayHeader = new ReplayHeader(version, name, dateBuilder.ToString());
 
         // Return true if i was not out of bounds and the game name is "COH2_REC"
         return i < headerSpan.Length;
@@ -273,7 +276,7 @@ public sealed class ReplayFile {
 
         // Get the scenario target chunk
         if (chunky["SDSC"] is not Chunk scenarioChunk) {
-            Trace.WriteLine("Failed to get scenario description...", nameof(ReplayFile));
+            logger.Warning("Failed to get scenario description.");
             return false;
         }
 
@@ -310,7 +313,7 @@ public sealed class ReplayFile {
                 // If we continue to read, we can get some mod data (asset packs)
 
                 // Create scenario description
-                this.m_sdsc = new ScenarioDescription(scenariopath, scenarioname, (int)scenariodimensions[0], (int)scenariodimensions[1]) {
+                m_sdsc = new ScenarioDescription(scenariopath, scenarioname, (int)scenariodimensions[0], (int)scenariodimensions[1]) {
                     Description = scenariodesc,
                 };
 
@@ -325,17 +328,17 @@ public sealed class ReplayFile {
 
         // Get the important chunk data
         if (chunky.Walk("INFO", "DATA") is not Chunk gameinfoChunk) {
-            Trace.WriteLine("Failed to get replay match info chunk data", nameof(ReplayFile));
+            logger.Warning("Failed to get replay match info chunk data");
             return false;
         }
 
         // Parse the player data
-        if (!this.ParseMatchdata(gameinfoChunk)) {
+        if (!ParseMatchdata(gameinfoChunk)) {
             return false;
         }
 
         // Parse the recorded data
-        if (!this.ParseRecordedData(replayData)) {
+        if (!ParseRecordedData(replayData)) {
             return false;
         }
 
@@ -353,26 +356,26 @@ public sealed class ReplayFile {
                     // Read match type
                     uint type = reader.ReadUInt32();
                     if (type.InRange(1, 2)) {
-                        this.m_replayMatchType = type == 1 ? MatchType.Multiplayer : MatchType.Skirmish;
+                        m_replayMatchType = type == 1 ? MatchType.Multiplayer : MatchType.Skirmish;
                     }
 
                     // Skip 10 bytes
                     reader.Skip(10);
 
                     // Read in the seed (random seed)
-                    this.m_seed = reader.ReadUInt32();
+                    m_seed = reader.ReadUInt32();
 
                     // Read player count
                     uint pcount = reader.ReadUInt32();
-                    this.m_playerlist = new Player[pcount];
+                    m_playerlist = new Player[pcount];
 
                     // Read player data
-                    for (int i = 0; i < this.m_playerlist.Length; i++) {
+                    for (int i = 0; i < m_playerlist.Length; i++) {
                         if (ParsePlayerInfo(reader) is Player p) {
-                            this.m_playerlist[i] = p;
+                            m_playerlist[i] = p;
                         } else {
-                            Trace.WriteLine($"Failed to read player {i} from replay data!", nameof(ReplayFile));
-                            this.m_playerlist[i] = new(uint.MaxValue, ulong.MaxValue, uint.MaxValue, "Error", Faction.America, string.Empty);
+                            logger.Warning($"Failed to read player {i} from replay data!");
+                            m_playerlist[i] = new(uint.MaxValue, ulong.MaxValue, uint.MaxValue, "Error", Faction.America, string.Empty);
                         }
                     }
 
@@ -409,7 +412,7 @@ public sealed class ReplayFile {
         // Read skins
         const ServerItemType skin = ServerItemType.Skin;
         if (!ReadItem(reader, skin, out ServerItem skin1) || !ReadItem(reader, skin, out ServerItem skin2) || !ReadItem(reader, skin, out ServerItem skin3)) {
-            Trace.WriteLine("Failed to read skin(s)", nameof(ReplayFile));
+            logger.Warning("Failed to read skin(s)");
             return null;
         }
 
@@ -421,19 +424,19 @@ public sealed class ReplayFile {
 
         // Read faceplate (Why is this even saved in the replay?)
         if (!ReadItem(reader, ServerItemType.Faceplate, out _)) {
-            Trace.WriteLine("Failed to read faceplate", nameof(ReplayFile));
+            logger.Warning("Failed to read faceplate");
             return null;
         }
 
         // Read victory strike
         if (!ReadItem(reader, ServerItemType.VictoryStrike, out _)) {
-            Trace.WriteLine("Failed to read victory strike", nameof(ReplayFile));
+            logger.Warning("Failed to read victory strike");
             return null;
         }
 
         // Read decal
         if (!ReadItem(reader, ServerItemType.Decal, out _)) {
-            Trace.WriteLine("Failed to read decal", nameof(ReplayFile));
+            logger.Warning("Failed to read decal");
             return null;
         }
 
@@ -467,14 +470,14 @@ public sealed class ReplayFile {
             534 => Read534(itemType, reader),
             _ => null,
         };
-        
+
         // Bail
         if (tmp is null) {
             item = ServerItem.None;
-            Trace.WriteLine("Unknown server item type {itemty}!", nameof(ReplayFile));
+            logger.Warning("Unknown server item type {itemty}!");
             return false;
         }
-        
+
         // Return result
         item = tmp.Value;
         return true;
@@ -517,11 +520,11 @@ public sealed class ReplayFile {
                         GameTick tick = new GameTick();
                         tick.Parse(reader);
 
-                        this.m_tickList.Add(tick);
-                        this.m_isPartial = true;
+                        m_tickList.Add(tick);
+                        m_isPartial = true;
 
-                        if (tick.TimeStamp > this.m_replayParsedLength) {
-                            this.m_replayParsedLength = tick.TimeStamp;
+                        if (tick.Timestamp > m_replayParsedLength) {
+                            m_replayParsedLength = tick.Timestamp;
                         }
 
                     } else if (dataType == 1) { // Chat
@@ -531,11 +534,11 @@ public sealed class ReplayFile {
                             reader.Skip(8);
                             string sender = reader.ReadASCIIString();
                             string content = reader.ReadASCIIString();
-                            Trace.WriteLine($"{sender}: {content}", nameof(ReplayFile));
-                            this.m_chatHistory.Add(new ChatMessage() {
+                            logger.Info($"{sender}: {content}");
+                            m_chatHistory.Add(new ChatMessage() {
                                 Sender = sender,
                                 Content = content,
-                                TimeStamp = this.m_replayParsedLength
+                                TimeStamp = m_replayParsedLength
                             });
                             reader.Skip(2 * reader.ReadUInt32());
                         } else {

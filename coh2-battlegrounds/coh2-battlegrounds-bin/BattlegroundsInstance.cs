@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
@@ -22,7 +21,7 @@ namespace Battlegrounds;
 public static class BattlegroundsInstance {
 
     // The path of the local settings file
-    private static readonly string PATH_LOCAL = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\local.json");
+    private static readonly string PATH_LOCAL = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH\\local.json");
 
     // The logger instance
     private static readonly Logger logger = Logger.CreateLogger();
@@ -86,7 +85,7 @@ public static class BattlegroundsInstance {
         public void ResolvePathsAndInitLog() {
 
             // Paths
-            string doc = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\");
+            string doc = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH\\");
             string installpath = $"{Environment.CurrentDirectory}\\";
             string binpath = $"{installpath}bg_common\\";
             string userpath = $"{doc}usr\\";
@@ -436,6 +435,10 @@ public static class BattlegroundsInstance {
     public static void SaveInstance()
         => File.WriteAllText(PATH_LOCAL, JsonSerializer.Serialize(__instance, new JsonSerializerOptions() { WriteIndented = true }));
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="lang"></param>
     public static void ChangeLanguage(LocaleLanguage lang) => __instance.Language = lang;
 
 }

@@ -69,6 +69,7 @@ public class BlueprintCollection<T> : IEnumerable<T> where T : Blueprint {
     /// <returns>A new <see cref="BlueprintCollection{T}"/> containing only <typeparamref name="T"/> instances matching the predicate.</returns>
     public BlueprintCollection<T> Filter(Predicate<T> predicate) => new BlueprintCollection<T>(this.m_internalDictionary.Where(x => predicate(x.Value)));
 
+    ///<inheritdoc/>
     public IEnumerator<T> GetEnumerator() => this.m_internalDictionary.Select(x => x.Value).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => this.m_internalDictionary.Select(x => x.Value).GetEnumerator();

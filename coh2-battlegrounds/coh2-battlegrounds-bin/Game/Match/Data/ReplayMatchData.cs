@@ -1,50 +1,52 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Linq;
 
-using Battlegrounds.Game.DataSource.Replay;
+using Battlegrounds.Logging;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match.Data.Events;
+using Battlegrounds.Game.DataSource.Playback;
 
 using RegexMatch = System.Text.RegularExpressions.Match;
 
 namespace Battlegrounds.Game.Match.Data;
 
 /// <summary>
-/// Object representing data read from a <see cref="ReplayFile"/>.
+/// Object representing data read from a <see cref="IPlayback"/>.
 /// </summary>
 public sealed class ReplayMatchData : IMatchData {
 
-    /// <summary>
-    /// The path to the latest replay file.
-    /// </summary>
-    public static readonly string LATEST_REPLAY_FILE = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\company of heroes 2\\playback\\temp.rec";
+    private static readonly Logger logger = Logger.CreateLogger();
 
-    private ReplayFile? m_replay;
+    private IPlayback? m_replay;
     private List<TimeEvent> m_events;
     private TimeSpan m_length;
     private Player[] m_players;
     private bool m_isSessionValid;
+
+    private readonly PlaybackLoader m_loader;
 
     private static readonly Regex broadcastRegex = new Regex(@"(?<cmdtype>\w)\[(?<content>(?<msg>(\w|_|-|:|\.|\d)+)|,|\s)*\]");
     private static readonly Regex broadcastIdRegex = new Regex(@"#(?<id>\d+)");
     private static readonly Regex broadcastCallerRegex = new Regex(@"@(?<id>(ai)?\d+(\.\d+e\+\d+)?(_(axis|allies))?)");
     private static readonly Regex broadcastUIDigitRegex = new Regex(@"\d+(,\d+)*");
 
+    /// <inheritdoc/>
     public ISession Session { get; }
 
+    /// <inheritdoc/>
     public TimeSpan Length => this.m_length;
 
+    /// <inheritdoc/>
     public bool IsSessionMatch => this.m_isSessionValid;
 
     /// <summary>
-    /// Get the <see cref="ReplayFile"/> all match data is read from.
+    /// Get the <see cref="IPlayback"/> all match data is read from.
     /// </summary>
-    public ReplayFile Replay => this.m_replay ?? throw new Exception("Replay file not loaded!");
+    public IPlayback Playback => this.m_replay ?? throw new Exception("Replay file not loaded!");
 
     /// <summary>
     /// Get collection of players
@@ -61,16 +63,19 @@ public sealed class ReplayMatchData : IMatchData {
         this.m_events = new List<TimeEvent>();
         this.m_isSessionValid = false;
         this.m_players = Array.Empty<Player>();
+        this.m_loader = new PlaybackLoader();
     }
 
+    /// <inheritdoc/>
     public bool LoadMatchData(string matchFile) {
 
         // Create instance
-        this.m_replay = new ReplayFile(matchFile);
+        this.m_replay = this.m_loader.LoadPlayback(matchFile, GameCase.CompanyOfHeroes2);
+        logger.Warning("Using CoH2 as default when handling replay match data -- please fix!");
 
-        // Load the replay
-        if (!this.m_replay.LoadReplay()) {
-            Trace.WriteLine($"Failed to read replay file {matchFile}", nameof(ReplayMatchData));
+        // Check replay file was loaded
+        if (this.m_replay is null) {
+            logger.Warning($"Failed to read replay file {matchFile}");
             return false;
         }
 
@@ -86,18 +91,19 @@ public sealed class ReplayMatchData : IMatchData {
     /// Debug/Test method. Please do not use in production.
     /// </remarks>
     /// <param name="replayFile">The loaded replay file to use.</param>
-    public void SetReplayFile(ReplayFile replayFile) => this.m_replay = replayFile;
+    public void SetReplayFile(IPlayback replayFile) => this.m_replay = replayFile;
 
+    /// <inheritdoc/>
     public bool ParseMatchData() {
 
         // Get the players
-        this.m_players = this.Replay.Players;
+        this.m_players = this.Playback.Players;
 
         // Get the ticks
-        var matchTicks = this.Replay.Ticks;
+        var matchTicks = this.Playback.Ticks;
 
         // Length of the match
-        this.m_length = this.Replay.Length;
+        this.m_length = this.Playback.Length;
 
         // Keep track of registered IDs
         HashSet<uint> ids = new HashSet<uint>();
@@ -117,7 +123,7 @@ public sealed class ReplayMatchData : IMatchData {
                     // Get the data
                     if (this.ParseBroadcastMessage(tickEvent) is IMatchEvent broadcastMessage) {
                         if (ids.Add(broadcastMessage.Uid)) {
-                            this.m_events.Add(new TimeEvent(tickEvent.TimeStamp, broadcastMessage));
+                            this.m_events.Add(new TimeEvent(tickEvent.Timestamp, broadcastMessage));
                         }
                     } else {
                         return false;
@@ -137,7 +143,7 @@ public sealed class ReplayMatchData : IMatchData {
 
     }
 
-    private IMatchEvent? ParseBroadcastMessage(GameEvent gameEvent) {
+    private IMatchEvent? ParseBroadcastMessage(IPlaybackEvent gameEvent) {
 
         // Make sure it's valid
         if (!string.IsNullOrEmpty(gameEvent.AttachedMessage)) {
@@ -160,7 +166,7 @@ public sealed class ReplayMatchData : IMatchData {
                 if (match.Success) {
                     eventUID = uint.Parse(match.Groups["id"].Value);
                 } else {
-                    Trace.WriteLine($"{{Warning}} Event message has no UID \"{gameEvent.AttachedMessage}\" (Using UID = 0), this may cause problems.", nameof(ReplayMatchData));
+                    logger.Warning($" Event message has no UID \"{gameEvent.AttachedMessage}\" (Using UID = 0), this may cause problems.");
                 }
 
                 // Define invoking player
@@ -201,7 +207,7 @@ public sealed class ReplayMatchData : IMatchData {
                 // Handle case were player is not found
                 if (player is null) {
                     player = this.m_players.First(x => x.ID == gameEvent.PlayerID);
-                    Trace.WriteLine($"{{Warning}} Event message has no player ID \"{gameEvent.AttachedMessage}\" (Using event ID), this may cause problems.", nameof(ReplayMatchData));
+                    logger.Warning($"Event message has no player ID \"{gameEvent.AttachedMessage}\" (Using event ID), this may cause problems.");
                 }
 
                 // Return the proper type
@@ -226,8 +232,8 @@ public sealed class ReplayMatchData : IMatchData {
                 } else {
 
                     // Log this scenario
-                    Trace.WriteLine("Found a broadcast message for which the regex failed to match.", nameof(ReplayMatchData));
-                    Trace.WriteLine($"Regex failure on : [{gameEvent.AttachedMessage}]", nameof(ReplayMatchData));
+                    logger.Error("Found a broadcast message for which the regex failed to match.");
+                    logger.Error($"Regex failure on : [{gameEvent.AttachedMessage}]");
 
                     // No match -> Invalid broadcast message
                     return null;
@@ -239,7 +245,7 @@ public sealed class ReplayMatchData : IMatchData {
         } else {
 
             // Log this case
-            Trace.WriteLine("Found broadcast message with message of length 0.", nameof(ReplayMatchData));
+            logger.Info("Found broadcast message with message of length 0.", nameof(ReplayMatchData));
 
             // Return null (nothing to parse)
             return null;
@@ -252,11 +258,12 @@ public sealed class ReplayMatchData : IMatchData {
         VerificationEvent verification = new VerificationEvent(id, values);
         if (verification.VerificationType == VerificationType.SessionVerification) {
             this.m_isSessionValid = verification.Verify(this.Session);
-            Trace.WriteLine($"Verification event returned: {this.m_isSessionValid}.", nameof(ReplayMatchData));
+            logger.Info($"Verification event returned: {this.m_isSessionValid}.", nameof(ReplayMatchData));
         }
         return verification;
     }
 
+    /// <inheritdoc/>
     public IEnumerator<IMatchEvent> GetEnumerator() => this.m_events.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)this.m_events).GetEnumerator();
