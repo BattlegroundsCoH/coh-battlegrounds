@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Battlegrounds.Steam;
 
 /// <summary>
-/// Represents a Steam User by ID and name. Implements <see cref="IJsonObject"/>. This class cannot be inherited.
+/// Represents a Steam User by ID and name. This class cannot be inherited.
 /// </summary>
 [JsonConverter(typeof(SteamUserJsonConverter))]
 public sealed class SteamUser {
@@ -52,10 +49,15 @@ public sealed class SteamUser {
 
 }
 
-public class SteamUserJsonConverter : JsonConverter<SteamUser> {
+/// <summary>
+/// Sealed converter class for converting a <see cref="SteamUser"/> instance into and from json format.
+/// </summary>
+public sealed class SteamUserJsonConverter : JsonConverter<SteamUser> {
 
+    /// <inheritdoc/>
     public override SteamUser Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => new(reader.GetUInt64());
 
+    /// <inheritdoc/>
     public override void Write(Utf8JsonWriter writer, SteamUser value, JsonSerializerOptions options) => writer.WriteNumberValue(value.ID);
 
 }

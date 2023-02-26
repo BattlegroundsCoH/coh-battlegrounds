@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
+using Battlegrounds.Logging;
 using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Server;
 
@@ -14,6 +15,8 @@ namespace Battlegrounds.Networking;
 /// Static class for setting global network interface values
 /// </summary>
 public static class NetworkInterface {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     private static readonly string __localServerAddr = File.Exists("network.test.txt") ? File.ReadAllText("network.test.txt") : "192.168.1.107";
 
@@ -101,14 +104,14 @@ public static class NetworkInterface {
 #if DEBUG
         // Try and connect to local server (if possible)
         if (AllowLocalServerInstance && HasLocalServer() && LocalEndpoint.IsConnectable()) {
-            Trace.WriteLine("Picked locally running server as endpoint", nameof(NetworkInterface));
+            logger.Info("Picked locally running server as endpoint");
             __bestEndpoint = LocalEndpoint;
             __hasServerConnection = true;
             return;
         }
         // Then try connect to debug server
         if (RemoteDebugEndpoint.IsConnectable()) {
-            Trace.WriteLine("Picked remote debug server as endpoint", nameof(NetworkInterface));
+            logger.Info("Picked remote debug server as endpoint");
             __bestEndpoint = RemoteDebugEndpoint;
             __hasServerConnection = true;
             return;
@@ -116,7 +119,7 @@ public static class NetworkInterface {
 #endif
         // Set as release
         __hasServerConnection = RemoteReleaseEndpoint.IsConnectable();
-        Trace.WriteLine($"Picked remote release server as endpoint (Connection = {__hasServerConnection})", nameof(NetworkInterface));
+        logger.Info($"Picked remote release server as endpoint (Connection = {__hasServerConnection})");
         __bestEndpoint = RemoteReleaseEndpoint;
     }
 
@@ -133,7 +136,7 @@ public static class NetworkInterface {
     /// <param name="connection">The connection instance to register.</param>
     public static void RegisterConnection(IConnection? connection) {
         if (__connections is null) {
-            Trace.WriteLine("Please setup the NetworkInterface before registering connections.", nameof(NetworkInterface));
+            logger.Warning("Please setup the NetworkInterface before registering connections.");
             return;
         }
         if (connection is not null) {
@@ -147,7 +150,7 @@ public static class NetworkInterface {
     /// <param name="connection">The connection instance to unregister.</param>
     public static void UnregisterConnection(IConnection? connection) {
         if (__connections is null) {
-            Trace.WriteLine("Please setup the NetworkInterface before unregistering connections.", nameof(NetworkInterface));
+            logger.Warning("Please setup the NetworkInterface before unregistering connections.");
             return;
         }
         lock (m_connlock) {
@@ -162,7 +165,7 @@ public static class NetworkInterface {
     /// </summary>
     public static void Shutdown() {
         if (__connections is null) {
-            Trace.WriteLine("Please setup the NetworkInterface before shutting it down.", nameof(NetworkInterface));
+            logger.Warning("Please setup the NetworkInterface before shutting it down.");
             return;
         }
         if (__connections.Count > 0) {
@@ -173,7 +176,9 @@ public static class NetworkInterface {
                         connection.Shutdown();
                     } catch { }
                 }
-            } catch (Exception e) { Trace.WriteLine($"Error on shutdown! {e}", nameof(NetworkInterface)); }
+            } catch (Exception e) { 
+                logger.Exception(e);
+            }
         }
     }
 

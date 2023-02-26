@@ -8,6 +8,6 @@
         <ResourceDictionary Source="Themes/Misc.xaml"/>
         <ResourceDictionary Source="Themes/Combobox.xaml"/>
         <ResourceDictionary Source="Modals/ModalResources.xaml"/>
-        <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds-ui;component/Controls/IconButtonStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds.UI;component/Controls/IconButtonStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

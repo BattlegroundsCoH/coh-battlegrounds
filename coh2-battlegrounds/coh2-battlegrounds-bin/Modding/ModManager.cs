@@ -2,12 +2,12 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Diagnostics;
 using System.Collections.Generic;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Modding.Battlegrounds;
+using Battlegrounds.Logging;
 
 namespace Battlegrounds.Modding;
 
@@ -15,6 +15,8 @@ namespace Battlegrounds.Modding;
 /// Static manager class for managing <see cref="ModPackage"/> instances.
 /// </summary>
 public static class ModManager {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     private static readonly List<ModPackage> __packages = new();
     private static readonly Dictionary<ModGuid, IGameMod> __mods = new();
@@ -43,13 +45,13 @@ public static class ModManager {
                 // Read the mod package
                 ModPackage? package = JsonSerializer.Deserialize<ModPackage>(File.OpenRead(packageFilepath));
                 if (package is null) {
-                    Trace.WriteLine($"Failed to load mod package '{packageFilepath}' (Error reading file).", nameof(ModManager));
+                    logger.Error($"Failed to load mod package '{packageFilepath}' (Error reading file).");
                     continue;
                 }
 
                 // Ensure no duplicate
                 if (__packages.Any(x => x.ID == package.ID)) {
-                    Trace.WriteLine($"Failed to load mod package '{package.ID}' (Duplicate ID entry).", nameof(ModManager));
+                    logger.Error($"Failed to load mod package '{package.ID}' (Duplicate ID entry).");
                     continue;
                 }
 
@@ -92,13 +94,13 @@ public static class ModManager {
                 }
 
                 // Log
-                Trace.WriteLine($"Loaded mod package '{package.ID}' (With {submods} mods).", nameof(ModManager));
+                logger.Info($"Loaded mod package '{package.ID}' (With {submods} mods).");
 
             } catch (Exception ex) {
 
                 // Log error and file
-                Trace.WriteLine($"Failed to read mod package '{packageName}'.", nameof(ModManager));
-                Trace.WriteLine($"{packageName} Error is: {ex}", nameof(ModManager));
+                logger.Error($"Failed to read mod package '{packageName}'.");
+                logger.Error($"{packageName} Error is: {ex}");
 
             }
         }

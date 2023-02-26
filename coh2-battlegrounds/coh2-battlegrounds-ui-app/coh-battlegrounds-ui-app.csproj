@@ -5,6 +5,7 @@
     <RootNamespace>Battlegrounds.UI.Application</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <AssemblyName>Battlegrounds.UI.Application</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\coh2-battlegrounds-ui\coh2-battlegrounds-ui.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-ui\coh-battlegrounds-ui.csproj" />
   </ItemGroup>
 
   <ItemGroup>

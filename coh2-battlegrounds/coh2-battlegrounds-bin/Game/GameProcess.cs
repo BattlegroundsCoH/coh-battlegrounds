@@ -6,9 +6,9 @@ using System.Threading;
 namespace Battlegrounds.Game;
 
 /// <summary>
-/// Static class for launching Company of Heroes 2 with the proper set of arguments.
+/// Abstract class representing the game process.
 /// </summary>
-public static class CoH2Launcher {
+public abstract class GameProcess {
 
     /// <summary>
     /// Const ID for marking process as having run to completion
@@ -21,18 +21,23 @@ public static class CoH2Launcher {
     public const int PROCESS_NOT_FOUND = 1;
 
     /// <summary>
-    /// The steam app ID for Company of Heroes 2.
+    /// 
     /// </summary>
-    public const string GameAppID = "231430";
+    public abstract string AppId { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public abstract string ApplicationExecutable { get; }
 
     /// <summary>
     /// Launch Company of Heroes 2 through Steam
     /// </summary>
-    public static bool Launch() {
+    public bool Launch() {
 
         // Create argument(s) - more can be given later if needed
         StringBuilder commandline = new StringBuilder();
-        commandline.Append($"-applaunch {GameAppID} ");
+        commandline.Append($"-applaunch {AppId}");
 
         // Start the process
         ProcessStartInfo startInfo = new ProcessStartInfo {
@@ -59,7 +64,7 @@ public static class CoH2Launcher {
     /// Watch the RelicCoH2.exe process
     /// </summary>
     /// <returns>Integer value representing the result of the operation (0 = OK, 1 = Not found)</returns>
-    public static int WatchProcess() {
+    public int WatchProcess() {
 
         // The attempts counter
         int attemps = 0;
@@ -75,14 +80,14 @@ public static class CoH2Launcher {
         do {
 
             // Try get proc
-            proc = GetCoH2Process();
+            proc = GetProcess();
 
             // Wait 5ms
             Thread.Sleep(5);
 
             // Increase attempts so it's not an endless loop
             attemps++;
-            
+
             // Update amount of seconds
             sec = (DateTime.Now - start).TotalSeconds;
 
@@ -90,12 +95,12 @@ public static class CoH2Launcher {
 
         // None found?
         if (proc is null) {
-            Trace.WriteLine($"Failed to detect a running instance of RelicCoH2.exe after {sec:0.00}s", nameof(CoH2Launcher));
+            Trace.WriteLine($"Failed to detect a running instance of RelicCoH2.exe after {sec:0.00}s", nameof(GameProcess));
             return PROCESS_NOT_FOUND;
         }
 
         // Log found
-        Trace.WriteLine($"Successfully detected a running instance of RelicCoH2.exe after {sec:0.00}s", nameof(CoH2Launcher));
+        Trace.WriteLine($"Successfully detected a running instance of RelicCoH2.exe after {sec:0.00}s", nameof(GameProcess));
 
         // Wait for exit
         proc.WaitForExit();
@@ -105,10 +110,14 @@ public static class CoH2Launcher {
 
     }
 
-    private static Process? GetCoH2Process() {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    private Process? GetProcess() {
 
         // Try and find it
-        var processes = Process.GetProcessesByName("RelicCoH2");
+        var processes = Process.GetProcessesByName(ApplicationExecutable);
 
         // If found - break
         if (processes.Length > 0) {
@@ -121,9 +130,15 @@ public static class CoH2Launcher {
     }
 
     /// <summary>
-    /// Get if Company of Heroes 2 is running.
+    /// Determine if the game is running.
     /// </summary>
     /// <returns>If the game is running then <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
-    public static bool IsRunning() => GetCoH2Process() is not null;
+    public bool IsRunning() => GetProcess() is not null;
+
+    public static bool IsRunning(GameCase game) => game switch {
+        GameCase.CompanyOfHeroes2 => (new CoH2Process()).IsRunning(),
+        GameCase.CompanyOfHeroes3 => (new CoH3Process()).IsRunning(),
+        _ => false
+    };
 
 }

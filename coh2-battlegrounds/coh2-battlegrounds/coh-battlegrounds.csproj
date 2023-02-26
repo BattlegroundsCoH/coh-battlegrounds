@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <RootNamespace>BattlegroundsApp</RootNamespace>
     <UseWPF>true</UseWPF>
     <LangVersion>preview</LangVersion>
@@ -10,11 +10,11 @@
     <Nullable>enable</Nullable>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <ApplicationIcon>coh2-battlegrounds.ico</ApplicationIcon>
+    <ApplicationIcon>Battlegrounds.ico</ApplicationIcon>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>E:\coh2_battlegrounds\coh2-battlegrounds\keypair.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>1.2.0</AssemblyVersion>
-    <FileVersion>1.2.0</FileVersion>
+    <AssemblyVersion>1.3.0</AssemblyVersion>
+    <FileVersion>1.3.0</FileVersion>
     <Version>1.2.0-alpha</Version>
     <RepositoryUrl>https://github.com/JustCodiex/coh2-battlegrounds</RepositoryUrl>
     <PackageProjectUrl>https://cohbattlegrounds.com/</PackageProjectUrl>
@@ -22,6 +22,7 @@
     <Description>Company of Heroes 2: Battlegrounds Mod Launcher</Description>
     <Product>Battlegrounds</Product>
 	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+	<AssemblyName>Battlegrounds</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -131,7 +132,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="coh2-battlegrounds.ico">
+    <Content Include="Battlegrounds.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -187,12 +188,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj" />
-    <ProjectReference Include="..\coh2-battlegrounds-editor\coh2-battlegrounds-editor.csproj" />
-    <ProjectReference Include="..\coh2-battlegrounds-lobby\coh2-battlegrounds-lobby.csproj" />
-    <ProjectReference Include="..\coh2-battlegrounds-resources\coh2-battlegrounds-resources.csproj" />
-    <ProjectReference Include="..\coh2-battlegrounds-ui-app\coh2-battlegrounds-ui-app.csproj" />
-    <ProjectReference Include="..\coh2-battlegrounds-ui\coh2-battlegrounds-ui.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-bin\coh-battlegrounds-core.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-editor\coh-battlegrounds-editor.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-lobby\coh-battlegrounds-lobby.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-resources\coh-battlegrounds-resources.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-ui-app\coh-battlegrounds-ui-app.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-ui\coh-battlegrounds-ui.csproj" />
   </ItemGroup>
 
   <ItemGroup>

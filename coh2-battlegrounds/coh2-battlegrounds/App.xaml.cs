@@ -31,6 +31,7 @@ using Battlegrounds.Editor;
 using Battlegrounds.Editor.Pages;
 using Battlegrounds.Lobby.Pages;
 using Battlegrounds.Lobby;
+using Battlegrounds.Logging;
 
 namespace BattlegroundsApp;
 
@@ -38,6 +39,8 @@ namespace BattlegroundsApp;
 /// Interaction logic for App.xaml
 /// </summary>
 public partial class App : Application, IResourceResolver, IViewController {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     private static AppViewManager? __viewManager;
 
@@ -171,10 +174,10 @@ public partial class App : Application, IResourceResolver, IViewController {
 
         // Burn if checksum is not available
         if (!File.Exists("checksum.txt"))
-            throw new FatalAppException("No checksum file found!");
+            throw logger.Fatal("No checksum file found!");
 
         // Run async
-        Task.Run(() => Integrity.CheckIntegrity(Environment.ProcessPath ?? throw new FatalAppException("Process path not found -> very fatal!")));
+        Task.Run(() => Integrity.CheckIntegrity(Environment.ProcessPath ?? throw logger.Fatal("Process path not found -> very fatal!")));
 
     }
 
@@ -225,7 +228,7 @@ public partial class App : Application, IResourceResolver, IViewController {
 
         } catch (Exception dex) {
 
-            Trace.WriteLine($"Failed to initialise discord API: {dex}", "DiscordAPI");
+            logger.Error($"Failed to initialise discord API: {dex}");
 
         }
 
@@ -288,7 +291,7 @@ public partial class App : Application, IResourceResolver, IViewController {
         if (File.Exists(filepath)) {
             _ = BattlegroundsInstance.Localize.LoadLocaleFile(filepath);
         } else {
-            Trace.WriteLine($"Failed to locate locale file: {filepath}", "AppStartup");
+            logger.Error($"Failed to locate locale file: {filepath}");
         }
 
     }
@@ -297,7 +300,7 @@ public partial class App : Application, IResourceResolver, IViewController {
 
         if (failed > 0) {
             // TODO: handle
-            Trace.WriteLine($"Failed to load {failed} databases!", nameof(App));
+            logger.Error($"Failed to load {failed} databases!");
         }
 
         // Load all companies used by the player
@@ -323,11 +326,11 @@ public partial class App : Application, IResourceResolver, IViewController {
             if (!string.IsNullOrEmpty(ppath)) {
                 ProcessStartInfo pinfo = new(ppath, "-report-error");
                 if (Process.Start(pinfo) is null) {
-                    Trace.WriteLine("Failed to open error reporter...");
+                    logger.Error("Failed to open error reporter...");
                 }
             }
         } catch {
-            Trace.WriteLine("Failed to launch self in error mode!");
+            logger.Error("Failed to launch self in error mode!");
         }
 
         // Close logger with exit code
@@ -374,7 +377,7 @@ public partial class App : Application, IResourceResolver, IViewController {
             return;
         }
 
-        Application.Current.Dispatcher.Invoke(() => {
+        Current.Dispatcher.Invoke(() => {
 
             // Do modal
             YesNoPrompt.Show(mControl, (vm, resault) => {
@@ -395,7 +398,7 @@ public partial class App : Application, IResourceResolver, IViewController {
     private static IEnumerator RunUpdate(ModalControl control) {
 
         yield return new WaitTimespan(TimeSpan.FromSeconds(0.5));
-        Application.Current.Dispatcher.Invoke(() => {
+        Current.Dispatcher.Invoke(() => {
             // Create downloadInProgress
             var downloadInProgress = new UpdateDownloader();
 

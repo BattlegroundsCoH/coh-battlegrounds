@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 
 using Battlegrounds.ErrorHandling;
 using Battlegrounds.Functional;
+using Battlegrounds.Logging;
 using Battlegrounds.Modding;
 
 using RegexMatch = System.Text.RegularExpressions.Match;
@@ -61,6 +62,8 @@ public enum BlueprintType {
 /// </summary>
 public static class BlueprintManager {
 
+    private static readonly Logger logger = Logger.CreateLogger();
+
     /// <summary>
     /// Const value for the invalid local blueprint ID.
     /// </summary>
@@ -109,7 +112,7 @@ public static class BlueprintManager {
 
         // Stop watch and log
         stopwatch.Stop();
-        Trace.WriteLine($"Loaded database for basegame blueprints in {stopwatch.Elapsed.TotalSeconds:0.000}s.", nameof(BlueprintManager));
+        logger.Info($"Loaded database for basegame blueprints in {stopwatch.Elapsed.TotalSeconds:0.000}s.");
 
     }
 
@@ -189,7 +192,7 @@ public static class BlueprintManager {
         }
 
         // Log
-        Trace.WriteLine($"Loaded {blueprints.Length} {bType}s for {(string.IsNullOrEmpty(guid) ? "base game" : $"mod[{guid}]")}", nameof(BlueprintManager));
+        logger.Info($"Loaded {blueprints.Length} {bType}s for {(string.IsNullOrEmpty(guid) ? "base game" : $"mod[{guid}]")}");
 
         // Return true
         return true;

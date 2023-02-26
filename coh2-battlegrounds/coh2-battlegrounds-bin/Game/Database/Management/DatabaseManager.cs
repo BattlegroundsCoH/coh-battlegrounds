@@ -2,7 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+
 using Battlegrounds.Game.Scenarios;
+using Battlegrounds.Logging;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database.Management;
@@ -23,6 +25,8 @@ public delegate void DatabaseLoadedHandler();
 /// Static class for abstracted interaction with the database managers.
 /// </summary>
 public static class DatabaseManager {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     private static bool __databasesLoaded = false;
     private static string __databaseFoundPath = string.Empty;
@@ -48,7 +52,7 @@ public static class DatabaseManager {
             return;
         }
 
-        Trace.WriteLine($"Database path: \"{SolveDatabasepath()}\"", nameof(DatabaseManager));
+        logger.Info($"Database path: \"{SolveDatabasepath()}\"");
 
         int loaded = 0;
         int failed = 0;
@@ -66,7 +70,7 @@ public static class DatabaseManager {
                     Stopwatch stopwatch = Stopwatch.StartNew();
                     BlueprintManager.LoadDatabaseWithMod(x.ID, x.TuningGUID.GUID);
                     stopwatch.Stop();
-                    Trace.WriteLine($"Loaded database for package '{x.PackageName}' in {stopwatch.Elapsed.TotalSeconds:0.000}s.", nameof(BlueprintManager));
+                    logger.Info($"Loaded database for package '{x.PackageName}' in {stopwatch.Elapsed.TotalSeconds:0.000}s.");
                 });
 
             });
@@ -75,7 +79,7 @@ public static class DatabaseManager {
             loaded++;
 
         } catch (Exception e) {
-            Trace.WriteLine($"Failed to load database: Blueprints [{e.Message}]", nameof(DatabaseManager));
+            logger.Warning($"Failed to load database: Blueprints [{e.Message}]");
             failed++;
         }
 
@@ -88,7 +92,7 @@ public static class DatabaseManager {
             loaded++;
 
         } catch (Exception e) {
-            Trace.WriteLine($"Failed to load database: Scenarios [{e.Message}]", nameof(DatabaseManager));
+            logger.Warning($"Failed to load database: Scenarios [{e.Message}]");
             failed++;
         }
 
@@ -134,13 +138,17 @@ public static class DatabaseManager {
         }
 
         // Log failure
-        Trace.WriteLine("Failed to find any valid path to the database folder. Please verify install path.", nameof(DatabaseManager));
+        logger.Error("Failed to find any valid path to the database folder. Please verify install path.");
 
         // Return none
         return __databaseFoundPath;
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="loadedHandler"></param>
     public static void LoadedCallback(DatabaseLoadedHandler loadedHandler) {
         
         // if already loaded, invoke immediately

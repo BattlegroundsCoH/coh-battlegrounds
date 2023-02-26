@@ -5,10 +5,11 @@
     <RootNamespace>Battlegrounds.Lobby</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <AssemblyName>Battlegrounds.Lobby</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\coh2-battlegrounds-ui\coh2-battlegrounds-ui.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-ui\coh-battlegrounds-ui.csproj" />
   </ItemGroup>
 
 </Project>

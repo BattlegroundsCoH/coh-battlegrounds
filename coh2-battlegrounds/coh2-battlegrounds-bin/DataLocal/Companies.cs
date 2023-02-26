@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Logging;
 using Battlegrounds.Verification;
 
 namespace Battlegrounds.DataLocal;
@@ -21,6 +22,8 @@ public delegate void LocalCompaniesLoadedHandler();
 /// Static utility class for handling local player companies.
 /// </summary>
 public static class Companies {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     /// <summary>
     /// 
@@ -61,16 +64,16 @@ public static class Companies {
                     if (CompanySerializer.GetCompanyFromFile(companypath, true) is Company company)
                         __companies.Add(company);
                 } catch (ChecksumViolationException checksumViolation) {
-                    Trace.WriteLine($"Failed to verify company \"{companypath}\" ({checksumViolation.Message})", nameof(Companies));
+                    logger.Warning($"Failed to verify company \"{companypath}\" ({checksumViolation.Message})");
                 }
             }
 
             PlayerCompaniesLoaded?.Invoke();
 
-            Trace.WriteLine($"Loaded {__companies.Count} user companies", nameof(Companies));
+            logger.Info($"Loaded {__companies.Count} user companies");
 
         } catch (Exception ex) {
-            Trace.WriteLine(ex, nameof(Companies));
+            logger.Exception(ex);
         }
 
     }
@@ -110,19 +113,19 @@ public static class Companies {
         try {
             string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{Regex.Replace(company.Name, @"[$&+,:;=?@#|'<>.^\\/""*()%!-]", " ").Replace(" ", "")}.json");
             if (File.Exists(filename)) {
-                Trace.WriteLine($"Deleting existing player company '{company.Name}'", nameof(Companies));
+                logger.Info($"Deleting existing player company '{company.Name}'");
                 File.Delete(filename);
             }
             CompanySerializer.SaveCompanyToFile(company, filename);
-            Trace.WriteLine($"Saved player company '{company.Name}'.", nameof(Companies));
+            logger.Info($"Saved player company '{company.Name}'.");
         } catch (IOException ioex) {
-            Trace.WriteLine($"Failed to save player company '{company.Name}'. ", nameof(Companies));
-            Trace.WriteLine(ioex, nameof(Companies));
+            logger.Info($"Failed to save player company '{company.Name}'. ");
+            logger.Exception(ioex);
         } finally {
             Company? oldCompany = __companies.FirstOrDefault(x => x.Name == company.Name && x.Army == company.Army);
             if (oldCompany is not null && oldCompany != company) { // If new reference
                 __companies[__companies.IndexOf(oldCompany)] = company;
-                Trace.WriteLine($"Updated player company '{company.Name}' object", nameof(Companies));
+                logger.Info($"Updated player company '{company.Name}' object");
             } else if (oldCompany is null) {
                 __companies.Add(company);
             }
@@ -134,7 +137,7 @@ public static class Companies {
     /// </summary>
     /// <param name="company">The company to delete.</param>
     public static void DeleteCompany(Company company) {
-        string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{Regex.Replace(company.Name, @"[$&+,:;=?@#|'<>.^\\/""*()%!-]", " ").Replace(" ", "")}.json");
+        string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{Regex.Replace(company.Name, @"[$&+,:;=?@#|'<>.^\\/""*()%!-]", "").Replace(" ", "")}.json");
         if (File.Exists(filename)) {
             File.Delete(filename);
         }

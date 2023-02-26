@@ -1,11 +1,11 @@
 ﻿<modals:Modal 
-    xmlns:modals="clr-namespace:Battlegrounds.UI.Modals;assembly=coh2-battlegrounds-ui"
+    xmlns:modals="clr-namespace:Battlegrounds.UI.Modals;assembly=Battlegrounds.UI"
     x:Class="Battlegrounds.UI.Application.Modals.StartupView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=coh2-battlegrounds-ui"
+    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=Battlegrounds.UI"
     xmlns:local="clr-namespace:Battlegrounds.UI.Application.Modals"
     mc:Ignorable="d" 
     d:DesignHeight="320" d:DesignWidth="600" Width="600" Height="320"
@@ -18,7 +18,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Label Content="Welcome to Company of Heroes 2: Battlegrounds!"
+        <Label Content="Welcome to Company of Heroes: Battlegrounds!"
                FontSize="18"
                FontWeight="Bold"
                Foreground="White"

@@ -5,10 +5,11 @@
     <RootNamespace>Battlegrounds.Misc</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <AssemblyName>Battlegrounds.Common</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-bin\coh-battlegrounds-core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,10 +5,11 @@
     <RootNamespace>Battlegrounds.Scripting</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>Battlegrounds.Scripting</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\coh2-battlegrounds-functional\coh2-battlegrounds-functional.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-functional\coh-battlegrounds-functional.csproj" />
   </ItemGroup>
 
 </Project>

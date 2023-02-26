@@ -42,10 +42,16 @@ public sealed class DLCPack {
     /// </summary>
     public DLCType Type { get; }
 
-    private DLCPack(string name, uint steamid, DLCType dlctype) {
+    /// <summary>
+    /// 
+    /// </summary>
+    public GameCase Game { get; }
+
+    private DLCPack(string name, uint steamid, DLCType dlctype, GameCase gameType) {
         this.Name = name;
         this.SteamAppID = steamid;
         this.Type = dlctype;
+        this.Game = gameType;
     }
 
     /// <summary>
@@ -56,10 +62,10 @@ public sealed class DLCPack {
 
     #region Static Region 
 
-    private static DLCPack basegame;
-    private static DLCPack wfa_aef;
-    private static DLCPack wfa_okw;
-    private static DLCPack ukf;
+    private static readonly DLCPack basegame;
+    private static readonly DLCPack wfa_aef;
+    private static readonly DLCPack wfa_okw;
+    private static readonly DLCPack ukf;
 
     /// <summary>
     /// The base game (with multiplayer access)
@@ -82,15 +88,10 @@ public sealed class DLCPack {
     public static DLCPack UKF => ukf;
 
     static DLCPack() {
-
-        basegame = new DLCPack("Base Game", 231451, DLCType.Faction); // DLC ID
-
-        wfa_aef = new DLCPack("Western Front Armies - US Forces", 39986, DLCType.Faction); // App ID
-
-        wfa_okw = new DLCPack("Western Front Armies - Oberkommando West", 39988, DLCType.Faction); // App ID
-
-        ukf = new DLCPack("British Forces", 76411, DLCType.Faction); // App ID
-
+        basegame = new DLCPack("Base Game", 231451, DLCType.Faction, GameCase.CompanyOfHeroes2); // DLC ID
+        wfa_aef = new DLCPack("Western Front Armies - US Forces", 39986, DLCType.Faction, GameCase.CompanyOfHeroes2); // App ID
+        wfa_okw = new DLCPack("Western Front Armies - Oberkommando West", 39988, DLCType.Faction, GameCase.CompanyOfHeroes2); // App ID
+        ukf = new DLCPack("British Forces", 76411, DLCType.Faction, GameCase.CompanyOfHeroes2); // App ID
     }
 
     #endregion

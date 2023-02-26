@@ -5,6 +5,7 @@
     <RootNamespace>Battlegrounds.Functional</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>Battlegrounds.Functional</AssemblyName>
   </PropertyGroup>
 
 </Project>

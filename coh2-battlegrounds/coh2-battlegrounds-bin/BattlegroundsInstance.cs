@@ -9,10 +9,10 @@ using System.Text.Json;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
+using Battlegrounds.Logging;
 using Battlegrounds.Modding;
 using Battlegrounds.Steam;
 using Battlegrounds.Update;
-using Battlegrounds.Util;
 
 namespace Battlegrounds;
 
@@ -23,6 +23,9 @@ public static class BattlegroundsInstance {
 
     // The path of the local settings file
     private static readonly string PATH_LOCAL = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\local.json");
+
+    // The logger instance
+    private static readonly Logger logger = Logger.CreateLogger();
 
     // ID of other settings
     public const string OPT_ZOOM = "ingame_zoom";
@@ -107,12 +110,12 @@ public static class BattlegroundsInstance {
             __logger = new();
 
             // Log
-            Trace.WriteLine($"Resolving paths (Local to: {Environment.CurrentDirectory})", nameof(BattlegroundsInstance));
+            logger.Info($"Resolving paths (Local to: {Environment.CurrentDirectory})");
 
             // Create data directory if it does not exist
             if (!Directory.Exists(binpath)) {
                 Directory.CreateDirectory(binpath);
-                Trace.WriteLine("Bin path missing - this may cause errors", nameof(BattlegroundsInstance));
+                logger.Info("Bin path missing - this may cause errors");
                 this.Paths.Add(BattlegroundsPaths.BINARY_FOLDER, binpath);
             } else {
                 if (!this.Paths.ContainsKey(BattlegroundsPaths.BINARY_FOLDER)) {
@@ -123,7 +126,7 @@ public static class BattlegroundsInstance {
             // Create user directory if it does not exist
             if (!Directory.Exists(userpath)) {
                 Directory.CreateDirectory(userpath);
-                Trace.WriteLine("User path missing - this may cause errors", nameof(BattlegroundsInstance));
+                logger.Info("User path missing - this may cause errors");
             }
 
             // Install folder
@@ -152,7 +155,7 @@ public static class BattlegroundsInstance {
                     Directory.GetFiles(tmppath).ForEach(File.Delete);
                     Directory.GetDirectories(tmppath).ForEach(x => Directory.Delete(x, true));
                 } catch {
-                    Trace.WriteLine("Unexpected IO error occured while attempting to clean tmp folder!", nameof(BattlegroundsInstance));
+                    logger.Info("Unexpected IO error occured while attempting to clean tmp folder!");
                 }
             }
 
@@ -173,8 +176,8 @@ public static class BattlegroundsInstance {
                     Directory.CreateDirectory(this.Paths[pathID]);
                 }
             } catch (Exception e) {
-                Trace.WriteLine($"Failed to resolve directory \"{pathID}\"", nameof(BattlegroundsInstance));
-                Trace.WriteLine(e, nameof(BattlegroundsInstance));
+                logger.Info($"Failed to resolve directory \"{pathID}\"");
+                logger.Exception(e);
             }
         }
 
@@ -195,7 +198,7 @@ public static class BattlegroundsInstance {
 
     }
 
-    private static Logger? __logger;
+    private static LoggerOutput? __logger;
     private static InternalInstance __instance;
     private static Localize __localeManagement;
     private static Random __rng;
@@ -255,10 +258,10 @@ public static class BattlegroundsInstance {
     /// <summary>
     /// Get the activer logger instance
     /// </summary>
-    public static Logger? Log => __logger;
+    public static LoggerOutput? Log => __logger;
 
     /// <summary>
-    /// Get and set the assembly version of coh2-battlegrounds.exe
+    /// Get and set the assembly version of executable.
     /// </summary>
     public static IAppVersionFetcher? Version { get; set; }
 
@@ -287,7 +290,7 @@ public static class BattlegroundsInstance {
     /// <summary>
     /// Get the relative path to a predefined app path. Can be appened with remaining direct path to obtain the full path.
     /// </summary>
-    /// <param name="pathID">The <see cref="string"/> path ID.</param>
+    /// <param name="pathId">The <see cref="string"/> path ID.</param>
     /// <param name="appendPath">The optional path to append to the relative path.</param>
     /// <returns>The relative path + potential append path.</returns>
     /// <exception cref="ArgumentException"/>

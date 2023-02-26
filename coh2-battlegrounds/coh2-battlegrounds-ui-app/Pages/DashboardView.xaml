@@ -6,8 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:Battlegrounds.UI.Application.Pages"
     xmlns:components="clr-namespace:Battlegrounds.UI.Application.Components"
-    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=coh2-battlegrounds-ui"
-    xmlns:uinum="clr-namespace:Battlegrounds.UI.Converters.Numeric;assembly=coh2-battlegrounds-ui"
+    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=Battlegrounds.UI"
+    xmlns:uinum="clr-namespace:Battlegrounds.UI.Converters.Numeric;assembly=Battlegrounds.UI"
     mc:Ignorable="d" 
     d:DesignHeight="850" 
     d:DesignWidth="1100">

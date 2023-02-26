@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=coh2-battlegrounds-ui">
+    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=Battlegrounds.UI">
 
     <Style x:Key="CompanyBuilderMainTabControl" TargetType="{x:Type TabControl}">
         <Setter Property="Background" Value="#212d3a"/>

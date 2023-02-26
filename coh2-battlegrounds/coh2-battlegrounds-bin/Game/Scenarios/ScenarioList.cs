@@ -12,6 +12,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Compiler;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Util;
+using Battlegrounds.Logging;
 
 namespace Battlegrounds.Game.Scenarios;
 
@@ -19,6 +20,8 @@ namespace Battlegrounds.Game.Scenarios;
 /// A list of all available scenarios that can be played.
 /// </summary>
 public static class ScenarioList {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     private static Dictionary<string, Scenario>? __scenarios;
 
@@ -35,14 +38,14 @@ public static class ScenarioList {
             string rawJsonDb = $"{DatabaseManager.SolveDatabasepath()}vcoh-map-db.json";
             LoadScenarioDatabaseFile(rawJsonDb).ForEach(x => {
                 if (!__scenarios.TryAdd(Path.GetFileNameWithoutExtension(x.RelativeFilename), x)) {
-                    Trace.WriteLine($"Failed to add duplicate vcoh scenario '{x.RelativeFilename}'", "ScenarioList::LoadList");
+                    logger.Warning($"Failed to add duplicate vcoh scenario '{x.RelativeFilename}'");
                 }
             });
 
             _ = Task.Run(HandleWorkshopFiles);
 
         } catch (Exception e) {
-            Trace.WriteLine(e);
+            logger.Exception(e);
         }
 
     }
@@ -73,7 +76,7 @@ public static class ScenarioList {
             File.WriteAllText(workshop_dbpath, JsonSerializer.Serialize(workshopScenarios));
 
             // Log how many new workship maps were added
-            Trace.WriteLine($"Added {newWorkshopEntries} workshop maps.", nameof(ScenarioList));
+            logger.Info($"Added {newWorkshopEntries} workshop maps.");
 
         }
 
@@ -96,6 +99,11 @@ public static class ScenarioList {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
     public static bool IsValidMapDirectory(string x) {
         if (Directory.Exists(x)) {
             string[] d = Directory.GetDirectories(x);
@@ -121,7 +129,7 @@ public static class ScenarioList {
 
         // Verify it exists
         if (!Directory.Exists(workshopScenarioFolder)) {
-            Trace.WriteLine("Failed to locate workshop folder. (CoH2 may never have been launched on this device).", "WorkshopScenarios");
+            logger.Warning("Failed to locate workshop folder. (CoH2 may never have been launched on this device).");
             return;
         }
 
@@ -139,7 +147,7 @@ public static class ScenarioList {
             if (!__scenarios.Any(x => x.Value.SgaName == sga) && !workshopScenarios.Any(x => x.SgaName == sga)) {
 
                 if (!Archiver.Extract(files[i], extractPath + "\\")) {
-                    Trace.WriteLine($"Failed to extract workshop scenario {sga}.", nameof(ScenarioList));
+                    logger.Warning($"Failed to extract workshop scenario {sga}.");
                 }
 
                 try {
@@ -168,10 +176,10 @@ public static class ScenarioList {
                         }
 
                     } else {
-                        Trace.WriteLine($"Failed to read sga \"{sga}\" (Skipping, unknown file structure)", nameof(ScenarioList));
+                        logger.Warning($"Failed to read sga \"{sga}\" (Skipping, unknown file structure)");
                     }
                 } catch (Exception e) {
-                    Trace.WriteLine($"Failed to read sga \"{sga}\" (Skipping, message = \"{e.Message}\")", nameof(ScenarioList));
+                    logger.Warning($"Failed to read sga \"{sga}\" (Skipping, message = \"{e.Message}\")");
                 }
 
             }
@@ -180,6 +188,13 @@ public static class ScenarioList {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="scenarioDirectoryPath"></param>
+    /// <param name="sga"></param>
+    /// <param name="mmSavePath"></param>
+    /// <returns></returns>
     public static Scenario? GetScenarioFromDirectory(string scenarioDirectoryPath, string sga = "MPScenarios.sga", string mmSavePath = "bin\\gfx\\map_icons\\") {
 
         // If valid scenario path
@@ -225,7 +240,7 @@ public static class ScenarioList {
                 }
 
             } catch (Exception ex) {
-                Trace.WriteLine($"Failed to read scenario {sga}.sga; {ex.Message}", nameof(ScenarioList));
+                logger.Warning($"Failed to read scenario {sga}.sga; {ex.Message}");
             }
 
             // Delete the extracted files
@@ -311,6 +326,10 @@ public static class ScenarioList {
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public static List<Scenario> GetList() => __scenarios?.Values.Where(x => x.HasValidInfoOrOptionsFile).ToList() ?? new();
 
 }

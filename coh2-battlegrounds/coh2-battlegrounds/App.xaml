@@ -8,12 +8,12 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <!-- ORDER IS IMPORTANT, and yet, somehow not, because WPF sucks arse -->
-                <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds-ui;component/Themes/Colours.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds-ui;component/UIResources.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Battlegrounds.UI;component/Themes/Colours.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Battlegrounds.UI;component/UIResources.xaml"/>
                 <ResourceDictionary Source="Themes/Windows.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds-ui-app;component/Link.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds-editor;component/Resources.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/coh2-battlegrounds-lobby;component/Link.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Battlegrounds.UI.Application;component/Link.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Battlegrounds.Editor;component/Resources.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Battlegrounds.Lobby;component/Link.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

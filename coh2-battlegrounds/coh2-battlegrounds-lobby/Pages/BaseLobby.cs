@@ -27,7 +27,6 @@ using Battlegrounds.Lobby.Components;
 using Battlegrounds.Lobby.Helpers;
 using Battlegrounds.Lobby.Pages.Host;
 using Battlegrounds.Lobby.Pages.Participants;
-using Battlegrounds.Functional;
 
 namespace Battlegrounds.Lobby.Pages;
 
@@ -504,7 +503,7 @@ public abstract class BaseLobby : IViewModel, INotifyPropertyChanged {
         }
 
         // Make sure CoH2 is not running
-        if (CoH2Launcher.IsRunning()) {
+        if (GameProcess.IsRunning(GameCase.CompanyOfHeroes2)) {
             this.m_chatModel?.SystemMessage("You must exit Company of Heroes 2!", Colors.Yellow);
             return false;
         }

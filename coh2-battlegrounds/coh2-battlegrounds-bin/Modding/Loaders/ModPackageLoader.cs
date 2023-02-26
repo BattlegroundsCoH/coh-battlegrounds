@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Logging;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Modding.Verifier;
@@ -19,6 +20,8 @@ namespace Battlegrounds.Modding.Loaders;
 /// Class for loading <see cref="ModPackage"/> instances through their JSON representation.
 /// </summary>
 public class ModPackageLoader : JsonConverter<ModPackage> {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     public override ModPackage Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 
@@ -106,7 +109,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
 
         // Just return input
         if (string.IsNullOrEmpty(original.SourceFile)) {
-            Trace.WriteLine(logstr, nameof(ModPackageLoader));
+            logger.Info(logstr);
             return original;
         }
         
@@ -120,19 +123,19 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
             // Deserialise and return result (or original if failure)
             try {
                 if (JsonSerializer.Deserialize<FactionCompanyType>(fs) is FactionCompanyType fct) {
-                    Trace.WriteLine(logstr, nameof(ModPackageLoader));
+                    logger.Info(logstr);
                     fct.ChangeId(original.Id);
                     fct.FactionData = original.FactionData;
                     return fct;
                 }
             } catch (Exception ex) {
-                Trace.WriteLine($"Failed to read faction company type '{original.Id}'.\n{ex}", nameof(ModPackageLoader));
+                logger.Error($"Failed to read faction company type '{original.Id}'.\n{ex}");
             }
 
         } else {
             
             // Log path not found
-            Trace.WriteLine($"Virtual path '{original.SourceFile}' not found", nameof(ModPackageLoader));
+            logger.Warning($"Virtual path '{original.SourceFile}' not found");
 
         }
 

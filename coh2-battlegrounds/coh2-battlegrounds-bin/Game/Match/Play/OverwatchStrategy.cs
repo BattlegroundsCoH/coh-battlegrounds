@@ -1,4 +1,5 @@
 ﻿using Battlegrounds.Game.Match.Data;
+using Battlegrounds.Logging;
 
 namespace Battlegrounds.Game.Match.Play;
 
@@ -7,7 +8,10 @@ namespace Battlegrounds.Game.Match.Play;
 /// </summary>
 public sealed class OverwatchStrategy : IPlayStrategy {
 
+    private static readonly Logger logger = Logger.CreateLogger();
+
     private readonly ISession m_session;
+    private readonly GameProcess m_gameProcess;
 
     private bool m_hasLaunched;
     private int m_procResponse;
@@ -24,25 +28,27 @@ public sealed class OverwatchStrategy : IPlayStrategy {
         this.m_matchData = null;
         this.m_procResponse = -1;
         this.m_session = session;
+        this.m_gameProcess = new CoH2Process(); // TMP!
+        logger.Debug("Dont forget to change the CoH2 process instance into a generic GameProcess instance");
     }
 
     public bool IsLaunched => this.m_hasLaunched;
 
     public bool IsPerfect()
-        => this.m_procResponse == CoH2Launcher.PROCESS_OK &&
+        => this.m_procResponse == CoH2Process.PROCESS_OK &&
         !SessionUtility.GotBugsplat().Result &&
         !SessionUtility.GotFatalScarError() &&
         SessionUtility.HasPlayback();
 
     public void Launch() {
         if (!this.IsLaunched) {
-            this.m_hasLaunched = CoH2Launcher.Launch();
+            this.m_hasLaunched = this.m_gameProcess.Launch();
         }
     }
 
     public void WaitForExit() {
         if (this.IsLaunched) {
-            this.m_procResponse = CoH2Launcher.WatchProcess();
+            this.m_procResponse = this.m_gameProcess.WatchProcess();
         }
     }
 

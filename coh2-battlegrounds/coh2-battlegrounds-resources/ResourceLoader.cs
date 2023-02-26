@@ -1,6 +1,5 @@
-﻿using System.Diagnostics;
-
-using Battlegrounds.Gfx;
+﻿using Battlegrounds.Gfx;
+using Battlegrounds.Logging;
 
 namespace Battlegrounds.Resources;
 
@@ -9,17 +8,19 @@ namespace Battlegrounds.Resources;
 /// </summary>
 public static class ResourceLoader {
 
+    private static readonly Logger logger = Logger.CreateLogger();
+
     private static void AddGfxEntry(GfxMap map, string resourceName, string filepath, BinaryReader br) {
 
         // Check if resource is contained
         if (map.HasResource(resourceName)) {
-            Trace.WriteLine($"Skipping GFX resource '{filepath}' (Resource already contains)", nameof(ResourceLoader));
+            logger.Info($"Skipping GFX resource '{filepath}' (Resource already contains)");
             return;
         }
 
         // Open reader and verify is 
         if (!br.ReadBytes(8).SequenceEqual(new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 })) {
-            Trace.WriteLine($"Failed to load GFX resource '{filepath}' (Invalid PNG header found)", nameof(ResourceLoader));
+            logger.Error($"Failed to load GFX resource '{filepath}' (Invalid PNG header found)");
             return;
         }
 
@@ -41,6 +42,7 @@ public static class ResourceLoader {
     /// <param name="filepath">The filepath to load the resource data from.</param>
     public static void LoadResourceFile(string identifier, string filepath) {
 
+        // Ensure file exists before trying to load it.
         if (!File.Exists(filepath))
             return;
 
@@ -67,8 +69,7 @@ public static class ResourceLoader {
                             }
 
                         // Log how much is actually loaded
-                        var msg = $"Loaded gfx map {identifier}(v:0x{other.BinaryVersion:X2}) of which {added}/{other.Count} gfx files were added ({map.Count} total '{identifier}' gfx files).";
-                        Trace.WriteLine(msg, nameof(ResourceLoader));
+                        logger.Info($"Loaded gfx map {identifier}(v:0x{other.BinaryVersion:X2}) of which {added}/{other.Count} gfx files were added ({map.Count} total '{identifier}' gfx files).");
 
                     } else {
                         AddGfxEntry(map, resourceName, filepath, new BinaryReader(fs));
@@ -81,10 +82,10 @@ public static class ResourceLoader {
                     var gfxmap = ResourceHandler.GfxMaps[identifier] = GfxMap.FromBinary(fs);
 
                     // Log
-                    Trace.WriteLine($"Loaded gfx map {identifier}(v:0x{gfxmap.BinaryVersion:X2}) with {gfxmap.Count} gfx files.", nameof(ResourceLoader));
+                    logger.Info($"Loaded gfx map {identifier}(v:0x{gfxmap.BinaryVersion:X2}) with {gfxmap.Count} gfx files.");
 
                 } else {
-                    Trace.WriteLine($"Cannot load resource of type '{identifier}'", nameof(ResourceLoader));
+                    logger.Warning($"Cannot load resource of type '{identifier}'");
                 }
                 break;
         }        
@@ -103,7 +104,7 @@ public static class ResourceLoader {
             return;
 
         if (shouldPackage)
-            Trace.WriteLine($"Resource folder '{path}' contains unpackaged resources.", nameof(ResourceLoader));
+            logger.Info($"Resource folder '{path}' contains unpackaged resources.");
 
         // Grab files
         string[] files = Directory.GetFiles(path);

@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AssemblyName>Battlegrounds.Resource</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,8 +22,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj" />
-		<ProjectReference Include="..\coh2-battlegrounds-functional\coh2-battlegrounds-functional.csproj" />
+		<ProjectReference Include="..\coh2-battlegrounds-bin\coh-battlegrounds-core.csproj" />
+		<ProjectReference Include="..\coh2-battlegrounds-functional\coh-battlegrounds-functional.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

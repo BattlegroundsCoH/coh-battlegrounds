@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-bin\coh-battlegrounds-core.csproj" />
   </ItemGroup>
 
 </Project>

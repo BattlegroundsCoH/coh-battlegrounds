@@ -7,6 +7,10 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <AssemblyName>Battlegrounds.Core</AssemblyName>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <AssemblyVersion>1.1.0</AssemblyVersion>
+    <FileVersion>1.1.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -18,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\coh2-battlegrounds-functional\coh2-battlegrounds-functional.csproj" />
-    <ProjectReference Include="..\coh2-battlegrounds-scripting\coh2-battlegrounds-scripting.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-functional\coh-battlegrounds-functional.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-scripting\coh-battlegrounds-scripting.csproj" />
   </ItemGroup>
 
 </Project>

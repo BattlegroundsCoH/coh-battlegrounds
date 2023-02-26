@@ -10,7 +10,7 @@
 
         <Ellipse Width="150" Height="150">
             <Ellipse.Fill>
-                <ImageBrush ImageSource="pack://application:,,,/coh2-battlegrounds-ui-app;component/Resources/User/Unknown.png"/>
+                <ImageBrush ImageSource="pack://application:,,,/Battlegrounds.UI.Application;component/Resources/User/Unknown.png"/>
             </Ellipse.Fill>
         </Ellipse>
 

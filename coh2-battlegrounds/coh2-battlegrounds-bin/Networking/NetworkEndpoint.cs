@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Battlegrounds.Logging;
+
+using System;
 using System.Diagnostics;
 using System.Net.Http;
 
@@ -8,6 +10,8 @@ namespace Battlegrounds.Networking;
 /// Struct representing an endpoint that can be connected to.
 /// </summary>
 public readonly struct NetworkEndpoint {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     /// <summary>
     /// The IP address of the remote network endpoint
@@ -61,7 +65,6 @@ public readonly struct NetworkEndpoint {
             var response = client.Send(request);
             return response.IsSuccessStatusCode;
         } catch (Exception e) {
-            //Trace.WriteLine(e, nameof(NetworkEndpoint));
             return false;
         }
     }

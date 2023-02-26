@@ -3,29 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds", "coh2-battlegrounds\coh2-battlegrounds.csproj", "{16FC939E-9E79-41C1-A52E-7731E750239C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh-battlegrounds", "coh2-battlegrounds\coh-battlegrounds.csproj", "{16FC939E-9E79-41C1-A52E-7731E750239C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-bin", "coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj", "{B6B5BD17-1508-433E-B710-131C5E7466AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh-battlegrounds-core", "coh2-battlegrounds-bin\coh-battlegrounds-core.csproj", "{B6B5BD17-1508-433E-B710-131C5E7466AB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-console", "coh2-battlegrounds-console\coh2-battlegrounds-console.csproj", "{A7E7769E-3205-4CA1-BB63-0C62DF284E90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh-battlegrounds-devtool", "coh2-battlegrounds-console\coh-battlegrounds-devtool.csproj", "{A7E7769E-3205-4CA1-BB63-0C62DF284E90}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "coh2-battlegrounds-installer", "coh2-battlegrounds-installer\coh2-battlegrounds-installer.wixproj", "{3E8286BB-B500-4714-8891-99E973A39B1F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-resources", "coh2-battlegrounds-resources\coh2-battlegrounds-resources.csproj", "{05C35883-465C-4AB1-9D9E-296C216644C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh-battlegrounds-resources", "coh2-battlegrounds-resources\coh-battlegrounds-resources.csproj", "{05C35883-465C-4AB1-9D9E-296C216644C0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-functional", "coh2-battlegrounds-functional\coh2-battlegrounds-functional.csproj", "{E7D3CC68-944C-4192-A30A-1DD931D237BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh-battlegrounds-functional", "coh2-battlegrounds-functional\coh-battlegrounds-functional.csproj", "{E7D3CC68-944C-4192-A30A-1DD931D237BD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-ui", "coh2-battlegrounds-ui\coh2-battlegrounds-ui.csproj", "{A80982E9-ACBD-4013-892E-E71E7D32FCF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh-battlegrounds-ui", "coh2-battlegrounds-ui\coh-battlegrounds-ui.csproj", "{A80982E9-ACBD-4013-892E-E71E7D32FCF8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-misc", "coh2-battlegrounds-misc\coh2-battlegrounds-misc.csproj", "{8264C3CF-F2C5-4229-98BD-9C696ECF717F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh-battlegrounds-misc", "coh2-battlegrounds-misc\coh-battlegrounds-misc.csproj", "{8264C3CF-F2C5-4229-98BD-9C696ECF717F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-scripting", "coh2-battlegrounds-scripting\coh2-battlegrounds-scripting.csproj", "{77252AB3-1A16-4763-84EF-D49EF273154A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh-battlegrounds-scripting", "coh2-battlegrounds-scripting\coh-battlegrounds-scripting.csproj", "{77252AB3-1A16-4763-84EF-D49EF273154A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-editor", "coh2-battlegrounds-editor\coh2-battlegrounds-editor.csproj", "{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh-battlegrounds-editor", "coh2-battlegrounds-editor\coh-battlegrounds-editor.csproj", "{7CFC7A79-7DB3-44A3-A392-FC85D3B5B6EA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh2-battlegrounds-lobby", "coh2-battlegrounds-lobby\coh2-battlegrounds-lobby.csproj", "{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh-battlegrounds-lobby", "coh2-battlegrounds-lobby\coh-battlegrounds-lobby.csproj", "{3F2A9E44-6426-4F34-9F3B-BEA2ABD48B7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh2-battlegrounds-ui-app", "coh2-battlegrounds-ui-app\coh2-battlegrounds-ui-app.csproj", "{6F92A503-3C53-47B1-8910-756C4F8CA1B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh-battlegrounds-ui-app", "coh2-battlegrounds-ui-app\coh-battlegrounds-ui-app.csproj", "{6F92A503-3C53-47B1-8910-756C4F8CA1B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
