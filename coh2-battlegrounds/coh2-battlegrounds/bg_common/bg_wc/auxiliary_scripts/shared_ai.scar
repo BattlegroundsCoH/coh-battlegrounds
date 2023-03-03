@@ -51,7 +51,7 @@ _bg_AISettings = {
             fuel_income = 1.7,
         }
     },
-    is_enabled = true
+    is_enabled = true,
 };
 
 function BGAI_RegisterAIPlayer(index, player)
@@ -68,6 +68,7 @@ function BGAI_RegisterAIPlayer(index, player)
     _bg_aiData[index].demand_support = 0;
     _bg_aiData[index].demand_any = 1;
     _bg_aiData[index].is_enabled = true;
+    _bg_aiData[index].can_duplicate = false;
 
     -- Apply resource modifiers
     _bg_aiData[index].resource_mods = {
@@ -93,6 +94,11 @@ end
 function BGAI_SetAIPlayerEnabled(player, enabled)
     local index = BGAI_GetAIPlayerID(player);
     _bg_aiData[index].is_enabled = enabled;
+end
+
+function BGAI_SetAIDuplicatesEnabled(player, enabled)
+    local index = BGAI_GetAIPlayerID(player);
+    _bg_aiData[index].can_duplicate = enabled;
 end
 
 function BGAI_GetDifficultyFromValue(d)
@@ -322,7 +328,7 @@ function BGAI_FindAffordableUnits(index, type, heavy)
             local heavyProperty = unit.heavy or false;
             local heavyCondition = (heavy and heavyProperty) or (heavy == false and not heavyProperty);
 
-            if (not unit.spawned) and (type == nil or unit.category == type) and heavyCondition then
+            if (_bg_aiData[index].can_duplicate or not unit.spawned) and (type == nil or unit.category == type) and heavyCondition then
 
                 local costManpower = unit.cost.manpower or 0;
                 local costMunitions = unit.cost.munitions or 0;
@@ -400,5 +406,3 @@ function BGAI_OnSquadDeath(squad)
     Battlegrounds_LogEvent(nil, BG_EVENT_ONDEATH, squadData.company_id, player);
 
 end
-
--- Note: The AI will ignore call-in phases

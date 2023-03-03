@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RootNamespace>Battlegrounds.UI.Application</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Logo.png" />
+    <None Remove="Resources\User\Unknown.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\coh2-battlegrounds-ui\coh2-battlegrounds-ui.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Logo.png" />
+    <Resource Include="Resources\User\Unknown.png" />
+  </ItemGroup>
+
+</Project>

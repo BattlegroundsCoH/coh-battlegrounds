@@ -22,6 +22,16 @@ public sealed class Faction {
     public string Name { get; }
 
     /// <summary>
+    /// Get the locale key for the faction name.
+    /// </summary>
+    public uint NameKey { get; }
+
+    /// <summary>
+    /// Get the locale key for the faction description.
+    /// </summary>
+    public uint DescKey { get; }
+
+    /// <summary>
     /// Get the racebps path.
     /// </summary>
     public string RbpPath { get; }
@@ -41,10 +51,11 @@ public sealed class Faction {
     /// </summary>
     public DLCPack RequiredDLC { get; }
 
-    private Faction(byte id, string name, string rbppath, bool isAllied, DLCPack requiredDLC) {
-        // Private constructor, we can't have custom armies, doesn't make sense to allow them then.
+    private Faction(byte id, uint namekey, uint descKey, string name, string rbppath, bool isAllied, DLCPack requiredDLC) {
         this.UID = id;
         this.Name = name;
+        this.NameKey = namekey;
+        this.DescKey = descKey;
         this.RbpPath = rbppath;
         this.IsAllied = isAllied;
         this.RequiredDLC = requiredDLC;
@@ -79,27 +90,27 @@ public sealed class Faction {
     /// <summary>
     /// The Soviet faction.
     /// </summary>
-    public static readonly Faction Soviet = new(0, FactionStrSoviet, "racebps\\soviet", true, DLCPack.Base);
+    public static readonly Faction Soviet = new(0, 2099401, 2099400, FactionStrSoviet, "racebps\\soviet", true, DLCPack.Base);
 
     /// <summary>
     /// The Wehrmacht (Ostheer) faction.
     /// </summary>
-    public static readonly Faction Wehrmacht = new(1, FactionStrGerman, "racebps\\german", false, DLCPack.Base);
+    public static readonly Faction Wehrmacht = new(1, 2099451, 2099450, FactionStrGerman, "racebps\\german", false, DLCPack.Base);
 
     /// <summary>
     /// The US Forces faction.
     /// </summary>
-    public static readonly Faction America = new(2, FactionStrAmerican, "racebps\\aef", true, DLCPack.WesternFrontArmiesUSA);
+    public static readonly Faction America = new(2, 11073202, 11073200, FactionStrAmerican, "racebps\\aef", true, DLCPack.WesternFrontArmiesUSA);
 
     /// <summary>
     /// The Oberkommando West faction.
     /// </summary>
-    public static readonly Faction OberkommandoWest = new(3, FactionStrOKW, "racebps\\west_german", false, DLCPack.WesternFrontArmiesOKW);
+    public static readonly Faction OberkommandoWest = new(3, 11073205, 11073203, FactionStrOKW, "racebps\\west_german", false, DLCPack.WesternFrontArmiesOKW);
 
     /// <summary>
     /// The United Kingdom faction.
     /// </summary>
-    public static readonly Faction British = new(4, FactionStrBritish, "racebps\\british", true, DLCPack.UKF);
+    public static readonly Faction British = new(4, 11078364, 11078365, FactionStrBritish, "racebps\\british", true, DLCPack.UKF);
 
     /// <summary>
     /// Get if some faction is an allied faction.

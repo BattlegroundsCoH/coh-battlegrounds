@@ -2,8 +2,8 @@
 using System.Globalization;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.Data.Generators.Lua.RuntimeServices;
 using Battlegrounds.Game.Gameplay.DataConverters;
-using Battlegrounds.Lua.Generator.RuntimeServices;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Game;
@@ -50,7 +50,7 @@ public struct GamePosition {
     /// </summary>
     /// <param name="x">The X-coordinate</param>
     /// <param name="y">The Y-coordinate</param>
-    public GamePosition(double x, double y) : this() {
+    public GamePosition(double x, double y) {
         this.m_x = x;
         this.m_y = y;
     }
@@ -107,12 +107,20 @@ public struct GamePosition {
     public static readonly GamePosition Naught = new GamePosition(0.0f, 0.0f, 0.0f);
 
     /// <summary>
-    /// Compute the squared distance between this point and <paramref name="other"/>.
+    /// Compute the squared distance (dx^2+dy^2+dz^2) between this point and <paramref name="other"/>.
     /// </summary>
     /// <param name="other">The other point to compute squared distance to.</param>
     /// <returns>The squared distance between the two points.</returns>
     public readonly double SquareDistance(GamePosition other)
         => (this.m_x - other.m_x).Square() + (this.m_y - other.m_y).Square() + (this.m_z - other.m_z).Square();
+
+    /// <summary>
+    /// Compute the distance between this point and <paramref name="other"/>.
+    /// </summary>
+    /// <param name="other">The other point to compute distance to.</param>
+    /// <returns>The distance between the two points.</returns>
+    public readonly double DistanceTo(GamePosition other)
+        => Math.Sqrt((this.m_x - other.m_x).Square() + (this.m_y - other.m_y).Square() + (this.m_z - other.m_z).Square());
 
     /// <summary>
     /// Interpolate between this position and <paramref name="y"/>.

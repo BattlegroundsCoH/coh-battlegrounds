@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 
 using Battlegrounds.AI;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Match;

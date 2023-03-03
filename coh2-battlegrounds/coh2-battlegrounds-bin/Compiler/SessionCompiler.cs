@@ -9,11 +9,11 @@ using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Functional;
 using Battlegrounds.Modding;
-using Battlegrounds.Lua.Generator;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Gameplay.Supply;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.AI;
+using Battlegrounds.Data.Generators.Lua;
 
 namespace Battlegrounds.Compiler;
 

@@ -1,5 +1,9 @@
 {
-  "Icon": "ct_ost_sturm",
+  "UIData": {
+    "Icon": "ct_ost_sturm",
+    "HighlightUnits": [],
+    "HighlightAbilities": []
+  },
   "MaxInfantry": 20,
   "MaxTeamWeapons": 10,
   "MaxVehicles": 8,

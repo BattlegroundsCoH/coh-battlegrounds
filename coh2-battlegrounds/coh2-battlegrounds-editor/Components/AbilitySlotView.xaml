@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="Battlegrounds.Editor.Components.AbilitySlotView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:uiconv="clr-namespace:Battlegrounds.UI.Converters.Visibility;assembly=coh2-battlegrounds-ui"
+             xmlns:local="clr-namespace:Battlegrounds.Editor.Components" 
+             xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=coh2-battlegrounds-ui"
+             mc:Ignorable="d" 
+             d:DesignHeight="72" d:DesignWidth="250"
+             Background="#334252"
+             x:Name="Self">
+    
+    <UserControl.Resources>
+        <uiconv:BooleanToVisibility x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid
+        Width="250"
+        Height="72">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="72"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="16"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="42"/>
+        </Grid.RowDefinitions>
+
+        <!-- Name -->
+        <Label 
+            Content="{Binding AbilityName, FallbackValue='Super Advanced Ability'}"
+            VerticalAlignment="Top"
+            VerticalContentAlignment="Top"
+            Foreground="White"
+            Grid.Column="1"
+            FontWeight="DemiBold"/>
+
+        <!-- Icon -->
+        <controls:GameIcon 
+            Grid.Column="0"
+            Grid.RowSpan="2"
+            IconName="{Binding AbilityIcon}"
+            SymbolName="{Binding AbilitySymbol}"
+            x:Name="IconElement"/>
+
+        <!-- Cost -->
+        <controls:CostDisplay
+            Height="40"
+            Grid.Row="1"
+            Grid.Column="1"
+            Cost="{Binding AbilityCost}"/>
+
+        <!-- Remove -->
+        <Button 
+            Width="16"
+            Height="64"
+            Grid.RowSpan="2"
+            Grid.Column="2"
+            Style="{StaticResource StandardRedButton}"
+            Content=">"
+            x:Name="RemoveButton"
+            Visibility="Collapsed"
+            Click="RemoveButton_Click"/>
+
+
+    </Grid>
+    
+</UserControl>

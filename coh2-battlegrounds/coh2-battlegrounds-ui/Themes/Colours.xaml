@@ -1,0 +1,52 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="BackgroundDeepBlue">#1f2833</Color>
+    <SolidColorBrush x:Key="BackgroundDeepBlueBrush" Color="{StaticResource BackgroundDeepBlue}" />
+
+    <Color x:Key="BackgroundDarkBlue">#212d3a</Color>
+    <SolidColorBrush x:Key="BackgroundDarkBlueBrush" Color="{StaticResource BackgroundDarkBlue}" />
+
+    <Color x:Key="BackgroundBlue">#273441</Color>
+    <SolidColorBrush x:Key="BackgroundBlueBrush" Color="{StaticResource BackgroundBlue}" />
+
+    <Color x:Key="BackgroundLightBlue">#334252</Color>
+    <SolidColorBrush x:Key="BackgroundLightBlueBrush" Color="{StaticResource BackgroundLightBlue}" />
+
+    <Color x:Key="BackgroundPurple">#523352</Color>
+    <SolidColorBrush x:Key="BackgroundPurpleBrush" Color="{StaticResource BackgroundPurple}" />
+
+    <Color x:Key="BackgroundLightPurple">#714771</Color>
+    <SolidColorBrush x:Key="BackgroundLightPurpleBrush" Color="{StaticResource BackgroundLightPurple}" />
+
+    <Color x:Key="BackgroundDarkishGreen">#335234</Color>
+    <SolidColorBrush x:Key="BackgroundDarkishGreenBrush" Color="{StaticResource BackgroundDarkishGreen}" />
+
+    <Color x:Key="BackgroundDarkRed">#873737</Color>
+    <SolidColorBrush x:Key="BackgroundDarkRedBrush" Color="{StaticResource BackgroundDarkRed}" />
+
+    <Color x:Key="BackgroundDeepRed">#582222</Color>
+    <SolidColorBrush x:Key="BackgroundDeepRedBrush" Color="{StaticResource BackgroundDeepRed}" />
+
+    <Color x:Key="BackgroundLightRed">#ad4a4a</Color>
+    <SolidColorBrush x:Key="BackgroundLightRedBrush" Color="{StaticResource BackgroundLightRed}" />
+
+    <Color x:Key="BackgroundGreen">#489635</Color>
+    <SolidColorBrush x:Key="BackgroundGreenBrush" Color="{StaticResource BackgroundGreen}" />
+
+    <Color x:Key="BackgroundLightGreen">#8fe37b</Color>
+    <SolidColorBrush x:Key="BackgroundLightGreenBrush" Color="{StaticResource BackgroundLightGreen}" />
+
+    <Color x:Key="BackgroundLightGray">#536375</Color>
+    <SolidColorBrush x:Key="BackgroundLightGrayBrush" Color="{StaticResource BackgroundLightGray}" />
+
+    <Color x:Key="BackgroundDarkGray">#323b46</Color>
+    <SolidColorBrush x:Key="BackgroundDarkGrayBrush" Color="{StaticResource BackgroundDarkGray}" />
+
+    <Color x:Key="SeperatorGray">#4a545f</Color>
+    <SolidColorBrush x:Key="SeperatorGrayBrush" Color="{StaticResource SeperatorGray}" />
+
+    <Color x:Key="ForegroundWhite">#d8dbde</Color>
+    <SolidColorBrush x:Key="ForegroundWhiteBrush" Color="{StaticResource ForegroundWhite}" />
+
+</ResourceDictionary>

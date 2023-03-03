@@ -141,7 +141,7 @@ function BG_SetupWeatherAndSupply()
     end
 
     -- Make sure the supply system is defined
-    if BGSupply_Setup ~= nil then        
+    if BGSupply_Setup ~= nil then
         -- Invoke setup
         BGSupply_Setup();
     end

@@ -417,6 +417,19 @@
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741947,
+    "Name": "dragon_teeth_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "2134650",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "0",
+      "Symbol": "Icons_symbols_building_british_1lb_field_charge_symbol"
+    },
+    "Health": 100
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741942,
     "Name": "makeshift_bunker_mp",
     "Army": "german",
@@ -500,6 +513,27 @@
       "FieldTime": 30
     },
     "Health": 500
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741946,
+    "Name": "teller_mine_bg",
+    "Army": "german",
+    "Display": {
+      "LocaleName": "11043122",
+      "LocaleDescriptionLong": "2163050",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_buildings_building_german_mines",
+      "Symbol": "Icons_symbols_building_german_mines_symbol"
+    },
+    "Cost": {
+      "Munition": 50,
+      "FieldTime": 30
+    },
+    "Hardpoints": [
+      "teller_mine_mp"
+    ],
+    "Health": 20
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
@@ -1960,6 +1994,27 @@
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741948,
+    "Name": "flare_mine_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11048821",
+      "LocaleDescriptionLong": "11048822",
+      "LocaleDescriptionShort": "0",
+      "Icon": "Icons_abilities_ability_soviet_tm35_mines",
+      "Symbol": "Icons_symbols_ability_soviet_tm35_mines_symbol"
+    },
+    "Cost": {
+      "Munition": 10,
+      "FieldTime": 40
+    },
+    "Hardpoints": [
+      "fieldcraft_mine_mp"
+    ],
+    "Health": 20
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
     "PBGID": 1073741935,
     "Name": "machine_gun_nest_bg",
     "Army": "soviet",
@@ -1979,6 +2034,24 @@
       "bunker_starting_position_dshk_mp"
     ],
     "Health": 600,
+    "UpgradeCapacity": 1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741949,
+    "Name": "sand_bag_soviet_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "2101751",
+      "LocaleDescriptionLong": "2101750",
+      "LocaleDescriptionShort": "11041869",
+      "Icon": "Icons_buildings_building_soviet_sandbags",
+      "Symbol": "Icons_symbols_building_soviet_sandbags_symbol"
+    },
+    "Cost": {
+      "FieldTime": 80
+    },
+    "Health": 240,
     "UpgradeCapacity": 1
   },
   {
@@ -3571,6 +3644,40 @@
     ],
     "Health": 480,
     "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741945,
+    "Name": "zis_6_supply_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "11048639",
+      "LocaleDescriptionLong": "0",
+      "LocaleDescriptionShort": "11049087",
+      "Icon": "Icons_vehicles_vehicle_soviet_su6_truck",
+      "Symbol": "Icons_symbols_vehicle_soviet_su6_truck_symbol"
+    },
+    "Cost": {
+      "Manpower": 120,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "Abilities": [
+      "german_hulldown_disable",
+      "blizzard_effect_vehicle"
+    ],
+    "Drivers": [
+      {
+        "Army": "racebps\\soviet",
+        "SBP": "soviet_male_vehicle_driver_bg",
+        "Capture": "zis_6_supply_truck_bg"
+      }
+    ],
+    "Hardpoints": [
+      "dummy_weapon_mp"
+    ],
+    "Health": 60,
+    "UpgradeCapacity": 1
   },
   {
     "ModGUID": "142b113740474c82a60b0a428bd553d5",

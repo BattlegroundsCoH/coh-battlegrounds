@@ -5,11 +5,10 @@ using System.Collections.Immutable;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Gameplay.DataConverters;
 using Battlegrounds.Functional;
 using Battlegrounds.Verification;
-using Battlegrounds.Lua.Generator.RuntimeServices;
+using Battlegrounds.Data.Generators.Lua.RuntimeServices;
 
 namespace Battlegrounds.Game.Gameplay;
 
@@ -56,24 +55,36 @@ public enum DeploymentPhase : byte {
     PhaseNone,
 
     /// <summary>
-    /// Deployed in the initial starting phase of a match.
+    /// Deployed in the beginning of a match.
     /// </summary>
     PhaseInitial,
 
     /// <summary>
-    /// Deployment is available in the first (early-game) phase.
+    /// Deployment is available throughout the match.
     /// </summary>
-    PhaseA,
+    PhaseStandard,
+
+}
+
+/// <summary>
+/// The role or command level the squad falls under.
+/// </summary>
+public enum DeploymentRole : byte {
 
     /// <summary>
-    /// Deployment is available in the second (mid-game) phase.
+    /// The unit is under direct command of the company.
     /// </summary>
-    PhaseB,
+    DirectCommand,
 
     /// <summary>
-    /// Deployment is available in the third and final (late-game) phase.
+    /// The unit serves a supporting role of the company.
     /// </summary>
-    PhaseC,
+    SupportRole,
+
+    /// <summary>
+    /// The unit serves as a reserve unit of the company.
+    /// </summary>
+    ReserveRole,
 
 }
 
@@ -91,6 +102,7 @@ public class Squad : IChecksumPropertyItem {
     private bool m_isCrewSquad;
     private DeploymentMethod m_deployMode;
     private DeploymentPhase m_deployPhase;
+    private DeploymentRole m_deployRole;
     private Squad? m_crewSquad;
     private Blueprint? m_deployBp;
     private EntityBlueprint? m_weaponBlueprint;
@@ -141,6 +153,12 @@ public class Squad : IChecksumPropertyItem {
     /// </summary>
     [ChecksumProperty]
     public DeploymentPhase DeploymentPhase => this.m_deployPhase;
+
+    /// <summary>
+    /// Get the role which the unit is deployed in.
+    /// </summary>
+    [ChecksumProperty]
+    public DeploymentRole DeploymentRole => this.m_deployRole;
 
     /// <summary>
     /// Get the custom name of the squad. This is null if no name is defined.
@@ -252,10 +270,12 @@ public class Squad : IChecksumPropertyItem {
     /// <param name="transportBlueprint">The <see cref="Database.Blueprint"/> to use as transport unit.</param>
     /// <param name="deployMode">The mode used to deploy a <see cref="Squad"/>.</param>
     /// <param name="phase">The deployment phase</param>
-    public void SetDeploymentMethod(Blueprint? transportBlueprint, DeploymentMethod deployMode, DeploymentPhase phase) {
+    /// <param name="role">The deployment role</param>
+    public void SetDeploymentMethod(Blueprint? transportBlueprint, DeploymentMethod deployMode, DeploymentPhase phase, DeploymentRole role) {
         this.m_deployMode = deployMode;
         this.m_deployBp = transportBlueprint;
         this.m_deployPhase = phase;
+        this.m_deployRole = role;
     }
 
     /// <summary>
@@ -334,15 +354,6 @@ public class Squad : IChecksumPropertyItem {
         => this.m_customName = customName;
 
     /// <summary>
-    /// Calculate the actual cost of a <see cref="Squad"/>.
-    /// </summary>
-    /// <returns>The cost of the squad.</returns>
-    public CostExtension GetCost() 
-        => ComputeFullCost(this.SBP, this.VeterancyRank, this.m_upgrades.Select(x => x as UpgradeBlueprint ?? throw new Exception("Expected upgrade but found null.")), 
-            this.m_deployBp as SquadBlueprint, 
-            this.DeploymentMethod, this.DeploymentPhase);
-
-    /// <summary>
     /// Get the display name of the squad.
     /// </summary>
     /// <returns>If squad has a custom display name, it is returned; Otherwise the <see cref="SquadBlueprint.UI"/> screen name is returned.</returns>
@@ -377,69 +388,5 @@ public class Squad : IChecksumPropertyItem {
     /// </summary>
     /// <returns>A string that represents the current object.</returns>
     public override string ToString() => $"{this.SBP.Name}${this.SquadID}";
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="sbp"></param>
-    /// <param name="rank"></param>
-    /// <param name="upgrades"></param>
-    /// <param name="transport"></param>
-    /// <param name="deploymentMethod"></param>
-    /// <param name="phase"></param>
-    /// <returns></returns>
-    public static CostExtension ComputeFullCost(SquadBlueprint sbp, 
-        byte rank, IEnumerable<UpgradeBlueprint> upgrades, SquadBlueprint? transport, DeploymentMethod deploymentMethod, DeploymentPhase phase) {
-
-        // Grab cost
-        var initialCost = sbp.Cost;
-
-        // Get base cost and add upgrade costs
-        CostExtension c = new(initialCost.Manpower, initialCost.Munitions, initialCost.Fuel, initialCost.FieldTime);
-        c = upgrades.Select(x => x.Cost).Aggregate(c, (a, b) => a + b);
-
-        // Add deploy method factor
-        if (transport is SquadBlueprint tsbp) {
-            c += tsbp.Cost * GetDeployMethodTransportCostModifier(deploymentMethod);
-        }
-
-        // Subtract phase mod
-        c *= 1.0f - GetDeployPhaseCostModifier(phase, sbp.Category);
-
-        // Return cost
-        return c;
-
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="method"></param>
-    /// <returns></returns>
-    public static float GetDeployMethodTransportCostModifier(DeploymentMethod method) => method switch {
-        DeploymentMethod.DeployAndExit => 0.25f,
-        DeploymentMethod.DeployAndStay => 0.65f,
-        _ => 0.0f
-    };
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="phase"></param>
-    /// <param name="category"></param>
-    /// <returns></returns>
-    public static float GetDeployPhaseCostModifier(DeploymentPhase phase, SquadCategory category) => phase switch {
-        DeploymentPhase.PhaseB => category switch {
-            SquadCategory.Vehicle => 0.025f,
-            SquadCategory.Support => 0.04f,
-            _ => 0.05f
-        },
-        DeploymentPhase.PhaseC => category switch {
-            SquadCategory.Vehicle => 0.04f,
-            SquadCategory.Support => 0.06f,
-            _ => 0.075f
-        },
-        _ => 0.0f
-    };
 
 }

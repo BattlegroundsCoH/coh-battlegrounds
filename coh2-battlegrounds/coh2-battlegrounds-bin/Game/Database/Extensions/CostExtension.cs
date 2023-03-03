@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 
+using Battlegrounds.Data.Generators.Lua.RuntimeServices;
 using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
-using Battlegrounds.Lua.Generator.RuntimeServices;
 
 namespace Battlegrounds.Game.Database.Extensions;
 

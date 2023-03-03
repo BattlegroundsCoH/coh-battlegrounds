@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-
+using Battlegrounds.Data.Generators.Lua;
+using Battlegrounds.Data.Generators.Lua.RuntimeServices;
 using Battlegrounds.Functional;
-using Battlegrounds.Lua.Generator;
-using Battlegrounds.Lua.Generator.RuntimeServices;
 
 namespace Battlegrounds.Game.Gameplay.DataConverters;
 

@@ -966,7 +966,7 @@
     "Name": "opel_blitz_supply_squad_bg",
     "Army": "german",
     "Display": {
-      "LocaleName": "11035438",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:94",
       "LocaleDescriptionLong": "11035439",
       "LocaleDescriptionShort": "11046736",
       "Icon": "Icons_vehicles_cargo_truck",
@@ -986,7 +986,9 @@
     ],
     "Abilities": [
       "transport_heavy_vehicle_bg",
-      "detach_tow_bg"
+      "detach_tow_bg",
+      "supply_auto_dis",
+      "auto_truck_supply_disable_bg"
     ],
     "Types": [
       "light_vehicle",
@@ -1002,8 +1004,8 @@
     "Name": "opel_blitz_transport_squad_bg",
     "Army": "german",
     "Display": {
-      "LocaleName": "11035438",
-      "LocaleDescriptionLong": "11035439",
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:93",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:95",
       "LocaleDescriptionShort": "11046736",
       "Icon": "Icons_vehicles_cargo_truck",
       "Symbol": "Icons_symbols_vehicle_german_opel_blitz_symbol",
@@ -3799,6 +3801,46 @@
       "heavy_vehicle"
     ],
     "SlotPickupCapacity": 2,
+    "UpgradeCapacity": -1
+  },
+  {
+    "ModGUID": "142b113740474c82a60b0a428bd553d5",
+    "PBGID": 1073741925,
+    "Name": "zis_6_supply_truck_bg",
+    "Army": "soviet",
+    "Display": {
+      "LocaleName": "$142b113740474c82a60b0a428bd553d5:82",
+      "LocaleDescriptionLong": "$142b113740474c82a60b0a428bd553d5:83",
+      "LocaleDescriptionShort": "$142b113740474c82a60b0a428bd553d5:84",
+      "Icon": "Icons_vehicles_vehicle_soviet_su6_truck",
+      "Symbol": "Icons_symbols_vehicle_soviet_su6_truck_symbol",
+      "Portrait": "Icons_portraits_vehicle_soviet_us6_truck_s_portrait"
+    },
+    "SquadCost": {
+      "Manpower": 120,
+      "Fuel": 30,
+      "FieldTime": 30
+    },
+    "HasCrew": true,
+    "Entities": [
+      {
+        "EBP": "zis_6_supply_bg",
+        "Count": 1
+      }
+    ],
+    "Abilities": [
+      "blizzard_effect",
+      "transport_heavy_vehicle_bg",
+      "detach_tow_bg",
+      "supply_auto_dis",
+      "auto_truck_supply_disable_bg"
+    ],
+    "Types": [
+      "m5_halftrack",
+      "light_vehicle",
+      "vehicle"
+    ],
+    "SlotPickupCapacity": 6,
     "UpgradeCapacity": -1
   },
   {

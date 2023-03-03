@@ -57,7 +57,7 @@ public sealed class BattlegroundsModFactory : IModFactory {
             RequireFixed = gamemode.FixedPosition,
             TeamName1 = gamemode.TeamNames?.GetOrDefault("1", string.Empty) ?? string.Empty,
             TeamName2 = gamemode.TeamNames?.GetOrDefault("2", string.Empty) ?? string.Empty,
-            IncludeFiles = gamemode.Files
+            IncludeFiles = gamemode.Files ?? Array.Empty<string>(),
         };
 
     }

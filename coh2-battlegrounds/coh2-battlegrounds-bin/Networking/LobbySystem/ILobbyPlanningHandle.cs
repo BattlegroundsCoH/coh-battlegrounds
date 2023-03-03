@@ -84,7 +84,7 @@ public interface ILobbyPlanningHandle {
     /// Get an array of all planning elements for the specified team. (Index of 4 = get all)
     /// </summary>
     /// <param name="teamIndex">The index of the team to retrieve planning elements from.</param>
-    /// <returns>Array of plan elements.</returns>
+    /// <returns>Plan element enumerator.</returns>
     ILobbyPlanElement[] GetPlanningElements(byte teamIndex);
 
     /// <summary>

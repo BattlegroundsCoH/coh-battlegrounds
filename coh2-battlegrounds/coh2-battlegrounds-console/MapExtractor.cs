@@ -5,7 +5,7 @@ using System.Text.Json;
 
 using Battlegrounds;
 using Battlegrounds.Compiler;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Scenarios;
 
 namespace coh2_battlegrounds_console;
 

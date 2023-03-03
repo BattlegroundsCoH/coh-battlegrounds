@@ -51,6 +51,11 @@ public enum AbilityActivation {
 public sealed class AbilityBlueprint : Blueprint, IUIBlueprint {
 
     /// <summary>
+    /// Invalid ability blueprint instance with no data associated with it.
+    /// </summary>
+    public static readonly AbilityBlueprint Invalid = new("abp_invalid", new(), null, new(), new(), Array.Empty<RequirementExtension>(), AbilityActivation.none);
+
+    /// <summary>
     /// The unique PropertyBagGroupdID assigned to this blueprint.
     /// </summary>
     public override BlueprintUID PBGID { get; }

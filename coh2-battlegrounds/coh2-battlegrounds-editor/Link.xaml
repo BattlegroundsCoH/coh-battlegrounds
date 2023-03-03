@@ -1,0 +1,53 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:components="clr-namespace:Battlegrounds.Editor.Components"
+    xmlns:modals="clr-namespace:Battlegrounds.Editor.Modals"
+    xmlns:pages="clr-namespace:Battlegrounds.Editor.Pages">
+    
+    <!-- Ability Slot Component -->
+    <DataTemplate DataType="{x:Type components:AbilitySlot}">
+        <components:AbilitySlotView/>
+    </DataTemplate>
+
+    <!-- Ability Slot Component -->
+    <DataTemplate DataType="{x:Type components:AvailableItem}">
+        <components:AvailableItemView/>
+    </DataTemplate>
+
+    <!-- Ability Slot Component -->
+    <DataTemplate DataType="{x:Type components:EquipmentSlot}">
+        <components:EquipmentSlotView/>
+    </DataTemplate>
+
+    <!-- Ability Slot Component -->
+    <DataTemplate DataType="{x:Type components:SquadSlot}">
+        <components:SquadSlotView/>
+    </DataTemplate>
+
+    <!-- Import Export Modal -->
+    <DataTemplate DataType="{x:Type modals:ImportExport}">
+        <modals:ImportExportView/>
+    </DataTemplate>
+
+    <!-- Create Company Modal -->
+    <DataTemplate DataType="{x:Type modals:CreateCompany}">
+        <modals:CreateCompanyView/>
+    </DataTemplate>
+
+    <!-- Squad Settings Modal -->
+    <DataTemplate DataType="{x:Type modals:SquadSettings}">
+        <modals:SquadSettingsView/>
+    </DataTemplate>
+
+    <!-- Company Browser Page -->
+    <DataTemplate DataType="{x:Type pages:CompanyBrowser}">
+        <pages:CompanyBrowserView/>
+    </DataTemplate>
+
+    <!-- Company Editor Page -->
+    <DataTemplate DataType="{x:Type pages:CompanyEditor}">
+        <pages:CompanyEditorView/>
+    </DataTemplate>
+    
+</ResourceDictionary>

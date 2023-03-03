@@ -94,20 +94,9 @@
     <None Remove="Resources\app\objective_icons\ot_support.png" />
     <None Remove="Resources\app\padlock_locked.png" />
     <None Remove="Resources\app\padlock_open.png" />
+    <None Remove="Resources\app\rally_icon.png" />
     <None Remove="Resources\app\refresh.png" />
     <None Remove="Resources\app\unknown_user.png" />
-    <None Remove="Resources\campaign\icon_attrition.png" />
-    <None Remove="Resources\campaign\icon_unittype_air.png" />
-    <None Remove="Resources\campaign\icon_unittype_arty.png" />
-    <None Remove="Resources\campaign\icon_unittype_infantry.png" />
-    <None Remove="Resources\campaign\icon_unittype_support.png" />
-    <None Remove="Resources\campaign\icon_unittype_tank.png" />
-    <None Remove="Resources\campaign\icon_unittype_vehicle.png" />
-    <None Remove="Resources\campaign\icon_vp.png" />
-    <None Remove="Resources\campaign\obj_main.png" />
-    <None Remove="Resources\campaign\obj_secondary.png" />
-    <None Remove="Resources\campaign\obj_star.png" />
-    <None Remove="Resources\ingame\ability_icons.dat" />
     <None Remove="Resources\ingame\aef.png" />
     <None Remove="Resources\ingame\application\app_background.png" />
     <None Remove="Resources\ingame\application\app_button.png" />
@@ -117,29 +106,20 @@
     <None Remove="Resources\ingame\application\app_logo1.png" />
     <None Remove="Resources\ingame\application\app_logo2.png" />
     <None Remove="Resources\ingame\british.png" />
-    <None Remove="Resources\ingame\deploy_icons.dat" />
-    <None Remove="Resources\ingame\entity_icons.dat" />
-    <None Remove="Resources\ingame\entity_symbols.dat" />
     <None Remove="Resources\ingame\german.png" />
-    <None Remove="Resources\ingame\item_icons.dat" />
-    <None Remove="Resources\ingame\minimap_icons.dat" />
     <None Remove="Resources\ingame\no_icon.png" />
-    <None Remove="Resources\ingame\phase_icons.dat" />
-    <None Remove="Resources\ingame\portraits.dat" />
     <None Remove="Resources\ingame\remove_item.png" />
     <None Remove="Resources\ingame\resource_icons\botb_fuel.png" />
     <None Remove="Resources\ingame\resource_icons\botb_manpower.png" />
     <None Remove="Resources\ingame\resource_icons\botb_munitions.png" />
+    <None Remove="Resources\ingame\resource_icons\botb_time.png" />
     <None Remove="Resources\ingame\soviet.png" />
-    <None Remove="Resources\ingame\symbol_icons.dat" />
     <None Remove="Resources\ingame\test_unit_ veterancy.png" />
     <None Remove="Resources\ingame\test_unit_icon.png" />
     <None Remove="Resources\ingame\test_unit_portrait.png" />
     <None Remove="Resources\ingame\test_unit_transport.png" />
     <None Remove="Resources\ingame\test_unit_veterancy.png" />
-    <None Remove="Resources\ingame\unit_icons.dat" />
     <None Remove="Resources\ingame\unknown_map.png" />
-    <None Remove="Resources\ingame\upgrade_icons.dat" />
     <None Remove="Resources\ingame\vet\vstar1.png" />
     <None Remove="Resources\ingame\vet\vstar2.png" />
     <None Remove="Resources\ingame\vet\vstar3.png" />
@@ -148,7 +128,6 @@
     <None Remove="Resources\ingame\vet\vstar_no.png" />
     <None Remove="Resources\ingame\vet\vstar_yes.png" />
     <None Remove="Resources\ingame\west_german.png" />
-    <None Remove="Resources\profanities.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -209,23 +188,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\coh2-battlegrounds-bin\coh2-battlegrounds-bin.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-editor\coh2-battlegrounds-editor.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-lobby\coh2-battlegrounds-lobby.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-resources\coh2-battlegrounds-resources.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-ui-app\coh2-battlegrounds-ui-app.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-ui\coh2-battlegrounds-ui.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\app\rally_icon.png" />
     <Resource Include="Resources\app\refresh.png" />
     <Resource Include="Resources\app\unknown_user.png" />
-    <Resource Include="Resources\campaign\icon_attrition.png" />
-    <Resource Include="Resources\campaign\icon_unittype_air.png" />
-    <Resource Include="Resources\campaign\icon_unittype_arty.png" />
-    <Resource Include="Resources\campaign\icon_unittype_infantry.png" />
-    <Resource Include="Resources\campaign\icon_unittype_support.png" />
-    <Resource Include="Resources\campaign\icon_unittype_tank.png" />
-    <Resource Include="Resources\campaign\icon_unittype_vehicle.png" />
-    <Resource Include="Resources\campaign\icon_vp.png" />
-    <Resource Include="Resources\campaign\obj_main.png" />
-    <Resource Include="Resources\campaign\obj_secondary.png" />
-    <Resource Include="Resources\campaign\obj_star.png" />
-    <Resource Include="Resources\ingame\ability_icons.dat" />
     <Resource Include="Resources\ingame\aef.png" />
     <Resource Include="Resources\ingame\application\app_background.png" />
     <Resource Include="Resources\ingame\application\app_button.png" />
@@ -235,28 +208,19 @@
     <Resource Include="Resources\ingame\application\app_logo1.png" />
     <Resource Include="Resources\ingame\application\app_logo2.png" />
     <Resource Include="Resources\ingame\british.png" />
-    <Resource Include="Resources\ingame\deploy_icons.dat" />
-    <Resource Include="Resources\ingame\entity_icons.dat" />
-    <Resource Include="Resources\ingame\entity_symbols.dat" />
     <Resource Include="Resources\ingame\german.png" />
-    <Resource Include="Resources\ingame\item_icons.dat" />
-    <Resource Include="Resources\ingame\minimap_icons.dat" />
     <Resource Include="Resources\ingame\no_icon.png" />
-    <Resource Include="Resources\ingame\phase_icons.dat" />
-    <Resource Include="Resources\ingame\portraits.dat" />
     <Resource Include="Resources\ingame\remove_item.png" />
     <Resource Include="Resources\ingame\resource_icons\botb_fuel.png" />
     <Resource Include="Resources\ingame\resource_icons\botb_manpower.png" />
     <Resource Include="Resources\ingame\resource_icons\botb_munitions.png" />
+    <Resource Include="Resources\ingame\resource_icons\botb_time.png" />
     <Resource Include="Resources\ingame\soviet.png" />
-    <Resource Include="Resources\ingame\symbol_icons.dat" />
     <Resource Include="Resources\ingame\test_unit_icon.png" />
     <Resource Include="Resources\ingame\test_unit_portrait.png" />
     <Resource Include="Resources\ingame\test_unit_transport.png" />
     <Resource Include="Resources\ingame\test_unit_veterancy.png" />
-    <Resource Include="Resources\ingame\unit_icons.dat" />
     <Resource Include="Resources\ingame\unknown_map.png" />
-    <Resource Include="Resources\ingame\upgrade_icons.dat" />
     <Resource Include="Resources\ingame\vet\vstar1.png" />
     <Resource Include="Resources\ingame\vet\vstar2.png" />
     <Resource Include="Resources\ingame\vet\vstar3.png" />
@@ -265,7 +229,6 @@
     <Resource Include="Resources\ingame\vet\vstar_no.png" />
     <Resource Include="Resources\ingame\vet\vstar_yes.png" />
     <Resource Include="Resources\ingame\west_german.png" />
-    <Resource Include="Resources\profanities.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -921,9 +884,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\data\mod_bg-wbp-db.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="plugins\README.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

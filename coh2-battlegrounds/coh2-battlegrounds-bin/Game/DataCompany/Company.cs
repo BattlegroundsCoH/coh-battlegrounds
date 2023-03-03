@@ -48,11 +48,6 @@ public class Company : IChecksumItem {
     public const int MAX_SIZE = 40;
 
     /// <summary>
-    /// The max amount of initially deployed units.
-    /// </summary>
-    public const int DEFAULT_INITIAL = 5;
-
-    /// <summary>
     /// The max amount of abilities available to a company.
     /// </summary>
     public const int MAX_ABILITY = 6;
