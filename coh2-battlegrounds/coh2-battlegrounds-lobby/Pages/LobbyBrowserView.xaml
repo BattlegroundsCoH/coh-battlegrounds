@@ -161,7 +161,7 @@
                     <ColumnDefinition Width="172"/>
                     <ColumnDefinition Width="124"/>
                     <ColumnDefinition Width="72"/>
-                    <ColumnDefinition Width="72"/>
+                    <ColumnDefinition Width="44"/>
                 </Grid.ColumnDefinitions>
                 <Grid x:Name="firstColumnSize"
                       Grid.Column="0"/>
