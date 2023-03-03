@@ -38,12 +38,12 @@ public class MainWindowViewModel : ViewModelBase {
     /// <summary>
     /// Minimum width of the window
     /// </summary>
-    public double WindowMinimumWidth { get; set; } = 1400.0;
+    public double WindowMinimumWidth { get; set; } = 1350.0;
 
     /// <summary>
     /// Minimum height of the window
     /// </summary>
-    public double WindowMinimumHeight { get; set; } = 850.0;
+    public double WindowMinimumHeight { get; set; } = 650.0;
 
     /// <summary>
     /// The size of the resize border around the window
