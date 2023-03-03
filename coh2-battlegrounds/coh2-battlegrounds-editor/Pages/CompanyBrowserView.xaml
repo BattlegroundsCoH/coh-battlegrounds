@@ -38,12 +38,6 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
         <!-- Row 0 -->
@@ -60,7 +54,7 @@
         <ListView x:Name="CompanyList"
                   Grid.Row="1"
                   Grid.Column="0"
-                  Grid.ColumnSpan="8"
+                  Grid.ColumnSpan="2"
                   ItemsSource="{Binding Companies}"
                   SelectedItem="{Binding SelectedCompany}"
                   MouseDoubleClick="{ui:EventBinding Handler=EditCompanyDirectly}"

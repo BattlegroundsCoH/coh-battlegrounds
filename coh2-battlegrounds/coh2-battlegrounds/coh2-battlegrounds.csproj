@@ -888,8 +888,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Utilities\Converters\" />
-  </ItemGroup>
-
 </Project>
