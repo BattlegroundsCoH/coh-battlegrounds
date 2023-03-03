@@ -25,7 +25,7 @@ public sealed class Team {
 
     public BaseLobby Lobby { get; }
 
-    public string Title => BattlegroundsInstance.Localize.GetString(this.m_team.TeamRole);
+    public string Title { get; }
 
     public Team(ILobbyHandle lobbyAPI, ILobbyTeam lobbyTeam, BaseLobby model) {
 
@@ -34,6 +34,8 @@ public sealed class Team {
 
         // Set lobby instance
         this.Lobby = model;
+
+        this.Title = BattlegroundsInstance.Localize.GetString(this.m_team.TeamRole);
 
         // Create models
         if (lobbyAPI.IsHost) {
