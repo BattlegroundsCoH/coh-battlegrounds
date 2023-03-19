@@ -127,7 +127,7 @@ public static class BinaryReaderExt {
             if (ByteUtil.Match(arr, barray)) {
                 break;
             } else {
-                reader.BaseStream.Position -= (barray.Length - 1);
+                reader.BaseStream.Position -= barray.Length - 1;
             }
 
         }

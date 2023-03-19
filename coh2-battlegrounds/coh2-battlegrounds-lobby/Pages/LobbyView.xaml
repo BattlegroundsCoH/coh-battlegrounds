@@ -14,8 +14,8 @@
     <UserControl.Resources>
         <ResourceDictionary x:Name="LobbyUI">
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/coh-battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
-                <ResourceDictionary x:Name="LobbyArt" Source="pack://application:,,,/coh-battlegrounds;component/Resources/app/LobbyArt.xaml"/>
+                <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/Battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
+                <ResourceDictionary x:Name="LobbyArt" Source="pack://application:,,,/Battlegrounds;component/Resources/app/LobbyArt.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

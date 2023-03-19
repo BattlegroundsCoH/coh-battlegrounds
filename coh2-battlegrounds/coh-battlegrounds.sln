@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh-battlegrounds-lobby", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coh-battlegrounds-ui-app", "coh2-battlegrounds-ui-app\coh-battlegrounds-ui-app.csproj", "{6F92A503-3C53-47B1-8910-756C4F8CA1B7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coh-battlegrounds-test", "coh-battlegrounds-test\coh-battlegrounds-test.csproj", "{F4C9D525-50D2-4E15-B22C-2AD41C7A9779}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -177,6 +179,18 @@ Global
 		{6F92A503-3C53-47B1-8910-756C4F8CA1B7}.Release|x64.Build.0 = Release|Any CPU
 		{6F92A503-3C53-47B1-8910-756C4F8CA1B7}.Release|x86.ActiveCfg = Release|Any CPU
 		{6F92A503-3C53-47B1-8910-756C4F8CA1B7}.Release|x86.Build.0 = Release|Any CPU
+		{F4C9D525-50D2-4E15-B22C-2AD41C7A9779}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4C9D525-50D2-4E15-B22C-2AD41C7A9779}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4C9D525-50D2-4E15-B22C-2AD41C7A9779}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F4C9D525-50D2-4E15-B22C-2AD41C7A9779}.Debug|x64.Build.0 = Debug|Any CPU
+		{F4C9D525-50D2-4E15-B22C-2AD41C7A9779}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F4C9D525-50D2-4E15-B22C-2AD41C7A9779}.Debug|x86.Build.0 = Debug|Any CPU
+		{F4C9D525-50D2-4E15-B22C-2AD41C7A9779}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4C9D525-50D2-4E15-B22C-2AD41C7A9779}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4C9D525-50D2-4E15-B22C-2AD41C7A9779}.Release|x64.ActiveCfg = Release|Any CPU
+		{F4C9D525-50D2-4E15-B22C-2AD41C7A9779}.Release|x64.Build.0 = Release|Any CPU
+		{F4C9D525-50D2-4E15-B22C-2AD41C7A9779}.Release|x86.ActiveCfg = Release|Any CPU
+		{F4C9D525-50D2-4E15-B22C-2AD41C7A9779}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

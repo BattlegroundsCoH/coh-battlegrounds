@@ -110,6 +110,33 @@ public class Chunky : IChunky {
 
     }
 
+    /// <summary>
+    /// Walks the chunky file and the sub chunks, following the specified <paramref name="path"/>.
+    /// </summary>
+    /// <param name="path">Ordered string path to walk of the file.</param>
+    /// <returns>The chunk at the end of the path or nothing</returns>
+    public IChunk? Walk(params string[] path) {
+
+        // Verify input length
+        if (path.Length is 0)
+            return null;
+
+        // Grab first
+        var res = chunks.FirstOrDefault(x => x.Name == path[0]);
+
+        // Repeat until walked through all
+        for (int i = 1; i < path.Length; i++) {
+            if (res is null) {
+                return null;
+            }
+            res = res.Chunks.FirstOrDefault(x => x.Name == path[i]);
+        }
+
+        // Return last
+        return res;
+
+    }
+
     /// <inheritdoc/>
     public void DumpJson(string jsonOutputFile)
         => File.WriteAllText(jsonOutputFile, JsonSerializer.Serialize(this.chunks));

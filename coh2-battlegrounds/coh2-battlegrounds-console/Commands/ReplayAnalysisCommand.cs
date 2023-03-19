@@ -1,15 +1,16 @@
-﻿using Battlegrounds.Game.DataSource.Playback.CoH2;
+﻿using Battlegrounds.Game.DataSource.Playback;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match;
-
-using System;
-using System.IO;
-using Battlegrounds.Game.DataSource.Playback;
 using Battlegrounds.Game;
+using Battlegrounds.Logging;
+
+using System.IO;
 
 namespace Battlegrounds.Developer.Commands;
 
 public class ReplayAnalysisCommand : Command {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     public static readonly Argument<string> PATH =
         new Argument<string>("-f", "Specifies the playback file to analyse.", File.Exists("temp.rec") ? "temp.rec" : PlaybackLoader.LATEST_COH2_REPLAY_FILE);
@@ -37,27 +38,27 @@ public class ReplayAnalysisCommand : Command {
         // Create playback loader
         var loader = new PlaybackLoader();
 
-        Console.WriteLine("Parsing latest replay file");
+        logger.Info("Parsing latest replay file");
         var playbackFile = loader.LoadPlayback(target, gameTarget);
         if (playbackFile is null) {
-            Console.WriteLine("Failed reading replay file");
+            logger.Info("Failed reading replay file");
             return;
         }
 
-        Console.WriteLine($"Partial: {playbackFile.IsPartial}");
+        logger.Info($"Partial: {playbackFile.IsPartial}");
 
         ReplayMatchData playback = new ReplayMatchData(new NullSession());
         playback.SetReplayFile(playbackFile);
         if (!playback.ParseMatchData()) {
-            Console.WriteLine("Failed to parse match data");
+            logger.Info("Failed to parse match data");
             return;
         }
 
         if (compile_json) {
-            Console.WriteLine("Compiling to json playback");
+            logger.Info("Compiling to json playback");
             JsonPlayback events = new JsonPlayback(playback);
             File.WriteAllText("playback.json", events.ToJson());
-            Console.WriteLine("Saved to replay analysis to playback.json");
+            logger.Info("Saved to replay analysis to playback.json");
         }
 
     }

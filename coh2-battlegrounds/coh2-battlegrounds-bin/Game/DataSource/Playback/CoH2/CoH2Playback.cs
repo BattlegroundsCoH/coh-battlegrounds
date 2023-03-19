@@ -348,40 +348,37 @@ public sealed class CoH2Playback : IPlayback {
 
     private bool ParseMatchdata(Chunk infoChunk) {
 
-        using (MemoryStream stream = new MemoryStream(infoChunk.Data)) {
-            using (BinaryReader reader = new BinaryReader(stream)) {
+        using MemoryStream stream = new MemoryStream(infoChunk.Data);
+        using BinaryReader reader = new BinaryReader(stream);
 
-                if (infoChunk.Version.InRange(27, 28)) {
+        if (infoChunk.Version.InRange(27, 28)) {
 
-                    // Read match type
-                    uint type = reader.ReadUInt32();
-                    if (type.InRange(1, 2)) {
-                        m_replayMatchType = type == 1 ? MatchType.Multiplayer : MatchType.Skirmish;
-                    }
-
-                    // Skip 10 bytes
-                    reader.Skip(10);
-
-                    // Read in the seed (random seed)
-                    m_seed = reader.ReadUInt32();
-
-                    // Read player count
-                    uint pcount = reader.ReadUInt32();
-                    m_playerlist = new Player[pcount];
-
-                    // Read player data
-                    for (int i = 0; i < m_playerlist.Length; i++) {
-                        if (ParsePlayerInfo(reader) is Player p) {
-                            m_playerlist[i] = p;
-                        } else {
-                            logger.Warning($"Failed to read player {i} from replay data!");
-                            m_playerlist[i] = new(uint.MaxValue, ulong.MaxValue, uint.MaxValue, "Error", Faction.America, string.Empty);
-                        }
-                    }
-
-                }
-
+            // Read match type
+            uint type = reader.ReadUInt32();
+            if (type.InRange(1, 2)) {
+                m_replayMatchType = type == 1 ? MatchType.Multiplayer : MatchType.Skirmish;
             }
+
+            // Skip 10 bytes
+            reader.Skip(10);
+
+            // Read in the seed (random seed)
+            m_seed = reader.ReadUInt32();
+
+            // Read player count
+            uint pcount = reader.ReadUInt32();
+            m_playerlist = new Player[pcount];
+
+            // Read player data
+            for (int i = 0; i < m_playerlist.Length; i++) {
+                if (ParsePlayerInfo(reader) is Player p) {
+                    m_playerlist[i] = p;
+                } else {
+                    logger.Warning($"Failed to read player {i} from replay data!");
+                    m_playerlist[i] = new(uint.MaxValue, ulong.MaxValue, uint.MaxValue, "Error", Faction.America, string.Empty);
+                }
+            }
+
         }
 
         // Return OK
@@ -445,7 +442,7 @@ public sealed class CoH2Playback : IPlayback {
         reader.Skip(4);
 
         // Create player object
-        Player player = new Player(playerID, steamID, teamID, name, Faction.FromName(faction), aiprofile) {
+        Player player = new Player(playerID, steamID, teamID, name, Faction.FromName(faction, GameCase.CompanyOfHeroes2), aiprofile) {
             IsAIPlayer = playertype != 1
         };
         player.Skins[0] = skin1;

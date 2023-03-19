@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <RootNamespace>Battlegrounds.Testing</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+
+    <AssemblyName>Battlegrounds.Testing</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.3.0" />
+    <PackageReference Include="NUnit.Analyzers" Version="3.5.0" />
+    <PackageReference Include="coverlet.collector" Version="3.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\coh2-battlegrounds-bin\coh-battlegrounds-core.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-editor\coh-battlegrounds-editor.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-functional\coh-battlegrounds-functional.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-lobby\coh-battlegrounds-lobby.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-misc\coh-battlegrounds-misc.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-resources\coh-battlegrounds-resources.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-scripting\coh-battlegrounds-scripting.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-ui-app\coh-battlegrounds-ui-app.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-ui\coh-battlegrounds-ui.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\" />
+    <Folder Include="Core\Game\DataSource\" />
+    <Folder Include="Functional\" />
+    <Folder Include="Lobby\" />
+    <Folder Include="Misc\" />
+  </ItemGroup>
+
+</Project>

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Battlegrounds.Game.Gameplay;
 
@@ -30,14 +26,30 @@ public enum MatchType {
 /// </summary>
 public interface IPlayback {
     
+    /// <summary>
+    /// 
+    /// </summary>
     bool IsPartial { get; }
     
+    /// <summary>
+    /// 
+    /// </summary>
     Player[] Players { get; }
     
+    /// <summary>
+    /// 
+    /// </summary>
     IPlaybackTick[] Ticks { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     TimeSpan Length { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     bool LoadPlayback();
 
 }

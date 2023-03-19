@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text;
 
-using Battlegrounds.Functional;
 using Battlegrounds.Game.DataSource.Gamedata;
 using Battlegrounds.Game.DataSource.Gamedata.CoH3;
 using Battlegrounds.Game.Gameplay;
@@ -24,33 +23,71 @@ public class CoH3Playback : IPlayback {
     /// <param name="Version"></param>
     /// <param name="Game"></param>
     /// <param name="Date"></param>
-    public record struct Header(uint Version, string Game, string Date);
+    public record struct Header(ushort Version, string Game, string Date);
 
-    private string playbackFile;
-    private Header header;
+    /// <summary>
+    /// file location of playback file
+    /// </summary>
+    protected string playbackFile;
+
+    /// <summary>
+    /// Header struct
+    /// </summary>
+    protected Header header;
+
+    /// <summary>
+    /// Internal flag setting if partially read
+    /// </summary>
+    protected bool isPartial;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected IPlaybackTick[] ticks;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected TimeSpan length;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected Player[] players;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected MatchType matchType;
 
     /// <summary>
     /// 
     /// </summary>
     public CoH3Playback() { 
         this.playbackFile = string.Empty;
+        this.players = Array.Empty<Player>();
+        this.ticks = Array.Empty<IPlaybackTick>();
     }
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="playbackFile"></param>
-    public CoH3Playback(string playbackFile) { 
+    public CoH3Playback(string playbackFile) : this() { 
         this.playbackFile = playbackFile;
     }
 
-    public bool IsPartial => throw new NotImplementedException();
+    ///<inheritdoc/>
+    public bool IsPartial => isPartial;
 
-    public Player[] Players => throw new NotImplementedException();
+    ///<inheritdoc/>
+    public Player[] Players => players;
 
-    public IPlaybackTick[] Ticks => throw new NotImplementedException();
+    ///<inheritdoc/>
+    public IPlaybackTick[] Ticks => ticks;
 
-    public TimeSpan Length => throw new NotImplementedException();
+    ///<inheritdoc/>
+    public TimeSpan Length => length;
 
     /// <inheritdoc/>
     public bool LoadPlayback() {
@@ -101,11 +138,25 @@ public class CoH3Playback : IPlayback {
 
         playbackChunky.DumpJson("playback_playback.json");
 
+        logger.Debug("Playback offset: " + br.BaseStream.Position + " | 0x" + br.BaseStream.Position.ToString("X0"));
+
         // Get playback data
         byte[] replaydata = br.ReadToEnd();
 
         // Dump playback data
         File.WriteAllBytes("playback_raw.bin", replaydata);
+
+        // Load info
+        IChunk? infodata = playbackChunky.Walk("INFO", "DATA");
+        if (infodata is null) {
+            logger.Info("Failed finding playback info data section: " + this.playbackFile);
+            return false;
+        }
+
+        if (!ParsePlaybackInfo(infodata)) {
+            logger.Info("Failed reading playback info data section: " + this.playbackFile);
+            return false;
+        }
 
         // TODO: Parse chunky raw binary
         if (!ParsePlaybackData(replaydata)) {
@@ -118,13 +169,13 @@ public class CoH3Playback : IPlayback {
     }
 
     private bool ParseHeader(Span<byte> headerBytes) {
-        uint version = 0;
+        ushort version = 0;
         string gameVersion = string.Empty; 
         StringBuilder dateBuilder = new();
 
         try {
 
-            version = BitConverter.ToUInt32(headerBytes[0..4]); // read version (unsigned 32-bit integer ==> 4 bytes)
+            version = BitConverter.ToUInt16(headerBytes[2..4]); // read version (unsigned 32-bit integer ==> 4 bytes)
             gameVersion = Encoding.ASCII.GetString(headerBytes[4..12]); // read game version (ASCII, 1 char = 1 byte, length is fixed and equal to 8)
 
             int i = 12; // start position
@@ -150,69 +201,44 @@ public class CoH3Playback : IPlayback {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <returns></returns>
+    protected virtual bool ParsePlaybackInfo(IChunk chunk) {
+        return false;
+    }
+
     private const int PlaybackDataType_Tick = 0;
     private const int PlaybackDataType_Chat = 1;
 
-    private bool ParsePlaybackData(byte[] data) {
-        
+    /// <summary>
+    /// Protected method that handles the loading of playback data.
+    /// </summary>
+    /// <param name="data">byte data to read.</param>
+    /// <returns>if playback data is successfully read, <see langword="true"/>; Otherise <see langword="false"/>.</returns>
+    protected virtual bool ParsePlaybackData(byte[] data) {
+       
         // Open parsers
         using MemoryStream ms = new MemoryStream(data);
         using BinaryReader reader = new BinaryReader(ms);
 
+        uint initData = reader.ReadUInt32();
+
+        reader.BaseStream.Position += initData;
+
         // Read until EOF
         while (ms.Position < ms.Length) {
 
-            uint dataType = reader.ReadUInt32();
-            uint dataSize = reader.ReadUInt32();
+            uint u1 = reader.ReadUInt32();
+            if (u1 < 4) {
+                return false;
+            }
 
-            if (dataSize == 0)
-                continue;
-
-            if (dataType == PlaybackDataType_Tick) {
-
-                // Skip one byte
-                logger.Debug("First byte of tick: " + reader.ReadByte());
-
-                // Get tick index
-                uint index = reader.ReadUInt32();
-                
-                // Calculate the timestamp
-                TimeSpan timestamp = new TimeSpan((long)(10000000.0 * index / 8.0));
-
-                // Skip next four bytes
-                logger.Debug("Skipping next four bytes: [" + string.Join("; ", reader.ReadBytes(4).Map(x => x.ToString("X2"))) + "]");
-
-                // Read tick events
-                uint events = reader.ReadUInt32();
-
-                // Read event bundle
-                for (uint i = 0; i < events; i++) {
-
-                    // Skip first 8 bytes
-                    logger.Debug("Skipping next four bytes: [" + string.Join("; ", reader.ReadBytes(8).Map(x => x.ToString("X2"))) + "]");
-
-                    uint count = reader.ReadUInt32();
-
-                    //logger.Debug("Skipping next byte: [" + string.Join("; ", reader.ReadBytes(1).Map(x => x.ToString("X2"))) + "]");
-
-                    // Read all
-                    for (int j = 0; j < count; j++) {
-
-                        ushort len = reader.ReadUInt16();
-                        if (len != 0) {
-
-                            reader.ReadBytes(len);
-
-                        }
-
-                    }
-
-                }
-
-            } else if (dataType == PlaybackDataType_Chat) {
-
-            } else {
-                logger.Error("Failed reading replay file with invalid dataType: " + dataType);
+            uint u2 = reader.ReadUInt32();
+            if (u2 < 4) {
+                // Do something
             }
 
         }

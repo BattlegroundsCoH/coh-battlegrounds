@@ -660,7 +660,7 @@ public class ServerAPI {
         for (int i = 0; i < chunks; i++) {
 
             // Grab chunk
-            var chunk = file.Slice(p, q);
+            var chunk = file[p..q];//.Slice(p, q);
 
             // Send
             try {
@@ -730,7 +730,7 @@ public class ServerAPI {
             for (int i = 0; i < chunks; i++) {
 
                 // Grab chunk
-                var chunk = filecontent.Slice(p, q);
+                var chunk = filecontent[p..q];//Slice(p, q);
                 var checksum = Redundancy.CRC(chunk);
 
                 // Get flags

@@ -1,7 +1,9 @@
-﻿namespace Battlegrounds.Game;
+﻿using Battlegrounds.Steam;
+
+namespace Battlegrounds.Game;
 
 /// <summary>
-/// Represents a DLC tied to Company of Heroes 2
+/// Represents a DLC tied to Company of Heroes 2 or Company of Heroes 3.
 /// </summary>
 public sealed class DLCPack {
 
@@ -25,6 +27,16 @@ public sealed class DLCPack {
         /// </summary>
         Commander,
 
+        /// <summary>
+        /// A base game (ie. CoH2 with multiplayer or CoH3 with multiplayer)
+        /// </summary>
+        Game,
+
+        /// <summary>
+        /// A battlegroup DLC (same as CoH2 commanders)
+        /// </summary>
+        Battlegroup = Commander
+
     }
 
     /// <summary>
@@ -35,7 +47,7 @@ public sealed class DLCPack {
     /// <summary>
     /// Unique app ID assigned to this pack
     /// </summary>
-    public uint SteamAppID { get; }
+    public AppId SteamAppID { get; }
 
     /// <summary>
     /// The type of DLC
@@ -43,22 +55,18 @@ public sealed class DLCPack {
     public DLCType Type { get; }
 
     /// <summary>
-    /// 
+    /// Get the game associated with this DLC.
     /// </summary>
-    public GameCase Game { get; }
+    public GameCase Game => GameCases.FromAppId(SteamAppID);
 
-    private DLCPack(string name, uint steamid, DLCType dlctype, GameCase gameType) {
+    private DLCPack(string name, AppId steamid, DLCType dlctype) {
         this.Name = name;
         this.SteamAppID = steamid;
         this.Type = dlctype;
-        this.Game = gameType;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public override string ToString() => $"DLC: {this.Name} (Steam App ID: {this.SteamAppID})";
+    /// <inheritdoc/>
+    public override string ToString() => $"DLC: '{this.Name}' (Steam App ID: {this.SteamAppID.Identifier})";
 
     #region Static Region 
 
@@ -67,10 +75,17 @@ public sealed class DLCPack {
     private static readonly DLCPack wfa_okw;
     private static readonly DLCPack ukf;
 
+    private static readonly DLCPack coh3;
+
     /// <summary>
-    /// The base game (with multiplayer access)
+    /// The base CoH2 game (with multiplayer access)
     /// </summary>
-    public static DLCPack Base => basegame;
+    public static DLCPack CoH2Base => basegame;
+
+    /// <summary>
+    /// The base CoH3 game
+    /// </summary>
+    public static DLCPack CoH3Base => coh3;
 
     /// <summary>
     /// The Western Front Armies (USA)
@@ -88,13 +103,13 @@ public sealed class DLCPack {
     public static DLCPack UKF => ukf;
 
     static DLCPack() {
-        basegame = new DLCPack("Base Game", 231451, DLCType.Faction, GameCase.CompanyOfHeroes2); // DLC ID
-        wfa_aef = new DLCPack("Western Front Armies - US Forces", 39986, DLCType.Faction, GameCase.CompanyOfHeroes2); // App ID
-        wfa_okw = new DLCPack("Western Front Armies - Oberkommando West", 39988, DLCType.Faction, GameCase.CompanyOfHeroes2); // App ID
-        ukf = new DLCPack("British Forces", 76411, DLCType.Faction, GameCase.CompanyOfHeroes2); // App ID
+        basegame = new DLCPack("Company of Heroes 2", AppId.Game(GameCases.CoH2AppId), DLCType.Faction);
+        wfa_aef = new DLCPack("Western Front Armies - US Forces", AppId.DLC(39986, GameCases.CoH2AppId), DLCType.Faction);
+        wfa_okw = new DLCPack("Western Front Armies - Oberkommando West", AppId.DLC(39988, GameCases.CoH2AppId), DLCType.Faction);
+        ukf = new DLCPack("British Forces", AppId.DLC(76411, GameCases.CoH2AppId), DLCType.Faction);
+        coh3 = new DLCPack("Company of Heroes 3", AppId.Game(GameCases.CoH3AppId), DLCType.Game);
     }
 
     #endregion
 
 }
-

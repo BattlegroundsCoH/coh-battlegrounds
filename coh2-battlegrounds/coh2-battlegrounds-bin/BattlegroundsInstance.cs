@@ -264,6 +264,11 @@ public static class BattlegroundsInstance {
     /// </summary>
     public static IAppVersionFetcher? Version { get; set; }
 
+    /// <summary>
+    /// Flag that determines if the light CoH3 playback loader should be used instead of the "correct" CoH3 playback loader.
+    /// </summary>
+    public static bool UseLightCoH3PlaybackLoader { get; set; } = true;
+
 #if DEBUG
 
     /// <summary>
