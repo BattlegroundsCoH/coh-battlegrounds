@@ -89,7 +89,7 @@ public enum DeploymentRole : byte {
 }
 
 /// <summary>
-/// Representation of a Squad. Implements <see cref="IJsonObject"/>.
+/// Representation of a Squad.
 /// </summary>
 [JsonConverter(typeof(SquadWriter.SquadJson))]
 [LuaConverter(typeof(SquadWriter.SquadLua))]

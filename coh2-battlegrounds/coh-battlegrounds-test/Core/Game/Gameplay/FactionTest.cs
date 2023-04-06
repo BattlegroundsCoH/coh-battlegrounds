@@ -61,7 +61,7 @@ public class FactionTest {
     }
 
     [Test]
-    public void CamCheckAllies() {
+    public void CanCheckAllies() {
         Assert.Multiple(() => {
             Assert.That(Faction.AreSameTeam(Faction.Germans, Faction.Wehrmacht), Is.True);
             Assert.That(Faction.AreSameTeam(Faction.America, Faction.Americans), Is.True);
