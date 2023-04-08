@@ -29,18 +29,18 @@ public sealed class SquadSlot : INotifyPropertyChanged {
     /// 
     /// </summary>
     public static readonly ImageSource VetRankAchieved
-            = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar_yes.png"));
+            = new BitmapImage(new Uri($"pack://application:,,,/Battlegrounds;component/Resources/ingame/vet/vstar_yes.png"));
 
     /// <summary>
     /// 
     /// </summary>
     public static readonly ImageSource VetRankNotAchieved
-        = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar_no.png"));
+        = new BitmapImage(new Uri($"pack://application:,,,/Battlegrounds;component/Resources/ingame/vet/vstar_no.png"));
 
     /// <summary>
     /// 
     /// </summary>
-    public static readonly ImageSource RallyIcon = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/rally_icon.png"));
+    public static readonly ImageSource RallyIcon = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/app/rally_icon.png"));
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
