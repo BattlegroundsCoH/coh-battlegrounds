@@ -26,6 +26,7 @@ using Battlegrounds.Util;
 using Battlegrounds.Verification;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Lobby.Components;
+using Battlegrounds.Game.Blueprints;
 
 namespace Battlegrounds.Lobby.Playing;
 
@@ -64,7 +65,7 @@ public abstract class BasePlayModel {
 
     }
 
-    protected void BasePrepare(ModPackage modPackage, PrepareCancelHandler cancelHandler) {
+    protected void BasePrepare(IModPackage modPackage, PrepareCancelHandler cancelHandler) {
 
         // Error if not set up
         if (this.m_startupStrategy is null) {
@@ -102,7 +103,7 @@ public abstract class BasePlayModel {
 
     }
 
-    protected void CreateMatchInfo(ModPackage package) {
+    protected void CreateMatchInfo(IModPackage package) {
 
         // Get settings (most up-to-date)
         var settings = this.m_handle.Settings;
@@ -146,13 +147,13 @@ public abstract class BasePlayModel {
         }
 
         // Grab gamemode
-        var gamemodeInstance = WinconditionList.GetGamemodeByName(package.GamemodeGUID, gamemode);
+        var gamemodeInstance = Winconditions.GetGamemodeByName(package.GamemodeGUID, gamemode);
         if (gamemodeInstance is null) {
             throw new StartupException($"Failed to find gamemode with name '{gamemode}' from wincondition list (mod package = {package.ID}).");
         }
 
         // Grab tuning
-        var tuningInstance = ModManager.GetMod<ITuningMod>(package.TuningGUID);
+        var tuningInstance = BattlegroundsContext.ModManager.GetMod<ITuningMod>(package.TuningGUID);
         if (tuningInstance is null) {
             throw new StartupException($"Failed to fetch tuning mod.");
         }
@@ -180,11 +181,11 @@ public abstract class BasePlayModel {
 
             // Invoke helper functions
             sessionGoals = CreatePlanningGoals(participants, elements, (int)scen.PlayableSize.Length);
-            sessionEntities = CreatePlanningEntities(participants, elements, (int)scen.PlayableSize.Length, mode);
+            sessionEntities = CreatePlanningEntities(participants, elements, (int)scen.PlayableSize.Length, mode, package);
             sessionSquads = CreatePlanningSquads(participants, elements, (int)scen.PlayableSize.Length);
 
             // Determine if there's need for AI planning
-            this.CreateAIPlans(scen, revflag ? allies : axis, (byte)(revflag ? 0 : 1), ref sessionSquads, ref sessionEntities, sessionGoals, mode);
+            this.CreateAIPlans(scen, revflag ? allies : axis, (byte)(revflag ? 0 : 1), ref sessionSquads, ref sessionEntities, sessionGoals, mode, package);
 
         } else {
 
@@ -262,7 +263,7 @@ public abstract class BasePlayModel {
             Y = -position.Y
         };
 
-    protected static SessionPlanEntityInfo[] CreatePlanningEntities(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements, int height, Gamemode gamemode) {
+    protected static SessionPlanEntityInfo[] CreatePlanningEntities(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements, int height, Gamemode gamemode, IModPackage package) {
 
         // Grab planning entities
         var planEntities = planElements.Filter(x => x.IsEntity && x.ObjectiveType is PlanningObjectiveType.None);
@@ -280,7 +281,7 @@ public abstract class BasePlayModel {
             entities[i] = new() {
                 TeamOwner = (int)p.TeamIndex,
                 TeamMemberOwner = p.PlayerIndexOnTeam,
-                Blueprint = BlueprintManager.FromBlueprintName<EntityBlueprint>(planEntities[i].Blueprint),
+                Blueprint = package.GetDataSource().GetBlueprints(GameCase.CompanyOfHeroes2).FromBlueprintName<EntityBlueprint>(planEntities[i].Blueprint),
                 Spawn = InvertPosition(planEntities[i].SpawnPosition),
                 Lookat = planEntities[i].LookatPosition is GamePosition look ? InvertPosition(look) : null,
                 IsDirectional = planEntities[i].IsDirectional,
@@ -355,7 +356,7 @@ public abstract class BasePlayModel {
     }
 
     protected void CreateAIPlans(Scenario scenario, SessionParticipant[] defenders, byte tid,
-        ref SessionPlanSquadInfo[] units, ref SessionPlanEntityInfo[] structures, SessionPlanGoalInfo[] goals, Gamemode gamemode) {
+        ref SessionPlanSquadInfo[] units, ref SessionPlanEntityInfo[] structures, SessionPlanGoalInfo[] goals, Gamemode gamemode, IModPackage package) {
 
         // Grab allies AIs
         var aiDefenders = defenders.Filter(x => !x.IsHuman);
@@ -407,7 +408,7 @@ public abstract class BasePlayModel {
             return new SessionPlanEntityInfo() {
                 TeamOwner = tid,
                 TeamMemberOwner = x.AIIndex + 1,
-                Blueprint = BlueprintManager.FromBlueprintName<EntityBlueprint>(x.PlanElement.Blueprint),
+                Blueprint = package.GetDataSource().GetBlueprints(GameCase.CompanyOfHeroes2).FromBlueprintName<EntityBlueprint>(x.PlanElement.Blueprint),
                 Spawn = x.PlanElement.SpawnPosition,
                 Lookat = x.PlanElement.LookatPosition,
                 IsDirectional = x.PlanElement.IsDirectional,

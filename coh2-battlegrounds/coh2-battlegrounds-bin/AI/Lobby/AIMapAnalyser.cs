@@ -67,7 +67,7 @@ public class AIMapAnalyser {
     public AIMapAnalysis? Analyze(out TgaPixel[,] pixelmap, int subDivisions, int searchRadius) {
 
         // Grab file
-        var mapFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, $"map_icons\\{this.m_scenario.RelativeFilename}_map.tga");
+        var mapFile = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, $"map_icons\\{this.m_scenario.RelativeFilename}_map.tga");
 
         // Zu erst : open mm
         this.m_tga = TryForget.Try(() => TgaPixelReader.ReadTarga(mapFile), null);

@@ -25,7 +25,7 @@ public sealed class Team {
 
     public BaseLobby Lobby { get; }
 
-    public string Title => BattlegroundsInstance.Localize.GetString(this.m_team.TeamRole);
+    public string Title => BattlegroundsContext.Localize.GetString(this.m_team.TeamRole);
 
     public Team(ILobbyHandle lobbyAPI, ILobbyTeam lobbyTeam, BaseLobby model) {
 

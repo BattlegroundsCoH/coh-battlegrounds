@@ -142,11 +142,11 @@ public struct GamePosition {
     /// Get a random new <see cref="GamePosition"/> within <paramref name="radius"/>.
     /// </summary>
     /// <param name="radius">The radius to pick new point.</param>
-    /// <param name="rng">The random number generator. If none is specified, <see cref="BattlegroundsInstance.RNG"/> is used.</param>
+    /// <param name="rng">The random number generator. If none is specified, <see cref="BattlegroundsContext.RNG"/> is used.</param>
     /// <returns>A position randomly offset inside the <paramref name="radius"/> of the position.</returns>
     public GamePosition RandomOffset(double radius, Random? rng = null) {
         if (rng is null) {
-            rng = BattlegroundsInstance.RNG;
+            rng = BattlegroundsContext.RNG;
         }
         return this with {
             m_x = this.m_x + rng.NextDouble() * (2 * radius) - radius,

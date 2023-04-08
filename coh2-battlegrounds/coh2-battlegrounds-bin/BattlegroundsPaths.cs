@@ -1,7 +1,7 @@
 ﻿namespace Battlegrounds;
 
 /// <summary>
-/// Static class containing constant path ID strings to use in <see cref="BattlegroundsInstance.GetRelativePath(string, string)"/>.
+/// Static class containing constant path ID strings to use in <see cref="BattlegroundsContext.GetRelativePath(string, string)"/>.
 /// </summary>
 public static class BattlegroundsPaths {
 

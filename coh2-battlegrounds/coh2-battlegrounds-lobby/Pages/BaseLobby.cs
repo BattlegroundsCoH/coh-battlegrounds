@@ -49,7 +49,7 @@ public abstract class BaseLobby : IViewModel, INotifyPropertyChanged {
         public override string ToString() => IsOn ? "On" : "Off";
     }
 
-    public record ModPackageOption(ModPackage ModPackage) {
+    public record ModPackageOption(IModPackage ModPackage) {
         public override string ToString() => this.ModPackage.PackageName;
     }
 
@@ -102,12 +102,12 @@ public abstract class BaseLobby : IViewModel, INotifyPropertyChanged {
     protected static readonly LocaleKey __leaveTitle = new("LobbyView_DialogLeaveTitle");
     protected static readonly LocaleKey __leaveDesc = new("LobbyView_DialogLeaveDesc");
 
-    protected static readonly Func<string> LOCSTR_EXIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_LeaveLobby");
-    protected static readonly Func<string> LOCSTR_EDIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_EditCompany");
-    protected static readonly Func<string> LOCSTR_START = () => BattlegroundsInstance.Localize.GetString("LobbyView_StartMatch");
-    protected static readonly Func<string> LOCSTR_PREPARING = () => BattlegroundsInstance.Localize.GetString("LobbyView_PREPARING");
-    protected static readonly Func<string> LOCSTR_WAIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_WaitMatch");
-    protected static readonly Func<string, string> LOCSTR_CANCEL = x => BattlegroundsInstance.Localize.GetString("LobbyView_CancelMatch", x);
+    protected static readonly Func<string> LOCSTR_EXIT = () => BattlegroundsContext.Localize.GetString("LobbyView_LeaveLobby");
+    protected static readonly Func<string> LOCSTR_EDIT = () => BattlegroundsContext.Localize.GetString("LobbyView_EditCompany");
+    protected static readonly Func<string> LOCSTR_START = () => BattlegroundsContext.Localize.GetString("LobbyView_StartMatch");
+    protected static readonly Func<string> LOCSTR_PREPARING = () => BattlegroundsContext.Localize.GetString("LobbyView_PREPARING");
+    protected static readonly Func<string> LOCSTR_WAIT = () => BattlegroundsContext.Localize.GetString("LobbyView_WaitMatch");
+    protected static readonly Func<string, string> LOCSTR_CANCEL = x => BattlegroundsContext.Localize.GetString("LobbyView_CancelMatch", x);
 
     protected readonly ILobbyHandle m_handle;
     protected ChatSpectator? m_chatModel;
@@ -143,7 +143,7 @@ public abstract class BaseLobby : IViewModel, INotifyPropertyChanged {
 
     public abstract Setting<ModPackageOption> ModPackageDropdown { get; }
 
-    public abstract ModPackage ModPackage { get; }
+    public abstract IModPackage ModPackage { get; }
 
     public ImageSource? ScenarioPreview { get; set; }
 
@@ -438,14 +438,14 @@ public abstract class BaseLobby : IViewModel, INotifyPropertyChanged {
         }
 
         // Decide on title
-        string modalTitle = BattlegroundsInstance.Localize.GetString(reason switch {
+        string modalTitle = BattlegroundsContext.Localize.GetString(reason switch {
             "KICK" => "LobbyView_DialogKickTitle",
             "CLOSED" => "LobbyView_DialogCloseTitle",
             _ => "LobbyView_DialogLostTitle"
         });
 
         // Decide on desc
-        string modalDesc = BattlegroundsInstance.Localize.GetString(reason switch {
+        string modalDesc = BattlegroundsContext.Localize.GetString(reason switch {
             "KICK" => "LobbyView_DialogKickDesc",
             "CLOSED" => "LobbyView_DialogCloseDesc",
             _ => "LobbyView_DialogLostDesc"

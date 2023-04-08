@@ -5,7 +5,7 @@ using System.Numerics;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Modding.Content;
@@ -201,7 +201,7 @@ public class AIDefencePlanner {
         for (int i = 0; i < bunkers.Length; i++) {
             if (strat.Length is 0)
                 break;
-            int max = BattlegroundsInstance.RNG.Next(Math.Min(bunkers[i].MaxPlacement, 6));
+            int max = BattlegroundsContext.RNG.Next(Math.Min(bunkers[i].MaxPlacement, 6));
             for (int j = 0; j < max; j++) {
 
                 // Bail on empty nodes
@@ -238,7 +238,7 @@ public class AIDefencePlanner {
         // Try place mines
         for (int i = 0; i < mines.Length; i++) {
             if (mines[i].IsLinePlacement) {
-                int max = BattlegroundsInstance.RNG.Next(Math.Min(mines[i].MaxPlacement, 8));
+                int max = BattlegroundsContext.RNG.Next(Math.Min(mines[i].MaxPlacement, 8));
                 for (int j = 0; j < max; j++) {
                     if (roads.Count is 0)
                         break;
@@ -263,7 +263,7 @@ public class AIDefencePlanner {
         // Try place barricades
         for (int i = 0; i < barricades.Length; i++) {
             if (barricades[i].IsLinePlacement) {
-                int max = BattlegroundsInstance.RNG.Next(Math.Min(barricades[i].MaxPlacement, 8));
+                int max = BattlegroundsContext.RNG.Next(Math.Min(barricades[i].MaxPlacement, 8));
                 for (int j = 0; j < max; j++) {
                     if (roads.Count is 0)
                         break;
@@ -288,7 +288,7 @@ public class AIDefencePlanner {
 
         // Try place units
         var units = company.Units.Filter(x => x.SBP.IsTeamWeapon);
-        int place = units.Length > 0 ? BattlegroundsInstance.RNG.Next(Math.Min(units.Length, 10)) : 0;
+        int place = units.Length > 0 ? BattlegroundsContext.RNG.Next(Math.Min(units.Length, 10)) : 0;
         for (int i = 0; i < place; i++) {
             if (roads.Count is 0)
                 break;

@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Functional;
 using Battlegrounds.Modding;
@@ -14,6 +12,7 @@ using Battlegrounds.Game.Gameplay.Supply;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.AI;
 using Battlegrounds.Data.Generators.Lua;
+using Battlegrounds.Game.Blueprints;
 
 namespace Battlegrounds.Compiler;
 
@@ -82,8 +81,8 @@ public class SessionCompiler : ISessionCompiler {
 
 #if DEBUG
         // Write any debug flags that may have been set
-        for (int i = 0; i < BattlegroundsInstance.Debug.ScarFlags.Length; i++) {
-            sourceBuilder.Writer.WriteVerbatim(BattlegroundsInstance.Debug.ScarFlags[i]);
+        for (int i = 0; i < BattlegroundsContext.Debug.ScarFlags.Length; i++) {
+            sourceBuilder.Writer.WriteVerbatim(BattlegroundsContext.Debug.ScarFlags[i]);
             sourceBuilder.Writer.EndLine(true);
         }
 #endif
@@ -94,7 +93,7 @@ public class SessionCompiler : ISessionCompiler {
         }
 
         // Write the precompiled database
-        this.WritePrecompiledDatabase(sourceBuilder, participants.MapNotNull(x => x.SelectedCompany));
+        this.WritePrecompiledDatabase(sourceBuilder, participants.MapNotNull(x => x.SelectedCompany), session);
 
         // Return built source code
         return sourceBuilder.GetSourceText();
@@ -214,12 +213,15 @@ public class SessionCompiler : ISessionCompiler {
     /// </summary>
     /// <param name="lua"></param>
     /// <param name="companies"></param>
-    protected virtual void WritePrecompiledDatabase(LuaSourceBuilder lua, IEnumerable<Company> companies) {
+    protected virtual void WritePrecompiledDatabase(LuaSourceBuilder lua, IEnumerable<Company> companies, ISession session) {
+
+        // Get package
+        var dataSource = session.TuningMod.Package.GetDataSource().GetBlueprints(session.Gamemode.SupportedGame);
 
         // Get all potential slot items
         var upgrades = companies.SelectMany(x => x.Units.SelectMany(y => y.Upgrades).Cast<UpgradeBlueprint>()).Distinct();
         var itemsInUpgrades = upgrades
-            .SelectMany(x => x.SlotItems.Select(y => BlueprintManager.FromBlueprintName<SlotItemBlueprint>(y))).Distinct();
+            .SelectMany(x => x.SlotItems.Select(y => dataSource.FromBlueprintName<SlotItemBlueprint>(y))).Distinct();
         var items = companies.SelectMany(x => x.Units.SelectMany(y => y.SlotItems.Cast<SlotItemBlueprint>()))
             .Union(itemsInUpgrades).Distinct();
         var upgradeItems = itemsInUpgrades.ToDictionary(k => k, v => upgrades.Where(x => x.SlotItems.Any(y => y == v.Name)).ToHashSet());
@@ -258,7 +260,7 @@ public class SessionCompiler : ISessionCompiler {
         // Get blueprints and create generic profiles
         var profiles = squads.Select(x => x.SBP)
             .Distinct()
-            .Select(x => new KeyValuePair<string, SupplyProfile>(x.GetScarName(), new(x)))
+            .Select(x => new KeyValuePair<string, SupplyProfile>(x.GetScarName(), new(x, session.TuningMod.Package)))
             .ToDictionary();
 
         // Save to lua

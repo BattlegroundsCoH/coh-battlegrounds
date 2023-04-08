@@ -11,7 +11,6 @@ using System.Windows;
 
 using Battlegrounds.DataLocal;
 using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
@@ -24,6 +23,7 @@ using Battlegrounds.UI;
 using Battlegrounds.Editor.Components;
 using Battlegrounds.Editor.Modals;
 using Battlegrounds.Functional;
+using Battlegrounds.Game.Blueprints;
 
 namespace Battlegrounds.Editor.Pages;
 
@@ -74,7 +74,7 @@ public sealed class CompanyEditor : ViewModelBase, IReturnable {
 
     public bool HasChanges => this.Builder.IsChanged;
 
-    private readonly ModPackage m_activeModPackage;
+    private readonly IModPackage m_activeModPackage;
     private readonly CompanyBuilder? m_builder;
 
     private readonly List<SquadBlueprint> m_availableSquads;
@@ -237,7 +237,7 @@ public sealed class CompanyEditor : ViewModelBase, IReturnable {
         this.ReserveUnitCapacity = new(0, 0, () => this.Builder.CountUnitsInRole(DeploymentRole.ReserveRole));
 
         // Set fields
-        this.m_activeModPackage = ModManager.GetPackageFromGuid(guid) ?? throw new Exception("Attempt to create company builder vm without a valid mod package");
+        this.m_activeModPackage = BattlegroundsContext.ModManager.GetPackageFromGuid(guid) ?? throw new Exception("Attempt to create company builder vm without a valid mod package");
 
     }
 
@@ -249,7 +249,7 @@ public sealed class CompanyEditor : ViewModelBase, IReturnable {
         this.CompanyName = company.Name;
         this.CompanyFaction = company.Army;
         this.CompanyGUID = company.TuningGUID;
-        this.CompanyType = BattlegroundsInstance.Localize.GetString(company.Type.Id);
+        this.CompanyType = BattlegroundsContext.Localize.GetString(company.Type.Id);
         this.CompanyTypeIcon = company.Type.UIData.Icon;
 
         // Load database and display
@@ -268,7 +268,7 @@ public sealed class CompanyEditor : ViewModelBase, IReturnable {
         this.CompanyName = companyName;
         this.CompanyFaction = faction;
         this.CompanyGUID = modGuid;
-        this.CompanyType = BattlegroundsInstance.Localize.GetString(type.Id);
+        this.CompanyType = BattlegroundsContext.Localize.GetString(type.Id);
         this.CompanyTypeIcon = type.UIData.Icon;
 
         // Load database and display
@@ -386,7 +386,7 @@ public sealed class CompanyEditor : ViewModelBase, IReturnable {
             var hidden = type.FactionData?.GetHiddenSquads() ?? Array.Empty<string>();
 
             // Get available squads
-            BlueprintManager.GetCollection<SquadBlueprint>()
+            this.Builder.BlueprintDatabase.GetCollection<SquadBlueprint>()
                 .FilterByMod(this.CompanyGUID)
                 .Filter(x => x.Army == this.CompanyFaction)
                 .Filter(x => !x.Types.IsVehicleCrew)
@@ -399,7 +399,7 @@ public sealed class CompanyEditor : ViewModelBase, IReturnable {
             var faction = this.m_activeModPackage.FactionSettings[this.CompanyFaction];
 
             // Get available abilities
-            BlueprintManager.GetCollection<AbilityBlueprint>()
+            this.Builder.BlueprintDatabase.GetCollection<AbilityBlueprint>()
                 .FilterByMod(this.CompanyGUID)
                 .Filter(x => faction.Abilities.Select(y => y.Blueprint).Contains(x.Name))
                 .ForEach(this.m_abilities.Add);
@@ -621,7 +621,7 @@ public sealed class CompanyEditor : ViewModelBase, IReturnable {
             if (equipmentSlot.Item.Item is SquadBlueprint sbp) { // Is vehicle...
 
                 // Get driver squad
-                var driverSbp = sbp.GetCrewBlueprint(this.CompanyFaction);
+                var driverSbp = m_activeModPackage.GetDataSource().GetBlueprints(Game.GameCase.CompanyOfHeroes2).GetCrewBlueprint(sbp, this.CompanyFaction);
                 driverSbp ??= this.Builder.CompanyType.FactionData!.GetDriver(sbp.Types);
 
                 // Add action

@@ -45,16 +45,16 @@ public record LobbySettingPreview(string Key, string Value);
 
 public record LobbySlotPreview(ServerSlot Slot) {
     public string SlotTitle => this.Slot.State switch {
-        0 => BattlegroundsInstance.Localize.GetString("GameBrowserView_PreviewSlotOpen"),
+        0 => BattlegroundsContext.Localize.GetString("GameBrowserView_PreviewSlotOpen"),
         1 => this.Slot.Difficulty switch {
             0 => this.Slot.DisplayName,
-            1 => BattlegroundsInstance.Localize.GetEnum(AIDifficulty.AI_Easy),
-            2 => BattlegroundsInstance.Localize.GetEnum(AIDifficulty.AI_Standard),
-            3 => BattlegroundsInstance.Localize.GetEnum(AIDifficulty.AI_Hard),
-            4 => BattlegroundsInstance.Localize.GetEnum(AIDifficulty.AI_Expert),
+            1 => BattlegroundsContext.Localize.GetEnum(AIDifficulty.AI_Easy),
+            2 => BattlegroundsContext.Localize.GetEnum(AIDifficulty.AI_Standard),
+            3 => BattlegroundsContext.Localize.GetEnum(AIDifficulty.AI_Hard),
+            4 => BattlegroundsContext.Localize.GetEnum(AIDifficulty.AI_Expert),
             _ => throw new InvalidOperationException()
         },
-        2 => BattlegroundsInstance.Localize.GetString("GameBrowserView_PreviewSlotLocked"),
+        2 => BattlegroundsContext.Localize.GetString("GameBrowserView_PreviewSlotLocked"),
         _ => ""
     };
     public ImageSource? SlotImage => this.Slot.State switch {
@@ -233,7 +233,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
         this.PreviewSettings.Clear();
 
         // Grab mod package
-        var package = ModManager.GetPackage(selected.Settings.TryGetValue(LobbyConstants.SETTING_MODPACK, out string? s) ? s : string.Empty);
+        var package = BattlegroundsContext.ModManager.GetPackage(selected.Settings.TryGetValue(LobbyConstants.SETTING_MODPACK, out string? s) ? s : string.Empty);
 
         // Set settings
         foreach (var setting in selected.Settings) {
@@ -244,7 +244,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
                     _ => true
                 };
                 if (show) {
-                    string k = BattlegroundsInstance.Localize.GetString(keyloc);
+                    string k = BattlegroundsContext.Localize.GetString(keyloc);
                     string v = setting.Key switch {
                         LobbyConstants.SETTING_MAP => SettingsLookup.GetScenarioName(scen, setting.Value),
                         LobbyConstants.SETTING_WEATHER or LobbyConstants.SETTING_LOGISTICS => setting.Value is "1" ? "On" : "Off",
@@ -338,7 +338,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
     private static void LocalButton() {
 
         // Create dummy model
-        LocalLobbyHandle localHandle = new(BattlegroundsInstance.Steam.User);
+        LocalLobbyHandle localHandle = new(BattlegroundsContext.Steam.User);
 
         // Create lobby models.
         var lobbyModel = BaseLobby.CreateModelAsHost(localHandle);
@@ -441,7 +441,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
         }
 
         // Ensure steam user is verified
-        if (!BattlegroundsInstance.Steam.HasVerifiedUser && !BattlegroundsInstance.Steam.GetSteamUser()) {
+        if (!BattlegroundsContext.Steam.HasVerifiedUser && !BattlegroundsContext.Steam.GetSteamUser()) {
             Trace.WriteLine("Failed to verify steam user in attempt to join game.", nameof(LobbyBrowser));
             return;
         }

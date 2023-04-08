@@ -5,10 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Input;
-
-using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 
@@ -24,6 +21,8 @@ using Battlegrounds.UI.Modals;
 using Battlegrounds.Editor.Components;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Game.Blueprints.Extensions;
 
 namespace Battlegrounds.Editor.Modals;
 
@@ -107,16 +106,16 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
     public ImageSource? CrewPortrait => this.CrewBuilderInstance is not null ? ResourceHandler.GetIcon("portraits", this.CrewBuilderInstance.Blueprint.UI.Portrait) : null;
 
     public string DeployMethodTitle => this.BuilderInstance.DeployMethod switch {
-        DeploymentMethod.None => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_None"),
-        DeploymentMethod.DeployAndExit => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Exit"),
-        DeploymentMethod.DeployAndStay => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Stay"),
+        DeploymentMethod.None => BattlegroundsContext.Localize.GetString("CompanySquadView_Deploy_None"),
+        DeploymentMethod.DeployAndExit => BattlegroundsContext.Localize.GetString("CompanySquadView_Deploy_Exit"),
+        DeploymentMethod.DeployAndStay => BattlegroundsContext.Localize.GetString("CompanySquadView_Deploy_Stay"),
         _ => throw new InvalidEnumArgumentException()
     };
 
     public string DeployMethodDesc => this.BuilderInstance.DeployMethod switch {
-        DeploymentMethod.None => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_None_Desc"),
-        DeploymentMethod.DeployAndExit => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Exit_Desc"),
-        DeploymentMethod.DeployAndStay => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Stay_Desc"),
+        DeploymentMethod.None => BattlegroundsContext.Localize.GetString("CompanySquadView_Deploy_None_Desc"),
+        DeploymentMethod.DeployAndExit => BattlegroundsContext.Localize.GetString("CompanySquadView_Deploy_Exit_Desc"),
+        DeploymentMethod.DeployAndStay => BattlegroundsContext.Localize.GetString("CompanySquadView_Deploy_Stay_Desc"),
         _ => throw new InvalidEnumArgumentException()
     };
 
@@ -189,7 +188,7 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
 
         // Collect all upgrades
         this.BuilderInstance.Blueprint.Upgrades
-            .Map(BlueprintManager.FromBlueprintName<UpgradeBlueprint>)
+            .Map(companyBuilder.BlueprintDatabase.FromBlueprintName<UpgradeBlueprint>)
             .Filter(x => x.UI.Icon is not "" && ResourceHandler.HasIcon("upgrade_icons", x.UI.Icon))
             .Map(x => new UpgradeButton(x, () => this.BuilderInstance.Upgrades.Contains(x), () => !this.UpgradeCapacity.IsAtCapacity, new EventCommand<MouseEventArgs>(this.UpgradeCommand)))
             .ForEach(this.Upgrades.Add);
@@ -269,7 +268,7 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
         // Set method
         this.BuilderInstance.SetDeploymentMethod(model.Method);
         if (model.Method is DeploymentMethod.None) {
-            this.BuilderInstance.SetTransportBlueprint(string.Empty);
+            this.BuilderInstance.SetTransportBlueprint((SquadBlueprint?)null);
         } else if (this.BuilderInstance.Transport is null && model.Method is not DeploymentMethod.None) {
             if (this.DeployUnits.FirstOrDefault() is DeployUnitButton bttn) {
                 this.BuilderInstance.SetTransportBlueprint(bttn.Blueprint);

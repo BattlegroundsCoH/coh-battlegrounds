@@ -5,8 +5,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content.Companies;
@@ -90,7 +89,13 @@ public class Company : IChecksumItem {
     public double Rating => Math.Round(this.GetStrength() / MAX_RATING, 2);
 
     /// <summary>
-    /// Get the <see cref="CompanyType"/> that can be used to describe the <see cref="Company"/> characteristics.
+    /// Get the game this company is designed for.
+    /// </summary>
+    [ChecksumProperty]
+    public GameCase Game { get; }
+
+    /// <summary>
+    /// Get the <see cref="FactionCompanyType"/> that can be used to describe the <see cref="Company"/> characteristics.
     /// </summary>
     [ChecksumProperty]
     public FactionCompanyType Type { get; init; }
@@ -172,19 +177,25 @@ public class Company : IChecksumItem {
     public bool AutoReplenish => this.m_autoReplenish;
 
     /// <summary>
+    /// New empty <see cref="Company"/> instance with <see cref="Game"/> set to <see cref="GameCase.CompanyOfHeroes2"/>.
+    /// </summary>
+    internal Company(Faction faction, FactionCompanyType companyType) : this(faction, companyType, GameCase.CompanyOfHeroes2) {}
+
+    /// <summary>
     /// New empty <see cref="Company"/> instance.
     /// </summary>
-    internal Company(Faction faction, FactionCompanyType companyType) {
+    internal Company(Faction faction, FactionCompanyType companyType, GameCase game) {
         this.Army = faction;
         this.Type = companyType;
         this.Name = "Untitled Company";
+        this.Game = game;
         this.m_squads = new List<Squad>();
         this.m_inventory = new List<CompanyItem>();
         this.m_modifiers = new List<Modifier>();
         this.m_upgrades = new List<UpgradeBlueprint>();
         this.m_abilities = new List<Ability>();
         this.m_companyStatistics = new CompanyStatistics();
-        this.m_lastEditVersion = BattlegroundsInstance.Version.ApplicationVersion;
+        this.m_lastEditVersion = BattlegroundsContext.Version.ApplicationVersion;
     }
 
     /// <summary>
@@ -298,7 +309,7 @@ public class Company : IChecksumItem {
     /// 
     /// </summary>
     /// <returns></returns>
-    public bool VerifyAppVersion() => this.m_lastEditVersion == BattlegroundsInstance.Version.ApplicationVersion;
+    public bool VerifyAppVersion() => this.m_lastEditVersion == BattlegroundsContext.Version.ApplicationVersion;
 
     public bool VerifyChecksum(ulong checksum)
         => this.m_checksum == checksum;
@@ -359,10 +370,7 @@ public class Company : IChecksumItem {
     public Ability[] GetSpecialUnitAbilities() {
 
         // Get the relevant mod package
-        var package = ModManager.GetPackageFromGuid(this.TuningGUID);
-        if (package is null) {
-            throw new InvalidOperationException();
-        }
+        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(this.TuningGUID) ?? throw new InvalidOperationException();
 
         // Return from this
         return GetSpecialUnitAbilities(this.Army, package, this.m_squads.Select(x => x.SBP).Distinct().ToArray());
@@ -376,7 +384,7 @@ public class Company : IChecksumItem {
     /// <param name="mod">The mod to collect unit abilities from.</param>
     /// <param name="squadBlueprints">The blueprints of units who grant unit abilities.</param>
     /// <returns>Array of special abilities that <paramref name="squadBlueprints"/> bring.</returns>
-    public static Ability[] GetSpecialUnitAbilities(Faction faction, ModPackage mod, IEnumerable<SquadBlueprint> squadBlueprints) {
+    public static Ability[] GetSpecialUnitAbilities(Faction faction, IModPackage mod, IEnumerable<SquadBlueprint> squadBlueprints) {
 
         // Get unit abilities for faction
         var uabps = mod.FactionSettings[faction].UnitAbilities;
@@ -384,7 +392,7 @@ public class Company : IChecksumItem {
         // Select all relevant abilities
         var abps = uabps.Filter(x => squadBlueprints.Any(y => y.Name == x.Blueprint))
             .MapAndFlatten(x => x.Abilities)
-            .Map(x => (data: x, bp: BlueprintManager.FromBlueprintName<AbilityBlueprint>(x.Blueprint)))
+            .Map(x => (data: x, bp: mod.GetDataSource().GetBlueprints(faction.RequiredDLC.Game)!.FromBlueprintName<AbilityBlueprint>(x.Blueprint)))
             .Filter(x => x.bp is not null);
 
         // Return array of ability instances

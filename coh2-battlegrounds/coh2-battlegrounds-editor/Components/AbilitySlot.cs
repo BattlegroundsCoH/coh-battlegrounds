@@ -1,9 +1,8 @@
-﻿using Battlegrounds.Game.Database.Extensions;
-using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Gameplay;
+﻿using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Game.Blueprints.Extensions;
 
 namespace Battlegrounds.Editor.Components;
 
@@ -85,7 +84,7 @@ public class AbilitySlot {
     public void UpdateUnitData(FactionData.UnitAbility unitData) {
 
         // Get blueprint
-        var sbp = BlueprintManager.FromBlueprintName<SquadBlueprint>(unitData.Blueprint);
+        var sbp = BattlegroundsContext.DataSource.GetBlueprintSource(this.AbilityInstance.ABP).FromBlueprintName<SquadBlueprint>(unitData.Blueprint);
         if (sbp is null) {
             return;
         }

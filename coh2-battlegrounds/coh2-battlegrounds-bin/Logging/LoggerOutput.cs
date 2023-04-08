@@ -9,7 +9,7 @@ namespace Battlegrounds.Logging;
 /// Class for logging information to <see cref="OUT_PATH"/>. Inherits from <see cref="TraceListener"/> (So use <see cref="Trace.WriteLine(object?)"/> or equivalent methods 
 /// to write logging messages).
 /// </summary>
-public sealed class LoggerOutput : TraceListener {
+public sealed class LoggerOutput : TraceListener{
 
     private static readonly string OUT_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH\\coh2-bg.log");
 
@@ -32,7 +32,7 @@ public sealed class LoggerOutput : TraceListener {
         // Open file
         FileStream? file = Open();
         if (file is not null) {
-            if (file.Length > 768) { // Delete if file exceeds 768kb
+            if (file.Length > 768 * 1024) { // Delete if file exceeds 768kb
                 file.Close();
                 File.Delete(OUT_PATH);
                 file = Open();
@@ -44,7 +44,7 @@ public sealed class LoggerOutput : TraceListener {
                 AutoFlush = true,
             };
             m_writer.WriteLine($"{Environment.NewLine}\tStarting new log on {DateTime.Now.ToLongDateString()} @ {DateTime.Now.ToLongTimeString()}{Environment.NewLine}");
-            Trace.Listeners.Add(this);
+            //Trace.Listeners.Add(this);
         }
     }
 

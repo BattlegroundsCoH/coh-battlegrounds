@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Battlegrounds.Game;
 using Battlegrounds.Game.DataSource;
 
 namespace Battlegrounds.Modding;
@@ -40,23 +41,29 @@ public readonly struct WinconditionOption : IGamemodeOption {
         this.Value = val;
     }
 
+    /// <inheritdoc/>
     public void Deconstruct(out UcsString title, out int value) {
         title = this.Title;
         value = this.Value;
     }
 
+    /// <inheritdoc/>
     public override string ToString() => this.Title;
 
 }
 
 public readonly struct WinconditionSliderOption : IGamemodeAuxiliaryOption {
 
+    /// <inheritdoc/>
     public string Name { get; init; }
 
+    /// <inheritdoc/>
     public UcsString Title { get; init; }
 
+    /// <inheritdoc/>
     public UcsString Description { get; init; }
 
+    /// <inheritdoc/>
     public AuxiliaryOptionType OptionInputType => AuxiliaryOptionType.Slider;
 
     /// <summary>
@@ -64,14 +71,19 @@ public readonly struct WinconditionSliderOption : IGamemodeAuxiliaryOption {
     /// </summary>
     public IGamemodeOption[] Options => Array.Empty<IGamemodeOption>();
 
+    /// <inheritdoc/>
     public int Minimum { get; init; }
 
+    /// <inheritdoc/>
     public int Maximum { get; init; }
 
+    /// <inheritdoc/>
     public int Step { get; init; }
 
+    /// <inheritdoc/>
     public int Default { get; init; }
 
+    /// <inheritdoc/>
     public UcsString Format { get; init; }
 
     /// <summary>
@@ -91,21 +103,25 @@ public readonly struct WinconditionSliderOption : IGamemodeAuxiliaryOption {
 
 public readonly struct WinconditionDropdownOption : IGamemodeAuxiliaryOption {
 
+    /// <inheritdoc/>
     public string Name { get; init; }
 
+    /// <inheritdoc/>
     public UcsString Title { get; init; }
 
+    /// <inheritdoc/>
     public UcsString Description { get; init; }
 
+    /// <inheritdoc/>
     public UcsString Format { get; init; }
 
+    /// <inheritdoc/>
     public AuxiliaryOptionType OptionInputType => AuxiliaryOptionType.Dropdown;
 
+    /// <inheritdoc/>
     public int Default { get; init; }
 
-    /// <summary>
-    /// 
-    /// </summary>
+    /// <inheritdoc/>
     public IGamemodeOption[] Options { get; init; }
 
     /// <summary>
@@ -191,6 +207,11 @@ public sealed class Wincondition : IGamemode {
     public string[] IncludeFiles { get; init; }
 
     /// <summary>
+    /// Get or initialise the supported game.
+    /// </summary>
+    public GameCase SupportedGame { get; init; }
+
+    /// <summary>
     /// Initialise a new <see cref="Wincondition"/> instance.
     /// </summary>
     /// <param name="name">The name of the wincondition.</param>
@@ -206,6 +227,7 @@ public sealed class Wincondition : IGamemode {
         this.PlannableEntities = new();
     }
 
+    /// <inheritdoc/>
     public override string ToString() => this.DisplayName;
 
 }

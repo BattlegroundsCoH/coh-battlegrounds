@@ -27,7 +27,7 @@ public static class SessionUtility {
     public static bool CompileSession(ISessionCompiler compiler, ISession session) {
 
         // Get the scar file
-        string sessionScarFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, "session.scar");
+        string sessionScarFile = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, "session.scar");
 
         // Conatiner for additional files to include
         List<WinconditionSourceFile> includeFiles = new();
@@ -45,7 +45,7 @@ public static class SessionUtility {
             if (session.Settings.GetCastValueOrDefault("sypply_system", false) is true) {
 
                 // Get the supply file
-                string sessionSupplyScarFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, "session_supply.scar");
+                string sessionSupplyScarFile = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.SESSION_FOLDER, "session_supply.scar");
 
                 // Log compiler
                 Trace.WriteLine($"Compiling \"{sessionSupplyScarFile}\" into a scar file using '{compiler.GetType().Name}'", nameof(SessionUtility));
@@ -68,7 +68,7 @@ public static class SessionUtility {
                 if (pathInfo.Length is 2) {
 
                     // Pick real path
-                    var realPath = BattlegroundsInstance.GetRelativeVirtualPath(pathInfo[0], ".scar");
+                    var realPath = BattlegroundsContext.GetRelativeVirtualPath(pathInfo[0], ".scar");
 
                     // Verify file exists
                     if (!File.Exists(realPath)) {
@@ -107,7 +107,7 @@ public static class SessionUtility {
         Trace.WriteLine($"Using {sourceFinder} as wincondition code source", "SessionCompiler");
 
         // Get the input directory
-        var buildFolder = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BUILD_FOLDER, string.Empty);
+        var buildFolder = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.BUILD_FOLDER, string.Empty);
 
         // Get the locale compiler
         var locCompiler = new LocaleCompiler();

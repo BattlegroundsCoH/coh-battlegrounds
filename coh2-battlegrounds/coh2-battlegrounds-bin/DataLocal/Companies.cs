@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -50,7 +49,7 @@ public static class Companies {
 
         try {
 
-            string companyFolder = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, string.Empty);
+            string companyFolder = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, string.Empty);
             string[] companies = Directory.GetFiles(companyFolder, "*.json");
 
             if (__companies.Count == companies.Length) {
@@ -111,7 +110,7 @@ public static class Companies {
     /// <param name="company">The <see cref="Company"/> instance to save.</param>
     public static void SaveCompany(Company company) {
         try {
-            string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{Regex.Replace(company.Name, @"[$&+,:;=?@#|'<>.^\\/""*()%!-]", " ").Replace(" ", "")}.json");
+            string filename = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{Regex.Replace(company.Name, @"[$&+,:;=?@#|'<>.^\\/""*()%!-]", " ").Replace(" ", "")}.json");
             if (File.Exists(filename)) {
                 logger.Info($"Deleting existing player company '{company.Name}'");
                 File.Delete(filename);
@@ -119,8 +118,10 @@ public static class Companies {
             CompanySerializer.SaveCompanyToFile(company, filename);
             logger.Info($"Saved player company '{company.Name}'.");
         } catch (IOException ioex) {
-            logger.Info($"Failed to save player company '{company.Name}'. ");
+            logger.Info($"Failed to save player company '{company.Name}' (IO Exception).");
             logger.Exception(ioex);
+        } catch (Exception e) {
+            logger.Exception(e);
         } finally {
             Company? oldCompany = __companies.FirstOrDefault(x => x.Name == company.Name && x.Army == company.Army);
             if (oldCompany is not null && oldCompany != company) { // If new reference
@@ -137,7 +138,7 @@ public static class Companies {
     /// </summary>
     /// <param name="company">The company to delete.</param>
     public static void DeleteCompany(Company company) {
-        string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{Regex.Replace(company.Name, @"[$&+,:;=?@#|'<>.^\\/""*()%!-]", "").Replace(" ", "")}.json");
+        string filename = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{Regex.Replace(company.Name, @"[$&+,:;=?@#|'<>.^\\/""*()%!-]", "").Replace(" ", "")}.json");
         if (File.Exists(filename)) {
             File.Delete(filename);
         }

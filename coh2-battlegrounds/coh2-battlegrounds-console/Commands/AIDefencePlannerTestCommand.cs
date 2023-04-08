@@ -31,7 +31,7 @@ public class AIDefencePlannerTestCommand : Command {
         }
 
         // Get gamode instance
-        var mode = ModManager.GetPackageOrError("mod_bg").Gamemodes.FirstOrDefault(x => x.ID == "bg_defence", new());
+        var mode = BattlegroundsContext.ModManager.GetPackageOrError("mod_bg").Gamemodes.FirstOrDefault(x => x.ID == "bg_defence", new());
 
         // Grab analysis
         var analysis = AIDatabase.GetMapAnalysis("2p_coh2_resistance");

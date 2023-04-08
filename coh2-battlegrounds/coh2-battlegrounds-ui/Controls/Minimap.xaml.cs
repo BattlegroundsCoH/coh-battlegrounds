@@ -2,12 +2,11 @@
 using System.Windows;
 using System.Windows.Controls;
 
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Game;
 using Battlegrounds.Resources;
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.Blueprints;
 
 namespace Battlegrounds.UI.Controls;
 
@@ -81,8 +80,8 @@ public partial class Minimap : UserControl {
         var points = await Task.Run(() => scenario.Points.Map(x => (x.Position, x.Owner switch {
             >= 1000 and < 1008 => (ushort)(x.Owner - 1000),
             _ => ushort.MaxValue
-        }, BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint))));
-
+        }, BattlegroundsContext.DataSource.GetBlueprints(BattlegroundsContext.ModManager.GetVanillaPackage(GameCase.CompanyOfHeroes2), GameCase.CompanyOfHeroes2)
+        !.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint))));
 
         // Display basic information
         await this.Dispatcher.BeginInvoke(() => this.TryShowPositions(scenario, points));

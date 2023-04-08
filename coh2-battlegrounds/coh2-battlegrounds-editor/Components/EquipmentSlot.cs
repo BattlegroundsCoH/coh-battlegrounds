@@ -1,6 +1,5 @@
 ﻿using System.Windows.Input;
-
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Locale;
 using Battlegrounds.UI;

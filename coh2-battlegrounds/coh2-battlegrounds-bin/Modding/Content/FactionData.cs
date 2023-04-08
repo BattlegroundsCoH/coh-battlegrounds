@@ -3,9 +3,9 @@ using System.Text.Json.Serialization;
 
 using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Extensions;
-using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Game.Blueprints.Extensions;
 using Battlegrounds.Modding.Content.Companies;
 
 namespace Battlegrounds.Modding.Content;
@@ -82,15 +82,20 @@ public class FactionData {
     /// </summary>
     public string TeamWeaponCrew { get; init; }
 
+    /// <summary>
+    /// Get or initialise the game case associated with this faction.
+    /// </summary>
+    public GameCase Game { get; init; }
+
     [JsonIgnore]
-    public ModPackage? Package { get; set; }
+    public IModPackage? Package { get; set; }
 
     [JsonConstructor]
     public FactionData(string Faction, 
         Driver[] Drivers, 
         FactionAbility[] Abilities, 
         UnitAbility[] UnitAbilities, string[] Transports, string[] TowTransports, bool CanHaveParadropInCompanies, bool CanHaveGliderInCompanies,
-        CompanySettings Companies, string TeamWeaponCrew) {
+        CompanySettings Companies, string TeamWeaponCrew, GameCase Game) {
         
         // Set fields
         this.Faction = Faction;
@@ -105,6 +110,8 @@ public class FactionData {
         this.Companies = Companies with { 
             Types = Companies.Types.ForEach(x => x.FactionData = this) 
         };
+
+        this.Game = Game is GameCase.Unspecified ? global::Battlegrounds.Game.Gameplay.Faction.TryGetGameFromFactionName(this.Faction) : Game;
 
     }
 
@@ -126,7 +133,7 @@ public class FactionData {
     public SquadBlueprint GetDriver(TypeList types) {
         for (int i = 0; i < this.Drivers.Length; i++) {
             if (string.IsNullOrEmpty(this.Drivers[i].WhenType) || types.IsType(this.Drivers[i].WhenType))
-                return BlueprintManager.FromBlueprintName<SquadBlueprint>(this.Drivers[i].Blueprint);
+                return Package!.GetDataSource().GetBlueprints(Game).FromBlueprintName<SquadBlueprint>(this.Drivers[i].Blueprint);
         }
         throw new ObjectNotFoundException("Failed to find driver blueprint.");
     }

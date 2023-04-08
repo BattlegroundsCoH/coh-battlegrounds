@@ -14,7 +14,7 @@ public class SingleplayerStartupStrategy : BaseStartupStrategy {
 
     private Session? m_collectedSession;
 
-    public override bool OnPrepare(object caller) => this.GetLocalCompany(BattlegroundsInstance.Steam.User.ID);
+    public override bool OnPrepare(object caller) => this.GetLocalCompany(BattlegroundsContext.Steam.User.ID);
 
     public override bool OnBegin(object caller) => true;
 

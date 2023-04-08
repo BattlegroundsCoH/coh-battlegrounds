@@ -28,15 +28,15 @@ namespace Battlegrounds.Lobby.Pages.Host;
 /// </summary>
 public sealed class HostLobby : BaseLobby {
 
-    private static readonly string __playabilityAlliesInvalid = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAlliesInvalid");
-    private static readonly string __playabilityAlliesNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAlliesNoPlayers");
-    private static readonly string __playabilityAxisInvalid = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisInvalid");
-    private static readonly string __playabilityAxisNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisNoPlayers");
-    private static readonly string __playabilityNoticePersistency = BattlegroundsInstance.Localize.GetString("LobbyView_PersistencyDisabled");
+    private static readonly string __playabilityAlliesInvalid = BattlegroundsContext.Localize.GetString("LobbyView_StartMatchAlliesInvalid");
+    private static readonly string __playabilityAlliesNoPlayers = BattlegroundsContext.Localize.GetString("LobbyView_StartMatchAlliesNoPlayers");
+    private static readonly string __playabilityAxisInvalid = BattlegroundsContext.Localize.GetString("LobbyView_StartMatchAxisInvalid");
+    private static readonly string __playabilityAxisNoPlayers = BattlegroundsContext.Localize.GetString("LobbyView_StartMatchAxisNoPlayers");
+    private static readonly string __playabilityNoticePersistency = BattlegroundsContext.Localize.GetString("LobbyView_PersistencyDisabled");
 
-    private static readonly Func<int, string> LOCSTR_GAMEMODEUPLOAD = x => BattlegroundsInstance.Localize.GetString("LobbyView_UploadGamemode", x);
+    private static readonly Func<int, string> LOCSTR_GAMEMODEUPLOAD = x => BattlegroundsContext.Localize.GetString("LobbyView_UploadGamemode", x);
 
-    private ModPackage? m_package;
+    private IModPackage? m_package;
 
     public override MutableButton SwapRoles { get; }
 
@@ -54,7 +54,7 @@ public sealed class HostLobby : BaseLobby {
 
     public override Setting<ModPackageOption> ModPackageDropdown { get; }
 
-    public override ModPackage ModPackage => this.m_package ?? throw new Exception("No Mod Package Defined");
+    public override IModPackage ModPackage => this.m_package ?? throw new Exception("No Mod Package Defined");
 
     public HostLobby(ILobbyHandle handle, ILobbyTeam allies, ILobbyTeam axis) : base(handle, allies, axis) {
 
@@ -73,7 +73,7 @@ public sealed class HostLobby : BaseLobby {
 
         // Get & set tunning list
         var tunlist = new List<ModPackageOption>();
-        ModManager.EachPackage(x => tunlist.Add(new ModPackageOption(x)));
+        BattlegroundsContext.ModManager.EachPackage(x => tunlist.Add(new ModPackageOption(x)));
 
         // Init mod package dropdown
         this.ModPackageDropdown = Setting<ModPackageOption>.NewDropdown("LobbyView_SettingTuning", new(tunlist), this.ModPackageSelectionChanged);
@@ -331,7 +331,7 @@ public sealed class HostLobby : BaseLobby {
         this.NotifyProperty(nameof(Scenario));
 
         // Update last played
-        BattlegroundsInstance.LastPlayedMap = scen.RelativeFilename;
+        BattlegroundsContext.LastPlayedMap = scen.RelativeFilename;
 
         // Update gamemode
         this.UpdateGamemodeAndOptionsSelection(scen);
@@ -470,7 +470,7 @@ public sealed class HostLobby : BaseLobby {
         // Get available gamemodes
         var guid = this.m_package.GamemodeGUID;
         List<IGamemode> gamemodes =
-            (scenario.Gamemodes.Count > 0 ? WinconditionList.GetGamemodes(guid, scenario.Gamemodes) : WinconditionList.GetGamemodes(guid)).ToList();
+            (scenario.Gamemodes.Count > 0 ? Winconditions.GetGamemodes(guid, scenario.Gamemodes) : Winconditions.GetGamemodes(guid)).ToList();
 
         // Update if there's any change in available gamemodes 
         if (this.GamemodeDropdown.Items.Count != gamemodes.Count || gamemodes.Any(x => !this.GamemodeDropdown.Items.Contains(x))) {

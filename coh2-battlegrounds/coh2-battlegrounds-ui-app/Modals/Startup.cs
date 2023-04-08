@@ -141,9 +141,9 @@ public sealed class Startup : ModalBase, INotifyPropertyChanged {
             if (validPath) {
                 SteamUser? user = SteamInstance.FromLocalInstall();
                 if (user is not null) {
-                    BattlegroundsInstance.Steam.User = user;
+                    BattlegroundsContext.Steam.User = user;
                     userFound = true;
-                    this.LocalUsername = BattlegroundsInstance.Localize.GetString("STARTUP_USER", user.Name);
+                    this.LocalUsername = BattlegroundsContext.Localize.GetString("STARTUP_USER", user.Name);
                     this.IsUsernameVisible = Visibility.Visible;
                     this.PropertyChanged?.Invoke(this, new(nameof(LocalUsername)));
                     this.PropertyChanged?.Invoke(this, new(nameof(IsUsernameVisible)));
@@ -247,8 +247,8 @@ public sealed class Startup : ModalBase, INotifyPropertyChanged {
         Pathfinder.CoHPath = this.DetectedCoHpath;
 
         // Set instance
-        BattlegroundsInstance.SaveInstancePath(BattlegroundsPaths.STEAM_FOLDER, Pathfinder.SteamPath);
-        BattlegroundsInstance.SaveInstancePath(BattlegroundsPaths.COH_FOLDER, Pathfinder.CoHPath);
+        BattlegroundsContext.SaveInstancePath(BattlegroundsPaths.STEAM_FOLDER, Pathfinder.SteamPath);
+        BattlegroundsContext.SaveInstancePath(BattlegroundsPaths.COH_FOLDER, Pathfinder.CoHPath);
 
         // Invoke callback
         this.m_closeCallback?.Invoke();

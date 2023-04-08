@@ -1,9 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Media;
-
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Extensions;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Game.Blueprints.Extensions;
 using Battlegrounds.Locale;
 using Battlegrounds.Resources;
 

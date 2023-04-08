@@ -17,7 +17,6 @@ using Battlegrounds.AI;
 using Battlegrounds.Data;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game;
 using Battlegrounds.Lobby.Playing;
@@ -31,6 +30,7 @@ using Battlegrounds.Lobby.Lookups;
 using Battlegrounds.Lobby.Planning;
 using Battlegrounds.Lobby.Pages.Host;
 using Battlegrounds.Lobby.Pages.Participants;
+using Battlegrounds.Game.Blueprints;
 
 namespace Battlegrounds.Lobby.Pages;
 
@@ -39,7 +39,7 @@ using static Battlegrounds.UI.AppContext;
 
 public record PlanningOverviewModelInput(BaseLobby Model, ChatSpectator Chat, ILobbyHandle Handle) {
     public Scenario Scenario => this.Model.Scenario ?? throw new Exception("No scenario was set!");
-    public ModPackage Package => this.Model.ModPackage;
+    public IModPackage Package => this.Model.ModPackage;
     public Gamemode Gamemode => this.Model.Gamemode;
 }
 
@@ -166,7 +166,7 @@ public sealed class Planner : ViewModelBase {
         this.m_planHandle = pHandle;
 
         // Set planning context handler
-        this.m_planningContext = new(this.m_planHandle, input.Scenario);
+        this.m_planningContext = new(this.m_planHandle, input.Scenario, input.Package);
 
         // Set return command
         this.ReturnLobbyCommand = new(this.ExitPlanning);
@@ -243,7 +243,7 @@ public sealed class Planner : ViewModelBase {
                 var data = defData[i];
 
                 // Grab EBP
-                var ebp = BlueprintManager.FromBlueprintName<EntityBlueprint>(data.EntityBlueprint);
+                var ebp = m_data.Package.GetDataSource().GetBlueprints(GameCase.CompanyOfHeroes2).FromBlueprintName<EntityBlueprint>(data.EntityBlueprint);
 
                 // Create display data from mod data
                 var handler = () => this.m_planningContext.PickPlaceElement(ebp, data);
@@ -456,7 +456,7 @@ public sealed class Planner : ViewModelBase {
         var points = await Task.Run(() => this.m_data.Scenario.Points.Map(x => (x.Position, x.Owner switch {
             >= 1000 and < 1008 => (ushort)(x.Owner - 1000),
             _ => ushort.MaxValue
-        }, BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint))));
+        }, m_data.Package.GetDataSource().GetBlueprints(GameCase.CompanyOfHeroes2).FromBlueprintName<EntityBlueprint>(x.EntityBlueprint))));
 
         // Display basic information
         points.Map(x => new LobbyPlanningMinimapItem(x.Item3, x.Item2, x.Position, this.m_data.Scenario)).ForEach(this.MinimapItems.Add);

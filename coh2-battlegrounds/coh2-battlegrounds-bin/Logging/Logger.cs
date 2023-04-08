@@ -122,8 +122,8 @@ public sealed class Logger {
     /// <param name="e">The exception to log.</param>
     public void Exception(Exception e) {
         LogThis(LogLevel.Error, e.Message);
-        BattlegroundsInstance.Log!.Write(e.StackTrace);
-        BattlegroundsInstance.Log!.Write(Environment.NewLine);
+        BattlegroundsContext.Log!.Write(e.StackTrace);
+        BattlegroundsContext.Log!.Write(Environment.NewLine);
     }
 
     // The actual method that passes the log message to the actual logger
@@ -138,8 +138,11 @@ public sealed class Logger {
                 level.ToString().ToUpperInvariant(),
                 source.Name,
                 msg);
-        BattlegroundsInstance.Log!.Write(tolog);
+        BattlegroundsContext.Log!.Write(tolog);
         Console.Write(tolog); // TOOD: check with global settings if this log is desired
+#if DEBUG
+        Trace.Write(tolog);
+#endif
     }
 
     // Performs nice formatting of objects

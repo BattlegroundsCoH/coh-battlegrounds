@@ -18,7 +18,7 @@ namespace Battlegrounds.Lobby.Components;
 /// 
 /// </summary>
 public sealed record ChatChannel(LocaleKey Display, int ChannelId) {
-    public override string ToString() => BattlegroundsInstance.Localize.GetString(this.Display);
+    public override string ToString() => BattlegroundsContext.Localize.GetString(this.Display);
 }
 
 /// <summary>
@@ -37,7 +37,7 @@ public sealed class ChatSpectator : ViewModelBase {
         }
     }
 
-    private static readonly Func<string> LOCSTR_SEND = () => BattlegroundsInstance.Localize.GetString("LobbyChat_Send");
+    private static readonly Func<string> LOCSTR_SEND = () => BattlegroundsContext.Localize.GetString("LobbyChat_Send");
 
     private readonly ILobbyHandle m_handle;
     private readonly LocaleKey m_allFilter;

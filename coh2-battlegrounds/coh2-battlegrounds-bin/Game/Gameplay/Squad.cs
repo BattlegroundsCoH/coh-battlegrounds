@@ -3,12 +3,11 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text.Json.Serialization;
-
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay.DataConverters;
 using Battlegrounds.Functional;
 using Battlegrounds.Verification;
 using Battlegrounds.Data.Generators.Lua.RuntimeServices;
+using Battlegrounds.Game.Blueprints;
 
 namespace Battlegrounds.Game.Gameplay;
 
@@ -125,13 +124,13 @@ public class Squad : IChecksumPropertyItem {
     public Player? PlayerOwner { get; }
 
     /// <summary>
-    /// The (crew if squad is a vehicle) <see cref="Database.Blueprint"/> the <see cref="Squad"/> is a type of.
+    /// The (crew if squad is a vehicle) <see cref="Blueprints.Blueprint"/> the <see cref="Squad"/> is a type of.
     /// </summary>
     [ChecksumProperty]
     public Blueprint Blueprint { get; }
 
     /// <summary>
-    /// Get the squad or entity <see cref="Database.Blueprint"/> to support this squad.
+    /// Get the squad or entity <see cref="Blueprints.Blueprint"/> to support this squad.
     /// </summary>
     [ChecksumProperty]
     public Blueprint? SupportBlueprint => this.m_deployBp;
@@ -221,11 +220,11 @@ public class Squad : IChecksumPropertyItem {
     public TimeSpan CombatTime => this.m_combatTime;
 
     /// <summary>
-    /// Create new <see cref="Squad"/> instance with a unique squad ID, a <see cref="Player"/> owner and a <see cref="Database.Blueprint"/>.
+    /// Create new <see cref="Squad"/> instance with a unique squad ID, a <see cref="Player"/> owner and a <see cref="Blueprints.Blueprint"/>.
     /// </summary>
     /// <param name="squadID">The unique squad ID used to identify the squad</param>
     /// <param name="owner">The <see cref="Player"/> who owns the squad</param>
-    /// <param name="squadBlueprint">The <see cref="Database.Blueprint"/> the squad is an instance of</param>
+    /// <param name="squadBlueprint">The <see cref="Blueprints.Blueprint"/> the squad is an instance of</param>
     public Squad(ushort squadID, Player? owner, Blueprint squadBlueprint) {
         this.SquadID = squadID;
         this.PlayerOwner = owner;
@@ -267,7 +266,7 @@ public class Squad : IChecksumPropertyItem {
     /// <summary>
     /// Set the deployment method used by a <see cref="Squad"/>.
     /// </summary>
-    /// <param name="transportBlueprint">The <see cref="Database.Blueprint"/> to use as transport unit.</param>
+    /// <param name="transportBlueprint">The <see cref="Blueprints.Blueprint"/> to use as transport unit.</param>
     /// <param name="deployMode">The mode used to deploy a <see cref="Squad"/>.</param>
     /// <param name="phase">The deployment phase</param>
     /// <param name="role">The deployment role</param>

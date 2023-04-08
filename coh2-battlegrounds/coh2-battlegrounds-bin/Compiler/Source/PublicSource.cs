@@ -16,7 +16,7 @@ public class PublicSource : IWinconditionSource {
 
     private string Intermediate => $"{this.m_relpath}coh2_battlegrounds_wincondition Intermediate Cache\\Intermediate Files\\";
 
-    private string GfxPath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "gfx");
+    private string GfxPath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "gfx");
 
     public PublicSource(string path) {
         this.m_relpath = path;
@@ -44,7 +44,7 @@ public class PublicSource : IWinconditionSource {
 
         // Collect all locale files
         List<WinconditionSourceFile> files = new List<WinconditionSourceFile>();
-        string binpath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER);
+        string binpath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER);
         string locpath = Path.Combine(binpath, "locale");
         string[] locFolders = Directory.GetDirectories(Path.GetFullPath(locpath));
         string[] loc = locFolders.MapAndFlatten(x => Directory.GetFiles(x, "*.gamemode.ucs"));
@@ -96,7 +96,7 @@ public class PublicSource : IWinconditionSource {
     public WinconditionSourceFile GetModGraphic()
         => new WinconditionSourceFile(
             "info\\coh2_battlegrounds_wincondition_preview.dds", 
-            File.ReadAllBytes(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "coh2_battlegrounds_wincondition_preview.dds")));
+            File.ReadAllBytes(BattlegroundsContext.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "coh2_battlegrounds_wincondition_preview.dds")));
 
     public override string ToString() => $"Local build from \"{this.m_relpath}\"";
 

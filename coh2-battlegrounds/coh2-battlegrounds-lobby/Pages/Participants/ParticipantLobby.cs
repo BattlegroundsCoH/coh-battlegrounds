@@ -433,7 +433,7 @@ public sealed class ParticipantLobby : BaseLobby {
             if (this.Gamemode.AdditionalOptions is not null) {
 
                 // Get locale
-                var loc = this.ModPackage.GetLocale(ModType.Gamemode, BattlegroundsInstance.Localize.Language);
+                var loc = this.ModPackage.GetLocale(ModType.Gamemode, BattlegroundsContext.Localize.Language);
 
                 // Read gamemode options
                 foreach (var (k, v) in this.Gamemode.AdditionalOptions) {
@@ -508,7 +508,7 @@ public sealed class ParticipantLobby : BaseLobby {
 
     private void OnModPackageChange(string modPackage) {
 
-        if (ModManager.GetPackage(modPackage) is not ModPackage tunning) {
+        if (BattlegroundsContext.ModManager.GetPackage(modPackage) is not ModPackage tunning) {
             this.ModPackageDropdown.Label = modPackage;
             return;
         }

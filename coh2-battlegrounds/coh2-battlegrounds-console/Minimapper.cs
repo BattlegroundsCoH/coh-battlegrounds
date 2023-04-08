@@ -16,7 +16,7 @@ public static class Minimapper {
         }
 
         // Find scenario minimap
-        var mapFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, $"map_icons\\{scenario.RelativeFilename}_map.tga");
+        var mapFile = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, $"map_icons\\{scenario.RelativeFilename}_map.tga");
         var mapData = TgaPixelReader.ReadTarga(mapFile);
 
         // Greate overlay

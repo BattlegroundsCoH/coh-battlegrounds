@@ -1,37 +1,38 @@
-﻿using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.DataCompany;
+﻿using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 using System;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Functional;
 
 namespace Battlegrounds.DataLocal.Generator;
 
+/// <summary>
+/// 
+/// </summary>
 public static class InitialCompanyCreator {
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static void Init() {
 
-        // Wait for database to be loaded
-        DatabaseManager.LoadedCallback(() => {
+        // Grab package
+        var package = BattlegroundsContext.ModManager.GetPackageOrError("mod_bg");
 
-            // Grab package
-            var package = ModManager.GetPackageOrError("mod_bg");
-
-            // Create default companies
-            CreateDefaultSovietCompany(package);
-            CreateDefaultGermanCompany(package);
-
-        });
+        // Create default companies
+        CreateDefaultSovietCompany(package);
+        CreateDefaultGermanCompany(package);
 
     }
 
-    private static void CreateDefaultSovietCompany(ModPackage package) {
+    private static void CreateDefaultSovietCompany(IModPackage package) {
 
         // Grab faction
         var sov = Faction.Soviet;
 
         // Grab type
-        var typ = package.GetCompanyType(sov, "sov_rifles") ?? throw new System.Exception("Failed to fetch company type");
+        var typ = package.GetCompanyType(sov, "sov_rifles") ?? throw new Exception("Failed to fetch company type");
 
         // Create builder
         CompanyBuilder builder = CompanyBuilder.NewCompany("Default Soviet", typ, CompanyAvailabilityType.MultiplayerOnly, sov, ModGuid.BattlegroundsTuning);
@@ -102,7 +103,7 @@ public static class InitialCompanyCreator {
 
     }
 
-    private static void CreateDefaultGermanCompany(ModPackage package) {
+    private static void CreateDefaultGermanCompany(IModPackage package) {
 
         // Grab faction
         var ger = Faction.Wehrmacht;
@@ -183,9 +184,9 @@ public static class InitialCompanyCreator {
 
     }
 
-    private static void AddUnit(CompanyBuilder cb, string bp, DeploymentPhase dp, DeploymentRole role, DeploymentMethod dm = DeploymentMethod.None, string transport = "", string[]? upgardes = null) {
-        var sbp = BlueprintManager.FromBlueprintName<SquadBlueprint>(bp);
-        var tsbp = string.IsNullOrEmpty(transport) ? null : BlueprintManager.FromBlueprintName<SquadBlueprint>(transport);
+    private static void AddUnit(CompanyBuilder cb, string bp, DeploymentPhase dp, DeploymentRole role, DeploymentMethod dm = DeploymentMethod.None, string transport = "", string[]? upgrades = null) {
+        var sbp = cb.BlueprintDatabase.FromBlueprintName<SquadBlueprint>(bp);
+        var tsbp = string.IsNullOrEmpty(transport) ? null : cb.BlueprintDatabase.FromBlueprintName<SquadBlueprint>(transport);
 
         cb.AddUnit(
             UnitBuilder.NewUnit(sbp)
@@ -193,7 +194,7 @@ public static class InitialCompanyCreator {
                 .SetDeploymentRole(role)
                 .SetDeploymentMethod(dm)
                 .SetTransportBlueprint(tsbp)
-                .AddUpgrade(upgardes ?? Array.Empty<string>())
+                .AddUpgrade(upgrades?.Map(cb.BlueprintDatabase.FromBlueprintName<UpgradeBlueprint>) ?? Array.Empty<UpgradeBlueprint>())
        );
     }
 

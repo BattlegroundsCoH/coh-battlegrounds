@@ -50,11 +50,11 @@ public static class VisualsLookup {
     /// <summary>
     /// Get the Locale String for downloading
     /// </summary>
-    public static readonly Func<string, string> LOCSTR_DOWNLOAD = x => BattlegroundsInstance.Localize.GetString("LobbyView_DownloadGamemode", x);
+    public static readonly Func<string, string> LOCSTR_DOWNLOAD = x => BattlegroundsContext.Localize.GetString("LobbyView_DownloadGamemode", x);
 
     /// <summary>
     /// Get the locale string for playing
     /// </summary>
-    public static readonly Func<string> LOCSTR_PLAYING = () => BattlegroundsInstance.Localize.GetString("LobbyView_PLAYING");
+    public static readonly Func<string> LOCSTR_PLAYING = () => BattlegroundsContext.Localize.GetString("LobbyView_PLAYING");
 
 }

@@ -19,6 +19,7 @@ namespace Battlegrounds.Game.Scenarios;
 /// <summary>
 /// A list of all available scenarios that can be played.
 /// </summary>
+[Obsolete]
 public static class ScenarioList {
 
     private static readonly Logger logger = Logger.CreateLogger();
@@ -28,6 +29,7 @@ public static class ScenarioList {
     /// <summary>
     /// Create and load a basic list of scenarios.
     /// </summary>
+    [Obsolete]
     public static void LoadList() {
 
         // Create the dictionary
@@ -35,12 +37,12 @@ public static class ScenarioList {
 
         try {
 
-            string rawJsonDb = $"{DatabaseManager.SolveDatabasepath()}vcoh-map-db.json";
+            /*string rawJsonDb = $"{DatabaseManager.SolveDatabasepath()}vcoh-map-db.json";
             LoadScenarioDatabaseFile(rawJsonDb).ForEach(x => {
                 if (!__scenarios.TryAdd(Path.GetFileNameWithoutExtension(x.RelativeFilename), x)) {
                     logger.Warning($"Failed to add duplicate vcoh scenario '{x.RelativeFilename}'");
                 }
-            });
+            });*/
 
             _ = Task.Run(HandleWorkshopFiles);
 
@@ -53,7 +55,7 @@ public static class ScenarioList {
     private static void HandleWorkshopFiles() {
 
         // Bail if user has not asked to initiate this process
-        if (BattlegroundsInstance.OtherOptions.GetCastValueOrDefault(BattlegroundsInstance.OPT_AUTOWORKSHOP, false) is false) {
+        if (BattlegroundsContext.OtherOptions.GetCastValueOrDefault(BattlegroundsContext.OPT_AUTOWORKSHOP, false) is false) {
 
             // Bail
             return;
@@ -61,7 +63,7 @@ public static class ScenarioList {
         }
 
         // Find path to workshop database
-        string workshop_dbpath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_USER_DATABASE_FODLER, "workshop-map-db.json");
+        string workshop_dbpath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.MOD_USER_DATABASE_FODLER, "workshop-map-db.json");
 
         // Load existing workshop items
         var workshopScenarios = LoadScenarioDatabaseFile(workshop_dbpath);
@@ -104,6 +106,7 @@ public static class ScenarioList {
     /// </summary>
     /// <param name="x"></param>
     /// <returns></returns>
+    [Obsolete]
     public static bool IsValidMapDirectory(string x) {
         if (Directory.Exists(x)) {
             string[] d = Directory.GetDirectories(x);
@@ -134,7 +137,7 @@ public static class ScenarioList {
         }
 
         // Get paths
-        string extractPath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.EXTRACT_FOLDER);
+        string extractPath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.EXTRACT_FOLDER);
         string extractReadPath = Path.Combine(extractPath, "scenarios");
 
         // Get sga files
@@ -165,7 +168,7 @@ public static class ScenarioList {
                         readfrom = dirs[0];
 
                         // Try and read scenario
-                        if (GetScenarioFromDirectory(readfrom, sga, BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_USER_ICONS_FODLER)) is Scenario wrkscen) {
+                        if (GetScenarioFromDirectory(readfrom, sga, BattlegroundsContext.GetRelativePath(BattlegroundsPaths.MOD_USER_ICONS_FODLER)) is Scenario wrkscen) {
 
                             // Add scenario
                             workshopScenarios.Add(wrkscen);
@@ -195,6 +198,7 @@ public static class ScenarioList {
     /// <param name="sga"></param>
     /// <param name="mmSavePath"></param>
     /// <returns></returns>
+    [Obsolete]
     public static Scenario? GetScenarioFromDirectory(string scenarioDirectoryPath, string sga = "MPScenarios.sga", string mmSavePath = "bin\\gfx\\map_icons\\") {
 
         // If valid scenario path
@@ -260,6 +264,7 @@ public static class ScenarioList {
     /// </summary>
     /// <param name="scenario">The new scenario to add.</param>
     /// <returns>Will return true if the <see cref="Scenario"/> was added. Otherwise false - <see cref="Scenario"/> already exists.</returns>
+    [Obsolete]
     public static bool AddScenario(Scenario scenario) {
 
         // Make sure we have something to add scenario to
@@ -284,6 +289,7 @@ public static class ScenarioList {
     /// <returns>The found scenario. If no matching scenario is found, an exception is thrown.</returns>
     /// <exception cref="ArgumentNullException"/>
     /// <exception cref="KeyNotFoundException"/>
+    [Obsolete]
     public static Scenario? FromFilename(string filename) => __scenarios is not null ? __scenarios[filename] : null;
 
     /// <summary>
@@ -291,6 +297,7 @@ public static class ScenarioList {
     /// </summary>
     /// <param name="filename"></param>
     /// <returns></returns>
+    [Obsolete]
     public static Scenario? FromRelativeFilename(string filename) => __scenarios?.FirstOrDefault(x => x.Value.RelativeFilename == filename).Value;
 
     /// <summary>
@@ -298,6 +305,7 @@ public static class ScenarioList {
     /// </summary>
     /// <param name="filename"></param>
     /// <returns></returns>
+    [Obsolete]
     public static string ScenarioNameFromRelativeFilename(string filename) {
         if (FromRelativeFilename(filename) is Scenario scen) {
             return scen.Name;
@@ -312,6 +320,7 @@ public static class ScenarioList {
     /// <param name="identifier"></param>
     /// <param name="scenario"></param>
     /// <returns></returns>
+    [Obsolete]
     public static bool TryFindScenario(string identifier, [NotNullWhen(true)] out Scenario? scenario) {
         scenario = null;
         if (__scenarios is null) {
@@ -330,6 +339,7 @@ public static class ScenarioList {
     /// 
     /// </summary>
     /// <returns></returns>
+    [Obsolete]
     public static List<Scenario> GetList() => __scenarios?.Values.Where(x => x.HasValidInfoOrOptionsFile).ToList() ?? new();
 
 }

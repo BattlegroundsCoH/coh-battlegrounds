@@ -5,9 +5,8 @@ using System.Text.Json.Serialization;
 
 using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Extensions;
-using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Game.Blueprints.Extensions;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding.Verifier;
 using Battlegrounds.Util;
@@ -422,7 +421,7 @@ public class FactionCompanyType : IChecksumElement {
     /// </summary>
     /// <returns></returns>
     public IList<SquadBlueprint> GetTowTransports() 
-        => this.DeployBlueprints.Filter(x => x.Tow).Map(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x.Blueprint));
+        => this.DeployBlueprints.Filter(x => x.Tow).Map(x => FactionData!.Package!.GetDataSource().GetBlueprints(FactionData.Game).FromBlueprintName<SquadBlueprint>(x.Blueprint));
 
     /// <summary>
     /// 
@@ -443,9 +442,10 @@ public class FactionCompanyType : IChecksumElement {
     /// <exception cref="ObjectNotFoundException"></exception>
     public SquadBlueprint GetWeaponsCrew() {
         if (string.IsNullOrEmpty(this.TeamWeaponCrew)) {
-            return BlueprintManager.FromBlueprintName<SquadBlueprint>(this.FactionData?.TeamWeaponCrew ?? throw new ObjectNotFoundException("Weapons crew squad is unspecified."));
+            return FactionData!.Package!.GetDataSource().GetBlueprints(FactionData.Game)
+                .FromBlueprintName<SquadBlueprint>(this.FactionData?.TeamWeaponCrew ?? throw new ObjectNotFoundException("Weapons crew squad is unspecified."));
         }
-        return BlueprintManager.FromBlueprintName<SquadBlueprint>(this.TeamWeaponCrew);
+        return FactionData!.Package!.GetDataSource().GetBlueprints(FactionData.Game).FromBlueprintName<SquadBlueprint>(this.TeamWeaponCrew);
     }
 
     /// <summary>
@@ -496,6 +496,7 @@ public class FactionCompanyType : IChecksumElement {
 
     internal void ChangeId(string id) => this.m_typeId = id;
 
+    /// <inheritdoc/>
     public override string ToString() => this.m_typeId;
 
 }

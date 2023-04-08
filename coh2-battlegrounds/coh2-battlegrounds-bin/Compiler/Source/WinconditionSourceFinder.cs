@@ -10,7 +10,7 @@ public static class WinconditionSourceFinder {
     private static IWinconditionSource? GetLocalSource() {
         string path;
 #if DEBUG
-        if (!BattlegroundsInstance.Debug.UseLocalWincondition) {
+        if (!BattlegroundsContext.Debug.UseLocalWincondition) {
             int top = 0; // try find debug folder before using local distribution
             path = "coh2-battlegrounds-mod\\wincondition_mod\\";
             try {
@@ -25,7 +25,7 @@ public static class WinconditionSourceFinder {
             } catch { }
         }
 #endif
-        path = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "bg_wc\\");
+        path = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "bg_wc\\");
         if (Directory.Exists(path)) {
             return new PublicSource(path);
         } else {

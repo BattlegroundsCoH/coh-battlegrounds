@@ -2,8 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-
-using Battlegrounds.Game.Database.Extensions;
+using Battlegrounds.Game.Blueprints.Extensions;
 
 namespace Battlegrounds.UI.Controls;
 

@@ -30,7 +30,7 @@ public static class ScenarioPreviewLookup {
         }
 
         // Get Path
-        string fullpath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, $"map_icons\\{scenario.RelativeFilename}_map.tga");
+        string fullpath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, $"map_icons\\{scenario.RelativeFilename}_map.tga");
 
         // Check if file exists
         if (File.Exists(fullpath)) {
@@ -40,7 +40,7 @@ public static class ScenarioPreviewLookup {
                 Trace.WriteLine(bife, nameof(TryGetMapSource));
             }
         } else {
-            fullpath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_USER_ICONS_FODLER, $"{scenario.RelativeFilename}_map.tga");
+            fullpath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.MOD_USER_ICONS_FODLER, $"{scenario.RelativeFilename}_map.tga");
             if (File.Exists(fullpath)) {
                 try {
                     return TgaImageSource.TargaBitmapSourceFromFile(fullpath);

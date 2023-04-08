@@ -1,9 +1,11 @@
 {
   "ID": "mod_bg",
   "Name": "Battlegrounds Mod Pack",
+  "DataSourcePath": "database_folder",
   "TuningGUID": "142b113740474c82a60b0a428bd553d5",
   "GamemodeGUID": "6a0a13b89555402ca75b85dc30f5cb04",
   "AssetGUID": "f0c3cb74008447268cad2804e3b9d565",
+  "SupportedGames": "CompanyOfHeroes2",
   "LocaleFiles": [
     {
       "Type": "Gamemode",
@@ -222,7 +224,6 @@
       "DefaultOption": 0
     }
   ],
-  "CustomOptions": [],
   "FactionData": [
     {
       "Faction": "soviet",

@@ -4,13 +4,12 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
-
-using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Resources;
+using Battlegrounds.Game.Blueprints.Extensions;
 
 namespace Battlegrounds.Editor.Components;
 

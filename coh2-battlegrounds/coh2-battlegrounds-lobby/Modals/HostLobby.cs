@@ -13,7 +13,7 @@ public delegate void HostLobbyCallback(HostLobby lobby, ModalDialogResult result
 /// </summary>
 public sealed class HostLobby : INotifyPropertyChanged {
 
-    private string _lobbyName = $"{BattlegroundsInstance.Steam.User.Name}'s Lobby";
+    private string _lobbyName = $"{BattlegroundsContext.Steam.User.Name}'s Lobby";
 
     /// <summary>
     /// 

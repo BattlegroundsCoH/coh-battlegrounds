@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Game.Gameplay.DataConverters;
+using Battlegrounds.Logging;
 using Battlegrounds.Modding;
 using Battlegrounds.Verification;
 
@@ -21,6 +23,9 @@ namespace Battlegrounds.Game.DataCompany;
 /// </summary>
 public class CompanySerializer : JsonConverter<Company> {
 
+    private static readonly Logger logger = Logger.CreateLogger();
+
+    /// <inheritdoc/>
     public override Company? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
         var newOptions = new JsonSerializerOptions(options);
         newOptions.Converters.Add(new UnverifiedCompanyJson());
@@ -28,7 +33,7 @@ public class CompanySerializer : JsonConverter<Company> {
         if (unverified.Success) {
             return unverified.Company;
         } else {
-            Trace.WriteLine("Failed to read company json...", nameof(CompanySerializer));
+            logger.Error("Failed to read company json...");
             return null;
         }
     }
@@ -36,13 +41,21 @@ public class CompanySerializer : JsonConverter<Company> {
     private static string ReadProperty(ref Utf8JsonReader reader, string property)
         => reader.GetString() == property && reader.Read() ? (reader.ReadProperty() ?? string.Empty) : string.Empty;
 
+    private static string ReadPropertyOrValueIfNotExists(ref Utf8JsonReader reader, string property, string propertyOrValue)
+        => reader.GetString() == property && reader.Read() ? (reader.ReadProperty() ?? string.Empty) : propertyOrValue;
+
     private static ulong ReadChecksum(ref Utf8JsonReader reader, string property)
         => reader.GetString() == property && reader.Read() ? reader.ReadUlongProperty() : 0;
 
     private static T? ReadPropertyThroughSerialisation<T>(ref Utf8JsonReader reader, string property)
         => reader.GetString() == property && reader.Read() ? JsonSerializer.Deserialize<T>(ref reader) : default;
 
+    /// <inheritdoc/>
     public override void Write(Utf8JsonWriter writer, Company value, JsonSerializerOptions options) {
+
+        JsonSerializerOptions newOptions = new JsonSerializerOptions(options);
+        newOptions.Converters.Add(new SquadWriter.SquadJson(null));
+        newOptions.Converters.Add(new CompanyItem.CompanyItemSerialiser(null));
 
         // Recalculate the checksum
         value.CalculateChecksum();
@@ -53,6 +66,7 @@ public class CompanySerializer : JsonConverter<Company> {
         // Write all the data
         writer.WriteString(nameof(Company.Name), value.Name);
         writer.WriteString(nameof(Company.Army), value.Army.Name);
+        writer.WriteString(nameof(Company.Game), value.Game.ToString());
         writer.WriteString(nameof(Company.TuningGUID), value.TuningGUID.GUID);
         writer.WriteString(nameof(Company.AppVersion), value.AppVersion);
         writer.WriteNumber(nameof(Company.Checksum), value.Checksum);
@@ -61,27 +75,27 @@ public class CompanySerializer : JsonConverter<Company> {
 
         // Write statistics
         writer.WritePropertyName(nameof(Company.Statistics));
-        JsonSerializer.Serialize(writer, value.Statistics, options);
+        JsonSerializer.Serialize(writer, value.Statistics, newOptions);
 
         // Write Units
         writer.WritePropertyName(nameof(Company.Units));
-        JsonSerializer.Serialize(writer, value.Units, options);
+        JsonSerializer.Serialize(writer, value.Units, newOptions);
 
         // Write abilities
         writer.WritePropertyName(nameof(Company.Abilities));
-        JsonSerializer.Serialize(writer, value.Abilities, options);
+        JsonSerializer.Serialize(writer, value.Abilities, newOptions);
 
         // Write inventory
         writer.WritePropertyName(nameof(Company.Inventory));
-        JsonSerializer.Serialize(writer, value.Inventory, options);
+        JsonSerializer.Serialize(writer, value.Inventory, newOptions);
 
         // Write upgrades
         writer.WritePropertyName(nameof(Company.Upgrades));
-        JsonSerializer.Serialize(writer, value.Upgrades, options);
+        JsonSerializer.Serialize(writer, value.Upgrades, newOptions);
 
         // Write modifiers
         writer.WritePropertyName(nameof(Company.Modifiers));
-        JsonSerializer.Serialize(writer, value.Modifiers, options);
+        JsonSerializer.Serialize(writer, value.Modifiers, newOptions);
 
         // Close company object
         writer.WriteEndObject();
@@ -108,11 +122,8 @@ public class CompanySerializer : JsonConverter<Company> {
         var json1 = JsonSerializer.Serialize(company, new JsonSerializerOptions());
         
         // Deserialise -> read in with checksum OK values (again, we need to do this because of rounding errors and such)
-        Company? delta = GetCompanyFromJson(json1);
-        if (delta is null) {
-            throw new Exception("Failed to save company file since intermeddiate save step failed!");
-        }
-        
+        Company? delta = GetCompanyFromJson(json1) ?? throw new Exception("Failed to save company file since intermeddiate save step failed!");
+
         // Save finally -> delta should now be checksum safe
         File.WriteAllText(filepath, JsonSerializer.Serialize(delta, new JsonSerializerOptions() { WriteIndented = true }), Encoding.UTF8);
 
@@ -144,7 +155,9 @@ public class CompanySerializer : JsonConverter<Company> {
 
         // Deserialise
         var options = new JsonSerializerOptions();
-        options.Converters.Add( new UnverifiedCompanyJson());
+        options.Converters.Add(new UnverifiedCompanyJson());
+        options.Converters.Add(new SquadWriter.SquadJson(null));
+        options.Converters.Add(new CompanyItem.CompanyItemSerialiser(null));
         var unverified = JsonSerializer.Deserialize<UnverifiedCompany>(fs, options: options);
         if (unverified.Success) {
 
@@ -159,7 +172,7 @@ public class CompanySerializer : JsonConverter<Company> {
 #else
                     "";
 #endif
-                Trace.WriteLine($"Fatal - Company '{result.Name}' has been modified{dbstr}.", $"{nameof(CompanySerializer)}::{nameof(GetCompanyFromFile)}");
+                logger.Error($"Fatal - Company '{result.Name}' has been modified{dbstr}.");
                 
                 throw new ChecksumViolationException(0, unverified.Checksum);
             }
@@ -170,7 +183,7 @@ public class CompanySerializer : JsonConverter<Company> {
         } else {
 
             // Log error
-            Trace.WriteLine("Failed to read company file...", $"{nameof(CompanySerializer)}::{nameof(GetCompanyFromFile)}");
+            logger.Error("Failed to read company file...");
             return null;
 
         }
@@ -194,6 +207,10 @@ public class CompanySerializer : JsonConverter<Company> {
     }
 
     public class UnverifiedCompanyJson : JsonConverter<UnverifiedCompany> {
+
+        private static readonly Logger logger = Logger.CreateLogger();
+
+        /// <inheritdoc/>
         public override UnverifiedCompany Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 
             // Open object
@@ -211,16 +228,21 @@ public class CompanySerializer : JsonConverter<Company> {
                 return new(0, null);
             }
 
+            // Read the game case (and always assume CoH2)
+            GameCase game = Enum.TryParse(ReadPropertyOrValueIfNotExists(ref reader, nameof(Company.Game), GameCase.CompanyOfHeroes2.ToString()), out GameCase _gm)
+                ? _gm : GameCase.CompanyOfHeroes2;
+
             // Get proper faction
-            var faction = Faction.FromName(army);
+            var faction = Faction.FromName(army, game);
 
             // Read mod GUID and BG App version
             var guid = ModGuid.FromGuid(ReadProperty(ref reader, nameof(Company.TuningGUID)));
             var version = ReadProperty(ref reader, nameof(Company.AppVersion));
+            // TODO: Validate version
 
             // Verify package
-            if (ModManager.GetPackageFromGuid(guid) is not ModPackage companyModPackage) {
-                Trace.WriteLine($"Failed to find mod package for tuning mod '{guid}'.", nameof(CompanySerializer));
+            if (BattlegroundsContext.ModManager.GetPackageFromGuid(guid) is not IModPackage companyModPackage) {
+                logger.Error($"Failed to find mod package for tuning mod '{guid}'.");
                 return new(0, null);
             }
 
@@ -234,7 +256,7 @@ public class CompanySerializer : JsonConverter<Company> {
 
             // Verify type
             if (type is null) {
-                Trace.WriteLine($"Failed to find company type '{typeStr}' in mod package '{companyModPackage.ID}'.", nameof(CompanySerializer));
+                logger.Error($"Failed to find company type '{typeStr}' in mod package '{companyModPackage.ID}'.");
                 return new(0, null);
             }
 
@@ -243,6 +265,14 @@ public class CompanySerializer : JsonConverter<Company> {
             if (ReadPropertyThroughSerialisation<CompanyStatistics>(ref reader, nameof(Company.Statistics)) is CompanyStatistics statistics) {
                 builder.Statistics = statistics;
             }
+
+            // Create converters
+            var subOptions = new JsonSerializerOptions(options);
+            if (subOptions.Converters.FirstOrDefault(x => x is SquadWriter.SquadJson) is SquadWriter.SquadJson existingSquadWriter) {
+                subOptions.Converters.Remove(existingSquadWriter);
+            }
+            subOptions.Converters.Add(new SquadWriter.SquadJson(BattlegroundsContext.DataSource.GetBlueprints(companyModPackage, game)));
+            subOptions.Converters.Add(new CompanyItem.CompanyItemSerialiser(BattlegroundsContext.DataSource.GetBlueprints(companyModPackage, game)));
 
             // Create helper dictionary
             var arrayTypes = new Dictionary<string, Type>() {
@@ -261,7 +291,7 @@ public class CompanySerializer : JsonConverter<Company> {
                 var inputType = arrayTypes[property];
 
                 // Get data and set it
-                if (JsonSerializer.Deserialize(ref reader, inputType) is not Array values) {
+                if (JsonSerializer.Deserialize(ref reader, inputType, subOptions) is not Array values) {
                     throw new InvalidDataException();
                 }
 
@@ -305,8 +335,14 @@ public class CompanySerializer : JsonConverter<Company> {
 
         }
 
+        /// <inheritdoc/>
         public override void Write(Utf8JsonWriter writer, UnverifiedCompany value, JsonSerializerOptions options) {
-            JsonSerializer.Serialize(writer, value.Company, options);
+            
+            JsonSerializerOptions newOptions = new(options);
+            newOptions.Converters.Add(new SquadWriter.SquadJson(null));
+            
+            JsonSerializer.Serialize(writer, value.Company, newOptions);
+
         }
 
     }

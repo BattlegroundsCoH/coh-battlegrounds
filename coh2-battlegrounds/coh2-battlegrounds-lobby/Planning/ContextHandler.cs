@@ -6,8 +6,6 @@ using System.Diagnostics;
 using System.Windows.Media;
 using System.Windows;
 
-using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Game;
 using Battlegrounds.Misc.Collections;
@@ -16,6 +14,8 @@ using Battlegrounds.Modding.Content;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.UI;
 using Battlegrounds.UI.Converters;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Lobby.Planning;
 
@@ -79,7 +79,9 @@ public sealed class ContextHandler {
 
     public ulong SelfId => this.m_handle.Handle.Self.ID;
 
-    public ContextHandler(ILobbyPlanningHandle handle, Scenario scenario) {
+    public IModPackage Package { get; }
+
+    public ContextHandler(ILobbyPlanningHandle handle, Scenario scenario, IModPackage package) {
 
         // Set handle
         this.m_handle = handle;
@@ -99,6 +101,9 @@ public sealed class ContextHandler {
 
         // Init base case
         this.MinimapRenderSize = new Size(512, 512);
+
+        // Set package
+        this.Package = package;
 
     }
 
@@ -276,7 +281,7 @@ public sealed class ContextHandler {
         } else if (planElement.IsEntity) {
 
             // entity
-            var ebp = BlueprintManager.FromBlueprintName<EntityBlueprint>(planElement.Blueprint);
+            var ebp = this.Package.GetDataSource().GetBlueprints(GameCase.CompanyOfHeroes2).FromBlueprintName<EntityBlueprint>(planElement.Blueprint);
 
             // Add element
             this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, ebp, spawn, lookat, !planElement.IsDirectional));
@@ -284,7 +289,7 @@ public sealed class ContextHandler {
         } else {
 
             // squad
-            var sbp = BlueprintManager.FromBlueprintName<SquadBlueprint>(planElement.Blueprint);
+            var sbp = this.Package.GetDataSource().GetBlueprints(GameCase.CompanyOfHeroes2).FromBlueprintName<SquadBlueprint>(planElement.Blueprint);
 
             // Add element
             this.Elements.Add(new(planElement.ElementId, planElement.ElementOwnerId, sbp, spawn, lookat, companyId: planElement.CompanyId));

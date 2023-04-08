@@ -4,8 +4,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using Battlegrounds.ErrorHandling.CommonExceptions;
-using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content.Companies;
@@ -15,6 +13,7 @@ using Battlegrounds.UI.Converters.Icons;
 using Battlegrounds.UI.Modals;
 using Battlegrounds.UI;
 using Battlegrounds.Functional;
+using Battlegrounds.Game.Blueprints;
 
 namespace Battlegrounds.Editor.Modals;
 
@@ -34,7 +33,7 @@ public sealed class CreateCompany : INotifyPropertyChanged {
         public static readonly CompanyType None = new("CreateCompanyDialogView_Type_None", null);
         private SquadBlueprint[]? m_squads;
         private AbilityBlueprint[]? m_abilities;
-        public string Desc => BattlegroundsInstance.Localize.GetString($"{this.Name}_desc");
+        public string Desc => BattlegroundsContext.Localize.GetString($"{this.Name}_desc");
         public ImageSource Icon => StringToCompanyTypeIcon.GetFromType(this.Type);
         public ImageSource? Unit01 => ResourceHandler.GetIcon("unit_icons", this.m_squads![0].UI.Icon);
         public ImageSource? Unit02 => ResourceHandler.GetIcon("unit_icons", this.m_squads![1].UI.Icon);
@@ -42,7 +41,7 @@ public sealed class CreateCompany : INotifyPropertyChanged {
         public ImageSource? Ability01 => ResourceHandler.GetIcon("ability_icons", this.m_abilities![0].UI.Icon);
         public ImageSource? Ability02 => ResourceHandler.GetIcon("ability_icons", this.m_abilities![1].UI.Icon);
         public ImageSource? Ability03 => ResourceHandler.GetIcon("ability_icons", this.m_abilities![2].UI.Icon);
-        public override string ToString() => BattlegroundsInstance.Localize.GetString(this.Name);
+        public override string ToString() => BattlegroundsContext.Localize.GetString(this.Name);
         public CompanyType CacheDisplay() {
 
             // Init bases
@@ -52,13 +51,17 @@ public sealed class CreateCompany : INotifyPropertyChanged {
             // Check if there's data to draw values from
             if (this.Type is not null) {
 
+                // Get datasource
+                var ds = BattlegroundsContext.DataSource.GetBlueprints(this.Type.FactionData!.Package!, this.Type.FactionData.Game)!;
+
                 // Set first three squads if possible
                 this.m_squads =
-                    this.Type.UIData.HighlightUnits.Length >= 3 ? this.Type.UIData.HighlightUnits[..3].Map(BlueprintManager.FromBlueprintName<SquadBlueprint>) : this.m_squads;
+                    this.Type.UIData.HighlightUnits.Length >= 3 ? this.Type.UIData.HighlightUnits[..3].Map(ds.FromBlueprintName<SquadBlueprint>) : this.m_squads;
 
                 // Set first three abilities if possible
                 this.m_abilities =
-                    this.Type.UIData.HighlightAbilities.Length >= 3 ? this.Type.UIData.HighlightAbilities[..3].Map(BlueprintManager.FromBlueprintName<AbilityBlueprint>) : this.m_abilities;
+                    this.Type.UIData.HighlightAbilities.Length >= 3 ? this.Type.UIData.HighlightAbilities[..3].Map(ds.FromBlueprintName<AbilityBlueprint>) : this.m_abilities;
+            
             }
 
             // Return self
@@ -73,9 +76,9 @@ public sealed class CreateCompany : INotifyPropertyChanged {
         public override string ToString() => GameLocale.GetString(this.Self.NameKey);
     }
 
-    private ModPackage m_package;
+    private IModPackage m_package;
 
-    public ModPackage Package {
+    public IModPackage Package {
         get => this.m_package;
         set {
             this.m_package = value;
@@ -131,7 +134,7 @@ public sealed class CreateCompany : INotifyPropertyChanged {
     private CreateCompany(CreateCompanyCallback resultCallback) {
 
         // Set package
-        this.m_package = ModManager.GetPackage("mod_bg") ?? throw new ObjectNotFoundException("Mod package 'mod_bg' not found!"); // TODO: Allow users to pick this
+        this.m_package = BattlegroundsContext.ModManager.GetPackage("mod_bg") ?? throw new ObjectNotFoundException("Mod package 'mod_bg' not found!"); // TODO: Allow users to pick this
 
         // Create available factions
         this.AvailableFactions = new() {

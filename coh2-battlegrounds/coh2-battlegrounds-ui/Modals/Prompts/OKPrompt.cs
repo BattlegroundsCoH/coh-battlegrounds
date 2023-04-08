@@ -44,13 +44,13 @@ public sealed class OKPrompt {
         // Set title
         this.DialogTitle = title switch {
             LocaleValueKey lvk => lvk.Content,
-            _ => BattlegroundsInstance.Localize.GetString(title)
+            _ => BattlegroundsContext.Localize.GetString(title)
         };
 
         // Set message
         this.DialogMessage = message switch {
             LocaleValueKey lvk => lvk.Content,
-            _ => BattlegroundsInstance.Localize.GetString(message)
+            _ => BattlegroundsContext.Localize.GetString(message)
         };
 
     }

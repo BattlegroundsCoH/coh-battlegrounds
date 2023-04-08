@@ -36,7 +36,7 @@ public interface IPlayModel {
     /// <param name="modPackage"></param>
     /// <param name="prepareOver"></param>
     /// <param name="prepareCancel"></param>
-    void Prepare(ModPackage modPackage, PrepareOverHandler prepareOver, PrepareCancelHandler prepareCancel);
+    void Prepare(IModPackage modPackage, PrepareOverHandler prepareOver, PrepareCancelHandler prepareCancel);
 
     /// <summary>
     /// 

@@ -12,7 +12,7 @@ using Battlegrounds.Misc.Locale;
 namespace Battlegrounds.UI.Controls;
 
 /// <summary>
-/// Class representing a localised label using the <see cref="BattlegroundsInstance.Localize"/> instance to localise text. Extends <see cref="Label"/>.
+/// Class representing a localised label using the <see cref="BattlegroundsContext.Localize"/> instance to localise text. Extends <see cref="Label"/>.
 /// </summary>
 [DefaultProperty(nameof(LocKey))]
 [ContentProperty(nameof(LocKey))]
@@ -104,22 +104,22 @@ public sealed class LocalisedLabel : Label {
 
     private object[] GetArgs() {
         var args = this.Arguments;
-        if (args is not null && BattlegroundsInstance.Localize is not null) {
+        if (args is not null && BattlegroundsContext.Localize is not null) {
             if (args is Array array) {
                 object[] vals = new object[array.Length];
                 for (int i = 0; i < vals.Length; i++) {
                     vals[i] = array.GetValue(i) switch {
-                        LocaleKey k => BattlegroundsInstance.Localize.GetString(k),
-                        string s => BattlegroundsInstance.Localize.GetString(s),
+                        LocaleKey k => BattlegroundsContext.Localize.GetString(k),
+                        string s => BattlegroundsContext.Localize.GetString(s),
                         object o => o,
                         _ => throw new InvalidProgramException()
                     };
                 }
                 return vals;
             } else if (args is LocaleKey k) {
-                return new[] { BattlegroundsInstance.Localize.GetString(k) };
+                return new[] { BattlegroundsContext.Localize.GetString(k) };
             } else if (args is string s) {
-                return new[] { BattlegroundsInstance.Localize.GetString(s) ?? s };
+                return new[] { BattlegroundsContext.Localize.GetString(s) ?? s };
             } else if (args is ILocaleArgumentsObject obj) {
                 return obj.ToArgs();
             }
@@ -129,7 +129,7 @@ public sealed class LocalisedLabel : Label {
 
     private void RefreshDisplay() {
         object value = this.GetValue(LocKeyProperty);
-        if (BattlegroundsInstance.Localize is Localize loc) {
+        if (BattlegroundsContext.Localize is Localize loc) {
             string str = value switch {
                 string s => loc.GetString(s, this.GetArgs()),
                 LocaleKey k => loc.GetString(k, this.GetArgs()),

@@ -53,13 +53,13 @@ class Program {
             return;
 
         // Load BG
-        BattlegroundsInstance.LoadInstance();
+        BattlegroundsContext.LoadInstance();
 
         // Wait for all to load
         bool isLoaded = false;
 
         // Important this is done
-        DatabaseManager.LoadAllDatabases((_, _) => isLoaded = true);
+        //DatabaseManager.LoadAllDatabases((_, _) => isLoaded = true);
 
         // Wait for database to load
         while (!isLoaded) {
@@ -67,13 +67,13 @@ class Program {
         }
 
         // Get package
-        var package = ModManager.GetPackage("mod_bg");
+        var package = BattlegroundsContext.ModManager.GetPackage("mod_bg");
         if (package is null) {
             Trace.WriteLine("Failed to find mod_bg package");
             Environment.Exit(-1);
         }
 
-        tuningMod = ModManager.GetMod<ITuningMod>(package.TuningGUID);
+        tuningMod = BattlegroundsContext.ModManager.GetMod<ITuningMod>(package.TuningGUID);
 
         // Mark loaded
         IsDatabaseUp = true;

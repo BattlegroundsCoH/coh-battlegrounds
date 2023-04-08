@@ -261,6 +261,24 @@ public sealed class Faction {
     };
 
     /// <summary>
+    /// Try and get the game case from the faction name.
+    /// </summary>
+    /// <param name="name">The name of the faction.</param>
+    /// <returns>The <see cref="GameCase"/> associated with the specified faction</returns>
+    public static GameCase TryGetGameFromFactionName(string name) => name.ToLowerInvariant() switch {
+        FactionStrAfrikaKorps => GameCase.CompanyOfHeroes3,
+        FactionStrAmerican => GameCase.CompanyOfHeroes2,
+        FactionStrAmericans => GameCase.CompanyOfHeroes3,
+        FactionStrBritish => GameCase.CompanyOfHeroes2,
+        FactionStrBritishAfrica => GameCase.CompanyOfHeroes3,
+        FactionStrGerman => GameCase.CompanyOfHeroes2,
+        FactionStrGermans => GameCase.CompanyOfHeroes3,
+        FactionStrOKW => GameCase.CompanyOfHeroes2,
+        FactionStrSoviet => GameCase.CompanyOfHeroes2,
+        _ => GameCase.Unspecified
+    };
+
+    /// <summary>
     /// Returns the complementary faction of the given faction (eg. Wehrmacht - Soviet).
     /// </summary>
     /// <param name="faction">The faction to find the complement of.</param>

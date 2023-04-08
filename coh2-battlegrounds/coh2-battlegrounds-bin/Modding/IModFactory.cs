@@ -10,7 +10,7 @@ public interface IModFactory {
     /// <summary>
     /// Get the mod package the factory creates mod instances for.
     /// </summary>
-    ModPackage Package { get; }
+    IModPackage Package { get; }
 
     /// <summary>
     /// 

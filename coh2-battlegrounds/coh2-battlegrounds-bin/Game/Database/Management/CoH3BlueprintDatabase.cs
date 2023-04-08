@@ -1,0 +1,43 @@
+﻿using System;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Game.Blueprints.Collections;
+using Battlegrounds.Game.Gameplay;
+
+namespace Battlegrounds.Game.Database.Management;
+
+/// <summary>
+/// 
+/// </summary>
+public class CoH3BlueprintDatabase : IModBlueprintDatabase {
+
+    /// <inheritdoc/>
+    public void AddBlueprints(Array blueprints, BlueprintType blueprintType) {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public Bp FromBlueprintName<Bp>(string bpName) where Bp : Blueprint {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public Blueprint FromBlueprintName(string id, BlueprintType bType) {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public T FromPPbgid<T>(BlueprintUID pBGID) where T : Blueprint {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public BlueprintCollection<T> GetCollection<T>() where T : Blueprint {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public SquadBlueprint? GetCrewBlueprint(SquadBlueprint sbp, Faction? faction = null) {
+        throw new NotImplementedException();
+    }
+
+}

@@ -25,7 +25,7 @@ public static class GameLocale {
     static GameLocale() {
 
         // Determine language to use
-        string language = Battlegrounds.BattlegroundsInstance.Localize.Language.ToString();
+        string language = Battlegrounds.BattlegroundsContext.Localize.Language.ToString();
         if (language == "Default") {
             language = "English";
         }
@@ -42,7 +42,7 @@ public static class GameLocale {
         ModLocales = new Dictionary<ModGuid, UcsFile>();
 
         // Load Mod Locales
-        ModManager.EachPackage(x => {
+        BattlegroundsContext.ModManager.EachPackage(x => {
             x.LocaleFiles.ForEach(y => {
                 if (y.GetLocale(x.ID, language) is UcsFile ucs) {
                     ModLocales.Add(y.ModType switch {

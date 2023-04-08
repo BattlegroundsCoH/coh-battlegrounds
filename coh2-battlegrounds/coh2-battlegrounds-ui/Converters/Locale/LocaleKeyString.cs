@@ -22,7 +22,7 @@ public sealed class LocaleKeyString : IValueConverter {
                     return localeString;
                 }
             }
-            return BattlegroundsInstance.Localize.GetString(key);
+            return BattlegroundsContext.Localize.GetString(key);
         } else if (value is Enum e) {
             // TODO: Implement
         }

@@ -6,8 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Lobby.Lookups;
 using Battlegrounds.Lobby.Planning;
 using Battlegrounds.Locale;
@@ -305,7 +304,7 @@ public partial class PlannerView : UserControl {
                 // Show line helper
                 this.LinePlacementHelperBox.SetValue(Canvas.TopProperty, p.Y);
                 this.LinePlacementHelperBox.SetValue(Canvas.LeftProperty, p.X + 8);
-                this.LinePlacementHelperBoxCapacity.Content = BattlegroundsInstance.Localize.GetString("LobbyPlanning_LinePlacing", selfCap.Current + ingameCount, selfCap.Capacity);
+                this.LinePlacementHelperBoxCapacity.Content = BattlegroundsContext.Localize.GetString("LobbyPlanning_LinePlacing", selfCap.Current + ingameCount, selfCap.Capacity);
                 this.LinePlacementHelperBoxCapacity.Foreground = allowPlacement ? Brushes.White : Brushes.Red;
 
             }

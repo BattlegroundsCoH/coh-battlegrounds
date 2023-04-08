@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -8,6 +7,7 @@ using System.Text.Json.Serialization;
 
 using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Functional;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Logging;
 using Battlegrounds.Modding.Content;
@@ -23,6 +23,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
 
     private static readonly Logger logger = Logger.CreateLogger();
 
+    /// <inheritdoc/>
     public override ModPackage Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 
         // Lookup table to store values in temp
@@ -41,12 +42,13 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
                 "VerificationUpgrade" => reader.GetString() ?? string.Empty,
                 "AllowSupplySystem" => reader.GetBoolean(),
                 "AllowWeatherSystem" => reader.GetBoolean(),
-                "LocaleFiles" => JsonSerializer.Deserialize<ModPackage.ModLocale[]>(ref reader) ?? Array.Empty<ModPackage.ModLocale>(),
+                "LocaleFiles" => JsonSerializer.Deserialize<ModLocale[]>(ref reader) ?? Array.Empty<ModLocale>(),
                 "FactionData" => JsonSerializer.Deserialize<FactionData[]>(ref reader) ?? Array.Empty<FactionData>(),
-                "CustomOptions" => JsonSerializer.Deserialize<ModPackage.CustomOptions[]>(ref reader) ?? Array.Empty<ModPackage.CustomOptions>(),
                 "Gamemodes" => JsonSerializer.Deserialize<Gamemode[]>(ref reader) ?? Array.Empty<Gamemode>(),
                 "Towing" => ReadTowdata(ref reader),
                 "TeamWeaponCaptureSquads" => JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(ref reader) ?? new(),
+                "DataSourcePath" => reader.GetString() ?? string.Empty,
+                "SupportedGames" => Enum.TryParse(reader.GetString() ?? string.Empty, true, out GameCase gameCase) ? gameCase : GameCase.Unspecified,
                 _ => throw new NotImplementedException(prop)
             };
         }
@@ -58,7 +60,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
 
         // Get factions
         Dictionary<Faction, FactionData> factions = __lookup.GetCastValueOrDefault("FactionData", Array.Empty<FactionData>())
-            .ToDictionary(x => Faction.FromName(x.Faction));
+            .ToDictionary(x => Faction.FromName(x.Faction, x.Game));
 
         // Get tow data
         (bool hastow, string istow, string istowing) = __lookup.GetCastValueOrDefault("Towing", (false, string.Empty, string.Empty));
@@ -82,11 +84,13 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
             IsTowingUpgrade = istowing,
             VerificationUpgrade = __lookup.GetCastValueOrDefault("VerificationUpgrade", string.Empty),
             ParadropUnits = __lookup.GetCastValueOrDefault("ParadropUnits", Array.Empty<string>()),
-            LocaleFiles = __lookup.GetCastValueOrDefault("LocaleFiles", Array.Empty<ModPackage.ModLocale>()),
+            LocaleFiles = __lookup.GetCastValueOrDefault("LocaleFiles", Array.Empty<ModLocale>()),
             AllowSupplySystem = __lookup.GetCastValueOrDefault("AllowSupplySystem", false),
             AllowWeatherSystem = __lookup.GetCastValueOrDefault("AllowWeatherSystem", false),
             Gamemodes = __lookup.GetCastValueOrDefault("Gamemodes", Array.Empty<Gamemode>()),
-            TeamWeaponCaptureSquads = __lookup.GetCastValueOrDefault("TeamWeaponCaptureSquads", new Dictionary<string, Dictionary<string, string>>())
+            TeamWeaponCaptureSquads = __lookup.GetCastValueOrDefault("TeamWeaponCaptureSquads", new Dictionary<string, Dictionary<string, string>>()),
+            DataSourcePath = __lookup.GetCastValueOrDefault("DataSourcePath", ""),
+            SupportedGames = __lookup.GetCastValueOrDefault("SupportedGames", GameCase.Unspecified)
         };
 
         // Set faction data owners and load source files
@@ -114,7 +118,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
         }
         
         // Get relative virt path
-        string abspath = BattlegroundsInstance.GetRelativeVirtualPath(original.SourceFile, ".json");
+        string abspath = BattlegroundsContext.GetRelativeVirtualPath(original.SourceFile, ".json");
         if (File.Exists(abspath)) {
             
             // Open read
@@ -158,6 +162,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
         return ((bool)data[0], data[1] as string ?? string.Empty, data[2] as string ?? string.Empty);
     }
 
+    /// <inheritdoc/>
     public override void Write(Utf8JsonWriter writer, ModPackage value, JsonSerializerOptions options) => throw new NotSupportedException();
 
 }

@@ -52,7 +52,7 @@ public class PlaybackLoader {
     /// <param name="filepath">The path of the playback file to load.</param>
     /// <returns>A new instance of the <see cref="CoH3Playback"/> class.</returns>
     public virtual IPlayback GetCoH3Playback(string filepath) => 
-        BattlegroundsInstance.UseLightCoH3PlaybackLoader ? GetCoH3LightPlayback(filepath) : new CoH3Playback(filepath);
+        BattlegroundsContext.UseLightCoH3PlaybackLoader ? GetCoH3LightPlayback(filepath) : new CoH3Playback(filepath);
 
     /// <summary>
     /// Returns a new instance of the <see cref="CoH3PlaybackLight"/> class for loading playback data from Company of Heroes 3, with a less correct reading method than the standard <see cref="CoH3Playback"/> class.

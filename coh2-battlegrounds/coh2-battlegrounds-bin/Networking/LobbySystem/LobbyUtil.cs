@@ -23,7 +23,7 @@ public static class LobbyUtil {
     public static void HostLobby(ServerAPI serverAPI, string lobbyName, string lobbyPassword, LobbyConnectCallback onLobbyCreated) {
 
         // Get steam user
-        var steamUser = BattlegroundsInstance.Steam.User;
+        var steamUser = BattlegroundsContext.Steam.User;
 
         // Success flag
         bool success = false;
@@ -89,7 +89,7 @@ public static class LobbyUtil {
         const string methoddb = $"{nameof(LobbyUtil)}::{nameof(JoinLobby)}";
 
         // Get steam user
-        var steamUser = BattlegroundsInstance.Steam.User;
+        var steamUser = BattlegroundsContext.Steam.User;
 
         // Success flag
         bool success = false;

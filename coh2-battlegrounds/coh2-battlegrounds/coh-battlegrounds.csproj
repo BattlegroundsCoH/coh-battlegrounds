@@ -299,31 +299,31 @@
     <None Update="bg_common\coh2_battlegrounds_wincondition_preview.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\vcoh-abp-db.json">
+    <None Update="bg_common\data\vcoh2-abp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\vcoh-aimap-db.json">
+    <None Update="bg_common\data\vcoh2-aimap-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\vcoh-cbp-db.json">
+    <None Update="bg_common\data\vcoh2-cbp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\vcoh-ebp-db.json">
+    <None Update="bg_common\data\vcoh2-ebp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\vcoh-ibp-db.json">
+    <None Update="bg_common\data\vcoh2-ibp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\vcoh-map-db.json">
+    <None Update="bg_common\data\vcoh2-map-db.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\vcoh-sbp-db.json">
+    <None Update="bg_common\data\vcoh2-sbp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\vcoh-ubp-db.json">
+    <None Update="bg_common\data\vcoh2-ubp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\vcoh-wbp-db.json">
+    <None Update="bg_common\data\vcoh2-wbp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04.gfx">
@@ -866,25 +866,25 @@
     <None Update="bg_common\locale\english\english.tuning.ucs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\mod_bg-abp-db.json">
+    <None Update="bg_common\data\mod_bg-abp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\mod_bg-cbp-db.json">
+    <None Update="bg_common\data\mod_bg-cbp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\mod_bg-ebp-db.json">
+    <None Update="bg_common\data\mod_bg-ebp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\mod_bg-ibp-db.json">
+    <None Update="bg_common\data\mod_bg-ibp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\mod_bg-sbp-db.json">
+    <None Update="bg_common\data\mod_bg-sbp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\mod_bg-ubp-db.json">
+    <None Update="bg_common\data\mod_bg-ubp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="bg_common\data\mod_bg-wbp-db.json">
+    <None Update="bg_common\data\mod_bg-wbp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

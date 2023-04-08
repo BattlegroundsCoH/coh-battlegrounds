@@ -24,7 +24,7 @@ public class NullSession : ISession {
     public IGamemode Gamemode => new Wincondition("Unknown Gamemode", ModGuid.BaseGame);
 
     public ITuningMod TuningMod 
-        => ModManager.GetMod<ITuningMod>(ModManager.GetPackage("mod_bg")?.TuningGUID ?? throw new Exception("Invalid tuning GUID set for mod_bg")) 
+        => BattlegroundsContext.ModManager.GetMod<ITuningMod>(BattlegroundsContext.ModManager.GetPackage("mod_bg")?.TuningGUID ?? throw new Exception("Invalid tuning GUID set for mod_bg")) 
         ?? throw new Exception("Not tuning mod found for mod_bg");
 
     public string GamemodeOption => "0";
