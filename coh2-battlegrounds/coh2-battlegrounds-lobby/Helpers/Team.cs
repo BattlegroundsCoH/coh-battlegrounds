@@ -35,7 +35,7 @@ public sealed class Team {
         // Set lobby instance
         this.Lobby = model;
 
-        this.Title = BattlegroundsInstance.Localize.GetString(this.m_team.TeamRole);
+        this.Title = BattlegroundsContext.Localize.GetString(this.m_team.TeamRole);
 
         // Create models
         if (lobbyAPI.IsHost) {
