@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.Game;
 using Battlegrounds.Game.DataSource;
 using Battlegrounds.Logging;
 
@@ -18,10 +19,16 @@ public readonly struct ModLocale {
     
     public string Path { get; }
 
+    [JsonIgnore]
+    public GameCase GameCase => Enum.Parse<GameCase>(this.Game);
+
+    public string Game { get; }
+
     [JsonConstructor]
-    public ModLocale(string Type, string Path) {
+    public ModLocale(string Type, string Path, string Game) {
         this.Type = Type;
         this.Path = Path;
+        this.Game = Game;
     }
 
     public UcsFile? GetLocale(string modID, string language) {

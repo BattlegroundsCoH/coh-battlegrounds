@@ -3,7 +3,7 @@ using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Blueprints.Collections;
 using Battlegrounds.Game.Gameplay;
 
-namespace Battlegrounds.Game.Database.Management;
+namespace Battlegrounds.Game.Database.Management.CoH3;
 
 /// <summary>
 /// 

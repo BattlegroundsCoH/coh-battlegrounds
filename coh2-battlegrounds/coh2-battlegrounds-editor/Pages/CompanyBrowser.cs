@@ -5,7 +5,6 @@ using System.Windows.Input;
 
 using Battlegrounds.Editor.Modals;
 using Battlegrounds.Game.DataCompany;
-using Battlegrounds.Locale;
 
 using Battlegrounds.UI;
 using Battlegrounds.UI.Modals;
@@ -13,6 +12,7 @@ using Battlegrounds.UI.Modals.Prompts;
 
 using static Battlegrounds.DataLocal.Companies;
 using static Battlegrounds.UI.AppContext;
+using Battlegrounds.Locale;
 
 namespace Battlegrounds.Editor.Pages;
 

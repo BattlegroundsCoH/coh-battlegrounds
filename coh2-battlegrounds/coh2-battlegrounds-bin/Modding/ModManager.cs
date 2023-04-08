@@ -37,13 +37,19 @@ public sealed class ModManager : IModManager {
         this._coh2 = new VanillaModPackage() {
             ID = "vcoh2",
             PackageName = "Company of Heroes 2",
-            SupportedGames = GameCase.CompanyOfHeroes2
+            SupportedGames = GameCase.CompanyOfHeroes2,
+            LocaleFiles = new ModLocale[] {
+                new ModLocale("Engine", "VCoH2", "CompanyOfHeroes2")
+            }
         };
 
         this._coh3 = new VanillaModPackage() {
             ID = "vcoh3",
             PackageName = "Company of Heroes 3",
-            SupportedGames = GameCase.CompanyOfHeroes3
+            SupportedGames = GameCase.CompanyOfHeroes3,
+            LocaleFiles = new ModLocale[] {
+                new ModLocale("Engine", "VCoH3", "CompanyOfHeroes3")
+            }
         };
 
         this.__packages.Add(_coh2);

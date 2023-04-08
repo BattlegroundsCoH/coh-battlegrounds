@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Game.Database.Management.CoH2;
 using Battlegrounds.Modding;
+using Battlegrounds.Modding.Vanilla;
 
 namespace Battlegrounds.Game.Database.Management;
 
@@ -35,6 +38,22 @@ public class ModDatabaseManager : IModDbManager {
     }
 
     /// <inheritdoc/>
+    public IModLocale? GetLocale(IModPackage package, GameCase game)
+        => packageDatabases.TryGetValue(package, out var database) && database is not null ? database.GetLocale(game) : null;
+
+    /// <inheritdoc/>
+    public IModLocale GetLocale(GameCase game) => game switch {
+        GameCase.CompanyOfHeroes2 => new CoH2Locale(),
+        _ => throw new NotImplementedException()
+    };
+
+    /// <inheritdoc/>
+    public IModLocale GetLocaleSource(Blueprint blueprint) {
+        var package = packageDatabases.Keys.FirstOrDefault(x => x.TuningGUID == blueprint.PBGID.Mod) ?? throw new System.Exception("fff");
+        return GetLocale(package, blueprint.Game)!;
+    }
+
+    /// <inheritdoc/>
     public IWinconditionList? GetWinconditionList(IModPackage package, GameCase game)
         => packageDatabases.TryGetValue(package, out var database) && database is not null ? database.GetWinconditions(game) : null;
 
@@ -55,7 +74,12 @@ public class ModDatabaseManager : IModDbManager {
 
             // Create database
             ModDatabase database = new ModDatabase(modManager, package);
-            database.LoadLocales(() => { });
+            
+            // Load locale for mod (Skip vanilla packages)
+            if (package is not VanillaModPackage) {
+                database.LoadLocales();
+            }
+
             var (successLoad, failLoad) = await database.LoadBlueprints(package.DataSourcePath);
             database.LoadWinconditions();
             database.LoadScenarios(() => { });

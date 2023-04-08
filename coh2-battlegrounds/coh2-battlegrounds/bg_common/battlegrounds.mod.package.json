@@ -9,11 +9,13 @@
   "LocaleFiles": [
     {
       "Type": "Gamemode",
-      "Path": "locale\\%LANG%\\%LANG%.gamemode.ucs"
+      "Path": "locale\\%LANG%\\%LANG%.gamemode.ucs",
+      "Game": "CompanyOfHeroes2"
     },
     {
       "Type": "Tuning",
-      "Path": "locale\\%LANG%\\%LANG%.tuning.ucs"
+      "Path": "locale\\%LANG%\\%LANG%.tuning.ucs",
+      "Game": "CompanyOfHeroes2"
     }
   ],
   "Gamemodes": [

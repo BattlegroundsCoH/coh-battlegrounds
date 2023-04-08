@@ -6,7 +6,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Resources;
 using Battlegrounds.Game.Blueprints.Extensions;
@@ -183,7 +182,7 @@ public sealed class SquadSlot : INotifyPropertyChanged {
     public void RefreshData() {
 
         // Set basic info
-        this.SquadName = GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ScreenName);
+        this.SquadName = BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.BuilderInstance.Blueprint.UI.ScreenName);
 
         // Get rank
         var rankLevel = this.BuilderInstance.Rank;

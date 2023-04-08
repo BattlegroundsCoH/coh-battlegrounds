@@ -5,21 +5,14 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Input;
-using Battlegrounds.Game.Database.Management;
+
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
-
-using Battlegrounds.Locale;
-
 using Battlegrounds.Misc.Values;
-
 using Battlegrounds.Resources;
-
 using Battlegrounds.UI;
 using Battlegrounds.UI.Modals;
-
 using Battlegrounds.Editor.Components;
-
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Blueprints.Extensions;
@@ -30,8 +23,8 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
 
     public record AbilityButton(AbilityBlueprint Abp) {
         public ImageSource? Icon => ResourceHandler.GetIcon("ability_icons", this.Abp.UI.Icon);
-        public string Title => GameLocale.GetString(this.Abp.UI.ScreenName);
-        public string Desc => GameLocale.GetString(this.Abp.UI.LongDescription);
+        public string Title => BattlegroundsContext.DataSource.GetLocaleSource(Abp).GetString(this.Abp.UI.ScreenName);
+        public string Desc => BattlegroundsContext.DataSource.GetLocaleSource(Abp).GetString(this.Abp.UI.LongDescription);
         public CostExtension Cost => this.Abp.Cost;
     }
 
@@ -40,8 +33,8 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
         public bool IsApplied => this.CheckApplied();
         public bool IsAvailable => this.CheckAvailable();
         public ImageSource? Icon => ResourceHandler.GetIcon("upgrade_icons", this.Ubp.UI.Icon);
-        public string Title => GameLocale.GetString(this.Ubp.UI.ScreenName);
-        public string Desc => GameLocale.GetString(this.Ubp.UI.LongDescription);
+        public string Title => BattlegroundsContext.DataSource.GetLocaleSource(Ubp).GetString(this.Ubp.UI.ScreenName);
+        public string Desc => BattlegroundsContext.DataSource.GetLocaleSource(Ubp).GetString(this.Ubp.UI.LongDescription);
         public CostExtension Cost => this.Ubp.Cost;
         public void Update() {
             this.PropertyChanged?.Invoke(this, new(nameof(IsAvailable)));
@@ -67,8 +60,8 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
         public bool IsActiveMethod => this.IsActive();
         public event PropertyChangedEventHandler? PropertyChanged;
         public ImageSource? Icon => ResourceHandler.GetIcon("unit_icons", this.Blueprint.UI.Icon);
-        public string Title => GameLocale.GetString(this.Blueprint.UI.ScreenName);
-        public string Desc => GameLocale.GetString(this.Blueprint.UI.LongDescription);
+        public string Title => BattlegroundsContext.DataSource.GetLocaleSource(Blueprint).GetString(this.Blueprint.UI.ScreenName);
+        public string Desc => BattlegroundsContext.DataSource.GetLocaleSource(Blueprint).GetString(this.Blueprint.UI.LongDescription);
         public CostExtension Cost => this.Blueprint.Cost;
         public void Update() {
             this.PropertyChanged?.Invoke(this, new(nameof(IsActiveMethod)));
@@ -87,21 +80,21 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
 
     public SquadSlot TriggerModel { get; }
 
-    public string UnitName => GameLocale.GetString(this.BuilderInstance.GetName());
+    public string UnitName => BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.BuilderInstance.GetName());
 
-    public string UnitRawName => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ScreenName);
+    public string UnitRawName => BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.BuilderInstance.Blueprint.UI.ScreenName);
 
-    public string UnitDesc => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.LongDescription);
+    public string UnitDesc => BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.BuilderInstance.Blueprint.UI.LongDescription);
 
-    public string UnitHelpText => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ShortDescription);
+    public string UnitHelpText => BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.BuilderInstance.Blueprint.UI.ShortDescription);
 
     public ImageSource? UnitPortrait => ResourceHandler.GetIcon("portraits", this.BuilderInstance.Blueprint.UI.Portrait);
 
-    public string CrewTitle => this.CrewBuilderInstance is not null ? GameLocale.GetString(this.CrewBuilderInstance.Blueprint.UI.ScreenName) : "";
+    public string CrewTitle => this.CrewBuilderInstance is not null ? BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.CrewBuilderInstance.Blueprint.UI.ScreenName) : "";
 
-    public string CrewDesc => this.CrewBuilderInstance is not null ? GameLocale.GetString(this.CrewBuilderInstance.Blueprint.UI.LongDescription) : "";
+    public string CrewDesc => this.CrewBuilderInstance is not null ? BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.CrewBuilderInstance.Blueprint.UI.LongDescription) : "";
 
-    public string CrewHelperDesc => this.CrewBuilderInstance is not null ? GameLocale.GetString(this.CrewBuilderInstance.Blueprint.UI.ShortDescription) : "";
+    public string CrewHelperDesc => this.CrewBuilderInstance is not null ? BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.CrewBuilderInstance.Blueprint.UI.ShortDescription) : "";
 
     public ImageSource? CrewPortrait => this.CrewBuilderInstance is not null ? ResourceHandler.GetIcon("portraits", this.CrewBuilderInstance.Blueprint.UI.Portrait) : null;
 

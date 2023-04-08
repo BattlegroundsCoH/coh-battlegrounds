@@ -3,7 +3,6 @@ using System.Diagnostics;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Locale;
-
 using Microsoft.Win32;
 
 namespace Battlegrounds.UI.Application.Pages;

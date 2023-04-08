@@ -49,4 +49,26 @@ public interface IModDbManager {
     /// <returns></returns>
     IWinconditionList? GetWinconditionList(IModPackage package, GameCase game);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="package"></param>
+    /// <param name="game"></param>
+    /// <returns></returns>
+    IModLocale? GetLocale(IModPackage package, GameCase game);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="blueprint"></param>
+    /// <returns></returns>
+    IModLocale GetLocaleSource(Blueprint blueprint);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="game"></param>
+    /// <returns></returns>
+    IModLocale GetLocale(GameCase game);
+
 }

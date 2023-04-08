@@ -7,9 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-
 using Battlegrounds.Locale;
-
 using Battlegrounds.Steam;
 using Battlegrounds.UI.Controls;
 using Battlegrounds.UI.Modals;

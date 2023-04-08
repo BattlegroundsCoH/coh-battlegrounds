@@ -9,7 +9,6 @@ using System.Windows.Shapes;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Lobby.Lookups;
 using Battlegrounds.Lobby.Planning;
-using Battlegrounds.Locale;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Resources;
 using Battlegrounds.UI.Controls;
@@ -85,7 +84,8 @@ public partial class PlannerView : UserControl {
                     this.LinePlacementHelperBox.Visibility = Visibility.Visible;
                     this.LinePlacementHelperBox.SetValue(Canvas.TopProperty, clickPos.Y);
                     this.LinePlacementHelperBox.SetValue(Canvas.LeftProperty, clickPos.X);
-                    this.LinePlacementHelperBoxTitle.Content = GameLocale.GetString(this.ContextHandler.PlaceElementBlueprint!.UI.ScreenName);
+                    this.LinePlacementHelperBoxTitle.Content = BattlegroundsContext.DataSource.GetLocaleSource(this.ContextHandler.PlaceElementBlueprint!)
+                        .GetString(this.ContextHandler.PlaceElementBlueprint!.UI.ScreenName);
                 } else {
                     this.LinePlacementHelperBox.Visibility = Visibility.Collapsed;
                 }
@@ -549,7 +549,7 @@ public partial class PlannerView : UserControl {
     private void DefenceIcon_MouseEnter(object sender, MouseEventArgs e) {
         if (sender is FrameworkElement fe && fe.DataContext is LobbyPlanningDefence def) {
             var cap = def.CapacityFetcher();
-            this.DefenceTooltip.Content = $"{GameLocale.GetString(def.Name)} ({cap.Current}/{cap.Capacity})";
+            this.DefenceTooltip.Content = $"{def.Name} ({cap.Current}/{cap.Capacity})";
             this.DefenceTooltip.Visibility = Visibility.Visible;
         }
     }

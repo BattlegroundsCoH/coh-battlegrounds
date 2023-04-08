@@ -5,7 +5,6 @@ using System.Windows.Media;
 
 using Battlegrounds.ErrorHandling.CommonExceptions;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Modding;
 using Battlegrounds.Resources;
@@ -71,9 +70,9 @@ public sealed class CreateCompany : INotifyPropertyChanged {
 
     }
 
-    public record FactionType(Faction Self) {
+    public record FactionType(Faction Self, IModPackage? Package) {
         public ImageSource Icon => StringToFactionIcon.GetIcon(this.Self);
-        public override string ToString() => GameLocale.GetString(this.Self.NameKey);
+        public override string ToString() => BattlegroundsContext.DataSource.GetLocale(Package!, Self.RequiredDLC.Game)?.GetString(this.Self.NameKey) ?? "Unknown Army";
     }
 
     private IModPackage m_package;
@@ -97,7 +96,7 @@ public sealed class CreateCompany : INotifyPropertyChanged {
         }
     }
 
-    private FactionType m_companyFaction = new(Faction.Soviet);
+    private FactionType m_companyFaction = new(Faction.Soviet, null);
 
     public FactionType SelectedFaction {
         get => this.m_companyFaction;
@@ -138,8 +137,8 @@ public sealed class CreateCompany : INotifyPropertyChanged {
 
         // Create available factions
         this.AvailableFactions = new() {
-            new FactionType(Faction.Soviet),
-            new FactionType(Faction.Wehrmacht)
+            new FactionType(Faction.Soviet, m_package),
+            new FactionType(Faction.Wehrmacht, m_package)
         };
 
         // Create available types

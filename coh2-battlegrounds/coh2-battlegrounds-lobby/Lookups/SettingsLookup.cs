@@ -2,7 +2,6 @@
 
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Scenarios;
-using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Lobby.Lookups;
@@ -12,7 +11,8 @@ public static class SettingsLookup {
     public static string GetScenarioName(Scenario? scen, string defaultName)
         => scen is null ?
         defaultName :
-        scen.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(scen.Name[1..], out uint key) ? GameLocale.GetString(key) : scen.Name;
+        scen.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(scen.Name[1..], out uint key) 
+            ? BattlegroundsContext.DataSource.GetLocale(Game.GameCase.CompanyOfHeroes2).GetString(key) : scen.Name;
 
     public static string GetGamemodeName(string gamemode, IModPackage? package) {
 

@@ -1,7 +1,6 @@
 ﻿using System.Windows.Input;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.DataCompany;
-using Battlegrounds.Locale;
 using Battlegrounds.UI;
 
 namespace Battlegrounds.Editor.Components;
@@ -69,7 +68,7 @@ public sealed class EquipmentSlot {
 
         // Grab portrait and title
         (this.Portrait, this.Title) = item.Item switch {
-            IUIBlueprint ui => (ui.UI.Portrait, GameLocale.GetString(ui.UI.ScreenName)),
+            IUIBlueprint ui => (ui.UI.Portrait, BattlegroundsContext.DataSource.GetLocaleSource(item.Item).GetString(ui.UI.ScreenName)),
             _ => (string.Empty, string.Empty)
         };
 

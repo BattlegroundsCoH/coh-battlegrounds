@@ -9,7 +9,7 @@ using Battlegrounds.Game.Blueprints.Extensions;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 
-namespace Battlegrounds.Game.Database.Management;
+namespace Battlegrounds.Game.Database.Management.CoH2;
 
 /// <summary>
 /// 
@@ -93,7 +93,7 @@ public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
     /// <returns>Dictionary of <see cref="Blueprint"/> instances linked with their <see cref="BlueprintUID"/> keys.</returns>
     /// <exception cref="ArgumentException"/>
     /// <exception cref="EnvironmentException"/>
-    public Dictionary<BlueprintUID, Blueprint> GetAllBlueprintsOfType(BlueprintType type) => (type switch {
+    public Dictionary<BlueprintUID, Blueprint> GetAllBlueprintsOfType(BlueprintType type) => type switch {
         BlueprintType.ABP => __abilities,
         BlueprintType.CBP => __criticals,
         BlueprintType.EBP => __entities,
@@ -102,7 +102,7 @@ public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
         BlueprintType.IBP => __slotitems,
         BlueprintType.WBP => __weapons,
         _ => throw new ArgumentException(null, nameof(type)),
-    }) ?? throw new EnvironmentException("Fatal error: Database not instantiated.");
+    } ?? throw new EnvironmentException("Fatal error: Database not instantiated.");
 
     /// <summary>
     /// Retrieve the <see cref="ModGuid"/> from a string fully qualified blueprint name.
@@ -157,7 +157,7 @@ public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
             // Check for driver extension
             if (entity.Drivers is DriverExtension drivers) {
                 var f2 = faction is null ? f : faction;
-                var crew =  drivers.Drivers.FirstOrDefault(x => x.Faction == f2.RbpPath).SquadBlueprint;
+                var crew = drivers.Drivers.FirstOrDefault(x => x.Faction == f2.RbpPath).SquadBlueprint;
                 return FromBlueprintName<SquadBlueprint>(crew);
             }
 

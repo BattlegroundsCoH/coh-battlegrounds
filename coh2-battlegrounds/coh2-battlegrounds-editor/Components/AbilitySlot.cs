@@ -1,5 +1,4 @@
 ﻿using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Blueprints.Extensions;
@@ -69,7 +68,7 @@ public class AbilitySlot {
         this.RemoveClick = onRemove;
 
         // Set data
-        this.AbilityName = GameLocale.GetString(this.AbilityInstance.ABP.UI.ScreenName);
+        this.AbilityName = BattlegroundsContext.DataSource.GetLocaleSource(ability.ABP).GetString(this.AbilityInstance.ABP.UI.ScreenName);
         this.AbilityCost = this.AbilityInstance.ABP.Cost;
 
         this.AbilityIcon = this.AbilityInstance.ABP.UI.Icon;

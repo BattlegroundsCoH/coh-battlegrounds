@@ -13,7 +13,6 @@ using Battlegrounds.DataLocal;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Locale;
 using Battlegrounds.Misc.Values;
 using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Modding;
@@ -24,6 +23,7 @@ using Battlegrounds.Editor.Components;
 using Battlegrounds.Editor.Modals;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Locale;
 
 namespace Battlegrounds.Editor.Pages;
 

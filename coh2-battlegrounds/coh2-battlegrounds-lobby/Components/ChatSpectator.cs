@@ -7,10 +7,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows;
-
-using Battlegrounds.Locale;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.UI;
+using Battlegrounds.Locale;
 
 namespace Battlegrounds.Lobby.Components;
 

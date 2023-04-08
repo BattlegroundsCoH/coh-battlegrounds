@@ -1,5 +1,4 @@
 ﻿using System.Windows.Input;
-
 using Battlegrounds.Locale;
 
 namespace Battlegrounds.UI.Modals.Prompts;

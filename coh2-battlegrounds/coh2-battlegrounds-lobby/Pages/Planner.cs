@@ -248,7 +248,7 @@ public sealed class Planner : ViewModelBase {
                 // Create display data from mod data
                 var handler = () => this.m_planningContext.PickPlaceElement(ebp, data);
                 var planData = new LobbyPlanningDefence(
-                    ResourceHandler.GetIcon("entity_icons", ebp.UI.Icon), ebp.UI.ScreenName, new(handler),
+                    ResourceHandler.GetIcon("entity_icons", ebp.UI.Icon), BattlegroundsContext.DataSource.GetLocaleSource(ebp).GetString(ebp.UI.ScreenName), new(handler),
                     () => this.m_planningContext.GetSelfCapacity(ebp.Name));
 
                 // Add

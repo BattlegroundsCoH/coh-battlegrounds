@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Blueprints.Converters;
+using Battlegrounds.Game.Database.Management.CoH2;
+using Battlegrounds.Game.Database.Management.CoH3;
+using Battlegrounds.Game.DataSource;
 using Battlegrounds.Logging;
 using Battlegrounds.Modding;
 
@@ -38,6 +41,9 @@ public class ModDatabase : IModDb {
     private readonly IWinconditionList? _winconditionCoH2List;
     private readonly IWinconditionList? _winconditionCoH3List;
 
+    private readonly IModLocale? _modCoH2Locale;
+    private readonly IModLocale? _modCoH3Locale;
+
     /// <summary>
     /// 
     /// </summary>
@@ -58,6 +64,7 @@ public class ModDatabase : IModDb {
                 new UpgradeBlueprintConverter(package.TuningGUID, GameCase.CompanyOfHeroes2)
             };
             this._winconditionCoH2List = new WinconditionList();
+            this._modCoH2Locale = new CoH2Locale();
         }
 
         if (this._modPackage.SupportedGames is GameCase.CompanyOfHeroes3 or GameCase.All) {
@@ -190,13 +197,38 @@ public class ModDatabase : IModDb {
         _ => throw new ApplicationException()
     };
 
-    public async void LoadLocales(DatabaseLoadedHandler loadedHandler) {
+    public void LoadLocales() {
 
+        // Determine language to use
+        string language = BattlegroundsContext.Localize.Language.ToString();
+        if (language is "Default") {
+            language = "English";
+        }
 
+        // Load
+        _modPackage.LocaleFiles.ForEach(locale => {
+            try {
+                var src = locale.GameCase switch {
+                    GameCase.CompanyOfHeroes2 => _modCoH2Locale ?? throw new Exception(),
+                    GameCase.CompanyOfHeroes3 => _modCoH3Locale ?? throw new Exception(),
+                    _ => throw new ApplicationException()
+                };
+                if (locale.GetLocale(_modPackage.ID, language) is UcsFile ucs) {
+                    src.RegisterUcsFile(locale.ModType switch {
+                        ModType.Asset => _modPackage.AssetGUID,
+                        ModType.Gamemode => _modPackage.GamemodeGUID,
+                        ModType.Tuning => _modPackage.TuningGUID,
+                        _ => throw new NotImplementedException()
+                    }, ucs);
+                }
+            } catch (Exception ex) {
+                logger.Exception(ex);
+            }
+        });
 
     }
 
-    public async void LoadScenarios(DatabaseLoadedHandler handler) {
+    public void LoadScenarios(DatabaseLoadedHandler handler) {
 
     }
 
@@ -240,6 +272,13 @@ public class ModDatabase : IModDb {
     public IWinconditionList GetWinconditions(GameCase game) => game switch {
         GameCase.CompanyOfHeroes2 => _winconditionCoH2List ?? throw new Exception(),
         GameCase.CompanyOfHeroes3 => _winconditionCoH3List ?? throw new Exception(),
+        _ => throw new Exception()
+    };
+
+    /// <inheritdoc/>
+    public IModLocale GetLocale(GameCase game) => game switch {
+        GameCase.CompanyOfHeroes2 => _modCoH2Locale ?? throw new Exception(),
+        GameCase.CompanyOfHeroes3 => _modCoH3Locale ?? throw new Exception(),
         _ => throw new Exception()
     };
 

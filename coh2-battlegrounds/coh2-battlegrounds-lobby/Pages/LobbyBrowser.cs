@@ -16,7 +16,6 @@ using Battlegrounds.Networking.Server;
 using Battlegrounds.UI;
 using Battlegrounds.DataLocal;
 using Battlegrounds.Game.Scenarios;
-using Battlegrounds.Locale;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.UI.Modals.Prompts;
@@ -27,6 +26,7 @@ using Battlegrounds.Resources;
 using Battlegrounds.Functional;
 using Battlegrounds.Lobby.Components;
 using Battlegrounds.Lobby.Modals;
+using Battlegrounds.Locale;
 
 namespace Battlegrounds.Lobby.Pages;
 

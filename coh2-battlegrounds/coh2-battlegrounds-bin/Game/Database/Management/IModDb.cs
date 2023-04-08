@@ -19,4 +19,11 @@ public interface IModDb {
     /// <returns></returns>
     IWinconditionList GetWinconditions(GameCase game);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="game"></param>
+    /// <returns></returns>
+    IModLocale GetLocale(GameCase game);
+
 }

@@ -6,8 +6,8 @@ using System.Windows;
 
 using Battlegrounds.Data;
 using Battlegrounds.Functional;
-using Battlegrounds.Locale;
 using Battlegrounds.Misc.Locale;
+using Battlegrounds.Locale;
 
 namespace Battlegrounds.UI.Controls;
 
