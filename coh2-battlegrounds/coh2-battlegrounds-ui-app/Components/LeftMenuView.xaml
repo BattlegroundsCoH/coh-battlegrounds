@@ -6,7 +6,7 @@
              xmlns:uiloc="clr-namespace:Battlegrounds.UI.Converters.Locale;assembly=Battlegrounds.UI"
              xmlns:local="clr-namespace:Battlegrounds.UI.Application.Components"
              mc:Ignorable="d" 
-             d:DesignHeight="850" d:DesignWidth="300" MaxWidth="300">
+             d:DesignHeight="850" d:DesignWidth="300">
     <UserControl.Background>
         <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
             <GradientStop Offset="0" Color="#212d3a"/>
@@ -14,15 +14,15 @@
             <GradientStop Offset="1" Color="#1e2935"/>
         </LinearGradientBrush>
     </UserControl.Background>
-    <Grid>
+    <Grid> 
         <Grid.Resources>
             <!-- LocaleConverter -->
             <uiloc:LocaleKeyString x:Key="LocaleConvertor"/>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="70*"/>
+            <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
 
         <!-- Row 1 -->
@@ -31,7 +31,7 @@
                Width="300"/>
 
         <!-- Row 2-->
-        <StackPanel Grid.Row="1" Grid.Column="0" Margin="38, 32, 38, 0">
+        <StackPanel Grid.Row="1" Grid.Column="0" Margin="38, 32, 38, 38">
 
             <Button x:Name="DashboardButton"
                     Content="{Binding Dashboard.Text, Converter={StaticResource LocaleConvertor}}"
@@ -93,13 +93,14 @@
         </StackPanel>
 
         <!-- Row 9 -->
-        <Button x:Name="ExitButton" Grid.Row="3" Grid.Column="0" 
-                    Content="{Binding Exit.Text, Converter={StaticResource LocaleConvertor}}" 
-                    Margin="38,0,38,38" 
+        <DockPanel Grid.Row="3" Grid.Column="0" VerticalAlignment="Stretch" Margin="38,0,38,38">
+            <Button x:Name="ExitButton"
+                    DockPanel.Dock="Bottom"
+                    Content="{Binding Exit.Text, Converter={StaticResource LocaleConvertor}}"  
                     IsEnabled="{Binding Exit.Enabled}" 
                     Command="{Binding Exit.Click}" 
                     ToolTip="Exit the application"
                     Style="{StaticResource MainButtonStyle}"/>
-
+        </DockPanel>
     </Grid>
 </UserControl>

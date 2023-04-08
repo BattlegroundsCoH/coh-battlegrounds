@@ -19,14 +19,13 @@
             <GradientStop Color="{StaticResource BackgroundDarkBlue}" Offset="1.0" />
         </LinearGradientBrush>
     </UserControl.Background>
-    <Grid>
+    <Grid Margin="15">
 
         <Grid.Resources>
             <uinum:WinrateToColour x:Key="winRateToColorConverter"/>
         </Grid.Resources>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>

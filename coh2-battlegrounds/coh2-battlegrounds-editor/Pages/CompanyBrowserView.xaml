@@ -14,7 +14,7 @@
     d:DesignHeight="450" 
     d:DesignWidth="800"
     Background="{StaticResource BackgroundBlueBrush}">
-    <Grid>
+    <Grid Margin="15">
 
         <Grid.Resources>
             <!-- Locale Converter -->
@@ -30,20 +30,13 @@
         </Grid.Resources>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="42"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="52"/>
+            <RowDefinition Height="90*"/>
+            <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
@@ -51,23 +44,23 @@
         <controls:LocalisedLabel
             LocKey="CompanyView_Title"
             Foreground="#d8dbde"
-            FontSize="28"
+            FontSize="32"
             FontFamily="Open Sans"
             FontWeight="Bold"
-            Margin="15, 0, 0, 0"
-            VerticalContentAlignment="Center"/>
+            VerticalContentAlignment="Center"
+            Margin="0, 0, 0, 15"/>
 
         <!-- Row 1 -->
         <ListView x:Name="CompanyList"
                   Grid.Row="1"
                   Grid.Column="0"
-                  Grid.ColumnSpan="8"
-                  Margin="15, 7.5, 15, 2"
+                  Grid.ColumnSpan="2"
                   ItemsSource="{Binding Companies}"
                   SelectedItem="{Binding SelectedCompany}"
                   MouseDoubleClick="{ui:EventBinding Handler=EditCompanyDirectly}"
                   Style="{StaticResource StandardBlueListViewStyle}"
-                  ItemContainerStyle="{StaticResource StandardBlueListViewItem}">
+                  ItemContainerStyle="{StaticResource StandardBlueListViewItem}"
+                  Margin="0, 0, 0, 15">
             <ListView.Resources>
                 <Style x:Key="CompanyLabel" TargetType="{x:Type Label}">
                     <Setter Property="Foreground" Value="#d8dbde"/>
@@ -156,85 +149,105 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="175"/>
                 <ColumnDefinition Width="125"/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="70"/>
             </Grid.ColumnDefinitions>
             <Grid x:Name="firstColumnSize"
                   Grid.Column="1"/>
         </Grid>
 
-        <!-- Row 2 -->
-        <Separator Grid.Row="2" Grid.ColumnSpan="8"
-                   Margin="15, 5, 15, 5"/>
-
         <!-- Row 3 -->
-        <Button x:Name="createCompanyButton"
-                Grid.Row="3"
+        <Grid Grid.Row="2" Grid.Column="2">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <Button x:Name="createCompanyButton"
+                Grid.Row="0"
                 Grid.Column="1"
                 Content="CompanyView_Create"
-                Margin="0,5,5,8"
                 Command="{Binding Create.Click}"
                 Style="{StaticResource StandardBlueLocalisedButton}"
-                Width="100"/>
+                Width="100"
+                Height="40"/>
 
-        <Button x:Name="editCompanyButton"
-                Grid.Row="3"
+            <Button x:Name="editCompanyButton"
+                Grid.Row="0"
                 Grid.Column="2"
                 Content="CompanyView_Edit"
-                Margin="5,5,5,8"
                 Command="{Binding Edit.Click}"
                 Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
-                Width="100"/>
+                Width="100"
+                Height="40"
+                Margin="15, 0, 0, 0"/>
 
-        <Button x:Name="renameCompanyButton"
-                Grid.Row="3"
+            <Button x:Name="renameCompanyButton"
+                Grid.Row="0"
                 Grid.Column="3"
                 Content="CompanyView_Rename"
-                Margin="5,5,5,8"
                 Command="{Binding Rename.Click}"
                 Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
-                Width="100"/>
+                Width="100"
+                Height="40"
+                Margin="15, 0, 0, 0"/>
 
-        <Button x:Name="deleteCompanyButton"
-                Grid.Row="3"
+            <Button x:Name="deleteCompanyButton"
+                Grid.Row="0"
                 Grid.Column="4"
                 Content="CompanyView_Delete"
-                Margin="5,5,5,8"
                 Command="{Binding Delete.Click}"
                 Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
-                Width="100"/>
+                Width="100"
+                Height="40"
+                Margin="15, 0, 0, 0"/>
 
-        <Button x:Name="copyCompanyButton"
-                Grid.Row="3"
+            <Button x:Name="copyCompanyButton"
+                Grid.Row="0"
                 Grid.Column="5"
                 Content="CompanyView_Copy"
-                Margin="5,5,5,8"
                 Command="{Binding Copy.Click}"
                 Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
-                Width="100"/>
+                Width="100"
+                Height="40"
+                Margin="15, 0, 0, 0"/>
 
-        <Button x:Name="exportCompanyButton"
-                Grid.Row="3"
+            <Button x:Name="exportCompanyButton"
+                Grid.Row="0"
                 Grid.Column="6"
                 Content="CompanyView_Export"
-                Margin="5,5,5,8"
                 Command="{Binding Export.Click}"
                 Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="{Binding ElementName=CompanyList, Path=SelectedItems.Count}"
-                Width="100"/>
+                Width="100"
+                Height="40"
+                Margin="15, 0, 0, 0"/>
 
-        <Button x:Name="importCompanyButton"
-                Grid.Row="3"
+            <Button x:Name="importCompanyButton"
+                Grid.Row="0"
                 Grid.Column="7"
                 Content="CompanyView_Import"
-                Margin="5,5,15,8"
                 Command="{Binding Import.Click}"
                 Style="{StaticResource StandardBlueLocalisedButton}"
                 IsEnabled="True"
-                Width="100"/>
+                Width="100"
+                Height="40"
+                Margin="15, 0, 0, 0"/>
+        </Grid>
 
     </Grid>
 </UserControl>
