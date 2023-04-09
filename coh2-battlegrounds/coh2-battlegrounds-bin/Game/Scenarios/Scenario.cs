@@ -155,6 +155,11 @@ public sealed class Scenario {
     /// </summary>
     public GameSize MinimapSize { get; set; }
 
+    /// <summary>
+    /// Get or set the game this scenario is for.
+    /// </summary>
+    public GameCase Game { get; set; }
+
     public Scenario() {
         SgaName = INVALID_SGA;
         Gamemodes = new List<string>();
@@ -166,6 +171,7 @@ public sealed class Scenario {
         PlayableSize = GameSize.Naught;
         TerrainSize = GameSize.Naught;
         MinimapSize = GameSize.Naught;
+        Game = GameCase.CompanyOfHeroes2;
     }
 
     /// <summary>
@@ -312,6 +318,7 @@ public sealed class Scenario {
     public GamePosition FromMinimapPosition(double minimapWidth, double minimapHeight, GamePosition minipos)
         => FromMinimapPosition(minimapWidth, minimapHeight, minipos.X, minipos.Y);
 
+    /// <inheritdoc/>
     public override string ToString() => Name;
 
 }

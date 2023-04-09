@@ -10,6 +10,7 @@ using System.Windows.Media;
 
 using Battlegrounds.AI;
 using Battlegrounds.Functional;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Lobby.Components;
@@ -58,19 +59,6 @@ public sealed class HostLobby : BaseLobby {
 
     public HostLobby(ILobbyHandle handle, ILobbyTeam allies, ILobbyTeam axis) : base(handle, allies, axis) {
 
-        // Init buttons
-        this.StartMatchButton = new(new(() => this.m_isStarting.IfFalse().Then(this.BeginMatchSetup).Else(this.CancelMatch)), Visibility.Visible) {
-            Title = LOCSTR_START(),
-            NotificationVisible = Visibility.Hidden
-        };
-        this.SwapRoles = new(new(this.SwapTeamRoles), Visibility.Collapsed);
-
-        // Get scenario list
-        var _scenlist = ScenarioList.GetList()
-            .Where(x => x.IsVisibleInLobby)
-            .OrderBy(x => x.MaxPlayers);
-        var scenlist = new List<ScenOp>(_scenlist.Select(x => new ScenOp(x)));
-
         // Get & set tunning list
         var tunlist = new List<ModPackageOption>();
         BattlegroundsContext.ModManager.EachPackage(x => tunlist.Add(new ModPackageOption(x)));
@@ -80,6 +68,19 @@ public sealed class HostLobby : BaseLobby {
 
         // Set default package
         this.m_package = this.ModPackageDropdown.Items[0].ModPackage;
+
+        // Init buttons
+        this.StartMatchButton = new(new(() => this.m_isStarting.IfFalse().Then(this.BeginMatchSetup).Else(this.CancelMatch)), Visibility.Visible) {
+            Title = LOCSTR_START(),
+            NotificationVisible = Visibility.Hidden
+        };
+        this.SwapRoles = new(new(this.SwapTeamRoles), Visibility.Collapsed);
+
+        // Get scenario list
+        var _scenlist = BattlegroundsContext.DataSource.GetScenarioList(m_package, GameCase.CompanyOfHeroes2)!.GetList()
+            .Where(x => x.IsVisibleInLobby)
+            .OrderBy(x => x.MaxPlayers);
+        var scenlist = new List<ScenOp>(_scenlist.Select(x => new ScenOp(x)));
 
         // Get On & Off collection
         ObservableCollection<OnOffOption> onOfflist = new(new[] { new OnOffOption(true), new OnOffOption(false) });

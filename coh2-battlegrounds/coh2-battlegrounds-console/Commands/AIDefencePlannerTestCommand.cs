@@ -1,7 +1,7 @@
 ﻿using Battlegrounds.AI.Lobby;
 using Battlegrounds.AI;
 using Battlegrounds.Game.Scenarios;
-using Battlegrounds.Modding;
+using Battlegrounds.Game.Database.Management.CoH2;
 
 using System;
 using System.Linq;
@@ -24,8 +24,11 @@ public class AIDefencePlannerTestCommand : Command {
         // Load AI database
         AIDatabase.LoadAIDatabase();
 
+        // Grab scenario list
+        var scenarioList = new CoH2ScenarioList();
+
         // Grab scenario
-        if (!ScenarioList.TryFindScenario("2p_coh2_resistance", out Scenario? scen) && scen is null) {
+        if (!scenarioList.TryFindScenario("2p_coh2_resistance", out Scenario? scen) && scen is null) {
             Console.WriteLine("Failed to find scenario '2p_coh2_resistance'");
             return;
         }

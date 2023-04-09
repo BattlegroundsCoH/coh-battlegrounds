@@ -71,4 +71,19 @@ public interface IModDbManager {
     /// <returns></returns>
     IModLocale GetLocale(GameCase game);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="game"></param>
+    /// <returns></returns>
+    IScenarioList GetScenarioList(GameCase game);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="package"></param>
+    /// <param name="game"></param>
+    /// <returns></returns>
+    IScenarioList? GetScenarioList(IModPackage package, GameCase game);
+
 }

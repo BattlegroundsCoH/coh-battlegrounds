@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.Json;
 
 using Battlegrounds.Compiler;
+using Battlegrounds.Game.Database.Management.CoH2;
 using Battlegrounds.Game.Scenarios;
 
 namespace Battlegrounds.Developer;
@@ -64,7 +65,7 @@ public static class MapExtractor {
                     Console.WriteLine($"Parsing scenario folder: {dir}");
 
                     // Read and add scenario
-                    if (ScenarioList.GetScenarioFromDirectory(dir, Path.GetFileName(archive)) is Scenario scen) {
+                    if ((new CoH2ScenarioList()).GetScenarioFromDirectory(dir, Path.GetFileName(archive)) is Scenario scen) {
                         if (scen.IsVisibleInLobby) {
                             scenarios.Add(scen);
                         } else {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -43,6 +44,9 @@ public class ModDatabase : IModDb {
 
     private readonly IModLocale? _modCoH2Locale;
     private readonly IModLocale? _modCoH3Locale;
+
+    private readonly IScenarioList? _modCoH2Scenarios;
+    private readonly IScenarioList? _modCoH3Scenarios;
 
     /// <summary>
     /// 
@@ -197,6 +201,9 @@ public class ModDatabase : IModDb {
         _ => throw new ApplicationException()
     };
 
+    /// <summary>
+    /// 
+    /// </summary>
     public void LoadLocales() {
 
         // Determine language to use
@@ -228,7 +235,24 @@ public class ModDatabase : IModDb {
 
     }
 
-    public void LoadScenarios(DatabaseLoadedHandler handler) {
+    public int LoadScenarios(string databaseSource) {
+
+        string rawJsonDb = Path.Combine(databaseSource, _modPackage.PackageName + "-map-db.json");
+        if (!File.Exists(rawJsonDb)) {
+            return 0;
+        }
+
+        return IScenarioList.LoadScenarioDatabaseFile(rawJsonDb).ForEach(x => {
+            var failWarning = ()
+                => logger.Warning("Failed adding duplicate scenario '{0}' from game pack '{1}' to scenario list for '{2}'.", x.Name, _modPackage.PackageName, x.Game);
+            bool isAdded = x.Game switch {
+                GameCase.CompanyOfHeroes2 when _modPackage.SupportedGames.HasFlag(GameCase.CompanyOfHeroes2)
+                    => _modCoH2Scenarios!.RegisterScenario(x).IfFalse().Then(failWarning).Negate().ToBool(),
+                GameCase.CompanyOfHeroes3 when _modPackage.SupportedGames.HasFlag(GameCase.CompanyOfHeroes3)
+                    => _modCoH3Scenarios!.RegisterScenario(x).IfFalse().Then(failWarning).Negate().ToBool(),
+                _ => true.Then(() => logger.Warning("Game pack '{0}' has invalid scenario '{1}' targetting game '{2}'", _modPackage.PackageName, x.Name, x.Game)).Negate().ToBool(),
+            };
+        }).ToList().Count;
 
     }
 
@@ -279,6 +303,13 @@ public class ModDatabase : IModDb {
     public IModLocale GetLocale(GameCase game) => game switch {
         GameCase.CompanyOfHeroes2 => _modCoH2Locale ?? throw new Exception(),
         GameCase.CompanyOfHeroes3 => _modCoH3Locale ?? throw new Exception(),
+        _ => throw new Exception()
+    };
+
+    /// <inheritdoc/>
+    public IScenarioList GetScenarios(GameCase game) => game switch {
+        GameCase.CompanyOfHeroes2 => _modCoH2Scenarios ?? throw new Exception(),
+        GameCase.CompanyOfHeroes3 => _modCoH3Scenarios ?? throw new Exception(),
         _ => throw new Exception()
     };
 

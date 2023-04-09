@@ -22,6 +22,7 @@ using Battlegrounds.Misc.Collections;
 using Battlegrounds.Locale;
 using Battlegrounds.UI;
 using Battlegrounds.Resources;
+using Battlegrounds.Game;
 
 namespace Battlegrounds.Lobby.Pages.Participants;
 
@@ -387,7 +388,7 @@ public sealed class ParticipantLobby : BaseLobby {
         Application.Current.Dispatcher.Invoke(() => {
 
             // Check if valid
-            if (ScenarioList.FromRelativeFilename(map) is not Scenario scenario) {
+            if (BattlegroundsContext.DataSource.GetScenarioList(m_package!, GameCase.CompanyOfHeroes2)!.FromRelativeFilename(map) is not Scenario scenario) {
                 this.MapDropdown.Label = map;
                 this.ScenarioPreview = ScenarioPreviewLookup.TryGetMapSource(null);
                 this.NotifyProperty(nameof(ScenarioPreview));

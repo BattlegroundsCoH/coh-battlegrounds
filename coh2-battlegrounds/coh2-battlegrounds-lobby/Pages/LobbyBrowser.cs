@@ -27,6 +27,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Lobby.Components;
 using Battlegrounds.Lobby.Modals;
 using Battlegrounds.Locale;
+using Battlegrounds.Game;
 
 namespace Battlegrounds.Lobby.Pages;
 
@@ -223,7 +224,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
         this.PropertyChanged?.Invoke(this, new(nameof(PreviewTitle)));
 
         // Read from settings
-        var scen = ScenarioList.FromRelativeFilename(selected.Settings[LobbyConstants.SETTING_MAP]);
+        var scen = BattlegroundsContext.DataSource.GetScenarioList(GameCase.CompanyOfHeroes2).FromRelativeFilename(selected.Settings[LobbyConstants.SETTING_MAP]);
 
         // Set scenario
         this.PreviewImage = ScenarioPreviewLookup.TryGetMapSource(scen);

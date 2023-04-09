@@ -1,5 +1,6 @@
 ﻿using Battlegrounds.AI.Lobby;
 using Battlegrounds.Game.Scenarios;
+using Battlegrounds.Game.Database.Management.CoH2;
 
 using System;
 using System.Collections.Generic;
@@ -27,11 +28,14 @@ public class AIDefenceAnalyserCommand : Command {
         // Load BG
         Program.LoadBGAndProceed();
 
+        // Get scenarios
+        CoH2ScenarioList scenarioList = new CoH2ScenarioList();
+
         // Do all if flag is set; otherwise just do example scenario
         if (argumentList.GetValue(DOALL)) {
 
             // Grab all scenarios
-            var scenarios = ScenarioList.GetList();
+            var scenarios = scenarioList.GetList();
 
             // Create required instances
             var ls = new Dictionary<string, AIMapAnalysis>();
@@ -62,7 +66,7 @@ public class AIDefenceAnalyserCommand : Command {
 
             // Get scenario
             string s = argumentList.GetValue(SCENARIO);
-            if (!ScenarioList.TryFindScenario(s, out Scenario? scen) && scen is null) {
+            if (!scenarioList.TryFindScenario(s, out Scenario? scen) && scen is null) {
                 Console.WriteLine("Failed to find scenario " + s);
                 return;
             }

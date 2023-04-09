@@ -133,7 +133,7 @@ public readonly struct Either<TOptionA, TOptionB> {
 /// <typeparam name="TOptionA">The first possible type.</typeparam>
 /// <typeparam name="TOptionB">The second possible type.</typeparam>
 /// <typeparam name="TOptionC">The third possible type.</typeparam>
-public struct Either<TOptionA, TOptionB, TOptionC> {
+public readonly struct Either<TOptionA, TOptionB, TOptionC> {
 
     private readonly TOptionA? m_a;
     private readonly TOptionB? m_b;

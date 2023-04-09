@@ -141,16 +141,12 @@ public abstract class BasePlayModel {
             .Map(x => x is null ? throw new StartupException("Invalid axis occupant") : CreateParticipantFromLobbyMember(x, ParticipantTeam.TEAM_AXIS, totalCounter, axisCounter));
 
         // Get scenario
-        var scen = ScenarioList.FromFilename(scenario);
-        if (scen is null) {
-            throw new StartupException($"Failed to fetch scenario {scenario} from scenario list.");
-        }
+        var scen = BattlegroundsContext.DataSource.GetScenarioList(package, GameCase.CompanyOfHeroes2)!.FromFilename(scenario)
+            ?? throw new StartupException($"Failed to fetch scenario {scenario} from scenario list.");
 
         // Grab gamemode
-        var gamemodeInstance = Winconditions.GetGamemodeByName(package.GamemodeGUID, gamemode);
-        if (gamemodeInstance is null) {
-            throw new StartupException($"Failed to find gamemode with name '{gamemode}' from wincondition list (mod package = {package.ID}).");
-        }
+        var gamemodeInstance = Winconditions.GetGamemodeByName(package.GamemodeGUID, gamemode)
+            ?? throw new StartupException($"Failed to find gamemode with name '{gamemode}' from wincondition list (mod package = {package.ID}).");
 
         // Grab tuning
         var tuningInstance = BattlegroundsContext.ModManager.GetMod<ITuningMod>(package.TuningGUID);

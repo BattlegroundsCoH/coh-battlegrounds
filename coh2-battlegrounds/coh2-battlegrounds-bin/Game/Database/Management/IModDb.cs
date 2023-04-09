@@ -26,4 +26,11 @@ public interface IModDb {
     /// <returns></returns>
     IModLocale GetLocale(GameCase game);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="game"></param>
+    /// <returns></returns>
+    IScenarioList GetScenarios(GameCase game);
+
 }

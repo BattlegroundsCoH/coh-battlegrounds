@@ -18,13 +18,26 @@ public class ModDatabaseManager : IModDbManager {
     private readonly Dictionary<IModPackage, IModDb> packageDatabases;
     private readonly IModManager modManager;
 
+    private readonly CoH2Locale coh2Locale;
+
+    private readonly CoH2ScenarioList coh2Scenarios;
+    
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="modManager"></param>
     public ModDatabaseManager(IModManager modManager) {
+    
+        // Set internals
         this.modManager = modManager;
         this.packageDatabases = new Dictionary<IModPackage, IModDb>();
+    
+        // Prepare game defaults
+        this.coh2Locale = new CoH2Locale();
+        this.coh2Scenarios = new CoH2ScenarioList();
+
+
     }
 
     /// <inheritdoc/>
@@ -43,7 +56,7 @@ public class ModDatabaseManager : IModDbManager {
 
     /// <inheritdoc/>
     public IModLocale GetLocale(GameCase game) => game switch {
-        GameCase.CompanyOfHeroes2 => new CoH2Locale(),
+        GameCase.CompanyOfHeroes2 => coh2Locale,
         _ => throw new NotImplementedException()
     };
 
@@ -52,6 +65,16 @@ public class ModDatabaseManager : IModDbManager {
         var package = packageDatabases.Keys.FirstOrDefault(x => x.TuningGUID == blueprint.PBGID.Mod) ?? throw new System.Exception("fff");
         return GetLocale(package, blueprint.Game)!;
     }
+
+    /// <inheritdoc/>
+    public IScenarioList GetScenarioList(GameCase game) => game switch {
+        GameCase.CompanyOfHeroes2 => coh2Scenarios,
+        _ => throw new NotImplementedException()
+    };
+
+    /// <inheritdoc/>
+    public IScenarioList? GetScenarioList(IModPackage package, GameCase game)
+        => packageDatabases.TryGetValue(package, out var database) && database is not null ? database.GetScenarios(game) : null;
 
     /// <inheritdoc/>
     public IWinconditionList? GetWinconditionList(IModPackage package, GameCase game)
@@ -80,9 +103,14 @@ public class ModDatabaseManager : IModDbManager {
                 database.LoadLocales();
             }
 
+            // Load blueprints
             var (successLoad, failLoad) = await database.LoadBlueprints(package.DataSourcePath);
+
+            // Load win conditions
             database.LoadWinconditions();
-            database.LoadScenarios(() => { });
+
+            // Load scenarios
+            int scenarios = database.LoadScenarios(package.DataSourcePath);
 
             // Update loaded
             dbLoaded += successLoad;
