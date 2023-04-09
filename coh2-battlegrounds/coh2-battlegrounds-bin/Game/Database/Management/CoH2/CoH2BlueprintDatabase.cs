@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Battlegrounds.ErrorHandling;
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Blueprints.Collections;
 using Battlegrounds.Game.Blueprints.Extensions;
@@ -24,9 +24,12 @@ public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
     private readonly Dictionary<BlueprintUID, Blueprint>? __slotitems;
     private readonly Dictionary<BlueprintUID, Blueprint>? __weapons;
 
-    private readonly List<Dictionary<BlueprintUID, Blueprint>>? __selfList;
+    private readonly HashSet<IModBlueprintDatabase> __inherit;
 
     private ushort bpCntr = 0;
+
+    /// <inheritdoc/>
+    public GameCase Game => GameCase.CompanyOfHeroes2;
 
     /// <summary>
     /// 
@@ -42,16 +45,8 @@ public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
         __slotitems = new();
         __weapons = new();
 
-        // Create list over self
-        __selfList = new List<Dictionary<BlueprintUID, Blueprint>>() {
-                __abilities,
-                __criticals,
-                __entities,
-                __slotitems,
-                __squads,
-                __upgrades,
-                __weapons,
-            };
+        // Create list of inheritance blueprints
+        __inherit = new();
 
     }
 
@@ -72,7 +67,8 @@ public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
     }
 
     /// <inheritdoc/>
-    public BlueprintCollection<T> GetCollection<T>() where T : Blueprint => new BlueprintCollection<T>(GetAllBlueprintsOfType(Blueprint.BlueprintTypeFromType<T>()));
+    public BlueprintCollection<T> GetCollection<T>() where T : Blueprint 
+        => new BlueprintCollection<T>(GetAllBlueprintsOfType(Blueprint.BlueprintTypeFromType<T>()).Map((k,v) => (T)v));
 
     /// <inheritdoc/>
     public Blueprint FromBlueprintName(string id, BlueprintType bType) {
@@ -86,23 +82,17 @@ public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
     public Bp FromBlueprintName<Bp>(string bpName) where Bp : Blueprint
         => (Bp)FromBlueprintName(bpName, Blueprint.BlueprintTypeFromType<Bp>());
 
-    /// <summary>
-    /// Get all blueprints in database of <paramref name="type"/>.
-    /// </summary>
-    /// <param name="type">The type of blueprint to retrieve.</param>
-    /// <returns>Dictionary of <see cref="Blueprint"/> instances linked with their <see cref="BlueprintUID"/> keys.</returns>
-    /// <exception cref="ArgumentException"/>
-    /// <exception cref="EnvironmentException"/>
-    public Dictionary<BlueprintUID, Blueprint> GetAllBlueprintsOfType(BlueprintType type) => type switch {
-        BlueprintType.ABP => __abilities,
-        BlueprintType.CBP => __criticals,
-        BlueprintType.EBP => __entities,
-        BlueprintType.SBP => __squads,
-        BlueprintType.UBP => __upgrades,
-        BlueprintType.IBP => __slotitems,
-        BlueprintType.WBP => __weapons,
+    /// <inheritdoc/>
+    public IDictionary<BlueprintUID, Blueprint> GetAllBlueprintsOfType(BlueprintType type) => type switch {
+        BlueprintType.ABP => __inherit.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__abilities!, (src, next) => src.Union(next)),
+        BlueprintType.CBP => __inherit.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__criticals!, (src, next) => src.Union(next)),
+        BlueprintType.EBP => __inherit.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__entities!, (src, next) => src.Union(next)),
+        BlueprintType.SBP => __inherit.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__squads!, (src, next) => src.Union(next)),
+        BlueprintType.UBP => __inherit.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__upgrades!, (src, next) => src.Union(next)),
+        BlueprintType.IBP => __inherit.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__slotitems!, (src, next) => src.Union(next)),
+        BlueprintType.WBP => __inherit.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__weapons!, (src, next) => src.Union(next)),
         _ => throw new ArgumentException(null, nameof(type)),
-    } ?? throw new EnvironmentException("Fatal error: Database not instantiated.");
+    };
 
     /// <summary>
     /// Retrieve the <see cref="ModGuid"/> from a string fully qualified blueprint name.
@@ -167,5 +157,9 @@ public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
         return null;
 
     }
+
+    /// <inheritdoc/>
+    public void Inherit(IModBlueprintDatabase modBlueprintDatabase) 
+        => __inherit.Add(modBlueprintDatabase);
 
 }

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Game.DataSource;
 using Battlegrounds.Logging;
 using Battlegrounds.Steam;

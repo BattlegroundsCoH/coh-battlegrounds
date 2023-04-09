@@ -1,4 +1,4 @@
-﻿namespace Battlegrounds.ErrorHandling.CommonExceptions;
+﻿namespace Battlegrounds.Errors.Common;
 
 /// <summary>
 /// Exception thrown when a requested object property is not properly defined (for example if the property value is <see langword="null"/> when expected not to).

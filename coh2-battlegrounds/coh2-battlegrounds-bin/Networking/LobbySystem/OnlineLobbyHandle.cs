@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 
-using Battlegrounds.ErrorHandling.Networking;
+using Battlegrounds.Errors.Networking;
 using Battlegrounds.Functional;
 using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.Communication.Connections;

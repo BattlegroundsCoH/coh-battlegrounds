@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 
 using Battlegrounds.Data;
-using Battlegrounds.ErrorHandling.IO;
+using Battlegrounds.Errors.IO;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Gfx;

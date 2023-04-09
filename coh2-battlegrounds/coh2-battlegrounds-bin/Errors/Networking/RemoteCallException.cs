@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Networking.Remoting;
 
-namespace Battlegrounds.ErrorHandling.Networking;
+namespace Battlegrounds.Errors.Networking;
 
 /// <summary>
 /// Class representing errors that occured while trying to invoke a remote call procedure.

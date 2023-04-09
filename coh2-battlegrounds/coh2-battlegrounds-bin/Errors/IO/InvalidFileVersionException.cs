@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Battlegrounds.ErrorHandling.IO;
+namespace Battlegrounds.Errors.IO;
 
 /// <summary>
 /// Represents errors where an invalid file version was detected.

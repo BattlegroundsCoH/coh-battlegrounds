@@ -31,7 +31,7 @@ public sealed class BattlegroundsModFactory : IModFactory {
 
         // Grab aux options
         var axusOptions = gamemode.AdditionalOptions switch {
-            Dictionary<string, Gamemode.GamemodeAdditionalOption> some => some.Map(this.GetAuxGamemodeOption),
+            Dictionary<string, Gamemode.GamemodeAdditionalOption> some => some.MapValues(this.GetAuxGamemodeOption),
             _ => Array.Empty<IGamemodeAuxiliaryOption>()
         };
 

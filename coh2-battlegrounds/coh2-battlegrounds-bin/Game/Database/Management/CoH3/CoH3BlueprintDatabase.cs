@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Blueprints.Collections;
 using Battlegrounds.Game.Gameplay;
@@ -9,6 +11,9 @@ namespace Battlegrounds.Game.Database.Management.CoH3;
 /// 
 /// </summary>
 public class CoH3BlueprintDatabase : IModBlueprintDatabase {
+
+    /// <inheritdoc/>
+    public GameCase Game => GameCase.CompanyOfHeroes3;
 
     /// <inheritdoc/>
     public void AddBlueprints(Array blueprints, BlueprintType blueprintType) {
@@ -31,12 +36,22 @@ public class CoH3BlueprintDatabase : IModBlueprintDatabase {
     }
 
     /// <inheritdoc/>
+    public IDictionary<BlueprintUID, Blueprint> GetAllBlueprintsOfType(BlueprintType type) {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
     public BlueprintCollection<T> GetCollection<T>() where T : Blueprint {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc/>
     public SquadBlueprint? GetCrewBlueprint(SquadBlueprint sbp, Faction? faction = null) {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public void Inherit(IModBlueprintDatabase modBlueprintDatabase) {
         throw new NotImplementedException();
     }
 

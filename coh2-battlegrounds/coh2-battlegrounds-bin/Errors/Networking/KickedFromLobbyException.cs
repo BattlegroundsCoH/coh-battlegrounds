@@ -1,6 +1,6 @@
-﻿using Battlegrounds.ErrorHandling.CommonExceptions;
+﻿using Battlegrounds.Errors.Common;
 
-namespace Battlegrounds.ErrorHandling.Networking;
+namespace Battlegrounds.Errors.Networking;
 
 /// <summary>
 /// Exception class thrown when the local machine is kicked from the lobby.

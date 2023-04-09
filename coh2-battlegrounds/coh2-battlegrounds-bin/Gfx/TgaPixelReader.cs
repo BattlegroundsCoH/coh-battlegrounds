@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 
-using Battlegrounds.ErrorHandling.IO;
+using Battlegrounds.Errors.IO;
 
 namespace Battlegrounds.Gfx;
 

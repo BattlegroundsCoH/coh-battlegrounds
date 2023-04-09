@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
 
-using Battlegrounds.ErrorHandling;
+using Battlegrounds.Errors;
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Scenarios;

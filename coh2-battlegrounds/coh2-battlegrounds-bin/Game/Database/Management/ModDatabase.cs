@@ -235,6 +235,11 @@ public class ModDatabase : IModDb {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="databaseSource"></param>
+    /// <returns></returns>
     public int LoadScenarios(string databaseSource) {
 
         string rawJsonDb = Path.Combine(databaseSource, _modPackage.PackageName + "-map-db.json");
@@ -286,10 +291,13 @@ public class ModDatabase : IModDb {
     }
 
     /// <inheritdoc/>
-    public IModBlueprintDatabase GetBlueprints(GameCase game) => game switch {
-        GameCase.CompanyOfHeroes2 => _modCoH2Database ?? throw new Exception(),
-        GameCase.CompanyOfHeroes3 => _modCoH3Database ?? throw new Exception(),
-        _ => throw new Exception()
+    public IModBlueprintDatabase GetBlueprints(GameCase game) => GetBlueprintsOrNull(game) ?? throw new ArgumentNullException(nameof(game));
+
+    /// <inheritdoc/>
+    public IModBlueprintDatabase? GetBlueprintsOrNull(GameCase game) => game switch {
+        GameCase.CompanyOfHeroes2 => _modCoH2Database,
+        GameCase.CompanyOfHeroes3 => _modCoH3Database,
+        _ => null
     };
 
     /// <inheritdoc/>

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 using System.Windows.Media;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Modding;

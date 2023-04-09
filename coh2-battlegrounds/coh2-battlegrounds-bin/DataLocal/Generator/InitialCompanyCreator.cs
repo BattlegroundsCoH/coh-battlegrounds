@@ -98,8 +98,14 @@ public static class InitialCompanyCreator {
         AddUnit(builder, "commissar_squad_bg", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
         AddUnit(builder, "soviet_officer_squad_bg", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
 
+        // Build company
+        var company = builder.Commit().Result;
+
         // Save
-        Companies.SaveCompany(builder.Commit().Result);
+        Companies.SaveCompany(company);
+
+        // Register
+        Companies.Register(company);
 
     }
 
@@ -179,8 +185,14 @@ public static class InitialCompanyCreator {
         AddUnit(builder, "assault_officer_squad_bg", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
         AddUnit(builder, "luftwaffe_officer_squad_bg", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
 
+        // Build company
+        var company = builder.Commit().Result;
+
         // Save
-        Companies.SaveCompany(builder.Commit().Result);
+        Companies.SaveCompany(company);
+
+        // Register
+        Companies.Register(company);
 
     }
 

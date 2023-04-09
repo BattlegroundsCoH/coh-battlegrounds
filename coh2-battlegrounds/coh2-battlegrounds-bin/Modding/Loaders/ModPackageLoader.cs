@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Gameplay;

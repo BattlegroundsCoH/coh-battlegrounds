@@ -1,4 +1,4 @@
-﻿namespace Battlegrounds.ErrorHandling.CommonExceptions;
+﻿namespace Battlegrounds.Errors.Common;
 
 /// <summary>
 /// Represents an error related to undo actions.

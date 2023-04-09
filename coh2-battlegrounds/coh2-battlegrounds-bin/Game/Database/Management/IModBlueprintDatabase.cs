@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Blueprints.Collections;
@@ -10,6 +11,8 @@ namespace Battlegrounds.Game.Database.Management;
 /// 
 /// </summary>
 public interface IModBlueprintDatabase {
+
+    GameCase Game { get; }
 
     /// <summary>
     /// 
@@ -60,5 +63,19 @@ public interface IModBlueprintDatabase {
     /// <param name="faction">The faction to get crew SBP from.</param>
     /// <returns>The crew <see cref="SquadBlueprint"/>. If not found for <paramref name="faction"/>, the default crew is returned.</returns>
     SquadBlueprint? GetCrewBlueprint(SquadBlueprint sbp, Faction? faction = null);
+    
+    /// <summary>
+    /// Get all blueprints in database of <paramref name="type"/>.
+    /// </summary>
+    /// <param name="type">The type of blueprint to retrieve.</param>
+    /// <returns>Dictionary of <see cref="Blueprint"/> instances linked with their <see cref="BlueprintUID"/> keys.</returns>
+    /// <exception cref="ArgumentException"/>
+    IDictionary<BlueprintUID, Blueprint> GetAllBlueprintsOfType(BlueprintType type);
+
+    /// <summary>
+    /// Inherit blueprints from the input <see cref="IModBlueprintDatabase"/>.
+    /// </summary>
+    /// <param name="modBlueprintDatabase">The database to inherit blueprints from.</param>
+    void Inherit(IModBlueprintDatabase modBlueprintDatabase);
 
 }

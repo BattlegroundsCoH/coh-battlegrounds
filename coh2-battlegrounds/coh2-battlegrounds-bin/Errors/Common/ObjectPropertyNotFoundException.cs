@@ -1,4 +1,4 @@
-﻿namespace Battlegrounds.ErrorHandling.CommonExceptions;
+﻿namespace Battlegrounds.Errors.Common;
 
 /// <summary>
 /// Exception thrown when a requested object property is not found. Mainly occurs while trying to deserialise json.

@@ -1,8 +1,8 @@
 ﻿using System;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 
-namespace Battlegrounds.ErrorHandling.IO;
+namespace Battlegrounds.Errors.IO;
 
 /// <summary>
 /// Represents errors where an invalid file contents (binary error, structural errror etc.) was detected.

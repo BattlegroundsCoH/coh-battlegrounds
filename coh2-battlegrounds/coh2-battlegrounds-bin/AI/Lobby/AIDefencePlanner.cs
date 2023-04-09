@@ -118,7 +118,7 @@ public class AIDefencePlanner {
         if (this.m_analysis is not null) {
 
             // Grab origin positions
-            var origins = this.m_defenderOrigins.Map((i, p) => (i, p));
+            var origins = this.m_defenderOrigins.MapValues((i, p) => (i, p));
 
             // Loop over and add
             for (int i = 0; i < this.m_analysis.Nodes.Length; i++) {

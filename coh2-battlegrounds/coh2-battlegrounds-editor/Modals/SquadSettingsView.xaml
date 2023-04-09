@@ -33,7 +33,7 @@
                                     <Image 
                                         Width="32"
                                         Height="32"
-                                        Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/rally_icon.png"/>
+                                        Source="pack://application:,,,/Battlegrounds;component/Resources/app/rally_icon.png"/>
                                     <Rectangle
                                         Width="32"
                                         Height="32"
@@ -114,7 +114,7 @@
                                 Canvas.Top="-8"
                                 Width="96"
                                 Stretch="Uniform"
-                                Source="{Binding UnitPortrait, FallbackValue='pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/test_unit_portrait.png'}"/>
+                                Source="{Binding UnitPortrait, FallbackValue='pack://application:,,,/Battlegrounds;component/Resources/ingame/test_unit_portrait.png'}"/>
                         </Canvas>
                     </Border>
                     <DockPanel 
@@ -735,7 +735,7 @@
                                         Canvas.Top="-8"
                                         Width="96"
                                         Stretch="Uniform"
-                                        Source="{Binding CrewPortrait, FallbackValue='pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/test_unit_portrait.png'}"/>
+                                        Source="{Binding CrewPortrait, FallbackValue='pack://application:,,,/Battlegrounds;component/Resources/ingame/test_unit_portrait.png'}"/>
                                 </Canvas>
                             </Border>
                             <DockPanel 

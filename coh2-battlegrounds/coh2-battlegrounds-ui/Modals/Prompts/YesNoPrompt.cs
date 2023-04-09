@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Locale;
 
 namespace Battlegrounds.UI.Modals.Prompts;

@@ -95,16 +95,25 @@ public class ModDatabaseManager : IModDbManager {
             // Get the package
             var package = packages[i];
 
+            // Test if vanilla
+            var isVanilla = package is VanillaModPackage;
+
             // Create database
             ModDatabase database = new ModDatabase(modManager, package);
             
             // Load locale for mod (Skip vanilla packages)
-            if (package is not VanillaModPackage) {
+            if (!isVanilla) {
                 database.LoadLocales();
             }
 
             // Load blueprints
             var (successLoad, failLoad) = await database.LoadBlueprints(package.DataSourcePath);
+            if (!isVanilla) {
+                database.GetBlueprintsOrNull(GameCase.CompanyOfHeroes2)
+                    ?.Inherit(packageDatabases[BattlegroundsContext.ModManager.GetVanillaPackage(GameCase.CompanyOfHeroes2)].GetBlueprints(GameCase.CompanyOfHeroes2));
+                database.GetBlueprintsOrNull(GameCase.CompanyOfHeroes3)
+                    ?.Inherit(packageDatabases[BattlegroundsContext.ModManager.GetVanillaPackage(GameCase.CompanyOfHeroes3)].GetBlueprints(GameCase.CompanyOfHeroes3));
+            }
 
             // Load win conditions
             database.LoadWinconditions();

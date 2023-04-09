@@ -10,7 +10,8 @@
     xmlns:uinum="clr-namespace:Battlegrounds.UI.Converters.Numeric;assembly=Battlegrounds.UI"
     mc:Ignorable="d" 
     d:DesignHeight="850" 
-    d:DesignWidth="1100">
+    d:DesignWidth="1100"
+    TextOptions.TextFormattingMode="Display">
     <UserControl.Background>
         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
             <GradientStop Color="{StaticResource BackgroundDeepBlue}" Offset="0.0" />
@@ -70,13 +71,15 @@
                             <DropShadowEffect BlurRadius="10" ShadowDepth="1" Direction="0"/>
                         </Border.Effect>
 
-                        <controls:LocalisedLabel Foreground="#d8dbde"
-                                           FontSize="22"
-                                           FontFamily="Open Sans"
-                                           FontWeight="DemiBold"
-                                           VerticalContentAlignment="Center"
-                                           HorizontalAlignment="Center"
-                                           LocKey="DashboardView_Statistics"/>
+                        <controls:LocalisedLabel 
+                            Foreground="#d8dbde"
+                            FontSize="22"
+                            FontFamily="Open Sans"
+                            FontWeight="DemiBold"
+                            VerticalContentAlignment="Center"
+                            HorizontalAlignment="Center"
+                            LocKey="DashboardView_Statistics"
+                            SnapsToDevicePixels="True"/>
 
                     </Border>
 

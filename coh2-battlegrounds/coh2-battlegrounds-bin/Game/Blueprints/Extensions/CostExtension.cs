@@ -1,17 +1,15 @@
 ﻿using System.Text.Json;
 
 using Battlegrounds.Data.Generators.Lua.RuntimeServices;
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Blueprints;
 
 namespace Battlegrounds.Game.Blueprints.Extensions;
 
 /// <summary>
 /// Class representing the cost extension attribute that is common among some <see cref="Blueprint"/> implementations.
 /// </summary>
-public class CostExtension
-{
+public class CostExtension {
 
     /// <summary>
     /// Manpower cost of the <see cref="Cost"/> data.
@@ -39,16 +37,14 @@ public class CostExtension
 
     public CostExtension() : this(0.0f, 0.0f, 0.0f) { }
 
-    public CostExtension(CostExtension costExtension)
-    {
+    public CostExtension(CostExtension costExtension) {
         Munitions = costExtension.Munitions;
         Manpower = costExtension.Manpower;
         Fuel = costExtension.Fuel;
         FieldTime = costExtension.FieldTime;
     }
 
-    public CostExtension(float manpower, float munitions, float fuel, float fieldTime = 0.0f)
-    {
+    public CostExtension(float manpower, float munitions, float fuel, float fieldTime = 0.0f) {
         Manpower = manpower;
         Munitions = munitions;
         Fuel = fuel;
@@ -69,14 +65,11 @@ public class CostExtension
     public static CostExtension operator *(float left, CostExtension right)
         => right * left;
 
-    public static CostExtension FromJson(ref Utf8JsonReader reader)
-    {
+    public static CostExtension FromJson(ref Utf8JsonReader reader) {
         float[] values = new float[4];
-        while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject)
-        {
+        while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
             string? prop = reader.ReadProperty();
-            values[prop switch
-            {
+            values[prop switch {
                 "Manpower" => 0,
                 "Munition" => 1,
                 "Fuel" => 2,
@@ -88,4 +81,3 @@ public class CostExtension
     }
 
 }
-

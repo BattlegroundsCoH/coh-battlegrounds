@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Battlegrounds.ErrorHandling;
+namespace Battlegrounds.Errors;
 
 internal static class TryForget {
 

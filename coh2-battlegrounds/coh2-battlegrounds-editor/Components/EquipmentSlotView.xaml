@@ -48,7 +48,7 @@
             Source="{
                 Binding Army, 
                 Converter={StaticResource Str2Fac}, 
-                FallbackValue='pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/german.png'}"/>
+                FallbackValue='pack://application:,,,/Battlegrounds;component/Resources/ingame/german.png'}"/>
 
         <!-- Equip -->
         <Button 

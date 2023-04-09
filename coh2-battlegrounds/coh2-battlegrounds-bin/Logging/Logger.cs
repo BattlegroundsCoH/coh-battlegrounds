@@ -1,4 +1,4 @@
-﻿using Battlegrounds.ErrorHandling;
+﻿using Battlegrounds.Errors;
 
 using System;
 using System.Diagnostics;

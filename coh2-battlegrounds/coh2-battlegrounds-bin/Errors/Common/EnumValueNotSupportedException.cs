@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Battlegrounds.ErrorHandling.CommonExceptions;
+namespace Battlegrounds.Errors.Common;
 
 /// <summary>
 /// Exception throw when an unsupported enum composition is encountered.

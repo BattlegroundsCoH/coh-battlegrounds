@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Battlegrounds.ErrorHandling;
+namespace Battlegrounds.Errors;
 
 /// <summary>
 /// Exception class representing a fatal application exception. Instantiating this call will force the application to shut down.

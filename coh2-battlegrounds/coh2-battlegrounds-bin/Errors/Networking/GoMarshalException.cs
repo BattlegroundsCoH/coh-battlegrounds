@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 
-namespace Battlegrounds.ErrorHandling.Networking;
+namespace Battlegrounds.Errors.Networking;
 
 /// <summary>
 /// Represents exceptions thrown when errors occur while trying to marshal or unmarshal Go data.

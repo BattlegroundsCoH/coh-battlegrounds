@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Battlegrounds.Functional; 
+﻿namespace Battlegrounds.Functional; 
 
 /// <summary>
 /// Static extension class for <see cref="IDictionary{TKey, TValue}"/> instances.
@@ -64,12 +61,30 @@ public static class FunctionalDictionaryExtensions {
     /// <param name="dic"></param>
     /// <param name="func"></param>
     /// <returns></returns>
-    public static T[] Map<K,V,T>(this IDictionary<K,V> dic, Func<K,V,T> func) {
+    public static T[] MapValues<K,V,T>(this IDictionary<K,V> dic, Func<K,V,T> func) {
         var mapped = new T[dic.Count];
         var itt = dic.GetEnumerator();
         int i = 0;
         while (itt.MoveNext()) {
             mapped[i++] = func(itt.Current.Key, itt.Current.Value);
+        }
+        return mapped;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="K"></typeparam>
+    /// <typeparam name="V"></typeparam>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="dic"></param>
+    /// <param name="mapper"></param>
+    /// <returns></returns>
+    public static IDictionary<K,T> Map<K,V,T>(this IDictionary<K,V> dic, Func<K, V, T> mapper) where K : notnull {
+        Dictionary<K, T> mapped = new Dictionary<K, T>();
+        var itt = dic.GetEnumerator();
+        while(itt.MoveNext()) {
+            mapped[itt.Current.Key] = mapper(itt.Current.Key, itt.Current.Value);
         }
         return mapped;
     }
@@ -90,6 +105,25 @@ public static class FunctionalDictionaryExtensions {
             }
         }
         return false;
+    }
+
+    /// <summary>
+    /// Returns the <see cref="IDictionary{TKey, TValue}"/> union between two dictionaries, where duplicate key elements are discarded from the <paramref name="src"/> dictionary.
+    /// </summary>
+    /// <typeparam name="K">The dictionary key</typeparam>
+    /// <typeparam name="V">The dictionary value</typeparam>
+    /// <param name="src">The source dictionary</param>
+    /// <param name="other">The other dictionary to union with</param>
+    /// <returns>The <see cref="IDictionary{TKey, TValue}"/> representing the union between the input parameters.</returns>
+    public static IDictionary<K,V> Union<K, V>(this IDictionary<K,V> src, IDictionary<K,V> other) where K : notnull {
+        Dictionary<K, V> newDic = new Dictionary<K, V>(other);
+        var itt = src.GetEnumerator();
+        while (itt.MoveNext()) {
+            if (!newDic.ContainsKey(itt.Current.Key)) {
+                newDic.Add(itt.Current.Key, itt.Current.Value);
+            }
+        }
+        return newDic;
     }
 
 }

@@ -235,7 +235,6 @@ public partial class App : Application, IResourceResolver, IViewController {
         NetworkInterface.SelfIdentifier = BattlegroundsContext.Steam.User.ID;
 
         // Load databases (async)
-        //DatabaseManager.LoadAllDatabases(OnDatabasesLoaded);
         BattlegroundsContext.DataSource.LoadDatabases(OnDatabasesLoaded);
 
         // Verify view manager
@@ -305,7 +304,6 @@ public partial class App : Application, IResourceResolver, IViewController {
         // If initial, create companies
         if (BattlegroundsContext.IsFirstRun || Companies.GetAllCompanies().Count is 0) {
             InitialCompanyCreator.Init();
-            Companies.LoadAll();
         }
 
     }

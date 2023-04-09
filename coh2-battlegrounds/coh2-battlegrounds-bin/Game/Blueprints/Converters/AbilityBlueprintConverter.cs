@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints.Extensions;
 using Battlegrounds.Game.Gameplay;

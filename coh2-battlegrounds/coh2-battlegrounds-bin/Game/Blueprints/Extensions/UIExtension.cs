@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Text.Json;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Functional;
 
 namespace Battlegrounds.Game.Blueprints.Extensions;
 
-public class UIExtension
-{
+public class UIExtension {
 
     public string ScreenName { get; init; }
 
@@ -23,8 +22,7 @@ public class UIExtension
 
     public int Position { get; init; }
 
-    public UIExtension()
-    {
+    public UIExtension() {
         ScreenName = string.Empty;
         ShortDescription = string.Empty;
         LongDescription = string.Empty;
@@ -33,22 +31,16 @@ public class UIExtension
         Portrait = string.Empty;
     }
 
-    public static UIExtension FromJson(ref Utf8JsonReader reader)
-    {
+    public static UIExtension FromJson(ref Utf8JsonReader reader) {
         string[] values = { "", "", "", "", "", "" };
         int pos = 0;
-        while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject)
-        {
+        while (reader.Read() && reader.TokenType is not JsonTokenType.EndObject) {
             string prop = reader.ReadProperty() ?? throw new ObjectPropertyNotFoundException();
-            if (prop is "Position")
-            {
+            if (prop is "Position") {
                 pos = reader.GetInt32();
-            }
-            else
-            {
+            } else {
                 var val = reader.GetString();
-                values[prop switch
-                {
+                values[prop switch {
                     "LocaleName" => 0,
                     "LocaleDescriptionShort" => 1,
                     "LocaleDescriptionLong" => 2,
@@ -59,8 +51,7 @@ public class UIExtension
                 }] = string.IsNullOrEmpty(val) ? string.Empty : val;
             }
         }
-        return new()
-        {
+        return new() {
             ScreenName = values[0],
             ShortDescription = values[1],
             LongDescription = values[2],
@@ -72,4 +63,3 @@ public class UIExtension
     }
 
 }
-

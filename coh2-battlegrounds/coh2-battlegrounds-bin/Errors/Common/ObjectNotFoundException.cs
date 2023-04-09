@@ -1,4 +1,4 @@
-﻿namespace Battlegrounds.ErrorHandling.CommonExceptions;
+﻿namespace Battlegrounds.Errors.Common;
 
 /// <summary>
 /// Exception thrown when a requested object is not found.

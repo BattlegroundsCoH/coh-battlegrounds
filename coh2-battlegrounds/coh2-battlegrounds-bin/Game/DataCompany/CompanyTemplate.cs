@@ -108,7 +108,7 @@ public sealed class CompanyTemplate {
         // Insert
         for (byte i = 1; i <= 4; i++) {
             DeploymentPhase phase = (DeploymentPhase)i;
-            template.m_units[i - 1] = templateSetup[phase].Map((k, v) => k with { AMOUNT = v });
+            template.m_units[i - 1] = templateSetup[phase].MapValues((k, v) => k with { AMOUNT = v });
         }
 
         // Return template

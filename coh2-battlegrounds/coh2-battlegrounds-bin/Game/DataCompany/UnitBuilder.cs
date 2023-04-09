@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Database.Management;
@@ -355,7 +355,7 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <summary>
     /// 
     /// </summary>
-    public AbilityBlueprint[] Abilities => this.m_target.Blueprint.Abilities.Map(x => blueprintDataSource.FromBlueprintName<AbilityBlueprint>(x));
+    public AbilityBlueprint[] Abilities => this.m_target.Blueprint.Abilities.Map(blueprintDataSource.FromBlueprintName<AbilityBlueprint>);
 
     /// <summary>
     /// 

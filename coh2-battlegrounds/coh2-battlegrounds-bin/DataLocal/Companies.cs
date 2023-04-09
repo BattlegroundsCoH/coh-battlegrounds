@@ -150,4 +150,12 @@ public static class Companies {
     /// <returns>List of <see cref="Company"/> instances.</returns>
     public static List<Company> GetAllCompanies() => __companies;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="company"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    public static void Register(Company company)
+        => __companies.Add(company);
+
 }

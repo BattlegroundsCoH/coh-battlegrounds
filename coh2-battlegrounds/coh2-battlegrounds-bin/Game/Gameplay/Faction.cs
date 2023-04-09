@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 
 namespace Battlegrounds.Game.Gameplay;
 

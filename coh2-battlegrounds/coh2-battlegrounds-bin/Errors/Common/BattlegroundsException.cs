@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Battlegrounds.ErrorHandling.CommonExceptions;
+namespace Battlegrounds.Errors.Common;
 
 /// <summary>
 /// Represents the base exception class for exceptions directly related to code within the Battlegrounds environment.

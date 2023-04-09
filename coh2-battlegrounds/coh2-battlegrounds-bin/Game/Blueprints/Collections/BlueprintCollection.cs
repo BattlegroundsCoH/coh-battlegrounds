@@ -34,6 +34,14 @@ public sealed class BlueprintCollection<T> : IEnumerable<T> where T : Blueprint 
     }
 
     /// <summary>
+    /// Create new <see cref="BlueprintCollection{T}"/> from an enumerable of <see cref="KeyValuePair{TKey, TValue}"/> with <typeparamref name="T"/>=TValue.
+    /// </summary>
+    /// <param name="initial">The initial collection of the instance</param>
+    public BlueprintCollection(IDictionary<BlueprintUID, T> initial) {
+        m_internalDictionary = initial;
+    }
+
+    /// <summary>
     /// Create new <see cref="BlueprintCollection{T}"/> from a <see cref="Dictionary{BlueprintUID, T}"/>.
     /// </summary>
     /// <param name="dictionaries">The initial dictionary.</param>
