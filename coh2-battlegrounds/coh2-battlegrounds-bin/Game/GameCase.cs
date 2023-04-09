@@ -1,7 +1,4 @@
-﻿using System.IO;
-
-using Battlegrounds.Errors.Common;
-using Battlegrounds.Game.DataSource;
+﻿using Battlegrounds.Errors.Common;
 using Battlegrounds.Logging;
 using Battlegrounds.Steam;
 
@@ -77,34 +74,5 @@ public static class GameCases {
         CoH3AppId => GameCase.CompanyOfHeroes3,
         _ => GameCase.Unspecified
     };
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="game"></param>
-    /// <returns></returns>
-    /// <exception cref="System.NotImplementedException"></exception>
-    /// <exception cref="System.Exception"></exception>
-    public static UcsFile GetLocale(GameCase game) {
-        switch (game) {
-            case GameCase.CompanyOfHeroes2:
-
-                // Determine language to use
-                string language = BattlegroundsContext.Localize.Language.ToString();
-                if (language == "Default") {
-                    language = "English";
-                }
-
-                // Load VCoh Locale
-                string localePath = Path.Combine(Pathfinder.GetOrFindCoHPath(), $"CoH2\\Locale\\{language}\\RelicCoH2.{language}.ucs");
-                if (File.Exists(localePath)) {
-                    return UcsFile.LoadFromFile(localePath);
-                } else {
-                    throw new FileNotFoundException($"Failed to load locale file '{localePath}'");
-                }
-            default:
-                throw new System.NotImplementedException("Get locale not implemented for " + game);
-        }
-    }
 
 }

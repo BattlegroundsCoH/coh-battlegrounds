@@ -27,41 +27,40 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Gfx\Icons\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Update="Gfx\Icons\ability_icons.dat">
+	  <None Update="coh\3\anvil.english.ucs">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Gfx\Icons\deploy_icons.dat">
+	  <None Update="gfx\icons\ability_icons.dat">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Gfx\Icons\entity_icons.dat">
+	  <None Update="gfx\icons\deploy_icons.dat">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Gfx\Icons\entity_symbols.dat">
+	  <None Update="gfx\icons\entity_icons.dat">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Gfx\Icons\item_icons.dat">
+	  <None Update="gfx\icons\entity_symbols.dat">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Gfx\Icons\minimap_icons.dat">
+	  <None Update="gfx\icons\item_icons.dat">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Gfx\Icons\phase_icons.dat">
+	  <None Update="gfx\icons\minimap_icons.dat">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Gfx\Icons\portraits.dat">
+	  <None Update="gfx\icons\phase_icons.dat">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Gfx\Icons\symbol_icons.dat">
+	  <None Update="gfx\icons\portraits.dat">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Gfx\Icons\unit_icons.dat">
+	  <None Update="gfx\icons\symbol_icons.dat">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Gfx\Icons\upgrade_icons.dat">
+	  <None Update="gfx\icons\unit_icons.dat">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="gfx\icons\upgrade_icons.dat">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>

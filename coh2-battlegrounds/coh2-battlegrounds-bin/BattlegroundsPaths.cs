@@ -95,4 +95,9 @@ public static class BattlegroundsPaths {
     /// </summary>
     public const string UPDATE_FOLDER = "update";
 
+    /// <summary>
+    /// Path ID for the coh resource folder (ie. where we store ripped/synthesised coh resources)
+    /// </summary>
+    public const string COH_RESOURCES_FODLER = "coh_resources_folder";
+
 }

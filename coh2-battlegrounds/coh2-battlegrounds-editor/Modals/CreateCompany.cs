@@ -1,9 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Linq;
 
-using Battlegrounds.Errors.Common;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Modding;
@@ -13,6 +14,8 @@ using Battlegrounds.UI.Modals;
 using Battlegrounds.UI;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Game;
+using Battlegrounds.Modding.Vanilla;
 
 namespace Battlegrounds.Editor.Modals;
 
@@ -28,10 +31,27 @@ public delegate void CreateCompanyCallback(CreateCompany sender, ModalDialogResu
 /// </summary>
 public sealed class CreateCompany : INotifyPropertyChanged {
 
+    public record FactionType(Faction Self) {
+        public ImageSource Icon => StringToFactionIcon.GetIcon(this.Self);
+        public override string ToString() => BattlegroundsContext.DataSource.GetLocale(Self.RequiredDLC.Game)?.GetString(this.Self.NameKey) ?? "Unknown Army";
+    }
+
+    public record GamePick(GameCase Game, IList<FactionType> Factions) {
+        public override string ToString() => Game switch {
+            GameCase.CompanyOfHeroes2 => "Company of Heroes 2",
+            GameCase.CompanyOfHeroes3 => "Company of Heroes 3",
+            _ => throw new InvalidEnumArgumentException(nameof(Game)),
+        };
+    }
+
+    public record PackagePick(IModPackage Package) {
+        public override string ToString() => Package.PackageName;
+    }
+
     public record CompanyType(string Name, FactionCompanyType? Type) {
         public static readonly CompanyType None = new("CreateCompanyDialogView_Type_None", null);
-        private SquadBlueprint[]? m_squads;
-        private AbilityBlueprint[]? m_abilities;
+        private SquadBlueprint[]? m_squads = new SquadBlueprint[3] { SquadBlueprint.Invalid, SquadBlueprint.Invalid, SquadBlueprint.Invalid };
+        private AbilityBlueprint[]? m_abilities = new AbilityBlueprint[3] { AbilityBlueprint.Invalid, AbilityBlueprint.Invalid, AbilityBlueprint.Invalid };
         public string Desc => BattlegroundsContext.Localize.GetString($"{this.Name}_desc");
         public ImageSource Icon => StringToCompanyTypeIcon.GetFromType(this.Type);
         public ImageSource? Unit01 => ResourceHandler.GetIcon("unit_icons", this.m_squads![0].UI.Icon);
@@ -70,21 +90,6 @@ public sealed class CreateCompany : INotifyPropertyChanged {
 
     }
 
-    public record FactionType(Faction Self, IModPackage? Package) {
-        public ImageSource Icon => StringToFactionIcon.GetIcon(this.Self);
-        public override string ToString() => BattlegroundsContext.DataSource.GetLocale(Package!, Self.RequiredDLC.Game)?.GetString(this.Self.NameKey) ?? "Unknown Army";
-    }
-
-    private IModPackage m_package;
-
-    public IModPackage Package {
-        get => this.m_package;
-        set {
-            this.m_package = value;
-            this.OnPropertyChanged(nameof(Package));
-        }
-    }
-
     private string m_companyName = string.Empty;
 
     public string SelectedName {
@@ -96,7 +101,7 @@ public sealed class CreateCompany : INotifyPropertyChanged {
         }
     }
 
-    private FactionType m_companyFaction = new(Faction.Soviet, null);
+    private FactionType m_companyFaction = new(Faction.Soviet);
 
     public FactionType SelectedFaction {
         get => this.m_companyFaction;
@@ -128,18 +133,64 @@ public sealed class CreateCompany : INotifyPropertyChanged {
 
     public ICommand CancelCommand { get; }
 
+    public IList<GamePick> Games { get; }
+
+    public ObservableCollection<PackagePick> Packages { get; }
+
     public bool CanCreate => this.SelectedName.Length > 0 && this.SelectedType != CompanyType.None;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public IModPackage Package => Packages[SelectedPackageIndex].Package;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public GameCase Game => Games[SelectedGameIndex].Game;
+
+    private int _packageIdx = 0;
+
+    public int SelectedPackageIndex {
+        get => _packageIdx;
+        set {
+            _packageIdx = value;
+            RefreshCompanyTypes();
+        }
+    }
+
+    private int _gameIdx;
+
+    public int SelectedGameIndex {
+        get => _gameIdx;
+        set {
+            _gameIdx = value;
+            GameChanged();
+        }
+    }
 
     private CreateCompany(CreateCompanyCallback resultCallback) {
 
-        // Set package
-        this.m_package = BattlegroundsContext.ModManager.GetPackage("mod_bg") ?? throw new ObjectNotFoundException("Mod package 'mod_bg' not found!"); // TODO: Allow users to pick this
+        // Create games pick
+        this.Games = new GamePick[] {
+            new GamePick(GameCase.CompanyOfHeroes2, new FactionType[] { 
+                new(Faction.Soviet), 
+                new(Faction.Wehrmacht) 
+            }),
+            new GamePick(GameCase.CompanyOfHeroes3, new FactionType[] { 
+                new(Faction.AfrikaKorps),
+                new(Faction.Americans),
+                new(Faction.BritishAfrica),
+                new(Faction.Germans) 
+            })
+        };
+
+        // Create package picks
+        this.Packages = new();
+        RefreshPackages();
 
         // Create available factions
-        this.AvailableFactions = new() {
-            new FactionType(Faction.Soviet, m_package),
-            new FactionType(Faction.Wehrmacht, m_package)
-        };
+        this.AvailableFactions = new ObservableCollection<FactionType>(this.Games[0].Factions);
 
         // Create available types
         this.AvailableTypes = new();
@@ -151,19 +202,34 @@ public sealed class CreateCompany : INotifyPropertyChanged {
 
     }
 
+    private void RefreshPackages() {
+        Packages.Clear();
+        BattlegroundsContext.ModManager.GetPackages()
+            .Where(x => x is not VanillaModPackage && x.SupportedGames.HasFlag(Game))
+            .Select(x => new PackagePick(x))
+            .ForEach(Packages.Add);
+    }
+
     public void OnPropertyChanged(string propertyName)
             => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     private void FactionChanged() {
 
         // Update faction
-        this.OnPropertyChanged(nameof(SelectedFaction));
+        OnPropertyChanged(nameof(SelectedFaction));
+
+        // Refresh company types
+        RefreshCompanyTypes();
+
+    }
+
+    private void RefreshCompanyTypes() {
 
         // Clear types
         this.AvailableTypes.Clear();
 
         // Grab available types
-        var types = this.m_package.FactionSettings[this.m_companyFaction.Self].Companies.Types;
+        var types = this.SelectedPackageIndex == -1 ? System.Array.Empty<FactionCompanyType>() : this.Package.FactionSettings[this.m_companyFaction.Self].Companies.Types;
         if (types is null || types.Length is 0) {
             this.AvailableTypes.Add(CompanyType.None);
             this.SelectedType = CompanyType.None;
@@ -171,10 +237,24 @@ public sealed class CreateCompany : INotifyPropertyChanged {
         }
 
         // Register
-        types.ForEach(x => this.AvailableTypes.Add((new CompanyType(x.Id, x)).CacheDisplay()));
+        types.ForEach(x => this.AvailableTypes.Add(new CompanyType(x.Id, x).CacheDisplay()));
 
         // Set default
         this.SelectedType = this.AvailableTypes[0];
+
+    }
+
+    private void  GameChanged() {
+        
+        RefreshPackages();
+        
+        SelectedPackageIndex = Packages.Count > 0 ? 0 : -1;
+        
+        OnPropertyChanged(nameof(SelectedPackageIndex));
+
+        // Clear factions
+        AvailableFactions.Clear();
+        Games[SelectedGameIndex].Factions.ForEach(AvailableFactions.Add);
 
     }
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Database.Management.CoH2;
+using Battlegrounds.Game.Database.Management.CoH3;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Vanilla;
 
@@ -19,9 +20,9 @@ public class ModDatabaseManager : IModDbManager {
     private readonly IModManager modManager;
 
     private readonly CoH2Locale coh2Locale;
+    private readonly CoH3Locale coh3Locale;
 
     private readonly CoH2ScenarioList coh2Scenarios;
-    
 
     /// <summary>
     /// 
@@ -33,10 +34,12 @@ public class ModDatabaseManager : IModDbManager {
         this.modManager = modManager;
         this.packageDatabases = new Dictionary<IModPackage, IModDb>();
     
-        // Prepare game defaults
+        // Prepare CoH2 defaults
         this.coh2Locale = new CoH2Locale();
         this.coh2Scenarios = new CoH2ScenarioList();
 
+        // Prepare CoH3 defaults
+        this.coh3Locale = new CoH3Locale();
 
     }
 
@@ -57,7 +60,8 @@ public class ModDatabaseManager : IModDbManager {
     /// <inheritdoc/>
     public IModLocale GetLocale(GameCase game) => game switch {
         GameCase.CompanyOfHeroes2 => coh2Locale,
-        _ => throw new NotImplementedException()
+        GameCase.CompanyOfHeroes3 => coh3Locale,
+        _ => throw new NotSupportedException()
     };
 
     /// <inheritdoc/>
@@ -69,7 +73,7 @@ public class ModDatabaseManager : IModDbManager {
     /// <inheritdoc/>
     public IScenarioList GetScenarioList(GameCase game) => game switch {
         GameCase.CompanyOfHeroes2 => coh2Scenarios,
-        _ => throw new NotImplementedException()
+        _ => throw new NotSupportedException()
     };
 
     /// <inheritdoc/>

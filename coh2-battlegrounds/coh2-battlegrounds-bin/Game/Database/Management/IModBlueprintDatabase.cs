@@ -8,10 +8,13 @@ using Battlegrounds.Game.Gameplay;
 namespace Battlegrounds.Game.Database.Management;
 
 /// <summary>
-/// 
+/// Interface for a blueprint database for a specific mod.
 /// </summary>
 public interface IModBlueprintDatabase {
 
+    /// <summary>
+    /// Get the game targetted by this blueprint database.
+    /// </summary>
     GameCase Game { get; }
 
     /// <summary>
@@ -76,6 +79,7 @@ public interface IModBlueprintDatabase {
     /// Inherit blueprints from the input <see cref="IModBlueprintDatabase"/>.
     /// </summary>
     /// <param name="modBlueprintDatabase">The database to inherit blueprints from.</param>
+    /// <exception cref="NotSupportedException"/>
     void Inherit(IModBlueprintDatabase modBlueprintDatabase);
 
 }

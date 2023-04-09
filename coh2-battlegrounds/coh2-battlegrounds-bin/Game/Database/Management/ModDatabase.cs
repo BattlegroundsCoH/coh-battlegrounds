@@ -69,6 +69,7 @@ public class ModDatabase : IModDb {
             };
             this._winconditionCoH2List = new WinconditionList();
             this._modCoH2Locale = new CoH2Locale();
+            this._modCoH2Scenarios = new CoH2ScenarioList();
         }
 
         if (this._modPackage.SupportedGames is GameCase.CompanyOfHeroes3 or GameCase.All) {
@@ -81,6 +82,7 @@ public class ModDatabase : IModDb {
                 new UpgradeBlueprintConverter(package.TuningGUID, GameCase.CompanyOfHeroes3)
             };
             this._winconditionCoH3List = new WinconditionList();
+            this._modCoH3Locale = new CoH3Locale();
         }
 
     }

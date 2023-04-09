@@ -27,11 +27,29 @@ public static class BattlegroundsContext {
     // The logger instance
     private static readonly Logger logger = Logger.CreateLogger();
 
-    // ID of other settings
+    /// <summary>
+    /// Zoom option
+    /// </summary>
     public const string OPT_ZOOM = "ingame_zoom";
+
+    /// <summary>
+    /// ???
+    /// </summary>
     public const string OPT_AUTOSCAR = "auto_scar";
+
+    /// <summary>
+    /// Auto-Update the application
+    /// </summary>
     public const string OPT_AUTOUPDATE = "auto_update";
+
+    /// <summary>
+    /// ???
+    /// </summary>
     public const string OPT_AUTODATA = "auto_data";
+
+    /// <summary>
+    /// Auto extract workshop scenarios
+    /// </summary>
     public const string OPT_AUTOWORKSHOP = "auto_workshop";
 
     /// <summary>
@@ -142,6 +160,7 @@ public static class BattlegroundsContext {
             this.ResolveDirectory(BattlegroundsPaths.PLUGIN_FOLDER, "plugins\\");
 
             // Data folder
+            this.ResolveDirectory(BattlegroundsPaths.COH_RESOURCES_FODLER, $"{installpath}coh\\");
             this.ResolveDirectory(BattlegroundsPaths.MOD_ART_FOLDER, $"{binpath}gfx\\");
             this.ResolveDirectory(BattlegroundsPaths.DATABASE_FOLDER, $"{binpath}data\\");
             this.ResolveDirectory(BattlegroundsPaths.LOCALE_FOLDER, $"{binpath}locale\\");

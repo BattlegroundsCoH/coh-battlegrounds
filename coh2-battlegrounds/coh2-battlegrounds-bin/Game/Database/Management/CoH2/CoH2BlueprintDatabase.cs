@@ -159,7 +159,11 @@ public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
     }
 
     /// <inheritdoc/>
-    public void Inherit(IModBlueprintDatabase modBlueprintDatabase) 
-        => __inherit.Add(modBlueprintDatabase);
+    public void Inherit(IModBlueprintDatabase modBlueprintDatabase) {
+        if (modBlueprintDatabase.Game != GameCase.CompanyOfHeroes2) {
+            throw new NotSupportedException($"Cannot inherit from a '{modBlueprintDatabase.Game}' database when inheriter is for the game '{Game}'");
+        }
+        __inherit.Add(modBlueprintDatabase);
+    }
 
 }

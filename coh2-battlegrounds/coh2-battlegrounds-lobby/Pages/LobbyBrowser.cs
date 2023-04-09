@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 using Battlegrounds.AI;
 
 using Battlegrounds.Networking.Server;
 using Battlegrounds.UI;
 using Battlegrounds.DataLocal;
-using Battlegrounds.Game.Scenarios;
-using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.UI.Modals.Prompts;
 using Battlegrounds.UI.Modals;
@@ -28,6 +23,7 @@ using Battlegrounds.Lobby.Components;
 using Battlegrounds.Lobby.Modals;
 using Battlegrounds.Locale;
 using Battlegrounds.Game;
+using Battlegrounds.Logging;
 
 namespace Battlegrounds.Lobby.Pages;
 
@@ -68,6 +64,7 @@ public record LobbySlotPreview(ServerSlot Slot) {
 
 public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
 
+    private static readonly Logger logger = Logger.CreateLogger();
 
     private static readonly LocaleKey _noMatches = new LocaleKey("GameBrowserView_NoLobbies");
     private static readonly LocaleKey _noConnection = new LocaleKey("GameBrowserView_NoConnection");
@@ -300,7 +297,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
         this.Lobbies.Clear();
 
         // Log refresh
-        Trace.WriteLine("Refreshing lobby list", nameof(LobbyBrowser));
+        logger.Info("Refreshing lobby list");
 
         // Get lobbies async
         Task.Run(() => {
@@ -309,7 +306,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
             var lobbies = GetLobbiesFromServer();
 
             // Log amount of lobbies fetched
-            Trace.WriteLine($"Serverhub returned {lobbies.Count} lobbies.", nameof(LobbyBrowser));
+            logger.Info($"Serverhub returned {lobbies.Count} lobbies.");
 
             // update lobbies
             Application.Current.Dispatcher.Invoke(() => {
@@ -342,10 +339,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
         LocalLobbyHandle localHandle = new(BattlegroundsContext.Steam.User);
 
         // Create lobby models.
-        var lobbyModel = BaseLobby.CreateModelAsHost(localHandle);
-        if (lobbyModel is null) {
-            throw new Exception("BAAAAAAD : FIX ASAP");
-        }
+        var lobbyModel = BaseLobby.CreateModelAsHost(localHandle) ?? throw new Exception("BAAAAAAD : FIX ASAP");
 
         // Create chat
         ChatSpectator chatMode = new(localHandle);
@@ -396,7 +390,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
         if (isSuccess && lobby is not null) {
 
             // Log success
-            Trace.WriteLine("Succsefully hosted lobby.", nameof(LobbyBrowser));
+            logger.Info("Succsefully hosted lobby.");
 
             // Invoke on GUI
             Application.Current.Dispatcher.Invoke(() => {
@@ -421,7 +415,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
         } else {
 
             // Log failure
-            Trace.WriteLine("Failed to host lobby.", nameof(LobbyBrowser));
+            logger.Error("Failed to host lobby.");
 
             // Give feedback to user.
             _ = MessageBox.Show("Failed to host lobby (Failed to connect to server).", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -437,13 +431,13 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
 
         // Ensure the interface object is set
         if (NetworkInterface.APIObject is null) {
-            Trace.WriteLine("Failed to show join modal (Network interface API is null)", nameof(LobbyBrowser));
+            logger.Error("Failed to show join modal (Network interface API is null)");
             return;
         }
 
         // Ensure steam user is verified
         if (!BattlegroundsContext.Steam.HasVerifiedUser && !BattlegroundsContext.Steam.GetSteamUser()) {
-            Trace.WriteLine("Failed to verify steam user in attempt to join game.", nameof(LobbyBrowser));
+            logger.Warning("Failed to verify steam user in attempt to join game.");
             return;
         }
 
@@ -486,13 +480,10 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
             Application.Current.Dispatcher.Invoke(() => {
 
                 // Log success
-                Trace.WriteLine("Succsefully joined lobby.", nameof(LobbyBrowser));
+                logger.Info("Succsefully joined lobby.");
 
                 // Create lobby models.
-                var lobbyModel = BaseLobby.CreateModelAsParticipant(lobby);
-                if (lobbyModel is null) {
-                    throw new Exception("BAAAAAAD : FIX ASAP");
-                }
+                var lobbyModel = BaseLobby.CreateModelAsParticipant(lobby) ?? throw new Exception("BAAAAAAD : FIX ASAP");
 
                 ChatSpectator chatMode = new(lobby);
                 lobbyModel.SetChatModel(chatMode);
@@ -509,7 +500,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
         } else {
 
             // Log failure
-            Trace.WriteLine("Failed to join lobby.", nameof(LobbyBrowser));
+            logger.Error("Failed to join lobby.");
 
             // Give feedback to user.
             _ = MessageBox.Show("Failed to join lobby (Failed to connect to server).", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
