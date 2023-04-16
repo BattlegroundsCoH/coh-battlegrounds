@@ -337,6 +337,21 @@
     <None Update="bg_common\data\vcoh2-wbp-db-coh2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="bg_common\data\vcoh3-abp-db-coh3.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh3-ebp-db-coh3.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh3-sbp-db-coh3.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh3-ubp-db-coh3.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh3-wbp-db-coh3.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04.gfx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
