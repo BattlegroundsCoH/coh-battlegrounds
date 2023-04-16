@@ -48,6 +48,7 @@ public class EntityBlueprintConverter : JsonConverter<EntityBlueprint> {
                 "UpgradeCapacity" => reader.GetInt32(),
                 "Upgrades" => reader.GetStringArray(),
                 "AppliedUpgrades" => reader.GetStringArray(),
+                "Types" => reader.GetStringArray(),
                 _ => throw new NotImplementedException(prop)
             };
         }
@@ -64,7 +65,10 @@ public class EntityBlueprintConverter : JsonConverter<EntityBlueprint> {
              __lookup.GetCastValueOrDefault("AppliedUpgrades", Array.Empty<string>()),
              __lookup.GetCastValueOrDefault("UpgradeCapacity", 0),
              __lookup.GetCastValueOrDefault("Hardpoints", Array.Empty<string>()),
-              (float)__lookup.GetCastValueOrDefault("Health", 0.0f)) { Game = game };
+              (float)__lookup.GetCastValueOrDefault("Health", 0.0f)) { 
+            Game = game,
+            Types = __lookup.GetCastValueOrDefault("Types", Array.Empty<string>())
+        };
     }
 
     /// <inheritdoc/>

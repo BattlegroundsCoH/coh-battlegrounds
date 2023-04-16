@@ -34,6 +34,11 @@ public abstract class Blueprint {
     /// </summary>
     public GameCase Game { get; init; }
 
+    /// <summary>
+    /// The name of the <see cref="Blueprint"/> this extends. Can be null or empty.
+    /// </summary>
+    public string? ParentBlueprint { get; init; }
+
     /// <inheritdoc/>
     public override string ToString() => $"{BlueprintType}:{Name}";
 

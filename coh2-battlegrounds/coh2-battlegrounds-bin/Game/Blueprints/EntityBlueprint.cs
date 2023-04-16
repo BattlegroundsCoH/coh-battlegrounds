@@ -8,35 +8,71 @@ namespace Battlegrounds.Game.Blueprints;
 /// </summary>
 public sealed class EntityBlueprint : Blueprint, IUIBlueprint {
 
-    /// <summary>
-    /// The unique PropertyBagGroupdID assigned to this blueprint.
-    /// </summary>
+    /// <inheritdoc/>
     public override BlueprintUID PBGID { get; }
 
+    /// <inheritdoc/>
     public override BlueprintType BlueprintType => BlueprintType.EBP;
 
+    /// <inheritdoc/>
     public override string Name { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public CostExtension Cost { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public UIExtension UI { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public DriverExtension Drivers { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public Faction? Faction { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public string[] Abilities { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public string[] Hardpoints { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public string[] Upgrades { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public string[] AppliedUpgrades { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public string[]? Types { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public int UpgradeCapacity { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public float Health { get; }
 
+    ///
     public EntityBlueprint(string name, BlueprintUID pbgid, Faction? faction,
         CostExtension cost, UIExtension ui, DriverExtension driverExtension,
         string[] abilities, string[] upgrades, string[] appliedUpgrades, int upgradeMax, string[] hardpoints, float health) {

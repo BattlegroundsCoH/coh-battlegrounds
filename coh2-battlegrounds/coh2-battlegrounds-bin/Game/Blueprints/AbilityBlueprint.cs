@@ -33,7 +33,12 @@ public enum AbilityActivation {
     /// <summary>
     /// The ability is toggled.
     /// </summary>
-    toggle
+    toggle,
+
+    /// <summary>
+    /// The ability targets self (CoH3 Only)
+    /// </summary>
+    self_targeted
 
 }
 
@@ -47,19 +52,13 @@ public sealed class AbilityBlueprint : Blueprint, IUIBlueprint {
     /// </summary>
     public static readonly AbilityBlueprint Invalid = new("abp_invalid", new(), null, new(), new(), Array.Empty<RequirementExtension>(), AbilityActivation.none);
 
-    /// <summary>
-    /// The unique PropertyBagGroupdID assigned to this blueprint.
-    /// </summary>
+    /// <inheritdoc/>
     public override BlueprintUID PBGID { get; }
 
-    /// <summary>
-    /// 
-    /// </summary>
+    /// <inheritdoc/>
     public override BlueprintType BlueprintType => BlueprintType.ABP;
 
-    /// <summary>
-    /// 
-    /// </summary>
+    /// <inheritdoc/>
     public override string Name { get; }
 
     /// <summary>
@@ -88,7 +87,7 @@ public sealed class AbilityBlueprint : Blueprint, IUIBlueprint {
     public AbilityActivation Activation { get; }
 
     /// <summary>
-    /// 
+    /// Get if the ability has a facing phase (ie. a phase where a direction is set).
     /// </summary>
     public bool HasFacingPhase { get; }
 

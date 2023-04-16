@@ -66,19 +66,25 @@ public sealed class AbilityBlueprintConverter : JsonConverter<AbilityBlueprint> 
                     "timed" => AbilityActivation.timed,
                     "toggle" => AbilityActivation.toggle,
                     "targeted" => AbilityActivation.targeted,
+                    "self_targeted" => AbilityActivation.self_targeted,
+                    string s => throw new EnumValueNotSupportedException<AbilityActivation>($"Unknown value {s}"),
                     _ => throw new FormatException()
                 },
                 "HasFacingPhase" => reader.GetBoolean(),
+                "ParentFilepath" => reader.GetString() ?? string.Empty,
                 _ => throw new NotImplementedException(prop)
             };
         }
-        var fac = __lookup.GetCastValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.FromName(__lookup.GetCastValueOrDefault("Army", "NULL"), game);
+        var fac = __lookup.GetCastValueOrDefault("Army", "NULL") is "NULL" ? null : Faction.TryGetFromName(__lookup.GetCastValueOrDefault("Army", "NULL"), game);
         BlueprintUID pbgid = new(__lookup.GetCastValueOrDefault("PBGID", 0ul), modGuid);
         return new(__lookup.GetCastValueOrDefault("Name", string.Empty), pbgid, fac,
             __lookup.GetCastValueOrDefault("Cost", new CostExtension()),
             __lookup.GetCastValueOrDefault("Display", new UIExtension()),
             __lookup.GetCastValueOrDefault("Requirements", Array.Empty<RequirementExtension>()),
-            __lookup.GetCastValueOrDefault("Activation", AbilityActivation.none)) { Game = game };
+            __lookup.GetCastValueOrDefault("Activation", AbilityActivation.none)) { 
+            Game = game, 
+            ParentBlueprint = __lookup.GetCastValueOrDefault("ParentFilepath", string.Empty) 
+        };
     }
 
     /// <inheritdoc/>

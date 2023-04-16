@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Blueprints.Collections;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Util;
 
 namespace Battlegrounds.Game.Database.Management.CoH3;
 
@@ -12,8 +13,33 @@ namespace Battlegrounds.Game.Database.Management.CoH3;
 /// </summary>
 public class CoH3BlueprintDatabase : IModBlueprintDatabase {
 
+    private readonly SearchTree<Blueprint>? __entities;
+    private readonly SearchTree<Blueprint>? __squads;
+    private readonly SearchTree<Blueprint>? __abilities;
+    private readonly SearchTree<Blueprint>? __upgrades;
+    private readonly SearchTree<Blueprint>? __weapons;
+
+    private readonly HashSet<IModBlueprintDatabase> __inherit;
+
     /// <inheritdoc/>
     public GameCase Game => GameCase.CompanyOfHeroes3;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public CoH3BlueprintDatabase() {
+
+        // Create Dictionaries
+        __entities = new();
+        __squads = new();
+        __abilities = new();
+        __upgrades = new();
+        __weapons = new();
+
+        // Create list of inheritance blueprints
+        __inherit = new();
+
+    }
 
     /// <inheritdoc/>
     public void AddBlueprints(Array blueprints, BlueprintType blueprintType) {
