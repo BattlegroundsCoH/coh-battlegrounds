@@ -134,4 +134,75 @@ public class SearchTreeTests {
 
     }
 
+    [Test]
+    public void Merge_EmptyTrees_ReturnsEmptyTree() {
+        // Arrange
+        var tree1 = new SearchTree<int>();
+        var tree2 = new SearchTree<int>();
+
+        // Act
+        var mergedTree = tree1.Merge(tree2);
+
+        // Assert
+        Assert.That(mergedTree, Has.Count.EqualTo(2));
+    }
+
+    [Test]
+    public void Merge_TwoNonEmptyTrees_ReturnsMergedTree() {
+        // Arrange
+        var tree1 = new SearchTree<int> {
+            { "a", 1 },
+            { "b", 2 }
+        };
+
+        var tree2 = new SearchTree<int> {
+            { "c", 3 },
+            { "d", 4 }
+        };
+
+        // Act
+        var mergedTree = tree1.Merge(tree2);
+
+        // Assert
+        Assert.That(mergedTree, Has.Count.EqualTo(2));
+        Assert.Multiple(() => {
+            Assert.That(mergedTree.Lookup("a"), Is.EqualTo(1));
+            Assert.That(mergedTree.Lookup("b"), Is.EqualTo(2));
+            Assert.That(mergedTree.Lookup("c"), Is.EqualTo(3));
+            Assert.That(mergedTree.Lookup("d"), Is.EqualTo(4));
+        });
+    }
+
+    [Test]
+    public void Merge_ThreeNonEmptyTrees_ReturnsMergedTree() {
+        // Arrange
+        var tree1 = new SearchTree<int> {
+            { "a", 1 },
+            { "b", 2 }
+        };
+
+        var tree2 = new SearchTree<int> {
+            { "c", 3 },
+            { "d", 4 }
+        };
+
+        var tree3 = new SearchTree<int> {
+            { "e", 5 },
+            { "f", 6 }
+        };
+
+        // Act
+        var mergedTree = tree1.Merge(tree2, tree3);
+
+        // Assert
+        Assert.That(mergedTree, Has.Count.EqualTo(3));
+        Assert.Multiple(() => {
+            Assert.That(mergedTree.Lookup("a"), Is.EqualTo(1));
+            Assert.That(mergedTree.Lookup("b"), Is.EqualTo(2));
+            Assert.That(mergedTree.Lookup("c"), Is.EqualTo(3));
+            Assert.That(mergedTree.Lookup("d"), Is.EqualTo(4));
+            Assert.That(mergedTree.Lookup("e"), Is.EqualTo(5));
+            Assert.That(mergedTree.Lookup("f"), Is.EqualTo(6));
+        });
+    }
 }

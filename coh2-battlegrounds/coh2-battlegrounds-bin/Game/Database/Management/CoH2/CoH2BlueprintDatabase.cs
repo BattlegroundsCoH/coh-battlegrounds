@@ -5,8 +5,7 @@ using System.Linq;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Blueprints.Collections;
-using Battlegrounds.Game.Blueprints.Extensions;
-using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Game.Database.Management.Common;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database.Management.CoH2;
@@ -14,7 +13,7 @@ namespace Battlegrounds.Game.Database.Management.CoH2;
 /// <summary>
 /// 
 /// </summary>
-public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
+public sealed class CoH2BlueprintDatabase : CommonBlueprintDatabase {
 
     private readonly Dictionary<BlueprintUID, Blueprint>? __entities;
     private readonly Dictionary<BlueprintUID, Blueprint>? __squads;
@@ -24,12 +23,10 @@ public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
     private readonly Dictionary<BlueprintUID, Blueprint>? __slotitems;
     private readonly Dictionary<BlueprintUID, Blueprint>? __weapons;
 
-    private readonly HashSet<IModBlueprintDatabase> __inherit;
-
     private ushort bpCntr = 0;
 
     /// <inheritdoc/>
-    public GameCase Game => GameCase.CompanyOfHeroes2;
+    public override GameCase Game => GameCase.CompanyOfHeroes2;
 
     /// <summary>
     /// 
@@ -45,13 +42,10 @@ public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
         __slotitems = new();
         __weapons = new();
 
-        // Create list of inheritance blueprints
-        __inherit = new();
-
     }
 
     /// <inheritdoc/>
-    public void AddBlueprints(Array blueprints, BlueprintType blueprintType) {
+    public override void AddBlueprints(Array blueprints, BlueprintType blueprintType) {
 
         // Get target array
         var target = GetAllBlueprintsOfType(blueprintType);
@@ -67,11 +61,11 @@ public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
     }
 
     /// <inheritdoc/>
-    public BlueprintCollection<T> GetCollection<T>() where T : Blueprint 
+    public override BlueprintCollection<T> GetCollection<T>() 
         => new BlueprintCollection<T>(GetAllBlueprintsOfType(Blueprint.BlueprintTypeFromType<T>()).Map((k,v) => (T)v));
 
     /// <inheritdoc/>
-    public Blueprint FromBlueprintName(string id, BlueprintType bType) {
+    public override Blueprint FromBlueprintName(string id, BlueprintType bType) {
         if (GetModGUID(id, out ModGuid guid, out string bp)) {
             return GetAllBlueprintsOfType(bType).FirstOrDefault(x => x.Value?.PBGID.Mod == guid && x.Value?.Name == bp).Value;
         }
@@ -79,18 +73,18 @@ public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
     }
 
     /// <inheritdoc/>
-    public Bp FromBlueprintName<Bp>(string bpName) where Bp : Blueprint
+    public override Bp FromBlueprintName<Bp>(string bpName)
         => (Bp)FromBlueprintName(bpName, Blueprint.BlueprintTypeFromType<Bp>());
 
     /// <inheritdoc/>
-    public IDictionary<BlueprintUID, Blueprint> GetAllBlueprintsOfType(BlueprintType type) => type switch {
-        BlueprintType.ABP => __inherit.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__abilities!, (src, next) => src.Union(next)),
-        BlueprintType.CBP => __inherit.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__criticals!, (src, next) => src.Union(next)),
-        BlueprintType.EBP => __inherit.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__entities!, (src, next) => src.Union(next)),
-        BlueprintType.SBP => __inherit.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__squads!, (src, next) => src.Union(next)),
-        BlueprintType.UBP => __inherit.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__upgrades!, (src, next) => src.Union(next)),
-        BlueprintType.IBP => __inherit.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__slotitems!, (src, next) => src.Union(next)),
-        BlueprintType.WBP => __inherit.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__weapons!, (src, next) => src.Union(next)),
+    public override IDictionary<BlueprintUID, Blueprint> GetAllBlueprintsOfType(BlueprintType type) => type switch {
+        BlueprintType.ABP => inheritsDatabase.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__abilities!, (src, next) => src.Union(next)),
+        BlueprintType.CBP => inheritsDatabase.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__criticals!, (src, next) => src.Union(next)),
+        BlueprintType.EBP => inheritsDatabase.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__entities!, (src, next) => src.Union(next)),
+        BlueprintType.SBP => inheritsDatabase.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__squads!, (src, next) => src.Union(next)),
+        BlueprintType.UBP => inheritsDatabase.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__upgrades!, (src, next) => src.Union(next)),
+        BlueprintType.IBP => inheritsDatabase.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__slotitems!, (src, next) => src.Union(next)),
+        BlueprintType.WBP => inheritsDatabase.Select(x => x.GetAllBlueprintsOfType(type)).Aggregate((IDictionary<BlueprintUID, Blueprint>)__weapons!, (src, next) => src.Union(next)),
         _ => throw new ArgumentException(null, nameof(type)),
     };
 
@@ -115,55 +109,7 @@ public sealed class CoH2BlueprintDatabase : IModBlueprintDatabase {
     }
 
     /// <inheritdoc/>
-    public T FromPPbgid<T>(BlueprintUID pBGID) where T : Blueprint
+    public override T FromPPbgid<T>(BlueprintUID pBGID)
         => (T)GetAllBlueprintsOfType(Blueprint.BlueprintTypeFromType<T>())[pBGID];
-
-    /// <inheritdoc/>
-    public SquadBlueprint? GetCrewBlueprint(SquadBlueprint sbp, Faction? faction = null) {
-
-        // Make sure there's actually a crew to get
-        if (!sbp.HasCrew) {
-            return null;
-        }
-
-        // Set faction
-        faction ??= sbp.Army;
-
-        // Bail if still null
-        if (faction is not Faction f)
-            return null;
-
-        // Loop over entities in loadout
-        for (int i = 0; i < sbp.Loadout.Count; i++) {
-
-            // Get loadout entity and skip if null
-            var e = sbp.Loadout.GetEntityName(i);
-            if (e is null)
-                continue;
-
-            // Get entity
-            var entity = FromBlueprintName<EntityBlueprint>(e);
-
-            // Check for driver extension
-            if (entity.Drivers is DriverExtension drivers) {
-                var f2 = faction is null ? f : faction;
-                var crew = drivers.Drivers.FirstOrDefault(x => x.Faction == f2.RbpPath).SquadBlueprint;
-                return FromBlueprintName<SquadBlueprint>(crew);
-            }
-
-        }
-
-        // No driver was found
-        return null;
-
-    }
-
-    /// <inheritdoc/>
-    public void Inherit(IModBlueprintDatabase modBlueprintDatabase) {
-        if (modBlueprintDatabase.Game != GameCase.CompanyOfHeroes2) {
-            throw new NotSupportedException($"Cannot inherit from a '{modBlueprintDatabase.Game}' database when inheriter is for the game '{Game}'");
-        }
-        __inherit.Add(modBlueprintDatabase);
-    }
 
 }

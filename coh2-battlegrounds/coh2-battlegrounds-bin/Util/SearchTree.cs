@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
+using Battlegrounds.Functional;
+
 namespace Battlegrounds.Util;
 
 /// <summary>
@@ -17,7 +19,7 @@ public class SearchTree<T> : IEnumerable<T> {
     /// <summary>
     /// Gets the number of values in the tree.
     /// </summary>
-    public int Count => _root.Count;
+    public virtual int Count => _root.Count;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SearchTree{T}"/> class with a root node named "Root".
@@ -31,7 +33,7 @@ public class SearchTree<T> : IEnumerable<T> {
     /// </summary>
     /// <param name="path">The path to the value.</param>
     /// <param name="value">The value to add.</param>
-    public void Add(string path, T value) {
+    public virtual void Add(string path, T value) {
         var node = new Node(path) { Value = value };
         _root.AddNode(path, node);
     }
@@ -41,7 +43,7 @@ public class SearchTree<T> : IEnumerable<T> {
     /// </summary>
     /// <param name="path">The path to the value.</param>
     /// <returns>The value associated with the path, or <c>null</c> if the path is not found in the tree.</returns>
-    public T? Lookup(string path) {
+    public virtual T? Lookup(string path) {
         var node = _root.GetNode(path);
         if (node != null) {
             return node.Value;
@@ -55,7 +57,7 @@ public class SearchTree<T> : IEnumerable<T> {
     /// <param name="path">The path to the value.</param>
     /// <param name="value">The value associated with the path, or <c>null</c> if the path is not found in the tree.</param>
     /// <returns><c>true</c> if the path is found in the tree and has a non-null value; otherwise, <c>false</c>.</returns>
-    public bool Lookup(string path, [NotNullWhen(true)] out T? value) {
+    public virtual bool Lookup(string path, [NotNullWhen(true)] out T? value) {
         var node = _root.GetNode(path);
         if (node != null && node.Value != null) {
             value = node.Value;
@@ -70,7 +72,7 @@ public class SearchTree<T> : IEnumerable<T> {
     /// </summary>
     /// <param name="path">The path to check.</param>
     /// <returns><c>true</c> if the path is found in the tree; otherwise, <c>false</c>.</returns>
-    public bool Contains(string path) => _root.GetNode(path) is not null;
+    public virtual bool Contains(string path) => _root.GetNode(path) is not null;
 
     /// <summary>
     /// Returns an enumerator that iterates through the values in the tree.
@@ -107,7 +109,7 @@ public class SearchTree<T> : IEnumerable<T> {
     /// Removes the value associated with the specified <paramref name="path"/> from the tree.
     /// </summary>
     /// <param name="path">The path to the value to remove.</param>
-    public void Remove(string path) {
+    public virtual void Remove(string path) {
         var segments = path.Split('.');
         var current = _root;
         for (int i = 0; i < segments.Length - 1; i++) {
@@ -123,8 +125,17 @@ public class SearchTree<T> : IEnumerable<T> {
     /// <summary>
     /// Removes all values from the tree.
     /// </summary>
-    public void Clear() {
+    public virtual void Clear() {
         _root.Children.Clear();
+    }
+
+    /// <summary>
+    /// Creates a new search tree that contains all the elements from this search tree and the specified search trees.
+    /// </summary>
+    /// <param name="trees">The search trees to merge with this search tree.</param>
+    /// <returns>A new search tree that contains all the elements from this search tree and the specified search trees.</returns>
+    public virtual SearchTree<T> Merge(params SearchTree<T>[] trees) {
+        return new MergedSearchTree<T>(trees.Append(this));
     }
 
     private class Node {

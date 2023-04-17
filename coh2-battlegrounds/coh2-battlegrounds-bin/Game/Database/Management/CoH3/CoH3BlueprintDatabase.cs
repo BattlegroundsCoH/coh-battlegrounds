@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
+using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Blueprints.Collections;
-using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Game.Database.Management.Common;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Game.Database.Management.CoH3;
@@ -11,7 +13,7 @@ namespace Battlegrounds.Game.Database.Management.CoH3;
 /// <summary>
 /// 
 /// </summary>
-public class CoH3BlueprintDatabase : IModBlueprintDatabase {
+public class CoH3BlueprintDatabase : CommonBlueprintDatabase {
 
     private readonly SearchTree<Blueprint>? __entities;
     private readonly SearchTree<Blueprint>? __squads;
@@ -19,10 +21,8 @@ public class CoH3BlueprintDatabase : IModBlueprintDatabase {
     private readonly SearchTree<Blueprint>? __upgrades;
     private readonly SearchTree<Blueprint>? __weapons;
 
-    private readonly HashSet<IModBlueprintDatabase> __inherit;
-
     /// <inheritdoc/>
-    public GameCase Game => GameCase.CompanyOfHeroes3;
+    public override GameCase Game => GameCase.CompanyOfHeroes3;
 
     /// <summary>
     /// 
@@ -36,49 +36,52 @@ public class CoH3BlueprintDatabase : IModBlueprintDatabase {
         __upgrades = new();
         __weapons = new();
 
-        // Create list of inheritance blueprints
-        __inherit = new();
+    }
+
+    /// <inheritdoc/>
+    public override void AddBlueprints(Array blueprints, BlueprintType blueprintType) {
+        
+        // Get target
+        var target = GetBlueprintsFromType(blueprintType);
+
+        // Iterate and add
+        for (int i = 0; i < blueprints.Length; i++) {
+            if (blueprints.GetValue(i) is Blueprint bp) {
+                target.Add(bp.Name, bp);
+            }
+        }
 
     }
 
     /// <inheritdoc/>
-    public void AddBlueprints(Array blueprints, BlueprintType blueprintType) {
-        throw new NotImplementedException();
-    }
+    public override Bp FromBlueprintName<Bp>(string bpName)
+        => FromBlueprintName(bpName, Blueprint.BlueprintTypeFromType<Bp>()) is Bp bp 
+        ? bp : throw new InvalidBlueprintTypeException($"Blueprint '{bpName}' is not of type '{typeof(Bp).Name}'.");
 
     /// <inheritdoc/>
-    public Bp FromBlueprintName<Bp>(string bpName) where Bp : Blueprint {
-        throw new NotImplementedException();
-    }
+    public override Blueprint FromBlueprintName(string id, BlueprintType bType)
+        => GetBlueprintsFromType(bType).Lookup(id) ?? throw new BlueprintNotFoundException(id);
 
     /// <inheritdoc/>
-    public Blueprint FromBlueprintName(string id, BlueprintType bType) {
-        throw new NotImplementedException();
-    }
+    public override T FromPPbgid<T>(BlueprintUID pBGID)
+        => GetBlueprintsFromType(Blueprint.BlueprintTypeFromType<T>()).FirstOrDefault(x => x.PBGID == pBGID) is T bp
+        ? bp : throw new BlueprintNotFoundException(pBGID.ToString());
 
     /// <inheritdoc/>
-    public T FromPPbgid<T>(BlueprintUID pBGID) where T : Blueprint {
-        throw new NotImplementedException();
-    }
+    public override IDictionary<BlueprintUID, Blueprint> GetAllBlueprintsOfType(BlueprintType type)
+        => GetBlueprintsFromType(type).ToDictionary(x => x.PBGID);
 
     /// <inheritdoc/>
-    public IDictionary<BlueprintUID, Blueprint> GetAllBlueprintsOfType(BlueprintType type) {
-        throw new NotImplementedException();
-    }
+    public override BlueprintCollection<T> GetCollection<T>()
+        => new BlueprintCollection<T>(GetAllBlueprintsOfType(Blueprint.BlueprintTypeFromType<T>()).Map((k,v) => (T)v));
 
-    /// <inheritdoc/>
-    public BlueprintCollection<T> GetCollection<T>() where T : Blueprint {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc/>
-    public SquadBlueprint? GetCrewBlueprint(SquadBlueprint sbp, Faction? faction = null) {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc/>
-    public void Inherit(IModBlueprintDatabase modBlueprintDatabase) {
-        throw new NotImplementedException();
-    }
+    private SearchTree<Blueprint> GetBlueprintsFromType(BlueprintType type) => type switch {
+        BlueprintType.ABP => __abilities ?? throw new Exception(),
+        BlueprintType.UBP => __upgrades ?? throw new Exception(),
+        BlueprintType.EBP => __entities ?? throw new Exception(),
+        BlueprintType.SBP => __squads ?? throw new Exception(),
+        BlueprintType.WBP => __weapons ?? throw new Exception(),
+        _ => throw new NotSupportedException(),
+    };
 
 }
