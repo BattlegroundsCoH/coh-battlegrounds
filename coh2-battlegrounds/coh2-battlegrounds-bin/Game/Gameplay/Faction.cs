@@ -185,7 +185,7 @@ public sealed class Faction {
     /// <summary>
     /// The US Forces faction (CoH3).
     /// </summary>
-    public static readonly Faction Americans = new(7, 11154247, 11234529, FactionStrAmericans, "racebps\\americans", true, DLCPack.CoH3Base);
+    public static readonly Faction Americans = new(8, 11154247, 11234529, FactionStrAmericans, "racebps\\americans", true, DLCPack.CoH3Base);
 
     /// <summary>
     /// Get if some faction is an allied faction.

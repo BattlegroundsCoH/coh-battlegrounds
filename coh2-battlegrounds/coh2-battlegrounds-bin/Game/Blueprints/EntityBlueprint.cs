@@ -1,5 +1,6 @@
 ﻿using Battlegrounds.Game.Blueprints.Extensions;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Meta.Annotations;
 
 namespace Battlegrounds.Game.Blueprints;
 
@@ -60,6 +61,7 @@ public sealed class EntityBlueprint : Blueprint, IUIBlueprint {
     /// <summary>
     /// 
     /// </summary>
+    [GameSpecific(GameCase.CompanyOfHeroes3)]
     public string[]? Types { get; init; }
 
     /// <summary>
@@ -72,7 +74,39 @@ public sealed class EntityBlueprint : Blueprint, IUIBlueprint {
     /// </summary>
     public float Health { get; }
 
-    ///
+    /// <summary>
+    /// 
+    /// </summary>
+    [GameSpecific(GameCase.CompanyOfHeroes3)]
+    public bool IsInventoryItem { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [GameSpecific(GameCase.CompanyOfHeroes3)]
+    public int InventoryRequiredCapacity { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [GameSpecific(GameCase.CompanyOfHeroes3)]
+    public float InventoryDropOnDeathChance { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="pbgid"></param>
+    /// <param name="faction"></param>
+    /// <param name="cost"></param>
+    /// <param name="ui"></param>
+    /// <param name="driverExtension"></param>
+    /// <param name="abilities"></param>
+    /// <param name="upgrades"></param>
+    /// <param name="appliedUpgrades"></param>
+    /// <param name="upgradeMax"></param>
+    /// <param name="hardpoints"></param>
+    /// <param name="health"></param>
     public EntityBlueprint(string name, BlueprintUID pbgid, Faction? faction,
         CostExtension cost, UIExtension ui, DriverExtension driverExtension,
         string[] abilities, string[] upgrades, string[] appliedUpgrades, int upgradeMax, string[] hardpoints, float health) {

@@ -6,6 +6,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Blueprints.Collections;
 using Battlegrounds.Game.Database.Management.Common;
+using Battlegrounds.Meta.Annotations;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Database.Management.CoH2;
@@ -13,6 +14,7 @@ namespace Battlegrounds.Game.Database.Management.CoH2;
 /// <summary>
 /// 
 /// </summary>
+[GameSpecific(GameCase.CompanyOfHeroes2)]
 public sealed class CoH2BlueprintDatabase : CommonBlueprintDatabase {
 
     private readonly Dictionary<BlueprintUID, Blueprint>? __entities;

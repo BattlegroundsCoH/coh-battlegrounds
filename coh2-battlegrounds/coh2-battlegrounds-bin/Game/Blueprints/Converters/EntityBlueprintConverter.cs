@@ -49,6 +49,10 @@ public class EntityBlueprintConverter : JsonConverter<EntityBlueprint> {
                 "Upgrades" => reader.GetStringArray(),
                 "AppliedUpgrades" => reader.GetStringArray(),
                 "Types" => reader.GetStringArray(),
+                "IsInventoryItem" => reader.GetBoolean(),
+                "InventoryRequiredCapacity" => reader.GetInt32(),
+                "InventoryDropOnDeathChance" => reader.GetSingle(),
+                "ParentFilepath" => reader.GetString() ?? string.Empty,
                 _ => throw new NotImplementedException(prop)
             };
         }
@@ -67,7 +71,10 @@ public class EntityBlueprintConverter : JsonConverter<EntityBlueprint> {
              __lookup.GetCastValueOrDefault("Hardpoints", Array.Empty<string>()),
               (float)__lookup.GetCastValueOrDefault("Health", 0.0f)) { 
             Game = game,
-            Types = __lookup.GetCastValueOrDefault("Types", Array.Empty<string>())
+            Types = __lookup.GetCastValueOrDefault("Types", Array.Empty<string>()),
+            IsInventoryItem = __lookup.GetCastValueOrDefault("IsInventoryItem", false),
+            InventoryRequiredCapacity = __lookup.GetCastValueOrDefault("InventoryRequiredCapacity", -1),
+            InventoryDropOnDeathChance = __lookup.GetCastValueOrDefault("InventoryDropOnDeathChance", 0.0f)
         };
     }
 

@@ -69,6 +69,7 @@ public class WeaponBlueprintConverter : JsonConverter<WeaponBlueprint> {
                     _ => WeaponExplosiveType.Invalid
                 },
                 "CallbackType" => GetCallbackType(reader.GetString() ?? string.Empty),
+                "ParentFilepath" => reader.GetString() ?? string.Empty,
                 _ => throw new NotImplementedException(prop)
             };
         }

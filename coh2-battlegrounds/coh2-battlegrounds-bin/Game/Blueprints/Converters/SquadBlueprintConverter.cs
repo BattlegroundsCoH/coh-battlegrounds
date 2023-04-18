@@ -53,6 +53,7 @@ public sealed class SquadBlueprintConverter : JsonConverter<SquadBlueprint> {
                 "UpgradeCapacity" => reader.GetInt32(),
                 "Upgrades" => reader.GetStringArray(),
                 "AppliedUpgrades" => reader.GetStringArray(),
+                "ParentFilepath" => reader.GetString() ?? string.Empty,
                 _ => throw new NotImplementedException(prop)
             };
         }

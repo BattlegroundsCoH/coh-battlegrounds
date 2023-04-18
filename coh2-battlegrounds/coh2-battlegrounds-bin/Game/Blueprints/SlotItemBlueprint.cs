@@ -7,6 +7,7 @@ using Battlegrounds.Errors.Common;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints.Extensions;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Meta.Annotations;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Blueprints;
@@ -15,6 +16,7 @@ namespace Battlegrounds.Game.Blueprints;
 /// 
 /// </summary>
 [JsonConverter(typeof(SlotItemBlueprintConverter))]
+[GameSpecific(GameCase.CompanyOfHeroes2)]
 public sealed class SlotItemBlueprint : Blueprint, IUIBlueprint {
 
     /// <summary>

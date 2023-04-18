@@ -65,6 +65,7 @@ public class UpgradeBlueprintConverter : JsonConverter<UpgradeBlueprint> {
                     _ => UpgradeBlueprint.OwnerType.None,
                 },
                 "Requirements" => JsonSerializer.Deserialize<RequirementExtension[]>(ref reader, options) ?? Array.Empty<RequirementExtension>(),
+                "ParentFilepath" => reader.GetString() ?? string.Empty,
                 _ => throw new NotImplementedException(prop)
             };
         }

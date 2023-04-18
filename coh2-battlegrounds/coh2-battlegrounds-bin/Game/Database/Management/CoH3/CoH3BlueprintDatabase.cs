@@ -6,6 +6,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Blueprints.Collections;
 using Battlegrounds.Game.Database.Management.Common;
+using Battlegrounds.Meta.Annotations;
 using Battlegrounds.Util;
 
 namespace Battlegrounds.Game.Database.Management.CoH3;
@@ -13,7 +14,8 @@ namespace Battlegrounds.Game.Database.Management.CoH3;
 /// <summary>
 /// 
 /// </summary>
-public class CoH3BlueprintDatabase : CommonBlueprintDatabase {
+[GameSpecific(GameCase.CompanyOfHeroes3)]
+public sealed class CoH3BlueprintDatabase : CommonBlueprintDatabase {
 
     private readonly SearchTree<Blueprint>? __entities;
     private readonly SearchTree<Blueprint>? __squads;

@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using Battlegrounds.Errors.Common;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints.Extensions;
+using Battlegrounds.Meta.Annotations;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Blueprints;
@@ -14,6 +15,7 @@ namespace Battlegrounds.Game.Blueprints;
 /// Representation of a <see cref="Blueprint"/> with critical blueprint specific values. Inherits from <see cref="Blueprint"/>. This class cannot be inherited.
 /// </summary>
 [JsonConverter(typeof(CriticalBlueprintConverter))]
+[GameSpecific(GameCase.CompanyOfHeroes2)]
 public sealed class CriticalBlueprint : Blueprint {
 
     /// <summary>

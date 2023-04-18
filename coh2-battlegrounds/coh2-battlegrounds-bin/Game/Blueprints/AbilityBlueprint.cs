@@ -2,6 +2,7 @@
 
 using Battlegrounds.Game.Blueprints.Extensions;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Meta.Annotations;
 
 namespace Battlegrounds.Game.Blueprints;
 
@@ -38,6 +39,7 @@ public enum AbilityActivation {
     /// <summary>
     /// The ability targets self (CoH3 Only)
     /// </summary>
+    [GameSpecific(GameCase.CompanyOfHeroes3)]
     self_targeted
 
 }
