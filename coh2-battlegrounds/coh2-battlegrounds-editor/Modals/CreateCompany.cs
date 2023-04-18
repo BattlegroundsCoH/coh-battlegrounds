@@ -144,6 +144,8 @@ public sealed class CreateCompany : INotifyPropertyChanged {
     /// </summary>
     public IModPackage Package => Packages[SelectedPackageIndex].Package;
 
+    private IModPackage? PackageOrNull => SelectedPackageIndex >= 0 ? Packages[SelectedPackageIndex].Package : null;
+
     /// <summary>
     /// 
     /// </summary>
@@ -228,8 +230,21 @@ public sealed class CreateCompany : INotifyPropertyChanged {
         // Clear types
         this.AvailableTypes.Clear();
 
+        if (this.m_companyFaction is null || this.PackageOrNull is null) {
+            this.AvailableTypes.Add(CompanyType.None);
+            this.SelectedType = CompanyType.None;
+            return; 
+        }
+
+        // Define base types
+        if (!this.PackageOrNull.FactionSettings.TryGetValue(this.m_companyFaction.Self, out var factionData)) {
+            this.AvailableTypes.Add(CompanyType.None);
+            this.SelectedType = CompanyType.None;
+            return;
+        }
+
         // Grab available types
-        var types = this.SelectedPackageIndex == -1 ? System.Array.Empty<FactionCompanyType>() : this.Package.FactionSettings[this.m_companyFaction.Self].Companies.Types;
+        var types = this.SelectedPackageIndex == -1  ? System.Array.Empty<FactionCompanyType>() : factionData.Companies.Types;
         if (types is null || types.Length is 0) {
             this.AvailableTypes.Add(CompanyType.None);
             this.SelectedType = CompanyType.None;
@@ -244,7 +259,7 @@ public sealed class CreateCompany : INotifyPropertyChanged {
 
     }
 
-    private void  GameChanged() {
+    private void GameChanged() {
         
         RefreshPackages();
         
@@ -255,6 +270,10 @@ public sealed class CreateCompany : INotifyPropertyChanged {
         // Clear factions
         AvailableFactions.Clear();
         Games[SelectedGameIndex].Factions.ForEach(AvailableFactions.Add);
+        if (AvailableFactions.Count > 0) {
+            SelectedFaction = AvailableFactions[0];
+            OnPropertyChanged(nameof(SelectedFaction));
+        }
 
     }
 

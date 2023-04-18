@@ -5,7 +5,7 @@
   "TuningGUID": "142b113740474c82a60b0a428bd553d5",
   "GamemodeGUID": "6a0a13b89555402ca75b85dc30f5cb04",
   "AssetGUID": "f0c3cb74008447268cad2804e3b9d565",
-  "SupportedGames": "CompanyOfHeroes2",
+  "SupportedGames": "All",
   "LocaleFiles": [
     {
       "Type": "Gamemode",
@@ -24,6 +24,7 @@
       "Display": "32",
       "DisplayDesc": "33",
       "DefaultOption": 1,
+      "SupportedGame": "CompanyOfHeroes2",
       "Files": [],
       "Options": [
         {
@@ -50,6 +51,7 @@
       "Display": "36",
       "DisplayDesc": "37",
       "DefaultOption": 1,
+      "SupportedGame": "CompanyOfHeroes2",
       "Files": [
         "Gamemode:coh2_battlegrounds_defence;coh2_battlegrounds_defence.scar"
       ],
@@ -223,7 +225,8 @@
       "ID": "bg_attr",
       "Display": "30",
       "DisplayDesc": "31",
-      "DefaultOption": 0
+      "DefaultOption": 0,
+      "SupportedGame": "CompanyOfHeroes2"
     }
   ],
   "FactionData": [

@@ -109,7 +109,7 @@ public class ModPackageLoader : JsonConverter<ModPackage> {
     private static FactionCompanyType LoadCompanyTypeFromSource(FactionCompanyType original) {
 
         // Compile str
-        string logstr = $"Loaded faction type '{original.Id}' for mod '{original.FactionData!.Package!.PackageName}'";
+        string logstr = $"Loaded faction company type '{original.Id}' for mod '{original.FactionData!.Package!.PackageName}'";
 
         // Just return input
         if (string.IsNullOrEmpty(original.SourceFile)) {
