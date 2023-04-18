@@ -703,6 +703,62 @@
           }
         ]
       }
+    },
+    {
+      "Faction": "afrika_korps",
+      "Drivers": [],
+      "Abilities": [],
+      "Companies": {
+        "Types": [
+          {
+            "Id": "dak_mot",
+            "SourceFile": "Common:bg_ct\\3\\dak_mot"
+          },
+          {
+            "Id": "ita_rifles",
+            "SourceFile": "Common:bg_ct\\3\\ita_rifles"
+          }
+        ]
+      }
+    },
+    {
+      "Faction": "germans",
+      "Drivers": [],
+      "Abilities": [],
+      "Companies": {
+        "Types": [
+          {
+            "Id": "ger_rifles",
+            "SourceFile": "Common:bg_ct\\3\\ger_rifles"
+          }
+        ]
+      }
+    },
+    {
+      "Faction": "british_africa",
+      "Drivers": [],
+      "Abilities": [],
+      "Companies": {
+        "Types": [
+          {
+            "Id": "ukf3_rifles",
+            "SourceFile": "Common:bg_ct\\3\\ukf_rifles"
+          }
+        ]
+      }
+    },
+    {
+      "Faction": "americans",
+      "Drivers": [],
+      "Abilities": [],
+      "Companies": {
+        "Types": [
+          {
+            "Id": "usa_rifles",
+            "SourceFile": "Common:bg_ct\\3\\usa_rifles"
+          }
+        ]
+      }
     }
   ],
   "ParadropUnits": [],

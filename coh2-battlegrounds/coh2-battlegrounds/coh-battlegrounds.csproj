@@ -244,6 +244,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="bg_common\bg_ct\3\dak_mot.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\3\ger_rifles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\3\ita_rifles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\3\ukf_rifles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\3\usa_rifles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\bg_ct\ost_airborne.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
