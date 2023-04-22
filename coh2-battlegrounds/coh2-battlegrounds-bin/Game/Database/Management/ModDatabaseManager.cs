@@ -115,8 +115,8 @@ public class ModDatabaseManager : IModDbManager {
             if (!isVanilla) {
                 database.GetBlueprintsOrNull(GameCase.CompanyOfHeroes2)
                     ?.Inherit(packageDatabases[BattlegroundsContext.ModManager.GetVanillaPackage(GameCase.CompanyOfHeroes2)].GetBlueprints(GameCase.CompanyOfHeroes2));
-                database.GetBlueprintsOrNull(GameCase.CompanyOfHeroes3)
-                    ?.Inherit(packageDatabases[BattlegroundsContext.ModManager.GetVanillaPackage(GameCase.CompanyOfHeroes3)].GetBlueprints(GameCase.CompanyOfHeroes3));
+                var coh3Blueprints = packageDatabases[BattlegroundsContext.ModManager.GetVanillaPackage(GameCase.CompanyOfHeroes3)].GetBlueprints(GameCase.CompanyOfHeroes3);
+                database.GetBlueprintsOrNull(GameCase.CompanyOfHeroes3)?.Inherit(coh3Blueprints);
             }
 
             // Load win conditions

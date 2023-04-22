@@ -105,6 +105,7 @@ public static class ResourceHandler {
             return source;
         }
         if (GfxMaps[iconType] is IGfxMap gfx && gfx.GetResource(iconName) is GfxResource rs) {
+            // TODO: Check resource type
             using (var stream = rs.Open()) {
                 BitmapImage bitmapImage = new();
                 bitmapImage.BeginInit();

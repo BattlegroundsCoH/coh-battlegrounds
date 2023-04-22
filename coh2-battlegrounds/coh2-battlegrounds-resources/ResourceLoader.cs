@@ -147,6 +147,7 @@ public static class ResourceLoader {
         LoadResourceFile(ResourceIdenitifers.SYMBOL_ICONS, "Gfx\\Icons\\symbol_icons.dat");
         LoadResourceFile(ResourceIdenitifers.UNIT_ICONS, "Gfx\\Icons\\unit_icons.dat");
         LoadResourceFile(ResourceIdenitifers.UPGRADE_ICONS, "Gfx\\Icons\\upgrade_icons.dat");
+        LoadResourceFile(ResourceIdenitifers.COH3_ICONS, "Gfx\\Icons\\3\\coh3_races.dat");
 
         // Load any additional files that are stored directly on drive
         foreach (string identifier in ResourceIdenitifers.IconIdentifiers)

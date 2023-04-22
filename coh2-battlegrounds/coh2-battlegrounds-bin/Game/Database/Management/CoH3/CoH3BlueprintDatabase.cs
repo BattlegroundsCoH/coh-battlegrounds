@@ -23,6 +23,8 @@ public sealed class CoH3BlueprintDatabase : CommonBlueprintDatabase {
     private readonly SearchTree<Blueprint>? __upgrades;
     private readonly SearchTree<Blueprint>? __weapons;
 
+    private readonly Dictionary<BlueprintType, HashSet<SearchTree<Blueprint>>> _inheritTrees;
+
     /// <inheritdoc/>
     public override GameCase Game => GameCase.CompanyOfHeroes3;
 
@@ -38,13 +40,22 @@ public sealed class CoH3BlueprintDatabase : CommonBlueprintDatabase {
         __upgrades = new();
         __weapons = new();
 
+        // Create inherit trees
+        _inheritTrees = new() {
+            [BlueprintType.ABP] = new(),
+            [BlueprintType.EBP] = new(),
+            [BlueprintType.SBP] = new(),
+            [BlueprintType.UBP] = new(),
+            [BlueprintType.WBP] = new(),
+        };
+
     }
 
     /// <inheritdoc/>
     public override void AddBlueprints(Array blueprints, BlueprintType blueprintType) {
         
         // Get target
-        var target = GetBlueprintsFromType(blueprintType);
+        var target = GetSearchTree(blueprintType);
 
         // Iterate and add
         for (int i = 0; i < blueprints.Length; i++) {
@@ -62,22 +73,22 @@ public sealed class CoH3BlueprintDatabase : CommonBlueprintDatabase {
 
     /// <inheritdoc/>
     public override Blueprint FromBlueprintName(string id, BlueprintType bType)
-        => GetBlueprintsFromType(bType).Lookup(id) ?? throw new BlueprintNotFoundException(id);
+        => GetAllBlueprintsFromType(bType).Lookup(id) ?? throw new BlueprintNotFoundException(id);
 
     /// <inheritdoc/>
     public override T FromPPbgid<T>(BlueprintUID pBGID)
-        => GetBlueprintsFromType(Blueprint.BlueprintTypeFromType<T>()).FirstOrDefault(x => x.PBGID == pBGID) is T bp
+        => GetAllBlueprintsFromType(Blueprint.BlueprintTypeFromType<T>()).FirstOrDefault(x => x.PBGID == pBGID) is T bp
         ? bp : throw new BlueprintNotFoundException(pBGID.ToString());
 
     /// <inheritdoc/>
     public override IDictionary<BlueprintUID, Blueprint> GetAllBlueprintsOfType(BlueprintType type)
-        => GetBlueprintsFromType(type).ToDictionary(x => x.PBGID);
+        => GetAllBlueprintsFromType(type).ToDictionary(x => x.PBGID);
 
     /// <inheritdoc/>
     public override BlueprintCollection<T> GetCollection<T>()
         => new BlueprintCollection<T>(GetAllBlueprintsOfType(Blueprint.BlueprintTypeFromType<T>()).Map((k,v) => (T)v));
 
-    private SearchTree<Blueprint> GetBlueprintsFromType(BlueprintType type) => type switch {
+    private SearchTree<Blueprint> GetSearchTree(BlueprintType type) => type switch {
         BlueprintType.ABP => __abilities ?? throw new Exception(),
         BlueprintType.UBP => __upgrades ?? throw new Exception(),
         BlueprintType.EBP => __entities ?? throw new Exception(),
@@ -85,5 +96,28 @@ public sealed class CoH3BlueprintDatabase : CommonBlueprintDatabase {
         BlueprintType.WBP => __weapons ?? throw new Exception(),
         _ => throw new NotSupportedException(),
     };
+
+    private SearchTree<Blueprint> GetAllBlueprintsFromType(BlueprintType type) => type switch {
+        BlueprintType.ABP => __abilities?.Merge(_inheritTrees[BlueprintType.ABP].ToArray()) ?? throw new Exception(),
+        BlueprintType.UBP => __upgrades?.Merge(_inheritTrees[BlueprintType.UBP].ToArray()) ?? throw new Exception(),
+        BlueprintType.EBP => __entities?.Merge(_inheritTrees[BlueprintType.EBP].ToArray()) ?? throw new Exception(),
+        BlueprintType.SBP => __squads?.Merge(_inheritTrees[BlueprintType.SBP].ToArray()) ?? throw new Exception(),
+        BlueprintType.WBP => __weapons?.Merge(_inheritTrees[BlueprintType.WBP].ToArray()) ?? throw new Exception(),
+        _ => throw new NotSupportedException(),
+    };
+
+    /// <inheritdoc/>
+    public override void Inherit(IModBlueprintDatabase modBlueprintDatabase) {
+        base.Inherit(modBlueprintDatabase);
+        
+        if (modBlueprintDatabase is CoH3BlueprintDatabase coh3bo) {
+            _inheritTrees[BlueprintType.ABP].Add(coh3bo.__abilities!);
+            _inheritTrees[BlueprintType.EBP].Add(coh3bo.__entities!);
+            _inheritTrees[BlueprintType.SBP].Add(coh3bo.__squads!);
+            _inheritTrees[BlueprintType.UBP].Add(coh3bo.__upgrades!);
+            _inheritTrees[BlueprintType.WBP].Add(coh3bo.__weapons!);
+        } 
+
+    }
 
 }
