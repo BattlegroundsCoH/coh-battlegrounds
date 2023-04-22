@@ -30,6 +30,9 @@
 	  <None Update="coh\3\anvil.english.ucs">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="gfx\icons\3\coh3_races.dat">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="gfx\icons\ability_icons.dat">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
@@ -63,6 +66,10 @@
 	  <None Update="gfx\icons\upgrade_icons.dat">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="gfx\icons\3\" />
 	</ItemGroup>
 
 </Project>

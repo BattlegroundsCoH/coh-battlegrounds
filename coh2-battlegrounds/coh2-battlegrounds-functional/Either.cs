@@ -36,6 +36,18 @@ public readonly struct Either<TOptionA, TOptionB> {
     public bool Any => this.IsFirst || this.IsSecond;
 
     /// <summary>
+    /// Get the first case value directly.
+    /// </summary>
+    /// <exception cref="InvalidOperationException"/>
+    public TOptionA First => this.IsFirst ? m_a : throw new InvalidOperationException("Either case is second case.");
+
+    /// <summary>
+    /// Get the second case value directly.
+    /// </summary>
+    /// <exception cref="InvalidOperationException"/>
+    public TOptionB Second => this.IsSecond ? m_b : throw new InvalidOperationException("Either case is first case.");
+
+    /// <summary>
     /// Initialise new <see cref="Either{TOptionA, TOptionB}"/> instance where type option is <typeparamref name="TOptionA"/>.
     /// </summary>
     /// <param name="a">The value of <typeparamref name="TOptionA"/>.</param>

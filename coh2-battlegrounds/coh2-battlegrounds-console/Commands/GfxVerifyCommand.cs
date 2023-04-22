@@ -1,4 +1,5 @@
 ﻿using Battlegrounds.Gfx;
+using Battlegrounds.Gfx.Loaders;
 
 using System;
 using System.IO;
@@ -21,8 +22,16 @@ public class GfxVerifyCommand : Command {
 
         try {
 
+            // Create reader factory
+            var factory = new GfxMapLoaderFactory();
+
+            // Read version
+            using var fs = File.OpenRead(target);
+            using var fsr = new BinaryReader(fs);
+            GfxVersion ver = (GfxVersion)fsr.ReadInt32();
+
             // Try read
-            GfxMap map = GfxMap.FromBinary(File.OpenRead(target));
+            IGfxMap map = factory.GetGfxMapLoader(ver).LoadGfxMap(fsr);
 
             // Log details if read
             if (map is null) {
@@ -32,8 +41,9 @@ public class GfxVerifyCommand : Command {
 
             // Do stuff
             Console.WriteLine("Successfully parsed gfx file:");
-            Console.WriteLine("\tBinary Version: " + map.BinaryVersion);
-            Console.WriteLine("\tResource count: " + map.Resources.Length);
+            Console.WriteLine("\tBinary Version: " + map.GfxVersion);
+            Console.WriteLine("\tResource capacity: " + map.Capacity);
+            Console.WriteLine("\tResource count: " + map.Count);
 
         } catch (Exception ex) {
             Console.WriteLine(ex);

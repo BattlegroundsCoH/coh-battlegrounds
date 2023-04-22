@@ -25,6 +25,7 @@ class Program {
         flags = new();
         flags.RegisterCommand<GfxVerifyCommand>();
         flags.RegisterCommand<GfxCompileCommand>();
+        flags.RegisterCommand<GfxUnpackCommand>();
         flags.RegisterCommand<TestCompaniesCommand>();
         flags.RegisterCommand<MapExtractCommand>();
         flags.RegisterCommand<CampaignCompileCommand>();

@@ -174,5 +174,23 @@ public static class BinaryReaderExt {
         return mem;
     }
 
-}
+    /// <summary>
+    /// Reads data from the binary reader and writes it to the specified stream, up to the specified amount of bytes.
+    /// </summary>
+    /// <param name="reader">The BinaryReader to read data from.</param>
+    /// <param name="destination">The Stream to write data to.</param>
+    /// <param name="amount">The maximum amount of bytes to read and write.</param>
+    public static void ReadInto(this BinaryReader reader, Stream destination, long amount) {
+        long read = 0;
+        while (read < amount || reader.HasReachedEOS()) {
+            int toRead = reader.BaseStream.Position + 1024 < reader.BaseStream.Length ? 1024 : (int)(reader.BaseStream.Length - reader.BaseStream.Position);
+            if (toRead == 0) {
+                break;
+            }
+            var buffer = reader.ReadBytes(toRead);
+            destination.Write(buffer, 0, buffer.Length);
+            read += buffer.Length;
+        }
+    }
 
+}

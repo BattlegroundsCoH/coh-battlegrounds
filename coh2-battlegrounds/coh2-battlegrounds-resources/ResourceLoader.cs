@@ -10,7 +10,7 @@ public static class ResourceLoader {
 
     private static readonly Logger logger = Logger.CreateLogger();
 
-    private static void AddGfxEntry(GfxMap map, string resourceName, string filepath, BinaryReader br) {
+    private static void AddGfxEntry(IGfxMap map, string resourceName, string filepath, BinaryReader br) {
 
         // Check if resource is contained
         if (map.HasResource(resourceName)) {
@@ -31,7 +31,7 @@ public static class ResourceLoader {
         br.BaseStream.Position = 0;
 
         // Create resource
-        map.CreateResource(resourceName, br, w, h);
+        map.CreateResource(resourceName, br, w, h, GfxResourceType.Png);
 
     }
 
@@ -52,7 +52,7 @@ public static class ResourceLoader {
         // Determine action
         switch (identifier) {
             default:
-                if (ResourceHandler.GfxMaps.TryGetValue(identifier, out GfxMap? map)) {
+                if (ResourceHandler.GfxMaps.TryGetValue(identifier, out IGfxMap? map)) {
 
                     using var fs = File.OpenRead(filepath);
                     if (filepath.EndsWith(".dat")) {
@@ -60,16 +60,20 @@ public static class ResourceLoader {
                         // Keep track of added
                         int added = 0;
 
+                        // Read version
+                        using var fsr = new BinaryReader(fs);
+                        GfxVersion ver = (GfxVersion)fsr.ReadInt32();
+
                         // Assume gfx map
-                        GfxMap other = GfxMap.FromBinary(fs);
-                        foreach (string resource in other.Resources)
+                        IGfxMap other = ResourceHandler.GfxLoaderFactory.GetGfxMapLoader(ver).LoadGfxMap(fsr);
+                        foreach (string resource in other.GetResourceManifest())
                             if (!map.HasResource(resource)) {
                                 map.AddResource(other.GetResource(resource)!);
                                 added++;
                             }
 
                         // Log how much is actually loaded
-                        logger.Info($"Loaded gfx map {identifier}(v:0x{other.BinaryVersion:X2}) of which {added}/{other.Count} gfx files were added ({map.Count} total '{identifier}' gfx files).");
+                        logger.Info($"Loaded gfx map {identifier}(v:0x{other.GfxVersion:X2}) of which {added}/{other.Count} gfx files were added ({map.Count} total '{identifier}' gfx files).");
 
                     } else {
                         AddGfxEntry(map, resourceName, filepath, new BinaryReader(fs));
@@ -77,12 +81,18 @@ public static class ResourceLoader {
 
                 } else if (Array.IndexOf(ResourceIdenitifers.IconIdentifiers, identifier) != -1) {
 
-                    // Register
+                    // Open map
                     using var fs = File.OpenRead(filepath);
-                    var gfxmap = ResourceHandler.GfxMaps[identifier] = GfxMap.FromBinary(fs);
+                    using var fsr = new BinaryReader(fs);
+
+                    // Determine version
+                    GfxVersion ver = (GfxVersion)fsr.ReadInt32();
+                    var gfxReader = ResourceHandler.GfxLoaderFactory.GetGfxMapLoader(ver);
+
+                    var gfxmap = ResourceHandler.GfxMaps[identifier] = gfxReader.LoadGfxMap(fsr);
 
                     // Log
-                    logger.Info($"Loaded gfx map {identifier}(v:0x{gfxmap.BinaryVersion:X2}) with {gfxmap.Count} gfx files.");
+                    logger.Info($"Loaded gfx map {identifier}(v:0x{gfxmap.GfxVersion:X}) with {gfxmap.Count} gfx files.");
 
                 } else {
                     logger.Warning($"Cannot load resource of type '{identifier}'");
@@ -110,7 +120,7 @@ public static class ResourceLoader {
         string[] files = Directory.GetFiles(path);
 
         // Try find GFX resource and increase its size
-        if (ResourceHandler.GfxMaps.TryGetValue(identifier, out GfxMap? map)) {
+        if (ResourceHandler.GfxMaps.TryGetValue(identifier, out IGfxMap? map)) {
             map.Allocate(files.Length);
         }
 
