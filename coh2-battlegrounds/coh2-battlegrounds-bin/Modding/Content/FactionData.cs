@@ -15,12 +15,26 @@ namespace Battlegrounds.Modding.Content;
 /// </summary>
 public class FactionData {
 
+    /// <summary>
+    /// 
+    /// </summary>
     public readonly struct UnitAbility {
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Blueprint { get; init; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public FactionAbility[] Abilities { get; init; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Blueprint"></param>
+        /// <param name="Abilities"></param>
         [JsonConstructor]
         public UnitAbility(string Blueprint, FactionAbility[] Abilities) {
             this.Blueprint = Blueprint;
@@ -29,11 +43,26 @@ public class FactionData {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public readonly struct Driver {
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public string Blueprint { get; init; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string WhenType { get; init; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Blueprint"></param>
+        /// <param name="WhenType"></param>
         [JsonConstructor]
         public Driver(string Blueprint, string WhenType) {
             this.Blueprint = Blueprint;
@@ -42,6 +71,9 @@ public class FactionData {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public readonly struct CompanySettings {
 
         /// <summary>
@@ -49,8 +81,16 @@ public class FactionData {
         /// </summary>
         public string[] ExcludeUnits { get; init; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public FactionCompanyType[] Types { get; init; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ExcludeUnits"></param>
+        /// <param name="Types"></param>
         [JsonConstructor]
         public CompanySettings(string[]? ExcludeUnits, FactionCompanyType[]? Types) {
             this.ExcludeUnits = ExcludeUnits ?? Array.Empty<string>();
@@ -59,22 +99,49 @@ public class FactionData {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public string Faction { get; init; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public Driver[] Drivers { get; init; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public FactionAbility[] Abilities { get; init; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public UnitAbility[] UnitAbilities { get; init; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public string[] Transports { get; init; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public string[] TowTransports { get; init; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public bool CanHaveParadropInCompanies { get; init; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public bool CanHaveGliderInCompanies { get; init; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public CompanySettings Companies { get; set; }
 
     /// <summary>
@@ -87,23 +154,40 @@ public class FactionData {
     /// </summary>
     public GameCase Game { get; init; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [JsonIgnore]
     public IModPackage? Package { get; set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="Faction"></param>
+    /// <param name="Drivers"></param>
+    /// <param name="Abilities"></param>
+    /// <param name="UnitAbilities"></param>
+    /// <param name="Transports"></param>
+    /// <param name="TowTransports"></param>
+    /// <param name="CanHaveParadropInCompanies"></param>
+    /// <param name="CanHaveGliderInCompanies"></param>
+    /// <param name="Companies"></param>
+    /// <param name="TeamWeaponCrew"></param>
+    /// <param name="Game"></param>
     [JsonConstructor]
     public FactionData(string Faction, 
-        Driver[] Drivers, 
-        FactionAbility[] Abilities, 
-        UnitAbility[] UnitAbilities, string[] Transports, string[] TowTransports, bool CanHaveParadropInCompanies, bool CanHaveGliderInCompanies,
+        Driver[]? Drivers, 
+        FactionAbility[]? Abilities, 
+        UnitAbility[]? UnitAbilities, string[]? Transports, string[]? TowTransports, bool CanHaveParadropInCompanies, bool CanHaveGliderInCompanies,
         CompanySettings Companies, string TeamWeaponCrew, GameCase Game) {
         
         // Set fields
         this.Faction = Faction;
-        this.Drivers = Drivers;
-        this.Abilities = Abilities;
-        this.UnitAbilities = UnitAbilities;
-        this.Transports = Transports;
-        this.TowTransports = TowTransports;
+        this.Drivers = Drivers ?? Array.Empty<Driver>();
+        this.Abilities = Abilities ?? Array.Empty<FactionAbility>();
+        this.UnitAbilities = UnitAbilities ?? Array.Empty<UnitAbility>();
+        this.Transports = Transports ?? Array.Empty<string>();
+        this.TowTransports = TowTransports ?? Array.Empty<string>();
         this.CanHaveGliderInCompanies = CanHaveGliderInCompanies;
         this.CanHaveParadropInCompanies = CanHaveParadropInCompanies;
         this.TeamWeaponCrew = TeamWeaponCrew;
