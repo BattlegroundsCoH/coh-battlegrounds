@@ -70,8 +70,8 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
     }
 
     private static string RankToStar(int i, int rank) => i < rank
-        ? "pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/vet/vstar_yes.png"
-        : "pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/vet/vstar_no.png";
+        ? "pack://application:,,,/Battlegrounds;component/Resources/ingame/vet/vstar_yes.png"
+        : "pack://application:,,,/Battlegrounds;component/Resources/ingame/vet/vstar_no.png";
 
     public UnitBuilder BuilderInstance { get; }
 

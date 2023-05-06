@@ -30,10 +30,10 @@ public interface IModManager {
     IModPackage GetPackageOrError(string packageID);
 
     /// <summary>
-    /// 
+    /// Get the <see cref="IModPackage"/> representing the vanilla case for the specified <see cref="GameCase"/>.
     /// </summary>
-    /// <param name="gameCase"></param>
-    /// <returns></returns>
+    /// <param name="gameCase">The game case to fetch vanilla package for.</param>
+    /// <returns>The <see cref="IModPackage"/> registered for a game case.</returns>
     IModPackage GetVanillaPackage(GameCase gameCase);
 
     /// <summary>
@@ -59,9 +59,9 @@ public interface IModManager {
     IModPackage? GetPackageFromGuid(ModGuid guid, GameCase game);
 
     /// <summary>
-    /// 
+    /// Get all <see cref="IModPackage"/> instances registered.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>List of registered <see cref="IModPackage"/> instances.</returns>
     IList<IModPackage> GetPackages();
 
 }

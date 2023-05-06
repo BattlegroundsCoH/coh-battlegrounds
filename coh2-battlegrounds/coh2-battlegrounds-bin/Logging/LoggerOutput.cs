@@ -9,7 +9,7 @@ namespace Battlegrounds.Logging;
 /// Class for logging information to <see cref="OUT_PATH"/>. Inherits from <see cref="TraceListener"/> (So use <see cref="Trace.WriteLine(object?)"/> or equivalent methods 
 /// to write logging messages).
 /// </summary>
-public sealed class LoggerOutput : TraceListener{
+public sealed class LoggerOutput : TraceListener {
 
     private static readonly string OUT_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH\\coh2-bg.log");
 
@@ -44,7 +44,6 @@ public sealed class LoggerOutput : TraceListener{
                 AutoFlush = true,
             };
             m_writer.WriteLine($"{Environment.NewLine}\tStarting new log on {DateTime.Now.ToLongDateString()} @ {DateTime.Now.ToLongTimeString()}{Environment.NewLine}");
-            //Trace.Listeners.Add(this);
         }
     }
 
@@ -79,8 +78,8 @@ public sealed class LoggerOutput : TraceListener{
 
             // Create storage paths
             var d = $"{m_startupTime.Year}_{m_startupTime.Month}_{m_startupTime.Day}_{m_startupTime.Hour}_{m_startupTime.Minute}_{m_startupTime.Second}";
-            var store_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2\\logs");
-            var store_name = Path.Combine(store_path, $"coh2-bg_{d}.log");
+            var store_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH\\logs");
+            var store_name = Path.Combine(store_path, $"coh-bg_{d}.log");
 
             // Make sure container folder exists
             if (!Directory.Exists(store_path)) {

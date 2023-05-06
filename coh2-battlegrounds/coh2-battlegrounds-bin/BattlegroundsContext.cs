@@ -409,7 +409,7 @@ public static class BattlegroundsContext {
         }
 
         // Grab documents path
-        string doc = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH2");
+        string doc = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Battlegrounds-CoH");
 
         // Check if directory exist
         bool hasDoc = Directory.Exists(doc);

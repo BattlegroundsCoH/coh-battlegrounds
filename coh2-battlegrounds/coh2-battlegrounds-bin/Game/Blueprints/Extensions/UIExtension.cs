@@ -3,11 +3,12 @@ using System.Text.Json;
 
 using Battlegrounds.Errors.Common;
 using Battlegrounds.Functional;
+using Battlegrounds.Game.DataSource;
 
 namespace Battlegrounds.Game.Blueprints.Extensions;
 
 /// <summary>
-/// Class representing a blueprint attribute
+/// Class representing a blueprint attribute containing UI information.
 /// </summary>
 public sealed class UIExtension {
 
@@ -94,6 +95,26 @@ public sealed class UIExtension {
             Portrait = values[5],
             Position = pos
         };
+    }
+
+    /// <summary>
+    /// Determines if the specified UIExtension object is empty in terms of text content.
+    /// </summary>
+    /// <param name="ui">The UIExtension object to check for emptiness.</param>
+    /// <returns>True if the text content is empty, regardless of graphical content; otherwise, false.</returns>
+    public static bool IsEmpty(UIExtension ui)
+        => IsEmpty(ui, false);
+
+    /// <summary>
+    /// Determines if the specified UIExtension object is empty in terms of text and, optionally, graphical content.
+    /// </summary>
+    /// <param name="ui">The UIExtension object to check for emptiness.</param>
+    /// <param name="isCompletelyEmpty">If true, considers the UIExtension empty only if both text and graphical content are empty; otherwise, only checks text content.</param>
+    /// <returns>True if the specified UIExtension object is empty based on the provided criteria; otherwise, false.</returns>
+    public static bool IsEmpty(UIExtension ui, bool isCompletelyEmpty) {
+        bool hasNoText = UcsString.IsNullOrEmpty(ui.ScreenName) && UcsString.IsNullOrEmpty(ui.ShortDescription) && UcsString.IsNullOrEmpty(ui.LongDescription);
+        bool hasNoGfx = !isCompletelyEmpty || (string.IsNullOrEmpty(ui.Portrait) && string.IsNullOrEmpty(ui.Icon) && string.IsNullOrEmpty(ui.Symbol));
+        return hasNoText && hasNoGfx;
     }
 
 }

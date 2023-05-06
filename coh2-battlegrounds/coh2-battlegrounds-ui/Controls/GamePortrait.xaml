@@ -22,7 +22,7 @@
                 Height="100"
                 Canvas.Left="-20"
                 Canvas.Top="-8"
-                Source="pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/test_unit_portrait.png">
+                Source="pack://application:,,,/Battlegrounds;component/Resources/ingame/test_unit_portrait.png">
                 <Image.Clip>
                     <RectangleGeometry Rect="20,8,40,78"/>
                 </Image.Clip>

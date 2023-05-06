@@ -117,11 +117,11 @@ public class TypeList : IEnumerable<string> {
         m_isVehicle = !m_isArmour && source.Contains("vehicle")
             || source.Contains("light_vehicle") || source.Contains("light_armor");
         m_isCrew = source.Contains("aef_vehicle_crew");
-        m_isSpecialInfantry = source.Contains("guard_troops") || source.Contains("shock_troops") || source.Contains("stormtrooper");
+        m_isSpecialInfantry = source.Contains("guard_troops") || source.Contains("shock_troops") || source.Contains("stormtrooper") || source.Contains("elite_infantry");
         m_isOfficer = source.Contains("sov_officer");
         m_isCommandUnit = m_isOfficer || source.Contains("command_panzer");
         m_isArtillery = source.Contains("artillery");
-        m_isSniper = source.Contains("sniper_soviet") || source.Contains("sniper_german");
+        m_isSniper = source.Contains("sniper_soviet") || source.Contains("sniper_german") || source.Contains("sniper");
         m_isTransport = source.Contains("m5_halftrack") || source.Contains("m3a1_scout_car") || source.Contains("251_halftrack");
 
     }
@@ -137,5 +137,9 @@ public class TypeList : IEnumerable<string> {
     public IEnumerator<string> GetEnumerator() => ((IEnumerable<string>)m_types).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)m_types).GetEnumerator();
+
+    /// <inheritdoc/>
+    public override string ToString()
+        => $"[{string.Join(';', this)}]";
 
 }

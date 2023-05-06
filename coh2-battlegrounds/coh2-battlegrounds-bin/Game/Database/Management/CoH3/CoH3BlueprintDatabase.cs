@@ -12,7 +12,7 @@ using Battlegrounds.Util;
 namespace Battlegrounds.Game.Database.Management.CoH3;
 
 /// <summary>
-/// 
+/// Class representing a bluepritn database for Company of Heroes 3 blueprints.
 /// </summary>
 [GameSpecific(GameCase.CompanyOfHeroes3)]
 public sealed class CoH3BlueprintDatabase : CommonBlueprintDatabase {

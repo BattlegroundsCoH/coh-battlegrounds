@@ -26,6 +26,7 @@ using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Locale;
 using Battlegrounds.Logging;
 using Battlegrounds.Game;
+using Battlegrounds.Game.Blueprints.Extensions;
 
 namespace Battlegrounds.Editor.Pages;
 
@@ -399,6 +400,7 @@ public sealed class CompanyEditor : ViewModelBase, IReturnable {
                 .Filter(x => !type.Exclude.Contains(x.Name))
                 .Filter(x => !hidden.Contains(x.Name))
                 .Filter(x => !this.m_activeModPackage.GetCaptureSquads().Contains(x.Name))
+                .Filter(x => !UIExtension.IsEmpty(x.UI))
                 .ForEach(this.m_availableSquads.Add);
 
             // Get faction data

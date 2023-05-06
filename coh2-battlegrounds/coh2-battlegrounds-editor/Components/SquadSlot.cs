@@ -53,12 +53,12 @@ public sealed class SquadSlot : INotifyPropertyChanged {
     /// <summary>
     /// 
     /// </summary>
-    public string SquadPortrait { get; set; }
+    public IIconSource? SquadPortrait { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
-    public string SquadSymbol { get; set; }
+    public IIconSource? SquadSymbol { get; set; }
 
     /// <summary>
     /// 
@@ -169,8 +169,8 @@ public sealed class SquadSlot : INotifyPropertyChanged {
         this.RemoveClick = onRemove;
 
         // Set data known not to change
-        this.SquadPortrait = this.BuilderInstance.Blueprint.UI.Portrait;
-        this.SquadSymbol = this.BuilderInstance.Blueprint.UI.Symbol;
+        this.SquadPortrait = this.BuilderInstance.Blueprint.GetPortrait();
+        this.SquadSymbol = this.BuilderInstance.Blueprint.GetSymbol();
 
         // Refresh data
         this.RefreshData();

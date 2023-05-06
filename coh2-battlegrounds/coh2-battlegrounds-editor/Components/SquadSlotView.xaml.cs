@@ -24,6 +24,7 @@ public partial class SquadSlotView : UserControl {
 
     public SquadSlotView() {
         InitializeComponent();
+        this.PortraitElement.IsSelected = false;
     }
 
     protected override void OnMouseEnter(MouseEventArgs e) {
