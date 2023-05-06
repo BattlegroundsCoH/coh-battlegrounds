@@ -11,6 +11,7 @@ using Battlegrounds.Lobby.Lookups;
 using Battlegrounds.Lobby.Planning;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Resources;
+using Battlegrounds.Resources.Extensions;
 using Battlegrounds.UI.Controls;
 using Battlegrounds.UI.Graphics;
 using Battlegrounds.Util;
@@ -149,7 +150,7 @@ public partial class PlannerView : UserControl {
     private static HelperElement CreateEntityMarker(EntityBlueprint ebp, Point p, int elementId, bool legalPlacement) {
 
         // Grab blueprint
-        var sym = ResourceHandler.GetIcon("entity_symbols", ebp.UI.Symbol);
+        var sym = ResourceHandler.GetIcon(ebp.GetEntitySymbol());
         if (sym is null) {
             return CreateMarker(p);
         }
@@ -170,7 +171,7 @@ public partial class PlannerView : UserControl {
     private static HelperElement CreateSquadMarker(SquadBlueprint sbp, Point p, int elementId) {
 
         // Grab blueprint
-        var sym = ResourceHandler.GetIcon("symbol_icons", sbp.UI.Symbol);
+        var sym = ResourceHandler.GetIcon(sbp.GetSymbol());
         if (sym is null) {
             return CreateMarker(p);
         }

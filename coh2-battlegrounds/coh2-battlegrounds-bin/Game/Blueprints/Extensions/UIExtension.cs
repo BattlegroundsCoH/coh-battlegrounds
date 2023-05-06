@@ -6,22 +6,49 @@ using Battlegrounds.Functional;
 
 namespace Battlegrounds.Game.Blueprints.Extensions;
 
-public class UIExtension {
+/// <summary>
+/// Class representing a blueprint attribute
+/// </summary>
+public sealed class UIExtension {
 
+    /// <summary>
+    /// Get or initialise the screen name
+    /// </summary>
     public string ScreenName { get; init; }
 
+    /// <summary>
+    /// Get or initialise the short description
+    /// </summary>
     public string ShortDescription { get; init; }
 
+    /// <summary>
+    /// Get or initialise the long description.
+    /// </summary>
     public string LongDescription { get; init; }
 
+    /// <summary>
+    /// Get or initialise the icon.
+    /// </summary>
     public string Icon { get; init; }
 
+    /// <summary>
+    /// Get or initialise the symbol identifier.
+    /// </summary>
     public string Symbol { get; init; }
 
+    /// <summary>
+    /// Get or initialise the portrait identifier.
+    /// </summary>
     public string Portrait { get; init; }
 
+    /// <summary>
+    /// Get or initialise the position the icon should be displayed at.
+    /// </summary>
     public int Position { get; init; }
 
+    /// <summary>
+    /// Initialise a new <see cref="UIExtension"/> instance.
+    /// </summary>
     public UIExtension() {
         ScreenName = string.Empty;
         ShortDescription = string.Empty;
@@ -31,6 +58,13 @@ public class UIExtension {
         Portrait = string.Empty;
     }
 
+    /// <summary>
+    /// Read a <see cref="UIExtension"/> from a <see cref="Utf8JsonReader"/>.
+    /// </summary>
+    /// <param name="reader">The reader to read data from.</param>
+    /// <returns>A <see cref="UIExtension"/> that is represented by the incoming json data.</returns>
+    /// <exception cref="ObjectPropertyNotFoundException"></exception>
+    /// <exception cref="FormatException"></exception>
     public static UIExtension FromJson(ref Utf8JsonReader reader) {
         string[] values = { "", "", "", "", "", "" };
         int pos = 0;

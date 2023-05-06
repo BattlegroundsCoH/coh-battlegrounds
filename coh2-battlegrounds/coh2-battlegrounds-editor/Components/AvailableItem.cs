@@ -4,6 +4,7 @@ using System.Windows.Media;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Blueprints.Extensions;
 using Battlegrounds.Resources;
+using Battlegrounds.Resources.Extensions;
 
 namespace Battlegrounds.Editor.Components;
 
@@ -83,14 +84,14 @@ public class AvailableItem : INotifyPropertyChanged {
         if (bp is SquadBlueprint sbp) {
 
             this.ItemName = BattlegroundsContext.DataSource.GetLocaleSource(sbp).GetString(sbp.UI.ScreenName);
-            this.ItemSymbol = ResourceHandler.GetIcon("symbol_icons", sbp.UI.Symbol);
+            this.ItemSymbol = ResourceHandler.GetIcon(sbp.GetSymbol());
             this.Blueprint = sbp;
             this.ItemCost = sbp.Cost;
 
         } else if (bp is AbilityBlueprint abp) {
 
             this.ItemName = BattlegroundsContext.DataSource.GetLocaleSource(abp).GetString(abp.UI.ScreenName);
-            this.ItemSymbol = ResourceHandler.GetIcon("symbol_icons", abp.UI.Symbol);
+            this.ItemSymbol = ResourceHandler.GetIcon(abp.GetSymbol());
             this.Blueprint = abp;
             this.ItemCost = abp.Cost;
 

@@ -54,8 +54,9 @@ public interface IModManager {
     /// Get a <see cref="IModPackage"/> based on one of its submod <paramref name="guid"/> elements.
     /// </summary>
     /// <param name="guid">The <see cref="ModGuid"/> to get <see cref="IModPackage"/> from.</param>
+    /// <param name="game">The game to find package in</param>
     /// <returns>The <see cref="IModPackage"/> associated with the submod associated <paramref name="guid"/>.</returns>
-    IModPackage? GetPackageFromGuid(ModGuid guid);
+    IModPackage? GetPackageFromGuid(ModGuid guid, GameCase game);
 
     /// <summary>
     /// 

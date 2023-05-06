@@ -402,7 +402,7 @@ public class UnitBuilder : IBuilder<Squad> {
         this.m_redoActions = new();
 
         // Get datasource
-        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(squad.Blueprint.PBGID.Mod) ?? throw new Exception("Failed finding package");
+        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(squad.Blueprint.PBGID.Mod, squad.Blueprint.Game) ?? throw new Exception("Failed finding package");
         this.blueprintDataSource = BattlegroundsContext.DataSource.GetBlueprints(package, squad.Blueprint.Game) ?? throw new Exception("Failed finding package data source");
 
     }
@@ -720,7 +720,7 @@ public class UnitBuilder : IBuilder<Squad> {
     public static UnitBuilder NewUnit(SquadBlueprint sbp) { 
         UnitBuilder? crewBuilder = null;
         if (sbp.HasCrew) {
-            IModPackage package = BattlegroundsContext.ModManager.GetPackageFromGuid(sbp.PBGID.Mod) ?? throw new Exception("f");
+            IModPackage package = BattlegroundsContext.ModManager.GetPackageFromGuid(sbp.PBGID.Mod, sbp.Game) ?? throw new Exception("f");
             crewBuilder = NewCrew(
                 package.GetDataSource()
                 .GetBlueprints(sbp.Game)

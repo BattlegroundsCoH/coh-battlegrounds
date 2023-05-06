@@ -69,4 +69,15 @@ public sealed class MergedSearchTree<T> : SearchTree<T> {
     /// <exception cref="NotSupportedException">Thrown when this method is called.</exception>
     public override void Clear() => throw new NotSupportedException();
 
+    /// <inheritdoc/>
+    public override IEnumerator<T> GetEnumerator() => TraverseAll().GetEnumerator();
+
+    private IEnumerable<T> TraverseAll() {
+        foreach (var t in _trees) {
+            foreach (var val in t) {
+                yield return val;
+            }
+        }
+    }
+
 }

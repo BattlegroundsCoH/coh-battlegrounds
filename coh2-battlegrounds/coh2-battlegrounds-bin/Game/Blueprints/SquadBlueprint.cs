@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Battlegrounds.Game.Blueprints.Extensions;
-using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Blueprints;
@@ -72,9 +71,7 @@ public sealed class SquadBlueprint : Blueprint, IUIBlueprint {
     /// </summary>
     public Faction? Army { get; }
 
-    /// <summary>
-    /// Get the UI extension.
-    /// </summary>
+    /// <inheritdoc/>
     public UIExtension UI { get; }
 
     /// <summary>

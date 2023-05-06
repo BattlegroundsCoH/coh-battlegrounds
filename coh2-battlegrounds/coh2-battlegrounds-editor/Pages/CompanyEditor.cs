@@ -24,6 +24,8 @@ using Battlegrounds.Editor.Modals;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Locale;
+using Battlegrounds.Logging;
+using Battlegrounds.Game;
 
 namespace Battlegrounds.Editor.Pages;
 
@@ -61,6 +63,8 @@ public record CompanyBuilderButton2(ICommand Click, LocaleKey? Tooltip, Func<Vis
 /// Class responsible for handling the editing companies.
 /// </summary>
 public sealed class CompanyEditor : ViewModelBase, IReturnable {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     public override bool KeepAlive => false;
 
@@ -166,7 +170,7 @@ public sealed class CompanyEditor : ViewModelBase, IReturnable {
         set => this.m_builder?.SetAutoReinforce(value);
     }
 
-    private CompanyEditor(ModGuid guid) {
+    private CompanyEditor(ModGuid guid, GameCase game) {
 
         // Create save
         this.Save = new(new RelayCommand(this.SaveButton), null, null);
@@ -237,11 +241,11 @@ public sealed class CompanyEditor : ViewModelBase, IReturnable {
         this.ReserveUnitCapacity = new(0, 0, () => this.Builder.CountUnitsInRole(DeploymentRole.ReserveRole));
 
         // Set fields
-        this.m_activeModPackage = BattlegroundsContext.ModManager.GetPackageFromGuid(guid) ?? throw new Exception("Attempt to create company builder vm without a valid mod package");
+        this.m_activeModPackage = BattlegroundsContext.ModManager.GetPackageFromGuid(guid, game) ?? throw new Exception("Attempt to create company builder vm without a valid mod package");
 
     }
 
-    public CompanyEditor(Company company) : this(company.TuningGUID) {
+    public CompanyEditor(Company company) : this(company.TuningGUID, company.Game) {
 
         // Set company information
         this.m_builder = CompanyBuilder.EditCompany(company);
@@ -261,7 +265,7 @@ public sealed class CompanyEditor : ViewModelBase, IReturnable {
 
     }
 
-    public CompanyEditor(string companyName, Faction faction, FactionCompanyType type, ModGuid modGuid) : this(modGuid) {
+    public CompanyEditor(string companyName, Faction faction, FactionCompanyType type, ModGuid modGuid) : this(modGuid, faction.RequiredDLC.Game) {
 
         // Set properties
         this.m_builder = CompanyBuilder.NewCompany(companyName, type, CompanyAvailabilityType.MultiplayerOnly, faction, modGuid);
@@ -315,7 +319,7 @@ public sealed class CompanyEditor : ViewModelBase, IReturnable {
         } catch (Exception e) {
 
             // Log error
-            Trace.WriteLine(e, nameof(CompanyEditor));
+            logger.Error(e);
 
             // Set not saved
             this.SaveStatus = 0;
@@ -386,8 +390,10 @@ public sealed class CompanyEditor : ViewModelBase, IReturnable {
             var hidden = type.FactionData?.GetHiddenSquads() ?? Array.Empty<string>();
 
             // Get available squads
+            var src = this.Builder.BlueprintDatabase.GetCollection<SquadBlueprint>();
+            var collection = 
             this.Builder.BlueprintDatabase.GetCollection<SquadBlueprint>()
-                .FilterByMod(this.CompanyGUID)
+                //.FilterByMod(this.CompanyGUID) // This line is no longer needed since mods now have their own dedicated DB
                 .Filter(x => x.Army == this.CompanyFaction)
                 .Filter(x => !x.Types.IsVehicleCrew)
                 .Filter(x => !type.Exclude.Contains(x.Name))

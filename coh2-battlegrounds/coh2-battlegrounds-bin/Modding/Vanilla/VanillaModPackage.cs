@@ -82,4 +82,10 @@ public class VanillaModPackage : IModPackage {
     public IModDb GetDataSource()
         => modDataSource ?? throw new InvalidOperationException();
 
+    public override string ToString() => this.SupportedGames switch {
+        GameCase.CompanyOfHeroes2 => "Company of Heroes 2",
+        GameCase.CompanyOfHeroes3 => "Company of Heroes 3",
+        _ => this.SupportedGames.ToString()
+    };
+
 }

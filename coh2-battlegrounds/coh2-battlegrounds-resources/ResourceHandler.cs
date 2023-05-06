@@ -37,7 +37,8 @@ public static class ResourceHandler {
         "resources/ingame/portraits.dat"
     };
 
-    private static readonly Dictionary<string, ImageSource> _cache;
+    private static readonly Dictionary<string, ImageSource> _IconCacheLegacy;
+    private static readonly Dictionary<IIconSource, ImageSource> _IconCache;
     private static MemoryStream? _profanityFilter;
 
     public static readonly IGfxMapLoaderFactory GfxLoaderFactory;
@@ -45,8 +46,10 @@ public static class ResourceHandler {
     public static readonly Dictionary<string, IGfxMap> GfxMaps;
 
     static ResourceHandler() {
-        
-        _cache = new();
+
+        _IconCache = new();
+        _IconCacheLegacy = new();
+
         _profanityFilter = null;
         _resourceNames = Array.Empty<string>();
 
@@ -100,8 +103,9 @@ public static class ResourceHandler {
         return ms;
     }
 
+    [Obsolete("Use the method accepting an IIconSource")]
     public static ImageSource? GetIcon(string iconType, string iconName) {
-        if (_cache.TryGetValue(iconName, out var source)) {
+        if (_IconCacheLegacy.TryGetValue(iconName, out var source)) {
             return source;
         }
         if (GfxMaps[iconType] is IGfxMap gfx && gfx.GetResource(iconName) is GfxResource rs) {
@@ -112,15 +116,40 @@ public static class ResourceHandler {
                 bitmapImage.StreamSource = stream;
                 bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapImage.EndInit();
-                _cache[iconName] = bitmapImage; // Save to cache, so we dont needlessly do this operation every time
+                _IconCacheLegacy[iconName] = bitmapImage; // Save to cache, so we dont needlessly do this operation every time
                 return bitmapImage;
             }
         }
         return null;
     }
 
+    public static ImageSource? GetIcon(IIconSource iconSource) {
+        if (_IconCache.TryGetValue(iconSource, out var source)) {
+            return source;
+        }
+        if (GfxMaps[iconSource.Container] is IGfxMap gfx 
+            && gfx.HasResource(iconSource.Identifier) && gfx.GetResource(iconSource.Identifier) is GfxResource rs) {
+            // TODO: Check resource type
+            using (var stream = rs.Open()) {
+                BitmapImage bitmapImage = new();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = stream;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                _IconCache[iconSource] = bitmapImage; // Save to cache, so we dont needlessly do this operation every time
+                return bitmapImage;
+            }
+        }
+        logger.Warning("Failed locating resource {0}:{1}", iconSource.Container, iconSource.Identifier);
+        return null;
+    }
+
+    [Obsolete("Use the method accepting an IIconSource")]
     public static bool HasIcon(string iconType, string iconName)
-        => _cache.ContainsKey(iconName) || (GfxMaps[iconType] is IGfxMap gfx && gfx.GetResource(iconName) is not null);
+        => _IconCacheLegacy.ContainsKey(iconName) || (GfxMaps[iconType] is IGfxMap gfx && gfx.GetResource(iconName) is not null);
+
+    public static bool HasIcon(IIconSource iconSource)
+        => _IconCache.ContainsKey(iconSource) || (GfxMaps[iconSource.Container] is IGfxMap gfx && gfx.HasResource(iconSource.Identifier));
 
     public static bool HasResource(string resourceName) => _resourceNames.Contains(resourceName.ToLowerInvariant());
 

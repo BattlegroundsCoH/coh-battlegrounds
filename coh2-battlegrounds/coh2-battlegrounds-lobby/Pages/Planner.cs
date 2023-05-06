@@ -31,6 +31,7 @@ using Battlegrounds.Lobby.Planning;
 using Battlegrounds.Lobby.Pages.Host;
 using Battlegrounds.Lobby.Pages.Participants;
 using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Resources.Extensions;
 
 namespace Battlegrounds.Lobby.Pages;
 
@@ -248,7 +249,7 @@ public sealed class Planner : ViewModelBase {
                 // Create display data from mod data
                 var handler = () => this.m_planningContext.PickPlaceElement(ebp, data);
                 var planData = new LobbyPlanningDefence(
-                    ResourceHandler.GetIcon("entity_icons", ebp.UI.Icon), BattlegroundsContext.DataSource.GetLocaleSource(ebp).GetString(ebp.UI.ScreenName), new(handler),
+                    ResourceHandler.GetIcon(ebp.GetEntityIcon()), BattlegroundsContext.DataSource.GetLocaleSource(ebp).GetString(ebp.UI.ScreenName), new(handler),
                     () => this.m_planningContext.GetSelfCapacity(ebp.Name));
 
                 // Add
@@ -274,7 +275,7 @@ public sealed class Planner : ViewModelBase {
                 var handler = () => this.m_planningContext.PickPlaceElement(unit.SBP, unit.SquadID);
 
                 // Grab icon
-                var ico = ResourceHandler.GetIcon("unit_icons", unit.SBP.UI.Icon);
+                var ico = ResourceHandler.GetIcon(unit.SBP.GetUnitIcon());
 
                 // Add
                 this.PreplacableUnits.Register(new(unit.SquadID, ico, unit.GetName(), unit.VeterancyRank, new(handler)));

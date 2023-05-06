@@ -28,6 +28,7 @@ public sealed class SlotItemBlueprint : Blueprint, IUIBlueprint {
 
     public override string Name { get; }
 
+    /// <inheritdoc/>
     public UIExtension UI { get; }
 
     public int SlotWeight { get; }

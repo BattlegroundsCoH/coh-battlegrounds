@@ -85,7 +85,7 @@ public class Ability {
     /// <param name="MaxUse">The maximum amount of uses each match.</param>
     /// <param name="UsedCount">The amount of times this has been used.</param>
     public Ability(AbilityBlueprint ABP, string UnlockUpgrade, string[] GrantingBlueprints, AbilityCategory Category, int MaxUse, int UsedCount = -1) {
-        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(ABP.PBGID.Mod) ?? throw new System.Exception();
+        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(ABP.PBGID.Mod, ABP.Game) ?? throw new System.Exception();
         var ds = package.GetDataSource().GetBlueprints(ABP.Game);
         this.ABP = ABP;
         this.Category = Category;

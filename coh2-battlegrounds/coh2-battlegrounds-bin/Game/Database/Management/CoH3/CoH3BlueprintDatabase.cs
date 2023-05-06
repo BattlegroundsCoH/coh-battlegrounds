@@ -85,8 +85,11 @@ public sealed class CoH3BlueprintDatabase : CommonBlueprintDatabase {
         => GetAllBlueprintsFromType(type).ToDictionary(x => x.PBGID);
 
     /// <inheritdoc/>
-    public override BlueprintCollection<T> GetCollection<T>()
-        => new BlueprintCollection<T>(GetAllBlueprintsOfType(Blueprint.BlueprintTypeFromType<T>()).Map((k,v) => (T)v));
+    public override BlueprintCollection<T> GetCollection<T>() {
+        var src = GetAllBlueprintsOfType(Blueprint.BlueprintTypeFromType<T>());
+        var mappedSrc = src.Map((k, v) => (T)v);
+        return new BlueprintCollection<T>(mappedSrc);
+    }
 
     private SearchTree<Blueprint> GetSearchTree(BlueprintType type) => type switch {
         BlueprintType.ABP => __abilities ?? throw new Exception(),

@@ -23,9 +23,7 @@ public sealed class EntityBlueprint : Blueprint, IUIBlueprint {
     /// </summary>
     public CostExtension Cost { get; }
 
-    /// <summary>
-    /// 
-    /// </summary>
+    /// <inheritdoc/>
     public UIExtension UI { get; }
 
     /// <summary>

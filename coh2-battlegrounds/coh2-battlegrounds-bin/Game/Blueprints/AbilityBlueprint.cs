@@ -68,9 +68,7 @@ public sealed class AbilityBlueprint : Blueprint, IUIBlueprint {
     /// </summary>
     public CostExtension Cost { get; }
 
-    /// <summary>
-    /// Get the UI extension of the ability.
-    /// </summary>
+    /// <inheritdoc/>
     public UIExtension UI { get; }
 
     /// <summary>

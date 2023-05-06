@@ -370,7 +370,7 @@ public class Company : IChecksumItem {
     public Ability[] GetSpecialUnitAbilities() {
 
         // Get the relevant mod package
-        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(this.TuningGUID) ?? throw new InvalidOperationException();
+        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(this.TuningGUID, this.Game) ?? throw new InvalidOperationException();
 
         // Return from this
         return GetSpecialUnitAbilities(this.Army, package, this.m_squads.Select(x => x.SBP).Distinct().ToArray());

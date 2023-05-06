@@ -241,7 +241,7 @@ public class CompanySerializer : JsonConverter<Company> {
             // TODO: Validate version
 
             // Verify package
-            if (BattlegroundsContext.ModManager.GetPackageFromGuid(guid) is not IModPackage companyModPackage) {
+            if (BattlegroundsContext.ModManager.GetPackageFromGuid(guid, game) is not IModPackage companyModPackage) {
                 logger.Error($"Failed to find mod package for tuning mod '{guid}'.");
                 return new(0, null);
             }

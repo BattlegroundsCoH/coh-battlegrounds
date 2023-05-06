@@ -30,9 +30,7 @@ public class UpgradeBlueprint : Blueprint, IUIBlueprint {
     /// </summary>
     public OwnerType OwnershipType { get; }
 
-    /// <summary>
-    /// Get the UI extension of the upgrade
-    /// </summary>
+    /// <inheritdoc/>
     public UIExtension UI { get; }
 
     /// <summary>

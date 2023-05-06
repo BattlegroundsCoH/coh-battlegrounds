@@ -202,15 +202,18 @@ public sealed class CompanyTemplate {
         // Get mod guid
         var guid = ModGuid.FromGuid(template.m_guid);
 
+        // Determine game
+        var game = template.m_game == 2 ? GameCase.CompanyOfHeroes2 : GameCase.CompanyOfHeroes3;
+
         // Get package
-        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(guid);
+        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(guid, game);
         if (package is null) {
             company = null;
             return false;
         }
 
         // Get data source
-        var dataSource = package.GetDataSource().GetBlueprints(template.m_game == 2 ? GameCase.CompanyOfHeroes2 : GameCase.CompanyOfHeroes3);
+        var dataSource = package.GetDataSource().GetBlueprints(game);
 
         // Get type
         var typ = package?.GetCompanyType(template.m_type);

@@ -162,8 +162,8 @@ public sealed class ModManager : IModManager {
         => __mods.TryGetValue(guid, out IGameMod? mod) ? mod as TMod : null;
 
     /// <inheritdoc/>
-    public IModPackage? GetPackageFromGuid(ModGuid guid)
-        => __packages.FirstOrDefault(x => x.TuningGUID == guid || x.GamemodeGUID == guid || x.AssetGUID == guid);
+    public IModPackage? GetPackageFromGuid(ModGuid guid, GameCase game)
+        => __packages.FirstOrDefault(x => x.SupportedGames.HasFlag(game) && (x.TuningGUID == guid || x.GamemodeGUID == guid || x.AssetGUID == guid));
 
     /// <inheritdoc/>
     public IList<IModPackage> GetPackages() => __packages;

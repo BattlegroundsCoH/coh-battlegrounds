@@ -49,7 +49,8 @@ public class ModDatabaseManager : IModDbManager {
 
     /// <inheritdoc/>
     public IModBlueprintDatabase GetBlueprintSource(Blueprint blueprint) {
-        var package = packageDatabases.Keys.FirstOrDefault(x => x.TuningGUID == blueprint.PBGID.Mod) ?? throw new System.Exception("fff");
+        var package = packageDatabases.Keys.Where(x => x.SupportedGames.HasFlag(blueprint.Game))
+            .FirstOrDefault(x => x.TuningGUID == blueprint.PBGID.Mod) ?? throw new Exception("fff");
         return GetBlueprints(package, blueprint.Game)!;
     }
 
@@ -66,7 +67,8 @@ public class ModDatabaseManager : IModDbManager {
 
     /// <inheritdoc/>
     public IModLocale GetLocaleSource(Blueprint blueprint) {
-        var package = packageDatabases.Keys.FirstOrDefault(x => x.TuningGUID == blueprint.PBGID.Mod) ?? throw new System.Exception("fff");
+        var package = packageDatabases.Keys.Where(x => x.SupportedGames.HasFlag(blueprint.Game))
+            .FirstOrDefault(x => x.TuningGUID == blueprint.PBGID.Mod) ?? throw new Exception("fff");
         return GetLocale(package, blueprint.Game)!;
     }
 

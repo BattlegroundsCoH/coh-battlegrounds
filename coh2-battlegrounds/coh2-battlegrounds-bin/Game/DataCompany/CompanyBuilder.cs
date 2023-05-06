@@ -26,6 +26,7 @@ public class CompanyBuilder : IBuilder<Company> {
         string Name,
         FactionCompanyType Type,
         ModGuid ModGuid,
+        GameCase GameCase,
         Faction Faction,
         UnitBuilder[] Units,
         Ability[] Abilities,
@@ -488,7 +489,7 @@ public class CompanyBuilder : IBuilder<Company> {
     /// </summary>
     /// <param name="action"></param>
     public virtual void EachAbility(Action<Ability, bool> action) {
-        if (BattlegroundsContext.ModManager.GetPackageFromGuid(this.m_target.ModGuid) is ModPackage package) {
+        if (BattlegroundsContext.ModManager.GetPackageFromGuid(this.m_target.ModGuid, this.m_target.GameCase) is ModPackage package) {
             Company.GetSpecialUnitAbilities(this.m_target.Faction, package, this.m_target.Units.Map(x => x.Blueprint).Distinct()).ForEach(x => action(x, true));
             this.m_target.Abilities.ForEach(x => action(x, false));
         }
@@ -512,11 +513,11 @@ public class CompanyBuilder : IBuilder<Company> {
 
         // Create buildable variant
         var buildable = new BuildableCompany(company.Name, 
-            company.Type, company.TuningGUID, company.Army, 
+            company.Type, company.TuningGUID, company.Game, company.Army, 
             units, company.Abilities.ToArray(), company.Inventory.ToArray(), company.AutoReplenish);
 
         // Get blueprints
-        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(company.TuningGUID) ?? throw new Exception("Failed finding company mod package");
+        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(company.TuningGUID, company.Game) ?? throw new Exception("Failed finding company mod package");
         var bpSource = BattlegroundsContext.DataSource.GetBlueprints(package, company.Game) ?? throw new Exception("Failed finding blueprint source for mod package");
 
         // Return company buuilder instance
@@ -539,11 +540,11 @@ public class CompanyBuilder : IBuilder<Company> {
     public static CompanyBuilder NewCompany(string name, FactionCompanyType type, CompanyAvailabilityType availabilityType, Faction faction, ModGuid modGuid) {
 
         // Get blueprints
-        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(modGuid) ?? throw new Exception("Failed finding company mod package");
+        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(modGuid, faction.RequiredDLC.Game) ?? throw new Exception("Failed finding company mod package");
         var bpSource = BattlegroundsContext.DataSource.GetBlueprints(package, faction.RequiredDLC.Game) ?? throw new Exception("Failed finding blueprint source for mod package");
 
         // return new company builder 
-        return new CompanyBuilder(new(name, type, modGuid, faction, Array.Empty<UnitBuilder>(), Array.Empty<Ability>(), Array.Empty<CompanyItem>(), false), bpSource) {
+        return new CompanyBuilder(new(name, type, modGuid, faction.RequiredDLC.Game, faction, Array.Empty<UnitBuilder>(), Array.Empty<Ability>(), Array.Empty<CompanyItem>(), false), bpSource) {
             AvailabilityType = availabilityType,
         };
 

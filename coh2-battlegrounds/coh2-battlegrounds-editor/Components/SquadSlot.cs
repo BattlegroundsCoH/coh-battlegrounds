@@ -9,6 +9,8 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Resources;
 using Battlegrounds.Game.Blueprints.Extensions;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Resources.Extensions;
 
 namespace Battlegrounds.Editor.Components;
 
@@ -195,10 +197,10 @@ public sealed class SquadSlot : INotifyPropertyChanged {
         this.Rank5 = rankLevel == 5 ? VetRankAchieved : VetRankNotAchieved;
 
         // Set transport
-        var transportBp = this.BuilderInstance.Transport;
-        this.SquadIsTransported = transportBp is not null;
-        if (this.SquadIsTransported && ResourceHandler.HasIcon("symbol_icons", transportBp!.UI.Symbol)) {
-            this.SquadTransportIcon = ResourceHandler.GetIcon("symbol_icons", transportBp!.UI.Symbol);
+        if (this.BuilderInstance.Transport is SquadBlueprint transportBp) {
+            var bpsrc = transportBp.GetSymbol();
+            this.SquadIsTransported = ResourceHandler.HasIcon(bpsrc);
+            this.SquadTransportIcon = this.SquadIsTransported ? ResourceHandler.GetIcon(bpsrc) : null;
         }
 
         // Refresh

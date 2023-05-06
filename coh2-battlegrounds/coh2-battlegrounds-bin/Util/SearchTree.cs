@@ -93,7 +93,7 @@ public class SearchTree<T> : IEnumerable<T> {
     /// Returns an enumerator that iterates through the values in the tree.
     /// </summary>
     /// <returns>An enumerator that iterates through the values in the tree.</returns>
-    public IEnumerator<T> GetEnumerator() 
+    public virtual IEnumerator<T> GetEnumerator() 
         => TraverseInternal(_root).Select(node => node.Value).Where(x => x is not null).GetEnumerator()!;
 
     IEnumerator IEnumerable.GetEnumerator() {

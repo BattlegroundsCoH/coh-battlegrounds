@@ -31,7 +31,7 @@ public class UpgradeBlueprintConverter : JsonConverter<UpgradeBlueprint> {
     private bool ReadFromString(ref Utf8JsonReader reader, out UpgradeBlueprint? ubp) {
         ubp = null;
         if (reader.TokenType is JsonTokenType.String) {
-            ubp = BattlegroundsContext.ModManager.GetPackageFromGuid(modGuid)
+            ubp = BattlegroundsContext.ModManager.GetPackageFromGuid(modGuid, this.game)
                 ?.GetDataSource()
                 .GetBlueprints(game)
                 .FromBlueprintName<UpgradeBlueprint>(reader.GetString() ?? string.Empty);

@@ -16,13 +16,14 @@ using Battlegrounds.Editor.Components;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Blueprints.Extensions;
+using Battlegrounds.Resources.Extensions;
 
 namespace Battlegrounds.Editor.Modals;
 
 public class SquadSettings : ModalBase, INotifyPropertyChanged {
 
     public record AbilityButton(AbilityBlueprint Abp) {
-        public ImageSource? Icon => ResourceHandler.GetIcon("ability_icons", this.Abp.UI.Icon);
+        public ImageSource? Icon => ResourceHandler.GetIcon(Abp.GetAbilityIcon());
         public string Title => BattlegroundsContext.DataSource.GetLocaleSource(Abp).GetString(this.Abp.UI.ScreenName);
         public string Desc => BattlegroundsContext.DataSource.GetLocaleSource(Abp).GetString(this.Abp.UI.LongDescription);
         public CostExtension Cost => this.Abp.Cost;
@@ -32,7 +33,7 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
         public event PropertyChangedEventHandler? PropertyChanged;
         public bool IsApplied => this.CheckApplied();
         public bool IsAvailable => this.CheckAvailable();
-        public ImageSource? Icon => ResourceHandler.GetIcon("upgrade_icons", this.Ubp.UI.Icon);
+        public ImageSource? Icon => ResourceHandler.GetIcon(Ubp.GetUpgradeIcon());
         public string Title => BattlegroundsContext.DataSource.GetLocaleSource(Ubp).GetString(this.Ubp.UI.ScreenName);
         public string Desc => BattlegroundsContext.DataSource.GetLocaleSource(Ubp).GetString(this.Ubp.UI.LongDescription);
         public CostExtension Cost => this.Ubp.Cost;
@@ -59,7 +60,7 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
     public record DeployUnitButton(SquadBlueprint Blueprint, Func<bool> IsActive, EventCommand Clicked) : INotifyPropertyChanged {
         public bool IsActiveMethod => this.IsActive();
         public event PropertyChangedEventHandler? PropertyChanged;
-        public ImageSource? Icon => ResourceHandler.GetIcon("unit_icons", this.Blueprint.UI.Icon);
+        public ImageSource? Icon => ResourceHandler.GetIcon(this.Blueprint.GetUnitIcon());
         public string Title => BattlegroundsContext.DataSource.GetLocaleSource(Blueprint).GetString(this.Blueprint.UI.ScreenName);
         public string Desc => BattlegroundsContext.DataSource.GetLocaleSource(Blueprint).GetString(this.Blueprint.UI.LongDescription);
         public CostExtension Cost => this.Blueprint.Cost;
@@ -88,7 +89,7 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
 
     public string UnitHelpText => BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.BuilderInstance.Blueprint.UI.ShortDescription);
 
-    public ImageSource? UnitPortrait => ResourceHandler.GetIcon("portraits", this.BuilderInstance.Blueprint.UI.Portrait);
+    public ImageSource? UnitPortrait => ResourceHandler.GetIcon(this.BuilderInstance.Blueprint.GetPortrait());
 
     public string CrewTitle => this.CrewBuilderInstance is not null ? BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.CrewBuilderInstance.Blueprint.UI.ScreenName) : "";
 
@@ -96,7 +97,7 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
 
     public string CrewHelperDesc => this.CrewBuilderInstance is not null ? BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.CrewBuilderInstance.Blueprint.UI.ShortDescription) : "";
 
-    public ImageSource? CrewPortrait => this.CrewBuilderInstance is not null ? ResourceHandler.GetIcon("portraits", this.CrewBuilderInstance.Blueprint.UI.Portrait) : null;
+    public ImageSource? CrewPortrait => this.CrewBuilderInstance is not null ? ResourceHandler.GetIcon(this.CrewBuilderInstance.Blueprint.GetPortrait()) : null;
 
     public string DeployMethodTitle => this.BuilderInstance.DeployMethod switch {
         DeploymentMethod.None => BattlegroundsContext.Localize.GetString("CompanySquadView_Deploy_None"),
@@ -170,7 +171,7 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
         this.RallyClick = new EventCommand<MouseEventArgs>(this.RallyCommand);
 
         // Collect all abilities
-        var abilities = this.BuilderInstance.Abilities.Filter(x => x.UI.Icon is not "").Filter(x => ResourceHandler.HasIcon("ability_icons", x.UI.Icon));
+        var abilities = this.BuilderInstance.Abilities.Filter(x => x.UI.Icon is not "").Filter(x => ResourceHandler.HasIcon(x.GetAbilityIcon()));
         this.Abilities = new ObservableCollection<AbilityButton>(abilities.Map(x => new AbilityButton(x)));
 
         // Create upgrade cap
@@ -182,7 +183,7 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
         // Collect all upgrades
         this.BuilderInstance.Blueprint.Upgrades
             .Map(companyBuilder.BlueprintDatabase.FromBlueprintName<UpgradeBlueprint>)
-            .Filter(x => x.UI.Icon is not "" && ResourceHandler.HasIcon("upgrade_icons", x.UI.Icon))
+            .Filter(x => x.UI.Icon is not "" && ResourceHandler.HasIcon(x.GetUpgradeIcon()))
             .Map(x => new UpgradeButton(x, () => this.BuilderInstance.Upgrades.Contains(x), () => !this.UpgradeCapacity.IsAtCapacity, new EventCommand<MouseEventArgs>(this.UpgradeCommand)))
             .ForEach(this.Upgrades.Add);
 

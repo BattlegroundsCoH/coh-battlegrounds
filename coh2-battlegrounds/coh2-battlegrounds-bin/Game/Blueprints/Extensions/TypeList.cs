@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Blueprints;
 
 namespace Battlegrounds.Game.Blueprints.Extensions;
 
-public class TypeList : IEnumerable<string>
-{
+/// <summary>
+/// 
+/// </summary>
+public class TypeList : IEnumerable<string> {
 
     private readonly HashSet<string> m_types;
 
@@ -96,8 +97,12 @@ public class TypeList : IEnumerable<string>
     /// </summary>
     [JsonIgnore] public bool IsTransportVehicle => m_isTransport;
 
-    public TypeList(string[] source, bool isTeamWeapon)
-    {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="isTeamWeapon"></param>
+    public TypeList(string[] source, bool isTeamWeapon) {
 
         // Set self data
         m_types = new(source);
@@ -106,11 +111,11 @@ public class TypeList : IEnumerable<string>
         m_isHeavyArtyillery = source.ContainsWithout("team_weapon",
             "wg_team_weapons", "mortar", "hmg"); // 'wg_team_weapons' is to block the raketenwerfer be considered a heavy artillery piece
         m_isAT = source.Contains("at_gun");
-        m_isInfantry = source.Contains("infantry") && !isTeamWeapon;
-        m_isHeavyArmour = source.Contains("heavy_tank");
-        m_isArmour = source.ContainsWithout("vehicle", "light_vehicle") && !m_isHeavyArmour;
+        m_isInfantry = source.Contains("standard_infantry") || (source.Contains("infantry") && !isTeamWeapon);
+        m_isHeavyArmour = source.Contains("heavy_tank") || source.Contains("heavy_armor");
+        m_isArmour = (source.Contains("vehicle_turret") || source.ContainsWithout("vehicle", "light_vehicle")) && !m_isHeavyArmour;
         m_isVehicle = !m_isArmour && source.Contains("vehicle")
-            || source.Contains("light_vehicle");
+            || source.Contains("light_vehicle") || source.Contains("light_armor");
         m_isCrew = source.Contains("aef_vehicle_crew");
         m_isSpecialInfantry = source.Contains("guard_troops") || source.Contains("shock_troops") || source.Contains("stormtrooper");
         m_isOfficer = source.Contains("sov_officer");
@@ -121,11 +126,16 @@ public class TypeList : IEnumerable<string>
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
     public bool IsType(string type) => m_types.Contains(type);
 
+    /// <inheritdoc/>
     public IEnumerator<string> GetEnumerator() => ((IEnumerable<string>)m_types).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)m_types).GetEnumerator();
 
 }
-

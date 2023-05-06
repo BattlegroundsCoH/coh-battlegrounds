@@ -32,7 +32,7 @@ public sealed class AbilityBlueprintConverter : JsonConverter<AbilityBlueprint> 
     private bool ReadFromString(ref Utf8JsonReader reader, out AbilityBlueprint? abp) {
         abp = null;
         if (reader.TokenType is JsonTokenType.String) {
-            abp = BattlegroundsContext.ModManager.GetPackageFromGuid(modGuid)
+            abp = BattlegroundsContext.ModManager.GetPackageFromGuid(modGuid, this.game)
                 ?.GetDataSource()
                 .GetBlueprints(game)
                 .FromBlueprintName<AbilityBlueprint>(reader.GetString() ?? string.Empty);

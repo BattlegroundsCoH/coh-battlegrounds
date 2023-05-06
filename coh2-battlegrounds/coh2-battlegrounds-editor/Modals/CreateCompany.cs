@@ -16,6 +16,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game;
 using Battlegrounds.Modding.Vanilla;
+using Battlegrounds.Resources.Extensions;
 
 namespace Battlegrounds.Editor.Modals;
 
@@ -54,12 +55,12 @@ public sealed class CreateCompany : INotifyPropertyChanged {
         private AbilityBlueprint[]? m_abilities = new AbilityBlueprint[3] { AbilityBlueprint.Invalid, AbilityBlueprint.Invalid, AbilityBlueprint.Invalid };
         public string Desc => BattlegroundsContext.Localize.GetString($"{this.Name}_desc");
         public ImageSource Icon => StringToCompanyTypeIcon.GetFromType(this.Type);
-        public ImageSource? Unit01 => ResourceHandler.GetIcon("unit_icons", this.m_squads![0].UI.Icon);
-        public ImageSource? Unit02 => ResourceHandler.GetIcon("unit_icons", this.m_squads![1].UI.Icon);
-        public ImageSource? Unit03 => ResourceHandler.GetIcon("unit_icons", this.m_squads![2].UI.Icon);
-        public ImageSource? Ability01 => ResourceHandler.GetIcon("ability_icons", this.m_abilities![0].UI.Icon);
-        public ImageSource? Ability02 => ResourceHandler.GetIcon("ability_icons", this.m_abilities![1].UI.Icon);
-        public ImageSource? Ability03 => ResourceHandler.GetIcon("ability_icons", this.m_abilities![2].UI.Icon);
+        public ImageSource? Unit01 => ResourceHandler.GetIcon(this.m_squads![0].GetUnitIcon());
+        public ImageSource? Unit02 => ResourceHandler.GetIcon(this.m_squads![1].GetUnitIcon());
+        public ImageSource? Unit03 => ResourceHandler.GetIcon(this.m_squads![2].GetUnitIcon());
+        public ImageSource? Ability01 => ResourceHandler.GetIcon(this.m_abilities![0].GetAbilityIcon());
+        public ImageSource? Ability02 => ResourceHandler.GetIcon(this.m_abilities![1].GetAbilityIcon());
+        public ImageSource? Ability03 => ResourceHandler.GetIcon(this.m_abilities![2].GetAbilityIcon());
         public override string ToString() => BattlegroundsContext.Localize.GetString(this.Name);
         public CompanyType CacheDisplay() {
 
