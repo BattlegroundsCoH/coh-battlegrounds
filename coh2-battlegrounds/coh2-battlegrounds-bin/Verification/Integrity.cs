@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 
 using Battlegrounds.Logging;
@@ -24,6 +23,11 @@ public static class Integrity {
     /// 
     /// </summary>
     public static string IntegrityHashString => $"0x{IntegrityHash:X}";
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static byte[] IntegrityHashBytes => BitConverter.GetBytes(__integrityHash);
 
     /// <summary>
     /// 

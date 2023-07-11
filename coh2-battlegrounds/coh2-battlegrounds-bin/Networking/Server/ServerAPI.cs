@@ -713,7 +713,7 @@ public class ServerAPI {
 
             // Prepare intro
             var intro = new IntroMessage() {
-                LobbyType = filetype,
+                InstanceType = filetype,
                 PlayerUID = uploadIdentity,
                 LobbyUID = uploadTarget,
                 Type = 5

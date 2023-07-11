@@ -142,6 +142,9 @@ public readonly struct ServerLobby {
 /// </summary>
 public readonly struct ServerSlot {
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public static readonly ServerSlot None = new("", "", 0, 0);
 
 	/// <summary>

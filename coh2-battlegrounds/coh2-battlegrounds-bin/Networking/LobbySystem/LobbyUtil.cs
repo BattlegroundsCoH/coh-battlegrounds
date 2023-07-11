@@ -5,11 +5,13 @@ using Battlegrounds.Errors.Networking;
 using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Server;
+using Battlegrounds.Game;
+using Battlegrounds.Verification;
 
 namespace Battlegrounds.Networking.LobbySystem;
 
 /// <summary>
-/// 
+/// Utility class hosting or joining a lobby.
 /// </summary>
 public static class LobbyUtil {
 
@@ -19,8 +21,10 @@ public static class LobbyUtil {
     /// <param name="serverAPI"></param>
     /// <param name="lobbyName"></param>
     /// <param name="lobbyPassword"></param>
+    /// <param name="lobbyGame"></param>
+    /// <param name="lobbyModPackage"></param>
     /// <param name="onLobbyCreated"></param>
-    public static void HostLobby(ServerAPI serverAPI, string lobbyName, string lobbyPassword, LobbyConnectCallback onLobbyCreated) {
+    public static void HostLobby(ServerAPI serverAPI, string lobbyName, string lobbyPassword, GameCase lobbyGame, string lobbyModPackage, LobbyConnectCallback onLobbyCreated) {
 
         // Get steam user
         var steamUser = BattlegroundsContext.Steam.User;
@@ -36,15 +40,20 @@ public static class LobbyUtil {
             // Create intro
             IntroMessage intro = new() { 
                 Type = 0, 
-                LobbyName = lobbyName, LobbyPassword = lobbyPassword, 
-                PlayerUID = steamUser.ID, PlayerName = steamUser.Name
+                LobbyName = lobbyName, 
+                LobbyPassword = lobbyPassword, 
+                PlayerUID = steamUser.ID, 
+                PlayerName = steamUser.Name,
+                AppVersion = Integrity.IntegrityHashBytes,
+                ModGuid = lobbyModPackage,
+                Game = lobbyGame.ToString(),
+                InstanceType = 0,
+                //IdentityKey =  // TODO: Implement
             };
 
             // Establish connection
-            ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.Endpoint.RemoteIPAddress, NetworkInterface.Endpoint.Tcp, intro, out ulong lobbyID);
-            if (connection is null) {
-                throw new ConnectionFailedException("Failed to establish TCP connection.");
-            }
+            ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.Endpoint.RemoteIPAddress, NetworkInterface.Endpoint.Tcp, intro, out ulong lobbyID) 
+                ?? throw new ConnectionFailedException("Failed to establish TCP connection.");
 
             // Set API
             serverAPI.SetLobbyGuid(lobbyID);
@@ -109,10 +118,8 @@ public static class LobbyUtil {
             };
 
             // Establish TCP connection
-            ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.Endpoint.RemoteIPAddress, NetworkInterface.Endpoint.Tcp, intro, out ulong lobbyID);
-            if (connection is null) {
-                throw new ConnectionFailedException("Failed to establish TCP connection.");
-            }
+            ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.Endpoint.RemoteIPAddress, NetworkInterface.Endpoint.Tcp, intro, out ulong lobbyID) 
+                ?? throw new ConnectionFailedException("Failed to establish TCP connection.");
 
             // Set API
             serverAPI.SetLobbyGuid(lobbyID);
