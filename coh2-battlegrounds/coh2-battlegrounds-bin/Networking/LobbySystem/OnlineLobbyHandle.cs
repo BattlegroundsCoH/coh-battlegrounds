@@ -618,14 +618,13 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// Send a chat message along a communication channel.
     /// </summary>
     /// <param name="filter">The message channel. 0 = (Lobby) Global Chat; 1 = Team Chat.</param>
-    /// <param name="mid">The ID of the sender of the message.</param>
     /// <param name="msg">The contents of the message to send.</param>
     /// <exception cref="IndexOutOfRangeException"></exception>
-    public void SendChatMessage(int filter, ulong mid, string msg) => this.m_remote.Call(filter switch {
-        0 => "GlobalChat",
-        1 => "TeamChat",
+    public void SendChatMessage(int filter, string msg) => this.m_remote.Call("ChatMessage", filter switch {
+        0 => "ALL",
+        1 => "TEAM",
         _ => throw new IndexOutOfRangeException()
-    }, mid, msg);
+    }, msg);
 
     /// <summary>
     /// Set the lobby setting.

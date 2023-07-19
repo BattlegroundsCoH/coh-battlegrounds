@@ -164,9 +164,8 @@ public interface ILobbyHandle {
     /// 
     /// </summary>
     /// <param name="filter"></param>
-    /// <param name="senderID"></param>
     /// <param name="message"></param>
-    void SendChatMessage(int filter, ulong senderID, string message);
+    void SendChatMessage(int filter, string message);
     
     /// <summary>
     /// 
