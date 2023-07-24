@@ -1,4 +1,6 @@
-﻿using Battlegrounds.Game;
+﻿using System.Diagnostics;
+
+using Battlegrounds.Game;
 using Battlegrounds.Networking;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.LobbySystem.Factory;
@@ -40,6 +42,23 @@ public abstract class TestWithServer : IDisposable {
             Thread.Sleep(50);
         }
         return handle ?? throw new Exception();
+    }
+
+    protected ILobbyHandle JoinTestLobby(ILobbyFactory factory) {
+        return null;
+    }
+
+    protected void WaitFor(TimeSpan duration) => Thread.Sleep(duration);
+
+    protected void WaitUntil(Func<bool> condition, TimeSpan timeout) { 
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        while (!condition() && stopwatch.ElapsedMilliseconds < timeout.TotalMilliseconds) {
+            Thread.Sleep(100);
+        }
+        stopwatch.Stop();
+        if (stopwatch.ElapsedMilliseconds >= timeout.TotalMilliseconds) {
+            Assert.Fail("Wait for event timed out");
+        }
     }
 
 }

@@ -606,7 +606,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// <param name="tid">The team ID containing the slot to be locked. Accepts values in the range 0 &#x2264; T &#x2264; 1</param>
     /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
     public void LockSlot(int tid, int sid)
-        => this.m_remote.Call("LockSlot", tid, sid);
+        => this.m_remote.Call("LobbyMethod_SetSlotState", tid, sid, LobbyConstants.STATE_LOCKED);
 
     /// <summary>
     /// Unlocks the locked slot at specified position.
@@ -614,7 +614,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// <param name="tid">The team ID containing the slot to be unlocked. Accepts values in the range 0 &#x2264; T &#x2264; 1</param>
     /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
     public void UnlockSlot(int tid, int sid)
-        => this.m_remote.Call("UnlockSlot", tid, sid);
+        => this.m_remote.Call("LobbyMethod_SetSlotState", tid, sid, LobbyConstants.STATE_OPEN);
 
     /// <summary>
     /// Send a chat message along a communication channel.

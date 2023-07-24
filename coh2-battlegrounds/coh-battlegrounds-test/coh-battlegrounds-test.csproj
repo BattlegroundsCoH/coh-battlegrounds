@@ -43,7 +43,6 @@
     <Folder Include="Common\" />
     <Folder Include="Core\Game\DataSource\" />
     <Folder Include="Core\Networking\Remoting\" />
-    <Folder Include="Core\Networking\Server\" />
     <Folder Include="Lobby\" />
     <Folder Include="Misc\" />
   </ItemGroup>
