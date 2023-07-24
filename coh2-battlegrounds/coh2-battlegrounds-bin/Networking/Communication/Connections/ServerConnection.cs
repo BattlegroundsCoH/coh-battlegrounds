@@ -298,7 +298,7 @@ public sealed class ServerConnection : IConnection {
     public static ServerConnection? ConnectToServer(string ipaddress, int port, IntroMessage introduction, out ulong lobbyID) {
 
         // Set socket
-        Socket? socket = null;
+        Socket? socket;
         lobbyID = introduction.LobbyUID;
 
         // Try

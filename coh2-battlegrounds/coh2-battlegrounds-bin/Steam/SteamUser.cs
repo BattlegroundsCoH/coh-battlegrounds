@@ -47,6 +47,14 @@ public sealed class SteamUser {
     /// <returns>A string that represents the current object.</returns>
     public override string ToString() => this.Name;
 
+    /// <summary>
+    /// Creates a temporary <see cref="SteamUser"/> instance with the specified identifier and display name
+    /// </summary>
+    /// <param name="steamUID">The steam ID</param>
+    /// <param name="displayName">The steam display name (NOT account name)</param>
+    /// <returns>A <see cref="SteamUser"/> instance</returns>
+    public static SteamUser CreateTempUser(ulong steamUID, string displayName) => new SteamUser(steamUID) { m_displayName = displayName };
+
 }
 
 /// <summary>

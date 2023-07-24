@@ -379,7 +379,7 @@ public sealed class LobbyBrowser : IViewModel {
             vm.LobbyPassword ??= string.Empty;
 
             // Create lobby
-            var factory = new OnlineLobbyFactory(NetworkInterface.APIObject, BattlegroundsContext.Steam.User);
+            var factory = new OnlineLobbyFactory(NetworkInterface.APIObject, NetworkInterface.Endpoint, BattlegroundsContext.Steam.User);
             BeginHostLobby(factory, vm.LobbyName, vm.LobbyPassword, vm.LobbyGame, vm.LobbyPackage.ID);
 
         });
@@ -442,7 +442,7 @@ public sealed class LobbyBrowser : IViewModel {
         if (this.SelectedLobby is ServerLobby lobby) {
 
             // Get factory
-            var factory = new OnlineLobbyFactory(NetworkInterface.APIObject, BattlegroundsContext.Steam.User);
+            var factory = new OnlineLobbyFactory(NetworkInterface.APIObject, NetworkInterface.Endpoint, BattlegroundsContext.Steam.User);
 
             // If password, ask for it
             if (lobby.IsPasswrodProtected) {

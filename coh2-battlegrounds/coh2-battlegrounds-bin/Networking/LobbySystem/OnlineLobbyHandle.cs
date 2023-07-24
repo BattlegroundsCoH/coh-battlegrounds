@@ -497,6 +497,10 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     public uint GetPlayerCount(bool humansOnly = false)
         => this.m_remote.Call<uint>("GetPlayerCount", EncBool(humansOnly));
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public byte GetSelfTeam() {
         if (this.Allies.GetSlotOfMember(this.Self.ID) is null) {
             if (this.Axis.GetSlotOfMember(this.Self.ID) is null) {
@@ -519,11 +523,9 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
 
         // Convert to str
         string strength = company.Strength.ToString(CultureInfo.InvariantCulture);
-        string auto = EncBool(company.IsAuto);
-        string none = EncBool(company.IsNone);
 
         // Invoke remotely
-        this.m_remote.Call("SetCompany", tid, sid, auto, none, company.Name, company.Army, strength, company.Specialisation);
+        this.m_remote.Call("SetCompany", tid, sid, company.Name, company.Army, strength, company.Specialisation);
 
         // Trigger self update
         this.OnLobbyCompanyUpdate?.Invoke(new(tid, sid, company)); // This might need to be removed!
@@ -576,7 +578,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
         var inv = company.Strength.ToString(CultureInfo.InvariantCulture);
 
         // Call AI
-        this.m_remote.Call("AddAI", tid, sid, difficulty, EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, inv, company.Specialisation);
+        this.m_remote.Call("AddAI", tid, sid, difficulty, EncBool(company.IsAuto), company.Name, company.Army, inv, company.Specialisation);
 
     }
 

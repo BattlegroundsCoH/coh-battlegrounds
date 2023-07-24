@@ -24,6 +24,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Testcontainers" Version="3.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,7 +42,6 @@
   <ItemGroup>
     <Folder Include="Common\" />
     <Folder Include="Core\Game\DataSource\" />
-    <Folder Include="Core\Networking\LobbySystem\" />
     <Folder Include="Core\Networking\Remoting\" />
     <Folder Include="Core\Networking\Server\" />
     <Folder Include="Lobby\" />

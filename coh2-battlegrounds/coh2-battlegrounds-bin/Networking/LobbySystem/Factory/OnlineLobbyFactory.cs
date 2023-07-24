@@ -10,7 +10,6 @@ using Battlegrounds.Verification;
 using Battlegrounds.Functional;
 using Battlegrounds.Steam;
 using Battlegrounds.Game;
-using System.Reflection.Metadata;
 
 namespace Battlegrounds.Networking.LobbySystem.Factory;
 
@@ -18,10 +17,12 @@ public sealed class OnlineLobbyFactory : ILobbyFactory {
 
     private static readonly Logger logger = Logger.CreateLogger();
 
+    private readonly NetworkEndpoint networkEndpoint;
     private readonly ServerAPI serverAPI;
     private readonly SteamUser user;
 
-    public OnlineLobbyFactory(ServerAPI serverAPI, SteamUser user) {
+    public OnlineLobbyFactory(ServerAPI serverAPI, NetworkEndpoint endpoint, SteamUser user) {
+        this.networkEndpoint = endpoint;
         this.serverAPI = serverAPI;
         this.user = user;
     }
@@ -46,7 +47,7 @@ public sealed class OnlineLobbyFactory : ILobbyFactory {
             try {
 
                 // Open connection
-                ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.Endpoint.RemoteIPAddress, NetworkInterface.Endpoint.Tcp, intro, out ulong lobbyID)
+                ServerConnection? connection = ServerConnection.ConnectToServer(networkEndpoint.RemoteIPAddress, networkEndpoint.Tcp, intro, out ulong lobbyID)
                     ?? throw new ConnectionFailedException("Failed to establish TCP connection.");
 
                 // Set API
@@ -96,7 +97,7 @@ public sealed class OnlineLobbyFactory : ILobbyFactory {
             try {
 
                 // Establish TCP connection
-                ServerConnection? connection = ServerConnection.ConnectToServer(NetworkInterface.Endpoint.RemoteIPAddress, NetworkInterface.Endpoint.Tcp, intro, out ulong lobbyID)
+                ServerConnection? connection = ServerConnection.ConnectToServer(networkEndpoint.RemoteIPAddress, networkEndpoint.Tcp, intro, out ulong lobbyID)
                     ?? throw new ConnectionFailedException("Failed to establish TCP connection.");
 
                 // Set API
