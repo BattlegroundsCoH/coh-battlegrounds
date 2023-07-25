@@ -358,6 +358,9 @@
     <None Update="bg_common\data\vcoh3-ebp-db-coh3.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="bg_common\data\vcoh3-map-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\data\vcoh3-sbp-db-coh3.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

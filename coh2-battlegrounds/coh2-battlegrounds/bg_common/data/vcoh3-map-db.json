@@ -1,3 +1,3974 @@
 [
-
+  {
+    "Name": "$11244283",
+    "Description": "$11244702",
+    "RelativeFilename": "catania_crossing_6p",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 6,
+    "Theatre": 3,
+    "IsWintermap": false,
+    "IsDesertMap": false,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": 73.02727,
+          "Y": -44.13563,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 10.8374,
+          "Y": 111.45956,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -115.86175,
+          "Y": 100.55106,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -184.52313,
+          "Y": -152.97047,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -104.05476,
+          "Y": 35.40074,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 32.5854,
+          "Y": 61.476,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 100.67096,
+          "Y": 59.62134,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 88.36913,
+          "Y": 8.81097,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -51.96004,
+          "Y": -106.27757,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 112.36881,
+          "Y": -52.70505,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 80.802,
+          "Y": 124.90508,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 213.81573,
+          "Y": -50.9187,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -158.64499,
+          "Y": 56.61176,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -26.49112,
+          "Y": -74.42028,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -6.88112,
+          "Y": 145.09819,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": -128.89777,
+          "Y": 144.01218,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": 201.8262,
+          "Y": -136.4577,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -215.45926,
+          "Y": 135.42848,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -91.04263,
+          "Y": -150.68271,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -78.01022,
+          "Y": -46.53662,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 157.60007,
+          "Y": -14.37021,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -145.17792,
+          "Y": -97.19816,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 47.49447,
+          "Y": -129.99222,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium_rect15x20"
+      },
+      {
+        "Position": {
+          "X": -29.63348,
+          "Y": -134.6409,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low_rect15x20"
+      },
+      {
+        "Position": {
+          "X": 148.00484,
+          "Y": -111.53207,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low_rect15x20"
+      },
+      {
+        "Position": {
+          "X": -224.24306,
+          "Y": -72.02624,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -224.22646,
+          "Y": -23.40808,
+          "Z": 0
+        },
+        "Owner": 1002,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -225.54086,
+          "Y": 26.20175,
+          "Z": 0
+        },
+        "Owner": 1004,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 168.4505,
+          "Y": 139.31581,
+          "Z": 0
+        },
+        "Owner": 1005,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 199.89839,
+          "Y": 113.90786,
+          "Z": 0
+        },
+        "Owner": 1003,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 225.40439,
+          "Y": 54.79194,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 544,
+      "Length": 400
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  },
+  {
+    "Name": "$11233952",
+    "Description": "$11233953",
+    "RelativeFilename": "cliff_crossing_2p",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 2,
+    "Theatre": 3,
+    "IsWintermap": false,
+    "IsDesertMap": false,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": 114.15191,
+          "Y": -129.64661,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -136.1778,
+          "Y": -35.86668,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -19.55176,
+          "Y": 79.59942,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -2.56691,
+          "Y": -74.23993,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 68.96901,
+          "Y": 32.06378,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -24.14597,
+          "Y": 115.2757,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": 123.42307,
+          "Y": 58.03152,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": 17.45762,
+          "Y": -2.83148,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 57.38345,
+          "Y": 99.23727,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 36.23206,
+          "Y": -117.4887,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_high"
+      },
+      {
+        "Position": {
+          "X": -54.29932,
+          "Y": -53.47094,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_high"
+      },
+      {
+        "Position": {
+          "X": 41.93261,
+          "Y": 56.67075,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -25.40188,
+          "Y": -118.9729,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -32.21311,
+          "Y": 51.84111,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 75.92966,
+          "Y": -7.00525,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -62.8596,
+          "Y": 88.32848,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 127.11475,
+          "Y": 2.91419,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -66.75606,
+          "Y": 9.58058,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 58.1179,
+          "Y": -62.54699,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 129.54599,
+          "Y": -43.49387,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -116.4144,
+          "Y": 56.19623,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 352,
+      "Length": 384
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  },
+  {
+    "Name": "$11233954",
+    "Description": "$11233955",
+    "RelativeFilename": "desert_airfield_6p_mkii",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 6,
+    "Theatre": 4,
+    "IsWintermap": false,
+    "IsDesertMap": true,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": 122.31642,
+          "Y": -86.6587,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 2.5214,
+          "Y": -3.36033,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -136.31294,
+          "Y": 95.58221,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -58.74841,
+          "Y": -166.52611,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 59.79456,
+          "Y": 148.29408,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 83.68756,
+          "Y": -62.77018,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -105.56256,
+          "Y": 67.65366,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -84.39063,
+          "Y": -45.34413,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 119.75245,
+          "Y": 18.3333,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -122.27422,
+          "Y": 16.39973,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 11.72807,
+          "Y": -123.50746,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 88.88779,
+          "Y": 68.60744,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -180.46556,
+          "Y": 31.11767,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -58.08194,
+          "Y": 25.27133,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 58.20886,
+          "Y": 6.28001,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 195.1317,
+          "Y": -18.07686,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -185.64252,
+          "Y": 128.63025,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 171.95259,
+          "Y": -101.55685,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 7.10359,
+          "Y": 66.61249,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -25.21283,
+          "Y": -56.63751,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -42.81376,
+          "Y": 182.90591,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 50.88815,
+          "Y": -189.39301,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -122.58076,
+          "Y": 183.0598,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 122.19315,
+          "Y": -169.96835,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -11.05762,
+          "Y": 127.40633,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 179.00385,
+          "Y": 174.82771,
+          "Z": 0
+        },
+        "Owner": 1005,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 196.28961,
+          "Y": 137.06436,
+          "Z": 0
+        },
+        "Owner": 1003,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 199.60628,
+          "Y": 86.35191,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -174.96138,
+          "Y": -184.15677,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -194.20375,
+          "Y": -125.04368,
+          "Z": 0
+        },
+        "Owner": 1002,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -196.53175,
+          "Y": -71.78519,
+          "Z": 0
+        },
+        "Owner": 1004,
+        "EntityBlueprint": "starting_position"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 480,
+      "Length": 480
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  },
+  {
+    "Name": "$11233956",
+    "Description": "$11233957",
+    "RelativeFilename": "desert_village_2p_mkiii",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 2,
+    "Theatre": 4,
+    "IsWintermap": false,
+    "IsDesertMap": true,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": -142.88953,
+          "Y": 39.59119,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": -120.06076,
+          "Y": -4.44368,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -7.61147,
+          "Y": -4.76245,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 92.78938,
+          "Y": -10.02779,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 95.28592,
+          "Y": 34.57392,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -108.37893,
+          "Y": -43.83742,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -94.21696,
+          "Y": 47.72752,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_high"
+      },
+      {
+        "Position": {
+          "X": -129.96307,
+          "Y": 100.37788,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 79.46458,
+          "Y": -49.48997,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_high"
+      },
+      {
+        "Position": {
+          "X": 105.20055,
+          "Y": -112.74952,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 130.68593,
+          "Y": -51.50257,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": -12.49318,
+          "Y": -70.19527,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": 14.12476,
+          "Y": 66.78214,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": -107.86782,
+          "Y": -132.96933,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 82.98353,
+          "Y": 118.77637,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 29.73553,
+          "Y": 8.17952,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -52.81153,
+          "Y": -16.99859,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 42.40033,
+          "Y": -57.8983,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point_rect15x20"
+      },
+      {
+        "Position": {
+          "X": -57.24477,
+          "Y": 52.23711,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point_rect15x20"
+      },
+      {
+        "Position": {
+          "X": -16.8656,
+          "Y": -143.51852,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -5.03656,
+          "Y": 141.62964,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 384,
+      "Length": 384
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  },
+  {
+    "Name": "$11233958",
+    "Description": "$11233959",
+    "RelativeFilename": "gardens_2p",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 2,
+    "Theatre": 3,
+    "IsWintermap": false,
+    "IsDesertMap": false,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": -6.91915,
+          "Y": -96.98864,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_high"
+      },
+      {
+        "Position": {
+          "X": 132.88809,
+          "Y": -87.54301,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -93.1373,
+          "Y": -82.71879,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -86.28123,
+          "Y": 104.19439,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 77.11187,
+          "Y": 102.21217,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -48.4696,
+          "Y": -15.06914,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low_rect15x20"
+      },
+      {
+        "Position": {
+          "X": 33.30011,
+          "Y": -14.42088,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low_rect15x20"
+      },
+      {
+        "Position": {
+          "X": 57.02885,
+          "Y": 27.11863,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low_rect15x20"
+      },
+      {
+        "Position": {
+          "X": -69.4383,
+          "Y": 29.99357,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low_rect15x20"
+      },
+      {
+        "Position": {
+          "X": -7.35638,
+          "Y": -7.8586,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": -42.66578,
+          "Y": 78.8092,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium_rect15x20"
+      },
+      {
+        "Position": {
+          "X": 28.97784,
+          "Y": 78.7193,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium_rect15x20"
+      },
+      {
+        "Position": {
+          "X": 16.72945,
+          "Y": -56.88474,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -95.36319,
+          "Y": -114.41945,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium_rect15x20"
+      },
+      {
+        "Position": {
+          "X": 76.20463,
+          "Y": -117.25174,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium_rect15x20"
+      },
+      {
+        "Position": {
+          "X": -29.79068,
+          "Y": -60.51297,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -138.76149,
+          "Y": -87.14749,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -7.93929,
+          "Y": 38.60471,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point_rect15x20"
+      },
+      {
+        "Position": {
+          "X": 87.66139,
+          "Y": -83.80915,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 150.20209,
+          "Y": 2.48563,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -148.39957,
+          "Y": 1.62702,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 384,
+      "Length": 320
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  },
+  {
+    "Name": "$11233960",
+    "Description": "$11233961",
+    "RelativeFilename": "industrial_railyard_6p_mkii",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 6,
+    "Theatre": 3,
+    "IsWintermap": false,
+    "IsDesertMap": false,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": -13.76381,
+          "Y": 111.93758,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -0.24332,
+          "Y": 0.934,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 23.93865,
+          "Y": -102.74568,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -125.65069,
+          "Y": 98.0717,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -77.43826,
+          "Y": 56.00045,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 30.79752,
+          "Y": 109.28928,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 165.74529,
+          "Y": -148.29549,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -11.82485,
+          "Y": -134.62665,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -186.32544,
+          "Y": 92.10275,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -56.59841,
+          "Y": 128.89746,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 9.61889,
+          "Y": 46.40115,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -16.53233,
+          "Y": -35.61319,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 56.21413,
+          "Y": -134.57304,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 168.60735,
+          "Y": -63.16745,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -94.95621,
+          "Y": -92.07133,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 61.01035,
+          "Y": 19.47947,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 82.66176,
+          "Y": 84.41411,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 51.16287,
+          "Y": -38.85482,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -71.99941,
+          "Y": -9.17319,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -111.11342,
+          "Y": 150.22893,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 105.03998,
+          "Y": -126.27334,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -124.96097,
+          "Y": -157.74469,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low_rect15x20"
+      },
+      {
+        "Position": {
+          "X": 124.55027,
+          "Y": 146.21483,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low_rect15x20"
+      },
+      {
+        "Position": {
+          "X": 195.07124,
+          "Y": 14.87521,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 195.72943,
+          "Y": 56.45915,
+          "Z": 0
+        },
+        "Owner": 1002,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 197.56282,
+          "Y": 95.12521,
+          "Z": 0
+        },
+        "Owner": 1004,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -191.74818,
+          "Y": -110.97002,
+          "Z": 0
+        },
+        "Owner": 1005,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -191.72154,
+          "Y": -64.22454,
+          "Z": 0
+        },
+        "Owner": 1003,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -191.01724,
+          "Y": -21.89346,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 480,
+      "Length": 416
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  },
+  {
+    "Name": "$11234009",
+    "Description": "$11234010",
+    "RelativeFilename": "mountain_ruins_6p",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 6,
+    "Theatre": 3,
+    "IsWintermap": false,
+    "IsDesertMap": false,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": 213.50665,
+          "Y": 48.15251,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -100.30165,
+          "Y": -218.58109,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 175.00008,
+          "Y": -119.39458,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 9.78456,
+          "Y": -5.48792,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 116.77216,
+          "Y": -136.06093,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_high"
+      },
+      {
+        "Position": {
+          "X": -74.96696,
+          "Y": 13.39107,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -2.22821,
+          "Y": 93.96616,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -154.98146,
+          "Y": -178.11801,
+          "Z": 0
+        },
+        "Owner": 1003,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 53.7528,
+          "Y": -189.07716,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -47.58642,
+          "Y": -60.02895,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 37.8743,
+          "Y": -50.26214,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 182.6395,
+          "Y": -53.80997,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 11.50308,
+          "Y": -168.23866,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 76.40548,
+          "Y": -82.42994,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 193.67577,
+          "Y": 76.50549,
+          "Z": 0
+        },
+        "Owner": 1002,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -4.51645,
+          "Y": -111.5749,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point_rect15x20"
+      },
+      {
+        "Position": {
+          "X": 104.8382,
+          "Y": -7.71362,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point_rect15x20"
+      },
+      {
+        "Position": {
+          "X": -183.51628,
+          "Y": -131.17767,
+          "Z": 0
+        },
+        "Owner": 1005,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 178.16069,
+          "Y": 111.64564,
+          "Z": 0
+        },
+        "Owner": 1004,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 138.08862,
+          "Y": -192.87794,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_high"
+      },
+      {
+        "Position": {
+          "X": -14.20633,
+          "Y": 19.72015,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_high"
+      },
+      {
+        "Position": {
+          "X": 57.26262,
+          "Y": 48.01187,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium_rect15x20"
+      },
+      {
+        "Position": {
+          "X": 47.61408,
+          "Y": -135.05403,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point_rect15x20"
+      },
+      {
+        "Position": {
+          "X": 133.81239,
+          "Y": -89.28882,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point_rect15x20"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 544,
+      "Length": 544
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  },
+  {
+    "Name": "$11233962",
+    "Description": "$11233963",
+    "RelativeFilename": "mountain_ruins_8p_mkii",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 8,
+    "Theatre": 3,
+    "IsWintermap": false,
+    "IsDesertMap": false,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": -192.88187,
+          "Y": 202.90257,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -204.1879,
+          "Y": 61.88753,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -76.37074,
+          "Y": 220.54251,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 45.44323,
+          "Y": 198.2256,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 53.78446,
+          "Y": -204.03201,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 133.17003,
+          "Y": -223.69737,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 215.87254,
+          "Y": -173.37152,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 75.4413,
+          "Y": 30.37081,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -38.53456,
+          "Y": -63.81902,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -131.14844,
+          "Y": -95.31982,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 151.24538,
+          "Y": 36.78156,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 186.32312,
+          "Y": -56.69379,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 116.50587,
+          "Y": -135.99156,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -145.20587,
+          "Y": 145.87708,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -16.07034,
+          "Y": 22.85964,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 10.80576,
+          "Y": 93.37863,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 120.58058,
+          "Y": 16.21325,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 33.13774,
+          "Y": -67.52832,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -77.86554,
+          "Y": 14.4826,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -62.61437,
+          "Y": -116.69487,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -88.36237,
+          "Y": 145.09734,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 5.14586,
+          "Y": -5.66098,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 83.20538,
+          "Y": -163.42145,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -60.11778,
+          "Y": -198.6935,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 46.09857,
+          "Y": 141.06235,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -143.55826,
+          "Y": 21.98398,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 225.0919,
+          "Y": 64.46933,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 192.82361,
+          "Y": 196.28171,
+          "Z": 0
+        },
+        "Owner": 1004,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -221.47511,
+          "Y": -154.78937,
+          "Z": 0
+        },
+        "Owner": 1003,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -229.89827,
+          "Y": -46.74036,
+          "Z": 0
+        },
+        "Owner": 1007,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -200.58699,
+          "Y": -206.70326,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -226.89629,
+          "Y": -101.28679,
+          "Z": 0
+        },
+        "Owner": 1005,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 146.00072,
+          "Y": 224.97119,
+          "Z": 0
+        },
+        "Owner": 1006,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 221.05157,
+          "Y": 135.25261,
+          "Z": 0
+        },
+        "Owner": 1002,
+        "EntityBlueprint": "starting_position"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 544,
+      "Length": 544
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  },
+  {
+    "Name": "$11233965",
+    "Description": "$11233966",
+    "RelativeFilename": "rails_and_sand_4p",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 4,
+    "Theatre": 4,
+    "IsWintermap": false,
+    "IsDesertMap": true,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": -110.97863,
+          "Y": -129.56865,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_high"
+      },
+      {
+        "Position": {
+          "X": 77.82879,
+          "Y": 117.20291,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_high"
+      },
+      {
+        "Position": {
+          "X": -70.65204,
+          "Y": -18.3034,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": 46.18768,
+          "Y": 11.98285,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": -73.68528,
+          "Y": 64.31609,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 33.79565,
+          "Y": -81.95723,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -137.9088,
+          "Y": 15.05641,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -45.1126,
+          "Y": 149.59673,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 28.94034,
+          "Y": -144.76521,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -8.86169,
+          "Y": 48.22198,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 101.34713,
+          "Y": -36.83393,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 128.50455,
+          "Y": 18.19605,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -148.39665,
+          "Y": -31.41111,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 66.77356,
+          "Y": 81.77959,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -11.43027,
+          "Y": -1.0213,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -104.542,
+          "Y": -93.94476,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -150.18652,
+          "Y": -77.52549,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -52.63025,
+          "Y": -147.78624,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 18.57631,
+          "Y": 134.10803,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 103.2537,
+          "Y": 57.59179,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -44.74401,
+          "Y": -71.01495,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -131.06143,
+          "Y": 166.10553,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -166.08046,
+          "Y": 119.39806,
+          "Z": 0
+        },
+        "Owner": 1002,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 155.17638,
+          "Y": -116.79463,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 124.13371,
+          "Y": -164.44623,
+          "Z": 0
+        },
+        "Owner": 1003,
+        "EntityBlueprint": "starting_position"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 416,
+      "Length": 416
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  },
+  {
+    "Name": "$11233968",
+    "Description": "$11233969",
+    "RelativeFilename": "rural_castle_4p",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 4,
+    "Theatre": 3,
+    "IsWintermap": false,
+    "IsDesertMap": false,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": 61.71658,
+          "Y": -101.80251,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 130.1731,
+          "Y": -91.38454,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -63.77782,
+          "Y": -18.68455,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -14.17212,
+          "Y": -114.6866,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -4.02547,
+          "Y": -65.70554,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": -32.81135,
+          "Y": -183.06845,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -97.91175,
+          "Y": -157.87671,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 109.31612,
+          "Y": 50.03373,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": -127.22839,
+          "Y": -108.2874,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 98.44941,
+          "Y": -53.55507,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -124.19147,
+          "Y": 4.11883,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 7.17464,
+          "Y": -5.40494,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point_rect15x20"
+      },
+      {
+        "Position": {
+          "X": 115.18687,
+          "Y": -2.24072,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -77.45153,
+          "Y": 94.6628,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 43.14418,
+          "Y": 175.46252,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -136.19943,
+          "Y": 102.26797,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 53.84914,
+          "Y": 2.16979,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 6.19658,
+          "Y": 63.30778,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": 20.36306,
+          "Y": 109.73637,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 105.16328,
+          "Y": 159.01065,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -112.12936,
+          "Y": -55.82026,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": 117.06576,
+          "Y": 105.29411,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -126.77186,
+          "Y": 38.33277,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -123.83705,
+          "Y": 183.63013,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -89.47229,
+          "Y": 189.68011,
+          "Z": 0
+        },
+        "Owner": 1002,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 121.06505,
+          "Y": -183.4153,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 75.86043,
+          "Y": -205.36554,
+          "Z": 0
+        },
+        "Owner": 1003,
+        "EntityBlueprint": "starting_position"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 416,
+      "Length": 512
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  },
+  {
+    "Name": "$11233970",
+    "Description": "$11233971",
+    "RelativeFilename": "rural_town_2p_mkii",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 2,
+    "Theatre": 3,
+    "IsWintermap": false,
+    "IsDesertMap": false,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": 46.5099,
+          "Y": -149.16161,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -54.39482,
+          "Y": 132.13924,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -109.21357,
+          "Y": -127.88248,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 64.93769,
+          "Y": 119.02528,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 8.39294,
+          "Y": -58.43377,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": -38.62723,
+          "Y": 24.63292,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": 101.25382,
+          "Y": -66.18398,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -86.15458,
+          "Y": -78.76211,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_high"
+      },
+      {
+        "Position": {
+          "X": 110.02801,
+          "Y": 10.2757,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 69.06148,
+          "Y": 71.34353,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_high"
+      },
+      {
+        "Position": {
+          "X": -100.42048,
+          "Y": 57.99156,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -40.2691,
+          "Y": -136.08121,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -127.34695,
+          "Y": 24.31854,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -94.00615,
+          "Y": -23.04912,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -126.73149,
+          "Y": -45.87921,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -8.42153,
+          "Y": -8.68615,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 127.61879,
+          "Y": 38.50314,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 448,
+      "Length": 416
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  },
+  {
+    "Name": "$11233972",
+    "Description": "$11233973",
+    "RelativeFilename": "rural_town_4p",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 4,
+    "Theatre": 3,
+    "IsWintermap": false,
+    "IsDesertMap": false,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": 0.46025,
+          "Y": -179.5074,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 52.81771,
+          "Y": -178.55272,
+          "Z": 0
+        },
+        "Owner": 1002,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -50.77054,
+          "Y": 162.15866,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 0.88087,
+          "Y": 162.25186,
+          "Z": 0
+        },
+        "Owner": 1003,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 148.2686,
+          "Y": -146.91472,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -93.99106,
+          "Y": -141.11823,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 10.43559,
+          "Y": -59.88167,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -42.97494,
+          "Y": 24.51789,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -160.67271,
+          "Y": 124.50843,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 119.02856,
+          "Y": 145.22839,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 172.99951,
+          "Y": -0.95189,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": -171.23309,
+          "Y": -13.42105,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": 99.29139,
+          "Y": -66.85023,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -87.79444,
+          "Y": -79.56061,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 88.96878,
+          "Y": 70.58812,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -99.43565,
+          "Y": 56.89849,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -168.14703,
+          "Y": 56.41422,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 164.88295,
+          "Y": -98.28604,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 47.4466,
+          "Y": -97.59571,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -12.57778,
+          "Y": 73.41529,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -154.78728,
+          "Y": -111.60619,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 152.7449,
+          "Y": 84.91721,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -72.17075,
+          "Y": -36.19223,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 68.38925,
+          "Y": 15.526,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -127.603,
+          "Y": -46.31009,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -10.06137,
+          "Y": -9.48466,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 126.18626,
+          "Y": 38.5804,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 448,
+      "Length": 416
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  },
+  {
+    "Name": "$11233974",
+    "Description": "$11233975",
+    "RelativeFilename": "torrente_4p_mkiii",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 4,
+    "Theatre": 3,
+    "IsWintermap": false,
+    "IsDesertMap": false,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": 25.7635,
+          "Y": 222.07367,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -77.37759,
+          "Y": 41.17886,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 74.31481,
+          "Y": 47.54554,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -92.00246,
+          "Y": -4.61168,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -3.84775,
+          "Y": 1.20822,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": -101.05218,
+          "Y": 102.02987,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 54.53165,
+          "Y": -70.95071,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -117.54324,
+          "Y": -93.99155,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 11.61454,
+          "Y": -184.46034,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -138.41093,
+          "Y": -18.25683,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 139.34477,
+          "Y": -3.80198,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 119.69377,
+          "Y": 64.16113,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 132.3933,
+          "Y": -77.15186,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 57.72608,
+          "Y": 78.74895,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 77.19521,
+          "Y": -103.63339,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 41.90237,
+          "Y": 163.05099,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -10.56978,
+          "Y": -105.32621,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_high"
+      },
+      {
+        "Position": {
+          "X": -20.23363,
+          "Y": 107.07942,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_high"
+      },
+      {
+        "Position": {
+          "X": 82.06458,
+          "Y": -211.81868,
+          "Z": 0
+        },
+        "Owner": 1003,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -49.50061,
+          "Y": -205.74217,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 114.75089,
+          "Y": 198.16309,
+          "Z": 0
+        },
+        "Owner": 1002,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -76.14082,
+          "Y": 206.2442,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -55.96955,
+          "Y": -50.30134,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -135.99179,
+          "Y": -176.64688,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 70.01385,
+          "Y": -8.67409,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 384,
+      "Length": 544
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  },
+  {
+    "Name": "$11233976",
+    "Description": "$11233977",
+    "RelativeFilename": "twin_beach_2p_mkii",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 2,
+    "Theatre": 3,
+    "IsWintermap": false,
+    "IsDesertMap": false,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": 30.61476,
+          "Y": -65.41959,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -56.78972,
+          "Y": 15.15595,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 83.37527,
+          "Y": 14.67255,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 12.26299,
+          "Y": 72.69433,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 127.56013,
+          "Y": -5.75961,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -14.51273,
+          "Y": 124.46692,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -83.05098,
+          "Y": -17.35139,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 69.49525,
+          "Y": 68.40084,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -4.18907,
+          "Y": -86.07123,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 17.29577,
+          "Y": -22.93813,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -14.61439,
+          "Y": 2.79317,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 56.93047,
+          "Y": 118.83318,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_high"
+      },
+      {
+        "Position": {
+          "X": 116.60081,
+          "Y": 66.13379,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_high"
+      },
+      {
+        "Position": {
+          "X": -36.29437,
+          "Y": -47.29255,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -94.12383,
+          "Y": -101.72588,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -26.86626,
+          "Y": -111.86234,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": -112.30865,
+          "Y": -39.44991,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": -122.08375,
+          "Y": 98.10012,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 117.33118,
+          "Y": -115.52264,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 38.93195,
+          "Y": 38.67931,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": -53.27507,
+          "Y": 136.16505,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      },
+      {
+        "Position": {
+          "X": 142.12329,
+          "Y": -50.41632,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_medium"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 384,
+      "Length": 384
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  },
+  {
+    "Name": "$11233978",
+    "Description": "$11233979",
+    "RelativeFilename": "winter_line_8p_mkii",
+    "SgaName": "ScenariosMP.sga",
+    "MaxPlayers": 8,
+    "Theatre": 3,
+    "IsWintermap": false,
+    "IsDesertMap": false,
+    "IsVisibleInLobby": true,
+    "IsWorkshopMap": false,
+    "Gamemodes": [],
+    "HasValidInfoOrOptionsFile": false,
+    "Points": [
+      {
+        "Position": {
+          "X": -0.60424,
+          "Y": -1.05243,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 20.13062,
+          "Y": 182.99936,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -17.32023,
+          "Y": -91.37114,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -3.9994,
+          "Y": -47.02709,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -27.56246,
+          "Y": -153.6196,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 161.70143,
+          "Y": -21.28429,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -178.03842,
+          "Y": 53.36621,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -72.52839,
+          "Y": -64.68825,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -79.92986,
+          "Y": -206.78583,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 6.65934,
+          "Y": -204.9713,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": -187.30707,
+          "Y": -53.30926,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -178.0952,
+          "Y": -165.07672,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -68.05823,
+          "Y": 73.29396,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 77.85924,
+          "Y": 17.03288,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 42.5923,
+          "Y": -92.8491,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 92.56985,
+          "Y": -49.68489,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 28.99019,
+          "Y": -147.85016,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -83.42334,
+          "Y": -141.35197,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": -124.69082,
+          "Y": -17.95812,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_strategic_point"
+      },
+      {
+        "Position": {
+          "X": 141.34729,
+          "Y": -106.82094,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": -61.25134,
+          "Y": 139.16856,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -34.4678,
+          "Y": -204.91968,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": -149.67043,
+          "Y": 151.61655,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low_rect15x20"
+      },
+      {
+        "Position": {
+          "X": -81.2896,
+          "Y": 192.14107,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 117.85794,
+          "Y": 164.94244,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 95.18981,
+          "Y": 96.60169,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": 176.16385,
+          "Y": 121.98147,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_fuel_point_low"
+      },
+      {
+        "Position": {
+          "X": 2.16727,
+          "Y": 62.80141,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_medium"
+      },
+      {
+        "Position": {
+          "X": 23.75206,
+          "Y": 137.92096,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_victory_point"
+      },
+      {
+        "Position": {
+          "X": 131.94322,
+          "Y": -194.40248,
+          "Z": 0
+        },
+        "Owner": 0,
+        "EntityBlueprint": "territory_munitions_point_low"
+      },
+      {
+        "Position": {
+          "X": -288.59552,
+          "Y": -118.42445,
+          "Z": 0
+        },
+        "Owner": 1000,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -288.90726,
+          "Y": -61.4857,
+          "Z": 0
+        },
+        "Owner": 1002,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -283.29147,
+          "Y": 31.30255,
+          "Z": 0
+        },
+        "Owner": 1004,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": -280.55713,
+          "Y": 95.11642,
+          "Z": 0
+        },
+        "Owner": 1006,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 245.42451,
+          "Y": -154.79301,
+          "Z": 0
+        },
+        "Owner": 1001,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 287.63577,
+          "Y": 43.63453,
+          "Z": 0
+        },
+        "Owner": 1007,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 282.34018,
+          "Y": -16.26061,
+          "Z": 0
+        },
+        "Owner": 1005,
+        "EntityBlueprint": "starting_position"
+      },
+      {
+        "Position": {
+          "X": 264.53812,
+          "Y": -99.90282,
+          "Z": 0
+        },
+        "Owner": 1003,
+        "EntityBlueprint": "starting_position"
+      }
+    ],
+    "PlayableSize": {
+      "Width": 672,
+      "Length": 544
+    },
+    "TerrainSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "MinimapSize": {
+      "Width": 0,
+      "Length": 0
+    },
+    "Game": 2
+  }
 ]

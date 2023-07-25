@@ -13,7 +13,7 @@ using Battlegrounds.Util;
 namespace Battlegrounds.Game.Scenarios.CoH2;
 
 /// <summary>
-/// Represents a scenario. This class cannot be inherited.
+/// Represents a scenario for Company of Heroes 2. This class cannot be inherited.
 /// </summary>
 public sealed class CoH2Scenario : IScenario {
 

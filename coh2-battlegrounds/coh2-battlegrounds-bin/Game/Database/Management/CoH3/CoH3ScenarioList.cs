@@ -7,9 +7,8 @@ using System.Linq;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Scenarios;
-using Battlegrounds.Game.Scenarios.CoH2;
+using Battlegrounds.Game.Scenarios.CoH3;
 using Battlegrounds.Logging;
-using Battlegrounds.Util;
 
 namespace Battlegrounds.Game.Database.Management.CoH3;
 
@@ -55,23 +54,21 @@ public class CoH3ScenarioList : IScenarioList {
 
         // Get scenario files
         string[] scenarioFiles = Directory.GetFiles(scenarioDirectoryPath);
-        string? lao = scenarioFiles.FirstOrDefault(x => x.EndsWith("_lao.dds", false, CultureInfo.InvariantCulture));
         string? info = scenarioFiles.FirstOrDefault(x => x.EndsWith(".info", false, CultureInfo.InvariantCulture));
-        string? opt = scenarioFiles.FirstOrDefault(x => x.EndsWith(".options", false, CultureInfo.InvariantCulture));
 
         // Define scenario variable
-        CoH2Scenario? scen = null;
+        CoH3Scenario? scen = null;
 
         try {
 
             // Create scenario
-            scen = CoH2Scenario.ReadScenario(lao, info, opt, sga);
+            scen = CoH3Scenario.ReadScenario(info, sga);
             if (scen is null) {
                 throw new Exception("Failed to read scenario");
             }
 
             // Find the index of the minimap
-            int minimapFile = scenarioFiles.IndexOf(x => x.EndsWithAny("_mm_high.tga", "_mm_low.tga"));
+            /*int minimapFile = scenarioFiles.IndexOf(x => x.EndsWithAny("_mm_high.tga", "_mm_low.tga"));
             if (minimapFile is -1) {
                 minimapFile = scenarioFiles.IndexOf(x => x.EndsWithAny("_mm.tga", "_preview.tga"));
             }
@@ -85,7 +82,7 @@ public class CoH3ScenarioList : IScenarioList {
                 // Copy the found index file
                 File.Copy(scenarioFiles[minimapFile], destination, true);
 
-            }
+            }*/
 
         } catch (Exception ex) {
             logger.Warning($"Failed to read scenario {sga}; {ex.Message}");

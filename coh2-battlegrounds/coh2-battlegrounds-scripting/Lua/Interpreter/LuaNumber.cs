@@ -43,6 +43,15 @@ public class LuaNumber : LuaValue {
         this.m_treatAsInteger = true;
     }
 
+    public static LuaNumber OfString(string value) {
+        if (int.TryParse(value, NumberStyles.Integer, NumberCulture, out var i)) {
+            return new LuaNumber(i);
+        } else if (long.TryParse(value, NumberStyles.Integer, NumberCulture, out var l)) {
+            return new LuaNumber((double)l);
+        }
+        throw new Exception("Not a number");
+    }
+
     /// <summary>
     /// Get a new <see cref="LuaNumber"/> where value is an integer representation.
     /// </summary>

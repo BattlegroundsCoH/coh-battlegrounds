@@ -43,7 +43,7 @@ public interface IScenario {
     /// <summary>
     /// Can this <see cref="IScenario"/> be considered a winter map.
     /// </summary>
-    bool IsWintermap { get; set; }
+    bool IsWintermap { get; }
 
     /// <summary>
     /// Get if the given scenario is visible in the lobby.
