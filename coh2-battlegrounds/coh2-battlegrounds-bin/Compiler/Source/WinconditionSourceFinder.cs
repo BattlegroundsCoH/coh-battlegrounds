@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 
+using Battlegrounds.Compiler.Source.CoH2;
 using Battlegrounds.Modding;
 
 namespace Battlegrounds.Compiler.Source; 
@@ -16,7 +17,7 @@ public static class WinconditionSourceFinder {
             try {
                 do {
                     if (Directory.Exists(path)) {
-                        return new LocalSource(path);
+                        return new CoH2LocalSource(path);
                     } else {
                         top++;
                         path = $"..\\{path}";
@@ -27,7 +28,7 @@ public static class WinconditionSourceFinder {
 #endif
         path = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "bg_wc\\");
         if (Directory.Exists(path)) {
-            return new PublicSource(path);
+            return new CoH2LocalSource(path);
         } else {
             return null; 
         }

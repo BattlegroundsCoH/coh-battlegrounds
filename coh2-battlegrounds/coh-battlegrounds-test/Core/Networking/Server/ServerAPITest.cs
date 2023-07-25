@@ -44,6 +44,8 @@ public class ServerAPITest : TestWithServer {
 
             Assert.That(lobbies[0].Game, Is.EqualTo(GameCase.CompanyOfHeroes3.ToString()));
 
+            Assert.That(lobbies[0].GetGame(), Is.EqualTo(GameCase.CompanyOfHeroes3));
+
         });
 
     }

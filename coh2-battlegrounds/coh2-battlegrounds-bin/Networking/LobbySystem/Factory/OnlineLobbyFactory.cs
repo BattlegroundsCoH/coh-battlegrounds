@@ -74,7 +74,7 @@ public sealed class OnlineLobbyFactory : ILobbyFactory {
                 serverAPI.SetLobbyGuid(lobbyID);
 
                 // Create handler
-                OnlineLobbyHandle handle = new OnlineLobbyHandle(true, name, user, connection, serverAPI);
+                OnlineLobbyHandle handle = new OnlineLobbyHandle(true, name, game, user, connection, serverAPI);
 
                 // Return success
                 provider.Success(handle);
@@ -133,7 +133,7 @@ public sealed class OnlineLobbyFactory : ILobbyFactory {
                 serverAPI.SetLobbyGuid(lobbyID);
 
                 // Create handler
-                OnlineLobbyHandle handle = new OnlineLobbyHandle(false, lobbyData.Name, user, connection, serverAPI);
+                OnlineLobbyHandle handle = new OnlineLobbyHandle(false, lobbyData.Name, lobbyData.GetGame(), user, connection, serverAPI);
 
                 // Do success
                 provider.Success(handle);

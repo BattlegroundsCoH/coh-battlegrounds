@@ -14,6 +14,7 @@ using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 using Battlegrounds.Networking.LobbySystem.Json;
 using Battlegrounds.Networking.Remoting;
+using Battlegrounds.Game;
 
 namespace Battlegrounds.Networking.LobbySystem;
 
@@ -80,6 +81,9 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// 
     /// </summary>
     public ILobbyPlanningHandle? PlanningHandle => this.m_planner;
+
+    /// <inheritdoc/>
+    public GameCase Game { get; }
 
     /// <summary>
     /// Event triggered when a lobby chat message is received.
@@ -181,14 +185,18 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// </summary>
     /// <param name="isHost">Flag marking if host. This is for local checking, the server verifies this independently.</param>
     /// <param name="title">The title of the lobby that was joined or hosted.</param>
+    /// <param name="game">The game this lobby handle is for.</param>
     /// <param name="self">The <see cref="SteamUser"/> instance that represents the local machine.</param>
     /// <param name="connection">The connection that connects the local machine to the server.</param>
     /// <param name="serverAPI">The API object that performs HTTP API calls to the server.</param>
     /// <exception cref="Exception"></exception>
-    public OnlineLobbyHandle(bool isHost, string title, SteamUser self, ServerConnection connection, ServerAPI serverAPI) {
+    public OnlineLobbyHandle(bool isHost, string title, GameCase game, SteamUser self, ServerConnection connection, ServerAPI serverAPI) {
 
         // Store ref to server handle
         this.ServerHandle = serverAPI;
+
+        // Set the game
+        this.Game = game;
 
         // Set internal refs
         this.m_connection = connection;

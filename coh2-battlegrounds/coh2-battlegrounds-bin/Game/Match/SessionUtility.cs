@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using Battlegrounds.Compiler;
 using Battlegrounds.Compiler.Source;
+using Battlegrounds.Compiler.Wincondition.CoH2;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.DataSource.Playback;
 using Battlegrounds.Game.Match.Data;
@@ -113,7 +114,7 @@ public static class SessionUtility {
         var locCompiler = new LocaleCompiler();
 
         // Return the result of the win condition compilation
-        return WinconditionCompiler.CompileToSga(buildFolder, sessionScarFile, session, sourceFinder, locCompiler, includeFiles.ToArray());
+        return CoH2WinconditionCompiler.CompileToSga(buildFolder, sessionScarFile, session, sourceFinder, locCompiler, includeFiles.ToArray());
 
     }
 

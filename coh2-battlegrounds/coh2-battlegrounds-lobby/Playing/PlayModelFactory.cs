@@ -20,7 +20,7 @@ public static class PlayModelFactory {
     /// <param name="cancelTime">The amount of seconds participants will have to cancel.</param>
     /// <returns>A <see cref="IPlayModel"/> instance</returns>
     /// <exception cref="Exception"></exception>
-    internal static IPlayModel GetModel(ILobbyHandle handle, ChatSpectator lobbyChat, uint cancelTime, UploadProgressCallbackHandler? callbackHandler) {
+    public static IPlayModel GetModel(ILobbyHandle handle, ChatSpectator lobbyChat, uint cancelTime, UploadProgressCallbackHandler? callbackHandler) {
 
         // If local then return early with a singleplayer
         if (handle is LocalLobbyHandle) {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Windows.Media;
@@ -26,10 +25,13 @@ using Battlegrounds.Verification;
 using Battlegrounds.Lobby.Components;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Scenarios;
+using Battlegrounds.Logging;
 
 namespace Battlegrounds.Lobby.Playing;
 
 public abstract class BasePlayModel {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     // Load refs
     protected readonly ILobbyHandle m_handle;
@@ -116,7 +118,7 @@ public abstract class BasePlayModel {
 
         // Try get gamemode value
         if (!int.TryParse(gamemodeValue, out int gamemodeoption)) {
-            Trace.WriteLine($"Failed to convert gamemode option {gamemodeoption} into an integer value.", nameof(BasePlayModel));
+            logger.Warning($"Failed to convert gamemode option {gamemodeoption} into an integer value.");
             gamemodeoption = 0;
         }
 
@@ -140,7 +142,7 @@ public abstract class BasePlayModel {
             .Map(x => x is null ? throw new StartupException("Invalid axis occupant") : CreateParticipantFromLobbyMember(x, ParticipantTeam.TEAM_AXIS, totalCounter, axisCounter));
 
         // Get scenario
-        var scen = BattlegroundsContext.DataSource.GetScenarioList(package, GameCase.CompanyOfHeroes2)!.FromFilename(scenario)
+        var scen = BattlegroundsContext.DataSource.GetScenarioList(package, this.m_handle.Game)!.FromFilename(scenario)
             ?? throw new StartupException($"Failed to fetch scenario {scenario} from scenario list.");
 
         // Grab gamemode
@@ -223,7 +225,7 @@ public abstract class BasePlayModel {
         };
 
         // Log this object (Helpful for debugging)
-        Trace.WriteLine($"Session Startup Info:\n{JsonSerializer.Serialize(this.m_info, new JsonSerializerOptions() { WriteIndented = true })}", nameof(BasePlayModel));
+        logger.Info($"Session Startup Info:\n{JsonSerializer.Serialize(this.m_info, new JsonSerializerOptions() { WriteIndented = true })}");
 
     }
 
@@ -235,18 +237,15 @@ public abstract class BasePlayModel {
 
         // Add participant based on role
         if (participant.Role is 3) {
-            var aiCompany = participant.Company;
-            if (aiCompany is null) {
-                throw new StartupException("AI startup company was null!");
-            }
-            var c = aiCompany.IsAuto ? null : Companies.FromNameAndFaction(aiCompany.Name, Faction.FromName(aiCompany.Army));
+            var aiCompany = participant.Company ?? throw new StartupException("AI startup company was null!");
+            var c = aiCompany.IsAuto ? null : Companies.FromNameAndFaction(aiCompany.Name, Faction.FromName(aiCompany.Army, this.m_handle.Game));
             return new SessionParticipant((AIDifficulty)participant.AILevel, c, team, tIndex, pIndex);
         } else {
             if (participant.MemberID == this.m_handle.Self.ID) {
                 if (participant.Company is not ILobbyCompany c) {
                     throw new StartupException("Invalid startup company.");
                 }
-                this.m_selfCompany = Companies.FromNameAndFaction(c.Name, Faction.FromName(participant.Company.Army));
+                this.m_selfCompany = Companies.FromNameAndFaction(c.Name, Faction.FromName(participant.Company.Army, this.m_handle.Game));
             }
             return new SessionParticipant(participant.DisplayName, participant.MemberID, null, team, tIndex, pIndex);
         }
@@ -438,12 +437,12 @@ public abstract class BasePlayModel {
         } catch (ChecksumViolationException checksumViolation) {
 
             // Log checksum violation
-            Trace.WriteLine(checksumViolation, nameof(BasePlayModel));
+            logger.Warning(checksumViolation);
 
         } catch (OperationCanceledException cancelledException) {
 
             // Log checksum violation
-            Trace.WriteLine(cancelledException, nameof(BasePlayModel));
+            logger.Warning(cancelledException);
 
         }
 

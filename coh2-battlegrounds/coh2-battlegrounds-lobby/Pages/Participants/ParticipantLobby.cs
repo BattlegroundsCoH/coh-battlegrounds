@@ -15,7 +15,6 @@ using Battlegrounds.Lobby.Components;
 using Battlegrounds.Lobby.Lookups;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.DataLocal;
-using Battlegrounds.Compiler;
 using Battlegrounds.Functional;
 using Battlegrounds.Misc.Collections;
 using Battlegrounds.Locale;
@@ -23,6 +22,7 @@ using Battlegrounds.UI;
 using Battlegrounds.Resources;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Scenarios.CoH2;
+using Battlegrounds.Compiler.Wincondition.CoH2;
 
 namespace Battlegrounds.Lobby.Pages.Participants;
 
@@ -269,7 +269,7 @@ public sealed class ParticipantLobby : BaseLobby {
                     }
 
                     // File sga to gamemode file
-                    File.WriteAllBytes(WinconditionCompiler.GetArchivePath(), data);
+                    File.WriteAllBytes(CoH2WinconditionCompiler.GetArchivePath(), data);
 
                     // Set as true
                     this.m_hasDownloadedGamemode = true;

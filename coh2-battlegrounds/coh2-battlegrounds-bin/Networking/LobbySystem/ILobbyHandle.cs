@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using Battlegrounds.Game;
 using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.Server;
@@ -51,6 +52,11 @@ public interface ILobbyHandle {
     /// Get the settings of the lobby.
     /// </summary>
     Dictionary<string, string> Settings { get; }
+
+    /// <summary>
+    /// Get the game this handle is targetting
+    /// </summary>
+    GameCase Game { get; }
 
     /// <summary>
     /// Event triggered when a lobby team instance is changed.

@@ -10,12 +10,12 @@ using Battlegrounds.Compiler.Source;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Match;
 
-namespace Battlegrounds.Compiler;
+namespace Battlegrounds.Compiler.Wincondition.CoH2;
 
 /// <summary>
 /// Static helper class for compiling a win condition in a JIT-style.
 /// </summary>
-public static class WinconditionCompiler {
+public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
 
     /// <summary>
     /// Get the path to where the gamemode archive is saved.
@@ -23,7 +23,7 @@ public static class WinconditionCompiler {
     /// <returns>The absolute path to the wincondition archive file.</returns>
     public static string GetArchivePath() {
         string dirpath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\subscriptions";
-        if (!Directory.Exists(dirpath)) { 
+        if (!Directory.Exists(dirpath)) {
             Directory.CreateDirectory(dirpath);
         }
         return dirpath + "\\coh2_battlegrounds_wincondition.sga";
@@ -38,12 +38,12 @@ public static class WinconditionCompiler {
     /// <param name="source">The wincondition source file locator.</param>
     /// <param name="includeFiles">Additional files to include in the gamemode.</param>
     /// <returns>True of the archive file was created sucessfully. False if any error occured.</returns>
-    public static bool CompileToSga(string workdir, string sessionFile, ISession session, IWinconditionSource source, LocaleCompiler locCompiler, 
+    public static bool CompileToSga(string workdir, string sessionFile, ISession session, IWinconditionSource source, LocaleCompiler locCompiler,
         params WinconditionSourceFile[] includeFiles) {
 
         // Verify is win condition source is valid
         if (source is null) {
-            Trace.WriteLine("Failed to find a valid source", nameof(WinconditionCompiler));
+            Trace.WriteLine("Failed to find a valid source", nameof(CoH2WinconditionCompiler));
             return false;
         }
 
@@ -123,7 +123,7 @@ public static class WinconditionCompiler {
 
             // Grab path and log
             string abspath = Path.GetFullPath(workdir + file.Path.Replace("/", "\\"));
-            Trace.WriteLine($"Adding locale file [ABS] <{abspath}>", nameof(WinconditionCompiler));
+            Trace.WriteLine($"Adding locale file [ABS] <{abspath}>", nameof(CoH2WinconditionCompiler));
 
             // Translate the locale file
             locCompiler.TranslateLocale(file.Contents, abspath, session.Names.ToArray());
@@ -192,11 +192,11 @@ public static class WinconditionCompiler {
         string abspath = Path.GetFullPath(workdir + relpath.Replace("/", "\\"));
 
         if (sourceFile.Contents == null || sourceFile.Contents.Length == 0) {
-            Trace.WriteLine($"Error file [ABS] <{abspath}>", nameof(WinconditionCompiler));
+            Trace.WriteLine($"Error file [ABS] <{abspath}>", nameof(CoH2WinconditionCompiler));
             return false;
         }
 
-        Trace.WriteLine($"Adding file [ABS] <{abspath}>", nameof(WinconditionCompiler));
+        Trace.WriteLine($"Adding file [ABS] <{abspath}>", nameof(CoH2WinconditionCompiler));
 
         builder.AppendLine($"\t{abspath}");
 
@@ -207,9 +207,7 @@ public static class WinconditionCompiler {
         if (useBytes) {
             File.WriteAllBytes(abspath, sourceFile.Contents);
         } else {
-            if (encoding is null) {
-                encoding = Encoding.UTF8;
-            }
+            encoding ??= Encoding.UTF8;
             File.WriteAllText(abspath, encoding.GetString(sourceFile.Contents));
         }
 
@@ -220,7 +218,7 @@ public static class WinconditionCompiler {
     private static void AddLocalFile(TxtBuilder builder, string localfile, string relpath, string workdir) {
 
         // Get path to copy file to
-        string copyFile = Path.GetFullPath($"{workdir}{relpath}{ Path.GetFileName(localfile)}");
+        string copyFile = Path.GetFullPath($"{workdir}{relpath}{Path.GetFileName(localfile)}");
 
         // Add the local file
         builder.AppendLine($"\t{copyFile}");
@@ -247,7 +245,7 @@ public static class WinconditionCompiler {
                 File.WriteAllBytes(gfxpath, uiFiles[i].Contents);
                 builder.AppendLine($"\t{gfxpath}");
             } else {
-                Trace.Write($"Skipping graphics file \"{uiFiles[i].Path}\"", nameof(WinconditionCompiler));
+                Trace.Write($"Skipping graphics file \"{uiFiles[i].Path}\"", nameof(CoH2WinconditionCompiler));
             }
         }
 
@@ -264,4 +262,3 @@ public static class WinconditionCompiler {
     }
 
 }
-

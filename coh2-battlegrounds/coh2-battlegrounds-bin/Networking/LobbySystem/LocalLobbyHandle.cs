@@ -2,6 +2,7 @@
 using System.Linq;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Game;
 using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.LobbySystem.Local;
@@ -34,6 +35,8 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
     public Dictionary<string, string> Settings { get; }
 
     public ILobbyPlanningHandle? PlanningHandle => this.m_planner;
+
+    public GameCase Game => GameCase.CompanyOfHeroes2;
 
     public event LobbyEventHandler<ILobbyTeam>? OnLobbyTeamUpdate;
     public event LobbyEventHandler<ILobbySlot>? OnLobbySlotUpdate;

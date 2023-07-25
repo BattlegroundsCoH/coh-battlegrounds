@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.Game;
 using Battlegrounds.Networking.LobbySystem;
 
 namespace Battlegrounds.Networking.Server;
@@ -104,6 +105,17 @@ public readonly struct ServerLobby {
 	/// 
 	/// </summary>
 	public byte[] AppVersion { get; }
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	public GameCase GetGame() {
+		if (Enum.TryParse(Game, true, out GameCase result)) {
+			return result;
+		}
+		return GameCase.CompanyOfHeroes2;
+	}
 
     /// <summary>
     /// 

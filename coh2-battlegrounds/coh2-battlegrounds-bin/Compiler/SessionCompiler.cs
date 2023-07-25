@@ -24,10 +24,11 @@ public class SessionCompiler : ISessionCompiler {
     private ICompanyCompiler? m_companyCompiler;
 
     /// <summary>
-    /// Create a new <see cref="SessionCompiler{T}"/> instance.
+    /// Create a new <see cref="SessionCompiler"/> instance.
     /// </summary>
     public SessionCompiler() => this.m_companyCompiler = null;
 
+    /// <inheritdoc/>
     public virtual string CompileSession(ISession session) {
 
         // Make sure we have a compiler compiler
@@ -124,6 +125,12 @@ public class SessionCompiler : ISessionCompiler {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="team"></param>
+    /// <param name="players"></param>
+    /// <returns></returns>
     protected virtual List<Dictionary<string, object>> GetTeam(string team, IEnumerable<ISessionParticipant> players) {
 
         List<Dictionary<string, object>> result = new();
@@ -145,6 +152,11 @@ public class SessionCompiler : ISessionCompiler {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="session"></param>
+    /// <returns></returns>
     protected virtual Dictionary<string, object> GetPlanning(ISession session) {
 
         // Create containers
@@ -242,8 +254,10 @@ public class SessionCompiler : ISessionCompiler {
 
     }
 
+    /// <inheritdoc/>
     public void SetCompanyCompiler(ICompanyCompiler companyCompiler) => this.m_companyCompiler = companyCompiler;
-    
+
+    /// <inheritdoc/>
     public string CompileSupplyData(ISession session) {
 
         // Get the participants

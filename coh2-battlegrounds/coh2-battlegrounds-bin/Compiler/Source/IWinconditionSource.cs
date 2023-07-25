@@ -1,9 +1,10 @@
-﻿using Battlegrounds.Modding;
+﻿using Battlegrounds.Compiler.Wincondition;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Compiler.Source;
 
 /// <summary>
-/// Interface for retrieving source files for use by the <see cref="WinconditionCompiler"/>.
+/// Interface for retrieving source files for use by the <see cref="IWinconditionCompiler"/>.
 /// </summary>
 public interface IWinconditionSource {
 
@@ -46,4 +47,3 @@ public interface IWinconditionSource {
     WinconditionSourceFile GetInfoFile(IGamemode mod);
 
 }
-
