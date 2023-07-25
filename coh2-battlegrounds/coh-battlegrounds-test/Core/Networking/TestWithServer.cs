@@ -6,7 +6,9 @@ using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Networking.LobbySystem.Factory;
 using Battlegrounds.Networking.Server;
 
+using DotNet.Testcontainers;
 using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 
 namespace Battlegrounds.Testing.Core.Networking;
@@ -25,6 +27,7 @@ public abstract class TestWithServer : IDisposable {
     protected readonly ServerAPI serverAPI;
     
     public TestWithServer() {
+        TestcontainersSettings.Logger = ConsoleLogger.Instance;
         container.StartAsync().GetAwaiter().GetResult();
         endpoint = new NetworkEndpoint(container.Hostname, container.GetMappedPublicPort(80), container.GetMappedPublicPort(11000));
         serverAPI = new ServerAPI(endpoint.RemoteIPAddress, endpoint.Http, true);

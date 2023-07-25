@@ -5,8 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 using System.Windows.Media;
 using System.Windows;
-
-using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Game;
 using Battlegrounds.Misc.Collections;
 using Battlegrounds.Misc.Values;
@@ -16,6 +14,7 @@ using Battlegrounds.UI;
 using Battlegrounds.UI.Converters;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Modding;
+using Battlegrounds.Game.Scenarios;
 
 namespace Battlegrounds.Lobby.Planning;
 
@@ -30,7 +29,7 @@ public sealed class ContextHandler {
 
     private readonly List<int> m_objectiveElements;
     private readonly ILobbyPlanningHandle m_handle;
-    private readonly Scenario m_scenario;
+    private readonly IScenario m_scenario;
     private readonly Dictionary<string, CapacityValue> m_entityCapacities;
     private PlacementCase? m_currentPlacement;
 
@@ -81,7 +80,7 @@ public sealed class ContextHandler {
 
     public IModPackage Package { get; }
 
-    public ContextHandler(ILobbyPlanningHandle handle, Scenario scenario, IModPackage package) {
+    public ContextHandler(ILobbyPlanningHandle handle, IScenario scenario, IModPackage package) {
 
         // Set handle
         this.m_handle = handle;

@@ -11,22 +11,22 @@ using Battlegrounds.Game.Scenarios.CoH2;
 using Battlegrounds.Logging;
 using Battlegrounds.Util;
 
-namespace Battlegrounds.Game.Database.Management.CoH2;
+namespace Battlegrounds.Game.Database.Management.CoH3;
 
 /// <summary>
 /// 
 /// </summary>
-public class CoH2ScenarioList : IScenarioList {
+public class CoH3ScenarioList : IScenarioList {
 
     private static readonly Logger logger = Logger.CreateLogger();
-    private static readonly Dictionary<string, IScenario> __coh2Scenarios = LoadScenarios();
+    private static readonly Dictionary<string, IScenario> __coh3Scenarios = LoadScenarios();
 
     private readonly Dictionary<string, IScenario> scenarios;
 
     /// <summary>
     /// 
     /// </summary>
-    public CoH2ScenarioList() {
+    public CoH3ScenarioList() {
         this.scenarios = new Dictionary<string, IScenario>();
     }
 
@@ -37,10 +37,10 @@ public class CoH2ScenarioList : IScenarioList {
     public IScenario? FromRelativeFilename(string filename) => scenarios?.FirstOrDefault(x => x.Value.RelativeFilename == filename).Value;
 
     /// <inheritdoc/>
-    public IList<IScenario> GetList() => scenarios.Values.Union(__coh2Scenarios.Values).ToArray();
+    public IList<IScenario> GetList() => scenarios.Values.Union(__coh3Scenarios.Values).ToArray();
 
     /// <inheritdoc/>
-    public IScenario? GetScenarioFromDirectory(string scenarioDirectoryPath, string sga = "MPScenarios.sga", string mmSavePath = "bin\\gfx\\map_icons\\") {
+    public IScenario? GetScenarioFromDirectory(string scenarioDirectoryPath, string sga = "ScenariosMP.sga", string mmSavePath = "bin\\gfx\\map_icons\\") {
 
         // Ensure valid directory
         if (!Directory.Exists(scenarioDirectoryPath)) {
@@ -88,93 +88,19 @@ public class CoH2ScenarioList : IScenarioList {
             }
 
         } catch (Exception ex) {
-            logger.Warning($"Failed to read scenario {sga}.sga; {ex.Message}");
+            logger.Warning($"Failed to read scenario {sga}; {ex.Message}");
         }
 
         // Delete the extracted files
-        Directory.Delete(scenarioDirectoryPath, true);
+        //Directory.Delete(scenarioDirectoryPath, true);
 
         // Return the scenario
         return scen;
 
     }
 
-    private static bool IsValidMapDirectory(string x) {
-        if (Directory.Exists(x)) {
-            string[] d = Directory.GetDirectories(x);
-            return d.Length == 1 && Directory.GetFiles(d[0]).Length > 0;
-        } else {
-            return false;
-        }
-    }
-
     /// <inheritdoc/>
     public void LoadWorkshopScenarios() {
-        /*
-        // Bail if no scenario list
-        if (scenarios is null) {
-            return;
-        }
-
-        // Get workshop filepath
-        string workshopScenarioFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\Mods\\Scenarios\\subscriptions";
-
-        // Verify it exists
-        if (!Directory.Exists(workshopScenarioFolder)) {
-            logger.Warning("Failed to locate workshop folder. (CoH2 may never have been launched on this device).");
-            return;
-        }
-
-        // Get paths
-        string extractPath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.EXTRACT_FOLDER);
-        string extractReadPath = Path.Combine(extractPath, "scenarios");
-
-        // Get sga files
-        string[] files = Directory.GetFiles(workshopScenarioFolder, "*.sga");
-
-        // Loop through all the .sga files in the subscriptions folder
-        for (int i = 0; i < files.Length; i++) {
-
-            string sga = Path.GetFileNameWithoutExtension(files[i]);
-            if (!scenarios.Any(x => x.Value.SgaName == sga) && !workshopScenarios.Any(x => x.SgaName == sga)) {
-
-                if (!Archiver.Extract(files[i], extractPath + "\\")) {
-                    logger.Warning($"Failed to extract workshop scenario {sga}.");
-                }
-
-                try {
-
-                    // Get the directory to read from
-                    string readfrom = $"{extractReadPath}\\mp\\community\\"
-                        .IfTrue(IsValidMapDirectory)
-                        .ElseIf($"{extractReadPath}\\mp\\", IsValidMapDirectory)
-                        .ElseIf($"{extractReadPath}\\pm\\community\\", IsValidMapDirectory)
-                        .ElseIf($"{extractReadPath}\\pm\\", IsValidMapDirectory)
-                        .Else(extractReadPath, IsValidMapDirectory);
-
-                    string[] dirs = Directory.GetDirectories(readfrom);
-                    if (dirs.Length > 0) {
-                        readfrom = dirs[0];
-
-                        // Try and read scenario
-                        if (GetScenarioFromDirectory(readfrom, sga, BattlegroundsContext.GetRelativePath(BattlegroundsPaths.MOD_USER_ICONS_FODLER)) is Scenario wrkscen) {
-
-                            // Add scenario
-                            workshopScenarios.Add(wrkscen);
-
-                        }
-
-                    } else {
-                        logger.Warning($"Failed to read sga \"{sga}\" (Skipping, unknown file structure)");
-                    }
-                } catch (Exception e) {
-                    logger.Warning($"Failed to read sga \"{sga}\" (Skipping, message = \"{e.Message}\")");
-                }
-
-            }
-
-        }
-        */
     }
 
     /// <inheritdoc/>
@@ -206,7 +132,7 @@ public class CoH2ScenarioList : IScenarioList {
 
         Dictionary<string, IScenario> scenarios = new Dictionary<string, IScenario>();
 
-        string rawJsonDb = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.DATABASE_FOLDER, "vcoh2-map-db.json");
+        string rawJsonDb = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.DATABASE_FOLDER, "vcoh3-map-db.json");
         IScenarioList.LoadScenarioDatabaseFile(rawJsonDb).ForEach(x => {
             if (!scenarios.TryAdd(Path.GetFileNameWithoutExtension(x.RelativeFilename), x)) {
                 logger.Warning($"Failed to add duplicate vcoh scenario '{x.RelativeFilename}'");

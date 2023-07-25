@@ -87,7 +87,7 @@ public class AIDefencePlanner {
     /// Create subdivisions of the map, marking where an AI player can place units/defences 
     /// </summary>
     /// <param name="scenario">The scenario to subdivide</param>
-    public void Subdivide(Scenario scenario, byte tid, byte[] indices) {
+    public void Subdivide(IScenario scenario, byte tid, byte[] indices) {
 
         // Get players per team
         var teamSize = scenario.MaxPlayers / 2;
@@ -181,7 +181,7 @@ public class AIDefencePlanner {
     /// <param name="indexOnTeam"></param>
     /// <param name="company"></param>
     /// <param name="scenario"></param>
-    public void CreateDefencePlan(byte teamIndex, byte indexOnTeam, Company company, Scenario scenario) {
+    public void CreateDefencePlan(byte teamIndex, byte indexOnTeam, Company company, IScenario scenario) {
 
         // Grab nodes and strategic points
         var nodes = this.m_analysisNodes[indexOnTeam];

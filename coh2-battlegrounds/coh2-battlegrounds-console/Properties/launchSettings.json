@@ -19,6 +19,10 @@
     "GfxCoH3-Unpack": {
       "commandName": "Project",
       "commandLineArgs": "gfxun -gfx coh3_races.dat -o coh3_races"
+    },
+    "CoH3Maps": {
+      "commandName": "Project",
+      "commandLineArgs": "coh2-extract-maps -coh3"
     }
   }
 }

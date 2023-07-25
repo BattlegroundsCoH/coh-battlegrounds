@@ -11,6 +11,7 @@ using Battlegrounds.Game.DataCompany;
 
 using static Battlegrounds.Game.Match.ParticipantTeam;
 using Battlegrounds.AI;
+using Battlegrounds.Game.Scenarios.CoH2;
 using Battlegrounds.Game.Scenarios;
 
 namespace Battlegrounds.Game.Match;
@@ -36,7 +37,7 @@ public class Session : ISession {
     /// <summary>
     /// Get the name of the scenario file to play.
     /// </summary>
-    public Scenario Scenario { get; }
+    public IScenario Scenario { get; }
 
     /// <summary>
     /// Get the <see cref="Wincondition"/> to use when playing.
@@ -88,7 +89,7 @@ public class Session : ISession {
     /// <param name="scenario"></param>
     /// <param name="gamemode"></param>
     /// <param name="tuning"></param>
-    private Session(Scenario scenario, IGamemode gamemode, ITuningMod tuning, ISessionPlanEntity[] planEntities, ISessionPlanGoal[] planGoals, ISessionPlanSquad[] planSquads) {
+    private Session(IScenario scenario, IGamemode gamemode, ITuningMod tuning, ISessionPlanEntity[] planEntities, ISessionPlanGoal[] planGoals, ISessionPlanSquad[] planSquads) {
 
         // Set public
         this.Settings = new Dictionary<string, object>();

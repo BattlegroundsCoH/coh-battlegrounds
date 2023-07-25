@@ -1,6 +1,6 @@
 ﻿using Battlegrounds.Game.Database.Management.CoH2;
 using Battlegrounds.Game.Scenarios;
-
+using Battlegrounds.Game.Scenarios.CoH2;
 using System;
 
 namespace Battlegrounds.Developer.Commands;
@@ -18,13 +18,14 @@ public class MinimapperCommand : Command {
 
         // Get scenario
         string s = argumentList.GetValue(SCENARIO);
-        if (!(new CoH2ScenarioList()).TryFindScenario(s, out Scenario? scen) && scen is null) {
+        if (!(new CoH2ScenarioList()).TryFindScenario(s, out IScenario? scen) && scen is null) {
             Console.WriteLine("Failed to find scenario " + s);
             return;
         }
 
         // Invoke mapper
-        Minimapper.Map(scen);
+        if (scen is CoH2Scenario sc)
+            Minimapper.Map(sc);
 
     }
 

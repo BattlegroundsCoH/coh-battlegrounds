@@ -83,6 +83,7 @@ public class ModDatabase : IModDb {
             };
             this._winconditionCoH3List = new WinconditionList();
             this._modCoH3Locale = new CoH3Locale();
+            this._modCoH3Scenarios = new CoH3ScenarioList();
         }
 
     }

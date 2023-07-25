@@ -6,8 +6,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Media;
 using System.Windows;
-
-using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
@@ -32,6 +30,7 @@ using Battlegrounds.Lobby.Pages.Host;
 using Battlegrounds.Lobby.Pages.Participants;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Resources.Extensions;
+using Battlegrounds.Game.Scenarios;
 
 namespace Battlegrounds.Lobby.Pages;
 
@@ -39,7 +38,7 @@ using static Battlegrounds.Lobby.Components.Buttons;
 using static Battlegrounds.UI.AppContext;
 
 public record PlanningOverviewModelInput(BaseLobby Model, ChatSpectator Chat, ILobbyHandle Handle) {
-    public Scenario Scenario => this.Model.Scenario ?? throw new Exception("No scenario was set!");
+    public IScenario Scenario => this.Model.Scenario ?? throw new Exception("No scenario was set!");
     public IModPackage Package => this.Model.ModPackage;
     public Gamemode Gamemode => this.Model.Gamemode;
 }
@@ -66,7 +65,7 @@ public sealed class Planner : ViewModelBase {
 
     public record LobbyPlanningParticipantDisplay(ImageSource? ArmyIcon, string Name, string CompanyName, int Row, int Column, ImageSource? SpawnPosIcon);
 
-    public record LobbyPlanningMinimapItem(EntityBlueprint EntityBlueprint, ushort Owner, GamePosition WorldPos, Scenario Scenario);
+    public record LobbyPlanningMinimapItem(EntityBlueprint EntityBlueprint, ushort Owner, GamePosition WorldPos, IScenario Scenario);
 
     public class LobbyPlanningCompanyDisplay : ILocaleArgumentsObject, INotifyPropertyChanged {
         public event ObjectChangedEventHandler? ObjectChanged;
