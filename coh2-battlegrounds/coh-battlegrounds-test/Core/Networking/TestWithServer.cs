@@ -16,7 +16,7 @@ namespace Battlegrounds.Testing.Core.Networking;
 public abstract class TestWithServer : IDisposable {
 
     private readonly IContainer container = new ContainerBuilder()
-            .WithImage("ghcr.io/battlegroundscoh/coh-battlegrounds-networking:v0.0.3")
+            .WithImage("ghcr.io/battlegroundscoh/coh-battlegrounds-networking:latest")
             .WithPortBinding(80, true)
             .WithPortBinding(11000, true)
             .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged("Started the CoH:Battlegrounds server with TCP and HTTP servers active"))
