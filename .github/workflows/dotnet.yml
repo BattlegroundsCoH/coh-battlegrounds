@@ -22,7 +22,7 @@ jobs:
     - name: Login to GitHub Container Registry
       run: docker login ghcr.io/battlegroundscoh -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
     - name: Docker Linux Daemon
-      run: cd C:\\Program Files\\Docker\\Docker && ./DockerCli.exe -witchDaemon
+      run: cd "C:\Program Files\Docker\Docker" && ./DockerCli.exe -witchDaemon
     - name: Pull docker image
       run: docker pull ghcr.io/battlegroundscoh/coh-battlegrounds-networking:latest
     - uses: actions/checkout@v3
