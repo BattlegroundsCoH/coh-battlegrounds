@@ -736,13 +736,28 @@
     <None Update="bg_common\gfx\map_icons\bocage_map.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="bg_common\gfx\map_icons\catania_crossing_6p_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\cliff_crossing_2p_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\gfx\map_icons\crossroadswx_map.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\gfx\map_icons\crossroads_map.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="bg_common\gfx\map_icons\desert_airfield_6p_mkii_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\desert_village_2p_mkiii_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\gfx\map_icons\deutz_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\gardens_2p_mm_generated.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\gfx\map_icons\german_industry_test_map_map.tga">
@@ -752,6 +767,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\gfx\map_icons\highwaybaku_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\industrial_railyard_6p_mkii_mm_generated.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\gfx\map_icons\ladoga_karelia_map.tga">
@@ -767,6 +785,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\gfx\map_icons\mill_road_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\mountain_ruins_6p_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\mountain_ruins_8p_mkii_mm_generated.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\gfx\map_icons\nexus_map.tga">
@@ -787,6 +811,9 @@
     <None Update="bg_common\gfx\map_icons\ponaryforest_map.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="bg_common\gfx\map_icons\rails_and_sand_4p_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\gfx\map_icons\rechnaya_pereprava_map.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -794,6 +821,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\gfx\map_icons\roadtoarnhem_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\rural_castle_4p_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\rural_town_2p_mkii_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\rural_town_4p_mm_generated.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\gfx\map_icons\southern_alblasserwaard_map.tga">
@@ -805,10 +841,19 @@
     <None Update="bg_common\gfx\map_icons\stadtschutt_map.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="bg_common\gfx\map_icons\torrente_4p_mkiii_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\twin_beach_2p_mkii_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\gfx\map_icons\vilshanka_map.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\gfx\map_icons\volga_timber_yard_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\winter_line_8p_mkii_mm_generated.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="bg_common\gfx\map_icons\wolfheze_map.tga">
