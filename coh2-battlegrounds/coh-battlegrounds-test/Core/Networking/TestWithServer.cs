@@ -15,22 +15,41 @@ namespace Battlegrounds.Testing.Core.Networking;
 
 public abstract class TestWithServer : IDisposable {
 
-    private readonly IContainer container = new ContainerBuilder()
-            .WithImage("ghcr.io/battlegroundscoh/coh-battlegrounds-networking:latest")
-            .WithPortBinding(80, true)
-            .WithPortBinding(11000, true)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged("Started the CoH:Battlegrounds server with TCP and HTTP servers active"))
-            .Build();
+    private readonly IContainer container;
+
+    private readonly bool isGithub;
 
     protected readonly NetworkEndpoint endpoint;
 
     protected readonly ServerAPI serverAPI;
     
     public TestWithServer() {
+        
+        if (Environment.GetEnvironmentVariable("TEST_LOCATION") is "github") {
+            isGithub = true;
+            return;
+        }
+
+        container = new ContainerBuilder()
+            .WithImage("ghcr.io/battlegroundscoh/coh-battlegrounds-networking:latest")
+            .WithPortBinding(80, true)
+            .WithPortBinding(11000, true)
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged("Started the CoH:Battlegrounds server with TCP and HTTP servers active"))
+            .Build();
+
         TestcontainersSettings.Logger = ConsoleLogger.Instance;
+
         container.StartAsync().GetAwaiter().GetResult();
         endpoint = new NetworkEndpoint(container.Hostname, container.GetMappedPublicPort(80), container.GetMappedPublicPort(11000));
         serverAPI = new ServerAPI(endpoint.RemoteIPAddress, endpoint.Http, true);
+
+    }
+
+    [SetUp] 
+    public void SetUpGithubCheck() { 
+        if (isGithub) {
+            Assert.Inconclusive("Cannot run server integration tests in githb");
+        }
     }
 
     public void Dispose() {

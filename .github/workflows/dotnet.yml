@@ -9,6 +9,9 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  TEST_LOCATION: "github"
+
 jobs:
   build:
 
@@ -19,12 +22,6 @@ jobs:
       contents: read
 
     steps:
-    - name: Login to GitHub Container Registry
-      run: docker login ghcr.io/battlegroundscoh -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
-    - name: Docker Linux Daemon
-      run: cd "C:\Program Files\Docker\Docker" && ./DockerCli.exe -witchDaemon
-    - name: Pull docker image
-      run: docker pull ghcr.io/battlegroundscoh/coh-battlegrounds-networking:latest
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
