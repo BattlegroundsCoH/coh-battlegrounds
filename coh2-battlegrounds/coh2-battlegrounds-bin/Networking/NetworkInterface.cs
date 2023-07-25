@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
@@ -18,10 +16,12 @@ public static class NetworkInterface {
 
     private static readonly Logger logger = Logger.CreateLogger();
 
-    private static readonly string __localServerAddr = File.Exists("network.test.txt") ? File.ReadAllText("network.test.txt") : "192.168.1.107";
-
-    private static readonly NetworkEndpoint LocalEndpoint = new(__localServerAddr, 80, 11000);
+    private static readonly NetworkEndpoint LocalEndpoint = new("127.0.0.1", 80, 11000);
     private static readonly NetworkEndpoint RemoteDebugEndpoint = new("194.37.80.249", 5001, 5000);
+
+    /// <summary>
+    /// Endpoint of the remote-release server
+    /// </summary>
     public static readonly NetworkEndpoint RemoteReleaseEndpoint = new("194.37.80.249", 80, 11000);
 
     /// <summary>
@@ -35,14 +35,9 @@ public static class NetworkInterface {
     public static bool LogAPICalls { get; set; } = true;
 
     /// <summary>
-    /// Get or set if the interface will accept local server instances.
-    /// </summary>
-    public static bool AllowLocalServerInstance { get; set; } = true;
-
-    /// <summary>
     /// Get or set the local address
     /// </summary>
-    public static string LocalAddress { get; set; } = __localServerAddr;
+    public static string LocalAddress { get; set; } = "127.0.0.1";
 
     /// <summary>
     /// Get or set the self identifier
@@ -102,33 +97,29 @@ public static class NetworkInterface {
 
     private static void DecideBestAddress(int timeout = 600) {
 #if DEBUG
-        // Try and connect to local server (if possible)
-        if (AllowLocalServerInstance && HasLocalServer() && LocalEndpoint.IsConnectable()) {
-            logger.Info("Picked locally running server as endpoint");
-            __bestEndpoint = LocalEndpoint;
-            __hasServerConnection = true;
+        if (TrySetBestAddress(timeout, LocalEndpoint, "Local Server")) {
             return;
         }
-        // Then try connect to debug server
-        if (RemoteDebugEndpoint.IsConnectable()) {
-            logger.Info("Picked remote debug server as endpoint");
-            __bestEndpoint = RemoteDebugEndpoint;
-            __hasServerConnection = true;
+        if (TrySetBestAddress(timeout, RemoteDebugEndpoint, "Debug Server")) {
             return;
         }
 #endif
-        // Set as release
-        __hasServerConnection = RemoteReleaseEndpoint.IsConnectable();
-        logger.Info($"Picked remote release server as endpoint (Connection = {__hasServerConnection})");
-        __bestEndpoint = RemoteReleaseEndpoint;
+        if (TrySetBestAddress(timeout, RemoteReleaseEndpoint, "Release Server")) {
+            return;
+        }
+        logger.Warning("Failed to connect to any remote endpoint - no internet or Battlegrounds server is down!");
     }
 
-    /// <summary>
-    /// Get if there's a local server instance running.
-    /// </summary>
-    /// <returns><see langword="true"/> if there's a local server instance running; Otherwise <see langword="false"/>.</returns>
-    public static bool HasLocalServer()
-        => Process.GetProcessesByName("bgserver").Length > 0;
+    private static bool TrySetBestAddress(int timeout, NetworkEndpoint endpoint, string endpointName) {
+        var connected = endpoint.IsConnectable(timeout);
+        if (connected) {
+            string version = endpoint.GetVersion(timeout);
+            logger.Info("Picked endpoint {0} ({1}) of version {2}", endpoint, endpointName, version);
+            __bestEndpoint = endpoint;
+            __hasServerConnection = true;
+        }
+        return connected;
+    }
 
     /// <summary>
     /// Register a connection with the interface.
@@ -164,23 +155,27 @@ public static class NetworkInterface {
     /// Shutdown all active connections.
     /// </summary>
     public static void Shutdown() {
+        
         if (__connections is null) {
             logger.Warning("Please setup the NetworkInterface before shutting it down.");
             return;
         }
-        if (__connections.Count > 0) {
-            var ls = new List<IConnection>(__connections);
-            try {
-                foreach (IConnection connection in ls) {
-                    try {
-                        connection.Shutdown();
-                    } catch { }
-                }
-            } catch (Exception e) { 
-                logger.Exception(e);
-            }
+
+        if (__connections.Count <= 0) {
+            return;
         }
+
+        var ls = new List<IConnection>(__connections);
+        try {
+            foreach (IConnection connection in ls) {
+                try {
+                    connection.Shutdown();
+                } catch { }
+            }
+        } catch (Exception e) {
+            logger.Exception(e);
+        }
+
     }
 
 }
-

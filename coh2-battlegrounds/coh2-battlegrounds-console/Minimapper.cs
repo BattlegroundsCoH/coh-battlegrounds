@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-
-using Battlegrounds.Game.Scenarios;
+using Battlegrounds.Game.Scenarios.CoH2;
 using Battlegrounds.Gfx;
 
 namespace Battlegrounds.Developer;
 
 public static class Minimapper {
 
-    public static unsafe void Map(Scenario scenario) {
+    public static unsafe void Map(CoH2Scenario scenario) {
 
         if (!OperatingSystem.IsWindows()) {
             return;

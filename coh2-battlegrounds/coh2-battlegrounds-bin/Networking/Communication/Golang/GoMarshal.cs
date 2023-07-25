@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
+
+using Battlegrounds.Logging;
 
 namespace Battlegrounds.Networking.Communication.Golang;
 
@@ -9,6 +10,8 @@ namespace Battlegrounds.Networking.Communication.Golang;
 /// Static utility class for handling marshalling between the server and client.
 /// </summary>
 public static class GoMarshal {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     /// <summary>
     /// The fixed size of the message header.
@@ -25,7 +28,7 @@ public static class GoMarshal {
         try {
             return JsonSerializer.SerializeToUtf8Bytes(obj);
         } catch (Exception e) {
-            Trace.WriteLine(e, "Networking.json");
+            logger.Exception(e);
             throw;
         }
     }
@@ -44,13 +47,13 @@ public static class GoMarshal {
         }
         if (input[0] is 0) {
             File.WriteAllBytes("errpackage.json.dat", input);
-            Trace.WriteLine("Halting unmarshal process before attempt to parse opening '0x0' byte.", "Networking.json");
+            logger.Info("Halting unmarshal process before attempt to parse opening '0x0' byte.");
         }
         try {
             return JsonSerializer.Deserialize<T>(input);
         } catch (Exception e) {
             File.WriteAllBytes("errpackage.json.dat", input);
-            Trace.WriteLine(e, "Networking.json");
+            logger.Exception(e);
             throw;
         }
     }

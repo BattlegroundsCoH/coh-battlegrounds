@@ -2,8 +2,8 @@
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 
-using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Resources.Imaging;
+using Battlegrounds.Game.Scenarios;
 
 namespace Battlegrounds.Resources;
 
@@ -22,7 +22,7 @@ public static class ScenarioPreviewLookup {
     /// </summary>
     /// <param name="scenario"></param>
     /// <returns></returns>
-    public static BitmapSource? TryGetMapSource(Scenario? scenario) {
+    public static BitmapSource? TryGetMapSource(IScenario? scenario) {
 
         // Check scenario
         if (scenario is null) {

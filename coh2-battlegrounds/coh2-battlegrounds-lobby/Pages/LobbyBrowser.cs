@@ -13,6 +13,7 @@ using Battlegrounds.Networking.Server;
 using Battlegrounds.UI;
 using Battlegrounds.DataLocal;
 using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.UI.Threading;
 using Battlegrounds.UI.Modals.Prompts;
 using Battlegrounds.UI.Modals;
 using Battlegrounds.Lobby.Lookups;
@@ -24,6 +25,7 @@ using Battlegrounds.Lobby.Modals;
 using Battlegrounds.Locale;
 using Battlegrounds.Game;
 using Battlegrounds.Logging;
+using Battlegrounds.Networking.LobbySystem.Factory;
 
 namespace Battlegrounds.Lobby.Pages;
 
@@ -62,7 +64,7 @@ public record LobbySlotPreview(ServerSlot Slot) {
     public Visibility SlotVisibility => this.Slot.State == 3 ? Visibility.Collapsed : Visibility.Visible;
 }
 
-public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
+public sealed class LobbyBrowser : IViewModel {
 
     private static readonly Logger logger = Logger.CreateLogger();
 
@@ -361,66 +363,61 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
             // Show error modal
             OKPrompt.Show(OKPrompt.Nothing,
                 "Network Failure", "No network connection was established to the Battlegrounds Server (NetworkInterface.APIObject=<NULL>).");
-
-        } else {
-
-            // Show modal
-            HostLobby.Show((vm, resault) => {
-
-                // Check return value
-                if (resault is not ModalDialogResult.Confirm) {
-                    return;
-                }
-
-                // Check for null pwd
-                vm.LobbyPassword ??= string.Empty;
-
-                // Create lobby
-                Task.Run(() => LobbyUtil.HostLobby(NetworkInterface.APIObject, vm.LobbyName, vm.LobbyPassword, this.HostLobbyResponse));
-
-            });
+            return;
 
         }
 
+        // Show modal
+        HostLobby.Show((vm, resault) => {
+
+            // Check return value
+            if (resault is not ModalDialogResult.Confirm) {
+                return;
+            }
+
+            // Check for null pwd
+            vm.LobbyPassword ??= string.Empty;
+
+            // Create lobby
+            var factory = new OnlineLobbyFactory(NetworkInterface.APIObject, NetworkInterface.Endpoint, BattlegroundsContext.Steam.User);
+            BeginHostLobby(factory, vm.LobbyName, vm.LobbyPassword, vm.LobbyGame, vm.LobbyPackage.ID);
+
+        });
+
     }
 
-    private void HostLobbyResponse(bool isSuccess, ILobbyHandle? lobby) {
+    private void BeginHostLobby(ILobbyFactory lobbyFactory, string name, string? password, GameCase game, string package) {
+        lobbyFactory.HostLobby(name, password, game, package).ThenDispatch(HostedLobby).ElseDispatch(() => HostedLobby(null));
+    }
 
-        // If lobby was created.
-        if (isSuccess && lobby is not null) {
+    private void HostedLobby(ILobbyHandle? handle) {
 
-            // Log success
-            logger.Info("Succsefully hosted lobby.");
-
-            // Invoke on GUI
-            Application.Current.Dispatcher.Invoke(() => {
-
-                // Create lobby models.
-                var lobbyModel = BaseLobby.CreateModelAsHost(lobby);
-                if (lobbyModel is null) {
-                    throw new Exception("BAAAAAAD : FIX ASAP");
-                }
-
-                ChatSpectator chatMode = new(lobby);
-                lobbyModel.SetChatModel(chatMode);
-
-                // Get VM
-                var vm = GetViewManager();
-
-                // Display it
-                vm.SetDisplay(AppDisplayState.LeftRight, chatMode, lobbyModel);
-
-            });
-
-        } else {
+        // Bail if not created
+        if (handle is null) {
 
             // Log failure
             logger.Error("Failed to host lobby.");
 
             // Give feedback to user.
-            _ = MessageBox.Show("Failed to host lobby (Failed to connect to server).", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("Failed to host lobby (Failed to connect to server).", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            return;
 
         }
+
+        // Log success
+        logger.Info("Succsefully hosted lobby.");
+
+        // Create lobby models.
+        BaseLobby lobbyModel = BaseLobby.CreateModelAsHost(handle) ?? throw new Exception("BAAAAAAD : FIX ASAP");
+        ChatSpectator chatMode = new(handle);
+        lobbyModel.SetChatModel(chatMode);
+
+        // Get VM
+        var vm = GetViewManager();
+
+        // Display it
+        vm.SetDisplay(AppDisplayState.LeftRight, chatMode, lobbyModel);
 
     }
 
@@ -444,6 +441,9 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
         // Get selected lobby
         if (this.SelectedLobby is ServerLobby lobby) {
 
+            // Get factory
+            var factory = new OnlineLobbyFactory(NetworkInterface.APIObject, NetworkInterface.Endpoint, BattlegroundsContext.Steam.User);
+
             // If password, ask for it
             if (lobby.IsPasswrodProtected) {
 
@@ -455,55 +455,30 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
                         return;
                     }
 
-                    Task.Run(() => {
-                        LobbyUtil.JoinLobby(NetworkInterface.APIObject, lobby, vm.Password, this.JoinLobbyResponse);
-                    });
+                    factory.JoinLobby(lobby, vm.Password).ThenDispatch(JoinedLobby).ElseDispatch(() => JoinedLobby(null));
 
                 });
 
             } else {
 
-                Task.Run(() => {
-                    LobbyUtil.JoinLobby(NetworkInterface.APIObject, lobby, string.Empty, this.JoinLobbyResponse);
-                });
+                factory.JoinLobby(lobby, string.Empty).ThenDispatch(JoinedLobby).ElseDispatch(() => JoinedLobby(null));
 
             }
 
         }
     }
 
-    private void JoinLobbyResponse(bool joined, ILobbyHandle? lobby) {
+    private void JoinedLobby(ILobbyHandle? handle) {
 
-        if (joined && lobby is not null) {
-
-            // Ensure this now runs on the GUI thread
-            Application.Current.Dispatcher.Invoke(() => {
-
-                // Log success
-                logger.Info("Succsefully joined lobby.");
-
-                // Create lobby models.
-                var lobbyModel = BaseLobby.CreateModelAsParticipant(lobby) ?? throw new Exception("BAAAAAAD : FIX ASAP");
-
-                ChatSpectator chatMode = new(lobby);
-                lobbyModel.SetChatModel(chatMode);
-
-                // Get VM
-                var vm = GetViewManager();
-
-                // Display it
-                vm.UpdateDisplay(AppDisplayTarget.Left, chatMode);
-                vm.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
-
-            });
-
-        } else {
+        if (handle is null) {
 
             // Log failure
             logger.Error("Failed to join lobby.");
 
             // Give feedback to user.
-            _ = MessageBox.Show("Failed to join lobby (Failed to connect to server).", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("Failed to join lobby (Failed to connect to server).", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            return;
 
         }
 

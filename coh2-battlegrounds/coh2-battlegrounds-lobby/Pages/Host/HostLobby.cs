@@ -13,6 +13,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Database;
 using Battlegrounds.Game.Scenarios;
+using Battlegrounds.Game.Scenarios.CoH2;
 using Battlegrounds.Lobby.Components;
 using Battlegrounds.Lobby.Lookups;
 using Battlegrounds.Lobby.Playing;
@@ -461,7 +462,7 @@ public sealed class HostLobby : BaseLobby {
 
     }
 
-    private void UpdateGamemodeAndOptionsSelection(Scenario scenario) {
+    private void UpdateGamemodeAndOptionsSelection(IScenario scenario) {
 
         // Bail if no package defined
         if (this.m_package is null) {

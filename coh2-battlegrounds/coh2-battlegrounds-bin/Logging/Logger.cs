@@ -124,6 +124,30 @@ public sealed class Logger {
         LogThis(LogLevel.Error, e.Message);
         BattlegroundsContext.Log!.Write(e.StackTrace);
         BattlegroundsContext.Log!.Write(Environment.NewLine);
+        BattlegroundsContext.Log!.Flush();
+    }
+
+    /// <summary>
+    /// Logs an exception in a nice and readable format with additional contextual details.
+    /// </summary>
+    /// <param name="e">The exception to log.</param>
+    /// <param name="details">The key-value paired contextual details to log with this error.</param>
+    public void ExceptionWithDetails(Exception e, params (string, object)[] details) {
+        LogThis(LogLevel.Error, e.Message);
+        BattlegroundsContext.Log!.Write("Context Details: ");
+        BattlegroundsContext.Log!.Write(Environment.NewLine);
+        for (int i = 0; i < details.Length; i++) {
+            BattlegroundsContext.Log!.Write("\t");
+            BattlegroundsContext.Log!.Write(details[i].Item1);
+            BattlegroundsContext.Log!.Write(": ");
+            BattlegroundsContext.Log!.Write(details[i].Item2);
+            BattlegroundsContext.Log!.Write(Environment.NewLine);
+        }
+        BattlegroundsContext.Log!.Write("Stack Trace: ");
+        BattlegroundsContext.Log!.Write(Environment.NewLine);
+        BattlegroundsContext.Log!.Write(e.StackTrace);
+        BattlegroundsContext.Log!.Write(Environment.NewLine);
+        BattlegroundsContext.Log!.Flush();
     }
 
     // The actual method that passes the log message to the actual logger

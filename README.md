@@ -64,6 +64,23 @@ Additionally, you must fullfill the following:
 
 The mod has an [official website](https://cohbattlegrounds.com/), and you can join our Discord [here](https://discord.gg/n26gXsk5R5)
 
+# For Developers
+
+This section is directed at developers of Battlegrounds
+
+## Testing
+
+We've started re-introducing automated testing to catch bugs and make server testing easier. The tests are integrated in the development cycle and PRs with failing tests will be rejected.
+
+Additionally, the automated tests make use of the actual Battlegrounds server to do testing; Thus requiring access to the private server repository. As a developer you mush, therefore,
+run the following command in order to locally run tests:
+
+```bash
+docker login ghcr.io/battlegroundscoh
+```
+
+Use your github username and a generated (classic) access token with read/write rights to repository packages.
+
 ---
 
 *A fan made mod for Company of Heroes 2

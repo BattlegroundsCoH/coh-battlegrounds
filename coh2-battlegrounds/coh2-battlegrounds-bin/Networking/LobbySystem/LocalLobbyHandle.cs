@@ -298,7 +298,7 @@ public sealed class LocalLobbyHandle : ILobbyHandle {
         // Do Nothing
     }
 
-    public void SendChatMessage(int filter, ulong senderID, string message) {
+    public void SendChatMessage(int filter, string message) {
         // Do Nothing
     }
 

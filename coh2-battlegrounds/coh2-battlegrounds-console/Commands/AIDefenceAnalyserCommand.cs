@@ -1,5 +1,4 @@
 ﻿using Battlegrounds.AI.Lobby;
-using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Game.Database.Management.CoH2;
 
 using System;
@@ -7,11 +6,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.Text.Json;
 using System.Threading;
+using Battlegrounds.Game.Scenarios;
 
 namespace Battlegrounds.Developer.Commands;
 
@@ -60,13 +59,13 @@ public class AIDefenceAnalyserCommand : Command {
             Console.WriteLine($"Finished processing {scenarios.Count} scenarios in {stop.Elapsed.TotalSeconds}s");
             Thread.Sleep(5000);
 
-            File.WriteAllText($"vcoh-aimap-db.json", JsonSerializer.Serialize(ls, new JsonSerializerOptions() { WriteIndented = true }));
+            File.WriteAllText($"vcoh2-aimap-db.json", JsonSerializer.Serialize(ls, new JsonSerializerOptions() { WriteIndented = true }));
 
         } else {
 
             // Get scenario
             string s = argumentList.GetValue(SCENARIO);
-            if (!scenarioList.TryFindScenario(s, out Scenario? scen) && scen is null) {
+            if (!scenarioList.TryFindScenario(s, out IScenario? scen) && scen is null) {
                 Console.WriteLine("Failed to find scenario " + s);
                 return;
             }
@@ -78,8 +77,7 @@ public class AIDefenceAnalyserCommand : Command {
 
     }
 
-    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "Will always run on Windows")]
-    private static AIMapAnalysis? DoScenario(Scenario scen) {
+    private static AIMapAnalysis? DoScenario(IScenario scen) {
 
         // Log
         Console.WriteLine($"Doing Analysis on: {scen.RelativeFilename}.");

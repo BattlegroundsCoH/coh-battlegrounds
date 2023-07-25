@@ -17,6 +17,8 @@ type LobbyPublic struct {
 	Capacity            byte
 	Occupants           byte
 	Teams               [][]LobbyPublicTeamSlot
+	Game                string
+	AppVersion          []byte
 }
 type LobbyPublicTeamSlot struct {
 	DisplayName string
@@ -84,25 +86,42 @@ public readonly struct ServerLobby {
 	/// <summary>
 	/// 
 	/// </summary>
-	public string Mode => this.Settings[LobbyConstants.SETTING_GAMEMODEOPTION] is "" 
+	public string Mode => GameModeOption is "" 
 		? $"{this.Settings[LobbyConstants.SETTING_MAP]}, {this.Settings[LobbyConstants.SETTING_GAMEMODE]}"
-		: $"{this.Settings[LobbyConstants.SETTING_MAP]}, {this.Settings[LobbyConstants.SETTING_GAMEMODE]} ({this.Settings[LobbyConstants.SETTING_GAMEMODEOPTION]})";
+		: $"{this.Settings[LobbyConstants.SETTING_MAP]}, {this.Settings[LobbyConstants.SETTING_GAMEMODE]} ({GameModeOption})";
 
 	/// <summary>
 	/// 
 	/// </summary>
-	/// <param name="UID"></param>
-	/// <param name="Name"></param>
-	/// <param name="Settings"></param>
-	/// <param name="IsPasswrodProtected"></param>
-	/// <param name="IsObserversAllowed"></param>
-	/// <param name="Status"></param>
-	/// <param name="Capacity"></param>
-	/// <param name="Occupants"></param>
-	/// <param name="Teams"></param>
-	[JsonConstructor]
+	public string GameModeOption => this.Settings.GetValueOrDefault(LobbyConstants.SETTING_GAMEMODEOPTION, string.Empty);
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public string Game { get; }
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public byte[] AppVersion { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="UID"></param>
+    /// <param name="Name"></param>
+    /// <param name="Settings"></param>
+    /// <param name="IsPasswrodProtected"></param>
+    /// <param name="IsObserversAllowed"></param>
+    /// <param name="Status"></param>
+    /// <param name="Capacity"></param>
+    /// <param name="Occupants"></param>
+    /// <param name="Teams"></param>
+    /// <param name="Game"></param>
+	/// <param name="AppVersion"></param>
+    [JsonConstructor]
 	public ServerLobby(ulong UID, string Name, Dictionary<string, string> Settings, bool IsPasswrodProtected, bool IsObserversAllowed, string Status,
-		byte Capacity, byte Occupants, ServerSlot[][] Teams) { 
+		byte Capacity, byte Occupants, ServerSlot[][] Teams, string Game, byte[] AppVersion) { 
 		this.UID = UID;
 		this.Name = Name;
 		this.IsPasswrodProtected = IsPasswrodProtected;
@@ -133,6 +152,9 @@ public readonly struct ServerLobby {
 			this.Teams = Teams;
         }
 
+		this.Game = Game;
+		this.AppVersion = AppVersion;
+
 	}
 
 }
@@ -142,6 +164,9 @@ public readonly struct ServerLobby {
 /// </summary>
 public readonly struct ServerSlot {
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public static readonly ServerSlot None = new("", "", 0, 0);
 
 	/// <summary>

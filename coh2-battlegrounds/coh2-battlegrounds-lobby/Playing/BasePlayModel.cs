@@ -17,16 +17,15 @@ using Battlegrounds.Game.Match.Composite;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Game.Match;
-using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Game;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Util;
 using Battlegrounds.Verification;
-using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Lobby.Components;
 using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Game.Scenarios;
 
 namespace Battlegrounds.Lobby.Playing;
 
@@ -351,7 +350,7 @@ public abstract class BasePlayModel {
 
     }
 
-    protected void CreateAIPlans(Scenario scenario, SessionParticipant[] defenders, byte tid,
+    protected void CreateAIPlans(IScenario scenario, SessionParticipant[] defenders, byte tid,
         ref SessionPlanSquadInfo[] units, ref SessionPlanEntityInfo[] structures, SessionPlanGoalInfo[] goals, Gamemode gamemode, IModPackage package) {
 
         // Grab allies AIs

@@ -23,6 +23,7 @@ public class ModDatabaseManager : IModDbManager {
     private readonly CoH3Locale coh3Locale;
 
     private readonly CoH2ScenarioList coh2Scenarios;
+    private readonly CoH3ScenarioList coh3Scenarios;
 
     /// <summary>
     /// 
@@ -40,6 +41,7 @@ public class ModDatabaseManager : IModDbManager {
 
         // Prepare CoH3 defaults
         this.coh3Locale = new CoH3Locale();
+        this.coh3Scenarios = new CoH3ScenarioList();
 
     }
 
@@ -75,6 +77,7 @@ public class ModDatabaseManager : IModDbManager {
     /// <inheritdoc/>
     public IScenarioList GetScenarioList(GameCase game) => game switch {
         GameCase.CompanyOfHeroes2 => coh2Scenarios,
+        GameCase.CompanyOfHeroes3 => coh3Scenarios,
         _ => throw new NotSupportedException()
     };
 

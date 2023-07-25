@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Scenarios;
+using Battlegrounds.Game.Scenarios.CoH2;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content.Companies;
 
@@ -19,7 +20,7 @@ public class NullSession : ISession {
 
     public bool AllowPersistency { get; }
 
-    public Scenario Scenario => new Scenario();
+    public IScenario Scenario => new CoH2Scenario();
 
     public IGamemode Gamemode => new Wincondition("Unknown Gamemode", ModGuid.BaseGame);
 

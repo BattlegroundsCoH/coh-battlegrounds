@@ -8,11 +8,11 @@ namespace Battlegrounds.Lobby.Lookups;
 
 public static class SettingsLookup {
 
-    public static string GetScenarioName(Scenario? scen, string defaultName)
+    public static string GetScenarioName(IScenario? scen, string defaultName)
         => scen is null ?
         defaultName :
         scen.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(scen.Name[1..], out uint key) 
-            ? BattlegroundsContext.DataSource.GetLocale(Game.GameCase.CompanyOfHeroes2).GetString(key) : scen.Name;
+            ? BattlegroundsContext.DataSource.GetLocale(scen.Game).GetString(key) : scen.Name;
 
     public static string GetGamemodeName(string gamemode, IModPackage? package) {
 

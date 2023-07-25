@@ -497,6 +497,10 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     public uint GetPlayerCount(bool humansOnly = false)
         => this.m_remote.Call<uint>("GetPlayerCount", EncBool(humansOnly));
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public byte GetSelfTeam() {
         if (this.Allies.GetSlotOfMember(this.Self.ID) is null) {
             if (this.Axis.GetSlotOfMember(this.Self.ID) is null) {
@@ -519,11 +523,9 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
 
         // Convert to str
         string strength = company.Strength.ToString(CultureInfo.InvariantCulture);
-        string auto = EncBool(company.IsAuto);
-        string none = EncBool(company.IsNone);
 
         // Invoke remotely
-        this.m_remote.Call("SetCompany", tid, sid, auto, none, company.Name, company.Army, strength, company.Specialisation);
+        this.m_remote.Call("SetCompany", tid, sid, company.Name, company.Army, strength, company.Specialisation);
 
         // Trigger self update
         this.OnLobbyCompanyUpdate?.Invoke(new(tid, sid, company)); // This might need to be removed!
@@ -576,7 +578,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
         var inv = company.Strength.ToString(CultureInfo.InvariantCulture);
 
         // Call AI
-        this.m_remote.Call("AddAI", tid, sid, difficulty, EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, inv, company.Specialisation);
+        this.m_remote.Call("AddAI", tid, sid, difficulty, EncBool(company.IsAuto), company.Name, company.Army, inv, company.Specialisation);
 
     }
 
@@ -604,7 +606,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// <param name="tid">The team ID containing the slot to be locked. Accepts values in the range 0 &#x2264; T &#x2264; 1</param>
     /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
     public void LockSlot(int tid, int sid)
-        => this.m_remote.Call("LockSlot", tid, sid);
+        => this.m_remote.Call("LobbyMethod_SetSlotState", tid, sid, LobbyConstants.STATE_LOCKED);
 
     /// <summary>
     /// Unlocks the locked slot at specified position.
@@ -612,20 +614,19 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// <param name="tid">The team ID containing the slot to be unlocked. Accepts values in the range 0 &#x2264; T &#x2264; 1</param>
     /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
     public void UnlockSlot(int tid, int sid)
-        => this.m_remote.Call("UnlockSlot", tid, sid);
+        => this.m_remote.Call("LobbyMethod_SetSlotState", tid, sid, LobbyConstants.STATE_OPEN);
 
     /// <summary>
     /// Send a chat message along a communication channel.
     /// </summary>
     /// <param name="filter">The message channel. 0 = (Lobby) Global Chat; 1 = Team Chat.</param>
-    /// <param name="mid">The ID of the sender of the message.</param>
     /// <param name="msg">The contents of the message to send.</param>
     /// <exception cref="IndexOutOfRangeException"></exception>
-    public void SendChatMessage(int filter, ulong mid, string msg) => this.m_remote.Call(filter switch {
-        0 => "GlobalChat",
-        1 => "TeamChat",
+    public void SendChatMessage(int filter, string msg) => this.m_remote.Call("ChatMessage", filter switch {
+        0 => "ALL",
+        1 => "TEAM",
         _ => throw new IndexOutOfRangeException()
-    }, mid, msg);
+    }, msg);
 
     /// <summary>
     /// Set the lobby setting.

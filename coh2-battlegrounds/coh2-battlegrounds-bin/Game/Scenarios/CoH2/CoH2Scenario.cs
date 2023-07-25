@@ -10,157 +10,81 @@ using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Scripting.Lua.Interpreter;
 using Battlegrounds.Util;
 
-namespace Battlegrounds.Game.Scenarios;
+namespace Battlegrounds.Game.Scenarios.CoH2;
 
 /// <summary>
-/// The theatre of war a scenario is taking place in.
+/// Represents a scenario. This class cannot be inherited.
 /// </summary>
-public enum ScenarioTheatre {
+public sealed class CoH2Scenario : IScenario {
 
     /// <summary>
-    /// Axis vs Soviets
+    /// Name of an invalid sga
     /// </summary>
-    EasternFront,
-
-    /// <summary>
-    /// Axis vs UKF & USF
-    /// </summary>
-    WesternFront,
-
-    /// <summary>
-    /// Axis vs Allies (Germany)
-    /// </summary>
-    SharedFront,
-
-}
-
-/// <summary>
-/// Represents a scenario. Implements <see cref="IJsonObject"/>. This class cannot be inherited.
-/// </summary>
-public sealed class Scenario {
-
     public const string INVALID_SGA = "INVALID SGA";
 
     /// <summary>
-    /// 
-    /// </summary>
-    public readonly struct PointPosition {
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [JsonInclude]
-        public readonly GamePosition Position;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [JsonInclude]
-        public readonly ushort Owner;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [JsonInclude]
-        public readonly string EntityBlueprint;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="X"></param>
-        /// <param name="Y"></param>
-        /// <param name="Owner"></param>
-        /// <param name="EntityBlueprint"></param>
-        [JsonConstructor]
-        public PointPosition(GamePosition Position, ushort Owner, string EntityBlueprint) {
-            this.Position = Position;
-            this.Owner = Owner;
-            this.EntityBlueprint = EntityBlueprint;
-        }
-    }
-
-    /// <summary>
-    /// The text-name for the <see cref="Scenario"/>.
+    /// The text-name for the <see cref="CoH2Scenario"/>.
     /// </summary>
     public string Name { get; set; }
 
     /// <summary>
-    /// The description text for the <see cref="Scenario"/>.
+    /// The description text for the <see cref="CoH2Scenario"/>.
     /// </summary>
     public string Description { get; set; }
 
-    /// <summary>
-    /// The relative filename to the "mp" scenarios folder.
-    /// </summary>
+    /// <inheritdoc/>
     public string RelativeFilename { get; set; }
 
     /// <summary>
-    /// Name of the sga file containing this <see cref="Scenario"/>.
+    /// Name of the sga file containing this <see cref="CoH2Scenario"/>.
     /// </summary>
     public string SgaName { get; set; }
 
-    /// <summary>
-    /// The max amount of players who can play on this map.
-    /// </summary>
+    /// <inheritdoc/>
     public byte MaxPlayers { get; set; }
 
-    /// <summary>
-    /// The <see cref="ScenarioTheatre"/> this map takes place in.
-    /// </summary>
+    /// <inheritdoc/>
     public ScenarioTheatre Theatre { get; set; }
 
     /// <summary>
-    /// Can this <see cref="Scenario"/> be considered a winter map.
+    /// Can this <see cref="CoH2Scenario"/> be considered a winter map.
     /// </summary>
     public bool IsWintermap { get; set; }
 
-    /// <summary>
-    /// Get if the given scenario is visible in the lobby.
-    /// </summary>
+    /// <inheritdoc/>
     public bool IsVisibleInLobby { get; set; }
 
     /// <summary>
-    /// Get if the <see cref="Scenario"/> is a workshop map.
+    /// Get if the <see cref="CoH2Scenario"/> is a workshop map.
     /// </summary>
     public bool IsWorkshopMap => SgaName.ToLower() is not ("mpscenarios" or "mpxp1scenarios");
 
-    /// <summary>
-    /// The <see cref="Wincondition"/> instances designed for this <see cref="Scenario"/>. Empty list means all <see cref="Wincondition"/> instances can be used.
-    /// </summary>
-    public List<string> Gamemodes { get; set; }
+    /// <inheritdoc/>
+    public IList<string> Gamemodes { get; set; }
 
-    /// <summary>
-    /// Get if the scenario has a valid info or options file.
-    /// </summary>
+    /// <inheritdoc/>
     [JsonIgnore]
     public bool HasValidInfoOrOptionsFile { get; private set; }
 
-    /// <summary>
-    /// Get the point position information.
-    /// </summary>
+    /// <inheritdoc/>
     public PointPosition[] Points { get; set; }
 
-    /// <summary>
-    /// Get the width and length of the playable world.
-    /// </summary>
+    /// <inheritdoc/>
     public GameSize PlayableSize { get; set; }
 
-    /// <summary>
-    /// Get or set the width and length of the terrain.
-    /// </summary>
+    /// <inheritdoc/>
     public GameSize TerrainSize { get; set; }
 
-    /// <summary>
-    /// Get or set the width and length of the terrain.
-    /// </summary>
+    /// <inheritdoc/>
     public GameSize MinimapSize { get; set; }
 
-    /// <summary>
-    /// Get or set the game this scenario is for.
-    /// </summary>
-    public GameCase Game { get; set; }
+    /// <inheritdoc/>
+    public GameCase Game => GameCase.CompanyOfHeroes2;
 
-    public Scenario() {
+    /// <summary>
+    /// Create a new, unitialised scenario
+    /// </summary>
+    public CoH2Scenario() {
         SgaName = INVALID_SGA;
         Gamemodes = new List<string>();
         HasValidInfoOrOptionsFile = true; // Under the assumption it's being set
@@ -171,17 +95,17 @@ public sealed class Scenario {
         PlayableSize = GameSize.Naught;
         TerrainSize = GameSize.Naught;
         MinimapSize = GameSize.Naught;
-        Game = GameCase.CompanyOfHeroes2;
     }
 
     /// <summary>
-    /// New <see cref="Scenario"/> instance with data from either an infor or options file.
+    /// New <see cref="CoH2Scenario"/> instance with data from either an infor or options file.
     /// </summary>
     /// <param name="laofile">The path to the lao file containing terrain information.</param>
     /// <param name="infofile">The path to the info file.</param>
     /// <param name="optionsfile">The path to the options file</param>
+    /// <param name="sganame">The name of the sga file</param>
     /// <exception cref="ArgumentNullException"/>
-    public static Scenario? ReadScenario(string? laofile, string? infofile, string? optionsfile, string sganame) {
+    public static CoH2Scenario? ReadScenario(string? laofile, string? infofile, string? optionsfile, string sganame) {
 
         // Make sure lao file is not null
         if (string.IsNullOrEmpty(laofile)) {
@@ -209,9 +133,9 @@ public sealed class Scenario {
         }
 
         // Create scenario with basics
-        var scen = new Scenario {
+        var scen = new CoH2Scenario {
             // Create basics
-            Gamemodes = new(),
+            Gamemodes = new List<string>(),
             SgaName = sganame,
             RelativeFilename = Path.GetFileNameWithoutExtension(infofile),
             Name = headerInfo["scenarioname"].Str(),
@@ -267,7 +191,7 @@ public sealed class Scenario {
             scen.TerrainSize = new(terrainWidth, terrainLength);
 
         } catch (Exception e) {
-            Trace.WriteLine($"Error while reading scenario information: {e}", nameof(Scenario));
+            Trace.WriteLine($"Error while reading scenario information: {e}", nameof(CoH2Scenario));
         }
 
         // Return
@@ -285,6 +209,8 @@ public sealed class Scenario {
         string ebp = table["ebp_name"].Str();
         return new(new(x, y), owner, ebp);
     }
+
+    /// <inheritdoc/>
     public GamePosition ToMinimapPosition(double minimapWidth, double minimapHeight, GamePosition worldPos) {
 
         // Bring into standard coordinate system
@@ -300,6 +226,7 @@ public sealed class Scenario {
 
     }
 
+    /// <inheritdoc/>
     public GamePosition FromMinimapPosition(double minimapWidth, double minimapHeight, double x, double y) {
 
         // Calculate u,v coords
@@ -315,6 +242,7 @@ public sealed class Scenario {
 
     }
 
+    /// <inheritdoc/>
     public GamePosition FromMinimapPosition(double minimapWidth, double minimapHeight, GamePosition minipos)
         => FromMinimapPosition(minimapWidth, minimapHeight, minipos.X, minipos.Y);
 

@@ -153,22 +153,15 @@ public sealed class ChatSpectator : ViewModelBase {
         Trace.WriteLine("Sending chat message: " + content);
 
         // Forward declare
-        string channel = "?";
+        string channel = this.SendFilter.CurrentIndex switch {
+            0 => "All",
+            1 => "Team",
+            _ => "?"
+        };
         string timestamp = DateTime.Now.ToShortTimeString();
 
         // Send using broker
-        switch (this.SendFilter.CurrentIndex) {
-            case 0: // All
-                this.m_handle.SendChatMessage(0, this.m_handle.Self.ID, content);
-                channel = "All";
-                break;
-            case 1: // Team
-                this.m_handle.SendChatMessage(1, this.m_handle.Self.ID, content);
-                channel = "Team";
-                break;
-            default:
-                break;
-        }
+        this.m_handle.SendChatMessage(this.SendFilter.CurrentIndex, content);
 
         // Append message
         this.NewMessage(this.m_handle.Self.Name, content, Color.FromRgb(255, 255, 255), timestamp, channel);

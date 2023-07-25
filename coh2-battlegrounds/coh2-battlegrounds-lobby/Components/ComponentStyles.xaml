@@ -23,7 +23,7 @@
                 <ControlTemplate TargetType="{x:Type controls:TriggerButton}">
                     <Grid x:Name="ToggleGrid">
                         <Grid.Resources>
-                            <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
+                            <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/Battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
                         </Grid.Resources>
                         <Image x:Name="Arrow" Source="{StaticResource ArrowDropdownDrawingImage}"/>
                     </Grid>

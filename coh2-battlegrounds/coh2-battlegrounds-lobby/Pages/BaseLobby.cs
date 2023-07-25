@@ -12,7 +12,6 @@ using System.Windows;
 using Battlegrounds.DataLocal;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Game;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Modding;
@@ -27,6 +26,7 @@ using Battlegrounds.Lobby.Helpers;
 using Battlegrounds.Lobby.Pages.Host;
 using Battlegrounds.Lobby.Pages.Participants;
 using Battlegrounds.Locale;
+using Battlegrounds.Game.Scenarios;
 
 namespace Battlegrounds.Lobby.Pages;
 
@@ -35,11 +35,11 @@ using static Battlegrounds.UI.AppContext;
 
 public abstract class BaseLobby : IViewModel, INotifyPropertyChanged {
 
-    public record ScenOp(Scenario Scenario) {
+    public record ScenOp(IScenario Scenario) {
         private static readonly Dictionary<string, string> _cachedNames = new();
         private string GetDisplay()
             => this.Scenario.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(this.Scenario.Name[1..], out uint key) ?
-            BattlegroundsContext.DataSource.GetLocale(GameCase.CompanyOfHeroes2).GetString(key) : this.Scenario.Name;
+            BattlegroundsContext.DataSource.GetLocale(Scenario.Game).GetString(key) : this.Scenario.Name;
         public override string ToString()
             => _cachedNames.TryGetValue(Scenario.Name, out string? s) ? (s ?? Scenario.Name) : (_cachedNames[this.Scenario.Name] = GetDisplay());
     }
@@ -147,7 +147,7 @@ public abstract class BaseLobby : IViewModel, INotifyPropertyChanged {
 
     public ImageSource? ScenarioPreview { get; set; }
 
-    public Scenario? Scenario { get; set; }
+    public IScenario? Scenario { get; set; }
 
     public string LobbyTitle { get; }
 
