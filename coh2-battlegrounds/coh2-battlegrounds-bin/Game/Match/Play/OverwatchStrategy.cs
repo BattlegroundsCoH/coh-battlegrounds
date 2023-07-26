@@ -1,5 +1,4 @@
 ﻿using Battlegrounds.Game.Match.Data;
-using Battlegrounds.Logging;
 
 namespace Battlegrounds.Game.Match.Play;
 
@@ -8,54 +7,58 @@ namespace Battlegrounds.Game.Match.Play;
 /// </summary>
 public sealed class OverwatchStrategy : IPlayStrategy {
 
-    private static readonly Logger logger = Logger.CreateLogger();
-
     private readonly ISession m_session;
+    private readonly ISessionHandler sessionHandler;
     private readonly GameProcess m_gameProcess;
 
     private bool m_hasLaunched;
     private int m_procResponse;
     private IMatchData? m_matchData;
 
+    /// <inheritdoc/>
     public ISession Session => this.m_session;
+
+    /// <inheritdoc/>
+    public bool IsLaunched => this.m_hasLaunched;
 
     /// <summary>
     /// Create new <see cref="OverwatchStrategy"/> for the specified <see cref="ISession"/>.
     /// </summary>
-    /// <param name="session">The <see cref="Session"/> instance used to run the game.</param>
-    public OverwatchStrategy(ISession session) {
+    /// <param name="session">The <see cref="ISession"/> instance used to run the game.</param>
+    /// <param name="sessionHandler">The session handler to use</param>
+    public OverwatchStrategy(ISession session, ISessionHandler sessionHandler) {
         this.m_hasLaunched = false;
         this.m_matchData = null;
         this.m_procResponse = -1;
         this.m_session = session;
-        this.m_gameProcess = new CoH2Process(); // TMP!
-        logger.Debug("Dont forget to change the CoH2 process instance into a generic GameProcess instance");
+        this.sessionHandler = sessionHandler;
+        this.m_gameProcess = sessionHandler.GetNewGameProcess();
     }
 
-    public bool IsLaunched => this.m_hasLaunched;
-
+    /// <inheritdoc/>
     public bool IsPerfect()
-        => this.m_procResponse == CoH2Process.PROCESS_OK &&
-        !SessionUtility.GotBugsplat().Result &&
-        !SessionUtility.GotFatalScarError() &&
-        SessionUtility.HasPlayback();
+        => this.m_procResponse == GameProcess.PROCESS_OK &&
+        !sessionHandler.GotBugsplat().Result &&
+        !sessionHandler.GotFatalScarError() &&
+        sessionHandler.HasPlayback();
 
+    /// <inheritdoc/>
     public void Launch() {
         if (!this.IsLaunched) {
             this.m_hasLaunched = this.m_gameProcess.Launch();
         }
     }
 
+    /// <inheritdoc/>
     public void WaitForExit() {
         if (this.IsLaunched) {
             this.m_procResponse = this.m_gameProcess.WatchProcess();
         }
     }
 
+    /// <inheritdoc/>
     public IMatchData GetResults() {
-        if (this.m_matchData is null) {
-            this.m_matchData = new ReplayMatchData(this.m_session);
-        }
+        this.m_matchData ??= new ReplayMatchData(this.m_session);
         return this.m_matchData;
     }
 

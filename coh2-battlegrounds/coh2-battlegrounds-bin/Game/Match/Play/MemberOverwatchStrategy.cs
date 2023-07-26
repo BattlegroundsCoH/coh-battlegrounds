@@ -1,5 +1,4 @@
 ﻿using Battlegrounds.Game.Match.Data;
-using Battlegrounds.Logging;
 
 namespace Battlegrounds.Game.Match.Play;
 
@@ -8,32 +7,42 @@ namespace Battlegrounds.Game.Match.Play;
 /// </summary>
 public class MemberOverwatchStrategy : IPlayStrategy {
 
-    private static readonly Logger logger = Logger.CreateLogger();
-
     private bool m_isLaunched;
     private IMatchData m_result;
+
+    private readonly ISessionHandler sessionHandler;
     private readonly GameProcess m_process;
 
-    public MemberOverwatchStrategy() {
+    /// <summary>
+    /// Initialise a new <see cref="MemberOverwatchStrategy"/> instance.
+    /// </summary>
+    /// <param name="sessionHandler">The handler that will handle the session</param>
+    public MemberOverwatchStrategy(ISessionHandler sessionHandler) {
         this.m_isLaunched = false;
         this.m_result = new NoMatchData();
-        this.m_process = new CoH2Process(); // Temp
-        logger.Debug("Dont forget to change the CoH2 process instance into a generic GameProcess instance");
+        this.sessionHandler = sessionHandler;
+        this.m_process = sessionHandler.GetNewGameProcess();
     }
 
+    /// <inheritdoc/>
     public bool IsLaunched => this.m_isLaunched;
 
+    /// <inheritdoc/>
     public ISession Session => new NullSession();
 
+    /// <inheritdoc/>
     public IMatchData GetResults() => this.m_result;
 
-    public bool IsPerfect() => SessionUtility.HasPlayback() && !SessionUtility.GotFatalScarError() && !SessionUtility.GotBugsplat().Result;
+    /// <inheritdoc/>
+    public bool IsPerfect() => sessionHandler.HasPlayback() && !sessionHandler.GotFatalScarError() && !sessionHandler.GotBugsplat().Result;
 
+    /// <inheritdoc/>
     public void Launch() => this.m_isLaunched = this.m_process.Launch();
 
+    /// <inheritdoc/>
     public void WaitForExit() {
         if (this.m_isLaunched) {
-            if (this.m_process.WatchProcess() == CoH2Process.PROCESS_OK) {
+            if (this.m_process.WatchProcess() == GameProcess.PROCESS_OK) {
                 this.m_result = new JsonPlayback(new ReplayMatchData(this.Session));
             } else {
                 this.m_result = new JsonPlayback();

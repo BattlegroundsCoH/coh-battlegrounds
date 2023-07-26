@@ -11,7 +11,6 @@ using Battlegrounds.Game.DataCompany;
 
 using static Battlegrounds.Game.Match.ParticipantTeam;
 using Battlegrounds.AI;
-using Battlegrounds.Game.Scenarios.CoH2;
 using Battlegrounds.Game.Scenarios;
 
 namespace Battlegrounds.Game.Match;

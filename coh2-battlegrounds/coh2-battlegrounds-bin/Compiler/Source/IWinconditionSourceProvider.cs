@@ -6,7 +6,7 @@ namespace Battlegrounds.Compiler.Source;
 /// <summary>
 /// Interface for retrieving source files for use by the <see cref="IWinconditionCompiler"/>.
 /// </summary>
-public interface IWinconditionSource {
+public interface IWinconditionSourceProvider {
 
     /// <summary>
     /// Get all scar code files

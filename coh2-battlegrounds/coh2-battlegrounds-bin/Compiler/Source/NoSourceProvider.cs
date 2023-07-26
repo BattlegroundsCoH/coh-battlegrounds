@@ -5,10 +5,10 @@ using Battlegrounds.Modding;
 namespace Battlegrounds.Compiler.Source;
 
 /// <summary>
-/// Represents a default implementation of the <see cref="IWinconditionSource"/> interface
+/// Represents a default implementation of the <see cref="IWinconditionSourceProvider"/> interface
 /// that provides no actual data for win conditions, locales, graphics, UI, or win files.
 /// </summary>
-public sealed class NoSource : IWinconditionSource {
+public sealed class NoSourceProvider : IWinconditionSourceProvider {
 
     /// <summary>
     /// Gets the information file related to the specified game mode.

@@ -20,13 +20,12 @@ public sealed class OnlineModel : BasePlayModel, IPlayModel {
     public OnlineModel(ILobbyHandle handler, ChatSpectator lobbyChat, UploadProgressCallbackHandler callbackHandler, uint cancelTime) : base(handler, lobbyChat) {
 
         // Startup strategy
-        this.m_startupStrategy = new OnlineStartupStrategy {
+        this.m_startupStrategy = new OnlineStartupStrategy(handler.Game) {
             LocalCompanyCollector = () => this.m_selfCompany,
             SessionInfoCollector = () => this.m_info,
             GamemodeUploadProgress = callbackHandler,
-            PlayStrategyFactory = new OverwatchStrategyFactory(),
+            PlayStrategyFactory = new OverwatchStrategyFactory(handler.Game),
             StopMatchSeconds = cancelTime
-
         };
 
         // Analysis strategy

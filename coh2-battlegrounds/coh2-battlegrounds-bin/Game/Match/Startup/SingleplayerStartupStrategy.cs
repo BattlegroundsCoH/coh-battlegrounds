@@ -1,34 +1,44 @@
-﻿using System.Diagnostics;
-
-using Battlegrounds.Compiler;
+﻿using Battlegrounds.Compiler;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Match.Composite;
 using Battlegrounds.Game.Match.Play;
+using Battlegrounds.Logging;
 
 namespace Battlegrounds.Game.Match.Startup;
 
 /// <summary>
 /// Startup Strategy for games with one human player. Can be extended with custom behaviour.
 /// </summary>
-public class SingleplayerStartupStrategy : BaseStartupStrategy {
+public sealed class SingleplayerStartupStrategy : BaseStartupStrategy {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     private Session? m_collectedSession;
 
+    /// <summary>
+    /// Create a new <see cref="SingleplayerStartupStrategy"/> instance.
+    /// </summary>
+    /// <param name="game">The specific game to play</param>
+    public SingleplayerStartupStrategy(GameCase game) : base(game) {}
+
+    /// <inheritdoc/>
     public override bool OnPrepare(object caller) => this.GetLocalCompany(BattlegroundsContext.Steam.User.ID);
 
+    /// <inheritdoc/>
     public override bool OnBegin(object caller) => true;
 
+    /// <inheritdoc/>
     public override bool OnCollectMatchInfo(object caller) {
 
         // Verify the info collector is valid
         if (this.SessionInfoCollector is null) {
-            Trace.WriteLine("Session info collector was null on match collection.", nameof(SingleplayerStartupStrategy));
+            logger.Error("Session info collector was null on match collection.");
             return false;
         }
 
         // Verify local company is there
         if (this.LocalCompany is not Company local) {
-            Trace.WriteLine("Local company was not defined on startup.", nameof(SingleplayerStartupStrategy));
+            logger.Error("Local company was not defined on startup.");
             return false;
         }
 
@@ -48,10 +58,13 @@ public class SingleplayerStartupStrategy : BaseStartupStrategy {
 
     }
 
-    public virtual ICompanyCompiler GetCompanyCompiler() => new CompanyCompiler();
+    /// <inheritdoc/>
+    public ICompanyCompiler GetCompanyCompiler() => new CompanyCompiler();
 
-    public virtual ISessionCompiler GetSessionCompiler() => new SessionCompiler();
+    /// <inheritdoc/>
+    public ISessionCompiler GetSessionCompiler() => new SessionCompiler();
 
+    /// <inheritdoc/>
     public override bool OnCompile(object caller) {
 
         // Create compiler
@@ -63,12 +76,12 @@ public class SingleplayerStartupStrategy : BaseStartupStrategy {
 
         // Verify the info collector is valid
         if (this.m_collectedSession is null) {
-            Trace.WriteLine("Session info collector was null on match compile.", nameof(SingleplayerStartupStrategy));
+            logger.Error("Session info collector was null on match compile.");
             return false;
         }
 
         // Compile session
-        bool result = SessionUtility.CompileSession(compiler, this.m_collectedSession);
+        bool result = sessionHandler.CompileSession(compiler, this.m_collectedSession);
 
         // Log result
         if (result) {
@@ -79,17 +92,18 @@ public class SingleplayerStartupStrategy : BaseStartupStrategy {
 
     }
 
+    /// <inheritdoc/>
     public override bool OnStart(object caller, out IPlayStrategy playStrategy) {
 
         // Verify the info collector is valid
         if (this.m_collectedSession is null) {
-            Trace.WriteLine("Session info collector was null on match compile.", nameof(SingleplayerStartupStrategy));
+            logger.Error("Session info collector was null on match compile.");
             playStrategy = new NoPlayStrategy();
             return false;
         }
 
         // Use the overwatch strategy (and launch).
-        playStrategy = this.PlayStrategyFactory?.CreateStrategy(this.m_collectedSession) is IPlayStrategy strat ? strat : new NoPlayStrategy();
+        playStrategy = this.PlayStrategyFactory?.CreateStrategy(this.m_collectedSession, sessionHandler) is IPlayStrategy strat ? strat : new NoPlayStrategy();
         playStrategy.Launch();
 
         // Inform player they'll now be launching

@@ -7,7 +7,7 @@ using Battlegrounds.Networking.LobbySystem;
 
 namespace Battlegrounds.Networking.Server;
 
-/* (Outdated as of 26th of April 2022)
+/* 
 type LobbyPublic struct {
 	UID                 uint64
 	Name                string

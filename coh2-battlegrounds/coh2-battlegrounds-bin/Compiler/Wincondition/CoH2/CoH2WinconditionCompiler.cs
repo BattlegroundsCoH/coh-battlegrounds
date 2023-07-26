@@ -2,26 +2,38 @@
 using System.IO;
 using System.Text;
 using System.Linq;
-using System.Diagnostics;
 using System.Globalization;
 
 using Battlegrounds.Util;
 using Battlegrounds.Compiler.Source;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Match;
+using Battlegrounds.Logging;
 
 namespace Battlegrounds.Compiler.Wincondition.CoH2;
 
 /// <summary>
-/// Static helper class for compiling a win condition in a JIT-style.
+/// Wincondition compiler for compiling a Company of Heroes 2 wincondition into a valid .sga file
 /// </summary>
 public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
 
+    private static readonly Logger logger = Logger.CreateLogger();
+
+    private readonly LocaleCompiler localeCompiler;
+    private readonly string workDirectory;
+
     /// <summary>
-    /// Get the path to where the gamemode archive is saved.
+    /// 
     /// </summary>
-    /// <returns>The absolute path to the wincondition archive file.</returns>
-    public static string GetArchivePath() {
+    /// <param name="workDirectory"></param>
+    /// <param name="localeCompiler"></param>
+    public CoH2WinconditionCompiler(string workDirectory, LocaleCompiler localeCompiler) {
+        this.workDirectory = !workDirectory.EndsWith("\\", false, CultureInfo.InvariantCulture) ? workDirectory + "\\" : workDirectory;
+        this.localeCompiler = localeCompiler;
+    }
+
+    /// <inheritdoc/>
+    public string GetArchivePath() {
         string dirpath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\my games\\Company of Heroes 2\\mods\\gamemode\\subscriptions";
         if (!Directory.Exists(dirpath)) {
             Directory.CreateDirectory(dirpath);
@@ -29,21 +41,12 @@ public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
         return dirpath + "\\coh2_battlegrounds_wincondition.sga";
     }
 
-    /// <summary>
-    /// Compile a session into a sga archive file.
-    /// </summary>
-    /// <param name="workdir">The temporary work directory.</param>
-    /// <param name="sessionFile">The session file to include</param>
-    /// <param name="wincondition">The wincondition to compile.</param>
-    /// <param name="source">The wincondition source file locator.</param>
-    /// <param name="includeFiles">Additional files to include in the gamemode.</param>
-    /// <returns>True of the archive file was created sucessfully. False if any error occured.</returns>
-    public static bool CompileToSga(string workdir, string sessionFile, ISession session, IWinconditionSource source, LocaleCompiler locCompiler,
-        params WinconditionSourceFile[] includeFiles) {
+    /// <inheritdoc/>
+    public bool CompileToSga(string sessionFile, ISession session, IWinconditionSourceProvider source, params WinconditionSourceFile[] includeFiles) {
 
         // Verify is win condition source is valid
         if (source is null) {
-            Trace.WriteLine("Failed to find a valid source", nameof(CoH2WinconditionCompiler));
+            logger.Error("Failed to find a valid source");
             return false;
         }
 
@@ -55,13 +58,8 @@ public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
         var infoFile = source.GetInfoFile(session.Gamemode);
         var modiconFile = source.GetModGraphic();
 
-        // Fix potential missing '\'
-        if (!workdir.EndsWith("\\", false, CultureInfo.InvariantCulture)) {
-            workdir += "\\";
-        }
-
         // Create the workspace
-        CreateWorkspace(workdir);
+        CreateWorkspace();
 
         // The archive definition to use when compiling
         TxtBuilder archiveDef = new();
@@ -82,23 +80,23 @@ public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
 
         // Add and compile win file(s)
         foreach (var file in winFiles) {
-            if (!AddFile(archiveDef, "data\\game\\winconditions\\", workdir, file)) {
+            if (!AddFile(archiveDef, "data\\game\\winconditions\\", file)) {
                 return false;
             }
         }
 
         // Add the session file
-        AddLocalFile(archiveDef, sessionFile, "data\\scar\\winconditions\\auxiliary_scripts\\", workdir);
+        AddLocalFile(archiveDef, sessionFile, "data\\scar\\winconditions\\auxiliary_scripts\\");
 
         // Add and *compile* scar files
         foreach (var file in scarFiles) {
-            if (!AddFile(archiveDef, "data\\scar\\winconditions\\", workdir, file)) {
+            if (!AddFile(archiveDef, "data\\scar\\winconditions\\", file)) {
                 return false;
             }
         }
 
         // Add the graphic files
-        AddGraphics(archiveDef, workdir, uiFiles);
+        AddGraphics(archiveDef, uiFiles);
 
         // Info TOC section
         archiveDef.AppendLine("TOCEnd");
@@ -108,7 +106,7 @@ public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
         archiveDef.AppendLine("\tFileSettingsEnd");
 
         // Add and compile info file
-        if (!AddInfoFiles(archiveDef, workdir, infoFile, modiconFile)) {
+        if (!AddInfoFiles(archiveDef, infoFile, modiconFile)) {
             return false;
         }
 
@@ -122,11 +120,11 @@ public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
         foreach (var file in localeFiles) {
 
             // Grab path and log
-            string abspath = Path.GetFullPath(workdir + file.Path.Replace("/", "\\"));
-            Trace.WriteLine($"Adding locale file [ABS] <{abspath}>", nameof(CoH2WinconditionCompiler));
+            string abspath = Path.GetFullPath(workDirectory + file.Path.Replace("/", "\\"));
+            logger.Info($"Adding locale file [ABS] <{abspath}>");
 
             // Translate the locale file
-            locCompiler.TranslateLocale(file.Contents, abspath, session.Names.ToArray());
+            localeCompiler.TranslateLocale(file.Contents, abspath, session.Names.ToArray());
 
             // Append win condition file to locale section.
             archiveDef.AppendLine($"\t{abspath}");
@@ -137,7 +135,7 @@ public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
         archiveDef.AppendLine("TOCEnd");
 
         // Generate the path
-        string archiveDefTxtPath = workdir + "ArchiveDefinition.txt";
+        string archiveDefTxtPath = workDirectory + "ArchiveDefinition.txt";
 
         // Save the archive definition
         archiveDef.Save(archiveDefTxtPath);
@@ -146,7 +144,7 @@ public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
         string outputArchive = GetArchivePath();
 
         // Call the archive
-        if (!Archiver.Archive(archiveDefTxtPath, workdir, outputArchive)) {
+        if (!Archiver.Archive(archiveDefTxtPath, workDirectory, outputArchive)) {
             return false;
         }
 
@@ -160,43 +158,43 @@ public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
 
     }
 
-    private static void CreateWorkspace(string workdir) {
+    private void CreateWorkspace() {
 
         // Clear the directory we're going to work in
-        if (Directory.Exists(workdir)) {
-            Directory.Delete(workdir, true);
+        if (Directory.Exists(workDirectory)) {
+            Directory.Delete(workDirectory, true);
         }
 
         // Create directories
-        Directory.CreateDirectory(workdir);
-        Directory.CreateDirectory($"{workdir}data\\");
-        Directory.CreateDirectory($"{workdir}data\\game");
-        Directory.CreateDirectory($"{workdir}data\\game\\winconditions");
-        Directory.CreateDirectory($"{workdir}data\\scar");
-        Directory.CreateDirectory($"{workdir}data\\scar\\winconditions");
-        Directory.CreateDirectory($"{workdir}data\\scar\\winconditions\\auxiliary_scripts");
-        Directory.CreateDirectory($"{workdir}data\\scar\\winconditions\\ui_api");
-        Directory.CreateDirectory($"{workdir}data\\ui\\");
-        Directory.CreateDirectory($"{workdir}data\\ui\\Assets\\");
-        Directory.CreateDirectory($"{workdir}data\\ui\\Assets\\Textures\\");
-        Directory.CreateDirectory($"{workdir}data\\ui\\Bin\\");
-        Directory.CreateDirectory($"{workdir}info");
-        Directory.CreateDirectory($"{workdir}locale");
-        Directory.CreateDirectory($"{workdir}locale\\english");
+        Directory.CreateDirectory(workDirectory);
+        Directory.CreateDirectory($"{workDirectory}data\\");
+        Directory.CreateDirectory($"{workDirectory}data\\game");
+        Directory.CreateDirectory($"{workDirectory}data\\game\\winconditions");
+        Directory.CreateDirectory($"{workDirectory}data\\scar");
+        Directory.CreateDirectory($"{workDirectory}data\\scar\\winconditions");
+        Directory.CreateDirectory($"{workDirectory}data\\scar\\winconditions\\auxiliary_scripts");
+        Directory.CreateDirectory($"{workDirectory}data\\scar\\winconditions\\ui_api");
+        Directory.CreateDirectory($"{workDirectory}data\\ui\\");
+        Directory.CreateDirectory($"{workDirectory}data\\ui\\Assets\\");
+        Directory.CreateDirectory($"{workDirectory}data\\ui\\Assets\\Textures\\");
+        Directory.CreateDirectory($"{workDirectory}data\\ui\\Bin\\");
+        Directory.CreateDirectory($"{workDirectory}info");
+        Directory.CreateDirectory($"{workDirectory}locale");
+        Directory.CreateDirectory($"{workDirectory}locale\\english");
 
     }
 
-    private static bool AddFile(TxtBuilder builder, string rpath, string workdir, WinconditionSourceFile sourceFile, bool useBytes = false, Encoding? encoding = null) {
+    private bool AddFile(TxtBuilder builder, string rpath, WinconditionSourceFile sourceFile, bool useBytes = false, Encoding? encoding = null) {
 
         string relpath = rpath + sourceFile.Path;
-        string abspath = Path.GetFullPath(workdir + relpath.Replace("/", "\\"));
+        string abspath = Path.GetFullPath(workDirectory + relpath.Replace("/", "\\"));
 
         if (sourceFile.Contents == null || sourceFile.Contents.Length == 0) {
-            Trace.WriteLine($"Error file [ABS] <{abspath}>", nameof(CoH2WinconditionCompiler));
+            logger.Error($"Failed adding file [ABS] <{abspath}>");
             return false;
         }
 
-        Trace.WriteLine($"Adding file [ABS] <{abspath}>", nameof(CoH2WinconditionCompiler));
+        logger.Info($"Adding file [ABS] <{abspath}>");
 
         builder.AppendLine($"\t{abspath}");
 
@@ -215,10 +213,10 @@ public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
 
     }
 
-    private static void AddLocalFile(TxtBuilder builder, string localfile, string relpath, string workdir) {
+    private void AddLocalFile(TxtBuilder builder, string localfile, string relpath) {
 
         // Get path to copy file to
-        string copyFile = Path.GetFullPath($"{workdir}{relpath}{Path.GetFileName(localfile)}");
+        string copyFile = Path.GetFullPath($"{workDirectory}{relpath}{Path.GetFileName(localfile)}");
 
         // Add the local file
         builder.AppendLine($"\t{copyFile}");
@@ -228,11 +226,11 @@ public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
 
     }
 
-    private static void AddGraphics(TxtBuilder builder, string workdir, WinconditionSourceFile[] uiFiles) {
+    private void AddGraphics(TxtBuilder builder, WinconditionSourceFile[] uiFiles) {
 
         // Create paths
-        string ddsPath = Path.GetFullPath($"{workdir}data\\ui\\Assets\\Textures\\");
-        string gfxPath = Path.GetFullPath($"{workdir}data\\ui\\Bin\\");
+        string ddsPath = Path.GetFullPath($"{workDirectory}data\\ui\\Assets\\Textures\\");
+        string gfxPath = Path.GetFullPath($"{workDirectory}data\\ui\\Bin\\");
 
         // Loop through gfx files and add them
         for (int i = 0; i < uiFiles.Length; i++) {
@@ -245,19 +243,19 @@ public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
                 File.WriteAllBytes(gfxpath, uiFiles[i].Contents);
                 builder.AppendLine($"\t{gfxpath}");
             } else {
-                Trace.Write($"Skipping graphics file \"{uiFiles[i].Path}\"", nameof(CoH2WinconditionCompiler));
+                logger.Warning($"Skipping graphics file \"{uiFiles[i].Path}\"");
             }
         }
 
     }
 
-    private static bool AddInfoFiles(TxtBuilder builder, string workdir, WinconditionSourceFile infoFile, WinconditionSourceFile iconFile) {
+    private bool AddInfoFiles(TxtBuilder builder, WinconditionSourceFile infoFile, WinconditionSourceFile iconFile) {
 
-        if (!AddFile(builder, string.Empty, workdir, infoFile)) {
+        if (!AddFile(builder, string.Empty, infoFile)) {
             return false;
         }
 
-        return AddFile(builder, string.Empty, workdir, iconFile);
+        return AddFile(builder, string.Empty, iconFile);
 
     }
 

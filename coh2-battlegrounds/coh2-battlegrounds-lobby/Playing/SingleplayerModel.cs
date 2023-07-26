@@ -21,10 +21,10 @@ public sealed class SingleplayerModel : BasePlayModel, IPlayModel {
     public SingleplayerModel(ILobbyHandle handler, ChatSpectator lobbyChat) : base(handler, lobbyChat) {
 
         // Startup strategy
-        this.m_startupStrategy = new SingleplayerStartupStrategy {
+        this.m_startupStrategy = new SingleplayerStartupStrategy(handler.Game) {
             LocalCompanyCollector = () => this.m_selfCompany,
             SessionInfoCollector = () => this.m_info,
-            PlayStrategyFactory = new OverwatchStrategyFactory(),
+            PlayStrategyFactory = new OverwatchStrategyFactory(handler.Game),
         };
 
         // Analysis strategy

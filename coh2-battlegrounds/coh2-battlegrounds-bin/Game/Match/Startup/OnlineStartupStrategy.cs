@@ -17,7 +17,7 @@ namespace Battlegrounds.Game.Match.Startup;
 /// <summary>
 /// Startup Strategy specifically for games with more than one human player. Can be extended with custom behaviour.
 /// </summary>
-public class OnlineStartupStrategy : BaseStartupStrategy {
+public sealed class OnlineStartupStrategy : BaseStartupStrategy {
 
     /// <summary>
     /// Get or set the amount of seconds all players have to press the stop button. (5 seconds by default).
@@ -33,10 +33,15 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
     private SessionInfo m_sessionInfo;
     private Session? m_session;
 
-    public OnlineStartupStrategy() {
+    /// <summary>
+    /// Initialise a new <see cref="OnlineStartupStrategy"/> instance.
+    /// </summary>
+    /// <param name="game">The game case to handle</param>
+    public OnlineStartupStrategy(GameCase game) : base(game) {
         this.m_session = null;
     }
 
+    /// <inheritdoc/>
     public override bool OnBegin(object caller) { // This can be cancelled by host as well by sending a self-message through the connection object.
 
         // Get managed lobby
@@ -49,6 +54,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
 
     }
 
+    /// <inheritdoc/>
     public override bool OnPrepare(object caller) {
 
         // Get managed lobby
@@ -63,6 +69,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
 
     }
 
+    /// <inheritdoc/>
     public override bool OnCollectCompanies(object caller) {
 
         // Get managed lobby
@@ -166,6 +173,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
 
     }
 
+    /// <inheritdoc/>
     public override bool OnCollectMatchInfo(object caller) {
 
         // Ensure player companies have been collected
@@ -202,10 +210,13 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
 
     }
 
-    public virtual ICompanyCompiler GetCompanyCompiler() => new CompanyCompiler();
+    /// <inheritdoc/>
+    public ICompanyCompiler GetCompanyCompiler() => new CompanyCompiler();
 
-    public virtual ISessionCompiler GetSessionCompiler() => new SessionCompiler();
+    /// <inheritdoc/>
+    public ISessionCompiler GetSessionCompiler() => new SessionCompiler();
 
+    /// <inheritdoc/>
     public override bool OnCompile(object caller) {
 
         // Get managed lobby
@@ -227,7 +238,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
         this.OnFeedback(caller, "Compiling match data into gamemode.");
 
         // Compile session
-        if (!SessionUtility.CompileSession(compiler, this.m_session)) {
+        if (!sessionHandler.CompileSession(compiler, this.m_session)) {
             return false;
         }
 
@@ -278,6 +289,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
 
     }
 
+    /// <inheritdoc/>
     public override bool OnWaitForStart(object caller) { // TODO: Wait for all players to notify they've downloaded and installed the gamemode.
 
         // Get lobby
@@ -293,6 +305,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
 
     }
 
+    /// <inheritdoc/>
     public override bool OnWaitForAllToSignal(object caller) { // Wait for all players to signal they've launched
 
         // Get lobby
@@ -305,6 +318,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
 
     }
 
+    /// <inheritdoc/>
     public override bool OnStart(object caller, [NotNullWhen(true)] out IPlayStrategy? playStrategy) { // Launch CoH2 with Overwatch strategy
 
         // Set play strategy to null
@@ -322,7 +336,7 @@ public class OnlineStartupStrategy : BaseStartupStrategy {
         }
 
         // Use the overwatch strategy (and launch).
-        playStrategy = this.PlayStrategyFactory.CreateStrategy(this.m_session);
+        playStrategy = this.PlayStrategyFactory.CreateStrategy(this.m_session, sessionHandler);
         playStrategy.Launch();
 
         // Inform host they'll now be launching

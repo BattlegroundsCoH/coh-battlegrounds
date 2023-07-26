@@ -94,7 +94,7 @@ public abstract class BasePlayModel {
         this.m_session = new MultiplayerSession(this.m_handle);
 
         // Create controller
-        this.m_controller = new();
+        this.m_controller = new MatchController(m_handle.Game);
         this.m_controller.SetStartupObjects(this.m_session, this.m_startupStrategy);
         this.m_controller.SetAnalysisObjects(this.m_session, this.m_matchAnalyzer);
         this.m_controller.SetFinalizerObjects(this.m_session, this.m_finalizeStrategy);
@@ -150,10 +150,8 @@ public abstract class BasePlayModel {
             ?? throw new StartupException($"Failed to find gamemode with name '{gamemode}' from wincondition list (mod package = {package.ID}).");
 
         // Grab tuning
-        var tuningInstance = BattlegroundsContext.ModManager.GetMod<ITuningMod>(package.TuningGUID);
-        if (tuningInstance is null) {
-            throw new StartupException($"Failed to fetch tuning mod.");
-        }
+        var tuningInstance = BattlegroundsContext.ModManager.GetMod<ITuningMod>(package.TuningGUID) 
+            ?? throw new StartupException($"Failed to fetch tuning mod.");
 
         // Create plan containers
         SessionPlanEntityInfo[] sessionEntities;

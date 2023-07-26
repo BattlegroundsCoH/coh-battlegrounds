@@ -225,6 +225,7 @@ public class SessionCompiler : ISessionCompiler {
     /// </summary>
     /// <param name="lua"></param>
     /// <param name="companies"></param>
+    /// <param name="session"></param>
     protected virtual void WritePrecompiledDatabase(LuaSourceBuilder lua, IEnumerable<Company> companies, ISession session) {
 
         // Get package

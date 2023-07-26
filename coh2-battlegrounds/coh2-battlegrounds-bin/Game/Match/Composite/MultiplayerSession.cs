@@ -22,18 +22,28 @@ public sealed class MultiplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFi
     private IAnalyzedMatch? m_analyzedMatch;
     private readonly ILobbyHandle m_lobby;
 
+    /// <inheritdoc/>
     public bool HasStarted => this.m_isStarted;
 
+    /// <inheritdoc/>
     public bool IsCancelled => this.m_isCancelled;
 
+    /// <inheritdoc/>
     public IPlayStrategy PlayObject => this.m_playStrategyResult ?? new NoPlayStrategy();
 
+    /// <inheritdoc/>
     public IAnalyzedMatch MatchAnalysis => this.m_analyzedMatch ?? new NullAnalysis();
 
+    /// <inheritdoc/>
     public bool AnalysisSuccess => this.m_hasSuccessAnalysis;
 
+    /// <inheritdoc/>
     public event AnalysisCancelledHandler? AnalysisCancelled;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="lobby"></param>
     public MultiplayerSession(ILobbyHandle lobby) {
         this.m_isCancelled = false;
         this.m_isStarted = false;
@@ -41,6 +51,7 @@ public sealed class MultiplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFi
         this.m_playStrategyResult = null;
     }
 
+    /// <inheritdoc/>
     public async void Startup(IStartupStrategy startupStrategy) {
 
         // Assign cancelled handler
@@ -113,6 +124,7 @@ public sealed class MultiplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFi
 
     private void StartupStrategy_StartupCancelled(IStartupStrategy sender, object? caller, string reason) => this.m_isCancelled = true;
 
+    /// <inheritdoc/>
     public void Analyze(IAnalyzeStrategy strategy, IMatchData matchResults) {
 
         // Set to false
@@ -150,6 +162,7 @@ public sealed class MultiplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFi
 
     }
 
+    /// <inheritdoc/>
     public void Finalize(IFinalizeStrategy strategy, IAnalyzedMatch analyzedMatch) {
 
         // Finalize
@@ -161,4 +174,3 @@ public sealed class MultiplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFi
     }
 
 }
-
