@@ -177,9 +177,11 @@ public class Company : IChecksumItem {
     public bool AutoReplenish => this.m_autoReplenish;
 
     /// <summary>
-    /// New empty <see cref="Company"/> instance with <see cref="Game"/> set to <see cref="GameCase.CompanyOfHeroes2"/>.
+    /// New empty <see cref="Company"/> instance.
     /// </summary>
-    internal Company(Faction faction, FactionCompanyType companyType) : this(faction, companyType, GameCase.CompanyOfHeroes2) {}
+    /// <param name="faction">The faction the company is for</param>
+    /// <param name="companyType">The company type</param>
+    internal Company(Faction faction, FactionCompanyType companyType) : this(faction, companyType, faction.RequiredDLC.Game) {}
 
     /// <summary>
     /// New empty <see cref="Company"/> instance.
@@ -251,14 +253,14 @@ public class Company : IChecksumItem {
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="blueprint"></param>
+    /// <param name="item"></param>
     public void AddInventoryItem(CompanyItem item)
         => this.m_inventory.Add(item);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="blueprint"></param>
+    /// <param name="itemId"></param>
     public void RemoveInventoryItem(uint itemId) {
         if (this.m_inventory.Find(x => x.ItemId == itemId) is CompanyItem item) {
             this.m_inventory.Remove(item);
@@ -311,9 +313,11 @@ public class Company : IChecksumItem {
     /// <returns></returns>
     public bool VerifyAppVersion() => this.m_lastEditVersion == BattlegroundsContext.Version.ApplicationVersion;
 
+    /// <inheritdoc/>
     public bool VerifyChecksum(ulong checksum)
         => this.m_checksum == checksum;
 
+    /// <inheritdoc/>
     public void CalculateChecksum()
         => this.m_checksum = new Checksum(this).GetCheckksum();
 

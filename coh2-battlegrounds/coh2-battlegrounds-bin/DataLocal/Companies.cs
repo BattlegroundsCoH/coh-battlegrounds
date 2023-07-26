@@ -121,6 +121,7 @@ public static class Companies {
             logger.Info($"Failed to save player company '{company.Name}' (IO Exception).");
             logger.Exception(ioex);
         } catch (Exception e) {
+            logger.Info($"Failed to save player company '{company.Name}'.");
             logger.Exception(e);
         } finally {
             Company? oldCompany = __companies.FirstOrDefault(x => x.Name == company.Name && x.Army == company.Army);
