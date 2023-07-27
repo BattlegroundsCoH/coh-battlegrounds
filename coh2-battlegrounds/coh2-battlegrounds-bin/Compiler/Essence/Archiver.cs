@@ -1,32 +1,41 @@
 ﻿using System.IO;
 using System.Diagnostics;
 using System.Threading;
+using Battlegrounds.Logging;
 
-namespace Battlegrounds.Compiler;
+namespace Battlegrounds.Compiler.Essence;
 
-public static class Archiver {
+/// <summary>
+/// Class representing the CoH2/CoH1 archiver for archiving and extracting .sga files.
+/// </summary>
+public sealed class Archiver : IArchiver {
 
-    public static bool Archive(string archdef, string relativepath, string output)
+    private static readonly Logger logger = Logger.CreateLogger();
+
+    /// <inheritdoc/>
+    public bool Archive(string archdef, string relativepath, string output)
         => RunArchiver($" -c \"{archdef}\" -a \"{output}\" -v -r \"{relativepath}\\\"", null);
 
-    public static bool Extract(string arcfile, string outpath)
+    /// <inheritdoc/>
+    public bool Extract(string arcfile, string outpath)
         => RunArchiver($" -a \"{arcfile}\" -e \"{outpath}\" -v ", null);
 
-    public static bool Extract(string arcfile, string outpath, TextWriter output)
+    /// <inheritdoc/>
+    public bool Extract(string arcfile, string outpath, TextWriter output)
         => RunArchiver($" -a \"{arcfile}\" -e \"{outpath}\" -v ", output);
 
-    private static string GetArchiverFilepath() {
-        string path = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COH_FOLDER, "Archive.exe");
+    private string GetArchiverFilepath() {
+        string path = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COH2_FOLDER, "Archive.exe");
         if (File.Exists(path)) {
-            Trace.WriteLine($"Using archiver @ {path}", nameof(Archiver));
+            logger.Info($"Using archiver @ {path}");
             return path;
         } else {
-            Trace.WriteLine($"Acrhive file not found @ {path}", nameof(Archiver));
+            logger.Info($"Acrhive file not found @ {path}");
             return string.Empty;
         }
     }
 
-    private static bool RunArchiver(string args, TextWriter? outputStream) {
+    private bool RunArchiver(string args, TextWriter? outputStream) {
 
         Process archiveProcess = new Process {
             StartInfo = new ProcessStartInfo() {
@@ -68,7 +77,7 @@ public static class Archiver {
 
             if (archiveProcess.ExitCode != 0) {
                 int eCode = archiveProcess.ExitCode;
-                Trace.WriteLine($"Archiver has finished with error code = {eCode}");
+                logger.Warning($"Archiver has finished with error code = {eCode}");
                 archiveProcess.Dispose();
                 return false;
             }
@@ -86,7 +95,7 @@ public static class Archiver {
 
     private static void ArchiveProcess_OutputDataReceived(object sender, DataReceivedEventArgs e) {
         if (e.Data != null && e.Data != string.Empty && e.Data != " ")
-            Trace.WriteLine(e.Data);
+            logger.Info(e.Data);
     }
 
 }

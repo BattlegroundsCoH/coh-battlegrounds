@@ -52,7 +52,7 @@ public sealed class Settings : ViewModelBase {
 
         // Set paths
         this.SteamPath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.STEAM_FOLDER);
-        this.CoHPath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COH_FOLDER);
+        this.CoHPath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COH2_FOLDER);
 
         // Set steam data
         var steamData = BattlegroundsContext.Steam;
@@ -154,7 +154,7 @@ public sealed class Settings : ViewModelBase {
 
         // Save paths
         BattlegroundsContext.SaveInstancePath(BattlegroundsPaths.STEAM_FOLDER, this.SteamPath);
-        BattlegroundsContext.SaveInstancePath(BattlegroundsPaths.COH_FOLDER, this.CoHPath);
+        BattlegroundsContext.SaveInstancePath(BattlegroundsPaths.COH2_FOLDER, this.CoHPath);
 
         // Check restart
         bool requiresRestart = BattlegroundsContext.Localize.Language != this.m_selectedLang;

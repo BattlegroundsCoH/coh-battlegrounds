@@ -16,7 +16,7 @@ public static class InitialCompanyCreator {
     private static readonly Logger logger = Logger.CreateLogger();
 
     /// <summary>
-    /// 
+    /// Initialise basic companies for first time use.
     /// </summary>
     public static void Init() {
 

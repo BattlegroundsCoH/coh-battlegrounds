@@ -323,7 +323,7 @@ public static class BattlegroundsContext {
     /// <param name="pathId">The ID of the path to save</param>
     /// <param name="path">The actual path to set</param>
     public static void SaveInstancePath(string pathId, string path) {
-        if (pathId is not BattlegroundsPaths.STEAM_FOLDER and not BattlegroundsPaths.COH_FOLDER) {
+        if (pathId is not BattlegroundsPaths.STEAM_FOLDER and not BattlegroundsPaths.COH2_FOLDER) {
             return;
         }
         __instance.Paths[pathId] = path;

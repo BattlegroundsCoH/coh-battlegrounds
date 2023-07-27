@@ -76,9 +76,14 @@ public static class BattlegroundsPaths {
     public const string STEAM_FOLDER = "steam_folder";
 
     /// <summary>
-    /// Path ID for the coh folder
+    /// Path ID for the CoH2 folder
     /// </summary>
-    public const string COH_FOLDER = "coh_folder";
+    public const string COH2_FOLDER = "coh_folder";
+
+    /// <summary>
+    /// Path ID for the CoH3 folder
+    /// </summary>
+    public const string COH3_FOLDER = "coh_3_folder";
 
     /// <summary>
     /// Path ID for the documents folder

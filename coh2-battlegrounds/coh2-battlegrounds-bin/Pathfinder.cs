@@ -40,7 +40,7 @@ public static class Pathfinder {
         steampaths = Array.Empty<string>();
         try {
             SteamPath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.STEAM_FOLDER);
-            CoHPath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COH_FOLDER);
+            CoHPath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COH2_FOLDER);
         } catch {
             SteamPath = string.IsNullOrEmpty(SteamPath) ? string.Empty : SteamPath;
             CoHPath = string.Empty;

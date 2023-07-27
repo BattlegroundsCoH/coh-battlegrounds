@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-
-using Battlegrounds.Compiler;
+using Battlegrounds.Compiler.Essence;
 using Battlegrounds.Game.Database.Management.CoH2;
 using Battlegrounds.Game.Database.Management.CoH3;
 using Battlegrounds.Game.Scenarios.CoH2;
@@ -40,7 +39,8 @@ public static class MapExtractor {
 
             Console.WriteLine($"Extracting .sga '{archive}'");
 
-            if (!Archiver.Extract(archive, extract, Console.Out)) {
+            Archiver archiver = new Archiver();
+            if (!archiver.Extract(archive, extract, Console.Out)) {
                 Console.WriteLine($"Failed to extract '{archive}'");
             }
 

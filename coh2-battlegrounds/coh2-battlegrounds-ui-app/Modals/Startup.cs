@@ -246,7 +246,7 @@ public sealed class Startup : ModalBase, INotifyPropertyChanged {
 
         // Set instance
         BattlegroundsContext.SaveInstancePath(BattlegroundsPaths.STEAM_FOLDER, Pathfinder.SteamPath);
-        BattlegroundsContext.SaveInstancePath(BattlegroundsPaths.COH_FOLDER, Pathfinder.CoHPath);
+        BattlegroundsContext.SaveInstancePath(BattlegroundsPaths.COH2_FOLDER, Pathfinder.CoHPath);
 
         // Invoke callback
         this.m_closeCallback?.Invoke();

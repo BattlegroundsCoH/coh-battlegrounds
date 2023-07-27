@@ -9,6 +9,7 @@ using Battlegrounds.Compiler.Source;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Logging;
+using Battlegrounds.Compiler.Essence;
 
 namespace Battlegrounds.Compiler.Wincondition.CoH2;
 
@@ -144,7 +145,8 @@ public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
         string outputArchive = GetArchivePath();
 
         // Call the archive
-        if (!Archiver.Archive(archiveDefTxtPath, workDirectory, outputArchive)) {
+        Archiver archiver = new Archiver(); // TODO: Enable dependency injection
+        if (!archiver.Archive(archiveDefTxtPath, workDirectory, outputArchive)) {
             return false;
         }
 
