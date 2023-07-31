@@ -244,6 +244,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="battlegrounds-archiver.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\bg_ct\3\dak_mot.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

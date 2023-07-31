@@ -85,6 +85,10 @@ public static class BattlegroundsContext {
                 [Faction.OberkommandoWest.Name] = string.Empty,
                 [Faction.America.Name] = string.Empty,
                 [Faction.British.Name] = string.Empty,
+                [Faction.BritishAfrica.Name] = string.Empty,
+                [Faction.AfrikaKorps.Name] = string.Empty,
+                [Faction.Germans.Name] = string.Empty,
+                [Faction.Americans.Name] = string.Empty
             };
             this.LastPlayedGamemode = "bg_vp";
             this.LastPlayedGamemodeSetting = 1;
