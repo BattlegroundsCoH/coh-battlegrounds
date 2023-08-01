@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <Folder Include="Common\" />
+    <Folder Include="Core\Compiler\" />
     <Folder Include="Core\Game\DataSource\" />
     <Folder Include="Core\Networking\Remoting\" />
     <Folder Include="Lobby\" />

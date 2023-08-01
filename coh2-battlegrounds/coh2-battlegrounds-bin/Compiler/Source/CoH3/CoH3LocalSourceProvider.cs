@@ -8,7 +8,7 @@ namespace Battlegrounds.Compiler.Source.CoH3;
 /// Represents a local source implementation of the <see cref="IWinconditionSourceProvider"/> interface
 /// for Company of Heroes 3.
 /// </summary>
-public class CoH3LocalSourceProvider : IWinconditionSourceProvider {
+public sealed class CoH3LocalSourceProvider : IWinconditionSourceProvider {
 
     private readonly string relativePath;
 

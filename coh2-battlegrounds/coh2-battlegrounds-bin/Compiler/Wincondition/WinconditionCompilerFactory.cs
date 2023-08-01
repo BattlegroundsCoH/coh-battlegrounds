@@ -29,8 +29,10 @@ public sealed class WinconditionCompilerFactory {
     /// <returns>An instance of the corresponding <see cref="IWinconditionCompiler"/>.</returns>
     /// <exception cref="ArgumentException">Thrown when an invalid game is specified with no wincondition compiler associated.</exception>
     public IWinconditionCompiler GetWinconditionCompiler(GameCase game) => game switch { 
-        GameCase.CompanyOfHeroes2 => new CoH2WinconditionCompiler(workDirectory, localeCompiler),
-        GameCase.CompanyOfHeroes3 => new CoH3WinconditionCompiler(workDirectory, localeCompiler),
+        GameCase.CompanyOfHeroes2 => new CoH2WinconditionCompiler(workDirectory, localeCompiler
+            /*, new BattlegroundsArchiver(BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COH2_FOLDER), game)*/),
+        GameCase.CompanyOfHeroes3 => new CoH3WinconditionCompiler(workDirectory, localeCompiler, 
+            new BattlegroundsArchiver(BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COH3_FOLDER), game)),
         _ => throw new ArgumentException("Specified game has no wincondition compiler associated", nameof(game)),
     };
 
