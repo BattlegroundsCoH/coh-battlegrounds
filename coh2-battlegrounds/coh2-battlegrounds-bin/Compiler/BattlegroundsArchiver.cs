@@ -10,7 +10,7 @@ using Battlegrounds.Logging;
 namespace Battlegrounds.Compiler;
 
 /// <summary>
-/// 
+/// Class representing an interface for interacting with the Battlegrounds archiver
 /// </summary>
 public sealed class BattlegroundsArchiver : IArchiver {
 
@@ -20,10 +20,10 @@ public sealed class BattlegroundsArchiver : IArchiver {
     private readonly GameCase game;
 
     /// <summary>
-    /// 
+    /// Initialise a new <see cref="BattlegroundsArchiver"/> instance.
     /// </summary>
-    /// <param name="toolDirectory"></param>
-    /// <param name="game"></param>
+    /// <param name="toolDirectory">The path to the actual tool to execute through the Battlegrounds arhciver</param>
+    /// <param name="game">The archiver game mode to target</param>
     public BattlegroundsArchiver(string toolDirectory, GameCase game) {
         this.toolDirectory = toolDirectory;
         this.game = game;

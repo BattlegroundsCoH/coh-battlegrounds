@@ -12,34 +12,9 @@ namespace Battlegrounds.Compiler.Source;
 /// </summary>
 public sealed class WinconditionSourceProviderFactory {
 
-    private string GetLocalCoH2DebugSource() {
-        string path = string.Empty;
-#if DEBUG
-        if (!BattlegroundsContext.Debug.UseLocalWincondition) {
-            int top = 0; // try find debug folder before using local distribution
-            path = "coh2-battlegrounds-mod\\wincondition_mod\\";
-            try {
-                while (top < 10) {
-                    if (Directory.Exists(path)) {
-                        return path;
-                    }
-                    top++;
-                    path = $"..\\{path}";
-                }
-            } catch { }
-        }
-#endif
-        return path;
-    }
-
     private IWinconditionSourceProvider GetLocalCoH2Source() {
         
-        string path = GetLocalCoH2DebugSource();
-        if (!string.IsNullOrEmpty(path)) {
-            return new CoH2LocalSourceProvider(path);
-        }
-
-        path = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "bg_wc\\coh2\\");
+        string path = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "bg_wc\\coh2\\");
         if (Directory.Exists(path)) {
             return new CoH2LocalSourceProvider(path);
         } else {

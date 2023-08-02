@@ -12,6 +12,7 @@ using Battlegrounds.Game.DataCompany;
 using static Battlegrounds.Game.Match.ParticipantTeam;
 using Battlegrounds.AI;
 using Battlegrounds.Game.Scenarios;
+using Battlegrounds.Logging;
 
 namespace Battlegrounds.Game.Match;
 
@@ -20,6 +21,8 @@ namespace Battlegrounds.Game.Match;
 /// Implements <see cref="ISession"/>.
 /// </summary>
 public class Session : ISession {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     private SessionParticipant[] m_participants;
     private readonly List<string> m_customNames;
@@ -80,6 +83,9 @@ public class Session : ISession {
     /// </summary>
     public bool HasPlanning => this.Gamemode.HasPlanning;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public TeamMode TeamOrder { get; private set; }
 
     /// <summary>
@@ -88,6 +94,9 @@ public class Session : ISession {
     /// <param name="scenario"></param>
     /// <param name="gamemode"></param>
     /// <param name="tuning"></param>
+    /// <param name="planEntities"></param>
+    /// <param name="planSquads"></param>
+    /// <param name="planGoals"></param>
     private Session(IScenario scenario, IGamemode gamemode, ITuningMod tuning, ISessionPlanEntity[] planEntities, ISessionPlanGoal[] planGoals, ISessionPlanSquad[] planSquads) {
 
         // Set public
@@ -185,7 +194,7 @@ public class Session : ISession {
                 session.AddSetting("gamemode_setting", "none");
             }
         } else {
-            Trace.WriteLine("Failed to read selected gamemode - using 500 as default option", "Session.Create");
+            logger.Warning("Failed to read selected gamemode - using 500 as default option");
             session.AddSetting("gamemode_setting", 500);
         }
 
@@ -260,10 +269,22 @@ public class Session : ISession {
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public ISessionPlanEntity[] GetPlanEntities() => this.m_planEntities;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public ISessionPlanSquad[] GetPlanSquads() => this.m_planSquads;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public ISessionPlanGoal[] GetPlanGoals() => this.m_planGoals;
 
     private static int GetPlayerCount(bool fillAI, int alliesCount, int axisCount, out int alliesAI, out int axisAI) {
@@ -320,7 +341,7 @@ public class Session : ISession {
                         sessionInfo.Allies[j].PlayerIndexOnTeam, 
                         sessionInfo.Allies[j].PlayerIngameIndex);
                 } else {
-                    Trace.WriteLine($"Failed to pair allied company '{allCompanies[i].Name}' with a player...", "Session.Zip");
+                    logger.Warning($"Failed to pair allied company '{allCompanies[i].Name}' with a player...");
                 }
 
             } else {
@@ -336,7 +357,7 @@ public class Session : ISession {
                         sessionInfo.Axis[j].PlayerIndexOnTeam, 
                         sessionInfo.Axis[j].PlayerIngameIndex);
                 } else {
-                    Trace.WriteLine($"Failed to pair axis company '{allCompanies[i].Name}' with a player...", "Session.Zip");
+                    logger.Warning($"Failed to pair axis company '{allCompanies[i].Name}' with a player...");
                 }
 
             }

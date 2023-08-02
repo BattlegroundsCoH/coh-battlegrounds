@@ -284,7 +284,6 @@ public sealed class Faction {
     /// <param name="faction">The faction to find the complement of.</param>
     /// <returns>The comlementary faction.</returns>
     /// <exception cref="ArgumentException"/>
-    [Obsolete("Specify the targetted game")]
     public static Faction GetComplementaryFaction(Faction faction) {
         if (faction == Soviet) {
             return Wehrmacht;

@@ -44,8 +44,8 @@ public sealed class CoH2LocalSourceProvider : IWinconditionSourceProvider {
     /// <inheritdoc/>
     public WinconditionSourceFile[] GetLocaleFiles(string? modpath) {
         List<WinconditionSourceFile> files = new List<WinconditionSourceFile>();
-        string[] locFolders = Directory.GetDirectories($"{m_relpath}locale");
-        string[] loc = locFolders.MapAndFlatten(x => Directory.GetFiles(x, "*.ucs"));
+        string[] locFolders = Directory.GetDirectories($"{m_relpath}..\\..\\locale");
+        string[] loc = locFolders.Filter(x => Path.GetDirectoryName(x) is not "3").MapAndFlatten(x => Directory.GetFiles(x, "*.ucs"));
         foreach (string file in loc) {
             files.Add(new WinconditionSourceFile(file[m_relpath.Length..], File.ReadAllBytes(file)));
         }

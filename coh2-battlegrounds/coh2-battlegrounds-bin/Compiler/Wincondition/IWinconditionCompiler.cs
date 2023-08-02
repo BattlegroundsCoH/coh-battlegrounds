@@ -21,7 +21,7 @@ public interface IWinconditionCompiler {
     /// <param name="session">The session to compile.</param>
     /// <param name="source">The wincondition source file locator.</param>
     /// <param name="includeFiles">Additional files to include in the gamemode.</param>
-    /// <returns>True of the archive file was created sucessfully. False if any error occured.</returns>
+    /// <returns>True if the archive file was created sucessfully. False if any error occured.</returns>
     bool CompileToSga(string sessionFile, ISession session, IWinconditionSourceProvider source, params WinconditionSourceFile[] includeFiles);
 
 }

@@ -9,7 +9,7 @@ namespace Battlegrounds.Compiler.Source;
 public interface IWinconditionSourceProvider {
 
     /// <summary>
-    /// Get all scar code files
+    /// Get all scar code files.
     /// </summary>
     /// <returns>Array of all scar files</returns>
     WinconditionSourceFile[] GetScarFiles();

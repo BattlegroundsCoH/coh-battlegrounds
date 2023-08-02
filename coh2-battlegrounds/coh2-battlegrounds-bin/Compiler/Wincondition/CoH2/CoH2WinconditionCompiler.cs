@@ -169,19 +169,12 @@ public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
 
         // Create directories
         Directory.CreateDirectory(workDirectory);
-        Directory.CreateDirectory($"{workDirectory}data\\");
-        Directory.CreateDirectory($"{workDirectory}data\\game");
         Directory.CreateDirectory($"{workDirectory}data\\game\\winconditions");
-        Directory.CreateDirectory($"{workDirectory}data\\scar");
-        Directory.CreateDirectory($"{workDirectory}data\\scar\\winconditions");
         Directory.CreateDirectory($"{workDirectory}data\\scar\\winconditions\\auxiliary_scripts");
         Directory.CreateDirectory($"{workDirectory}data\\scar\\winconditions\\ui_api");
-        Directory.CreateDirectory($"{workDirectory}data\\ui\\");
-        Directory.CreateDirectory($"{workDirectory}data\\ui\\Assets\\");
         Directory.CreateDirectory($"{workDirectory}data\\ui\\Assets\\Textures\\");
         Directory.CreateDirectory($"{workDirectory}data\\ui\\Bin\\");
         Directory.CreateDirectory($"{workDirectory}info");
-        Directory.CreateDirectory($"{workDirectory}locale");
         Directory.CreateDirectory($"{workDirectory}locale\\english");
 
     }

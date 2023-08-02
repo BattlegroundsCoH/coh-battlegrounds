@@ -322,6 +322,15 @@
     <None Update="bg_common\bg_wc\coh2\coh2_battlegrounds_defence.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="bg_common\bg_wc\coh3\battlegrounds.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh3\bg_scripts\bg_root.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh3\bg_scripts\ui\ui_setup.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\campaigns\sov_ost_stalingrad.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -865,6 +874,9 @@
     <None Update="bg_common\gfx\map_icons\wolfs_lair_map.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="bg_common\locale\3\en.ucs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="bg_common\locale\english.loc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -946,6 +958,12 @@
     <None Update="bg_common\bg_wc\coh2\ui_api\statusindicator.scar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="bg_common\precompiled\3\battlegrounds.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\precompiled\3\mod.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="checksum.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -982,7 +1000,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="bg_common\bg_wc\coh3\" />
+    <Folder Include="bg_common\precompiled\3\" />
   </ItemGroup>
 
 </Project>
