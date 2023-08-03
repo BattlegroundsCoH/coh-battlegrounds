@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
@@ -342,6 +343,24 @@ public static class BattlegroundsContext {
     /// <exception cref="ArgumentException"/>
     public static string GetRelativePath(string pathId, string appendPath = "")
         => Path.Combine(__instance.GetPath(pathId), appendPath);
+
+    /// <summary>
+    /// Change the path referenced by the speciified path identifier.
+    /// </summary>
+    /// <remarks>
+    /// This method only works in DEBUG mode.
+    /// </remarks>
+    /// <param name="pathId">The path ID to update</param>
+    /// <param name="newRelativePath">The new relative path</param>
+    /// <exception cref="ArgumentException"></exception>
+    [Conditional("DEBUG")]
+    public static void ChangeRelativePath(string pathId, string newRelativePath) {
+        if (!__instance.Paths.ContainsKey(pathId)) {
+            throw new ArgumentException("Invalid path identifier", nameof(pathId));
+        }
+        __instance.Paths[pathId] = newRelativePath;
+
+    }
 
     /// <summary>
     /// Get the relative path based on virtual path.

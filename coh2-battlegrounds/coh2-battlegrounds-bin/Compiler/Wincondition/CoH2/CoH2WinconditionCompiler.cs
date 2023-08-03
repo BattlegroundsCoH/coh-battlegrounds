@@ -10,6 +10,7 @@ using Battlegrounds.Functional;
 using Battlegrounds.Game.Match;
 using Battlegrounds.Logging;
 using Battlegrounds.Compiler.Essence;
+using Battlegrounds.Compiler.Locale;
 
 namespace Battlegrounds.Compiler.Wincondition.CoH2;
 
@@ -20,15 +21,15 @@ public sealed class CoH2WinconditionCompiler : IWinconditionCompiler {
 
     private static readonly Logger logger = Logger.CreateLogger();
 
-    private readonly LocaleCompiler localeCompiler;
+    private readonly ILocaleCompiler localeCompiler;
     private readonly string workDirectory;
 
     /// <summary>
-    /// 
+    /// Create a new <see cref="CoH2WinconditionCompiler"/> instance.
     /// </summary>
-    /// <param name="workDirectory"></param>
-    /// <param name="localeCompiler"></param>
-    public CoH2WinconditionCompiler(string workDirectory, LocaleCompiler localeCompiler) {
+    /// <param name="workDirectory">The work directory to output temporary files to.</param>
+    /// <param name="localeCompiler">The locale compiler to use when compiling locales.</param>
+    public CoH2WinconditionCompiler(string workDirectory, ILocaleCompiler localeCompiler) {
         this.workDirectory = !workDirectory.EndsWith("\\", false, CultureInfo.InvariantCulture) ? workDirectory + "\\" : workDirectory;
         this.localeCompiler = localeCompiler;
     }

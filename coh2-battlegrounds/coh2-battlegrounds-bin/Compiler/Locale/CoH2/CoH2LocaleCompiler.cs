@@ -1,21 +1,38 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Battlegrounds.Compiler;
+using Battlegrounds.Logging;
 
-public class LocaleCompiler {
+namespace Battlegrounds.Compiler.Locale.CoH2;
+
+/// <summary>
+/// Class representing a locale compiler specifically for CoH2.
+/// </summary>
+public sealed class CoH2LocaleCompiler : ILocaleCompiler {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     private readonly Regex m_ucsRegex; // Cuz we never really know how messed up the input files are...
 
+    /// <summary>
+    /// Starting Key Index for custom unit names
+    /// </summary>
     public const int CUSTOM_NAME_KEYSTART = 38;
+    
+    /// <summary>
+    /// Ending Key Index for custom unit names (Inclusive)
+    /// </summary>
     public const int CUSTOM_NAME_KEYEND = 102; // (Inclusive)
 
-    public LocaleCompiler() {
-        this.m_ucsRegex = new(@"(?<id>\d+)\s+(?<content>.*)");
+    /// <summary>
+    /// Create a new <see cref="CoH2LocaleCompiler"/> instance.
+    /// </summary>
+    public CoH2LocaleCompiler() {
+        m_ucsRegex = new(@"(?<id>\d+)\s+(?<content>.*)");
     }
 
+    /// <inheritdoc/>
     public void TranslateLocale(byte[] localeContent, string localeTargetPath, string[] customNames) {
 
         // Read to content
@@ -29,7 +46,7 @@ public class LocaleCompiler {
         for (int i = 0; i < lines.Length; i++) {
 
             // split string
-            var m = this.m_ucsRegex.Match(lines[i]);
+            var m = m_ucsRegex.Match(lines[i]);
             if (m.Success) {
 
                 // Look at key
@@ -50,7 +67,7 @@ public class LocaleCompiler {
 
                 // Log
                 if (!string.IsNullOrEmpty(lines[i])) {
-                    Trace.WriteLine($"Failed to compile UCS file entry '{lines[i]}'", nameof(LocaleCompiler));
+                    logger.Warning($"Failed to compile UCS file entry '{lines[i]}'");
                 }
 
             }

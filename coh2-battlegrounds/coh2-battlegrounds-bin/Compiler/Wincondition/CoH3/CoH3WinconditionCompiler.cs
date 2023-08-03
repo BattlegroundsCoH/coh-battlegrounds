@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 
+using Battlegrounds.Compiler.Locale;
 using Battlegrounds.Compiler.Source;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.Match;
@@ -11,23 +11,23 @@ using Battlegrounds.Logging;
 namespace Battlegrounds.Compiler.Wincondition.CoH3;
 
 /// <summary>
-/// 
+/// Class representing a wincondition compiler for Company of Heroes 3
 /// </summary>
 public sealed class CoH3WinconditionCompiler : IWinconditionCompiler {
 
     private static readonly Logger logger = Logger.CreateLogger();
 
     private readonly string workDirectory;
-    private readonly LocaleCompiler localeCompiler;
+    private readonly ILocaleCompiler localeCompiler;
     private readonly IArchiver archiver;
 
     /// <summary>
-    /// 
+    /// Initialise a new <see cref="CoH3WinconditionCompiler"/> instance.
     /// </summary>
-    /// <param name="workDirectory"></param>
-    /// <param name="localeCompiler"></param>
-    /// <param name="archiver"></param>
-    public CoH3WinconditionCompiler(string workDirectory, LocaleCompiler localeCompiler, IArchiver archiver) {
+    /// <param name="workDirectory">The work directory to output temporary files to.</param>
+    /// <param name="localeCompiler">The locale compiler to use when compiling locales.</param>
+    /// <param name="archiver">The archiver tool responsible for archiving the sga files</param>
+    public CoH3WinconditionCompiler(string workDirectory, ILocaleCompiler localeCompiler, IArchiver archiver) {
         this.workDirectory = workDirectory.EndsWith("\\") ? workDirectory : workDirectory + "\\";
         this.localeCompiler = localeCompiler;
         this.archiver = archiver;
@@ -122,6 +122,22 @@ public sealed class CoH3WinconditionCompiler : IWinconditionCompiler {
             };
         });
 
+        // Copy over ucs files
+        var localeArchiveEntry = localeFiles.Map(localeFile => {
+            string filename = Path.Combine(workDirectory, "data", localeFile.Path);
+            if (!Directory.Exists(Path.GetDirectoryName(filename))) {
+                Directory.CreateDirectory(Path.GetDirectoryName(filename)!);
+            }
+            localeCompiler.TranslateLocale(localeFile.Contents, filename, Array.Empty<string>());
+            return new ArchiveDefinition.ArchiveFile() {
+                FileName = filename,
+                RelativePath = localeFile.Path,
+                Encryption = "None",
+                Storage = "StreamCompress",
+                Verification = "None"
+            };
+        });
+
         // Copy over the bin files
         var binArchiveEntry = new ArchiveDefinition.ArchiveFile[] {
             MakeArchiveFile(winFiles[0], Path.Combine(workDirectory, "data", winFiles[0].Path)),
@@ -132,7 +148,7 @@ public sealed class CoH3WinconditionCompiler : IWinconditionCompiler {
         return new ArchiveDefinition.ArchiveTOC() {
             Alias = "Data",
             TocName = "Data",
-            Files = scarArchiveEntry.Concat(binArchiveEntry)
+            Files = scarArchiveEntry.Concat(binArchiveEntry).Concat(localeArchiveEntry)
         };
 
     }

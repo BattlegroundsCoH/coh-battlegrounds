@@ -1,4 +1,5 @@
 ﻿using Battlegrounds.Compiler;
+using Battlegrounds.Compiler.Locale.CoH3;
 using Battlegrounds.Compiler.Source.CoH3;
 using Battlegrounds.Compiler.Wincondition.CoH3;
 using Battlegrounds.Game.Match;
@@ -30,7 +31,7 @@ public class CoH3WinconditionCompilerTest {
         
         archiver = new Mock<IArchiver>();
         localSourceProvider = new CoH3LocalSourceProvider("bg_common\\bg_wc\\coh3");
-        compiler = new CoH3WinconditionCompiler(workDir, new LocaleCompiler(), archiver.Object);
+        compiler = new CoH3WinconditionCompiler(workDir, new CoH3LocaleCompiler(), archiver.Object);
 
         session = Session.CreateSession(new SessionInfo() {
             Entities = Array.Empty<SessionPlanEntityInfo>(),

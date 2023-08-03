@@ -15,18 +15,19 @@ namespace Battlegrounds.Testing.Core.Networking;
 
 public abstract class TestWithServer : IDisposable {
 
-    private readonly IContainer container;
+    private readonly IContainer? container;
 
     private readonly bool isGithub;
 
     protected readonly NetworkEndpoint endpoint;
 
     protected readonly ServerAPI serverAPI;
-    
+
     public TestWithServer() {
         
-        if (Environment.GetEnvironmentVariable("TEST_LOCATION") is "github") {
+        if (Github.IsGithub()) {
             isGithub = true;
+            serverAPI = new ServerAPI(string.Empty, 0, false);
             return;
         }
 
