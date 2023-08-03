@@ -39,7 +39,7 @@ public sealed class BattlegroundsArchiver : IArchiver {
 
     private bool ArchiveInternal(string definitionPath, string[] arguments) {
 
-        string[] args = new string[] { "-tool_dir", toolDirectory, "-def", definitionPath }.Concat(arguments)
+        string[] args = new string[] { "-tool_dir", $"\"{toolDirectory}\"", "-def", definitionPath }.Concat(arguments)
             .IfTrue(_ => game is GameCase.CompanyOfHeroes3)
             .Then(x => x.Append("-coh3"));
 
@@ -57,6 +57,7 @@ public sealed class BattlegroundsArchiver : IArchiver {
         };
 
         archiveProcess.OutputDataReceived += Process_OutputDataReceived;
+        archiveProcess.ErrorDataReceived += Process_OutputErrorDataReceived;
 
         try {
 
@@ -72,7 +73,8 @@ public sealed class BattlegroundsArchiver : IArchiver {
 
             if (archiveProcess.ExitCode != 0) {
                 int eCode = archiveProcess.ExitCode;
-                logger.Warning($"Archiver has finished with error code = {eCode}");
+                logger.Error(archiveProcess.StandardError.ReadToEnd());
+                logger.Warning($"Archiver has finished with error code {eCode}");
                 return false;
             }
 
@@ -87,6 +89,11 @@ public sealed class BattlegroundsArchiver : IArchiver {
     private static void Process_OutputDataReceived(object sender, DataReceivedEventArgs e) {
         if (e.Data != null && e.Data != string.Empty && e.Data != " ")
             logger.Info(e.Data);
+    }
+
+    private static void Process_OutputErrorDataReceived(object sender, DataReceivedEventArgs e) {
+        if (e.Data != null && e.Data != string.Empty && e.Data != " ")
+            logger.Error(e.Data);
     }
 
 }

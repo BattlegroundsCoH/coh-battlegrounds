@@ -2,6 +2,7 @@
 using Battlegrounds.Compiler.Locale.CoH3;
 using Battlegrounds.Compiler.Source.CoH3;
 using Battlegrounds.Compiler.Wincondition.CoH3;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Match;
 
 using Moq;
@@ -69,6 +70,29 @@ public class CoH3WinconditionCompilerTest {
             Assert.That(File.Exists("compiler_test_coh3\\data\\info\\mod.bin"), Is.True);
             Assert.That(File.Exists("compiler_test_coh3\\data\\scar\\winconditions\\battlegrounds.bin"), Is.True);
             Assert.That(File.Exists("compiler_test_coh3\\data\\scar\\winconditions\\battlegrounds.scar"), Is.True);
+
+        });
+
+    }
+
+    [Test]
+    public void WillCompileFully() {
+        Precondition.RequiresNotGithubActions("Requires Essence Editor installed");
+        string coh3 = Precondition.RequiresEssenceEditor();
+
+        BattlegroundsArchiver battlegroundsArchiver = new BattlegroundsArchiver(Path.GetDirectoryName(coh3)!, GameCase.CompanyOfHeroes3);
+
+        bool success = false;
+        archiver.Setup(x => x.Archive("compiler_test_coh3\\ArchiveDefinition.json")).Callback(() => {
+            success = battlegroundsArchiver.Archive("compiler_test_coh3\\ArchiveDefinition.json");
+        }).Returns(() => success);
+
+        var result = compiler.CompileToSga("session.scar", session, localSourceProvider);
+
+        Assert.Multiple(() => {
+
+            // Assert actually working
+            Assert.That(result, Is.True);
 
         });
 

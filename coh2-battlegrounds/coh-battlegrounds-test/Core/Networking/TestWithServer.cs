@@ -25,7 +25,7 @@ public abstract class TestWithServer : IDisposable {
 
     public TestWithServer() {
         
-        if (Github.IsGithub()) {
+        if (Precondition.IsGithub()) {
             isGithub = true;
             serverAPI = new ServerAPI(string.Empty, 0, false);
             return;
