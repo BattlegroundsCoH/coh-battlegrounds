@@ -146,7 +146,7 @@ public abstract class BasePlayModel {
             ?? throw new StartupException($"Failed to fetch scenario {scenario} from scenario list.");
 
         // Grab gamemode
-        var gamemodeInstance = Winconditions.GetGamemodeByName(package.GamemodeGUID, gamemode)
+        var gamemodeInstance = BattlegroundsContext.DataSource.GetGamemodeList(package, this.m_handle.Game)!.GetGamemodeByName(package.GamemodeGUID, gamemode)
             ?? throw new StartupException($"Failed to find gamemode with name '{gamemode}' from wincondition list (mod package = {package.ID}).");
 
         // Grab tuning

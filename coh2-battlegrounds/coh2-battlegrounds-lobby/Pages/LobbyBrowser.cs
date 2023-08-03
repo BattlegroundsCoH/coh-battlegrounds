@@ -249,7 +249,7 @@ public sealed class LobbyBrowser : IViewModel {
                         LobbyConstants.SETTING_MAP => SettingsLookup.GetScenarioName(scen, setting.Value),
                         LobbyConstants.SETTING_WEATHER or LobbyConstants.SETTING_LOGISTICS => setting.Value is "1" ? "On" : "Off",
                         LobbyConstants.SETTING_MODPACK => package?.PackageName ?? setting.Value,
-                        LobbyConstants.SETTING_GAMEMODE => SettingsLookup.GetGamemodeName(setting.Value, package),
+                        LobbyConstants.SETTING_GAMEMODE => SettingsLookup.GetGamemodeName(setting.Value, package, selected.GetGame()),
                         _ => setting.Value
                     };
                     this.PreviewSettings.Add(new(k, v));

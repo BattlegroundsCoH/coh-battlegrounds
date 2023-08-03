@@ -23,7 +23,7 @@ using RegexMatch = System.Text.RegularExpressions.Match;
 namespace Battlegrounds.Game.Database.Management;
 
 /// <summary>
-/// 
+/// Class representing the whole database of a game mod.
 /// </summary>
 public class ModDatabase : IModDb {
 
@@ -39,8 +39,8 @@ public class ModDatabase : IModDb {
     private readonly IList<JsonConverter>? _modCoH2Converters;
     private readonly IList<JsonConverter>? _modCoH3Converters;
 
-    private readonly IWinconditionList? _winconditionCoH2List;
-    private readonly IWinconditionList? _winconditionCoH3List;
+    private readonly IGamemodeList? _winconditionCoH2List;
+    private readonly IGamemodeList? _winconditionCoH3List;
 
     private readonly IModLocale? _modCoH2Locale;
     private readonly IModLocale? _modCoH3Locale;
@@ -67,7 +67,7 @@ public class ModDatabase : IModDb {
                 new WeaponBlueprintConverter(package.TuningGUID, GameCase.CompanyOfHeroes2),
                 new UpgradeBlueprintConverter(package.TuningGUID, GameCase.CompanyOfHeroes2)
             };
-            this._winconditionCoH2List = new WinconditionList();
+            this._winconditionCoH2List = new CoH2GamemodeList();
             this._modCoH2Locale = new CoH2Locale();
             this._modCoH2Scenarios = new CoH2ScenarioList();
         }
@@ -81,7 +81,7 @@ public class ModDatabase : IModDb {
                 new WeaponBlueprintConverter(package.TuningGUID, GameCase.CompanyOfHeroes3),
                 new UpgradeBlueprintConverter(package.TuningGUID, GameCase.CompanyOfHeroes3)
             };
-            this._winconditionCoH3List = new WinconditionList();
+            this._winconditionCoH3List = new CoH3GamemodeList();
             this._modCoH3Locale = new CoH3Locale();
             this._modCoH3Scenarios = new CoH3ScenarioList();
         }
@@ -304,7 +304,7 @@ public class ModDatabase : IModDb {
     };
 
     /// <inheritdoc/>
-    public IWinconditionList GetWinconditions(GameCase game) => game switch {
+    public IGamemodeList GetWinconditions(GameCase game) => game switch {
         GameCase.CompanyOfHeroes2 => _winconditionCoH2List ?? throw new Exception(),
         GameCase.CompanyOfHeroes3 => _winconditionCoH3List ?? throw new Exception(),
         _ => throw new Exception()

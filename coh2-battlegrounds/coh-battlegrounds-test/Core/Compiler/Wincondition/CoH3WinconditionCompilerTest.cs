@@ -47,6 +47,10 @@ public class CoH3WinconditionCompilerTest {
             AdditionalOptions = new()
         });
 
+        if (File.Exists(sgaPath)) {
+            File.Delete(sgaPath);
+        }
+
     }
 
     [Test]
@@ -91,8 +95,11 @@ public class CoH3WinconditionCompilerTest {
 
         Assert.Multiple(() => {
 
-            // Assert actually working
+            // Assert archived
             Assert.That(result, Is.True);
+
+            // Assert file is there
+            Assert.That(File.Exists(compiler.GetArchivePath()), Is.True);
 
         });
 

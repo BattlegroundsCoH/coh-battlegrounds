@@ -416,7 +416,7 @@ public sealed class ParticipantLobby : BaseLobby {
         Application.Current.Dispatcher.Invoke(() => {
 
             // Set gamemode label
-            this.GamemodeDropdown.Label = SettingsLookup.GetGamemodeName(gamemode, this.m_package);
+            this.GamemodeDropdown.Label = SettingsLookup.GetGamemodeName(gamemode, this.m_package, m_handle.Game);
 
             // Set gamemode
             this.Gamemode = this.ModPackage.Gamemodes

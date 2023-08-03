@@ -9,11 +9,11 @@ using System.Windows;
 using System.Windows.Media;
 
 using Battlegrounds.AI;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Scenarios;
-using Battlegrounds.Game.Scenarios.CoH2;
 using Battlegrounds.Lobby.Components;
 using Battlegrounds.Lobby.Lookups;
 using Battlegrounds.Lobby.Playing;
@@ -469,10 +469,14 @@ public sealed class HostLobby : BaseLobby {
             return;
         }
 
+        // Get gamemode list
+        IGamemodeList gamemodesSource = BattlegroundsContext.DataSource.GetGamemodeList(m_package, scenario.Game)
+            ?? throw new ObjectNotFoundException("Failed finding gamemode list");
+
         // Get available gamemodes
         var guid = this.m_package.GamemodeGUID;
         List<IGamemode> gamemodes =
-            (scenario.Gamemodes.Count > 0 ? Winconditions.GetGamemodes(guid, scenario.Gamemodes) : Winconditions.GetGamemodes(guid)).ToList();
+            (scenario.Gamemodes.Count > 0 ? gamemodesSource.GetGamemodes(guid, scenario.Gamemodes) : gamemodesSource.GetGamemodes(guid)).ToList();
 
         // Update if there's any change in available gamemodes 
         if (this.GamemodeDropdown.Items.Count != gamemodes.Count || gamemodes.Any(x => !this.GamemodeDropdown.Items.Contains(x))) {

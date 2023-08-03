@@ -47,7 +47,7 @@ public interface IModDbManager {
     /// <param name="package"></param>
     /// <param name="game"></param>
     /// <returns></returns>
-    IWinconditionList? GetWinconditionList(IModPackage package, GameCase game);
+    IGamemodeList? GetGamemodeList(IModPackage package, GameCase game);
 
     /// <summary>
     /// 

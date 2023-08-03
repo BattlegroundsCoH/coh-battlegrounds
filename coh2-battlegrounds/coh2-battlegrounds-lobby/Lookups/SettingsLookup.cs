@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 
-using Battlegrounds.Game.Database;
+using Battlegrounds.Errors.Common;
+using Battlegrounds.Game;
 using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Modding;
 
@@ -14,13 +15,14 @@ public static class SettingsLookup {
         scen.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(scen.Name[1..], out uint key) 
             ? BattlegroundsContext.DataSource.GetLocale(scen.Game).GetString(key) : scen.Name;
 
-    public static string GetGamemodeName(string gamemode, IModPackage? package) {
+    public static string GetGamemodeName(string gamemode, IModPackage? package, GameCase game) {
 
         if (package is null) {
             return gamemode;
         }
 
-        if (Winconditions.GetGamemodeByName(package.GamemodeGUID, gamemode) is not IGamemode wincondition) {
+        var gamemodesSource = BattlegroundsContext.DataSource.GetGamemodeList(package, game) ?? throw new ObjectNotFoundException("Failed finding gamemode list");
+        if (gamemodesSource.GetGamemodeByName(package.GamemodeGUID, gamemode) is not IGamemode wincondition) {
             return gamemode;
         }
 

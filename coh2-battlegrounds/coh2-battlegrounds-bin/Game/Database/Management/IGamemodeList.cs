@@ -5,9 +5,9 @@ using Battlegrounds.Modding;
 namespace Battlegrounds.Game.Database.Management;
 
 /// <summary>
-/// 
+/// Interface representing a list of <see cref="IGamemode"/> instances.
 /// </summary>
-public interface IWinconditionList {
+public interface IGamemodeList {
 
     /// <summary>
     /// Register a new <see cref="IGamemode"/> in the database.
@@ -38,6 +38,5 @@ public interface IWinconditionList {
     /// <param name="gamemodeNames"></param>
     /// <returns></returns>
     List<IGamemode> GetGamemodes(ModGuid modGuid, IEnumerable<string> gamemodeNames);
-
 
 }

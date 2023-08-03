@@ -86,7 +86,7 @@ public class ModDatabaseManager : IModDbManager {
         => packageDatabases.TryGetValue(package, out var database) && database is not null ? database.GetScenarios(game) : null;
 
     /// <inheritdoc/>
-    public IWinconditionList? GetWinconditionList(IModPackage package, GameCase game)
+    public IGamemodeList? GetGamemodeList(IModPackage package, GameCase game)
         => packageDatabases.TryGetValue(package, out var database) && database is not null ? database.GetWinconditions(game) : null;
 
     /// <inheritdoc/>
