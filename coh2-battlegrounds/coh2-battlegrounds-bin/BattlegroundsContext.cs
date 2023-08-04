@@ -14,6 +14,8 @@ using Battlegrounds.Logging;
 using Battlegrounds.Modding;
 using Battlegrounds.Steam;
 using Battlegrounds.Update;
+using Battlegrounds.Util.Coroutines;
+using Battlegrounds.Util.Threading;
 
 namespace Battlegrounds;
 
@@ -312,6 +314,11 @@ public static class BattlegroundsContext {
     /// </summary>
     public static bool UseLightCoH3PlaybackLoader { get; set; } = true;
 
+    /// <summary>
+    /// Get or set the dispatcher used by the application.
+    /// </summary>
+    public static IDispatcher Dispatcher { get; set; } = ICoroutineDispatcher.CurrentDispatcher;
+
 #if DEBUG
 
     /// <summary>
@@ -508,5 +515,25 @@ public static class BattlegroundsContext {
     /// </summary>
     /// <param name="lang"></param>
     public static void ChangeLanguage(LocaleLanguage lang) => __instance.Language = lang;
+
+    /// <summary>
+    /// Change the data source in use by the context.
+    /// </summary>
+    /// <remarks>
+    /// This method only works in DEBUG mode.
+    /// </remarks>
+    /// <param name="db">The new database</param>
+    [Conditional("DEBUG")]
+    public static void ChangeDataSource(IModDbManager db) => __modDatabases = db;
+
+    /// <summary>
+    /// Change the mod manager in use by the context
+    /// </summary>
+    /// <remarks>
+    /// This method only works in DEBUG mode.
+    /// </remarks>
+    /// <param name="manager">The new mod manager</param>
+    [Conditional("DEBUG")]
+    public static void ChangeModManager(IModManager manager) => __modManager = manager;
 
 }

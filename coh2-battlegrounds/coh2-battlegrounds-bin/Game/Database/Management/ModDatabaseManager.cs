@@ -14,7 +14,7 @@ namespace Battlegrounds.Game.Database.Management;
 /// <summary>
 /// 
 /// </summary>
-public class ModDatabaseManager : IModDbManager {
+public sealed class ModDatabaseManager : IModDbManager {
 
     private readonly Dictionary<IModPackage, IModDb> packageDatabases;
     private readonly IModManager modManager;
@@ -87,7 +87,7 @@ public class ModDatabaseManager : IModDbManager {
 
     /// <inheritdoc/>
     public IGamemodeList? GetGamemodeList(IModPackage package, GameCase game)
-        => packageDatabases.TryGetValue(package, out var database) && database is not null ? database.GetWinconditions(game) : null;
+        => packageDatabases.TryGetValue(package, out var database) && database is not null ? database.GetGamemodes(game) : null;
 
     /// <inheritdoc/>
     public void LoadDatabases(DatabaseLoadedCallbackHandler callback) => Task.Run(async () => {

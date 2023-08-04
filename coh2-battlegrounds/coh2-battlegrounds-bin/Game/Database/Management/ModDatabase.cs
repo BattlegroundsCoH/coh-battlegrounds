@@ -304,7 +304,7 @@ public class ModDatabase : IModDb {
     };
 
     /// <inheritdoc/>
-    public IGamemodeList GetWinconditions(GameCase game) => game switch {
+    public IGamemodeList GetGamemodes(GameCase game) => game switch {
         GameCase.CompanyOfHeroes2 => _winconditionCoH2List ?? throw new Exception(),
         GameCase.CompanyOfHeroes3 => _winconditionCoH3List ?? throw new Exception(),
         _ => throw new Exception()

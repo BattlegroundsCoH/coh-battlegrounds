@@ -47,8 +47,15 @@ public sealed class Logger {
     /// Logs an information message.
     /// </summary>
     /// <param name="message">The message to log; accepting string formatting</param>
+    public void Info(string message) 
+        => LogThis(LogLevel.Info, message);
+
+    /// <summary>
+    /// Logs an information message.
+    /// </summary>
+    /// <param name="message">The message to log; accepting string formatting</param>
     /// <param name="args">String format arguments</param>
-    public void Info(string message, params object[] args)
+    public void Info(string message, params object[] args) 
         => LogThis(LogLevel.Info, string.Format(message, args));
 
     /// <summary>

@@ -30,6 +30,7 @@ using Battlegrounds.Editor.Pages;
 using Battlegrounds.Lobby.Pages;
 using Battlegrounds.Lobby;
 using Battlegrounds.Logging;
+using Battlegrounds.UI.Threading;
 
 namespace BattlegroundsApp;
 
@@ -146,8 +147,8 @@ public partial class App : Application, IResourceResolver, IViewController {
 
         // Load more low priority stuff down here
 
-        var updateFolderContents = Directory.GetFiles(BattlegroundsContext.GetRelativePath(BattlegroundsPaths.UPDATE_FOLDER));
         // Remove update folder
+        var updateFolderContents = Directory.GetFiles(BattlegroundsContext.GetRelativePath(BattlegroundsPaths.UPDATE_FOLDER));
         if (updateFolderContents.Length > 0) {
             updateFolderContents.ForEach(File.Delete);
         }
@@ -180,6 +181,9 @@ public partial class App : Application, IResourceResolver, IViewController {
     }
 
     private void MainWindow_Ready(MainWindow window) {
+
+        // Save dispatcher
+        BattlegroundsContext.Dispatcher = new UIDispatcher(window.Dispatcher);
 
         // Do first-time startup
         if (BattlegroundsContext.IsFirstRun) {
@@ -314,7 +318,7 @@ public partial class App : Application, IResourceResolver, IViewController {
         sender ??= "<<NULL>>";
 
         // Log exception
-        Trace.WriteLine($"\n\n\n\t*** FATAL APP EXIT ***\n\nException trigger:\n{sender}\n\nException Info:\n{e.ExceptionObject}\n");
+        logger.Info($"\n\n\n\t*** FATAL APP EXIT ***\n\nException trigger:\n{sender}\n\nException Info:\n{e.ExceptionObject}\n");
 
         // Try launch self in error mode
         try {

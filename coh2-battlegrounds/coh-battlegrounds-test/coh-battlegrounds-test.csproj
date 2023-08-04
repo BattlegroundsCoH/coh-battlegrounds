@@ -44,7 +44,6 @@
     <Folder Include="Common\" />
     <Folder Include="Core\Game\DataSource\" />
     <Folder Include="Core\Networking\Remoting\" />
-    <Folder Include="Lobby\" />
     <Folder Include="Misc\" />
   </ItemGroup>
 

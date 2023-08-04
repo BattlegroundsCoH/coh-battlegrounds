@@ -247,7 +247,7 @@ public sealed class HostLobby : BaseLobby {
                 this.m_handle.SetLobbyState(LobbyState.Starting);
 
                 // Get play model
-                var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, 5, this.UploadGamemodeCallback);
+                var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, BattlegroundsContext.Dispatcher, 5, this.UploadGamemodeCallback);
 
                 // Log Screen change
                 Trace.WriteLine($"{nameof(PlayModelFactory)} picked play model '{play.GetType().Name}'.", nameof(HostLobby));

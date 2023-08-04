@@ -1,10 +1,12 @@
-﻿using Battlegrounds.Game.DataCompany;
+﻿using System;
+
+using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
-using System;
 using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Functional;
 using Battlegrounds.Logging;
+using Battlegrounds.Errors.Modding;
 
 namespace Battlegrounds.DataLocal.Generator;
 
@@ -26,12 +28,15 @@ public static class InitialCompanyCreator {
             var package = BattlegroundsContext.ModManager.GetPackageOrError("mod_bg");
 
             // Create default CoH2 companies
-            CreateDefaultSovietCompany(package);
-            CreateDefaultGermanCompany(package);
+            var sov_company = CreateDefaultSovietCompany(package);
+            var ost_company = CreateDefaultGermanCompany(package);
 
             // Create default CoH3 companies
-            CreateDefaultCoH3BritishCompany(package);
+            var ukf3_company = CreateDefaultCoH3BritishCompany(package);
             CreateDefaultCoH3DAKCompany(package);
+
+            // Commit
+            CommitCompanies(sov_company, ost_company, ukf3_company);
 
         } catch (Exception ex) {
             logger.Error(ex);
@@ -39,13 +44,22 @@ public static class InitialCompanyCreator {
 
     }
 
-    private static void CreateDefaultSovietCompany(IModPackage package) {
+    private static void CommitCompanies(params Company[] companies) 
+        => companies.ForEach(Companies.SaveCompany).ForEach(Companies.Register);
+
+    /// <summary>
+    /// Generates the default <see cref="Faction.Soviet"/> company.
+    /// </summary>
+    /// <param name="package">The package to use when creating the company</param>
+    /// <returns>A default generated company</returns>
+    /// <exception cref="CompanyTypeNotFoundException"></exception>
+    public static Company CreateDefaultSovietCompany(IModPackage package) {
 
         // Grab faction
         var sov = Faction.Soviet;
 
         // Grab type
-        var typ = package.GetCompanyType(sov, "sov_rifles") ?? throw new Exception("Failed to fetch company type");
+        var typ = package.GetCompanyType(sov, "sov_rifles") ?? throw new CompanyTypeNotFoundException("sov_rifles", sov, package);
 
         // Create builder
         CompanyBuilder builder = CompanyBuilder.NewCompany("Default Soviet", typ, CompanyAvailabilityType.MultiplayerOnly, sov, ModGuid.BattlegroundsTuning);
@@ -112,23 +126,23 @@ public static class InitialCompanyCreator {
         AddUnit(builder, "soviet_officer_squad_bg", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
 
         // Build company
-        var company = builder.Commit().Result;
-
-        // Save
-        Companies.SaveCompany(company);
-
-        // Register
-        Companies.Register(company);
+        return builder.Commit().Result;
 
     }
 
-    private static void CreateDefaultGermanCompany(IModPackage package) {
+    /// <summary>
+    /// Generates the default <see cref="Faction.Wehrmacht"/> company.
+    /// </summary>
+    /// <param name="package">The package to use when creating the company</param>
+    /// <returns>A default generated company</returns>
+    /// <exception cref="CompanyTypeNotFoundException"></exception>
+    public static Company CreateDefaultGermanCompany(IModPackage package) {
 
         // Grab faction
         var ger = Faction.Wehrmacht;
 
         // Grab type
-        var typ = package.GetCompanyType("ost_rifles") ?? throw new Exception("Failed to fetch company type");
+        var typ = package.GetCompanyType(ger, "ost_rifles") ?? throw new CompanyTypeNotFoundException("ost_rifles", ger, package);
 
         // Create builder
         CompanyBuilder builder = CompanyBuilder.NewCompany("Default German", typ, CompanyAvailabilityType.MultiplayerOnly, ger, ModGuid.BattlegroundsTuning);
@@ -198,27 +212,27 @@ public static class InitialCompanyCreator {
         AddUnit(builder, "assault_officer_squad_bg", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
         AddUnit(builder, "luftwaffe_officer_squad_bg", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
 
-        // Build company
-        var company = builder.Commit().Result;
-
-        // Save
-        Companies.SaveCompany(company);
-
-        // Register
-        Companies.Register(company);
+        // Build company and return it
+        return builder.Commit().Result;
 
     }
 
-    private static void CreateDefaultCoH3BritishCompany(IModPackage package) {
+    /// <summary>
+    /// Generates the default <see cref="Faction.BritishAfrica"/> company.
+    /// </summary>
+    /// <param name="package">The package to use when creating the company</param>
+    /// <returns>A default generated company</returns>
+    /// <exception cref="CompanyTypeNotFoundException"></exception>
+    public static Company CreateDefaultCoH3BritishCompany(IModPackage package) {
 
         // Grab faction
-        var ger = Faction.BritishAfrica;
+        var ukf = Faction.BritishAfrica;
 
         // Grab type
-        var typ = package.GetCompanyType("ukf3_rifles") ?? throw new Exception("Failed to fetch company type");
+        var typ = package.GetCompanyType(ukf, "ukf3_rifles") ?? throw new CompanyTypeNotFoundException("ukf3_rifles", ukf, package);
 
         // Create builder
-        CompanyBuilder builder = CompanyBuilder.NewCompany("Desert Rats", typ, CompanyAvailabilityType.MultiplayerOnly, ger, ModGuid.BattlegroundsTuning);
+        CompanyBuilder builder = CompanyBuilder.NewCompany("Desert Rats", typ, CompanyAvailabilityType.MultiplayerOnly, ukf, ModGuid.BattlegroundsTuning);
 
         // Initial phase
         AddUnit(builder, "SBP.BRITISH.TOMMY_UK", DeploymentPhase.PhaseInitial, DeploymentRole.DirectCommand);
@@ -266,14 +280,8 @@ public static class InitialCompanyCreator {
 
         AddUnit(builder, "SBP.BRITISH_AFRICA.OFFICER_AFRICA_UK", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
 
-        // Build company
-        var company = builder.Commit().Result;
-
-        // Save
-        Companies.SaveCompany(company);
-
-        // Register
-        Companies.Register(company);
+        // Build company and return
+        return builder.Commit().Result;
 
     }
 

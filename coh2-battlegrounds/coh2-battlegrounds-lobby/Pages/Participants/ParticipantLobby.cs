@@ -466,7 +466,6 @@ public sealed class ParticipantLobby : BaseLobby {
             this.GamemodeOptionDropdown.Label = gamomodeOption;
         });
 
-
     }
 
     private void OnGamemodeAuxOptionChanged(Setting setting, LobbySettingsChangedEventArgs e) {

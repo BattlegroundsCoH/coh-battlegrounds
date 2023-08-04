@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Media;
 
 using Battlegrounds.Game.Match.Analyze;
@@ -10,6 +9,7 @@ using Battlegrounds.Lobby.Components;
 using Battlegrounds.Modding;
 
 using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.Util.Threading;
 
 namespace Battlegrounds.Lobby.Playing;
 
@@ -18,7 +18,8 @@ namespace Battlegrounds.Lobby.Playing;
 /// </summary>
 public sealed class SingleplayerModel : BasePlayModel, IPlayModel {
 
-    public SingleplayerModel(ILobbyHandle handler, ChatSpectator lobbyChat) : base(handler, lobbyChat) {
+    public SingleplayerModel(ILobbyHandle handler, IChatSpectator lobbyChat, IDispatcher dispatcher) 
+        : base(handler, lobbyChat, dispatcher) {
 
         // Startup strategy
         this.m_startupStrategy = new SingleplayerStartupStrategy(handler.Game) {
@@ -43,7 +44,7 @@ public sealed class SingleplayerModel : BasePlayModel, IPlayModel {
         this.BasePrepare(modPackage, prepareCancelled);
 
         // Trigger prepare over immediately
-        Application.Current.Dispatcher.Invoke(() => {
+        this.m_dispatcher.Invoke(() => {
             prepareOver?.Invoke(this);
         });
 
@@ -73,7 +74,7 @@ public sealed class SingleplayerModel : BasePlayModel, IPlayModel {
         this.m_chat.SystemMessage(BattlegroundsContext.Localize.GetString("SystemMessage_MatchError", r), Colors.Red);
 
         // Invoke over event in lobby model.
-        Application.Current.Dispatcher.Invoke(() => {
+        this.m_dispatcher.Invoke(() => {
             matchOver.Invoke(this);
         });
 
@@ -89,7 +90,7 @@ public sealed class SingleplayerModel : BasePlayModel, IPlayModel {
         }
 
         // Invoke over event in lobby model.
-        Application.Current.Dispatcher.Invoke(() => {
+        this.m_dispatcher.Invoke(() => {
             handler.Invoke(this);
         });
 

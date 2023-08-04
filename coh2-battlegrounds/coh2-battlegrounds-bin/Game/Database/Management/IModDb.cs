@@ -24,7 +24,7 @@ public interface IModDb {
     /// </summary>
     /// <param name="game"></param>
     /// <returns></returns>
-    IGamemodeList GetWinconditions(GameCase game);
+    IGamemodeList GetGamemodes(GameCase game);
 
     /// <summary>
     /// 

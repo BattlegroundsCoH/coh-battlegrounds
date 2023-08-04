@@ -472,7 +472,7 @@ public sealed class Planner : ViewModelBase {
             this.m_data.Handle.SetLobbyState(LobbyState.Starting);
 
             // Get play model
-            var play = PlayModelFactory.GetModel(this.m_data.Handle, this.m_data.Chat, 0, hostModel.UploadGamemodeCallback);
+            var play = PlayModelFactory.GetModel(this.m_data.Handle, this.m_data.Chat, BattlegroundsContext.Dispatcher, 0, hostModel.UploadGamemodeCallback);
 
             // prepare
             play.Prepare(this.m_data.Package, hostModel.BeginMatch, x => hostModel.EndMatch(x is IPlayModel y ? y : throw new ArgumentNullException()));

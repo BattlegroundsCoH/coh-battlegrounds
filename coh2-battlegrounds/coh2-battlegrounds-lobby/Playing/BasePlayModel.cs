@@ -8,7 +8,6 @@ using Battlegrounds.AI;
 using Battlegrounds.AI.Lobby;
 using Battlegrounds.DataLocal;
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match.Analyze;
@@ -21,6 +20,7 @@ using Battlegrounds.Modding.Content;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Util;
+using Battlegrounds.Util.Threading;
 using Battlegrounds.Verification;
 using Battlegrounds.Lobby.Components;
 using Battlegrounds.Game.Blueprints;
@@ -29,13 +29,17 @@ using Battlegrounds.Logging;
 
 namespace Battlegrounds.Lobby.Playing;
 
+/// <summary>
+/// Abstract base class that handles gameplay startup, match setup, and game finish operations.
+/// </summary>
 public abstract class BasePlayModel {
 
     private static readonly Logger logger = Logger.CreateLogger();
 
     // Load refs
     protected readonly ILobbyHandle m_handle;
-    protected readonly ChatSpectator m_chat;
+    protected readonly IChatSpectator m_chat;
+    protected readonly IDispatcher m_dispatcher;
 
     // The strategies to use
     protected IStartupStrategy? m_startupStrategy;
@@ -58,14 +62,21 @@ public abstract class BasePlayModel {
     /// </summary>
     /// <param name="handle">The lobby handle to create play instance for.</param>
     /// <param name="lobbyChat">The chat instance to use when communicating progress.</param>
-    public BasePlayModel(ILobbyHandle handle, ChatSpectator lobbyChat) {
+    /// <param name="dispatcher">The dispatcher to invoke UI thread actions through.</param>
+    public BasePlayModel(ILobbyHandle handle, IChatSpectator lobbyChat, IDispatcher dispatcher) {
 
         // Set base stuff
         this.m_handle = handle;
         this.m_chat = lobbyChat;
+        this.m_dispatcher = dispatcher;
 
     }
 
+    /// <summary>
+    /// Prepares the play model for gameplay.
+    /// </summary>
+    /// <param name="modPackage">The mod package to use for preparation.</param>
+    /// <param name="cancelHandler">Handler to call when the preparation is cancelled.</param>
     protected void BasePrepare(IModPackage modPackage, PrepareCancelHandler cancelHandler) {
 
         // Error if not set up
@@ -104,6 +115,10 @@ public abstract class BasePlayModel {
 
     }
 
+    /// <summary>
+    /// Creates match information from the given mod package.
+    /// </summary>
+    /// <param name="package">The mod package to use for creating the match information.</param>
     protected void CreateMatchInfo(IModPackage package) {
 
         // Get settings (most up-to-date)
@@ -227,6 +242,14 @@ public abstract class BasePlayModel {
 
     }
 
+    /// <summary>
+    /// Creates a participant for a session from a lobby member.
+    /// </summary>
+    /// <param name="participant">The lobby member to transform into a session participant.</param>
+    /// <param name="team">The team of the participant.</param>
+    /// <param name="count">The total count of participants.</param>
+    /// <param name="index">The index of the participant.</param>
+    /// <returns>The created session participant.</returns>
     protected SessionParticipant CreateParticipantFromLobbyMember(ILobbyMember participant, ParticipantTeam team, ValRef<byte> count, ValRef<byte> index) {
 
         // Update indicies
@@ -410,12 +433,24 @@ public abstract class BasePlayModel {
 
     }
 
+    /// <summary>
+    /// Handles the event when the game startup is cancelled.
+    /// </summary>
+    /// <param name="sender">The startup strategy that triggered the event.</param>
+    /// <param name="caller">The object that invoked the method.</param>
+    /// <param name="reason">The reason for cancellation.</param>
     protected void HandleStartupCancel(IStartupStrategy sender, object? caller, string reason) {
         this.m_chat.SystemMessage(reason, Colors.Red);
         this.m_handle.NotifyError("startup", reason);
         this.m_prepCancelHandler?.Invoke(this);
     }
 
+    /// <summary>
+    /// Handles the event when the game startup is providing an information.
+    /// </summary>
+    /// <param name="sender">The startup strategy that triggered the event.</param>
+    /// <param name="caller">The object that invoked the method.</param>
+    /// <param name="message">The information message.</param>
     protected void HandleStartupInformation(IStartupStrategy sender, object? caller, string message)
         => this.ShowStartupInformation(message);
 
@@ -424,7 +459,11 @@ public abstract class BasePlayModel {
         this.m_handle.NotifyMatch("startup", message);
     }
 
-    protected void OnCompanySerialized(Company company) {
+    /// <summary>
+    /// Handles the serialization event of a company.
+    /// </summary>
+    /// <param name="company">The company that has been serialized.</param>
+    protected virtual void OnCompanySerialized(Company company) {
 
         // Run through a sanitizer
         try {

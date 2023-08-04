@@ -23,7 +23,7 @@ public sealed record ChatChannel(LocaleKey Display, int ChannelId) {
 /// <summary>
 /// 
 /// </summary>
-public sealed class ChatSpectator : ViewModelBase {
+public sealed class ChatSpectator : ViewModelBase, IChatSpectator {
 
     public record ChatButton(string Title, RelayCommand Click);
     public record ChatFilterDropdown(ObservableCollection<ChatChannel> Channels) {
