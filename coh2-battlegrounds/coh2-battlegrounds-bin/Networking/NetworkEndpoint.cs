@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 
 namespace Battlegrounds.Networking;
@@ -35,11 +35,11 @@ public readonly struct NetworkEndpoint {
     public string HttpStr => $"{this.RemoteIPAddress}:{this.Http}";
 
     /// <summary>
-    /// Create 
+    /// Creates a network endpoint that can be connected to.
     /// </summary>
-    /// <param name="remoteIP"></param>
-    /// <param name="http"></param>
-    /// <param name="tcp"></param>
+    /// <param name="remoteIP">The remote IP address or hostname of the endpoint</param>
+    /// <param name="http">The HTTP port to use</param>
+    /// <param name="tcp">The TCP port to use</param>
     public NetworkEndpoint(string remoteIP, int http, int tcp) {
         this.RemoteIPAddress = remoteIP;
         this.Http = http;
@@ -55,15 +55,38 @@ public readonly struct NetworkEndpoint {
         try {
             HttpClient client = new HttpClient() { Timeout = TimeSpan.FromMilliseconds(timeout) };
             var request = new HttpRequestMessage {
-                RequestUri = new Uri($"http://{this.RemoteIPAddress}:{this.Http}/api/ping"),
+                RequestUri = new Uri($"http://{this.RemoteIPAddress}:{this.Http}/ping"),
                 Method = HttpMethod.Get,
             };
             var response = client.Send(request);
             return response.IsSuccessStatusCode;
-        } catch (Exception e) {
-            //Trace.WriteLine(e, nameof(NetworkEndpoint));
+        } catch {
             return false;
         }
     }
+
+    /// <summary>
+    /// Asks the network endpoint what version it currently is.
+    /// </summary>
+    /// <param name="timeout">The amount of milliseconds to wait before failing to retrieve version.</param>
+    /// <returns>The network endpoint version.</returns>
+    public string GetVersion(int timeout = 600) {
+        try {
+            HttpClient client = new HttpClient() { Timeout = TimeSpan.FromMilliseconds(timeout) };
+            var request = new HttpRequestMessage {
+                RequestUri = new Uri($"http://{this.RemoteIPAddress}:{this.Http}/version"),
+                Method = HttpMethod.Get,
+            };
+            var response = client.Send(request);
+            using var data = response.Content.ReadAsStream();
+            using var dataReader = new StreamReader(data);
+            return dataReader.ReadToEnd();
+        } catch {
+            return "0.0.0";
+        }
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => $"Endpoint [Http: {HttpStr}; Tcp: {TcpStr}]";
 
 }

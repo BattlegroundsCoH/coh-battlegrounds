@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Battlegrounds.Functional;
+﻿namespace Battlegrounds.Functional;
 
 /// <summary>
 /// Static helper class for working with generic collections.
@@ -103,5 +99,10 @@ public static class FunctionalGeneric {
 
     public static uint Max<T>(this IEnumerable<T> sources, uint defaultValue, Func<T, uint> func)
         => sources.Any() ? sources.Max(func) : defaultValue;
+
+    public static T Reduce<T>(this IEnumerable<T> sources, Func<T, T, T> reducer) {
+        var source = sources.FirstOrDefault() ?? throw new InvalidOperationException();
+        return sources.Aggregate(source, (x, y) => reducer(x, y));
+    }
 
 }

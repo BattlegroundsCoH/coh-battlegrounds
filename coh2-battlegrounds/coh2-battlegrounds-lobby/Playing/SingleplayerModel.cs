@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Media;
 
 using Battlegrounds.Game.Match.Analyze;
@@ -10,6 +9,7 @@ using Battlegrounds.Lobby.Components;
 using Battlegrounds.Modding;
 
 using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.Util.Threading;
 
 namespace Battlegrounds.Lobby.Playing;
 
@@ -18,13 +18,14 @@ namespace Battlegrounds.Lobby.Playing;
 /// </summary>
 public sealed class SingleplayerModel : BasePlayModel, IPlayModel {
 
-    public SingleplayerModel(ILobbyHandle handler, ChatSpectator lobbyChat) : base(handler, lobbyChat) {
+    public SingleplayerModel(ILobbyHandle handler, IChatSpectator lobbyChat, IDispatcher dispatcher) 
+        : base(handler, lobbyChat, dispatcher) {
 
         // Startup strategy
-        this.m_startupStrategy = new SingleplayerStartupStrategy {
+        this.m_startupStrategy = new SingleplayerStartupStrategy(handler.Game) {
             LocalCompanyCollector = () => this.m_selfCompany,
             SessionInfoCollector = () => this.m_info,
-            PlayStrategyFactory = new OverwatchStrategyFactory(),
+            PlayStrategyFactory = new OverwatchStrategyFactory(handler.Game),
         };
 
         // Analysis strategy
@@ -37,13 +38,13 @@ public sealed class SingleplayerModel : BasePlayModel, IPlayModel {
 
     }
 
-    public void Prepare(ModPackage modPackage, PrepareOverHandler prepareOver, PrepareCancelHandler prepareCancelled) {
+    public void Prepare(IModPackage modPackage, PrepareOverHandler prepareOver, PrepareCancelHandler prepareCancelled) {
 
         // For singleplayer we can just invoke the base play
         this.BasePrepare(modPackage, prepareCancelled);
 
         // Trigger prepare over immediately
-        Application.Current.Dispatcher.Invoke(() => {
+        this.m_dispatcher.Invoke(() => {
             prepareOver?.Invoke(this);
         });
 
@@ -70,10 +71,10 @@ public sealed class SingleplayerModel : BasePlayModel, IPlayModel {
     private void GameErrorHandler(string r, PlayOverHandler matchOver) {
 
         // Log error
-        this.m_chat.SystemMessage(BattlegroundsInstance.Localize.GetString("SystemMessage_MatchError", r), Colors.Red);
+        this.m_chat.SystemMessage(BattlegroundsContext.Localize.GetString("SystemMessage_MatchError", r), Colors.Red);
 
         // Invoke over event in lobby model.
-        Application.Current.Dispatcher.Invoke(() => {
+        this.m_dispatcher.Invoke(() => {
             matchOver.Invoke(this);
         });
 
@@ -83,13 +84,13 @@ public sealed class SingleplayerModel : BasePlayModel, IPlayModel {
 
         // do stuff with match?
         if (match.IsFinalizableMatch) {
-            this.m_chat.SystemMessage(BattlegroundsInstance.Localize.GetString("SystemMessage_MatchSaved"), Colors.DarkGray);
+            this.m_chat.SystemMessage(BattlegroundsContext.Localize.GetString("SystemMessage_MatchSaved"), Colors.DarkGray);
         } else {
-            this.m_chat.SystemMessage(BattlegroundsInstance.Localize.GetString("SystemMessage_MatchInvalid"), Colors.DarkGray);
+            this.m_chat.SystemMessage(BattlegroundsContext.Localize.GetString("SystemMessage_MatchInvalid"), Colors.DarkGray);
         }
 
         // Invoke over event in lobby model.
-        Application.Current.Dispatcher.Invoke(() => {
+        this.m_dispatcher.Invoke(() => {
             handler.Invoke(this);
         });
 

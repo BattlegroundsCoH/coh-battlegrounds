@@ -1,24 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 using Battlegrounds.AI;
 
 using Battlegrounds.Networking.Server;
 using Battlegrounds.UI;
 using Battlegrounds.DataLocal;
-using Battlegrounds.Game.Scenarios;
-using Battlegrounds.Locale;
-using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.UI.Threading;
 using Battlegrounds.UI.Modals.Prompts;
 using Battlegrounds.UI.Modals;
 using Battlegrounds.Lobby.Lookups;
@@ -27,6 +22,10 @@ using Battlegrounds.Resources;
 using Battlegrounds.Functional;
 using Battlegrounds.Lobby.Components;
 using Battlegrounds.Lobby.Modals;
+using Battlegrounds.Locale;
+using Battlegrounds.Game;
+using Battlegrounds.Logging;
+using Battlegrounds.Networking.LobbySystem.Factory;
 
 namespace Battlegrounds.Lobby.Pages;
 
@@ -45,16 +44,16 @@ public record LobbySettingPreview(string Key, string Value);
 
 public record LobbySlotPreview(ServerSlot Slot) {
     public string SlotTitle => this.Slot.State switch {
-        0 => BattlegroundsInstance.Localize.GetString("GameBrowserView_PreviewSlotOpen"),
+        0 => BattlegroundsContext.Localize.GetString("GameBrowserView_PreviewSlotOpen"),
         1 => this.Slot.Difficulty switch {
             0 => this.Slot.DisplayName,
-            1 => BattlegroundsInstance.Localize.GetEnum(AIDifficulty.AI_Easy),
-            2 => BattlegroundsInstance.Localize.GetEnum(AIDifficulty.AI_Standard),
-            3 => BattlegroundsInstance.Localize.GetEnum(AIDifficulty.AI_Hard),
-            4 => BattlegroundsInstance.Localize.GetEnum(AIDifficulty.AI_Expert),
+            1 => BattlegroundsContext.Localize.GetEnum(AIDifficulty.AI_Easy),
+            2 => BattlegroundsContext.Localize.GetEnum(AIDifficulty.AI_Standard),
+            3 => BattlegroundsContext.Localize.GetEnum(AIDifficulty.AI_Hard),
+            4 => BattlegroundsContext.Localize.GetEnum(AIDifficulty.AI_Expert),
             _ => throw new InvalidOperationException()
         },
-        2 => BattlegroundsInstance.Localize.GetString("GameBrowserView_PreviewSlotLocked"),
+        2 => BattlegroundsContext.Localize.GetString("GameBrowserView_PreviewSlotLocked"),
         _ => ""
     };
     public ImageSource? SlotImage => this.Slot.State switch {
@@ -65,8 +64,9 @@ public record LobbySlotPreview(ServerSlot Slot) {
     public Visibility SlotVisibility => this.Slot.State == 3 ? Visibility.Collapsed : Visibility.Visible;
 }
 
-public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
+public sealed class LobbyBrowser : IViewModel {
 
+    private static readonly Logger logger = Logger.CreateLogger();
 
     private static readonly LocaleKey _noMatches = new LocaleKey("GameBrowserView_NoLobbies");
     private static readonly LocaleKey _noConnection = new LocaleKey("GameBrowserView_NoConnection");
@@ -223,7 +223,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
         this.PropertyChanged?.Invoke(this, new(nameof(PreviewTitle)));
 
         // Read from settings
-        var scen = ScenarioList.FromRelativeFilename(selected.Settings[LobbyConstants.SETTING_MAP]);
+        var scen = BattlegroundsContext.DataSource.GetScenarioList(GameCase.CompanyOfHeroes2).FromRelativeFilename(selected.Settings[LobbyConstants.SETTING_MAP]);
 
         // Set scenario
         this.PreviewImage = ScenarioPreviewLookup.TryGetMapSource(scen);
@@ -233,7 +233,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
         this.PreviewSettings.Clear();
 
         // Grab mod package
-        var package = ModManager.GetPackage(selected.Settings.TryGetValue(LobbyConstants.SETTING_MODPACK, out string? s) ? s : string.Empty);
+        var package = BattlegroundsContext.ModManager.GetPackage(selected.Settings.TryGetValue(LobbyConstants.SETTING_MODPACK, out string? s) ? s : string.Empty);
 
         // Set settings
         foreach (var setting in selected.Settings) {
@@ -244,12 +244,12 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
                     _ => true
                 };
                 if (show) {
-                    string k = BattlegroundsInstance.Localize.GetString(keyloc);
+                    string k = BattlegroundsContext.Localize.GetString(keyloc);
                     string v = setting.Key switch {
                         LobbyConstants.SETTING_MAP => SettingsLookup.GetScenarioName(scen, setting.Value),
                         LobbyConstants.SETTING_WEATHER or LobbyConstants.SETTING_LOGISTICS => setting.Value is "1" ? "On" : "Off",
                         LobbyConstants.SETTING_MODPACK => package?.PackageName ?? setting.Value,
-                        LobbyConstants.SETTING_GAMEMODE => SettingsLookup.GetGamemodeName(setting.Value, package),
+                        LobbyConstants.SETTING_GAMEMODE => SettingsLookup.GetGamemodeName(setting.Value, package, selected.GetGame()),
                         _ => setting.Value
                     };
                     this.PreviewSettings.Add(new(k, v));
@@ -299,7 +299,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
         this.Lobbies.Clear();
 
         // Log refresh
-        Trace.WriteLine("Refreshing lobby list", nameof(LobbyBrowser));
+        logger.Info("Refreshing lobby list");
 
         // Get lobbies async
         Task.Run(() => {
@@ -308,7 +308,7 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
             var lobbies = GetLobbiesFromServer();
 
             // Log amount of lobbies fetched
-            Trace.WriteLine($"Serverhub returned {lobbies.Count} lobbies.", nameof(LobbyBrowser));
+            logger.Info($"Serverhub returned {lobbies.Count} lobbies.");
 
             // update lobbies
             Application.Current.Dispatcher.Invoke(() => {
@@ -338,13 +338,10 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
     private static void LocalButton() {
 
         // Create dummy model
-        LocalLobbyHandle localHandle = new(BattlegroundsInstance.Steam.User);
+        LocalLobbyHandle localHandle = new(BattlegroundsContext.Steam.User);
 
         // Create lobby models.
-        var lobbyModel = BaseLobby.CreateModelAsHost(localHandle);
-        if (lobbyModel is null) {
-            throw new Exception("BAAAAAAD : FIX ASAP");
-        }
+        var lobbyModel = BaseLobby.CreateModelAsHost(localHandle) ?? throw new Exception("BAAAAAAD : FIX ASAP");
 
         // Create chat
         ChatSpectator chatMode = new(localHandle);
@@ -366,66 +363,61 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
             // Show error modal
             OKPrompt.Show(OKPrompt.Nothing,
                 "Network Failure", "No network connection was established to the Battlegrounds Server (NetworkInterface.APIObject=<NULL>).");
-
-        } else {
-
-            // Show modal
-            HostLobby.Show((vm, resault) => {
-
-                // Check return value
-                if (resault is not ModalDialogResult.Confirm) {
-                    return;
-                }
-
-                // Check for null pwd
-                vm.LobbyPassword ??= string.Empty;
-
-                // Create lobby
-                Task.Run(() => LobbyUtil.HostLobby(NetworkInterface.APIObject, vm.LobbyName, vm.LobbyPassword, this.HostLobbyResponse));
-
-            });
+            return;
 
         }
+
+        // Show modal
+        HostLobby.Show((vm, resault) => {
+
+            // Check return value
+            if (resault is not ModalDialogResult.Confirm) {
+                return;
+            }
+
+            // Check for null pwd
+            vm.LobbyPassword ??= string.Empty;
+
+            // Create lobby
+            var factory = new OnlineLobbyFactory(NetworkInterface.APIObject, NetworkInterface.Endpoint, BattlegroundsContext.Steam.User);
+            BeginHostLobby(factory, vm.LobbyName, vm.LobbyPassword, vm.LobbyGame, vm.LobbyPackage.ID);
+
+        });
 
     }
 
-    private void HostLobbyResponse(bool isSuccess, ILobbyHandle? lobby) {
+    private void BeginHostLobby(ILobbyFactory lobbyFactory, string name, string? password, GameCase game, string package) {
+        lobbyFactory.HostLobby(name, password, game, package).ThenDispatch(HostedLobby).ElseDispatch(() => HostedLobby(null));
+    }
 
-        // If lobby was created.
-        if (isSuccess && lobby is not null) {
+    private void HostedLobby(ILobbyHandle? handle) {
 
-            // Log success
-            Trace.WriteLine("Succsefully hosted lobby.", nameof(LobbyBrowser));
-
-            // Invoke on GUI
-            Application.Current.Dispatcher.Invoke(() => {
-
-                // Create lobby models.
-                var lobbyModel = BaseLobby.CreateModelAsHost(lobby);
-                if (lobbyModel is null) {
-                    throw new Exception("BAAAAAAD : FIX ASAP");
-                }
-
-                ChatSpectator chatMode = new(lobby);
-                lobbyModel.SetChatModel(chatMode);
-
-                // Get VM
-                var vm = GetViewManager();
-
-                // Display it
-                vm.SetDisplay(AppDisplayState.LeftRight, chatMode, lobbyModel);
-
-            });
-
-        } else {
+        // Bail if not created
+        if (handle is null) {
 
             // Log failure
-            Trace.WriteLine("Failed to host lobby.", nameof(LobbyBrowser));
+            logger.Error("Failed to host lobby.");
 
             // Give feedback to user.
-            _ = MessageBox.Show("Failed to host lobby (Failed to connect to server).", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("Failed to host lobby (Failed to connect to server).", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            return;
 
         }
+
+        // Log success
+        logger.Info("Succsefully hosted lobby.");
+
+        // Create lobby models.
+        BaseLobby lobbyModel = BaseLobby.CreateModelAsHost(handle) ?? throw new Exception("BAAAAAAD : FIX ASAP");
+        ChatSpectator chatMode = new(handle);
+        lobbyModel.SetChatModel(chatMode);
+
+        // Get VM
+        var vm = GetViewManager();
+
+        // Display it
+        vm.SetDisplay(AppDisplayState.LeftRight, chatMode, lobbyModel);
 
     }
 
@@ -436,18 +428,21 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
 
         // Ensure the interface object is set
         if (NetworkInterface.APIObject is null) {
-            Trace.WriteLine("Failed to show join modal (Network interface API is null)", nameof(LobbyBrowser));
+            logger.Error("Failed to show join modal (Network interface API is null)");
             return;
         }
 
         // Ensure steam user is verified
-        if (!BattlegroundsInstance.Steam.HasVerifiedUser && !BattlegroundsInstance.Steam.GetSteamUser()) {
-            Trace.WriteLine("Failed to verify steam user in attempt to join game.", nameof(LobbyBrowser));
+        if (!BattlegroundsContext.Steam.HasVerifiedUser && !BattlegroundsContext.Steam.GetSteamUser()) {
+            logger.Warning("Failed to verify steam user in attempt to join game.");
             return;
         }
 
         // Get selected lobby
         if (this.SelectedLobby is ServerLobby lobby) {
+
+            // Get factory
+            var factory = new OnlineLobbyFactory(NetworkInterface.APIObject, NetworkInterface.Endpoint, BattlegroundsContext.Steam.User);
 
             // If password, ask for it
             if (lobby.IsPasswrodProtected) {
@@ -460,58 +455,30 @@ public sealed class LobbyBrowser : IViewModel, INotifyPropertyChanged {
                         return;
                     }
 
-                    Task.Run(() => {
-                        LobbyUtil.JoinLobby(NetworkInterface.APIObject, lobby, vm.Password, this.JoinLobbyResponse);
-                    });
+                    factory.JoinLobby(lobby, vm.Password).ThenDispatch(JoinedLobby).ElseDispatch(() => JoinedLobby(null));
 
                 });
 
             } else {
 
-                Task.Run(() => {
-                    LobbyUtil.JoinLobby(NetworkInterface.APIObject, lobby, string.Empty, this.JoinLobbyResponse);
-                });
+                factory.JoinLobby(lobby, string.Empty).ThenDispatch(JoinedLobby).ElseDispatch(() => JoinedLobby(null));
 
             }
 
         }
     }
 
-    private void JoinLobbyResponse(bool joined, ILobbyHandle? lobby) {
+    private void JoinedLobby(ILobbyHandle? handle) {
 
-        if (joined && lobby is not null) {
-
-            // Ensure this now runs on the GUI thread
-            Application.Current.Dispatcher.Invoke(() => {
-
-                // Log success
-                Trace.WriteLine("Succsefully joined lobby.", nameof(LobbyBrowser));
-
-                // Create lobby models.
-                var lobbyModel = BaseLobby.CreateModelAsParticipant(lobby);
-                if (lobbyModel is null) {
-                    throw new Exception("BAAAAAAD : FIX ASAP");
-                }
-
-                ChatSpectator chatMode = new(lobby);
-                lobbyModel.SetChatModel(chatMode);
-
-                // Get VM
-                var vm = GetViewManager();
-
-                // Display it
-                vm.UpdateDisplay(AppDisplayTarget.Left, chatMode);
-                vm.UpdateDisplay(AppDisplayTarget.Right, lobbyModel);
-
-            });
-
-        } else {
+        if (handle is null) {
 
             // Log failure
-            Trace.WriteLine("Failed to join lobby.", nameof(LobbyBrowser));
+            logger.Error("Failed to join lobby.");
 
             // Give feedback to user.
-            _ = MessageBox.Show("Failed to join lobby (Failed to connect to server).", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("Failed to join lobby (Failed to connect to server).", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            return;
 
         }
 

@@ -1,0 +1,1006 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <RootNamespace>BattlegroundsApp</RootNamespace>
+    <UseWPF>true</UseWPF>
+    <LangVersion>preview</LangVersion>
+    <AnalysisLevel>5.0</AnalysisLevel>
+    <Nullable>enable</Nullable>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <ApplicationIcon>Battlegrounds.ico</ApplicationIcon>
+    <SignAssembly>False</SignAssembly>
+    <AssemblyOriginatorKeyFile>E:\coh2_battlegrounds\coh2-battlegrounds\keypair.snk</AssemblyOriginatorKeyFile>
+    <AssemblyVersion>1.3.0</AssemblyVersion>
+    <FileVersion>1.3.0</FileVersion>
+    <Version>1.2.0-alpha</Version>
+    <RepositoryUrl>https://github.com/JustCodiex/coh2-battlegrounds</RepositoryUrl>
+    <PackageProjectUrl>https://cohbattlegrounds.com/</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <Description>Company of Heroes 2: Battlegrounds Mod Launcher</Description>
+    <Product>Battlegrounds</Product>
+	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+	<AssemblyName>Battlegrounds</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Resources\ingame\ability_icons\**" />
+    <Compile Remove="Resources\ingame\item_icons\**" />
+    <Compile Remove="Resources\ingame\symbol_icons\**" />
+    <Compile Remove="Resources\ingame\unit_icons\**" />
+    <Compile Remove="Resources\ingame\upgrade_icons\**" />
+    <EmbeddedResource Remove="Resources\ingame\ability_icons\**" />
+    <EmbeddedResource Remove="Resources\ingame\item_icons\**" />
+    <EmbeddedResource Remove="Resources\ingame\symbol_icons\**" />
+    <EmbeddedResource Remove="Resources\ingame\unit_icons\**" />
+    <EmbeddedResource Remove="Resources\ingame\upgrade_icons\**" />
+    <None Remove="Resources\ingame\ability_icons\**" />
+    <None Remove="Resources\ingame\item_icons\**" />
+    <None Remove="Resources\ingame\symbol_icons\**" />
+    <None Remove="Resources\ingame\unit_icons\**" />
+    <None Remove="Resources\ingame\upgrade_icons\**" />
+    <Page Remove="Resources\ingame\ability_icons\**" />
+    <Page Remove="Resources\ingame\item_icons\**" />
+    <Page Remove="Resources\ingame\symbol_icons\**" />
+    <Page Remove="Resources\ingame\unit_icons\**" />
+    <Page Remove="Resources\ingame\upgrade_icons\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\app\army_icons\FactionAEF.png" />
+    <None Remove="Resources\app\army_icons\FactionAEFHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionBRIT.png" />
+    <None Remove="Resources\app\army_icons\FactionBRITHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionLOCKED.png" />
+    <None Remove="Resources\app\army_icons\FactionLOCKEDHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionOKW.png" />
+    <None Remove="Resources\app\army_icons\FactionOKWHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionSOVIET.png" />
+    <None Remove="Resources\app\army_icons\FactionSOVIETHighlighted.png" />
+    <None Remove="Resources\app\army_icons\FactionWEHR.png" />
+    <None Remove="Resources\app\army_icons\FactionWEHRHighlighted.png" />
+    <None Remove="Resources\app\checkmark.png" />
+    <None Remove="Resources\app\checkmark_not.png" />
+    <None Remove="Resources\app\coh2-battlegrounds-logo.png" />
+    <None Remove="Resources\app\company_types\ct_airborne.png" />
+    <None Remove="Resources\app\company_types\ct_armoured.png" />
+    <None Remove="Resources\app\company_types\ct_artillery.png" />
+    <None Remove="Resources\app\company_types\ct_engineer.png" />
+    <None Remove="Resources\app\company_types\ct_infantry.png" />
+    <None Remove="Resources\app\company_types\ct_mechanized.png" />
+    <None Remove="Resources\app\company_types\ct_motorized.png" />
+    <None Remove="Resources\app\company_types\ct_ost_sturm.png" />
+    <None Remove="Resources\app\company_types\ct_sov_nkvd.png" />
+    <None Remove="Resources\app\company_types\ct_td.png" />
+    <None Remove="Resources\app\company_types\ct_unspecified.png" />
+    <None Remove="Resources\app\flags\french.png" />
+    <None Remove="Resources\app\flags\german.png" />
+    <None Remove="Resources\app\flags\polish.png" />
+    <None Remove="Resources\app\flags\spanish.png" />
+    <None Remove="Resources\app\flags\unionjack.png" />
+    <None Remove="Resources\app\icon_bkg.png" />
+    <None Remove="Resources\app\LobbyMapDefence.png" />
+    <None Remove="Resources\app\LobbySettingMap.png" />
+    <None Remove="Resources\app\logo_main.png" />
+    <None Remove="Resources\app\objective_icons\ot_attack.png" />
+    <None Remove="Resources\app\objective_icons\ot_defend.png" />
+    <None Remove="Resources\app\objective_icons\ot_support.png" />
+    <None Remove="Resources\app\padlock_locked.png" />
+    <None Remove="Resources\app\padlock_open.png" />
+    <None Remove="Resources\app\rally_icon.png" />
+    <None Remove="Resources\app\refresh.png" />
+    <None Remove="Resources\app\unknown_user.png" />
+    <None Remove="Resources\ingame\aef.png" />
+    <None Remove="Resources\ingame\afrika_korps.png" />
+    <None Remove="Resources\ingame\american.png" />
+    <None Remove="Resources\ingame\application\app_background.png" />
+    <None Remove="Resources\ingame\application\app_button.png" />
+    <None Remove="Resources\ingame\application\app_button_disabled.png" />
+    <None Remove="Resources\ingame\application\app_button_highlighted.png" />
+    <None Remove="Resources\ingame\application\app_button_selected.png" />
+    <None Remove="Resources\ingame\application\app_logo1.png" />
+    <None Remove="Resources\ingame\application\app_logo2.png" />
+    <None Remove="Resources\ingame\british.png" />
+    <None Remove="Resources\ingame\british_africa.png" />
+    <None Remove="Resources\ingame\german.png" />
+    <None Remove="Resources\ingame\german_ugly.png" />
+    <None Remove="Resources\ingame\no_icon.png" />
+    <None Remove="Resources\ingame\remove_item.png" />
+    <None Remove="Resources\ingame\resource_icons\botb_fuel.png" />
+    <None Remove="Resources\ingame\resource_icons\botb_manpower.png" />
+    <None Remove="Resources\ingame\resource_icons\botb_munitions.png" />
+    <None Remove="Resources\ingame\resource_icons\botb_time.png" />
+    <None Remove="Resources\ingame\soviet.png" />
+    <None Remove="Resources\ingame\test_unit_ veterancy.png" />
+    <None Remove="Resources\ingame\test_unit_icon.png" />
+    <None Remove="Resources\ingame\test_unit_portrait.png" />
+    <None Remove="Resources\ingame\test_unit_transport.png" />
+    <None Remove="Resources\ingame\test_unit_veterancy.png" />
+    <None Remove="Resources\ingame\unknown_map.png" />
+    <None Remove="Resources\ingame\vet\vstar1.png" />
+    <None Remove="Resources\ingame\vet\vstar2.png" />
+    <None Remove="Resources\ingame\vet\vstar3.png" />
+    <None Remove="Resources\ingame\vet\vstar4.png" />
+    <None Remove="Resources\ingame\vet\vstar5.png" />
+    <None Remove="Resources\ingame\vet\vstar_no.png" />
+    <None Remove="Resources\ingame\vet\vstar_yes.png" />
+    <None Remove="Resources\ingame\west_german.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Battlegrounds.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\ingame\afrika_korps.png" />
+    <Resource Include="Resources\ingame\american.png" />
+    <Resource Include="Resources\ingame\british_africa.png" />
+    <Resource Include="Resources\ingame\german_ugly.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\app\army_icons\FactionAEF.png" />
+    <Resource Include="Resources\app\army_icons\FactionAEFHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionBRIT.png" />
+    <Resource Include="Resources\app\army_icons\FactionBRITHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionLOCKEDHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionLOCKED.png" />
+    <Resource Include="Resources\app\army_icons\FactionOKW.png" />
+    <Resource Include="Resources\app\army_icons\FactionOKWHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionSOVIET.png" />
+    <Resource Include="Resources\app\army_icons\FactionSOVIETHighlighted.png" />
+    <Resource Include="Resources\app\army_icons\FactionWEHR.png" />
+    <Resource Include="Resources\app\army_icons\FactionWEHRHighlighted.png" />
+    <Resource Include="Resources\app\checkmark.png" />
+    <Resource Include="Resources\app\checkmark_not.png" />
+    <Resource Include="Resources\app\coh2-battlegrounds-logo.png" />
+    <Resource Include="Resources\app\company_types\ct_airborne.png" />
+    <Resource Include="Resources\app\company_types\ct_armoured.png" />
+    <Resource Include="Resources\app\company_types\ct_artillery.png" />
+    <Resource Include="Resources\app\company_types\ct_engineer.png" />
+    <Resource Include="Resources\app\company_types\ct_infantry.png" />
+    <Resource Include="Resources\app\company_types\ct_mechanized.png" />
+    <Resource Include="Resources\app\company_types\ct_motorized.png" />
+    <Resource Include="Resources\app\company_types\ct_ost_sturm.png" />
+    <Resource Include="Resources\app\company_types\ct_sov_nkvd.png" />
+    <Resource Include="Resources\app\company_types\ct_td.png" />
+    <Resource Include="Resources\app\company_types\ct_unspecified.png" />
+    <Resource Include="Resources\app\flags\french.png" />
+    <Resource Include="Resources\app\flags\german.png" />
+    <Resource Include="Resources\app\flags\polish.png" />
+    <Resource Include="Resources\app\flags\spanish.png" />
+    <Resource Include="Resources\app\flags\unionjack.png" />
+    <Resource Include="Resources\app\icon_bkg.png" />
+    <Resource Include="Resources\app\LobbyMapDefence.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\app\LobbySettingMap.png" />
+    <Resource Include="Resources\app\logo_main.png" />
+    <Resource Include="Resources\app\objective_icons\ot_attack.png" />
+    <Resource Include="Resources\app\objective_icons\ot_defend.png" />
+    <Resource Include="Resources\app\objective_icons\ot_support.png" />
+    <Resource Include="Resources\app\padlock_locked.png" />
+    <Resource Include="Resources\app\padlock_open.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpVectors" Version="1.7.7" />
+    <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\coh2-battlegrounds-bin\coh-battlegrounds-core.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-editor\coh-battlegrounds-editor.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-lobby\coh-battlegrounds-lobby.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-resources\coh-battlegrounds-resources.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-ui-app\coh-battlegrounds-ui-app.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-ui\coh-battlegrounds-ui.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\app\rally_icon.png" />
+    <Resource Include="Resources\app\refresh.png" />
+    <Resource Include="Resources\app\unknown_user.png" />
+    <Resource Include="Resources\ingame\aef.png" />
+    <Resource Include="Resources\ingame\application\app_background.png" />
+    <Resource Include="Resources\ingame\application\app_button.png" />
+    <Resource Include="Resources\ingame\application\app_button_disabled.png" />
+    <Resource Include="Resources\ingame\application\app_button_highlighted.png" />
+    <Resource Include="Resources\ingame\application\app_button_selected.png" />
+    <Resource Include="Resources\ingame\application\app_logo1.png" />
+    <Resource Include="Resources\ingame\application\app_logo2.png" />
+    <Resource Include="Resources\ingame\british.png" />
+    <Resource Include="Resources\ingame\german.png" />
+    <Resource Include="Resources\ingame\no_icon.png" />
+    <Resource Include="Resources\ingame\remove_item.png" />
+    <Resource Include="Resources\ingame\resource_icons\botb_fuel.png" />
+    <Resource Include="Resources\ingame\resource_icons\botb_manpower.png" />
+    <Resource Include="Resources\ingame\resource_icons\botb_munitions.png" />
+    <Resource Include="Resources\ingame\resource_icons\botb_time.png" />
+    <Resource Include="Resources\ingame\soviet.png" />
+    <Resource Include="Resources\ingame\test_unit_icon.png" />
+    <Resource Include="Resources\ingame\test_unit_portrait.png" />
+    <Resource Include="Resources\ingame\test_unit_transport.png" />
+    <Resource Include="Resources\ingame\test_unit_veterancy.png" />
+    <Resource Include="Resources\ingame\unknown_map.png" />
+    <Resource Include="Resources\ingame\vet\vstar1.png" />
+    <Resource Include="Resources\ingame\vet\vstar2.png" />
+    <Resource Include="Resources\ingame\vet\vstar3.png" />
+    <Resource Include="Resources\ingame\vet\vstar4.png" />
+    <Resource Include="Resources\ingame\vet\vstar5.png" />
+    <Resource Include="Resources\ingame\vet\vstar_no.png" />
+    <Resource Include="Resources\ingame\vet\vstar_yes.png" />
+    <Resource Include="Resources\ingame\west_german.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="battlegrounds-archiver.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\3\dak_mot.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\3\ger_rifles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\3\ita_rifles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\3\ukf_rifles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\3\usa_rifles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_airborne.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_arm.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_arty.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_eng.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_mech.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_mot.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_rifles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_sturm.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\ost_td.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_airborne.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_arm.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_arty.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_eng.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_mech.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_mot.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_nkvd.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_rifles.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_ct\sov_td.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\auxiliary_scripts\debug_script.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\coh2_battlegrounds_defence.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh3\battlegrounds.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh3\bg_scripts\bg_root.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh3\bg_scripts\ui\ui_setup.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\campaigns\sov_ost_stalingrad.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\coh2_battlegrounds_wincondition_preview.dds">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh2-abp-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh2-aimap-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh2-cbp-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh2-ebp-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh2-ibp-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh2-map-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh2-sbp-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh2-ubp-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh2-wbp-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh3-abp-db-coh3.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh3-ebp-db-coh3.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh3-map-db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh3-sbp-db-coh3.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh3-ubp-db-coh3.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\vcoh3-wbp-db-coh3.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04.gfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04_I1.dds">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04_I20.dds">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04_I26.dds">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\6a0a13b89555402ca75b85dc30f5cb04_I3.dds">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\%282-4%29_compound_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2-4_langres_winter_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_angoville_farms_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_arnhem_checkpoint_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_bayeux_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_bryansk_forest_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_caen_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_cheneux_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_coh2_resistance_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_crossing_in_the_woods_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_divide_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_don_river_v2_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_faymonville_approach_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_halbe_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_karelia_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_kholodnaya_ferma_battlefield_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_kholodnaya_ferma_spring_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_la_gleize_breakout_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_minsk_pocket_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_novgorodoutskirts_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_road_to_kharkov_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_road_to_ligneuville_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_semois_winter_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_sturzdorf_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2p_wiltz_summit_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\2_4_tereklines_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_across_the_rhine_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_another_city_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_baugnez_outskirts_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_belgorod_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_bystraya_voda_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_coh2_okariver_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_crossing_in_the_woods_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_dreux_scout_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_dusseldorf_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_ecliptic_fields_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_einhoven_country_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_elst_outskirts_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_ettelbruck_station_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_fields_of_winnekendonk_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_gelsenkirchen_refinery_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_heidelberg_crossings_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_hurtgen_forest_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_kholodnaya_ferma_battlefield_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_lisores_river_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_minsk_pocket_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_moscow_outskirts_fall_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_moscow_outskirts_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_noville_encirclement_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_poltawa_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_pripyat_sector_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_prypiat_battlefield_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_prypiat_winter_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_pump_station_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_rails_and_metal_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_road_to_kharkov_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_rothe_erde_station_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_rzhev_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_rzhev_summer_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_schilberg_outskirts_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_semois_attrition_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_semois_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_semois_winter_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_trois_pont_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_vaux_farmlands_attrition_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4p_vaux_farmlands_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4_6_lemberg_fall_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\4_6_rostov_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_across_the_rhine_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_angermuende_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_anklet_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_bulligen_spearhead_2_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_coh2_pavlov_s_house_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_esch_sur_sure_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_ettelbruck_station_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_fields_of_winnekendonk_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_general_mud_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_hill_331_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_hill_400_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_lazenrath_ambush_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_montherme_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_mudroad311_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_mud_valley_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_port_of_hamburg_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_rzhev_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6p_swamps_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\6_8_brody_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_achelous_river_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_angermuende_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_anklet_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_coh2_city_17_spring_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_coh2_city_17_winter_battlefield_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_coh2_thesteppes_frontline_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_essen_steelworks_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_general_mud_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_hill_400_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_lazenrath_ambush_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_la_gleize_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_lienne_forest_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_lienne_forest_winter_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_lorch_assault_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_montargis_region_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_narva_v2_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_nordwind_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_port_of_hamburg_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_redball_express_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_sittard_2_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_tank_factory_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_tundra_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_west_wall_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\8p_whiteball_express_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\amilly_fields_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\anotherstalingrad_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\aod_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\bacon_mirage_round2_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\bialystok_market_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\bocage_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\catania_crossing_6p_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\cliff_crossing_2p_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\crossroadswx_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\crossroads_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\desert_airfield_6p_mkii_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\desert_village_2p_mkiii_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\deutz_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\gardens_2p_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\german_industry_test_map_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\hamlet_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\highwaybaku_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\industrial_railyard_6p_mkii_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\ladoga_karelia_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\langres_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\lost_glider_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\market_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\mill_road_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\mountain_ruins_6p_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\mountain_ruins_8p_mkii_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\nexus_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\operation_plunder_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\operation_queen_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\overgrowth_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\ploiesti_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\ponaryforest_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\rails_and_sand_4p_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\rechnaya_pereprava_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\refinery_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\roadtoarnhem_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\rural_castle_4p_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\rural_town_2p_mkii_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\rural_town_4p_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\southern_alblasserwaard_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\specialtest_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\stadtschutt_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\torrente_4p_mkiii_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\twin_beach_2p_mkii_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\vilshanka_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\volga_timber_yard_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\winter_line_8p_mkii_mm_generated.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\wolfheze_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\gfx\map_icons\wolfs_lair_map.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\locale\3\en.ucs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\locale\english.loc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\auxiliary_scripts\api_ui.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\auxiliary_scripts\client_companyui.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\auxiliary_scripts\client_overrideui.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\auxiliary_scripts\shared_abilities.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\auxiliary_scripts\shared_ai.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\auxiliary_scripts\shared_constants.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\auxiliary_scripts\shared_handler.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\auxiliary_scripts\shared_lookups.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\auxiliary_scripts\shared_sessionloader.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\auxiliary_scripts\shared_units.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\auxiliary_scripts\shared_util.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\auxiliary_scripts\system_tow.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\coh2_battlegrounds.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\coh2_battlegrounds.win">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\coh2_battlegrounds_supply.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\coh2_battlegrounds_supply_ui.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\coh2_battlegrounds_weather.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\ui_api\button.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\ui_api\class.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\ui_api\color.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\ui_api\control.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\ui_api\icon.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\ui_api\label.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\ui_api\panel.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\ui_api\rootpanel.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\bg_wc\coh2\ui_api\statusindicator.scar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\precompiled\3\battlegrounds.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\precompiled\3\mod.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="checksum.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\battlegrounds.mod.package.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\locale\english\english.gamemode.ucs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\locale\english\english.tuning.ucs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\mod_bg-abp-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\mod_bg-cbp-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\mod_bg-ebp-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\mod_bg-ibp-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\mod_bg-sbp-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\mod_bg-ubp-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bg_common\data\mod_bg-wbp-db-coh2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="bg_common\precompiled\3\" />
+  </ItemGroup>
+
+</Project>

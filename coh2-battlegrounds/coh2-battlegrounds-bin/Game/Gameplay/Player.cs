@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Battlegrounds.Game.Database;
+﻿using Battlegrounds.Game.Database;
 
 namespace Battlegrounds.Game.Gameplay;
 
@@ -16,6 +12,9 @@ public class Player {
     /// </summary>
     public uint ID { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public ulong SteamID { get; }
 
     /// <summary>
@@ -52,6 +51,7 @@ public class Player {
     /// 
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="sid"></param>
     /// <param name="tID"></param>
     /// <param name="name"></param>
     /// <param name="faction"></param>
@@ -66,10 +66,7 @@ public class Player {
         this.IsAIPlayer = false;
     }
 
-    /// <summary>
-    /// Returns a string that represents the current object.
-    /// </summary>
-    /// <returns>A string that represents the current object.</returns>
+    /// <inheritdoc/>
     public override string ToString() => $"{Name} ({Army.Name})";
 
 }

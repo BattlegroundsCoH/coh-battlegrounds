@@ -7,8 +7,8 @@ namespace Battlegrounds.Util.Coroutines;
 /// </summary>
 public sealed class WaitTimespan : YieldInstruction {
 
-    DateTime m_beginAt;
-    TimeSpan m_time;
+    private readonly DateTime m_beginAt;
+    private readonly TimeSpan m_time;
 
     /// <summary>
     /// Initialize a new <see cref="WaitTimespan"/> class with <paramref name="span"/> to wait.
@@ -19,8 +19,8 @@ public sealed class WaitTimespan : YieldInstruction {
         this.m_beginAt = DateTime.Now;
     }
 
+    /// <inheritdoc/>
     public override bool CanAdvance()
         => DateTime.Now - this.m_beginAt > this.m_time;
 
 }
-

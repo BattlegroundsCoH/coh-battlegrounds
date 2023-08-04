@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
 
-using Battlegrounds.ErrorHandling;
+using Battlegrounds.Errors;
 using Battlegrounds.Functional;
 using Battlegrounds.Game;
 using Battlegrounds.Game.Scenarios;
@@ -48,7 +48,7 @@ public class AIMapAnalyser {
 
     private static readonly TgaPixel RoadPixelColour = new TgaPixel(142, 142, 124);
 
-    private readonly Scenario m_scenario;
+    private readonly IScenario m_scenario;
     private readonly List<Edge> m_edges;
     private readonly List<Node> m_nodes;
     private Subdivision[,]? m_grid;
@@ -58,7 +58,7 @@ public class AIMapAnalyser {
 
     public List<Edge> Edges => this.m_edges;
 
-    public AIMapAnalyser(Scenario scenario) {
+    public AIMapAnalyser(IScenario scenario) {
         this.m_scenario = scenario;
         this.m_edges = new();
         this.m_nodes = new();
@@ -67,7 +67,7 @@ public class AIMapAnalyser {
     public AIMapAnalysis? Analyze(out TgaPixel[,] pixelmap, int subDivisions, int searchRadius) {
 
         // Grab file
-        var mapFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, $"map_icons\\{this.m_scenario.RelativeFilename}_map.tga");
+        var mapFile = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, $"map_icons\\{this.m_scenario.RelativeFilename}_map.tga");
 
         // Zu erst : open mm
         this.m_tga = TryForget.Try(() => TgaPixelReader.ReadTarga(mapFile), null);
@@ -97,58 +97,57 @@ public class AIMapAnalyser {
 
         // Return success
         if (this.m_edges.Count is 0) {
-            
+
             // Return null -> nothing of value
             return null;
 
-        } else {
-
-            // Grab all nodes as game positons
-            var gNodes = this.Nodes.ToArray().Map(x => this.m_scenario.FromMinimapPosition(width, height, x.X, x.Y));
-
-            // Grab all edges
-            var gEdges = this.Edges.ToArray().Map(e => {
-                int i = this.Nodes.FindIndex(x => e.A.X == x.X && e.A.Y == x.Y);
-                int j = this.Nodes.FindIndex(x => e.B.X == x.X && e.B.Y == x.Y);
-                return new AIMapAnalysis.RoadConnection(i, j);
-            });
-
-            // Grab all important crossroads
-            var gChokePoints = gNodes.Mapi((i, x) => {
-                int eCount = gEdges.Filter(y => y.First == i || y.Second == i).Length;
-                if (eCount > 4) {
-                    float w = Math.Max(eCount - 2, 5);
-                    return new AIMapAnalysis.StrategicValue(x, AIMapAnalysis.StrategicValueType.Crossroads, w / 5.0f);
-                } else {
-                    return null;
-                }
-            }).NotNull();
-
-            // Grab strategic points
-            var gStratPoints = this.m_scenario.Points
-                .Filter(x => x.EntityBlueprint is "victory_point" or "territory_munitions_point_mp" or "territory_fuel_point_mp" or "territory_point_mp")
-                .Map(x => new AIMapAnalysis.StrategicValue(x.Position, x.EntityBlueprint switch {
-                    "victory_point" => AIMapAnalysis.StrategicValueType.VictoryPoint,
-                    "territory_fuel_point_mp" => AIMapAnalysis.StrategicValueType.Fuel,
-                    "territory_munitions_point_mp" => AIMapAnalysis.StrategicValueType.Munitions,
-                    "territory_point_mp" => AIMapAnalysis.StrategicValueType.Resource,
-                    _ => AIMapAnalysis.StrategicValueType.Crossroads,
-                }, x.EntityBlueprint switch {
-                    "victory_point" => 0.9f,
-                    "territory_fuel_point_mp" => .8f,
-                    "territory_munitions_point_mp" => .6f,
-                    "territory_point_mp" => .4f,
-                    _ => .1f
-                }));
-
-            // Return analysis
-            return new() {
-                Nodes = gNodes,
-                Roads = gEdges,
-                StrategicPositions = gChokePoints.Concat(gStratPoints),
-            };
-
         }
+
+
+        // Grab all nodes as game positons
+        var gNodes = this.Nodes.ToArray().Map(x => this.m_scenario.FromMinimapPosition(width, height, x.X, x.Y));
+
+        // Grab all edges
+        var gEdges = this.Edges.ToArray().Map(e => {
+            int i = this.Nodes.FindIndex(x => e.A.X == x.X && e.A.Y == x.Y);
+            int j = this.Nodes.FindIndex(x => e.B.X == x.X && e.B.Y == x.Y);
+            return new AIMapAnalysis.RoadConnection(i, j);
+        });
+
+        // Grab all important crossroads
+        var gChokePoints = gNodes.Mapi((i, x) => {
+            int eCount = gEdges.Filter(y => y.First == i || y.Second == i).Length;
+            if (eCount > 4) {
+                float w = Math.Max(eCount - 2, 5);
+                return new AIMapAnalysis.StrategicValue(x, AIMapAnalysis.StrategicValueType.Crossroads, w / 5.0f);
+            } else {
+                return null;
+            }
+        }).NotNull();
+
+        // Grab strategic points
+        var gStratPoints = this.m_scenario.Points
+            .Filter(x => x.EntityBlueprint is "victory_point" or "territory_munitions_point_mp" or "territory_fuel_point_mp" or "territory_point_mp")
+            .Map(x => new AIMapAnalysis.StrategicValue(x.Position, x.EntityBlueprint switch {
+                "victory_point" => AIMapAnalysis.StrategicValueType.VictoryPoint,
+                "territory_fuel_point_mp" => AIMapAnalysis.StrategicValueType.Fuel,
+                "territory_munitions_point_mp" => AIMapAnalysis.StrategicValueType.Munitions,
+                "territory_point_mp" => AIMapAnalysis.StrategicValueType.Resource,
+                _ => AIMapAnalysis.StrategicValueType.Crossroads,
+            }, x.EntityBlueprint switch {
+                "victory_point" => 0.9f,
+                "territory_fuel_point_mp" => .8f,
+                "territory_munitions_point_mp" => .6f,
+                "territory_point_mp" => .4f,
+                _ => .1f
+            }));
+
+        // Return analysis
+        return new() {
+            Nodes = gNodes,
+            Roads = gEdges,
+            StrategicPositions = gChokePoints.Concat(gStratPoints),
+        };
 
     }
 

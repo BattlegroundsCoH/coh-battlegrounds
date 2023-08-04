@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 
-using Battlegrounds.ErrorHandling.Networking;
+using Battlegrounds.Errors.Networking;
 using Battlegrounds.Functional;
 using Battlegrounds.Networking.Communication.Golang;
 using Battlegrounds.Networking.Communication.Connections;
@@ -14,6 +14,7 @@ using Battlegrounds.Networking.Server;
 using Battlegrounds.Steam;
 using Battlegrounds.Networking.LobbySystem.Json;
 using Battlegrounds.Networking.Remoting;
+using Battlegrounds.Game;
 
 namespace Battlegrounds.Networking.LobbySystem;
 
@@ -80,6 +81,9 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// 
     /// </summary>
     public ILobbyPlanningHandle? PlanningHandle => this.m_planner;
+
+    /// <inheritdoc/>
+    public GameCase Game { get; }
 
     /// <summary>
     /// Event triggered when a lobby chat message is received.
@@ -181,14 +185,18 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// </summary>
     /// <param name="isHost">Flag marking if host. This is for local checking, the server verifies this independently.</param>
     /// <param name="title">The title of the lobby that was joined or hosted.</param>
+    /// <param name="game">The game this lobby handle is for.</param>
     /// <param name="self">The <see cref="SteamUser"/> instance that represents the local machine.</param>
     /// <param name="connection">The connection that connects the local machine to the server.</param>
     /// <param name="serverAPI">The API object that performs HTTP API calls to the server.</param>
     /// <exception cref="Exception"></exception>
-    public OnlineLobbyHandle(bool isHost, string title, SteamUser self, ServerConnection connection, ServerAPI serverAPI) {
+    public OnlineLobbyHandle(bool isHost, string title, GameCase game, SteamUser self, ServerConnection connection, ServerAPI serverAPI) {
 
         // Store ref to server handle
         this.ServerHandle = serverAPI;
+
+        // Set the game
+        this.Game = game;
 
         // Set internal refs
         this.m_connection = connection;
@@ -497,6 +505,10 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     public uint GetPlayerCount(bool humansOnly = false)
         => this.m_remote.Call<uint>("GetPlayerCount", EncBool(humansOnly));
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public byte GetSelfTeam() {
         if (this.Allies.GetSlotOfMember(this.Self.ID) is null) {
             if (this.Axis.GetSlotOfMember(this.Self.ID) is null) {
@@ -519,11 +531,9 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
 
         // Convert to str
         string strength = company.Strength.ToString(CultureInfo.InvariantCulture);
-        string auto = EncBool(company.IsAuto);
-        string none = EncBool(company.IsNone);
 
         // Invoke remotely
-        this.m_remote.Call("SetCompany", tid, sid, auto, none, company.Name, company.Army, strength, company.Specialisation);
+        this.m_remote.Call("SetCompany", tid, sid, company.Name, company.Army, strength, company.Specialisation);
 
         // Trigger self update
         this.OnLobbyCompanyUpdate?.Invoke(new(tid, sid, company)); // This might need to be removed!
@@ -562,7 +572,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// </summary>
     /// <param name="tid">The ID of the team to add AI to. Accepts values in the range 0 &#x2264; T &#x2264; 1</param>
     /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
-    /// <param name="difficulty">The AI difficulty level (integer representation of <see cref="AIDifficulty"/>)</param>
+    /// <param name="difficulty">The AI difficulty level</param>
     /// <param name="company">The company initially given to the AI.</param>
     /// <exception cref="InvokePermissionAccessDeniedException"></exception>
     public void AddAI(int tid, int sid, int difficulty, ILobbyCompany company) {
@@ -576,7 +586,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
         var inv = company.Strength.ToString(CultureInfo.InvariantCulture);
 
         // Call AI
-        this.m_remote.Call("AddAI", tid, sid, difficulty, EncBool(company.IsAuto), EncBool(company.IsNone), company.Name, company.Army, inv, company.Specialisation);
+        this.m_remote.Call("AddAI", tid, sid, difficulty, EncBool(company.IsAuto), company.Name, company.Army, inv, company.Specialisation);
 
     }
 
@@ -604,7 +614,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// <param name="tid">The team ID containing the slot to be locked. Accepts values in the range 0 &#x2264; T &#x2264; 1</param>
     /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
     public void LockSlot(int tid, int sid)
-        => this.m_remote.Call("LockSlot", tid, sid);
+        => this.m_remote.Call("LobbyMethod_SetSlotState", tid, sid, LobbyConstants.STATE_LOCKED);
 
     /// <summary>
     /// Unlocks the locked slot at specified position.
@@ -612,20 +622,19 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// <param name="tid">The team ID containing the slot to be unlocked. Accepts values in the range 0 &#x2264; T &#x2264; 1</param>
     /// <param name="sid">The slot ID in the range 0 &#x2264; S &#x2264; 4</param>
     public void UnlockSlot(int tid, int sid)
-        => this.m_remote.Call("UnlockSlot", tid, sid);
+        => this.m_remote.Call("LobbyMethod_SetSlotState", tid, sid, LobbyConstants.STATE_OPEN);
 
     /// <summary>
     /// Send a chat message along a communication channel.
     /// </summary>
     /// <param name="filter">The message channel. 0 = (Lobby) Global Chat; 1 = Team Chat.</param>
-    /// <param name="mid">The ID of the sender of the message.</param>
     /// <param name="msg">The contents of the message to send.</param>
     /// <exception cref="IndexOutOfRangeException"></exception>
-    public void SendChatMessage(int filter, ulong mid, string msg) => this.m_remote.Call(filter switch {
-        0 => "GlobalChat",
-        1 => "TeamChat",
+    public void SendChatMessage(int filter, string msg) => this.m_remote.Call("ChatMessage", filter switch {
+        0 => "ALL",
+        1 => "TEAM",
         _ => throw new IndexOutOfRangeException()
-    }, mid, msg);
+    }, msg);
 
     /// <summary>
     /// Set the lobby setting.
@@ -840,7 +849,7 @@ public sealed class OnlineLobbyHandle : ILobbyHandle, ILobbyChatNotifier, ILobby
     /// Conducts a simple yes/no poll across the server.
     /// </summary>
     /// <param name="pollType">The type of poll we are conducting</param>
-    /// <param name="cancelTime">The amount of seconds the server will wait before sending back a response if the match should continue.</param>
+    /// <param name="pollTime">The amount of seconds the server will wait before sending back a response if the match should continue.</param>
     /// <returns>If match received server OK, <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
     public LobbyPollResults ConductPoll(string pollType, double pollTime = 3) {
 

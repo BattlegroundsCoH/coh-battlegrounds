@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <RootNamespace>Battlegrounds.Editor</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>Battlegrounds.Editor</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\coh2-battlegrounds-bin\coh-battlegrounds-core.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-functional\coh-battlegrounds-functional.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-misc\coh-battlegrounds-misc.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-resources\coh-battlegrounds-resources.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-ui\coh-battlegrounds-ui.csproj" />
+  </ItemGroup>
+
+</Project>

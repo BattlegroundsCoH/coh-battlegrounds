@@ -3,8 +3,7 @@
 /// <summary>
 /// 
 /// </summary>
-public sealed class ScenarioDescription
-{
+public sealed class ScenarioDescription {
 
     /// <summary>
     /// 
@@ -43,8 +42,7 @@ public sealed class ScenarioDescription
     /// <param name="name"></param>
     /// <param name="width"></param>
     /// <param name="length"></param>
-    public ScenarioDescription(string file, string name, int width, int length)
-    {
+    public ScenarioDescription(string file, string name, int width, int length) {
         File = file;
         Name = name;
         Width = width;
@@ -54,4 +52,3 @@ public sealed class ScenarioDescription
     }
 
 }
-

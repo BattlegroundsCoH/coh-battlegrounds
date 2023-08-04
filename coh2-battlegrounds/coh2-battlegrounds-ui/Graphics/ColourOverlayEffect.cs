@@ -11,7 +11,7 @@ namespace Battlegrounds.UI.Graphics;
 public sealed class ColourOverlayEffect : ShaderEffect {
 
     private static readonly PixelShader __shader = new PixelShader() {
-        UriSource = new Uri("pack://application:,,,/coh2-battlegrounds-ui;component/Graphics/Shaders/ColourOverlayEffect.ps")
+        UriSource = new Uri("pack://application:,,,/Battlegrounds.UI;component/Graphics/Shaders/ColourOverlayEffect.ps")
     };
 
     public static readonly DependencyProperty InputProperty =

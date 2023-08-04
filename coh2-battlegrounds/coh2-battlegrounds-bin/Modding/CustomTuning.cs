@@ -12,13 +12,13 @@ public class CustomTuning : ITuningMod {
 
     public string Name { get; }
 
-    public ModPackage Package { get; }
+    public IModPackage Package { get; }
 
     public bool IsTowingEnabled { get; }
 
     public ModType GameModeType => ModType.Tuning;
 
-    public CustomTuning(ModPackage package) {
+    public CustomTuning(IModPackage package) {
         this.Package = package;
         this.Guid = package.TuningGUID;
         this.Name = package.PackageName;

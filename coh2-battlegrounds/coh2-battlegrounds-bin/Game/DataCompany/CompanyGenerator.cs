@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
-using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content.Companies;
@@ -28,7 +24,8 @@ public static class CompanyGenerator {
     /// <param name="borrowVanilla"></param>
     /// <param name="allowVeterancy"></param>
     /// <returns></returns>
-    public static Company Generate(Faction army, ModPackage package, bool allowVeterancy, bool allowCapturedEquipment) {
+    [Obsolete("Deprecated - not in use")]
+    public static Company Generate(Faction army, IModPackage package, bool allowVeterancy, bool allowCapturedEquipment) {
 
         // Create the company
         CompanyBuilder builder = CompanyBuilder.NewCompany("Auto-generated Company", new BasicCompanyType(), CompanyAvailabilityType.AnyMode, army, package.TuningGUID);
@@ -43,7 +40,7 @@ public static class CompanyGenerator {
         }
 
         // Select all the squad blueprints we can use
-        IEnumerable<SquadBlueprint> blueprintPool = BlueprintManager.Select(selectQuery).Select(x => x as SquadBlueprint).ToArray().NotNull();
+        //IEnumerable<SquadBlueprint> blueprintPool = BlueprintManager.Select(selectQuery).Select(x => x as SquadBlueprint).ToArray().NotNull();
 
         // Get the max units we can deploy (not representative of standard-human company design!)
         int remaining = Company.MAX_SIZE;
@@ -56,7 +53,7 @@ public static class CompanyGenerator {
         int max_transport_use = 4;
 
         // While we can add a unit
-        while (remaining >= 0) {
+        /*while (remaining >= 0) {
 
             int unit_type = __random.Next(0, 52);
             byte vet_level = (allowVeterancy) ? (byte)__random.Next(0, 6) : (byte)0;
@@ -180,7 +177,7 @@ public static class CompanyGenerator {
 
             }
 
-        }
+        }*/
 
         // Commit changes and return the company
         return builder.Commit().Result;

@@ -13,11 +13,11 @@ public class CustomWincondition : IWinconditionMod {
 
     public IGamemode[] Gamemodes { get; }
 
-    public ModPackage Package { get; }
+    public IModPackage Package { get; }
 
     public ModType GameModeType => ModType.Gamemode;
 
-    public CustomWincondition(ModPackage package) {
+    public CustomWincondition(IModPackage package) {
         this.Package = package;
         this.Gamemodes = Array.Empty<IGamemode>();
     }

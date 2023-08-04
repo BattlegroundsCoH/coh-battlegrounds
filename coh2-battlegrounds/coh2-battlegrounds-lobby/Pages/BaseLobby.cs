@@ -12,9 +12,7 @@ using System.Windows;
 using Battlegrounds.DataLocal;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Game;
-using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
@@ -27,7 +25,8 @@ using Battlegrounds.Lobby.Components;
 using Battlegrounds.Lobby.Helpers;
 using Battlegrounds.Lobby.Pages.Host;
 using Battlegrounds.Lobby.Pages.Participants;
-using Battlegrounds.Functional;
+using Battlegrounds.Locale;
+using Battlegrounds.Game.Scenarios;
 
 namespace Battlegrounds.Lobby.Pages;
 
@@ -36,11 +35,11 @@ using static Battlegrounds.UI.AppContext;
 
 public abstract class BaseLobby : IViewModel, INotifyPropertyChanged {
 
-    public record ScenOp(Scenario Scenario) {
+    public record ScenOp(IScenario Scenario) {
         private static readonly Dictionary<string, string> _cachedNames = new();
         private string GetDisplay()
             => this.Scenario.Name.StartsWith("$", false, CultureInfo.InvariantCulture) && uint.TryParse(this.Scenario.Name[1..], out uint key) ?
-            GameLocale.GetString(key) : this.Scenario.Name;
+            BattlegroundsContext.DataSource.GetLocale(Scenario.Game).GetString(key) : this.Scenario.Name;
         public override string ToString()
             => _cachedNames.TryGetValue(Scenario.Name, out string? s) ? (s ?? Scenario.Name) : (_cachedNames[this.Scenario.Name] = GetDisplay());
     }
@@ -50,7 +49,7 @@ public abstract class BaseLobby : IViewModel, INotifyPropertyChanged {
         public override string ToString() => IsOn ? "On" : "Off";
     }
 
-    public record ModPackageOption(ModPackage ModPackage) {
+    public record ModPackageOption(IModPackage ModPackage) {
         public override string ToString() => this.ModPackage.PackageName;
     }
 
@@ -103,12 +102,12 @@ public abstract class BaseLobby : IViewModel, INotifyPropertyChanged {
     protected static readonly LocaleKey __leaveTitle = new("LobbyView_DialogLeaveTitle");
     protected static readonly LocaleKey __leaveDesc = new("LobbyView_DialogLeaveDesc");
 
-    protected static readonly Func<string> LOCSTR_EXIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_LeaveLobby");
-    protected static readonly Func<string> LOCSTR_EDIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_EditCompany");
-    protected static readonly Func<string> LOCSTR_START = () => BattlegroundsInstance.Localize.GetString("LobbyView_StartMatch");
-    protected static readonly Func<string> LOCSTR_PREPARING = () => BattlegroundsInstance.Localize.GetString("LobbyView_PREPARING");
-    protected static readonly Func<string> LOCSTR_WAIT = () => BattlegroundsInstance.Localize.GetString("LobbyView_WaitMatch");
-    protected static readonly Func<string, string> LOCSTR_CANCEL = x => BattlegroundsInstance.Localize.GetString("LobbyView_CancelMatch", x);
+    protected static readonly Func<string> LOCSTR_EXIT = () => BattlegroundsContext.Localize.GetString("LobbyView_LeaveLobby");
+    protected static readonly Func<string> LOCSTR_EDIT = () => BattlegroundsContext.Localize.GetString("LobbyView_EditCompany");
+    protected static readonly Func<string> LOCSTR_START = () => BattlegroundsContext.Localize.GetString("LobbyView_StartMatch");
+    protected static readonly Func<string> LOCSTR_PREPARING = () => BattlegroundsContext.Localize.GetString("LobbyView_PREPARING");
+    protected static readonly Func<string> LOCSTR_WAIT = () => BattlegroundsContext.Localize.GetString("LobbyView_WaitMatch");
+    protected static readonly Func<string, string> LOCSTR_CANCEL = x => BattlegroundsContext.Localize.GetString("LobbyView_CancelMatch", x);
 
     protected readonly ILobbyHandle m_handle;
     protected ChatSpectator? m_chatModel;
@@ -144,11 +143,11 @@ public abstract class BaseLobby : IViewModel, INotifyPropertyChanged {
 
     public abstract Setting<ModPackageOption> ModPackageDropdown { get; }
 
-    public abstract ModPackage ModPackage { get; }
+    public abstract IModPackage ModPackage { get; }
 
     public ImageSource? ScenarioPreview { get; set; }
 
-    public Scenario? Scenario { get; set; }
+    public IScenario? Scenario { get; set; }
 
     public string LobbyTitle { get; }
 
@@ -439,14 +438,14 @@ public abstract class BaseLobby : IViewModel, INotifyPropertyChanged {
         }
 
         // Decide on title
-        string modalTitle = BattlegroundsInstance.Localize.GetString(reason switch {
+        string modalTitle = BattlegroundsContext.Localize.GetString(reason switch {
             "KICK" => "LobbyView_DialogKickTitle",
             "CLOSED" => "LobbyView_DialogCloseTitle",
             _ => "LobbyView_DialogLostTitle"
         });
 
         // Decide on desc
-        string modalDesc = BattlegroundsInstance.Localize.GetString(reason switch {
+        string modalDesc = BattlegroundsContext.Localize.GetString(reason switch {
             "KICK" => "LobbyView_DialogKickDesc",
             "CLOSED" => "LobbyView_DialogCloseDesc",
             _ => "LobbyView_DialogLostDesc"
@@ -504,7 +503,7 @@ public abstract class BaseLobby : IViewModel, INotifyPropertyChanged {
         }
 
         // Make sure CoH2 is not running
-        if (CoH2Launcher.IsRunning()) {
+        if (GameProcess.IsRunning(GameCase.CompanyOfHeroes2)) {
             this.m_chatModel?.SystemMessage("You must exit Company of Heroes 2!", Colors.Yellow);
             return false;
         }

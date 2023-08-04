@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BattlegroundsApp"
-        xmlns:modals="clr-namespace:Battlegrounds.UI.Modals;assembly=coh2-battlegrounds-ui"
+        xmlns:modals="clr-namespace:Battlegrounds.UI.Modals;assembly=Battlegrounds.UI"
         mc:Ignorable="d"
         Title="{Binding Title}"
         WindowStartupLocation="CenterScreen" 

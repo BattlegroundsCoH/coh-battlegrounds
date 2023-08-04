@@ -20,4 +20,3 @@ public interface ICompanyCompiler {
     Dictionary<string, object> CompileToLua(Company company, bool isAIPlayer, byte indexOnTeam, IList<string> customNames);
 
 }
-

@@ -3,7 +3,6 @@ using System.Diagnostics;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Locale;
-
 using Microsoft.Win32;
 
 namespace Battlegrounds.UI.Application.Pages;
@@ -52,24 +51,24 @@ public sealed class Settings : ViewModelBase {
         this.SaveButton = new(this.SaveSettings);
 
         // Set paths
-        this.SteamPath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.STEAM_FOLDER);
-        this.CoHPath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COH_FOLDER);
+        this.SteamPath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.STEAM_FOLDER);
+        this.CoHPath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COH2_FOLDER);
 
         // Set steam data
-        var steamData = BattlegroundsInstance.Steam;
+        var steamData = BattlegroundsContext.Steam;
         this.SteamUserContent = steamData.HasUser ?
-            BattlegroundsInstance.Localize.GetString("SettingsView_SteamContentFound", steamData.User.Name) :
-            BattlegroundsInstance.Localize.GetString("SettingsView_SteamContentNotFound");
+            BattlegroundsContext.Localize.GetString("SettingsView_SteamContentFound", steamData.User.Name) :
+            BattlegroundsContext.Localize.GetString("SettingsView_SteamContentNotFound");
 
         // Set settings
-        this.AutoUpdate = BattlegroundsInstance.OtherOptions.GetCastValueOrDefault(BattlegroundsInstance.OPT_AUTOUPDATE, false);
-        this.AutoCollectData = BattlegroundsInstance.OtherOptions.GetCastValueOrDefault(BattlegroundsInstance.OPT_AUTODATA, false);
-        this.AutoReportScarErrors = BattlegroundsInstance.OtherOptions.GetCastValueOrDefault(BattlegroundsInstance.OPT_AUTOSCAR, false);
-        this.AutoCollectWorkshop = BattlegroundsInstance.OtherOptions.GetCastValueOrDefault(BattlegroundsInstance.OPT_AUTOWORKSHOP, true);
-        this.ZoomSetting = BattlegroundsInstance.OtherOptions.GetCastValueOrDefault(BattlegroundsInstance.OPT_ZOOM, 0.0);
+        this.AutoUpdate = BattlegroundsContext.OtherOptions.GetCastValueOrDefault(BattlegroundsContext.OPT_AUTOUPDATE, false);
+        this.AutoCollectData = BattlegroundsContext.OtherOptions.GetCastValueOrDefault(BattlegroundsContext.OPT_AUTODATA, false);
+        this.AutoReportScarErrors = BattlegroundsContext.OtherOptions.GetCastValueOrDefault(BattlegroundsContext.OPT_AUTOSCAR, false);
+        this.AutoCollectWorkshop = BattlegroundsContext.OtherOptions.GetCastValueOrDefault(BattlegroundsContext.OPT_AUTOWORKSHOP, true);
+        this.ZoomSetting = BattlegroundsContext.OtherOptions.GetCastValueOrDefault(BattlegroundsContext.OPT_ZOOM, 0.0);
 
         // Set language
-        this.m_selectedLang = BattlegroundsInstance.Localize.Language;
+        this.m_selectedLang = BattlegroundsContext.Localize.Language;
 
     }
 
@@ -104,16 +103,16 @@ public sealed class Settings : ViewModelBase {
     private void RefreshSteam() {
 
         // Get steam instance
-        var steamData = BattlegroundsInstance.Steam;
+        var steamData = BattlegroundsContext.Steam;
 
         // Update
-        this.SteamUserContent = BattlegroundsInstance.Localize.GetString("SettingsView_SteamContentNotFound");
+        this.SteamUserContent = BattlegroundsContext.Localize.GetString("SettingsView_SteamContentNotFound");
 
         // Get user
         if (steamData.GetSteamUser()) {
 
             // Update
-            this.SteamUserContent = BattlegroundsInstance.Localize.GetString("SettingsView_SteamContentFound", steamData.User.Name);
+            this.SteamUserContent = BattlegroundsContext.Localize.GetString("SettingsView_SteamContentFound", steamData.User.Name);
 
         }
 
@@ -147,30 +146,30 @@ public sealed class Settings : ViewModelBase {
     private void SaveSettings() {
 
         // Save all that
-        BattlegroundsInstance.OtherOptions[BattlegroundsInstance.OPT_ZOOM] = this.ZoomSetting;
-        BattlegroundsInstance.OtherOptions[BattlegroundsInstance.OPT_AUTODATA] = this.AutoCollectData;
-        BattlegroundsInstance.OtherOptions[BattlegroundsInstance.OPT_AUTOUPDATE] = this.AutoUpdate;
-        BattlegroundsInstance.OtherOptions[BattlegroundsInstance.OPT_AUTOSCAR] = this.AutoReportScarErrors;
-        BattlegroundsInstance.OtherOptions[BattlegroundsInstance.OPT_AUTOWORKSHOP] = this.AutoCollectWorkshop;
+        BattlegroundsContext.OtherOptions[BattlegroundsContext.OPT_ZOOM] = this.ZoomSetting;
+        BattlegroundsContext.OtherOptions[BattlegroundsContext.OPT_AUTODATA] = this.AutoCollectData;
+        BattlegroundsContext.OtherOptions[BattlegroundsContext.OPT_AUTOUPDATE] = this.AutoUpdate;
+        BattlegroundsContext.OtherOptions[BattlegroundsContext.OPT_AUTOSCAR] = this.AutoReportScarErrors;
+        BattlegroundsContext.OtherOptions[BattlegroundsContext.OPT_AUTOWORKSHOP] = this.AutoCollectWorkshop;
 
         // Save paths
-        BattlegroundsInstance.SaveInstancePath(BattlegroundsPaths.STEAM_FOLDER, this.SteamPath);
-        BattlegroundsInstance.SaveInstancePath(BattlegroundsPaths.COH_FOLDER, this.CoHPath);
+        BattlegroundsContext.SaveInstancePath(BattlegroundsPaths.STEAM_FOLDER, this.SteamPath);
+        BattlegroundsContext.SaveInstancePath(BattlegroundsPaths.COH2_FOLDER, this.CoHPath);
 
         // Check restart
-        bool requiresRestart = BattlegroundsInstance.Localize.Language != this.m_selectedLang;
+        bool requiresRestart = BattlegroundsContext.Localize.Language != this.m_selectedLang;
 
         // Update language
-        BattlegroundsInstance.ChangeLanguage(this.m_selectedLang);
+        BattlegroundsContext.ChangeLanguage(this.m_selectedLang);
 
         // Do save now
-        BattlegroundsInstance.SaveInstance();
+        BattlegroundsContext.SaveInstance();
 
         // Restart if required
         if (requiresRestart) {
 
             // Close log
-            BattlegroundsInstance.Log?.SaveAndClose(0);
+            BattlegroundsContext.Log?.SaveAndClose(0);
 
             // Create new process
             Process.Start("coh2-battlegrounds.exe");

@@ -12,18 +12,18 @@ namespace Battlegrounds.UI.Converters.Icons;
 public sealed class StringToCompanyTypeIcon : IValueConverter {
 
     private static readonly Dictionary<string, ImageSource> Icons = new() {
-        ["ct_infantry"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_infantry.png")),
-        ["ct_armoured"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_armoured.png")),
-        ["ct_motorized"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_motorized.png")),
-        ["ct_mechanized"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_mechanized.png")),
-        ["ct_airborne"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_airborne.png")),
-        ["ct_artillery"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_artillery.png")),
-        ["ct_td"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_td.png")),
-        ["ct_engineer"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_engineer.png")),
-        ["ct_sov_nkvd"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_sov_nkvd.png")),
-        ["ct_ost_sturm"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_ost_sturm.png")),
-        ["ct_unspecified"] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_unspecified.png")),
-        [string.Empty] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/company_types/ct_unspecified.png"))
+        ["ct_infantry"] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/app/company_types/ct_infantry.png")),
+        ["ct_armoured"] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/app/company_types/ct_armoured.png")),
+        ["ct_motorized"] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/app/company_types/ct_motorized.png")),
+        ["ct_mechanized"] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/app/company_types/ct_mechanized.png")),
+        ["ct_airborne"] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/app/company_types/ct_airborne.png")),
+        ["ct_artillery"] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/app/company_types/ct_artillery.png")),
+        ["ct_td"] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/app/company_types/ct_td.png")),
+        ["ct_engineer"] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/app/company_types/ct_engineer.png")),
+        ["ct_sov_nkvd"] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/app/company_types/ct_sov_nkvd.png")),
+        ["ct_ost_sturm"] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/app/company_types/ct_ost_sturm.png")),
+        ["ct_unspecified"] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/app/company_types/ct_unspecified.png")),
+        [string.Empty] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/app/company_types/ct_unspecified.png"))
     };
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {

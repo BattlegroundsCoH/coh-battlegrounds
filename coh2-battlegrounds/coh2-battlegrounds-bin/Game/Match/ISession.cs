@@ -40,7 +40,7 @@ public interface ISession {
     /// <summary>
     /// Get the scenario to be played.
     /// </summary>
-    Scenario Scenario { get; }
+    IScenario Scenario { get; }
 
     /// <summary>
     /// Get the wincondition to be played.

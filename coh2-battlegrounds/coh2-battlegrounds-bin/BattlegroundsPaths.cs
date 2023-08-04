@@ -1,7 +1,7 @@
 ﻿namespace Battlegrounds;
 
 /// <summary>
-/// Static class containing constant path ID strings to use in <see cref="BattlegroundsInstance.GetRelativePath(string, string)"/>.
+/// Static class containing constant path ID strings to use in <see cref="BattlegroundsContext.GetRelativePath(string, string)"/>.
 /// </summary>
 public static class BattlegroundsPaths {
 
@@ -76,9 +76,14 @@ public static class BattlegroundsPaths {
     public const string STEAM_FOLDER = "steam_folder";
 
     /// <summary>
-    /// Path ID for the coh folder
+    /// Path ID for the CoH2 folder
     /// </summary>
-    public const string COH_FOLDER = "coh_folder";
+    public const string COH2_FOLDER = "coh_folder";
+
+    /// <summary>
+    /// Path ID for the CoH3 folder
+    /// </summary>
+    public const string COH3_FOLDER = "coh_3_folder";
 
     /// <summary>
     /// Path ID for the documents folder
@@ -94,5 +99,10 @@ public static class BattlegroundsPaths {
     /// Get the update folder
     /// </summary>
     public const string UPDATE_FOLDER = "update";
+
+    /// <summary>
+    /// Path ID for the coh resource folder (ie. where we store ripped/synthesised coh resources)
+    /// </summary>
+    public const string COH_RESOURCES_FODLER = "coh_resources_folder";
 
 }

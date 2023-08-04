@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Battlegrounds.Util.Threading;
 
 namespace Battlegrounds.Util.Coroutines;
 
 /// <summary>
 /// Interface for coroutine dispatching handler.
 /// </summary>
-public interface ICoroutineDispatcher {
+public interface ICoroutineDispatcher : IDispatcher {
 
     /// <summary>
     /// Get the default dispatcher (Runs coroutine on background dispatcher)
@@ -13,11 +13,4 @@ public interface ICoroutineDispatcher {
     public static ICoroutineDispatcher CurrentDispatcher
         => new DefaultCoroutineDispatcher();
 
-    /// <summary>
-    /// Invoke callback <see cref="Action"/> using designated <see cref="ICoroutineDispatcher"/>.
-    /// </summary>
-    /// <param name="action">The callback action to invoke</param>
-    void Invoke(Action action);
-
 }
-

@@ -1,7 +1,5 @@
 ﻿using System;
-
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Match.Data.Events;
@@ -11,7 +9,10 @@ namespace Battlegrounds.Game.Match.Data.Events;
 /// </summary>
 public class PickupEvent : IMatchEvent {
 
+    /// <inheritdoc/>
     public char Identifier => 'I';
+
+    /// <inheritdoc/>
     public uint Uid { get; }
 
     /// <summary>
@@ -32,6 +33,7 @@ public class PickupEvent : IMatchEvent {
     /// <summary>
     /// Create a new <see cref="PickupEvent"/>.
     /// </summary>
+    /// <param name="id">The id of the event.</param>
     /// <param name="values">The string values for the event.</param>
     /// <param name="player">The player owning the unit picking up the item.</param>
     /// <exception cref="FormatException"/>
@@ -51,7 +53,7 @@ public class PickupEvent : IMatchEvent {
         }
 
         // Get the blueprint of the item that was picked up (may be null)
-        this.PickupItem = BlueprintManager.FromBlueprintName(values[1], BlueprintType.IBP);
+        this.PickupItem = null; // BlueprintManager.FromBlueprintName(values[1], BlueprintType.IBP);
 
     }
 

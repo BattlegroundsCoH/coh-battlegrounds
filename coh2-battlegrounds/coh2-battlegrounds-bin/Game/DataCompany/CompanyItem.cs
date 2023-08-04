@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Verification;
 
@@ -13,6 +13,13 @@ namespace Battlegrounds.Game.DataCompany;
 public class CompanyItem : IChecksumElement {
 
     public class CompanyItemSerialiser : JsonConverter<CompanyItem> {
+
+        private readonly IModBlueprintDatabase? blueprintDatabase;
+
+        public CompanyItemSerialiser(IModBlueprintDatabase? blueprintDatabase) {
+            this.blueprintDatabase = blueprintDatabase;
+        }
+
         private static string ReadProperty(ref Utf8JsonReader reader, string property)
             => reader.GetString() == property && reader.Read() ? (reader.ReadProperty() ?? string.Empty) : string.Empty;
         private static uint ReadUintProperty(ref Utf8JsonReader reader, string property)
@@ -21,6 +28,10 @@ public class CompanyItem : IChecksumElement {
             => reader.GetString() == property && reader.Read() ? reader.ReadBoolProperty() : false;
 
         public override CompanyItem? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+
+            if (this.blueprintDatabase is null) {
+                throw new InvalidOperationException();
+            }
 
             // Open
             reader.Read();
@@ -38,7 +49,7 @@ public class CompanyItem : IChecksumElement {
             var bpNam = ReadProperty(ref reader, nameof(Item));
 
             // Return
-            return new(itemId, BlueprintManager.FromBlueprintName(bpNam, bpTyp), isVeh);
+            return new(itemId, blueprintDatabase.FromBlueprintName(bpNam, bpTyp), isVeh);
 
         }
 

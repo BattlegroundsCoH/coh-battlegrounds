@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RootNamespace>Battlegrounds.UI</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AssemblyName>Battlegrounds.UI</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Graphics\Shaders\ColourOverlayEffect.ps" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\coh2-battlegrounds-bin\coh-battlegrounds-core.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-misc\coh-battlegrounds-misc.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-resources\coh-battlegrounds-resources.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Graphics\Shaders\ColourOverlayEffect.ps" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\Common\" />
+  </ItemGroup>
+
+</Project>

@@ -4,13 +4,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
-
-using Battlegrounds.Game.Database.Extensions;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Locale;
 using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Resources;
+using Battlegrounds.Game.Blueprints.Extensions;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Resources.Extensions;
 
 namespace Battlegrounds.Editor.Components;
 
@@ -30,18 +30,18 @@ public sealed class SquadSlot : INotifyPropertyChanged {
     /// 
     /// </summary>
     public static readonly ImageSource VetRankAchieved
-            = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar_yes.png"));
+            = new BitmapImage(new Uri($"pack://application:,,,/Battlegrounds;component/Resources/ingame/vet/vstar_yes.png"));
 
     /// <summary>
     /// 
     /// </summary>
     public static readonly ImageSource VetRankNotAchieved
-        = new BitmapImage(new Uri($"pack://application:,,,/Resources/ingame/vet/vstar_no.png"));
+        = new BitmapImage(new Uri($"pack://application:,,,/Battlegrounds;component/Resources/ingame/vet/vstar_no.png"));
 
     /// <summary>
     /// 
     /// </summary>
-    public static readonly ImageSource RallyIcon = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/app/rally_icon.png"));
+    public static readonly ImageSource RallyIcon = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/app/rally_icon.png"));
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -53,12 +53,12 @@ public sealed class SquadSlot : INotifyPropertyChanged {
     /// <summary>
     /// 
     /// </summary>
-    public string SquadPortrait { get; set; }
+    public IIconSource? SquadPortrait { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
-    public string SquadSymbol { get; set; }
+    public IIconSource? SquadSymbol { get; set; }
 
     /// <summary>
     /// 
@@ -169,8 +169,8 @@ public sealed class SquadSlot : INotifyPropertyChanged {
         this.RemoveClick = onRemove;
 
         // Set data known not to change
-        this.SquadPortrait = this.BuilderInstance.Blueprint.UI.Portrait;
-        this.SquadSymbol = this.BuilderInstance.Blueprint.UI.Symbol;
+        this.SquadPortrait = this.BuilderInstance.Blueprint.GetPortrait();
+        this.SquadSymbol = this.BuilderInstance.Blueprint.GetSymbol();
 
         // Refresh data
         this.RefreshData();
@@ -184,7 +184,7 @@ public sealed class SquadSlot : INotifyPropertyChanged {
     public void RefreshData() {
 
         // Set basic info
-        this.SquadName = GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ScreenName);
+        this.SquadName = BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.BuilderInstance.Blueprint.UI.ScreenName);
 
         // Get rank
         var rankLevel = this.BuilderInstance.Rank;
@@ -197,10 +197,10 @@ public sealed class SquadSlot : INotifyPropertyChanged {
         this.Rank5 = rankLevel == 5 ? VetRankAchieved : VetRankNotAchieved;
 
         // Set transport
-        var transportBp = this.BuilderInstance.Transport;
-        this.SquadIsTransported = transportBp is not null;
-        if (this.SquadIsTransported && ResourceHandler.HasIcon("symbol_icons", transportBp!.UI.Symbol)) {
-            this.SquadTransportIcon = ResourceHandler.GetIcon("symbol_icons", transportBp!.UI.Symbol);
+        if (this.BuilderInstance.Transport is SquadBlueprint transportBp) {
+            var bpsrc = transportBp.GetSymbol();
+            this.SquadIsTransported = ResourceHandler.HasIcon(bpsrc);
+            this.SquadTransportIcon = this.SquadIsTransported ? ResourceHandler.GetIcon(bpsrc) : null;
         }
 
         // Refresh

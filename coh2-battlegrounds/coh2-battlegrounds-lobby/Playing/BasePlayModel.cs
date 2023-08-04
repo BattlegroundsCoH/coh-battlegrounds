@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Windows.Media;
@@ -9,7 +8,6 @@ using Battlegrounds.AI;
 using Battlegrounds.AI.Lobby;
 using Battlegrounds.DataLocal;
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Match.Analyze;
@@ -17,23 +15,31 @@ using Battlegrounds.Game.Match.Composite;
 using Battlegrounds.Game.Match.Finalizer;
 using Battlegrounds.Game.Match.Startup;
 using Battlegrounds.Game.Match;
-using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Game;
 using Battlegrounds.Modding.Content;
 using Battlegrounds.Modding;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Util;
+using Battlegrounds.Util.Threading;
 using Battlegrounds.Verification;
-using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Lobby.Components;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Game.Scenarios;
+using Battlegrounds.Logging;
 
 namespace Battlegrounds.Lobby.Playing;
 
+/// <summary>
+/// Abstract base class that handles gameplay startup, match setup, and game finish operations.
+/// </summary>
 public abstract class BasePlayModel {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     // Load refs
     protected readonly ILobbyHandle m_handle;
-    protected readonly ChatSpectator m_chat;
+    protected readonly IChatSpectator m_chat;
+    protected readonly IDispatcher m_dispatcher;
 
     // The strategies to use
     protected IStartupStrategy? m_startupStrategy;
@@ -56,15 +62,22 @@ public abstract class BasePlayModel {
     /// </summary>
     /// <param name="handle">The lobby handle to create play instance for.</param>
     /// <param name="lobbyChat">The chat instance to use when communicating progress.</param>
-    public BasePlayModel(ILobbyHandle handle, ChatSpectator lobbyChat) {
+    /// <param name="dispatcher">The dispatcher to invoke UI thread actions through.</param>
+    public BasePlayModel(ILobbyHandle handle, IChatSpectator lobbyChat, IDispatcher dispatcher) {
 
         // Set base stuff
         this.m_handle = handle;
         this.m_chat = lobbyChat;
+        this.m_dispatcher = dispatcher;
 
     }
 
-    protected void BasePrepare(ModPackage modPackage, PrepareCancelHandler cancelHandler) {
+    /// <summary>
+    /// Prepares the play model for gameplay.
+    /// </summary>
+    /// <param name="modPackage">The mod package to use for preparation.</param>
+    /// <param name="cancelHandler">Handler to call when the preparation is cancelled.</param>
+    protected void BasePrepare(IModPackage modPackage, PrepareCancelHandler cancelHandler) {
 
         // Error if not set up
         if (this.m_startupStrategy is null) {
@@ -92,7 +105,7 @@ public abstract class BasePlayModel {
         this.m_session = new MultiplayerSession(this.m_handle);
 
         // Create controller
-        this.m_controller = new();
+        this.m_controller = new MatchController(m_handle.Game);
         this.m_controller.SetStartupObjects(this.m_session, this.m_startupStrategy);
         this.m_controller.SetAnalysisObjects(this.m_session, this.m_matchAnalyzer);
         this.m_controller.SetFinalizerObjects(this.m_session, this.m_finalizeStrategy);
@@ -102,7 +115,11 @@ public abstract class BasePlayModel {
 
     }
 
-    protected void CreateMatchInfo(ModPackage package) {
+    /// <summary>
+    /// Creates match information from the given mod package.
+    /// </summary>
+    /// <param name="package">The mod package to use for creating the match information.</param>
+    protected void CreateMatchInfo(IModPackage package) {
 
         // Get settings (most up-to-date)
         var settings = this.m_handle.Settings;
@@ -116,7 +133,7 @@ public abstract class BasePlayModel {
 
         // Try get gamemode value
         if (!int.TryParse(gamemodeValue, out int gamemodeoption)) {
-            Trace.WriteLine($"Failed to convert gamemode option {gamemodeoption} into an integer value.", nameof(BasePlayModel));
+            logger.Warning($"Failed to convert gamemode option {gamemodeoption} into an integer value.");
             gamemodeoption = 0;
         }
 
@@ -140,22 +157,16 @@ public abstract class BasePlayModel {
             .Map(x => x is null ? throw new StartupException("Invalid axis occupant") : CreateParticipantFromLobbyMember(x, ParticipantTeam.TEAM_AXIS, totalCounter, axisCounter));
 
         // Get scenario
-        var scen = ScenarioList.FromFilename(scenario);
-        if (scen is null) {
-            throw new StartupException($"Failed to fetch scenario {scenario} from scenario list.");
-        }
+        var scen = BattlegroundsContext.DataSource.GetScenarioList(package, this.m_handle.Game)!.FromFilename(scenario)
+            ?? throw new StartupException($"Failed to fetch scenario {scenario} from scenario list.");
 
         // Grab gamemode
-        var gamemodeInstance = WinconditionList.GetGamemodeByName(package.GamemodeGUID, gamemode);
-        if (gamemodeInstance is null) {
-            throw new StartupException($"Failed to find gamemode with name '{gamemode}' from wincondition list (mod package = {package.ID}).");
-        }
+        var gamemodeInstance = BattlegroundsContext.DataSource.GetGamemodeList(package, this.m_handle.Game)!.GetGamemodeByName(package.GamemodeGUID, gamemode)
+            ?? throw new StartupException($"Failed to find gamemode with name '{gamemode}' from wincondition list (mod package = {package.ID}).");
 
         // Grab tuning
-        var tuningInstance = ModManager.GetMod<ITuningMod>(package.TuningGUID);
-        if (tuningInstance is null) {
-            throw new StartupException($"Failed to fetch tuning mod.");
-        }
+        var tuningInstance = BattlegroundsContext.ModManager.GetMod<ITuningMod>(package.TuningGUID) 
+            ?? throw new StartupException($"Failed to fetch tuning mod.");
 
         // Create plan containers
         SessionPlanEntityInfo[] sessionEntities;
@@ -180,11 +191,11 @@ public abstract class BasePlayModel {
 
             // Invoke helper functions
             sessionGoals = CreatePlanningGoals(participants, elements, (int)scen.PlayableSize.Length);
-            sessionEntities = CreatePlanningEntities(participants, elements, (int)scen.PlayableSize.Length, mode);
+            sessionEntities = CreatePlanningEntities(participants, elements, (int)scen.PlayableSize.Length, mode, package);
             sessionSquads = CreatePlanningSquads(participants, elements, (int)scen.PlayableSize.Length);
 
             // Determine if there's need for AI planning
-            this.CreateAIPlans(scen, revflag ? allies : axis, (byte)(revflag ? 0 : 1), ref sessionSquads, ref sessionEntities, sessionGoals, mode);
+            this.CreateAIPlans(scen, revflag ? allies : axis, (byte)(revflag ? 0 : 1), ref sessionSquads, ref sessionEntities, sessionGoals, mode, package);
 
         } else {
 
@@ -227,10 +238,18 @@ public abstract class BasePlayModel {
         };
 
         // Log this object (Helpful for debugging)
-        Trace.WriteLine($"Session Startup Info:\n{JsonSerializer.Serialize(this.m_info, new JsonSerializerOptions() { WriteIndented = true })}", nameof(BasePlayModel));
+        logger.Info($"Session Startup Info:\n{JsonSerializer.Serialize(this.m_info, new JsonSerializerOptions() { WriteIndented = true })}");
 
     }
 
+    /// <summary>
+    /// Creates a participant for a session from a lobby member.
+    /// </summary>
+    /// <param name="participant">The lobby member to transform into a session participant.</param>
+    /// <param name="team">The team of the participant.</param>
+    /// <param name="count">The total count of participants.</param>
+    /// <param name="index">The index of the participant.</param>
+    /// <returns>The created session participant.</returns>
     protected SessionParticipant CreateParticipantFromLobbyMember(ILobbyMember participant, ParticipantTeam team, ValRef<byte> count, ValRef<byte> index) {
 
         // Update indicies
@@ -239,18 +258,15 @@ public abstract class BasePlayModel {
 
         // Add participant based on role
         if (participant.Role is 3) {
-            var aiCompany = participant.Company;
-            if (aiCompany is null) {
-                throw new StartupException("AI startup company was null!");
-            }
-            var c = aiCompany.IsAuto ? null : Companies.FromNameAndFaction(aiCompany.Name, Faction.FromName(aiCompany.Army));
+            var aiCompany = participant.Company ?? throw new StartupException("AI startup company was null!");
+            var c = aiCompany.IsAuto ? null : Companies.FromNameAndFaction(aiCompany.Name, Faction.FromName(aiCompany.Army, this.m_handle.Game));
             return new SessionParticipant((AIDifficulty)participant.AILevel, c, team, tIndex, pIndex);
         } else {
             if (participant.MemberID == this.m_handle.Self.ID) {
                 if (participant.Company is not ILobbyCompany c) {
                     throw new StartupException("Invalid startup company.");
                 }
-                this.m_selfCompany = Companies.FromNameAndFaction(c.Name, Faction.FromName(participant.Company.Army));
+                this.m_selfCompany = Companies.FromNameAndFaction(c.Name, Faction.FromName(participant.Company.Army, this.m_handle.Game));
             }
             return new SessionParticipant(participant.DisplayName, participant.MemberID, null, team, tIndex, pIndex);
         }
@@ -262,7 +278,7 @@ public abstract class BasePlayModel {
             Y = -position.Y
         };
 
-    protected static SessionPlanEntityInfo[] CreatePlanningEntities(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements, int height, Gamemode gamemode) {
+    protected static SessionPlanEntityInfo[] CreatePlanningEntities(IDictionary<ulong, SessionParticipant> participants, ILobbyPlanElement[] planElements, int height, Gamemode gamemode, IModPackage package) {
 
         // Grab planning entities
         var planEntities = planElements.Filter(x => x.IsEntity && x.ObjectiveType is PlanningObjectiveType.None);
@@ -280,7 +296,7 @@ public abstract class BasePlayModel {
             entities[i] = new() {
                 TeamOwner = (int)p.TeamIndex,
                 TeamMemberOwner = p.PlayerIndexOnTeam,
-                Blueprint = BlueprintManager.FromBlueprintName<EntityBlueprint>(planEntities[i].Blueprint),
+                Blueprint = package.GetDataSource().GetBlueprints(GameCase.CompanyOfHeroes2).FromBlueprintName<EntityBlueprint>(planEntities[i].Blueprint),
                 Spawn = InvertPosition(planEntities[i].SpawnPosition),
                 Lookat = planEntities[i].LookatPosition is GamePosition look ? InvertPosition(look) : null,
                 IsDirectional = planEntities[i].IsDirectional,
@@ -354,8 +370,8 @@ public abstract class BasePlayModel {
 
     }
 
-    protected void CreateAIPlans(Scenario scenario, SessionParticipant[] defenders, byte tid,
-        ref SessionPlanSquadInfo[] units, ref SessionPlanEntityInfo[] structures, SessionPlanGoalInfo[] goals, Gamemode gamemode) {
+    protected void CreateAIPlans(IScenario scenario, SessionParticipant[] defenders, byte tid,
+        ref SessionPlanSquadInfo[] units, ref SessionPlanEntityInfo[] structures, SessionPlanGoalInfo[] goals, Gamemode gamemode, IModPackage package) {
 
         // Grab allies AIs
         var aiDefenders = defenders.Filter(x => !x.IsHuman);
@@ -407,7 +423,7 @@ public abstract class BasePlayModel {
             return new SessionPlanEntityInfo() {
                 TeamOwner = tid,
                 TeamMemberOwner = x.AIIndex + 1,
-                Blueprint = BlueprintManager.FromBlueprintName<EntityBlueprint>(x.PlanElement.Blueprint),
+                Blueprint = package.GetDataSource().GetBlueprints(GameCase.CompanyOfHeroes2).FromBlueprintName<EntityBlueprint>(x.PlanElement.Blueprint),
                 Spawn = x.PlanElement.SpawnPosition,
                 Lookat = x.PlanElement.LookatPosition,
                 IsDirectional = x.PlanElement.IsDirectional,
@@ -417,12 +433,24 @@ public abstract class BasePlayModel {
 
     }
 
+    /// <summary>
+    /// Handles the event when the game startup is cancelled.
+    /// </summary>
+    /// <param name="sender">The startup strategy that triggered the event.</param>
+    /// <param name="caller">The object that invoked the method.</param>
+    /// <param name="reason">The reason for cancellation.</param>
     protected void HandleStartupCancel(IStartupStrategy sender, object? caller, string reason) {
         this.m_chat.SystemMessage(reason, Colors.Red);
         this.m_handle.NotifyError("startup", reason);
         this.m_prepCancelHandler?.Invoke(this);
     }
 
+    /// <summary>
+    /// Handles the event when the game startup is providing an information.
+    /// </summary>
+    /// <param name="sender">The startup strategy that triggered the event.</param>
+    /// <param name="caller">The object that invoked the method.</param>
+    /// <param name="message">The information message.</param>
     protected void HandleStartupInformation(IStartupStrategy sender, object? caller, string message)
         => this.ShowStartupInformation(message);
 
@@ -431,7 +459,11 @@ public abstract class BasePlayModel {
         this.m_handle.NotifyMatch("startup", message);
     }
 
-    protected void OnCompanySerialized(Company company) {
+    /// <summary>
+    /// Handles the serialization event of a company.
+    /// </summary>
+    /// <param name="company">The company that has been serialized.</param>
+    protected virtual void OnCompanySerialized(Company company) {
 
         // Run through a sanitizer
         try {
@@ -442,12 +474,12 @@ public abstract class BasePlayModel {
         } catch (ChecksumViolationException checksumViolation) {
 
             // Log checksum violation
-            Trace.WriteLine(checksumViolation, nameof(BasePlayModel));
+            logger.Warning(checksumViolation);
 
         } catch (OperationCanceledException cancelledException) {
 
             // Log checksum violation
-            Trace.WriteLine(cancelledException, nameof(BasePlayModel));
+            logger.Warning(cancelledException);
 
         }
 

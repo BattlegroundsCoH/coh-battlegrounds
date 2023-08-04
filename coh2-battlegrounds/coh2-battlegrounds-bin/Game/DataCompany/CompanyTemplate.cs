@@ -6,8 +6,7 @@ using System.Globalization;
 using System.Text;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
 using Battlegrounds.Util;
@@ -25,21 +24,23 @@ public sealed class CompanyTemplate {
     private readonly string m_guid;
     private readonly string m_army;
     private readonly string m_type;
+    private readonly byte m_game;
 
     /// <summary>
     /// Get the company army set by this template
     /// </summary>
     public string TemplateArmy => this.m_army;
 
-    private CompanyTemplate(string guid, string army, string companytype)
-        : this(guid, army, companytype, new CompanyUnit[4][]){
+    private CompanyTemplate(string guid, string army, byte game, string companytype)
+        : this(guid, army, companytype, game, new CompanyUnit[4][]){
     }
 
-    private CompanyTemplate(string guid, string army, string companytype, CompanyUnit[][] units) {
+    private CompanyTemplate(string guid, string army, string companytype, byte game, CompanyUnit[][] units) {
         this.m_army = army;
         this.m_type = companytype;
         this.m_guid = guid;
         this.m_units = units;
+        this.m_game = game;
     }
 
     /// <summary>
@@ -77,7 +78,7 @@ public sealed class CompanyTemplate {
     public static CompanyTemplate FromCompany(Company company) {
 
         // Create template with base params
-        CompanyTemplate template = new CompanyTemplate(company.TuningGUID, company.Army.Name, company.Type.Id);
+        CompanyTemplate template = new CompanyTemplate(company.TuningGUID, company.Army.Name, (byte)(company.Army.RequiredDLC.Game == GameCase.CompanyOfHeroes2 ? 2 : 3), company.Type.Id);
 
         // Define container
         Dictionary<DeploymentPhase, Dictionary<CompanyUnit, int>> templateSetup = new() {
@@ -107,7 +108,7 @@ public sealed class CompanyTemplate {
         // Insert
         for (byte i = 1; i <= 4; i++) {
             DeploymentPhase phase = (DeploymentPhase)i;
-            template.m_units[i - 1] = templateSetup[phase].Map((k, v) => k with { AMOUNT = v });
+            template.m_units[i - 1] = templateSetup[phase].MapValues((k, v) => k with { AMOUNT = v });
         }
 
         // Return template
@@ -125,7 +126,7 @@ public sealed class CompanyTemplate {
         try {
 
             // Get cut position and length for name
-            string decompressed = StringCompression.DecompressString(tmpString[(ModGuid.FIXED_LENGTH + 1)..]);
+            string decompressed = StringCompression.DecompressString(tmpString[(ModGuid.FIXED_LENGTH + 2)..]);
 
             // Grab first section
             int a = decompressed.IndexOf('[');
@@ -166,11 +167,13 @@ public sealed class CompanyTemplate {
 
             }
 
+            byte game = (byte)(tmpString[ModGuid.FIXED_LENGTH + 1] == '2' ? 2 : 3);
+
             // Create template and return
             return new CompanyTemplate(
                 tmpString[0..ModGuid.FIXED_LENGTH],
-                DecodeArmy(tmpString[ModGuid.FIXED_LENGTH]),
-                typ, units);
+                DecodeArmy(tmpString[ModGuid.FIXED_LENGTH]),                
+                typ, game, units);
 
         } catch (Exception ex) {
             Trace.WriteLine(ex, nameof(CompanyTemplate));
@@ -199,8 +202,21 @@ public sealed class CompanyTemplate {
         // Get mod guid
         var guid = ModGuid.FromGuid(template.m_guid);
 
+        // Determine game
+        var game = template.m_game == 2 ? GameCase.CompanyOfHeroes2 : GameCase.CompanyOfHeroes3;
+
+        // Get package
+        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(guid, game);
+        if (package is null) {
+            company = null;
+            return false;
+        }
+
+        // Get data source
+        var dataSource = package.GetDataSource().GetBlueprints(game);
+
         // Get type
-        var typ = ModManager.GetPackageFromGuid(guid)?.GetCompanyType(template.m_type);
+        var typ = package?.GetCompanyType(template.m_type);
         if (typ is null) {
             company = null;
             return false;
@@ -212,8 +228,8 @@ public sealed class CompanyTemplate {
         // Create Units
         for (int i = 0; i < template.m_units.Length; i++) {
             for (int j = 0; j < template.m_units[i].Length; j++) {
-                var sbp = BlueprintManager.FromPPbgid<SquadBlueprint>(new BlueprintUID(template.m_units[i][j].PBGID, guid));
-                var tsbp = template.m_units[i][j].TPBGID is 0 ? null : BlueprintManager.FromPPbgid<SquadBlueprint>(new BlueprintUID(template.m_units[i][j].TPBGID, guid));
+                var sbp = dataSource.FromPPbgid<SquadBlueprint>(new BlueprintUID(template.m_units[i][j].PBGID, guid));
+                var tsbp = template.m_units[i][j].TPBGID is 0 ? null : dataSource.FromPPbgid<SquadBlueprint>(new BlueprintUID(template.m_units[i][j].TPBGID, guid));
                 for (int k = 0; k < template.m_units[i][j].AMOUNT; k++) {
                     
                     // Create unit with basics

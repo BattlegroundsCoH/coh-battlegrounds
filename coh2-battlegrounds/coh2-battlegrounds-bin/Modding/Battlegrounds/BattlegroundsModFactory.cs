@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Battlegrounds.Functional;
+using Battlegrounds.Game;
 using Battlegrounds.Game.DataSource;
 using Battlegrounds.Modding.Content;
 
@@ -9,15 +10,17 @@ namespace Battlegrounds.Modding.Battlegrounds;
 
 public sealed class BattlegroundsModFactory : IModFactory {
 
-    public ModPackage Package { get; }
+    /// <inheritdoc/>
+    public IModPackage Package { get; }
 
     private readonly UcsFile? m_gamemodelocale;
 
-    public BattlegroundsModFactory(ModPackage package) {
+    public BattlegroundsModFactory(IModPackage package) {
         this.Package = package;
-        this.m_gamemodelocale = package.GetLocale(ModType.Gamemode, BattlegroundsInstance.Localize.Language);
+        this.m_gamemodelocale = package.GetLocale(ModType.Gamemode, BattlegroundsContext.Localize.Language);
     }
 
+    /// <inheritdoc/>
     public IGamemode GetGamemode(Gamemode gamemode) {
         
         // Grab options
@@ -28,7 +31,7 @@ public sealed class BattlegroundsModFactory : IModFactory {
 
         // Grab aux options
         var axusOptions = gamemode.AdditionalOptions switch {
-            Dictionary<string, Gamemode.GamemodeAdditionalOption> some => some.Map(this.GetAuxGamemodeOption),
+            Dictionary<string, Gamemode.GamemodeAdditionalOption> some => some.MapValues(this.GetAuxGamemodeOption),
             _ => Array.Empty<IGamemodeAuxiliaryOption>()
         };
 
@@ -58,6 +61,7 @@ public sealed class BattlegroundsModFactory : IModFactory {
             TeamName1 = gamemode.TeamNames?.GetOrDefault("1", string.Empty) ?? string.Empty,
             TeamName2 = gamemode.TeamNames?.GetOrDefault("2", string.Empty) ?? string.Empty,
             IncludeFiles = gamemode.Files ?? Array.Empty<string>(),
+            SupportedGame = Enum.TryParse(gamemode.SupportedGame, true, out GameCase gameCase) ? gameCase : GameCase.Unspecified
         };
 
     }
@@ -114,9 +118,11 @@ public sealed class BattlegroundsModFactory : IModFactory {
         };
     }
 
+    /// <inheritdoc/>
     public IWinconditionMod GetWinconditionMod() 
         => new BattlegroundsWincondition(this.Package, this.Package.Gamemodes.Map(this.GetGamemode));
 
+    /// <inheritdoc/>
     public ITuningMod GetTuning()
         => new BattlegroundsTuning(this.Package);
 

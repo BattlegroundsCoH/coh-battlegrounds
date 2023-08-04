@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Diagnostics;
 using System.Reflection;
 using System.Resources;
 
@@ -8,6 +7,8 @@ using System.Windows.Media.Imaging;
 
 using Battlegrounds.Functional;
 using Battlegrounds.Gfx;
+using Battlegrounds.Gfx.Loaders;
+using Battlegrounds.Logging;
 
 namespace Battlegrounds.Resources;
 
@@ -17,6 +18,8 @@ public enum ResourceType {
 }
 
 public static class ResourceHandler {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     private static string[] _resourceNames;
     
@@ -34,17 +37,24 @@ public static class ResourceHandler {
         "resources/ingame/portraits.dat"
     };
 
-    private static readonly Dictionary<string, ImageSource> _cache;
+    private static readonly Dictionary<string, ImageSource> _IconCacheLegacy;
+    private static readonly Dictionary<IIconSource, ImageSource> _IconCache;
     private static MemoryStream? _profanityFilter;
 
-    public static readonly Dictionary<string, GfxMap> GfxMaps;
+    public static readonly IGfxMapLoaderFactory GfxLoaderFactory;
+
+    public static readonly Dictionary<string, IGfxMap> GfxMaps;
 
     static ResourceHandler() {
-        
-        _cache = new();
-        GfxMaps = new();
+
+        _IconCache = new();
+        _IconCacheLegacy = new();
+
         _profanityFilter = null;
         _resourceNames = Array.Empty<string>();
+
+        GfxMaps = new();
+        GfxLoaderFactory = new GfxMapLoaderFactory();
 
     }
 
@@ -62,21 +72,22 @@ public static class ResourceHandler {
         var resourceName = assembly.GetName().Name + ".g";
         var resourceManager = new ResourceManager(resourceName, assembly);
         try {
-            var set = resourceManager.GetResourceSet(culture, true, true);
-            if (set is null) {
-                throw new Exception("Failed to load resource set.");
-            }
+            var set = resourceManager.GetResourceSet(culture, true, true) ?? throw new Exception("Failed to load resource set.");
             foreach (DictionaryEntry resource in set) {
                 string? name = Path.GetFileNameWithoutExtension(resource.Key as string) ?? "InvalidPathEntry";
                 if (resource.Value is not UnmanagedMemoryStream datastream) {
                     continue;
                 }
                 if (__iconResourceFiles.Contains(resource.Key as string)) {
-                    var gfxmap = GfxMaps[name] = GfxMap.FromBinary(ToMemoryStream(datastream));
-                    Trace.WriteLine($"Loaded gfx map {name}(v:0x{gfxmap.BinaryVersion:X2}) with {gfxmap.Resources.Length} gfx files.", nameof(ResourceHandler));
+                    using var ms = ToMemoryStream(datastream);
+                    using var msReader = new BinaryReader(ms);
+                    var gfxVersion = msReader.ReadInt32();
+                    var gfxReader = GfxLoaderFactory.GetGfxMapLoader((GfxVersion)gfxVersion);
+                    var gfxmap = GfxMaps[name] = gfxReader.LoadGfxMap(msReader);
+                    logger.Info($"Loaded gfx map {name}(v:0x{gfxmap.GfxVersion:X2}) with {gfxmap.Count} gfx files.");
                 } else if (resource.Key is "resources/profanities.json") {
                     _profanityFilter = ToMemoryStream(datastream);
-                    Trace.WriteLine($"Loaded json resource into memory '{name}'");
+                    logger.Info($"Loaded json resource into memory '{name}'");
                 }
                 yield return resource.Key;
             }
@@ -92,26 +103,53 @@ public static class ResourceHandler {
         return ms;
     }
 
+    [Obsolete("Use the method accepting an IIconSource")]
     public static ImageSource? GetIcon(string iconType, string iconName) {
-        if (_cache.TryGetValue(iconName, out var source)) {
+        if (_IconCacheLegacy.TryGetValue(iconName, out var source)) {
             return source;
         }
-        if (GfxMaps[iconType] is GfxMap gfx && gfx.GetResource(iconName) is GfxResource rs) {
+        if (GfxMaps[iconType] is IGfxMap gfx && gfx.GetResource(iconName) is GfxResource rs) {
+            // TODO: Check resource type
             using (var stream = rs.Open()) {
                 BitmapImage bitmapImage = new();
                 bitmapImage.BeginInit();
                 bitmapImage.StreamSource = stream;
                 bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapImage.EndInit();
-                _cache[iconName] = bitmapImage; // Save to cache, so we dont needlessly do this operation every time
+                _IconCacheLegacy[iconName] = bitmapImage; // Save to cache, so we dont needlessly do this operation every time
                 return bitmapImage;
             }
         }
         return null;
     }
 
+    public static ImageSource? GetIcon(IIconSource iconSource) {
+        if (_IconCache.TryGetValue(iconSource, out var source)) {
+            return source;
+        }
+        if (GfxMaps[iconSource.Container] is IGfxMap gfx 
+            && gfx.HasResource(iconSource.Identifier) && gfx.GetResource(iconSource.Identifier) is GfxResource rs) {
+            // TODO: Check resource type
+            using (var stream = rs.Open()) {
+                BitmapImage bitmapImage = new();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = stream;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                _IconCache[iconSource] = bitmapImage; // Save to cache, so we dont needlessly do this operation every time
+                return bitmapImage;
+            }
+        }
+        logger.Warning("Failed locating resource {0}:{1}", iconSource.Container, iconSource.Identifier);
+        return null;
+    }
+
+    [Obsolete("Use the method accepting an IIconSource")]
     public static bool HasIcon(string iconType, string iconName)
-        => _cache.ContainsKey(iconName) || (GfxMaps[iconType] is GfxMap gfx && gfx.GetResource(iconName) is not null);
+        => _IconCacheLegacy.ContainsKey(iconName) || (GfxMaps[iconType] is IGfxMap gfx && gfx.GetResource(iconName) is not null);
+
+    public static bool HasIcon(IIconSource iconSource)
+        => _IconCache.ContainsKey(iconSource) || (GfxMaps[iconSource.Container] is IGfxMap gfx && gfx.HasResource(iconSource.Identifier));
 
     public static bool HasResource(string resourceName) => _resourceNames.Contains(resourceName.ToLowerInvariant());
 

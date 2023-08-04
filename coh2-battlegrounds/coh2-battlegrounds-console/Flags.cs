@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace coh2_battlegrounds_console;
+namespace Battlegrounds.Developer;
 
 public class Flags {
 

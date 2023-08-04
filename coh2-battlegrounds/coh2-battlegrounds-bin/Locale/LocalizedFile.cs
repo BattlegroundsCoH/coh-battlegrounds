@@ -9,6 +9,9 @@ using Battlegrounds.Util;
 
 namespace Battlegrounds.Locale;
 
+/// <summary>
+/// 
+/// </summary>
 public class LocalizedFile {
 
     private readonly Dictionary<LocaleLanguage, List<(LocaleKey key, string value)>> m_loadedStrings;
@@ -17,13 +20,23 @@ public class LocalizedFile {
     /// <summary>
     /// Get all distinct keys
     /// </summary>
-    public string[] DistinctKeys => this.m_loadedStrings.Values.SelectMany(x => x.Select(x => x.key.LocaleID)).Distinct().ToArray();
+    public string[] DistinctKeys => m_loadedStrings.Values.SelectMany(x => x.Select(x => x.key.LocaleID)).Distinct().ToArray();
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sourceID"></param>
     public LocalizedFile(string sourceID) {
-        this.m_sourceID = sourceID;
-        this.m_loadedStrings = new Dictionary<LocaleLanguage, List<(LocaleKey key, string value)>>();
+        m_sourceID = sourceID;
+        m_loadedStrings = new Dictionary<LocaleLanguage, List<(LocaleKey key, string value)>>();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fullString"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidDataException"></exception>
     public bool LoadFromString(string fullString) {
 
         // Split into lines
@@ -58,15 +71,15 @@ public class LocalizedFile {
                             string v = lns[i][(j + 1)..].Replace('\r', ' ').Trim(' ').Trim('\"');
 
                             // Add string
-                            this.m_loadedStrings[lang].Add((new LocaleKey(k, this.m_sourceID), v));
+                            m_loadedStrings[lang].Add((new LocaleKey(k, m_sourceID), v));
 
                         } else {
                             return false;
                         }
                     } else {
                         if (TryGetLanguage(lns[i], out lang)) {
-                            if (!this.m_loadedStrings.ContainsKey(lang)) {
-                                this.m_loadedStrings.Add(lang, new List<(LocaleKey key, string value)>());
+                            if (!m_loadedStrings.ContainsKey(lang)) {
+                                m_loadedStrings.Add(lang, new List<(LocaleKey key, string value)>());
                             }
                             hasLanguage = true;
                         }
@@ -105,34 +118,43 @@ public class LocalizedFile {
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="locale"></param>
+    /// <returns></returns>
     public (LocaleKey k, string v)[] GetLanguage(LocaleLanguage locale) {
-        if (this.m_loadedStrings.ContainsKey(locale)) {
-            return this.m_loadedStrings[locale].ToArray();
+        if (m_loadedStrings.ContainsKey(locale)) {
+            return m_loadedStrings[locale].ToArray();
         } else {
             return Array.Empty<(LocaleKey, string)>();
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public byte[] AsBinary() {
 
         using MemoryStream ms = new MemoryStream();
         using BinaryWriter bw = new BinaryWriter(ms, Encoding.Unicode);
 
-        byte[] ids = Encoding.Unicode.GetBytes(this.m_sourceID);
+        byte[] ids = Encoding.Unicode.GetBytes(m_sourceID);
 
         bw.Write(ids.Length);
         bw.Write(ids);
 
-        bw.Write(this.m_loadedStrings.Count);
-        this.m_loadedStrings.Keys.ForEach(x => {
+        bw.Write(m_loadedStrings.Count);
+        m_loadedStrings.Keys.ForEach(x => {
             bw.Write((byte)0);
             bw.Write((byte)x);
-            bw.Write(this.m_loadedStrings[x].Count);
+            bw.Write(m_loadedStrings[x].Count);
         });
 
         int j = 0;
-        bw.Write(this.DistinctKeys.Length);
-        this.DistinctKeys.ForEach(x => {
+        bw.Write(DistinctKeys.Length);
+        DistinctKeys.ForEach(x => {
             byte[] kc = Encoding.Unicode.GetBytes(x);
             bw.Write((ushort)kc.Length);
             bw.Write(kc);
@@ -141,10 +163,10 @@ public class LocalizedFile {
         });
 
         // Sort by keys
-        this.m_loadedStrings.ForEach(lang => {
+        m_loadedStrings.ForEach(lang => {
             bw.Write((byte)lang.Key);
             lang.Value.ForEach(v => {
-                int k = Array.IndexOf(this.DistinctKeys, v.key.LocaleID);
+                int k = Array.IndexOf(DistinctKeys, v.key.LocaleID);
                 if (k >= 0) {
                     bw.Write(k);
                 } else {
@@ -164,6 +186,11 @@ public class LocalizedFile {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <returns></returns>
     public bool LoadFromBinary(MemoryStream stream) {
 
         // Create binary reader
@@ -171,9 +198,9 @@ public class LocalizedFile {
 
         // Read identifier
         string identifier = reader.ReadUnicodeString();
-        if (identifier != this.m_sourceID) {
-            if (this.m_sourceID == Localize.UndefinedSource) {
-                this.m_sourceID = identifier;
+        if (identifier != m_sourceID) {
+            if (m_sourceID == Localize.UndefinedSource) {
+                m_sourceID = identifier;
             } else {
                 return false;
             }
@@ -188,7 +215,7 @@ public class LocalizedFile {
             reader.Skip(1); // skip a single byte
             LocaleLanguage lang = (LocaleLanguage)reader.ReadByte();
             tmp.Add(lang, reader.ReadInt32());
-            this.m_loadedStrings.Add(lang, new List<(LocaleKey key, string value)>());
+            m_loadedStrings.Add(lang, new List<(LocaleKey key, string value)>());
         }
 
         // Read lookup keys
@@ -212,7 +239,7 @@ public class LocalizedFile {
                 } else {
                     locID = lookup[lookupID];
                 }
-                this.m_loadedStrings[lan].Add((new LocaleKey(locID, identifier), reader.ReadUnicodeString(reader.ReadUInt16())));
+                m_loadedStrings[lan].Add((new LocaleKey(locID, identifier), reader.ReadUnicodeString(reader.ReadUInt16())));
             }
         }
 
@@ -222,4 +249,3 @@ public class LocalizedFile {
     }
 
 }
-

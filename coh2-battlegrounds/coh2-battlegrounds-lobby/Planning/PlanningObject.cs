@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-
-using Battlegrounds.Game.Database;
-
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Networking.LobbySystem;
 
 namespace Battlegrounds.Lobby.Planning;
@@ -34,7 +32,7 @@ public sealed class PlanningObject {
     public Point? VisualPointEnd { get; set; }
 
     /// <summary>
-    /// Get the <see cref="Battlegrounds.Game.Database.Blueprint"/> associated with the object.
+    /// Get the <see cref="Game.Blueprints.Blueprint"/> associated with the object.
     /// </summary>
     public Blueprint? Blueprint { get; }
 

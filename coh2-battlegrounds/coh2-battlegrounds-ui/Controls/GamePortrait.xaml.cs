@@ -32,16 +32,16 @@ public partial class GamePortrait : UserControl {
     /// Identifies the <see cref="PortraitName"/> property.
     /// </summary>
     public static readonly DependencyProperty PortraitNameProperty
-        = DependencyProperty.Register(nameof(PortraitName), typeof(string), typeof(GamePortrait), new FrameworkPropertyMetadata(
+        = DependencyProperty.Register(nameof(PortraitName), typeof(object), typeof(GamePortrait), new FrameworkPropertyMetadata(
             string.Empty,
             FrameworkPropertyMetadataOptions.AffectsRender,
-            (a, b) => a.Cast<GamePortrait>(p => p.PortraitName = b.NewValue as string)));
+            (a, b) => a.Cast<GamePortrait>(p => p.PortraitName = b.NewValue)));
 
     /// <summary>
     /// Get or set portrait name to display
     /// </summary>
-    public string? PortraitName {
-        get => this.GetValue(PortraitNameProperty) as string;
+    public object? PortraitName {
+        get => this.GetValue(PortraitNameProperty);
         set {
             this.SetValue(PortraitNameProperty, value);
             this.TrySetPortrait();
@@ -52,16 +52,16 @@ public partial class GamePortrait : UserControl {
     /// Identifies the <see cref="SymbolName"/> property.
     /// </summary>
     public static readonly DependencyProperty SymbolNameProperty
-        = DependencyProperty.Register(nameof(SymbolName), typeof(string), typeof(GamePortrait), new FrameworkPropertyMetadata(
+        = DependencyProperty.Register(nameof(SymbolName), typeof(object), typeof(GamePortrait), new FrameworkPropertyMetadata(
             string.Empty,
             FrameworkPropertyMetadataOptions.AffectsRender,
-            (a, b) => a.Cast<GamePortrait>(p => p.SymbolName = b.NewValue as string)));
+            (a, b) => a.Cast<GamePortrait>(p => p.SymbolName = b.NewValue)));
 
     /// <summary>
     /// Get or set name of symbol to display
     /// </summary>
-    public string? SymbolName {
-        get => this.GetValue(SymbolNameProperty) as string;
+    public object? SymbolName {
+        get => this.GetValue(SymbolNameProperty);
         set {
             this.SetValue(SymbolNameProperty, value);
             this.TrySetIcon();
@@ -105,25 +105,35 @@ public partial class GamePortrait : UserControl {
     }
 
     private void TrySetPortrait()
-        => TrySet(PortraitImage, PORTRAIT_SOURCE, PortraitName ?? string.Empty);
+        => TrySet(PortraitImage, ResolveResource(PORTRAIT_SOURCE, PortraitName));
 
     private void TrySetIcon()
-        => TrySet(SymbolImage, SYMBOL_SOURCE, SymbolName ?? string.Empty);
+        => TrySet(SymbolImage, ResolveResource(SYMBOL_SOURCE, SymbolName));
 
-    private static void TrySet(Image img, string source, string name) {
+    private static IIconSource? ResolveResource(string container, object? identifier) {
+        if (identifier is IIconSource iconSource) {
+            return iconSource;
+        }
+        if (identifier is string str) {
+            return new DefaultIconSource(container, str);
+        }
+        return null;
+    }
+
+    private static void TrySet(Image img, IIconSource? iconSource) {
 
         // Do nothing if name is not valid
-        if (string.IsNullOrEmpty(name)) {
+        if (iconSource is null) {
             return;
         }
 
         // do nothing if icon is invalid
-        if (!ResourceHandler.HasIcon(source, name)) {
+        if (!ResourceHandler.HasIcon(iconSource)) {
             return;
         }
 
         // Set source
-        img.Source = ResourceHandler.GetIcon(source, name);
+        img.Source = ResourceHandler.GetIcon(iconSource);
 
     }
 

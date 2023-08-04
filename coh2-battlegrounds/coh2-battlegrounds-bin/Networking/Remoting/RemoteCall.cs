@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-using Battlegrounds.ErrorHandling.Networking;
+using Battlegrounds.Errors.Networking;
 using Battlegrounds.Functional;
 using Battlegrounds.Networking.Communication.Connections;
 using Battlegrounds.Networking.Communication.Golang;

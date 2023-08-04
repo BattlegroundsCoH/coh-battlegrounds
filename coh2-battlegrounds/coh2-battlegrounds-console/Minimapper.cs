@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-
-using Battlegrounds;
-using Battlegrounds.Game.Scenarios;
+using Battlegrounds.Game.Scenarios.CoH2;
 using Battlegrounds.Gfx;
 
-namespace coh2_battlegrounds_console;
+namespace Battlegrounds.Developer;
 
 public static class Minimapper {
 
-    public static unsafe void Map(Scenario scenario) {
+    public static unsafe void Map(CoH2Scenario scenario) {
 
         if (!OperatingSystem.IsWindows()) {
             return;
         }
 
         // Find scenario minimap
-        var mapFile = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, $"map_icons\\{scenario.RelativeFilename}_map.tga");
+        var mapFile = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.MOD_ART_FOLDER, $"map_icons\\{scenario.RelativeFilename}_map.tga");
         var mapData = TgaPixelReader.ReadTarga(mapFile);
 
         // Greate overlay

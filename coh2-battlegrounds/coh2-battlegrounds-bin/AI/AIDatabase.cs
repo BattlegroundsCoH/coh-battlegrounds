@@ -37,7 +37,7 @@ public static class AIDatabase {
         __isLoading = true;
 
         // Grab ai filepath and make sure it exists
-        var map_profiles_path = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.DATABASE_FOLDER, "vcoh-aimap-db.json");
+        var map_profiles_path = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.DATABASE_FOLDER, "vcoh-aimap-db.json");
         if (File.Exists(map_profiles_path)) {
             __mapanalysis = JsonSerializer.Deserialize<Dictionary<string, AIMapAnalysis>>(File.OpenRead(map_profiles_path)) ?? new();
         }

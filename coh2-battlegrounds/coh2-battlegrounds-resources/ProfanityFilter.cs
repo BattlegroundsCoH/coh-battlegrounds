@@ -57,7 +57,7 @@ public static class ProfanityFilter {
             if (__filters.TryGetValue(filterMode, out var content) && content is FilterContent filter) {
 
                 corrected = filter.FilterWords["all"].Fold(toFilter, ApplyFilter);
-                if (filter.FilterWords.TryGetValue(BattlegroundsInstance.Localize.Language.ToString().ToLowerInvariant(), out var words) && words is not null) {
+                if (filter.FilterWords.TryGetValue(BattlegroundsContext.Localize.Language.ToString().ToLowerInvariant(), out var words) && words is not null) {
                     corrected = words.Fold(toFilter, ApplyFilter);
                 }
 

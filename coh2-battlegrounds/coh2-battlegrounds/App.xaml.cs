@@ -18,8 +18,6 @@ using Battlegrounds.UI.Application.Pages;
 using Battlegrounds.UI.Application.Modals;
 using Battlegrounds.UI.Application.Components;
 using Battlegrounds.Networking;
-using Battlegrounds.Game.Database.Management;
-using Battlegrounds.ErrorHandling;
 using Battlegrounds.Verification;
 using Battlegrounds.Update;
 using Battlegrounds.Functional;
@@ -31,6 +29,8 @@ using Battlegrounds.Editor;
 using Battlegrounds.Editor.Pages;
 using Battlegrounds.Lobby.Pages;
 using Battlegrounds.Lobby;
+using Battlegrounds.Logging;
+using Battlegrounds.UI.Threading;
 
 namespace BattlegroundsApp;
 
@@ -38,6 +38,8 @@ namespace BattlegroundsApp;
 /// Interaction logic for App.xaml
 /// </summary>
 public partial class App : Application, IResourceResolver, IViewController {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     private static AppViewManager? __viewManager;
 
@@ -82,7 +84,7 @@ public partial class App : Application, IResourceResolver, IViewController {
         VerifyIntegrity();
 
         // Load BG .dll instance*
-        BattlegroundsInstance.LoadInstance();
+        BattlegroundsContext.LoadInstance();
 
         // Setup resource handler
         LoadResources();
@@ -129,10 +131,10 @@ public partial class App : Application, IResourceResolver, IViewController {
         IsStarted = true;
 
         // Set the application version
-        BattlegroundsInstance.Version = new AppVersionFetcher();
+        BattlegroundsContext.Version = new AppVersionFetcher();
 
         // Load
-        if (!BattlegroundsInstance.IsFirstRun) {
+        if (!BattlegroundsContext.IsFirstRun) {
             this.LoadNext();
         }
 
@@ -145,8 +147,8 @@ public partial class App : Application, IResourceResolver, IViewController {
 
         // Load more low priority stuff down here
 
-        var updateFolderContents = Directory.GetFiles(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.UPDATE_FOLDER));
         // Remove update folder
+        var updateFolderContents = Directory.GetFiles(BattlegroundsContext.GetRelativePath(BattlegroundsPaths.UPDATE_FOLDER));
         if (updateFolderContents.Length > 0) {
             updateFolderContents.ForEach(File.Delete);
         }
@@ -171,17 +173,20 @@ public partial class App : Application, IResourceResolver, IViewController {
 
         // Burn if checksum is not available
         if (!File.Exists("checksum.txt"))
-            throw new FatalAppException("No checksum file found!");
+            throw logger.Fatal("No checksum file found!");
 
         // Run async
-        Task.Run(() => Integrity.CheckIntegrity(Environment.ProcessPath ?? throw new FatalAppException("Process path not found -> very fatal!")));
+        Task.Run(() => Integrity.CheckIntegrity(Environment.ProcessPath ?? throw logger.Fatal("Process path not found -> very fatal!")));
 
     }
 
     private void MainWindow_Ready(MainWindow window) {
 
+        // Save dispatcher
+        BattlegroundsContext.Dispatcher = new UIDispatcher(window.Dispatcher);
+
         // Do first-time startup
-        if (BattlegroundsInstance.IsFirstRun) {
+        if (BattlegroundsContext.IsFirstRun) {
 
             // Grab modal control
             if (Views.GetModalControl() is not ModalControl fullModal) {
@@ -197,11 +202,8 @@ public partial class App : Application, IResourceResolver, IViewController {
                 // Load next
                 this.LoadNext();
 
-                // Create initial data
-                InitialCompanyCreator.Init();
-
                 // Save all changes
-                BattlegroundsInstance.SaveInstance();
+                BattlegroundsContext.SaveInstance();
 
             });
 
@@ -225,7 +227,7 @@ public partial class App : Application, IResourceResolver, IViewController {
 
         } catch (Exception dex) {
 
-            Trace.WriteLine($"Failed to initialise discord API: {dex}", "DiscordAPI");
+            logger.Error($"Failed to initialise discord API: {dex}");
 
         }
 
@@ -234,10 +236,10 @@ public partial class App : Application, IResourceResolver, IViewController {
     private void LoadNext() {
 
         // Set network user
-        NetworkInterface.SelfIdentifier = BattlegroundsInstance.Steam.User.ID;
+        NetworkInterface.SelfIdentifier = BattlegroundsContext.Steam.User.ID;
 
         // Load databases (async)
-        DatabaseManager.LoadAllDatabases(OnDatabasesLoaded);
+        BattlegroundsContext.DataSource.LoadDatabases(OnDatabasesLoaded);
 
         // Verify view manager
         if (!IsStarted) {
@@ -264,10 +266,10 @@ public partial class App : Application, IResourceResolver, IViewController {
         NetworkInterface.Shutdown();
 
         // Close log
-        BattlegroundsInstance.Log?.SaveAndClose(0);
+        BattlegroundsContext.Log?.SaveAndClose(0);
 
         // Save all changes
-        BattlegroundsInstance.SaveInstance();
+        BattlegroundsContext.SaveInstance();
 
         // Set started flag
         IsStarted = false;
@@ -279,16 +281,16 @@ public partial class App : Application, IResourceResolver, IViewController {
 
     private static void LoadLocale() {
 
-        string lang = BattlegroundsInstance.Localize.Language.ToString().ToLower(CultureInfo.InvariantCulture);
+        string lang = BattlegroundsContext.Localize.Language.ToString().ToLower(CultureInfo.InvariantCulture);
         if (lang == "default") {
             lang = "english";
         }
 
-        string filepath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, $"locale\\{lang}.loc");
+        string filepath = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, $"locale\\{lang}.loc");
         if (File.Exists(filepath)) {
-            _ = BattlegroundsInstance.Localize.LoadLocaleFile(filepath);
+            _ = BattlegroundsContext.Localize.LoadLocaleFile(filepath);
         } else {
-            Trace.WriteLine($"Failed to locate locale file: {filepath}", "AppStartup");
+            logger.Error($"Failed to locate locale file: {filepath}");
         }
 
     }
@@ -297,15 +299,16 @@ public partial class App : Application, IResourceResolver, IViewController {
 
         if (failed > 0) {
             // TODO: handle
-            Trace.WriteLine($"Failed to load {failed} databases!", nameof(App));
+            logger.Error($"Failed to load {failed} databases!");
         }
 
         // Load all companies used by the player
         Companies.LoadAll();
 
-        // Load all installed and active campaigns
-        //PlayerCampaigns.GetInstalledCampaigns();
-        //PlayerCampaigns.LoadActiveCampaigns();
+        // If initial, create companies
+        if (BattlegroundsContext.IsFirstRun || Companies.GetAllCompanies().Count is 0) {
+            InitialCompanyCreator.Init();
+        }
 
     }
 
@@ -315,7 +318,7 @@ public partial class App : Application, IResourceResolver, IViewController {
         sender ??= "<<NULL>>";
 
         // Log exception
-        Trace.WriteLine($"\n\n\n\t*** FATAL APP EXIT ***\n\nException trigger:\n{sender}\n\nException Info:\n{e.ExceptionObject}\n");
+        logger.Info($"\n\n\n\t*** FATAL APP EXIT ***\n\nException trigger:\n{sender}\n\nException Info:\n{e.ExceptionObject}\n");
 
         // Try launch self in error mode
         try {
@@ -323,15 +326,15 @@ public partial class App : Application, IResourceResolver, IViewController {
             if (!string.IsNullOrEmpty(ppath)) {
                 ProcessStartInfo pinfo = new(ppath, "-report-error");
                 if (Process.Start(pinfo) is null) {
-                    Trace.WriteLine("Failed to open error reporter...");
+                    logger.Error("Failed to open error reporter...");
                 }
             }
         } catch {
-            Trace.WriteLine("Failed to launch self in error mode!");
+            logger.Error("Failed to launch self in error mode!");
         }
 
         // Close logger with exit code
-        BattlegroundsInstance.Log?.SaveAndClose(int.MaxValue);
+        BattlegroundsContext.Log?.SaveAndClose(int.MaxValue);
 
     }
 
@@ -374,7 +377,7 @@ public partial class App : Application, IResourceResolver, IViewController {
             return;
         }
 
-        Application.Current.Dispatcher.Invoke(() => {
+        Current.Dispatcher.Invoke(() => {
 
             // Do modal
             YesNoPrompt.Show(mControl, (vm, resault) => {
@@ -395,7 +398,7 @@ public partial class App : Application, IResourceResolver, IViewController {
     private static IEnumerator RunUpdate(ModalControl control) {
 
         yield return new WaitTimespan(TimeSpan.FromSeconds(0.5));
-        Application.Current.Dispatcher.Invoke(() => {
+        Current.Dispatcher.Invoke(() => {
             // Create downloadInProgress
             var downloadInProgress = new UpdateDownloader();
 

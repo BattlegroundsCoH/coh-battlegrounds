@@ -9,7 +9,7 @@ using Battlegrounds.AI;
 namespace Battlegrounds.Game.Match;
 
 /// <summary>
-/// Represents a human or AI participant in a <see cref="Session"/>. Implements <see cref="IJsonObject"/>.
+/// Represents a human or AI participant in a <see cref="Session"/>.
 /// </summary>
 public readonly struct SessionParticipant : ISessionParticipant { // Maybe change to class, now that we implement an interface
 
@@ -64,12 +64,14 @@ public readonly struct SessionParticipant : ISessionParticipant { // Maybe chang
     public byte PlayerIngameIndex { get; }
 
     /// <summary>
-    /// 
+    /// Initialise a new <see cref="SessionParticipant"/> instance.
     /// </summary>
-    /// <param name="user"></param>
-    /// <param name="company"></param>
-    /// <param name="tIndex"></param>
-    /// <param name="pIndex"></param>
+    /// <param name="user">The displayname of the player</param>
+    /// <param name="id">The unique Steam index of the player</param>
+    /// <param name="company">The company the participant should use</param>
+    /// <param name="tIndex">The team the player is on</param>
+    /// <param name="pTeamIndex">The player's index on the team.</param>
+    /// <param name="pIndex">The player's global index</param>
     public SessionParticipant(string user, ulong id, Company? company, ParticipantTeam tIndex, byte pTeamIndex, byte pIndex) {
 
         this.UserDisplayname = user;
@@ -88,12 +90,13 @@ public readonly struct SessionParticipant : ISessionParticipant { // Maybe chang
     }
 
     /// <summary>
-    /// 
+    /// Initialise a new <see cref="SessionParticipant"/> instance.
     /// </summary>
-    /// <param name="difficulty"></param>
-    /// <param name="company"></param>
-    /// <param name="tIndex"></param>
-    /// <param name="pIndex"></param>
+    /// <param name="difficulty">The difficulty of the player. Should never be human.</param>
+    /// <param name="company">The company the participant should use</param>
+    /// <param name="tIndex">The team the player is on</param>
+    /// <param name="pTeamIndex">The player's index on the team.</param>
+    /// <param name="pIndex">The player's global index</param>
     /// <exception cref="ArgumentException"/>
     public SessionParticipant(AIDifficulty difficulty, Company? company, ParticipantTeam tIndex, byte pTeamIndex, byte pIndex) {
 
@@ -111,12 +114,21 @@ public readonly struct SessionParticipant : ISessionParticipant { // Maybe chang
 
     }
 
+    /// <summary>
+    /// Get the name of the participant
+    /// </summary>
+    /// <returns>The name of the participant</returns>
     public string GetName()
         => (this.IsHuman) ? this.UserDisplayname : this.Difficulty.GetIngameDisplayName();
 
+    /// <summary>
+    /// Get the unique Steam id of the participant.
+    /// </summary>
+    /// <returns>The unique Steam id of the participant</returns>
     public ulong GetId()
         => this.IsHuman ? this.UserID : 0;
 
+    /// <inheritdoc/>
     public override string ToString()
         => $"{this.GetName()} [{this.SelectedCompany?.Name}]";
 

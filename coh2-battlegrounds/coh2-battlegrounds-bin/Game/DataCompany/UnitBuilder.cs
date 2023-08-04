@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Extensions;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany.Builder;
 using Battlegrounds.Game.Gameplay;
@@ -19,7 +18,24 @@ namespace Battlegrounds.Game.DataCompany;
 /// </summary>
 public class UnitBuilder : IBuilder<Squad> {
 
-    public record BuildableSquad(
+    /// <summary>
+    /// Represents a squad that can be built by a <see cref="UnitBuilder"/>.
+    /// </summary>
+    /// <param name="Rank">The rank of the squad.</param>
+    /// <param name="Experience">The experience of the squad.</param>
+    /// <param name="IsCrew">Whether or not the squad is a crew.</param>
+    /// <param name="CustomName">The custom name of the squad.</param>
+    /// <param name="Blueprint">The blueprint of the squad.</param>
+    /// <param name="Transport">The transport blueprint of the squad.</param>
+    /// <param name="SyncWeapon">The synchronized weapon blueprint of the squad.</param>
+    /// <param name="DeploymentMethod">The deployment method of the squad.</param>
+    /// <param name="DeploymentPhase">The deployment phase of the squad.</param>
+    /// <param name="DeploymentRole">The deployment role of the squad.</param>
+    /// <param name="CrewBuilder">The builder for the crew of the squad.</param>
+    /// <param name="Upgrades">The upgrades of the squad.</param>
+    /// <param name="Items">The items of the squad.</param>
+    /// <param name="Modifiers">The modifiers of the squad.</param>
+    public sealed record BuildableSquad(
         byte Rank,
         float Experience,
         bool IsCrew,
@@ -35,149 +51,235 @@ public class UnitBuilder : IBuilder<Squad> {
         SlotItemBlueprint[] Items,
         Modifier[] Modifiers);
 
+    /// <summary>
+    /// Mutates the rank of a squad.
+    /// </summary>
+    /// <param name="Rank">The new rank.</param>
     public sealed record RankAction(byte Rank) : IEditAction<BuildableSquad> {
         private byte m_prevRank;
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             Rank = this.Rank.And(() => this.m_prevRank = target.Rank)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {                
             Rank = this.m_prevRank
         };
     }
 
+    /// <summary>
+    /// Mutates the veterancy experience of a squad.
+    /// </summary>
+    /// <param name="Experience">The new experience to set.</param>
     public sealed record ExperienceAction(float Experience) : IEditAction<BuildableSquad> {
         private float m_prevExperience;
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             Experience = this.Experience.And(() => this.m_prevExperience = target.Rank)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {
             Experience = this.m_prevExperience
         };
     }
 
+    /// <summary>
+    /// Mutates the deployment method of the squad.
+    /// </summary>
+    /// <param name="Method">The new deployment method.</param>
     public sealed record DeploymentAction(DeploymentMethod Method) : IEditAction<BuildableSquad> {
         private DeploymentMethod m_prevMethod;
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             DeploymentMethod = this.Method.And(() => this.m_prevMethod = target.DeploymentMethod)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {
             DeploymentMethod = this.m_prevMethod
         };
     }
 
+    /// <summary>
+    /// Mutates the deployment phase of the squad.
+    /// </summary>
+    /// <param name="Phase">The new deployment phase.</param>
     public sealed record PhaseAction(DeploymentPhase Phase) : IEditAction<BuildableSquad> {
         private DeploymentPhase m_prevPhase;
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             DeploymentPhase = this.Phase.And(() => this.m_prevPhase = target.DeploymentPhase)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {
             DeploymentPhase = this.m_prevPhase
         };
     }
 
+    /// <summary>
+    /// Mutates the role of the squad.
+    /// </summary>
+    /// <param name="Role">The new deployment role.</param>
     public sealed record RoleAction(DeploymentRole Role) : IEditAction<BuildableSquad> {
         private DeploymentRole m_prevRole;
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             DeploymentRole = this.Role.And(() => this.m_prevRole = target.DeploymentRole)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {
             DeploymentRole = this.m_prevRole
         };
     }
 
+    /// <summary>
+    /// Mutate the name of the squad.
+    /// </summary>
+    /// <param name="Name">The new name of the squad.</param>
     public sealed record NameAction(string Name) : IEditAction<BuildableSquad> {
         private string m_prev = "";
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             CustomName = this.Name.And(() => this.m_prev = target.CustomName)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {
             CustomName = this.m_prev
         };
     }
 
+    /// <summary>
+    /// Mutate the transportation unit of the squad.
+    /// </summary>
+    /// <param name="Transport">The unit to transport.</param>
     public sealed record TransportAction(SquadBlueprint? Transport) : IEditAction<BuildableSquad> {
         private SquadBlueprint? m_prev;
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             Transport = this.Transport.And(() => this.m_prev = target.Transport)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {
             Transport = this.m_prev
         };
     }
 
+    /// <summary>
+    /// Add an upgrade to the squad.
+    /// </summary>
+    /// <param name="Blueprint">The upgrade to add.</param>
     public sealed record AddUpgradeAction(UpgradeBlueprint Blueprint) : IEditAction<BuildableSquad> {
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             Upgrades = target.Upgrades.Append(this.Blueprint)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {
             Upgrades = target.Upgrades.Except(this.Blueprint)
         };
     }
 
+    /// <summary>
+    /// Add an inventory item to the squad.
+    /// </summary>
+    /// <param name="Blueprint">The inventory item to add.</param>
     public sealed record AddItemAction(SlotItemBlueprint Blueprint) : IEditAction<BuildableSquad> {
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             Items = target.Items.Append(this.Blueprint)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {
             Items = target.Items.Except(this.Blueprint)
         };
     }
 
+    /// <summary>
+    /// Add a sync weapon to the squad.
+    /// </summary>
+    /// <param name="Blueprint">The sync weapon to set</param>
     public sealed record AddSyncWeaponAction(EntityBlueprint Blueprint) : IEditAction<BuildableSquad> {
         private EntityBlueprint? m_prev;
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             SyncWeapon = this.Blueprint.And(() => this.m_prev = target.SyncWeapon)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {
             SyncWeapon = this.m_prev
         };
     }
 
+    /// <summary>
+    /// Add a modifier to the squad.
+    /// </summary>
+    /// <param name="Modifier">The modifier to add.</param>
     public sealed record AddModifierAction(Modifier Modifier) : IEditAction<BuildableSquad> {
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             Modifiers = target.Modifiers.Append(this.Modifier)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {
             Modifiers = target.Modifiers.Except(this.Modifier)
         };
     }
 
+    /// <summary>
+    /// Removes an upgrade from the squad.
+    /// </summary>
+    /// <param name="Blueprint">The upgrade to remove.</param>
     public sealed record RemoveUpgradeAction(UpgradeBlueprint Blueprint) : IEditAction<BuildableSquad> {
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             Upgrades = target.Upgrades.Except(this.Blueprint)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {
             Upgrades = target.Upgrades.Append(this.Blueprint)
         };
     }
 
+    /// <summary>
+    /// Removes an inventory item from the squad.
+    /// </summary>
+    /// <param name="Blueprint">The inventory item to remove.</param>
     public sealed record RemoveItemAction(SlotItemBlueprint Blueprint) : IEditAction<BuildableSquad> {
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             Items = target.Items.Except(this.Blueprint)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {
             Items = target.Items.Append(this.Blueprint)
         };
     }
 
+    /// <summary>
+    /// Remove a modifier from the squad.
+    /// </summary>
+    /// <param name="Modifier">The modifier to remove</param>
     public sealed record RemoveModifierAction(Modifier Modifier) : IEditAction<BuildableSquad> {
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             Modifiers = target.Modifiers.Except(this.Modifier)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {
             Modifiers = target.Modifiers.Append(this.Modifier)
         };
     }
 
-    public sealed record RemoveSyncWeaponAction() : IEditAction<BuildableSquad> {
+    /*public sealed record RemoveSyncWeaponAction() : IEditAction<BuildableSquad> {
         private EntityBlueprint? m_prev;
+        /// <inheritdoc/>
         public BuildableSquad Apply(BuildableSquad target) => target with {
             SyncWeapon = (this.m_prev = target.SyncWeapon).Then(_ => null)
         };
+        /// <inheritdoc/>
         public BuildableSquad Undo(BuildableSquad target) => target with {
             SyncWeapon = this.m_prev
         };
-    }
+    }*/
 
     private readonly Stack<IEditAction<BuildableSquad>> m_actions;
     private readonly Stack<IEditAction<BuildableSquad>> m_redoActions;
@@ -187,6 +289,8 @@ public class UnitBuilder : IBuilder<Squad> {
 
     private readonly ushort m_overrideIndex = ushort.MaxValue;
     private readonly bool m_hasOverrideIndex = false;
+
+    private readonly IModBlueprintDatabase blueprintDataSource;
 
     /// <summary>
     /// Get if builder already has an index to use
@@ -251,7 +355,7 @@ public class UnitBuilder : IBuilder<Squad> {
     /// <summary>
     /// 
     /// </summary>
-    public AbilityBlueprint[] Abilities => this.m_target.Blueprint.Abilities.Map(x => BlueprintManager.FromBlueprintName<AbilityBlueprint>(x));
+    public AbilityBlueprint[] Abilities => this.m_target.Blueprint.Abilities.Map(blueprintDataSource.FromBlueprintName<AbilityBlueprint>);
 
     /// <summary>
     /// 
@@ -297,6 +401,10 @@ public class UnitBuilder : IBuilder<Squad> {
         this.m_actions = new();
         this.m_redoActions = new();
 
+        // Get datasource
+        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(squad.Blueprint.PBGID.Mod, squad.Blueprint.Game) ?? throw new Exception("Failed finding package");
+        this.blueprintDataSource = BattlegroundsContext.DataSource.GetBlueprints(package, squad.Blueprint.Game) ?? throw new Exception("Failed finding package data source");
+
     }
 
     /// <summary>
@@ -340,11 +448,12 @@ public class UnitBuilder : IBuilder<Squad> {
     /// </remarks>
     /// <param name="sbpName">The blueprint name to use when finding the <see cref="Blueprint"/>. If null or the empty string, the transport blueprint is set to 'none'</param>
     /// <returns>The modified instance the method is invoked with.</returns>
+    [Obsolete("Please provide the SquadBlueprint instance")]
     public virtual UnitBuilder SetTransportBlueprint(string? sbpName) {
         if (string.IsNullOrEmpty(sbpName)) {
             this.ApplyAction(new TransportAction(null));
         } else {
-            this.SetTransportBlueprint(BlueprintManager.FromBlueprintName(sbpName, BlueprintType.SBP) as SquadBlueprint ?? throw new ObjectNotFoundException("Blueprint not found"));
+            this.SetTransportBlueprint(blueprintDataSource.FromBlueprintName<SquadBlueprint>(sbpName) ?? throw new ObjectNotFoundException("Blueprint not found"));
         }
         return this;
     }
@@ -396,42 +505,28 @@ public class UnitBuilder : IBuilder<Squad> {
     /// </summary>
     /// <param name="upb"></param>
     /// <returns>The modified instance the method is invoked with.</returns>
+    [Obsolete("Please provide the UpgradeBlueprint instance")]
     public virtual UnitBuilder AddUpgrade(string upb)
-        => this.AddUpgrade(BlueprintManager.FromBlueprintName(upb, BlueprintType.UBP) as UpgradeBlueprint ?? throw new ObjectNotFoundException("Blueprint not found"));
+        => this.AddUpgrade(blueprintDataSource.FromBlueprintName<UpgradeBlueprint>(upb) ?? throw new ObjectNotFoundException("Blueprint not found"));
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="upbs"></param>
     /// <returns>The modified instance the method is invoked with.</returns>
+    [Obsolete("Please provide the UpgradeBlueprint instance")]
     public virtual UnitBuilder AddUpgrade(string[] upbs) {
-        upbs.ForEach(x => this.AddUpgrade(BlueprintManager.FromBlueprintName(x, BlueprintType.UBP) as UpgradeBlueprint ?? throw new ObjectNotFoundException("Blueprint not found")));
+        upbs.ForEach(x => this.AddUpgrade(blueprintDataSource.FromBlueprintName<UpgradeBlueprint>(x) ?? throw new ObjectNotFoundException("Blueprint not found")));
         return this;
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="ibp"></param>
-    /// <returns>The modified instance the method is invoked with.</returns>
-    public virtual UnitBuilder AddSlotItem(SlotItemBlueprint ibp) 
-        => this.ApplyAction(new AddItemAction(ibp));
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="ibp"></param>
-    /// <returns>The modified instance the method is invoked with.</returns>
-    public virtual UnitBuilder AddSlotItem(string ibp)
-        => this.AddSlotItem(BlueprintManager.FromBlueprintName(ibp, BlueprintType.IBP) as SlotItemBlueprint ?? throw new ObjectNotFoundException("Blueprint not found"));
-
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="ibps"></param>
     /// <returns>The modified instance the method is invoked with.</returns>
-    public virtual UnitBuilder AddSlotItem(string[] ibps) {
-        ibps.ForEach(x => this.AddSlotItem(BlueprintManager.FromBlueprintName(x, BlueprintType.IBP) as SlotItemBlueprint ?? throw new ObjectNotFoundException("Blueprint not found")));
+    public virtual UnitBuilder AddSlotItem(params SlotItemBlueprint[] ibps) {
+        ibps.ForEach(x => ApplyAction(new AddItemAction(x)));
         return this;
     }
 
@@ -517,7 +612,7 @@ public class UnitBuilder : IBuilder<Squad> {
             transports = transports.Filter(x => x.Tow);
 
         // Map to proper transports
-        return transports.Map(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x.Blueprint));
+        return transports.Map(x => blueprintDataSource.FromBlueprintName<SquadBlueprint>(x.Blueprint));
 
     }
 
@@ -620,29 +715,21 @@ public class UnitBuilder : IBuilder<Squad> {
     /// 
     /// </summary>
     /// <param name="sbp"></param>
-    /// <param name="modGuid"></param>
     /// <returns></returns>
     /// <exception cref="ObjectNotFoundException"></exception>
-    public static UnitBuilder NewUnit(string sbp, ModGuid modGuid) {
-        var sbp_val = BlueprintManager.GetCollection<SquadBlueprint>()
-            .FilterByMod(modGuid).FirstOrDefault(x => x.Name == sbp);
-        if (sbp_val is not null) {
-            return NewUnit(sbp_val);
-        } else {
-            throw new ObjectNotFoundException($"Blueprint with name '{sbp}' not found in blueprint database.");
+    public static UnitBuilder NewUnit(SquadBlueprint sbp) { 
+        UnitBuilder? crewBuilder = null;
+        if (sbp.HasCrew) {
+            IModPackage package = BattlegroundsContext.ModManager.GetPackageFromGuid(sbp.PBGID.Mod, sbp.Game) ?? throw new Exception("f");
+            crewBuilder = NewCrew(
+                package.GetDataSource()
+                .GetBlueprints(sbp.Game)
+                .GetCrewBlueprint(sbp) ?? throw new ObjectNotFoundException($"Crew blueprint not found for blueprint '{sbp}'."));
         }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="sbp"></param>
-    /// <returns></returns>
-    /// <exception cref="ObjectNotFoundException"></exception>
-    public static UnitBuilder NewUnit(SquadBlueprint sbp)
-        => new(new BuildableSquad(0, 0.0f, false, string.Empty, sbp, null, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, DeploymentRole.ReserveRole,
-            sbp.HasCrew ? NewCrew(sbp.GetCrewBlueprint() ?? throw new ObjectNotFoundException($"Crew blueprint not found for blueprint '{sbp}'.")) : null,
+        return new(new BuildableSquad(0, 0.0f, false, string.Empty, sbp, null, null, DeploymentMethod.None, DeploymentPhase.PhaseNone, DeploymentRole.ReserveRole,
+            crewBuilder,
             Array.Empty<UpgradeBlueprint>(), Array.Empty<SlotItemBlueprint>(), Array.Empty<Modifier>()));
+    }
 
     /// <summary>
     /// 

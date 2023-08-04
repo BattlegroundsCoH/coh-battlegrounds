@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Gameplay;
 
@@ -85,7 +84,7 @@ public class CaptureEvent : IMatchEvent {
 
             // Set properties
             this.CapturedBlueprintType = Enum.Parse<BlueprintType>(values[2]);
-            this.CapturedBlueprint = BlueprintManager.FromBlueprintName(values[0], this.CapturedBlueprintType); // This may fail (return null).
+            this.CapturedBlueprint = null;//BlueprintManager.FromBlueprintName(values[0], this.CapturedBlueprintType); // This may fail (return null).
 
         } else {
 

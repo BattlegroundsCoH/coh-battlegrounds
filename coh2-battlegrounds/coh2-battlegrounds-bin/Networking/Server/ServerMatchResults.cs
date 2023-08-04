@@ -12,7 +12,7 @@ public struct ServerMatchResults {
     /// Get the length of the match.
     /// </summary>
     [JsonIgnore]
-    public TimeSpan Length { get => TimeSpan.FromTicks(this.LengthTicks); set => this.LengthTicks = value.Ticks; }
+    public TimeSpan Length { readonly get => TimeSpan.FromTicks(this.LengthTicks); set => this.LengthTicks = value.Ticks; }
 
     /// <summary>
     /// Get or set the length of the match in ticks.

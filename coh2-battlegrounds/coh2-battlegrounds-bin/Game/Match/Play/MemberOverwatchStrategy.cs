@@ -10,24 +10,39 @@ public class MemberOverwatchStrategy : IPlayStrategy {
     private bool m_isLaunched;
     private IMatchData m_result;
 
-    public MemberOverwatchStrategy() {
+    private readonly ISessionHandler sessionHandler;
+    private readonly GameProcess m_process;
+
+    /// <summary>
+    /// Initialise a new <see cref="MemberOverwatchStrategy"/> instance.
+    /// </summary>
+    /// <param name="sessionHandler">The handler that will handle the session</param>
+    public MemberOverwatchStrategy(ISessionHandler sessionHandler) {
         this.m_isLaunched = false;
         this.m_result = new NoMatchData();
+        this.sessionHandler = sessionHandler;
+        this.m_process = sessionHandler.GetNewGameProcess();
     }
 
+    /// <inheritdoc/>
     public bool IsLaunched => this.m_isLaunched;
 
+    /// <inheritdoc/>
     public ISession Session => new NullSession();
 
+    /// <inheritdoc/>
     public IMatchData GetResults() => this.m_result;
 
-    public bool IsPerfect() => SessionUtility.HasPlayback() && !SessionUtility.GotFatalScarError() && !SessionUtility.GotBugsplat().Result;
+    /// <inheritdoc/>
+    public bool IsPerfect() => sessionHandler.HasPlayback() && !sessionHandler.GotFatalScarError() && !sessionHandler.GotBugsplat().Result;
 
-    public void Launch() => this.m_isLaunched = CoH2Launcher.Launch();
+    /// <inheritdoc/>
+    public void Launch() => this.m_isLaunched = this.m_process.Launch();
 
+    /// <inheritdoc/>
     public void WaitForExit() {
         if (this.m_isLaunched) {
-            if (CoH2Launcher.WatchProcess() == CoH2Launcher.PROCESS_OK) {
+            if (this.m_process.WatchProcess() == GameProcess.PROCESS_OK) {
                 this.m_result = new JsonPlayback(new ReplayMatchData(this.Session));
             } else {
                 this.m_result = new JsonPlayback();

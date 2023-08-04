@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Windows.Markup;
 using System.Windows;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Functional;
 
 namespace Battlegrounds.UI;

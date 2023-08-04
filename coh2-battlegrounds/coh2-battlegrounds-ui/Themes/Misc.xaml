@@ -204,7 +204,7 @@
                 <ControlTemplate 
                     TargetType="{x:Type ComboBox}">
                     <ControlTemplate.Resources>
-                        <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/coh2-battlegrounds-ui;component/Resources/Common/Icons.xaml"/>
+                        <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/Battlegrounds.UI;component/Resources/Common/Icons.xaml"/>
                     </ControlTemplate.Resources>
                     <Grid>
                         <VisualStateManager.VisualStateGroups>

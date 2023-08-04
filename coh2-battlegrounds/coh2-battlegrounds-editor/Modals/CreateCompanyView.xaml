@@ -1,5 +1,5 @@
 ﻿<modals:Modal  
-    xmlns:modals="clr-namespace:Battlegrounds.UI.Modals;assembly=coh2-battlegrounds-ui"
+    xmlns:modals="clr-namespace:Battlegrounds.UI.Modals;assembly=Battlegrounds.UI"
     x:Class="Battlegrounds.Editor.Modals.CreateCompanyView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -50,6 +50,22 @@
                 FontFamily="Open Sans"
                 Height="25"
                 x:Name="companyName"/>
+
+            <!-- Game -->
+            <ComboBox
+                Margin="0, 0, 0, 7"
+                x:Name="lobbyGame"
+                SelectedIndex="{Binding SelectedGameIndex}"
+                ItemsSource="{Binding Games}"
+                Style="{StaticResource BlueDropdown}"/>
+
+            <!-- Package -->
+            <ComboBox
+                Margin="0, 0, 0, 7"
+                x:Name="lobbyPackage"
+                SelectedIndex="{Binding SelectedPackageIndex}"
+                ItemsSource="{Binding Packages}"
+                Style="{StaticResource BlueDropdown}"/>
 
             <Grid
                 Margin="0, 0, 0, 7">

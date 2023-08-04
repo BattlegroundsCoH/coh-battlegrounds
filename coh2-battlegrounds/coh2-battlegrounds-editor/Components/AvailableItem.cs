@@ -1,11 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Media;
-
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Extensions;
-using Battlegrounds.Locale;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Game.Blueprints.Extensions;
 using Battlegrounds.Resources;
+using Battlegrounds.Resources.Extensions;
 
 namespace Battlegrounds.Editor.Components;
 
@@ -84,15 +83,15 @@ public class AvailableItem : INotifyPropertyChanged {
         // Switch on type
         if (bp is SquadBlueprint sbp) {
 
-            this.ItemName = GameLocale.GetString(sbp.UI.ScreenName);
-            this.ItemSymbol = ResourceHandler.GetIcon("symbol_icons", sbp.UI.Symbol);
+            this.ItemName = BattlegroundsContext.DataSource.GetLocaleSource(sbp).GetString(sbp.UI.ScreenName);
+            this.ItemSymbol = ResourceHandler.GetIcon(sbp.GetSymbol());
             this.Blueprint = sbp;
             this.ItemCost = sbp.Cost;
 
         } else if (bp is AbilityBlueprint abp) {
 
-            this.ItemName = GameLocale.GetString(abp.UI.ScreenName);
-            this.ItemSymbol = ResourceHandler.GetIcon("symbol_icons", abp.UI.Symbol);
+            this.ItemName = BattlegroundsContext.DataSource.GetLocaleSource(abp).GetString(abp.UI.ScreenName);
+            this.ItemSymbol = ResourceHandler.GetIcon(abp.GetSymbol());
             this.Blueprint = abp;
             this.ItemCost = abp.Cost;
 

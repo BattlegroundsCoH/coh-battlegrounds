@@ -21,11 +21,11 @@ public partial class CompanyCard : UserControl {
     public double CompanyWinRate { get; set; }
 
     private static readonly Dictionary<Faction, ImageSource> Flags = new() {
-        [Faction.Soviet] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/soviet.png")),
-        [Faction.Wehrmacht] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/german.png")),
-        [Faction.America] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/aef.png")),
-        [Faction.OberkommandoWest] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/west_german.png")),
-        [Faction.British] = new BitmapImage(new Uri("pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/british.png"))
+        [Faction.Soviet] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/ingame/soviet.png")),
+        [Faction.Wehrmacht] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/ingame/german.png")),
+        [Faction.America] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/ingame/aef.png")),
+        [Faction.OberkommandoWest] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/ingame/west_german.png")),
+        [Faction.British] = new BitmapImage(new Uri("pack://application:,,,/Battlegrounds;component/Resources/ingame/british.png"))
     };
 
     public static readonly DependencyProperty CompanyProperty

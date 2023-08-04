@@ -9,11 +9,11 @@ public class CustomAsset : IGameMod {
 
     public string Name { get; }
 
-    public ModPackage Package { get; }
+    public IModPackage Package { get; }
 
     public ModType GameModeType => ModType.Asset;
 
-    public CustomAsset(ModPackage package) {
+    public CustomAsset(IModPackage package) {
         this.Name = package.PackageName;
         this.Guid = package.AssetGUID;
         this.Package = package;

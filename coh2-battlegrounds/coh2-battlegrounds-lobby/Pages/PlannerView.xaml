@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=coh2-battlegrounds-ui"
+    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=Battlegrounds.UI"
     xmlns:local="clr-namespace:Battlegrounds.Lobby.Pages"
     mc:Ignorable="d" 
     Background="{StaticResource BackgroundBlueBrush}"
@@ -14,8 +14,8 @@
     <UserControl.Resources>
         <ResourceDictionary x:Name="LobbyUI">
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
-                <ResourceDictionary x:Name="LobbyArt" Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbyArt.xaml"/>
+                <ResourceDictionary x:Name="LobbyIcons" Source="pack://application:,,,/coh-battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
+                <ResourceDictionary x:Name="LobbyArt" Source="pack://application:,,,/coh-battlegrounds;component/Resources/app/LobbyArt.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

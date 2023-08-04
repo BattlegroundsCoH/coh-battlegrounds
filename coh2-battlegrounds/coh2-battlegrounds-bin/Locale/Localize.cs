@@ -60,7 +60,7 @@ public enum LocaleLanguage {
     /// Spanish language
     /// </summary>
     Spanish,
-    
+
     /// <summary>
     /// Polish language
     /// </summary>
@@ -91,7 +91,7 @@ public class Localize {
     /// <summary>
     /// Get dictionary containing a specific converter for a specific type.
     /// </summary>
-    public Dictionary<Type, LocaleConverter> Converters => this.m_converters;
+    public Dictionary<Type, LocaleConverter> Converters => m_converters;
 
     /// <summary>
     /// Initialize a new <see cref="Localize"/> class with language set for <paramref name="language"/>.
@@ -100,14 +100,14 @@ public class Localize {
     public Localize(LocaleLanguage language) {
 
         // Set language
-        this.Language = language;
+        Language = language;
 
         // Init private fields
-        this.m_allText = new();
-        this.m_converters = new();
-        
+        m_allText = new();
+        m_converters = new();
+
         // Register some simple converters
-        this.RegisterObjectConverter(new TimespanLocaleConverter());
+        RegisterObjectConverter(new TimespanLocaleConverter());
 
     }
 
@@ -117,10 +117,10 @@ public class Localize {
     /// <param name="converter">The converter to register.</param>
     /// <exception cref="Exception"></exception>
     public void RegisterObjectConverter(LocaleConverter converter) {
-        if (this.m_converters.ContainsKey(converter.ConvertType))
+        if (m_converters.ContainsKey(converter.ConvertType))
             throw new Exception("Converter already registered for type.");
-        else 
-            this.m_converters[converter.ConvertType] = converter; 
+        else
+            m_converters[converter.ConvertType] = converter;
     }
 
     /// <summary>
@@ -132,7 +132,7 @@ public class Localize {
         if (File.Exists(localefilepath)) {
             var loc = new LocalizedFile(Path.GetFileNameWithoutExtension(localefilepath));
             if (loc.LoadFromString(File.ReadAllText(localefilepath))) {
-                return this.LoadLocaleFile(loc);
+                return LoadLocaleFile(loc);
             }
         }
         return false;
@@ -202,7 +202,7 @@ public class Localize {
     private bool LoadLocaleFile(LocalizedFile fl) {
 
         // Get all keys for THIS language
-        var kvps = fl.GetLanguage(this.Language);
+        var kvps = fl.GetLanguage(Language);
 
         // Add keys
         if (!AddKeys(kvps)) {
@@ -220,10 +220,10 @@ public class Localize {
 
         // Loop through them all
         foreach (var (k, v) in entries) {
-            if (!this.m_allText.ContainsKey(k)) {
-                this.m_allText[k] = v;
+            if (!m_allText.ContainsKey(k)) {
+                m_allText[k] = v;
             } else {
-                Trace.WriteLine($"Duplicate locale entry '{k}' (e = \"{this.m_allText[k]}\", n = \"{v}\") (language is '{this.Language}')", "Localize");
+                Trace.WriteLine($"Duplicate locale entry '{k}' (e = \"{m_allText[k]}\", n = \"{v}\") (language is '{Language}')", "Localize");
                 dups = true;
             }
         }
@@ -248,8 +248,8 @@ public class Localize {
         }
 
         // Get relevant keys
-        var kvps = lf.GetLanguage(this.Language);
-        if (!this.AddKeys(kvps)) {
+        var kvps = lf.GetLanguage(Language);
+        if (!AddKeys(kvps)) {
             return false;
         }
 
@@ -270,11 +270,11 @@ public class Localize {
         if (string.IsNullOrEmpty(key.LocaleID)) {
             return string.Empty;
         }
-        if (this.m_allText.ContainsKey(key)) {
-            return this.m_allText[key];
+        if (m_allText.ContainsKey(key)) {
+            return m_allText[key];
         }
         if (key.LocaleSource == UndefinedSource) {
-            if (this.m_allText.FirstOrDefault(x => x.Key.LocaleID == key.LocaleID) is KeyValuePair<LocaleKey, string> kvp) {
+            if (m_allText.FirstOrDefault(x => x.Key.LocaleID == key.LocaleID) is KeyValuePair<LocaleKey, string> kvp) {
                 if (kvp.Value is not null) {
                     return kvp.Value;
                 } else {
@@ -282,7 +282,7 @@ public class Localize {
                 }
             }
         }
-        Trace.WriteLine($"Undefined locale key '{key.LocaleID}'@{key.LocaleSource}. (Lang : {this.Language})", nameof(Localize));
+        Trace.WriteLine($"Undefined locale key '{key.LocaleID}'@{key.LocaleSource}. (Lang : {Language})", nameof(Localize));
         return key.LocaleID;
     }
 
@@ -293,10 +293,10 @@ public class Localize {
     /// <param name="args">The argument values to give to the string parameters.</param>
     /// <returns>The UTF-16 encoded <see cref="string"/> with filled parameters sought after if present in system. Otherwsie <paramref name="key"/> is returned.</returns>
     public string GetString(LocaleKey key, params object[] args) {
-        string str = this.GetString(key);
+        string str = GetString(key);
         for (int i = 0; i < args.Length; i++) {
             string? value = TryGetObjectAsString(args[i]) switch {
-                LocaleKey lc => this.GetString(lc),
+                LocaleKey lc => GetString(lc),
                 _ => args[i].ToString()
             };
             str = str.Replace($"{{{i}}}", value);
@@ -309,7 +309,7 @@ public class Localize {
     /// </summary>
     /// <param name="key">The raw locale key to use when locating the string.</param>
     /// <returns>The UTF-16 encoded <see cref="string"/> sought after if present in system. Otherwsie <paramref name="key"/> is returned.</returns>
-    public string GetString(string key) => this.GetString(new LocaleKey(key));
+    public string GetString(string key) => GetString(new LocaleKey(key));
 
     /// <summary>
     /// Get the first UTF-16 encoded string represented by the <paramref name="key"/> and fill in string parameters.
@@ -317,7 +317,7 @@ public class Localize {
     /// <param name="key">The raw locale key to use when locating the string.</param>
     /// <param name="args">The argument values to give to the string parameters.</param>
     /// <returns>The UTF-16 encoded <see cref="string"/> with filled parameters sought after if present in system. Otherwsie <paramref name="key"/> is returned.</returns>
-    public string GetString(string key, params object[] args) => this.GetString(new LocaleKey(key), args.Map(TryGetObjectAsString));
+    public string GetString(string key, params object[] args) => GetString(new LocaleKey(key), args.Map(TryGetObjectAsString));
 
     /// <summary>
     /// Get the UTF-16 encoded string represented by the enum value.
@@ -328,7 +328,7 @@ public class Localize {
     /// <returns>If enum value is defined, the display value is returned. Otherwise the used key is returned.</returns>
     public string GetEnum<T>(T enumValue, string sourceID = UndefinedSource) where T : Enum {
         string lookup = $"{typeof(T).Name}_{enumValue}";
-        return this.GetString(new LocaleKey(lookup, sourceID));
+        return GetString(new LocaleKey(lookup, sourceID));
     }
 
     /// <summary>
@@ -338,14 +338,14 @@ public class Localize {
     /// <returns>The localised object.</returns>
     /// <exception cref="Exception"></exception>
     public string GetObjectAsString(object obj) {
-        if (this.m_converters.TryGetValue(obj.GetType(), out var converter))
+        if (m_converters.TryGetValue(obj.GetType(), out var converter))
             return converter.GetLocalisedString(this, obj);
         else
             throw new Exception($"Converter does not exist for object of type {obj.GetType().Name}.");
     }
 
     private object TryGetObjectAsString(object obj) {
-        if (this.m_converters.TryGetValue(obj.GetType(), out var converter))
+        if (m_converters.TryGetValue(obj.GetType(), out var converter))
             return converter.GetLocalisedString(this, obj);
         else
             return obj;
@@ -359,15 +359,14 @@ public class Localize {
     public string GetNumberSuffix(int n) {
         string s = n.ToString();
         if (s[^1] == '1') {
-            return $"{n}{this.GetString("ST")}";
+            return $"{n}{GetString("ST")}";
         } else if (s[^1] == '2') {
-            return $"{n}{this.GetString("ND")}";
+            return $"{n}{GetString("ND")}";
         } else if (s[^1] == '3') {
-            return $"{n}{this.GetString("RD")}";
+            return $"{n}{GetString("RD")}";
         } else {
-            return $"{n}{this.GetString("TH")}";
+            return $"{n}{GetString("TH")}";
         }
     }
 
 }
-

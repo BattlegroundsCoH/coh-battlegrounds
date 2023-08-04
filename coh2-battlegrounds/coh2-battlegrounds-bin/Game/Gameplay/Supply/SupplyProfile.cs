@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Modding;
 
 namespace Battlegrounds.Game.Gameplay.Supply;
 
@@ -115,11 +116,15 @@ public class SupplyProfile {
     /// Initialise a new <see cref="SupplyProfile"/> instance for <paramref name="sbp"/>.
     /// </summary>
     /// <param name="sbp">The blueprint to generate profile for.</param>
-    public SupplyProfile(SquadBlueprint sbp) {
+    /// <param name="package"></param>
+    public SupplyProfile(SquadBlueprint sbp, IModPackage package) {
+
+        // Get the database source
+        var db = package.GetDataSource().GetBlueprints(sbp.Game);
 
         // Get relevant blueprints
-        var ebps = sbp.Loadout.GetEntities().NotNull();
-        var wbps = ebps.MapAndFlatten(x => x.Hardpoints).Map(BlueprintManager.FromBlueprintName<WeaponBlueprint>).Distinct();
+        var ebps = sbp.Loadout.GetEntities().NotNull().Map(db.FromBlueprintName<EntityBlueprint>);
+        var wbps = ebps.MapAndFlatten(x => x.Hardpoints).Map(db.FromBlueprintName<WeaponBlueprint>).Distinct();
 
         // Get weapon profiles
         this.WeaponProfiles = wbps.Select(

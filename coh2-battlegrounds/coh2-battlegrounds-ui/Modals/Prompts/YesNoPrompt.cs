@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Locale;
 
 namespace Battlegrounds.UI.Modals.Prompts;
@@ -48,13 +48,13 @@ public sealed class YesNoPrompt {
         // Set title
         this.DialogTitle = title switch {
             LocaleValueKey lvk => lvk.Content,
-            _ => BattlegroundsInstance.Localize.GetString(title)
+            _ => BattlegroundsContext.Localize.GetString(title)
         };
 
         // Set message
         this.DialogMessage = message switch {
             LocaleValueKey lvk => lvk.Content,
-            _ => BattlegroundsInstance.Localize.GetString(message)
+            _ => BattlegroundsContext.Localize.GetString(message)
         };
 
     }

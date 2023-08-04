@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 
 namespace Battlegrounds.Game.Match;
 

@@ -15,13 +15,13 @@ public sealed class BattlegroundsTuning : ITuningMod {
 
     public string TowingUpgrade { get; }
 
-    public ModPackage Package { get; }
+    public IModPackage Package { get; }
 
     public bool IsTowingEnabled => true;
 
     public ModType GameModeType => ModType.Tuning;
 
-    public BattlegroundsTuning(ModPackage package) {
+    public BattlegroundsTuning(IModPackage package) {
         this.Guid = package.TuningGUID;
         this.Name = "Battlegrounds";
         this.VerificationUpgrade = package.VerificationUpgrade;

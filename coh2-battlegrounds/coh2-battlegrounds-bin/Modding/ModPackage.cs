@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataSource;
 using Battlegrounds.Game.Gameplay;
@@ -22,43 +21,10 @@ namespace Battlegrounds.Modding;
 /// Class representing a package of mods working together as an overhaul experience.
 /// </summary>
 [JsonConverter(typeof(ModPackageLoader))]
-public class ModPackage {
+public class ModPackage : IModPackage {
 
-    public readonly struct CustomOptions {
-
-    }
-
-    public readonly struct ModLocale {
-
-        [JsonIgnore]
-        public ModType ModType => Enum.Parse<ModType>(this.Type);
-        public string Type { get; }
-        public string Path { get; }
-        [JsonConstructor]
-        public ModLocale(string Type, string Path) {
-            this.Type = Type;
-            this.Path = Path;
-        }
-
-        public UcsFile? GetLocale(string modID, string language) {
-            string locFile = this.Path.Replace("%LANG%", language);
-            try {
-                string locpath = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, locFile);
-                string locpath2 = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_USER_FOLDER, locFile);
-                if (File.Exists(locpath)) {
-                    return UcsFile.LoadFromFile(locpath);
-                } else if (File.Exists(locpath2)) {
-                    return UcsFile.LoadFromFile(locpath2);
-                } else if (locpath != BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_USER_FOLDER)) {
-                    Trace.WriteLine($"Failed to locate ucs file '{locpath}'", nameof(ModPackage));
-                }
-            } catch (Exception locex) {
-                Trace.WriteLine($"Failed to load ucs file for mod package '{modID}' ({locex.Message})", nameof(ModPackage));
-            }
-            return null;
-        }
-
-    }
+    private string modDataSourcePath = BattlegroundsPaths.MOD_USER_DATABASE_FODLER;
+    private IModDb? modDataSource;
 
     public string ID { get; init; }
 
@@ -91,6 +57,13 @@ public class ModPackage {
     public Gamemode[] Gamemodes { get; init; }
 
     public Dictionary<string, Dictionary<string, string>> TeamWeaponCaptureSquads { get; init; }
+
+    public GameCase SupportedGames { get; init; }
+
+    public string DataSourcePath {
+        get => BattlegroundsContext.GetRelativePath(modDataSourcePath);
+        set => modDataSourcePath = value;
+    }
 
     public ModPackage() {
         this.ID = "$invalid";
@@ -156,7 +129,7 @@ public class ModPackage {
         var ebpstr = ebp.GetScarName();
         foreach (var (k,v) in this.TeamWeaponCaptureSquads) {
             if (k == ebpstr) {
-                return BlueprintManager.FromBlueprintName<SquadBlueprint>(v[faction.Name]);
+                return modDataSource!.GetBlueprints(ebp.Game).FromBlueprintName<SquadBlueprint>(v[faction.Name]);
             }
         }
         throw new ObjectNotFoundException($"Failed to find capture squad blueprint for team weapon '{ebp}' for faction '{faction}'.");
@@ -179,5 +152,11 @@ public class ModPackage {
         }
         return result;
     }
+
+    public void SetDataSource(IModDb dataSrc)
+        => modDataSource = dataSrc;
+
+    public IModDb GetDataSource()
+        => modDataSource ?? throw new InvalidOperationException();
 
 }

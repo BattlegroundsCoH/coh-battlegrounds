@@ -43,11 +43,12 @@ public sealed class MatchController {
     /// <summary>
     /// Create a new <see cref="MatchController"/> instance with default strategies.
     /// </summary>
-    public MatchController() {
+    /// <param name="game"></param>
+    public MatchController(GameCase game) {
         this.m_starter = null;
         this.m_analyzer = null;
         this.m_finalizer = null;
-        this.m_startupStrategy = new SingleplayerStartupStrategy(); // Default Behaviour
+        this.m_startupStrategy = new SingleplayerStartupStrategy(game); // Default Behaviour
         this.m_analyzeStrategy = new SingleplayerMatchAnalyzer(); // Default Behaviour
         this.m_finalizeStrategy = new SingleplayerFinalizer(); // Default behaviour
     }
@@ -192,4 +193,3 @@ public sealed class MatchController {
     }
 
 }
-

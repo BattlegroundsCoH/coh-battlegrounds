@@ -1,6 +1,5 @@
-﻿using System.Diagnostics;
-
-using Battlegrounds.Gfx;
+﻿using Battlegrounds.Gfx;
+using Battlegrounds.Logging;
 
 namespace Battlegrounds.Resources;
 
@@ -9,17 +8,19 @@ namespace Battlegrounds.Resources;
 /// </summary>
 public static class ResourceLoader {
 
-    private static void AddGfxEntry(GfxMap map, string resourceName, string filepath, BinaryReader br) {
+    private static readonly Logger logger = Logger.CreateLogger();
+
+    private static void AddGfxEntry(IGfxMap map, string resourceName, string filepath, BinaryReader br) {
 
         // Check if resource is contained
         if (map.HasResource(resourceName)) {
-            Trace.WriteLine($"Skipping GFX resource '{filepath}' (Resource already contains)", nameof(ResourceLoader));
+            logger.Info($"Skipping GFX resource '{filepath}' (Resource already contains)");
             return;
         }
 
         // Open reader and verify is 
         if (!br.ReadBytes(8).SequenceEqual(new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 })) {
-            Trace.WriteLine($"Failed to load GFX resource '{filepath}' (Invalid PNG header found)", nameof(ResourceLoader));
+            logger.Error($"Failed to load GFX resource '{filepath}' (Invalid PNG header found)");
             return;
         }
 
@@ -30,7 +31,7 @@ public static class ResourceLoader {
         br.BaseStream.Position = 0;
 
         // Create resource
-        map.CreateResource(resourceName, br, w, h);
+        map.CreateResource(resourceName, br, w, h, GfxResourceType.Png);
 
     }
 
@@ -41,6 +42,7 @@ public static class ResourceLoader {
     /// <param name="filepath">The filepath to load the resource data from.</param>
     public static void LoadResourceFile(string identifier, string filepath) {
 
+        // Ensure file exists before trying to load it.
         if (!File.Exists(filepath))
             return;
 
@@ -50,7 +52,7 @@ public static class ResourceLoader {
         // Determine action
         switch (identifier) {
             default:
-                if (ResourceHandler.GfxMaps.TryGetValue(identifier, out GfxMap? map)) {
+                if (ResourceHandler.GfxMaps.TryGetValue(identifier, out IGfxMap? map)) {
 
                     using var fs = File.OpenRead(filepath);
                     if (filepath.EndsWith(".dat")) {
@@ -58,17 +60,20 @@ public static class ResourceLoader {
                         // Keep track of added
                         int added = 0;
 
+                        // Read version
+                        using var fsr = new BinaryReader(fs);
+                        GfxVersion ver = (GfxVersion)fsr.ReadInt32();
+
                         // Assume gfx map
-                        GfxMap other = GfxMap.FromBinary(fs);
-                        foreach (string resource in other.Resources)
+                        IGfxMap other = ResourceHandler.GfxLoaderFactory.GetGfxMapLoader(ver).LoadGfxMap(fsr);
+                        foreach (string resource in other.GetResourceManifest())
                             if (!map.HasResource(resource)) {
                                 map.AddResource(other.GetResource(resource)!);
                                 added++;
                             }
 
                         // Log how much is actually loaded
-                        var msg = $"Loaded gfx map {identifier}(v:0x{other.BinaryVersion:X2}) of which {added}/{other.Count} gfx files were added ({map.Count} total '{identifier}' gfx files).";
-                        Trace.WriteLine(msg, nameof(ResourceLoader));
+                        logger.Info($"Loaded gfx map {identifier}(v:0x{other.GfxVersion:X2}) of which {added}/{other.Count} gfx files were added ({map.Count} total '{identifier}' gfx files).");
 
                     } else {
                         AddGfxEntry(map, resourceName, filepath, new BinaryReader(fs));
@@ -76,15 +81,21 @@ public static class ResourceLoader {
 
                 } else if (Array.IndexOf(ResourceIdenitifers.IconIdentifiers, identifier) != -1) {
 
-                    // Register
+                    // Open map
                     using var fs = File.OpenRead(filepath);
-                    var gfxmap = ResourceHandler.GfxMaps[identifier] = GfxMap.FromBinary(fs);
+                    using var fsr = new BinaryReader(fs);
+
+                    // Determine version
+                    GfxVersion ver = (GfxVersion)fsr.ReadInt32();
+                    var gfxReader = ResourceHandler.GfxLoaderFactory.GetGfxMapLoader(ver);
+
+                    var gfxmap = ResourceHandler.GfxMaps[identifier] = gfxReader.LoadGfxMap(fsr);
 
                     // Log
-                    Trace.WriteLine($"Loaded gfx map {identifier}(v:0x{gfxmap.BinaryVersion:X2}) with {gfxmap.Count} gfx files.", nameof(ResourceLoader));
+                    logger.Info($"Loaded gfx map {identifier}(v:0x{gfxmap.GfxVersion:X}) with {gfxmap.Count} gfx files.");
 
                 } else {
-                    Trace.WriteLine($"Cannot load resource of type '{identifier}'", nameof(ResourceLoader));
+                    logger.Warning($"Cannot load resource of type '{identifier}'");
                 }
                 break;
         }        
@@ -103,13 +114,13 @@ public static class ResourceLoader {
             return;
 
         if (shouldPackage)
-            Trace.WriteLine($"Resource folder '{path}' contains unpackaged resources.", nameof(ResourceLoader));
+            logger.Info($"Resource folder '{path}' contains unpackaged resources.");
 
         // Grab files
         string[] files = Directory.GetFiles(path);
 
         // Try find GFX resource and increase its size
-        if (ResourceHandler.GfxMaps.TryGetValue(identifier, out GfxMap? map)) {
+        if (ResourceHandler.GfxMaps.TryGetValue(identifier, out IGfxMap? map)) {
             map.Allocate(files.Length);
         }
 
@@ -136,6 +147,7 @@ public static class ResourceLoader {
         LoadResourceFile(ResourceIdenitifers.SYMBOL_ICONS, "Gfx\\Icons\\symbol_icons.dat");
         LoadResourceFile(ResourceIdenitifers.UNIT_ICONS, "Gfx\\Icons\\unit_icons.dat");
         LoadResourceFile(ResourceIdenitifers.UPGRADE_ICONS, "Gfx\\Icons\\upgrade_icons.dat");
+        LoadResourceFile(ResourceIdenitifers.COH3_ICONS, "Gfx\\Icons\\3\\coh3_races.dat");
 
         // Load any additional files that are stored directly on drive
         foreach (string identifier in ResourceIdenitifers.IconIdentifiers)

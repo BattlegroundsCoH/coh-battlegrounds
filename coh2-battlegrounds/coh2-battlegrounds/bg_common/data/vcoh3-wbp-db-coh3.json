@@ -1,0 +1,6893 @@
+[
+  {
+    "PBGID": 2076869,
+    "Name": "WEAPON.COMMON.DUMMY_CONSTRUCTION_BARBED_WIRE",
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2018742,
+    "Name": "WEAPON.COMMON.DUMMY_CONSTRUCTION_DEMO",
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 205361,
+    "Name": "WEAPON.COMMON.DUMMY_CONSTRUCTION_LANDMINE",
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2063012,
+    "Name": "WEAPON.COMMON.DUMMY_CONSTRUCTION_LANDMINE_GERMAN",
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 205362,
+    "Name": "WEAPON.COMMON.DUMMY_CONSTRUCTION_SANDBAG",
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 205360,
+    "Name": "WEAPON.COMMON.DUMMY_CONSTRUCTION_SHOVEL",
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 205363,
+    "Name": "WEAPON.COMMON.DUMMY_CONSTRUCTION_WELDING_GEAR",
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2082646,
+    "Name": "WEAPON.COMMON.DUMMY_WIRE_CUTTERS",
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 181285,
+    "Name": "WEAPON.GARAND_RIFLEMAN_US_BULKY",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 8,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 181286,
+    "Name": "WEAPON.GARAND_RIFLEMAN_US_SLOPPY",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 8,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 129959,
+    "Name": "WEAPON.NERF_GUN",
+    "Range": 35,
+    "Damage": 8,
+    "MagazineSize": 8,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 183162,
+    "Name": "WEAPON.PROJECTILE_ALWAYS_PENETRATES_BUG",
+    "Range": 35,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 1546025,
+    "Name": "WEAPON.AFRIKA_KORPS.FLAMETHROWER_GUASTATORI_AK",
+    "Range": 20,
+    "Damage": 16,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "flame"
+  },
+  {
+    "PBGID": 2072765,
+    "Name": "WEAPON.AFRIKA_KORPS.FLAMETHROWER_L6_40_AK",
+    "Range": 30,
+    "Damage": 16,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "flame"
+  },
+  {
+    "PBGID": 198385,
+    "Name": "WEAPON.AFRIKA_KORPS.FLAMETHROWER_PANZERPIONEER_AK",
+    "Range": 20,
+    "Damage": 16,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "flame"
+  },
+  {
+    "PBGID": 2032160,
+    "Name": "WEAPON.AFRIKA_KORPS.FLAMETHROWER_PANZER_III_AK",
+    "Range": 30,
+    "Damage": 16,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "flame"
+  },
+  {
+    "PBGID": 2108246,
+    "Name": "WEAPON.AFRIKA_KORPS.FLAMETHROWER_PANZER_III_BLOCK_VISOR_AK",
+    "Range": 30,
+    "Damage": 16,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "flame"
+  },
+  {
+    "PBGID": 2103011,
+    "Name": "WEAPON.AFRIKA_KORPS.PROPAGANDA_WAR_AK",
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2033815,
+    "Name": "WEAPON.AIRCRAFT_B25_BOMBING_RUN_US",
+    "Range": 1000,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 182901,
+    "Name": "WEAPON.BOMBARDMENT_DESTROYER_RTS_CAMPAIGN_US",
+    "Range": 10000,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2076934,
+    "Name": "WEAPON.BOMBARDMENT_HOWITZER_RTS_CAMPAIGN_US",
+    "Range": 250,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 182902,
+    "Name": "WEAPON.BOMBING_RUN_AIRFIELD_RTS_CAMPAIGN_US",
+    "Range": 200,
+    "Damage": 320,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2063964,
+    "Name": "WEAPON.EMPLACEMENT_AA_GUN_40MM_US",
+    "Range": 30,
+    "MagazineSize": 4,
+    "FireRate": 4
+  },
+  {
+    "PBGID": 2063963,
+    "Name": "WEAPON.EMPLACEMENT_AT_GUN_57MM_US",
+    "Range": 45,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 203640,
+    "Name": "WEAPON.EMPLACEMENT_HMG_M1919A4_US",
+    "Range": 20,
+    "MagazineSize": 80,
+    "FireRate": 8
+  },
+  {
+    "PBGID": 2075759,
+    "Name": "WEAPON.EMPLACEMENT_HOWITZER_GUN_105MM_DUMMY_US",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2075739,
+    "Name": "WEAPON.EMPLACEMENT_HOWITZER_GUN_105MM_US",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1.75
+  },
+  {
+    "PBGID": 2058762,
+    "Name": "WEAPON.INFANTRY_BAZOOKA_M9_US",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2058764,
+    "Name": "WEAPON.INFANTRY_FLAMETHROWER_US",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2058763,
+    "Name": "WEAPON.INFANTRY_LMG_M1919A6_US",
+    "Range": 11,
+    "MagazineSize": 64,
+    "FireRate": 8
+  },
+  {
+    "PBGID": 2057022,
+    "Name": "WEAPON.INFANTRY_MORTAR_81MM_BARRAGE_US",
+    "Range": 11,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 203643,
+    "Name": "WEAPON.INFANTRY_MORTAR_81MM_US",
+    "Range": 15,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 203645,
+    "Name": "WEAPON.INFANTRY_RIFLE_GARAND_US",
+    "Range": 11,
+    "MagazineSize": 7,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 203644,
+    "Name": "WEAPON.INFANTRY_RIFLE_SPRINGFIELD_US",
+    "Range": 11,
+    "MagazineSize": 4,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031764,
+    "Name": "WEAPON.INFANTRY_SMG_GREASE_GUN_US",
+    "Range": 11,
+    "MagazineSize": 48,
+    "FireRate": 8
+  },
+  {
+    "PBGID": 204695,
+    "Name": "WEAPON.VEHICLE_HMG_BROWNING_US",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 191345,
+    "Name": "WEAPON.VEHICLE_SHERMAN_75MM_US",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2058771,
+    "Name": "WEAPON.VEHICLE_SHERMAN_76MM_US",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 196763,
+    "Name": "WEAPON.VEHICLE_TRUCK_4X4_HMG_BROWNING_US",
+    "Range": 11,
+    "MagazineSize": 8,
+    "FireRate": 8
+  },
+  {
+    "PBGID": 177754,
+    "Name": "WEAPON.FLAMETHROWER_AOE_ENGINEER_US",
+    "Range": 20,
+    "Damage": 5,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "flame"
+  },
+  {
+    "PBGID": 166486,
+    "Name": "WEAPON.FLAMETHROWER_ENGINEER_US",
+    "Range": 20,
+    "Damage": 16,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "flame"
+  },
+  {
+    "PBGID": 1282243,
+    "Name": "WEAPON.CRANE_RECOVERY_VEHICLE_US",
+    "Range": 45,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197463,
+    "Name": "WEAPON.CRASHING_PLANE_B25J_MITCHELL_US",
+    "Range": 250,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197465,
+    "Name": "WEAPON.CRASHING_PLANE_C47_DOUGLAS_US",
+    "Range": 250,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197467,
+    "Name": "WEAPON.CRASHING_PLANE_FRAGMENTS_US",
+    "Range": 20,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197464,
+    "Name": "WEAPON.CRASHING_PLANE_L2_GRASSHOPPER_US",
+    "Range": 250,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197466,
+    "Name": "WEAPON.CRASHING_PLANE_P47_THUNDERBOLT_US",
+    "Range": 250,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 203903,
+    "Name": "WEAPON.DUMMY_COMMANDER_SHERMAN_US",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 112,
+    "FireRate": 16
+  },
+  {
+    "PBGID": 203938,
+    "Name": "WEAPON.DUMMY_TANK_COMMANDER_WEAPON",
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 212592,
+    "Name": "WEAPON.EXPLOSION_INSTANT_US",
+    "Range": 150,
+    "Damage": 80,
+    "MagazineSize": 5,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 299202,
+    "Name": "WEAPON.FUEL_BARREL_EXPLOSION_INSTANT",
+    "Range": 150,
+    "Damage": 80,
+    "MagazineSize": 5,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2039470,
+    "Name": "WEAPON.FUEL_BARREL_EXPLOSION_INSTANT_RAID",
+    "Range": 150,
+    "Damage": 110,
+    "MagazineSize": 5,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 172937,
+    "Name": "WEAPON.MINESWEEPER_ENGINEER_US",
+    "Range": 50,
+    "Damage": 80,
+    "MagazineSize": 4,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2033255,
+    "Name": "WEAPON.MUNITION_BULLET_CRATE_EXPLOSION_INSTANT",
+    "Range": 150,
+    "Damage": 80,
+    "MagazineSize": 5,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2033132,
+    "Name": "WEAPON.MUNITION_CRATE_EXPLOSION_INSTANT",
+    "Range": 150,
+    "Damage": 80,
+    "MagazineSize": 5,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2029897,
+    "Name": "WEAPON.SMOKESCREEN_VEHICLE_MEDIUM",
+    "Range": 45,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 1069552,
+    "Name": "WEAPON.SMOKE_BLOCK_LOS_INSTANT_US",
+    "Range": 45,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 195444,
+    "Name": "WEAPON.SMOKE_BOMB_INSTANT_US",
+    "Range": 45,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 202459,
+    "Name": "WEAPON.THROWING_KNIFE_DEVILS_BRIGADE_US",
+    "Range": 30,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2062002,
+    "Name": "WEAPON.BRITISH.AIRCRAFT_FULMAR_BOMBS_250LB_UK",
+    "Range": 1000,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2062000,
+    "Name": "WEAPON.BRITISH.AIRCRAFT_SWORDFISH_TORPEDO_457MM_UK",
+    "Range": 40,
+    "Damage": 300,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 191416,
+    "Name": "WEAPON.BRITISH.EMPLACEMENT_ANTI_AIR_GUN_UK",
+    "Range": 30,
+    "MagazineSize": 6,
+    "FireRate": 2
+  },
+  {
+    "PBGID": 2031737,
+    "Name": "WEAPON.BRITISH.EMPLACEMENT_AT_GUN_6PDR_UK",
+    "Range": 45,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 203646,
+    "Name": "WEAPON.BRITISH.EMPLACEMENT_HMG_VICKERS_UK",
+    "Range": 20,
+    "MagazineSize": 80,
+    "FireRate": 8
+  },
+  {
+    "PBGID": 2103410,
+    "Name": "WEAPON.BRITISH.INFANTRY_AT_GUN_6PDR_UK",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 203647,
+    "Name": "WEAPON.BRITISH.INFANTRY_MORTAR_81MM_UK",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031759,
+    "Name": "WEAPON.BRITISH.INFANTRY_PACK_HOWITZER_75MM_UK",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 203649,
+    "Name": "WEAPON.BRITISH.INFANTRY_RIFLE_LEE_ENFIELD_UK",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044791,
+    "Name": "WEAPON.BRITISH.INFANTRY_SMG_STEN_UK",
+    "Range": 11,
+    "MagazineSize": 8,
+    "FireRate": 8
+  },
+  {
+    "PBGID": 393302,
+    "Name": "WEAPON.BRITISH.VEHICLE_BISHOP_88MM_BARRAGE_UK",
+    "Range": 180,
+    "MagazineSize": 1,
+    "FireRate": 1.75
+  },
+  {
+    "PBGID": 204687,
+    "Name": "WEAPON.BRITISH.VEHICLE_BISHOP_88MM_UK",
+    "Range": 180,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 204684,
+    "Name": "WEAPON.BRITISH.VEHICLE_CHURCHILL_57MM_UK",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2058880,
+    "Name": "WEAPON.BRITISH.VEHICLE_CHURCHILL_76MM_UK",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2058878,
+    "Name": "WEAPON.BRITISH.VEHICLE_CHURCHILL_COAXIAL_30CAL_UK",
+    "Range": 11,
+    "MagazineSize": 35,
+    "FireRate": 7
+  },
+  {
+    "PBGID": 2058879,
+    "Name": "WEAPON.BRITISH.VEHICLE_CHURCHILL_HULL_30CAL_UK",
+    "Range": 11,
+    "MagazineSize": 35,
+    "FireRate": 7
+  },
+  {
+    "PBGID": 2058877,
+    "Name": "WEAPON.BRITISH.VEHICLE_STUART_37MM_UK",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2058876,
+    "Name": "WEAPON.BRITISH.VEHICLE_STUART_COAXIAL_30CAL_UK",
+    "Range": 11,
+    "MagazineSize": 35,
+    "FireRate": 7
+  },
+  {
+    "PBGID": 2058875,
+    "Name": "WEAPON.BRITISH.VEHICLE_STUART_HULL_30CAL_UK",
+    "Range": 11,
+    "MagazineSize": 35,
+    "FireRate": 7
+  },
+  {
+    "PBGID": 2062005,
+    "Name": "WEAPON.BRITISH.VESSEL_BATTLESHIP_381MM_BOMBARD_UK",
+    "Range": 75,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2061939,
+    "Name": "WEAPON.BRITISH.VESSEL_BATTLESHIP_381MM_UK",
+    "Range": 11,
+    "MagazineSize": 3,
+    "FireRate": 3
+  },
+  {
+    "PBGID": 181842,
+    "Name": "WEAPON.BRITISH.VESSEL_DESTROYER_102MM_BOMBARD_UK",
+    "Range": 75,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2061959,
+    "Name": "WEAPON.BRITISH.VESSEL_DESTROYER_102MM_UK",
+    "Range": 11,
+    "MagazineSize": 3,
+    "FireRate": 3
+  },
+  {
+    "PBGID": 2031719,
+    "Name": "WEAPON.BRITISH.FLAMETHROWER_CROCODILE_UK",
+    "Range": 30,
+    "Damage": 32,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "flame"
+  },
+  {
+    "PBGID": 197701,
+    "Name": "WEAPON.BRITISH.FLAMETHROWER_SAPPER_UK",
+    "Range": 20,
+    "Damage": 16,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "flame"
+  },
+  {
+    "PBGID": 2035981,
+    "Name": "WEAPON.BRITISH.CRASHING_PLANE_AVRO_LANCASTER_UK",
+    "Range": 250,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2035982,
+    "Name": "WEAPON.BRITISH.CRASHING_PLANE_HAWKER_TYPHOON_UK",
+    "Range": 250,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2089157,
+    "Name": "WEAPON.BRITISH.DUMMY_LIGHTECO_UK",
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2032926,
+    "Name": "WEAPON.BRITISH.DUMMY_TANK_HATCH",
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2028382,
+    "Name": "WEAPON.BRITISH.KUKRI_KNIFE_GURKHAS_UK",
+    "Range": 5,
+    "Damage": 80,
+    "MagazineSize": 3,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2071676,
+    "Name": "WEAPON.BRITISH_AFRICA.FLAMETHROWER_SAPPER_AFRICA_UK",
+    "Range": 20,
+    "Damage": 16,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "flame"
+  },
+  {
+    "PBGID": 205051,
+    "Name": "WEAPON.COMMON.DESTRUCTION_DEBRIS",
+    "Range": 20,
+    "Damage": 10,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2104303,
+    "Name": "WEAPON.COMMON.BALLISTIC_PARENT",
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 209223,
+    "Name": "WEAPON.COMMON.EXPLODE_AREA_LARGE",
+    "Damage": 400,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 209222,
+    "Name": "WEAPON.COMMON.EXPLODE_AREA_MED",
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 209067,
+    "Name": "WEAPON.COMMON.EXPLODE_AREA_SMALL",
+    "Damage": 130,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 269814,
+    "Name": "WEAPON.COMMON.VIZ_EXPLODE_AREA_LARGE",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "ParentFilepath": "WEAPON.COMMON.EXPLODE_AREA_LARGE"
+  },
+  {
+    "PBGID": 269815,
+    "Name": "WEAPON.COMMON.VIZ_EXPLODE_AREA_MED",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "ParentFilepath": "WEAPON.COMMON.EXPLODE_AREA_MED"
+  },
+  {
+    "PBGID": 269816,
+    "Name": "WEAPON.COMMON.VIZ_EXPLODE_AREA_SMALL",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "ParentFilepath": "WEAPON.COMMON.EXPLODE_AREA_SMALL"
+  },
+  {
+    "PBGID": 735556,
+    "Name": "WEAPON.COMMON.AMMO_BOXES_DUMMY_WEAPON_US",
+    "Range": 50,
+    "Damage": 80,
+    "MagazineSize": 4,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2062658,
+    "Name": "WEAPON.COMMON.SHELL_DUMMY_WEAPON_US",
+    "Range": 50,
+    "Damage": 80,
+    "MagazineSize": 4,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2075730,
+    "Name": "WEAPON.BREW_UP",
+    "Range": 30,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2075729,
+    "Name": "WEAPON.CREW_INJURED",
+    "Range": 30,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2075728,
+    "Name": "WEAPON.CREW_SHOCK",
+    "Range": 30,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2075727,
+    "Name": "WEAPON.ENGINE_DAMAGE",
+    "Range": 30,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2075731,
+    "Name": "WEAPON.HEAVY_ENGINE_DAMAGE",
+    "Range": 30,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2075732,
+    "Name": "WEAPON.MAIN_GUN_DESTROYED",
+    "Range": 30,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2083730,
+    "Name": "WEAPON.NORMAL_DEATH",
+    "Range": 30,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2075733,
+    "Name": "WEAPON.OUT_OF_CONTROL",
+    "Range": 30,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2075735,
+    "Name": "WEAPON.TURRET_POP_OFF",
+    "Range": 30,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2075736,
+    "Name": "WEAPON.VEHICLE_BLIND",
+    "Range": 30,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2075734,
+    "Name": "WEAPON.VEHICLE_IMMOBILIZED",
+    "Range": 30,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 191286,
+    "Name": "WEAPON.GERMANS.EMPLACEMENT_ANTI_AIR_GUN_GER",
+    "Range": 30,
+    "MagazineSize": 4,
+    "FireRate": 4
+  },
+  {
+    "PBGID": 2103149,
+    "Name": "WEAPON.GERMANS.EMPLACEMENT_ANTI_TANK_GER",
+    "Range": 40,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2061868,
+    "Name": "WEAPON.GERMANS.EMPLACEMENT_COASTAL_GUN_GER",
+    "Range": 60,
+    "MagazineSize": 2,
+    "FireRate": 2.5
+  },
+  {
+    "PBGID": 203650,
+    "Name": "WEAPON.GERMANS.EMPLACEMENT_HMG_MG42_GER",
+    "Range": 20,
+    "MagazineSize": 80,
+    "FireRate": 8
+  },
+  {
+    "PBGID": 2100899,
+    "Name": "WEAPON.GERMANS.EMPLACEMENT_HOWITZER_DUMMY_GER",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2062162,
+    "Name": "WEAPON.GERMANS.EMPLACEMENT_HOWITZER_GER",
+    "Range": 100,
+    "MagazineSize": 2,
+    "FireRate": 2.5
+  },
+  {
+    "PBGID": 2065016,
+    "Name": "WEAPON.GERMANS.EMPLACEMENT_MINEFIELD_GER",
+    "Range": 1,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2072280,
+    "Name": "WEAPON.GERMANS.INFANTRY_LMG_MG15_GER",
+    "Range": 35,
+    "Damage": 5.25,
+    "MagazineSize": 84,
+    "FireRate": 14
+  },
+  {
+    "PBGID": 203651,
+    "Name": "WEAPON.GERMANS.INFANTRY_MORTAR_81MM_GER",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 203652,
+    "Name": "WEAPON.GERMANS.INFANTRY_RIFLE_G43_GER",
+    "Range": 11,
+    "MagazineSize": 2,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 203653,
+    "Name": "WEAPON.GERMANS.INFANTRY_RIFLE_KAR98K_GER",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2058892,
+    "Name": "WEAPON.GERMANS.INFANTRY_SMG_MP40_GER",
+    "Range": 11,
+    "MagazineSize": 40,
+    "FireRate": 8
+  },
+  {
+    "PBGID": 2058868,
+    "Name": "WEAPON.GERMANS.VEHICLE_ARMORED_CAR_MG34_GER",
+    "Range": 11,
+    "MagazineSize": 70,
+    "FireRate": 14
+  },
+  {
+    "PBGID": 2058897,
+    "Name": "WEAPON.GERMANS.VEHICLE_ARMORED_CAR_PANZERBUCHSE_20MM_GER",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2058867,
+    "Name": "WEAPON.GERMANS.VEHICLE_HALFTRACK_MG34_GER",
+    "Range": 11,
+    "MagazineSize": 70,
+    "FireRate": 14
+  },
+  {
+    "PBGID": 2058866,
+    "Name": "WEAPON.GERMANS.VEHICLE_HALFTRACK_MG34_REAR_GER",
+    "Range": 11,
+    "MagazineSize": 70,
+    "FireRate": 14
+  },
+  {
+    "PBGID": 2058865,
+    "Name": "WEAPON.GERMANS.VEHICLE_L6_40_20MM_GER",
+    "Range": 11,
+    "MagazineSize": 8,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2058864,
+    "Name": "WEAPON.GERMANS.VEHICLE_L6_40_COAXIAL_8MM_GER",
+    "Range": 11,
+    "MagazineSize": 64,
+    "FireRate": 8
+  },
+  {
+    "PBGID": 191349,
+    "Name": "WEAPON.GERMANS.VEHICLE_PANZER_IV_75MM_GER",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2058862,
+    "Name": "WEAPON.GERMANS.VEHICLE_PANZER_IV_COAXIAL_MG34_GER",
+    "Range": 11,
+    "MagazineSize": 70,
+    "FireRate": 14
+  },
+  {
+    "PBGID": 2058863,
+    "Name": "WEAPON.GERMANS.VEHICLE_PANZER_IV_HULL_MG34_GER",
+    "Range": 11,
+    "MagazineSize": 70,
+    "FireRate": 14
+  },
+  {
+    "PBGID": 2058859,
+    "Name": "WEAPON.GERMANS.VEHICLE_PANZER_IV_STUBBY_GER",
+    "Range": 11,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2061956,
+    "Name": "WEAPON.GERMANS.VESSEL_BATTLESHIP_320MM_GER",
+    "Range": 11,
+    "MagazineSize": 3,
+    "FireRate": 3
+  },
+  {
+    "PBGID": 2061961,
+    "Name": "WEAPON.GERMANS.VESSEL_DESTROYER_120MM_GER",
+    "Range": 11,
+    "MagazineSize": 3,
+    "FireRate": 3
+  },
+  {
+    "PBGID": 2061943,
+    "Name": "WEAPON.GERMANS.VESSEL_SUBMARINE_533MM_GER",
+    "Range": 50,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 840358,
+    "Name": "WEAPON.GERMANS.FLAMETHROWER_L6_40_GER",
+    "Range": 30,
+    "Damage": 16,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "flame"
+  },
+  {
+    "PBGID": 2027150,
+    "Name": "WEAPON.GERMANS.FLAMETHROWER_PIONEER_GER",
+    "Range": 20,
+    "Damage": 16,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "flame"
+  },
+  {
+    "PBGID": 173609,
+    "Name": "WEAPON.GERMANS.FLAMETHROWER_PIONEER_US",
+    "Range": 20,
+    "Damage": 16,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "flame"
+  },
+  {
+    "PBGID": 2064540,
+    "Name": "WEAPON.GERMANS.CRANE_RECOVERY_VEHICLE_GER",
+    "Range": 45,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2035790,
+    "Name": "WEAPON.GERMANS.CRASHING_PLANE_HEINKELL_HE111_GER",
+    "Range": 250,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2103353,
+    "Name": "WEAPON.GERMANS.CRASHING_PLANE_JU52_GER",
+    "Range": 250,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2035770,
+    "Name": "WEAPON.GERMANS.CRASHING_PLANE_STUKA_GER",
+    "Range": 250,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 198363,
+    "Name": "WEAPON.AFRIKA_KORPS.75MM_AT_GUN_AK",
+    "Range": 60,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2099401,
+    "Name": "WEAPON.AFRIKA_KORPS.75_MM_LEIG_DIRECT_SHOT_AK",
+    "Range": 55,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 198364,
+    "Name": "WEAPON.AFRIKA_KORPS.88MM_AT_GUN_AK",
+    "Range": 70,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2099563,
+    "Name": "WEAPON.AFRIKA_KORPS.88MM_AT_GUN_TARGET_WEAK_POINT_AK",
+    "Range": 70,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2075941,
+    "Name": "WEAPON.AFRIKA_KORPS.PAK_38_50MM_AT_GUN_AK",
+    "Range": 60,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2099388,
+    "Name": "WEAPON.AFRIKA_KORPS.PAK_38_ARMOR_SHRED_AK",
+    "Range": 60,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 226969,
+    "Name": "WEAPON.AFRIKA_KORPS.PANZERBUCHSE39_AT_RIFLE_AK",
+    "Range": 40,
+    "Damage": 50,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2072001,
+    "Name": "WEAPON.AFRIKA_KORPS.PANZERBUCHSE39_AT_RIFLE_TEAR_GAS_AK",
+    "Range": 40,
+    "Damage": 50,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2032179,
+    "Name": "WEAPON.AFRIKA_KORPS.20MM_250_AK",
+    "Range": 40,
+    "Damage": 16,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 227004,
+    "Name": "WEAPON.AFRIKA_KORPS.20MM_8_RAD_AK",
+    "Range": 40,
+    "Damage": 16,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2075548,
+    "Name": "WEAPON.AFRIKA_KORPS.20MM_AP_HALFTRACK_FLAK_AK",
+    "Range": 40,
+    "Damage": 5,
+    "MagazineSize": 24,
+    "FireRate": 12,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 198408,
+    "Name": "WEAPON.AFRIKA_KORPS.20MM_HALFTRACK_FLAK_AK",
+    "Range": 40,
+    "Damage": 5,
+    "MagazineSize": 24,
+    "FireRate": 12,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2044371,
+    "Name": "WEAPON.AFRIKA_KORPS.20MM_KWK38_ARMORED_CAR_AK",
+    "Range": 40,
+    "Damage": 16,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2057996,
+    "Name": "WEAPON.AFRIKA_KORPS.20MM_L6_40_AK",
+    "Range": 40,
+    "Damage": 16,
+    "MagazineSize": 11,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2072842,
+    "Name": "WEAPON.AFRIKA_KORPS.37MM_PANZER_III_AK",
+    "Range": 40,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2064596,
+    "Name": "WEAPON.AFRIKA_KORPS.47MM_CANNONE_DA_47_32_AK",
+    "Range": 40,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2032780,
+    "Name": "WEAPON.AFRIKA_KORPS.50MM_LONG_BARREL_PANZER_III_AK",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2032159,
+    "Name": "WEAPON.AFRIKA_KORPS.50MM_PANZER_III_AK",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2075590,
+    "Name": "WEAPON.AFRIKA_KORPS.75MM_BARRAGE_STUG_III_SHORT_AK",
+    "Range": 50,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 198368,
+    "Name": "WEAPON.AFRIKA_KORPS.75MM_MARDER_III_AK",
+    "Range": 50,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 198370,
+    "Name": "WEAPON.AFRIKA_KORPS.75MM_PANZER_III_AK",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 198369,
+    "Name": "WEAPON.AFRIKA_KORPS.75MM_PANZER_IV_AK",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2033662,
+    "Name": "WEAPON.AFRIKA_KORPS.75MM_STUG_III_SHORT_AK",
+    "Range": 30,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 198371,
+    "Name": "WEAPON.AFRIKA_KORPS.88MM_TIGER_AK",
+    "Range": 45,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 226776,
+    "Name": "WEAPON.AFRIKA_KORPS.ANTI_TANK_GRENADE_PANZERGRENADIER_AK",
+    "Range": 21,
+    "Damage": 110,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 226972,
+    "Name": "WEAPON.AFRIKA_KORPS.FLARE_PANZERJAEGER_AK",
+    "Range": 150,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2034104,
+    "Name": "WEAPON.AFRIKA_KORPS.GRB_39_GRENADE_LAUNCHER_HE_AK",
+    "Range": 35,
+    "Damage": 45,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2076057,
+    "Name": "WEAPON.AFRIKA_KORPS.GRB_39_GRENADE_LAUNCHER_HE_DEMO_AK",
+    "Range": 35,
+    "Damage": 45,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2076485,
+    "Name": "WEAPON.AFRIKA_KORPS.GRB_39_GRENADE_LAUNCHER_SMOKE_AK",
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2058534,
+    "Name": "WEAPON.AFRIKA_KORPS.GRENADE_ASSAULT_ASSAULT_GRENADIER_AK",
+    "Range": 20,
+    "Damage": 40,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2072724,
+    "Name": "WEAPON.AFRIKA_KORPS.GRENADE_GUASTATORI_AK",
+    "Range": 20,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2074728,
+    "Name": "WEAPON.AFRIKA_KORPS.GRENADE_OTO_M35_BERSAGLIERI_AK",
+    "Range": 20,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 198372,
+    "Name": "WEAPON.AFRIKA_KORPS.GRENADE_PANZERGRENADIER_AK",
+    "Range": 20,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2076313,
+    "Name": "WEAPON.AFRIKA_KORPS.GRENADE_PANZERGRENADIER_STUN_AK",
+    "Range": 20,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 343911,
+    "Name": "WEAPON.AFRIKA_KORPS.GRENADE_STUN_KRADSCHUTZEN_AK",
+    "Range": 20,
+    "Damage": 40,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2073728,
+    "Name": "WEAPON.AFRIKA_KORPS.GRENADE_STUN_PANZERPIONEER_AK",
+    "Range": 20,
+    "Damage": 40,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2058781,
+    "Name": "WEAPON.AFRIKA_KORPS.MAGNETIC_MINE_PANZERPIONEER_AK",
+    "Range": 10,
+    "Damage": 220,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2058530,
+    "Name": "WEAPON.AFRIKA_KORPS.PANZERGRENADIER_GRENADE_ASSAULT_UK",
+    "Range": 20,
+    "Damage": 40,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2081883,
+    "Name": "WEAPON.AFRIKA_KORPS.SATCHEL_ANTI_TANK_GUASTATORI_AK",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "ParentFilepath": "WEAPON.COMMON.ANTI_TANK_SATCHEL_PARENT"
+  },
+  {
+    "PBGID": 2072728,
+    "Name": "WEAPON.AFRIKA_KORPS.SATCHEL_CHARGE_GUASTATORI_AK",
+    "Range": 10,
+    "Damage": 600,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 343912,
+    "Name": "WEAPON.AFRIKA_KORPS.SMOKE_GRENADE_PANZERGRENADIER_AK",
+    "Range": 20,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2065039,
+    "Name": "WEAPON.AFRIKA_KORPS.STUN_KRADSHUTZEN_TEST_AK",
+    "Range": 20,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 198373,
+    "Name": "WEAPON.AFRIKA_KORPS.105MM_DUMMY_HOWITZER_AK",
+    "Range": 250,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 198374,
+    "Name": "WEAPON.AFRIKA_KORPS.105MM_HOWITZER_AK",
+    "Range": 250,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2102695,
+    "Name": "WEAPON.AFRIKA_KORPS.105MM_HOWITZER_CANNONE_BARRAGE_AK",
+    "Range": 275,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2099832,
+    "Name": "WEAPON.AFRIKA_KORPS.105MM_HOWITZER_CANNONE_DUMMY_AK",
+    "Range": 275,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2102701,
+    "Name": "WEAPON.AFRIKA_KORPS.105MM_HOWITZER_CANNONE_SMOKE_AK",
+    "Range": 275,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2083487,
+    "Name": "WEAPON.AFRIKA_KORPS.105MM_HOWITZER_COVERING_FIRE_AT_AK",
+    "Range": 250,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 198415,
+    "Name": "WEAPON.AFRIKA_KORPS.150MM_DUMMY_STUKA_AK",
+    "Range": 75,
+    "Damage": 55,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2099406,
+    "Name": "WEAPON.AFRIKA_KORPS.280MM_STUKAZUFUSS_CREEPING_BARRAGE_AK",
+    "Range": 150,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2033011,
+    "Name": "WEAPON.AFRIKA_KORPS.280MM_STUKAZUFUSS_ROCKET_AK",
+    "Range": 150,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 226977,
+    "Name": "WEAPON.AFRIKA_KORPS.OFF_MAP_105MM_BARRAGE_AK",
+    "Range": 250,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2074388,
+    "Name": "WEAPON.AFRIKA_KORPS.OFF_MAP_OBICE_BARRAGE_AK",
+    "Range": 1000,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2082026,
+    "Name": "WEAPON.AFRIKA_KORPS.STUKA_DIVE_BOMB_AK",
+    "Range": 250,
+    "Damage": 800,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 198376,
+    "Name": "WEAPON.AFRIKA_KORPS.75MM_BARRAGE_LEIG_AK",
+    "Range": 160,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2083488,
+    "Name": "WEAPON.AFRIKA_KORPS.75MM_BARRAGE_LEIG_COVERING_FIRE_STUN_AK",
+    "Range": 165,
+    "Damage": 40,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 198378,
+    "Name": "WEAPON.AFRIKA_KORPS.75MM_LEIG_AK",
+    "Range": 110,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 198380,
+    "Name": "WEAPON.AFRIKA_KORPS.75MM_SMOKE_BARRAGE_LEIG_AK",
+    "Range": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 198381,
+    "Name": "WEAPON.AFRIKA_KORPS.75MM_WP_SMOKE_LEIG_AK",
+    "Range": 160,
+    "MagazineSize": 4,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2099453,
+    "Name": "WEAPON.AFRIKA_KORPS.81MM_INCENDIARY_MORTAR_HALFTRACK_AK",
+    "Range": 100,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2068187,
+    "Name": "WEAPON.AFRIKA_KORPS.81MM_MORTAR_HALFTRACK_AK",
+    "Range": 75,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2068544,
+    "Name": "WEAPON.AFRIKA_KORPS.81MM_MORTAR_HALFTRACK_BARRAGE_AK",
+    "Range": 100,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2068545,
+    "Name": "WEAPON.AFRIKA_KORPS.81MM_MORTAR_HALFTRACK_SMOKE_BARRAGE_AK",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 226978,
+    "Name": "WEAPON.AFRIKA_KORPS.OFF_MAP_SMOKE_BARRAGE_AK",
+    "Range": 60,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 198382,
+    "Name": "WEAPON.AFRIKA_KORPS.HEAVY_MINE_PANZERPIONEER_AK",
+    "Range": 35,
+    "Damage": 400,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 198383,
+    "Name": "WEAPON.AFRIKA_KORPS.LIGHT_ANTI_VEHICLE_MINE_AK",
+    "Range": 35,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 198384,
+    "Name": "WEAPON.AFRIKA_KORPS.MINE_PANZERGRENADIER_AK",
+    "Range": 35,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2103094,
+    "Name": "WEAPON.AFRIKA_KORPS.S_MINE_LAUNCHER_AK",
+    "Range": 150,
+    "Damage": 140,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2084251,
+    "Name": "WEAPON.AFRIKA_KORPS.TERRITORY_BOOBY_TRAP_AK",
+    "Range": 10,
+    "Damage": 440,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2072436,
+    "Name": "WEAPON.AFRIKA_KORPS.25MM_TANK_MORTAR_SMOKE_AK",
+    "Range": 55,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2107796,
+    "Name": "WEAPON.AFRIKA_KORPS.TANK_SMOKE_AK",
+    "Range": 55,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 181764,
+    "Name": "WEAPON.57MM_AT_GUN_ARMOR_PIERCING_US",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.57MM_AT_GUN_US"
+  },
+  {
+    "PBGID": 170146,
+    "Name": "WEAPON.57MM_AT_GUN_US",
+    "Range": 60,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 172843,
+    "Name": "WEAPON.BAZOOKA_BAZOOKA_TEAM_US",
+    "Range": 35,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 201506,
+    "Name": "WEAPON.BAZOOKA_DEVILS_BRIGADE_US",
+    "Range": 35,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 1464161,
+    "Name": "WEAPON.BAZOOKA_PARATROOPERS_US",
+    "Range": 35,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 172860,
+    "Name": "WEAPON.BAZOOKA_PRECISION_SHOT_US",
+    "Range": 35,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2033436,
+    "Name": "WEAPON.BAZOOKA_WHITE_PHOSPHORUS_ROCKET_US",
+    "Range": 35,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2028529,
+    "Name": "WEAPON.PANZERBUCHSE39_AT_RIFLE_MARKSMEN_TEAM_PARTISAN",
+    "Range": 50,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2028832,
+    "Name": "WEAPON.PANZERBUCHSE39_AT_RIFLE_TUNGSTEN_MARKSMEN_TEAM_PARTISAN",
+    "Range": 50,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2027838,
+    "Name": "WEAPON.PANZERSCHREK_RESISTANCE_FIGHTERS_PARTISAN",
+    "Range": 35,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 177862,
+    "Name": "WEAPON.105MM_HE_ROUND_SHERMAN_BULLDOZER_US",
+    "Range": 40,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.105MM_SHERMAN_BULLDOZER_US"
+  },
+  {
+    "PBGID": 1564036,
+    "Name": "WEAPON.105MM_SHERMAN_BULLDOZER_BUNKER_BUSTER_US",
+    "Range": 40,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.105MM_SHERMAN_BULLDOZER_US"
+  },
+  {
+    "PBGID": 170239,
+    "Name": "WEAPON.105MM_SHERMAN_BULLDOZER_US",
+    "Range": 35,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun"
+  },
+  {
+    "PBGID": 2044857,
+    "Name": "WEAPON.105MM_SHERMAN_INCENDIARY_BARRAGE_US",
+    "Range": 40,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.105MM_SHERMAN_BULLDOZER_US"
+  },
+  {
+    "PBGID": 2062418,
+    "Name": "WEAPON.105MM_SHERMAN_WP_BARRAGE_US",
+    "Range": 40,
+    "Damage": 40,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.105MM_SHERMAN_BULLDOZER_US"
+  },
+  {
+    "PBGID": 2062359,
+    "Name": "WEAPON.37MM_CANISTER_SHOT_GREYHOUND_US",
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.37MM_GREYHOUND_US"
+  },
+  {
+    "PBGID": 170236,
+    "Name": "WEAPON.37MM_GREYHOUND_US",
+    "Range": 40,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 1047745,
+    "Name": "WEAPON.37MM_LEE_US",
+    "Range": 40,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2062450,
+    "Name": "WEAPON.75MM_CANISTER_SHOT_SHERMAN_US",
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.75MM_SHERMAN_US"
+  },
+  {
+    "PBGID": 2062377,
+    "Name": "WEAPON.75MM_CHAFFEE_APCR_US",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.75MM_CHAFFEE_US"
+  },
+  {
+    "PBGID": 1080526,
+    "Name": "WEAPON.75MM_CHAFFEE_US",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 203934,
+    "Name": "WEAPON.75MM_DUMMY_SHERMAN_US",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2076037,
+    "Name": "WEAPON.75MM_DUMMY_WHIZBANG_US",
+    "Range": 70,
+    "Damage": 70,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 208334,
+    "Name": "WEAPON.75MM_HALFTRACK_75MM_TAKE_AIM_US",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.75MM_HALFTRACK_75MM_US"
+  },
+  {
+    "PBGID": 208233,
+    "Name": "WEAPON.75MM_HALFTRACK_75MM_TWP_US",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.75MM_HALFTRACK_75MM_US"
+  },
+  {
+    "PBGID": 170189,
+    "Name": "WEAPON.75MM_HALFTRACK_75MM_US",
+    "Range": 45,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 1047744,
+    "Name": "WEAPON.75MM_LEE_US",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 1562817,
+    "Name": "WEAPON.75MM_SHERMAN_HE_ROUNDS_US",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.75MM_SHERMAN_US"
+  },
+  {
+    "PBGID": 131027,
+    "Name": "WEAPON.75MM_SHERMAN_US",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 177834,
+    "Name": "WEAPON.75MM_WHITE_PHOSPHOROUS_SHERMAN_US",
+    "Range": 45,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.75MM_SHERMAN_US"
+  },
+  {
+    "PBGID": 177819,
+    "Name": "WEAPON.76MM_HELLCAT_HE_US",
+    "Range": 55,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.76MM_HELLCAT_US"
+  },
+  {
+    "PBGID": 171709,
+    "Name": "WEAPON.76MM_HELLCAT_HVAP_US",
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.76MM_HELLCAT_US"
+  },
+  {
+    "PBGID": 170193,
+    "Name": "WEAPON.76MM_HELLCAT_US",
+    "Range": 45,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 1628292,
+    "Name": "WEAPON.76MM_SHERMAN_EASY_8_HVAP_US",
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.76MM_SHERMAN_EASY_8_US"
+  },
+  {
+    "PBGID": 197148,
+    "Name": "WEAPON.76MM_SHERMAN_EASY_8_US",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2104459,
+    "Name": "WEAPON.76MM_SHERMAN_US",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 182124,
+    "Name": "WEAPON.W_AIRCRAFT_BOMBING_OPERATION_US",
+    "Range": 1000,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 182125,
+    "Name": "WEAPON.W_AIRCRAFT_DIVE_BOMB_OPERATION_US",
+    "Range": 40,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2030615,
+    "Name": "WEAPON.W_AIRCRAFT_INCENDIARY_OPERATION_US",
+    "Range": 1000,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2030618,
+    "Name": "WEAPON.W_AIRCRAFT_SMOKE_OPERATION_US",
+    "Range": 1000,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 204950,
+    "Name": "WEAPON.W_AIRCRAFT_STRAFING_OPERATION_DAMAGE_US",
+    "Range": 1000,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 204918,
+    "Name": "WEAPON.W_AIRCRAFT_STRAFING_OPERATION_VISUALS_US",
+    "Range": 1000,
+    "MagazineSize": 45,
+    "FireRate": 45
+  },
+  {
+    "PBGID": 171804,
+    "Name": "WEAPON.FLARE_SCOUT_US",
+    "Range": 150,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2099603,
+    "Name": "WEAPON.GRB_39_GRENADE_LAUNCHER_HE_SABOTEURS_PARTISAN",
+    "Range": 35,
+    "Damage": 45,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 181077,
+    "Name": "WEAPON.GRENADE_ASSAULT_POSITION_RANGER_US",
+    "Range": 20,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2127635,
+    "Name": "WEAPON.GRENADE_DEVILS_BRIGADE_US",
+    "Range": 20,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 181028,
+    "Name": "WEAPON.GRENADE_RANGER_US",
+    "Range": 20,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 166021,
+    "Name": "WEAPON.GRENADE_RIFLEMAN_US",
+    "Range": 20,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2026644,
+    "Name": "WEAPON.GRENADE_TYPE_L_RESISTANCE_FIGHTERS_PARTISAN",
+    "Damage": 65,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "ParentFilepath": "WEAPON.COMMON.ANTI_TANK_GRENADE_PARENT"
+  },
+  {
+    "PBGID": 201669,
+    "Name": "WEAPON.GRENADE_WHITE_PHOSPHORUS_DEVILS_BRIGADE_US",
+    "Range": 15,
+    "Damage": 30,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2026640,
+    "Name": "WEAPON.MOLOTOV_RESISTANCE_FIGHTERS_PARTISAN",
+    "Range": 20,
+    "Damage": 8,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2063135,
+    "Name": "WEAPON.RIFLE_GRENADE_PATHFINDER_US",
+    "Range": 30,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2062502,
+    "Name": "WEAPON.RIFLE_GRENADE_RIFLEMEN_US",
+    "Range": 30,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2033431,
+    "Name": "WEAPON.SATCHEL_ANTI_TANK_BAZOOKA_TEAM_US",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "ParentFilepath": "WEAPON.COMMON.ANTI_TANK_SATCHEL_PARENT"
+  },
+  {
+    "PBGID": 2028150,
+    "Name": "WEAPON.SATCHEL_ANTI_TANK_SABOTEURS_PARTISAN",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "ParentFilepath": "WEAPON.COMMON.ANTI_TANK_SATCHEL_PARENT"
+  },
+  {
+    "PBGID": 182843,
+    "Name": "WEAPON.SATCHEL_CHARGE_PARATROOPER_US",
+    "Range": 10,
+    "Damage": 600,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031678,
+    "Name": "WEAPON.SATCHEL_CHARGE_PARATROOPER_US_MONTE_CASSINO_BOOBY_TRAP",
+    "Range": 10,
+    "Damage": 340,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 172969,
+    "Name": "WEAPON.SMOKE_GRENADE_CAPTAIN_US",
+    "Range": 20,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 171802,
+    "Name": "WEAPON.SMOKE_GRENADE_SCOUT_US",
+    "Range": 30,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 765849,
+    "Name": "WEAPON.SMOKE_RIFLE_GRENADE_SCOUT_US",
+    "Range": 30,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 171218,
+    "Name": "WEAPON.STICKY_BOMB_RIFLEMAN_US",
+    "Range": 21,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "ParentFilepath": "WEAPON.COMMON.ANTI_TANK_GRENADE_PARENT"
+  },
+  {
+    "PBGID": 202228,
+    "Name": "WEAPON.TIMED_DEMO_CHARGE_DEVILS_BRIGADE_US",
+    "Range": 10,
+    "Damage": 440,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 178544,
+    "Name": "WEAPON.105MM_DUMMY_HOWITZER_US",
+    "Range": 250,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 953102,
+    "Name": "WEAPON.105MM_HOWITZER_C_INFANTRY_105MM_HOWITZER_ZERO_IN_BARRAGE_105MM_US",
+    "Range": 250,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 181133,
+    "Name": "WEAPON.105MM_HOWITZER_OFF_MAP_ARTILLERY_HALFTRACK_ASSAULT_US",
+    "Range": 250,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 178543,
+    "Name": "WEAPON.105MM_HOWITZER_US",
+    "Range": 250,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 178511,
+    "Name": "WEAPON.155MM_HOWITZER_OFF_MAP_ARTILLERY_US",
+    "Range": 250,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 217185,
+    "Name": "WEAPON.180MM_DUMMY_WHIZBANG_US",
+    "Range": 70,
+    "Damage": 70,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 202452,
+    "Name": "WEAPON.180MM_PRECISION_SWEEP_WHIZBANG_US",
+    "Range": 70,
+    "Damage": 70,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 202213,
+    "Name": "WEAPON.180MM_ROCKET_BARRAGE_WHIZBANG_US",
+    "Range": 70,
+    "Damage": 70,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2053560,
+    "Name": "WEAPON.240MM_HOWITZER_OFF_MAP_ARTILLERY_COMPANY_US",
+    "Range": 250,
+    "Damage": 760,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 201844,
+    "Name": "WEAPON.240MM_HOWITZER_OFF_MAP_ARTILLERY_US",
+    "Range": 250,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 183730,
+    "Name": "WEAPON.325LB_BOMB_B25J_US",
+    "Range": 200,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2072099,
+    "Name": "WEAPON.325LB_BOMB_B25J_US_MONTE_CASSINO_NIS",
+    "Range": 200,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2062413,
+    "Name": "WEAPON.500LB_BOMB_P47_US",
+    "Range": 200,
+    "Damage": 180,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 182798,
+    "Name": "WEAPON.5INCH_ROCKET_P47_US",
+    "Range": 200,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 207480,
+    "Name": "WEAPON.C_240MM_HOWITZER_OFF_MAP_ARTILLERY_US",
+    "Range": 250,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 206483,
+    "Name": "WEAPON.C_AIRBORNE_CARPET_BOMBING_MINES_US",
+    "Range": 1000,
+    "Damage": 320,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 204716,
+    "Name": "WEAPON.C_AIRBORNE_SMOKE_BOMB_P47_US",
+    "Range": 1000,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 205667,
+    "Name": "WEAPON.C_AIRBORNE_SMOKE_RUN_DAMAGE_US",
+    "Range": 1000,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 969663,
+    "Name": "WEAPON.C_INFANTRY_240MM_ARTILLERY_OFF_MAP_BARRAGE_STUN_US",
+    "Range": 250,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2053868,
+    "Name": "WEAPON.C_INFANTRY_OFF_MAP_SMOKE_ASSAULT_US",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 204860,
+    "Name": "WEAPON.OFF_MAP_ARTILLERY_FLARES_US",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 201422,
+    "Name": "WEAPON.OFF_MAP_COVERING_SMOKE_BARRAGE_US",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 905014,
+    "Name": "WEAPON.RECON_FLARES_US",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197391,
+    "Name": "WEAPON.SMOKE_BOMB_P47_US",
+    "Range": 1000,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044379,
+    "Name": "WEAPON.75MM_HOWITZER_BARRAGE_BUNKER_BUSTER_SCOTT_US",
+    "Range": 60,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044380,
+    "Name": "WEAPON.75MM_HOWITZER_BARRAGE_HALFTRACK_US",
+    "Range": 90,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044381,
+    "Name": "WEAPON.75MM_HOWITZER_BARRAGE_SCOTT_US",
+    "Range": 60,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044382,
+    "Name": "WEAPON.75MM_HOWITZER_BARRAGE_WP_SCOTT_US",
+    "Range": 60,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044383,
+    "Name": "WEAPON.75MM_HOWITZER_CLUSTER_BOMB_US",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044384,
+    "Name": "WEAPON.75MM_HOWITZER_HALFTRACK_US",
+    "Range": 90,
+    "Damage": 110,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044385,
+    "Name": "WEAPON.75MM_HOWITZER_RAIDING_FLARES_INSTANT_US",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044386,
+    "Name": "WEAPON.75MM_HOWITZER_RAIDING_FLARES_US",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044387,
+    "Name": "WEAPON.75MM_HOWITZER_SCOTT_US",
+    "Range": 45,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044388,
+    "Name": "WEAPON.75MM_HOWITZER_SMOKE_BARRAGE_HALFTRACK_75MM_US",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044389,
+    "Name": "WEAPON.75MM_HOWITZER_SMOKE_BARRAGE_SCOTT_US",
+    "Range": 65,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044390,
+    "Name": "WEAPON.75MM_HOWITZER_SMOKE_SCREEN_US",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044391,
+    "Name": "WEAPON.75MM_HOWITZER_WHITE_PHOSPHORUS_US",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044392,
+    "Name": "WEAPON.75MM_PACK_HOWITZER_BARRAGE_US",
+    "Range": 160,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044393,
+    "Name": "WEAPON.75MM_PACK_HOWITZER_US",
+    "Range": 100,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 210961,
+    "Name": "WEAPON.BOOBY_TRAP_PARTISAN",
+    "Range": 35,
+    "Damage": 300,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 201878,
+    "Name": "WEAPON.MINE_CLUSTER_BOMB_US",
+    "Range": 35,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 169982,
+    "Name": "WEAPON.MINE_ENGINEER_US",
+    "Range": 35,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 171259,
+    "Name": "WEAPON.MINE_GREYHOUND_US",
+    "Range": 35,
+    "Damage": 400,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 171729,
+    "Name": "WEAPON.2INCH_MORTAR_SMOKE_SHERMAN_US",
+    "Range": 55,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 173000,
+    "Name": "WEAPON.81MM_MORTAR_BARRAGE_US",
+    "Range": 100,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 182092,
+    "Name": "WEAPON.81MM_MORTAR_DELAYED_FUZE_US",
+    "Range": 100,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 201415,
+    "Name": "WEAPON.81MM_MORTAR_PIT_BARRAGE_US",
+    "Range": 110,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 201413,
+    "Name": "WEAPON.81MM_MORTAR_PIT_US",
+    "Range": 100,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 173001,
+    "Name": "WEAPON.81MM_MORTAR_SMOKE_US",
+    "Range": 110,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 182089,
+    "Name": "WEAPON.81MM_MORTAR_TIMED_FUZE_US",
+    "Range": 100,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 170150,
+    "Name": "WEAPON.81MM_MORTAR_US",
+    "Range": 75,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2025927,
+    "Name": "WEAPON.BRITISH.40MM_BOFORS_UK",
+    "Range": 40,
+    "Damage": 12,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2064569,
+    "Name": "WEAPON.BRITISH.40MM_BOFORS_UK_EMPLACEMENT",
+    "Range": 40,
+    "Damage": 12,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2054112,
+    "Name": "WEAPON.BRITISH.17PDR_AT_GUN_PH_UK",
+    "Range": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.BRITISH.17PDR_AT_GUN_UK"
+  },
+  {
+    "PBGID": 197677,
+    "Name": "WEAPON.BRITISH.17PDR_AT_GUN_UK",
+    "Range": 80,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2085123,
+    "Name": "WEAPON.BRITISH.17_PDR_AT_GUN_PH_HE_UK",
+    "Range": 80,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.BRITISH.17PDR_AT_GUN_UK"
+  },
+  {
+    "PBGID": 197732,
+    "Name": "WEAPON.BRITISH.2PDR_AT_GUN_360_UK",
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.BRITISH.2PDR_AT_GUN_UK"
+  },
+  {
+    "PBGID": 2031559,
+    "Name": "WEAPON.BRITISH.2PDR_AT_GUN_TWP_UK",
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.BRITISH.2PDR_AT_GUN_UK"
+  },
+  {
+    "PBGID": 197678,
+    "Name": "WEAPON.BRITISH.2PDR_AT_GUN_UK",
+    "Range": 45,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 203657,
+    "Name": "WEAPON.BRITISH.6PDR_AT_GUN_TWP_UK",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.BRITISH.6PDR_AT_GUN_UK"
+  },
+  {
+    "PBGID": 197679,
+    "Name": "WEAPON.BRITISH.6PDR_AT_GUN_UK",
+    "Range": 60,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2089286,
+    "Name": "WEAPON.BRITISH.6PDR_AT_GUN_VET_UK",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.BRITISH.6PDR_AT_GUN_UK"
+  },
+  {
+    "PBGID": 212148,
+    "Name": "WEAPON.BRITISH.BAZOOKA_GUARDS_UK",
+    "Range": 35,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 197680,
+    "Name": "WEAPON.BRITISH.BOYS_AT_RIFLE_UK",
+    "Range": 40,
+    "Damage": 50,
+    "MagazineSize": 3,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2031701,
+    "Name": "WEAPON.BRITISH.SAPPER_PIAT_UK",
+    "Range": 35,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 197681,
+    "Name": "WEAPON.BRITISH.15MM_HUMBER_UK",
+    "Range": 40,
+    "Damage": 12,
+    "MagazineSize": 20,
+    "FireRate": 4,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 203807,
+    "Name": "WEAPON.BRITISH.17PDR_ARCHER_UK",
+    "Range": 60,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2088955,
+    "Name": "WEAPON.BRITISH.25PDR_BISHOP_AP_ROUND_UK",
+    "Range": 45,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 197682,
+    "Name": "WEAPON.BRITISH.37MM_GRANT_UK",
+    "Range": 40,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2058292,
+    "Name": "WEAPON.BRITISH.37MM_STUART_ACE_SP_HE_ROUNDS_UK",
+    "Range": 50,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2057995,
+    "Name": "WEAPON.BRITISH.37MM_STUART_ACE_SP_UK",
+    "Range": 50,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 197683,
+    "Name": "WEAPON.BRITISH.37MM_STUART_UK",
+    "Range": 40,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 209490,
+    "Name": "WEAPON.BRITISH.37MM_TREADSHOT_STUART_UK",
+    "Range": 45,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2061605,
+    "Name": "WEAPON.BRITISH.40MM_CHURCHILL_DUMMY_UK",
+    "Range": 40,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 202597,
+    "Name": "WEAPON.BRITISH.40MM_CHURCHILL_UK",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 205500,
+    "Name": "WEAPON.BRITISH.40MM_CRUSADER_AA_SUPPRESS_UK",
+    "Range": 40,
+    "Damage": 16,
+    "MagazineSize": 7,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 202660,
+    "Name": "WEAPON.BRITISH.40MM_CRUSADER_AA_UK",
+    "Range": 40,
+    "Damage": 20,
+    "MagazineSize": 7,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 197684,
+    "Name": "WEAPON.BRITISH.40MM_CRUSADER_UK",
+    "Range": 40,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 197685,
+    "Name": "WEAPON.BRITISH.40MM_MATILDA_UK",
+    "Range": 40,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 205438,
+    "Name": "WEAPON.BRITISH.40MM_SMOKE_SHOT_VALENTINE_UK",
+    "Range": 45,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 205437,
+    "Name": "WEAPON.BRITISH.40MM_VALENTINE_UK",
+    "Range": 40,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 225022,
+    "Name": "WEAPON.BRITISH.57MM_CRUSADER_UK",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2030693,
+    "Name": "WEAPON.BRITISH.75MM_CHURCHILL_UK",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 197686,
+    "Name": "WEAPON.BRITISH.75MM_GRANT_UK",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 207017,
+    "Name": "WEAPON.BRITISH.75MM_SHERMAN_UK",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 211532,
+    "Name": "WEAPON.BRITISH.76MM_CHURCHILL_BLACK_PRINCE_UK",
+    "Range": 40,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2030967,
+    "Name": "WEAPON.BRITISH.95MM_HESH_ROUND_CENTAUR_UK",
+    "Range": 35,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2030603,
+    "Name": "WEAPON.BRITISH.95MM_HE_ROUND_CENTAUR_UK",
+    "Range": 30,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2085348,
+    "Name": "WEAPON.BRITISH.95MM_SMOKE_ROUND_CENTAUR_UK",
+    "Range": 50,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 212899,
+    "Name": "WEAPON.BRITISH.ARCHER_17PDR_FIRST_STRIKE_UK",
+    "Range": 60,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.BRITISH.ARCHER_17PDR_UK"
+  },
+  {
+    "PBGID": 209743,
+    "Name": "WEAPON.BRITISH.ARCHER_17PDR_UK",
+    "Range": 60,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 197687,
+    "Name": "WEAPON.BRITISH.ANTI_TANK_GRENADE_UK",
+    "Range": 25,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "ParentFilepath": "WEAPON.COMMON.ANTI_TANK_GRENADE_PARENT"
+  },
+  {
+    "PBGID": 2061572,
+    "Name": "WEAPON.BRITISH.FLARE_TOMMY_UK",
+    "Range": 150,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 203814,
+    "Name": "WEAPON.BRITISH.GAMMON_BOMB_GUARDS_UK",
+    "Range": 20,
+    "Damage": 180,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2030558,
+    "Name": "WEAPON.BRITISH.GRENADE_COMMANDO_UK",
+    "Range": 20,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197688,
+    "Name": "WEAPON.BRITISH.GRENADE_MILLS_BOMB_TOMMY_UK",
+    "Range": 20,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 210352,
+    "Name": "WEAPON.BRITISH.GRENADE_NO69_UK",
+    "Range": 20,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 212820,
+    "Name": "WEAPON.BRITISH.GRENADE_SMOKE_RED_UK",
+    "Range": 20,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044750,
+    "Name": "WEAPON.BRITISH.GURKHA_GRENADE_ASSAULT_UK",
+    "Range": 20,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044717,
+    "Name": "WEAPON.BRITISH.GURKHA_SMOKE_GRENADE_UK",
+    "Range": 30,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 203623,
+    "Name": "WEAPON.BRITISH.RIFLE_GRENADE_TOMMY_UK",
+    "Range": 30,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2104727,
+    "Name": "WEAPON.BRITISH.SMOKE_RIFLE_GRENADE_TOMMY_UK",
+    "Range": 30,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2103288,
+    "Name": "WEAPON.BRITISH.SMOKE_WARNING_RED_NO_TIMER_UK",
+    "Range": 20,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 213784,
+    "Name": "WEAPON.BRITISH.SMOKE_WARNING_RED_UK",
+    "Range": 20,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 204168,
+    "Name": "WEAPON.BRITISH.25PDR_BASE_HOWITZER_CREEPING_SMOKE_UK",
+    "Range": 500,
+    "MagazineSize": 4,
+    "FireRate": 4
+  },
+  {
+    "PBGID": 201714,
+    "Name": "WEAPON.BRITISH.25PDR_BASE_HOWITZER_UK",
+    "Range": 1000,
+    "Damage": 180,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 764062,
+    "Name": "WEAPON.BRITISH.25PDR_BISHOP_AP_UK",
+    "Range": 160,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197690,
+    "Name": "WEAPON.BRITISH.25PDR_BISHOP_DUMMY_UK",
+    "Range": 160,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197689,
+    "Name": "WEAPON.BRITISH.25PDR_BISHOP_UK",
+    "Range": 160,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2100247,
+    "Name": "WEAPON.BRITISH.25PDR_DUMMY_HOWITZER_UK",
+    "Range": 500,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 204428,
+    "Name": "WEAPON.BRITISH.25PDR_HOWITZER_AIRBURST_UK",
+    "Range": 500,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 204429,
+    "Name": "WEAPON.BRITISH.25PDR_HOWITZER_AP_UK",
+    "Range": 500,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031626,
+    "Name": "WEAPON.BRITISH.25PDR_HOWITZER_ASSAULT_SECTOR_UK",
+    "Range": 1000,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2073876,
+    "Name": "WEAPON.BRITISH.25PDR_HOWITZER_CREEPING_UK",
+    "Range": 1000,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 205233,
+    "Name": "WEAPON.BRITISH.25PDR_HOWITZER_INCENDIARY_OFF_MAP_UK",
+    "Range": 500,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 204642,
+    "Name": "WEAPON.BRITISH.25PDR_HOWITZER_OFF_MAP_UK",
+    "Range": 500,
+    "Damage": 180,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197694,
+    "Name": "WEAPON.BRITISH.25PDR_HOWITZER_UK",
+    "Range": 1000,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2030053,
+    "Name": "WEAPON.BRITISH.356MM_NAVAL_BOMBARDMENT_UK",
+    "Range": 250,
+    "Damage": 440,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2030066,
+    "Name": "WEAPON.BRITISH.ASSAULT_FLARES_UK",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2100248,
+    "Name": "WEAPON.BRITISH.BL_5_5_DUMMY_HOWITZER_UK",
+    "Range": 300,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2051673,
+    "Name": "WEAPON.BRITISH.BL_5_5_HOWITZER_AUTO_FIRE_UK",
+    "Range": 300,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 204439,
+    "Name": "WEAPON.BRITISH.BL_5_5_HOWITZER_PRECISION_SHOT_UK",
+    "Range": 300,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 201717,
+    "Name": "WEAPON.BRITISH.BL_5_5_HOWITZER_UK",
+    "Range": 300,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2083871,
+    "Name": "WEAPON.BRITISH.BOMBING_RUN_INCENDIARY_UK",
+    "Range": 500,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 201723,
+    "Name": "WEAPON.BRITISH.OFF_MAP_CREEPING_SMOKE_BARRAGE_UK",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2135997,
+    "Name": "WEAPON.BRITISH.ROCKET_HAWKER_TYPHOON_US",
+    "Range": 200,
+    "Damage": 50,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 202428,
+    "Name": "WEAPON.BRITISH.75MM_HOWITZER_SPOT_AND_SMOKE_FLARES_UK",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2049633,
+    "Name": "WEAPON.BRITISH.75MM_PACK_HOWITZER_INCENDIARY_UK",
+    "Range": 160,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2050769,
+    "Name": "WEAPON.BRITISH.75MM_PACK_HOWITZER_SMOKE_BARRAGE_UK",
+    "Range": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2030583,
+    "Name": "WEAPON.BRITISH.75MM_PACK_HOWITZER_UK",
+    "Range": 100,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197739,
+    "Name": "WEAPON.BRITISH.LIGHT_ANTI_VEHICLE_MINE_UK",
+    "Range": 35,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031517,
+    "Name": "WEAPON.BRITISH.MINE_BOOBYTRAP_TERRITORY_POINT_UK",
+    "Range": 35,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031468,
+    "Name": "WEAPON.BRITISH.MINE_FIELD_SAPPER_UK",
+    "Range": 35,
+    "Damage": 40,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044426,
+    "Name": "WEAPON.BRITISH.MINE_HEAVY_SAPPER_UK",
+    "Range": 35,
+    "Damage": 400,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197696,
+    "Name": "WEAPON.BRITISH.MINE_SAPPER_UK",
+    "Range": 35,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031552,
+    "Name": "WEAPON.BRITISH.TRIPWIRE_FLARE_UK",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2122695,
+    "Name": "WEAPON.BRITISH.2INCH_MORTAR_SMOKE_HUMBER_UK",
+    "Range": 55,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031478,
+    "Name": "WEAPON.BRITISH.4_2_INCH_HEAVY_MORTAR_AIRBURST_UK",
+    "Range": 120,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031476,
+    "Name": "WEAPON.BRITISH.4_2_INCH_HEAVY_MORTAR_BARRAGE_UK",
+    "Range": 150,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2103356,
+    "Name": "WEAPON.BRITISH.4_2_INCH_HEAVY_MORTAR_FLARE_UK",
+    "Range": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2051739,
+    "Name": "WEAPON.BRITISH.4_2_INCH_HEAVY_MORTAR_INCENDIARY_UK",
+    "Range": 120,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031477,
+    "Name": "WEAPON.BRITISH.4_2_INCH_HEAVY_MORTAR_SMOKE_UK",
+    "Range": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031475,
+    "Name": "WEAPON.BRITISH.4_2_INCH_HEAVY_MORTAR_UK",
+    "Range": 100,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197697,
+    "Name": "WEAPON.BRITISH.81MM_MORTAR_BARRAGE_UK",
+    "Range": 100,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197700,
+    "Name": "WEAPON.BRITISH.81MM_MORTAR_SMOKE_UK",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197699,
+    "Name": "WEAPON.BRITISH.81MM_MORTAR_UK",
+    "Range": 75,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197698,
+    "Name": "WEAPON.BRITISH.FLARE_81MM_MORTAR_UK",
+    "Range": 85,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2071792,
+    "Name": "WEAPON.BRITISH_AFRICA.BAZOOKA_GUARDS_AFRICA_UK",
+    "Range": 35,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2085243,
+    "Name": "WEAPON.BRITISH_AFRICA.BAZOOKA_STAGGERED_SHOT_GUARDS_AFRICA_UK",
+    "Range": 30,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2085263,
+    "Name": "WEAPON.BRITISH_AFRICA.BAZOOKA_STAGGERED_SHOT_STUN_GUARDS_AFRICA_UK",
+    "Range": 30,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2071696,
+    "Name": "WEAPON.BRITISH_AFRICA.BOYS_AT_RIFLE_AFRICA_UK",
+    "Range": 40,
+    "Damage": 50,
+    "MagazineSize": 3,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2088937,
+    "Name": "WEAPON.BRITISH_AFRICA.BOYS_AT_RIFLE_VOLLEY_AFRICA_UK",
+    "Range": 40,
+    "Damage": 50,
+    "MagazineSize": 3,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2071660,
+    "Name": "WEAPON.BRITISH_AFRICA.ANTI_TANK_GRENADE_AFRICA_UK",
+    "Range": 24,
+    "Damage": 110,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2071508,
+    "Name": "WEAPON.BRITISH_AFRICA.FLARE_TOMMY_AFRICA_UK",
+    "Range": 150,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2071761,
+    "Name": "WEAPON.BRITISH_AFRICA.GAMMON_BOMB_GUARDS_AFRICA_UK",
+    "Range": 20,
+    "Damage": 180,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2071644,
+    "Name": "WEAPON.BRITISH_AFRICA.GRENADE_NO69_AFRICA_UK",
+    "Range": 20,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2071526,
+    "Name": "WEAPON.BRITISH_AFRICA.GRENADE_SMOKE_RED_AFRICA_UK",
+    "Range": 20,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2088987,
+    "Name": "WEAPON.BRITISH_AFRICA.RED_SMOKE_HUMBER_AFRICA_UK",
+    "Range": 45,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2071436,
+    "Name": "WEAPON.BRITISH_AFRICA.RIFLE_GRENADE_TOMMY_AFRICA_UK",
+    "Range": 30,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2071510,
+    "Name": "WEAPON.BRITISH_AFRICA.SMOKE_RIFLE_GRENADE_TOMMY_AFRICA_UK",
+    "Range": 30,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2122225,
+    "Name": "WEAPON.COMMON.ANTI_TANK_GRENADE_PARENT",
+    "Range": 19,
+    "Damage": 110,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2122228,
+    "Name": "WEAPON.COMMON.ANTI_TANK_SATCHEL_PARENT",
+    "Range": 14,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 195232,
+    "Name": "WEAPON.GERMANS.75MM_AT_GUN_AP_GER",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.GERMANS.75MM_AT_GUN_GER"
+  },
+  {
+    "PBGID": 170344,
+    "Name": "WEAPON.GERMANS.75MM_AT_GUN_GER",
+    "Range": 60,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 197134,
+    "Name": "WEAPON.GERMANS.75MM_AT_GUN_RAPID_DISPLACE_GER",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.GERMANS.75MM_AT_GUN_GER"
+  },
+  {
+    "PBGID": 195233,
+    "Name": "WEAPON.GERMANS.75MM_AT_GUN_TRACER_GER",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.GERMANS.75MM_AT_GUN_GER"
+  },
+  {
+    "PBGID": 202965,
+    "Name": "WEAPON.GERMANS.75MM_LG40_AT_GUN_GER",
+    "Range": 60,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 188403,
+    "Name": "WEAPON.GERMANS.88MM_EMPLACEMENT_AT_GUN_GER",
+    "Range": 70,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2062475,
+    "Name": "WEAPON.GERMANS.88MM_PAK43_AT_GUN_GER",
+    "Range": 70,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "antitankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 204705,
+    "Name": "WEAPON.GERMANS.GRB_39_GRENADE_LAUNCHER_AP_GER",
+    "Range": 35,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2030192,
+    "Name": "WEAPON.GERMANS.GRB_39_GRENADE_LAUNCHER_HE_GER",
+    "Range": 35,
+    "Damage": 45,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 197244,
+    "Name": "WEAPON.GERMANS.IMPROVED_PANZERFAUST_GRENADIER_GER",
+    "Range": 32,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2032557,
+    "Name": "WEAPON.GERMANS.PANZERBUCHSE39_AT_RIFLE_GER",
+    "Range": 40,
+    "Damage": 50,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 173667,
+    "Name": "WEAPON.GERMANS.PANZERFAUST_GRENADIER_GER",
+    "Range": 28,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 188679,
+    "Name": "WEAPON.GERMANS.PANZERSCHRECK_STORMTROOPER_GER",
+    "Range": 35,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "infantryatgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2032839,
+    "Name": "WEAPON.GERMANS.20MM_8_RAD_GER",
+    "Range": 40,
+    "Damage": 16,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 220923,
+    "Name": "WEAPON.GERMANS.20MM_AA_DEFENSE_GER",
+    "Range": 40,
+    "Damage": 10,
+    "MagazineSize": 32,
+    "FireRate": 8,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2022360,
+    "Name": "WEAPON.GERMANS.20MM_AA_GUN_BUTTON_GER",
+    "Range": 50,
+    "MagazineSize": 16,
+    "FireRate": 4,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 203115,
+    "Name": "WEAPON.GERMANS.20MM_AA_GUN_EMPLACEMENT_GER",
+    "Range": 50,
+    "Damage": 16,
+    "MagazineSize": 16,
+    "FireRate": 4,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 170352,
+    "Name": "WEAPON.GERMANS.20MM_AA_GUN_GER",
+    "Range": 50,
+    "Damage": 16,
+    "MagazineSize": 16,
+    "FireRate": 4,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 1536373,
+    "Name": "WEAPON.GERMANS.20MM_AA_GUN_HALFTRACK_GER",
+    "Range": 45,
+    "Damage": 24,
+    "MagazineSize": 16,
+    "FireRate": 4,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 195244,
+    "Name": "WEAPON.GERMANS.20MM_AA_GUN_SUPPRESSING_FIRE_GER",
+    "Range": 40,
+    "Damage": 24,
+    "MagazineSize": 48,
+    "FireRate": 12,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 197167,
+    "Name": "WEAPON.GERMANS.20MM_AA_GUN_WP_GER",
+    "Range": 50,
+    "Damage": 32,
+    "MagazineSize": 16,
+    "FireRate": 4,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 1148731,
+    "Name": "WEAPON.GERMANS.20MM_FLAKVIERLING_WIRBELWIND_BUTTON_GER",
+    "Range": 45,
+    "MagazineSize": 32,
+    "FireRate": 8,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 170384,
+    "Name": "WEAPON.GERMANS.20MM_FLAKVIERLING_WIRBELWIND_GER",
+    "Range": 40,
+    "Damage": 5,
+    "MagazineSize": 12,
+    "FireRate": 12,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2059912,
+    "Name": "WEAPON.GERMANS.20MM_FLAKVIERLING_WIRBELWIND_WP_GER",
+    "Range": 40,
+    "Damage": 7,
+    "MagazineSize": 96,
+    "FireRate": 12,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 170375,
+    "Name": "WEAPON.GERMANS.20MM_L6_40_GER",
+    "Range": 35,
+    "Damage": 16,
+    "MagazineSize": 11,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 195426,
+    "Name": "WEAPON.GERMANS.20MM_PANZERBUCHSE_ARMORED_CAR_GER",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 195442,
+    "Name": "WEAPON.GERMANS.20MM_PANZERBUCHSE_CRITICAL_SHOT_ARMORED_CAR_GER",
+    "Range": 45,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 197830,
+    "Name": "WEAPON.GERMANS.75MM_PANTHER_GER",
+    "Range": 40,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 221866,
+    "Name": "WEAPON.GERMANS.75MM_PANZER_IV_AP_GER",
+    "Range": 40,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 169561,
+    "Name": "WEAPON.GERMANS.75MM_PANZER_IV_GER",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 200644,
+    "Name": "WEAPON.GERMANS.75MM_PANZER_IV_HE_GER",
+    "Range": 40,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2064178,
+    "Name": "WEAPON.GERMANS.75MM_PANZER_IV_STUBBY_GER",
+    "Range": 40,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2059900,
+    "Name": "WEAPON.GERMANS.75MM_SEMOVENTE_ARTILLERY_BARRAGE_GER",
+    "Range": 60,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun"
+  },
+  {
+    "PBGID": 2082051,
+    "Name": "WEAPON.GERMANS.75MM_SEMOVENTE_AT_GER",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2059771,
+    "Name": "WEAPON.GERMANS.75MM_SEMOVENTE_GER",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2059844,
+    "Name": "WEAPON.GERMANS.75MM_SEMOVENTE_HEAT_GER",
+    "Range": 40,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2021227,
+    "Name": "WEAPON.GERMANS.75MM_STUG_HE_ROUNDS_GER",
+    "Range": 35,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 170381,
+    "Name": "WEAPON.GERMANS.75MM_STUG_III_GER",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 195799,
+    "Name": "WEAPON.GERMANS.76MM_AP_MARDER_III_GER",
+    "Range": 50,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 188661,
+    "Name": "WEAPON.GERMANS.76MM_MARDER_III_GER",
+    "Range": 50,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 185475,
+    "Name": "WEAPON.GERMANS.88MM_NASHORN_GER",
+    "Range": 60,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 202032,
+    "Name": "WEAPON.GERMANS.88MM_TIGER_GER",
+    "Range": 45,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2099704,
+    "Name": "WEAPON.GERMANS.88MM_TIGER_TIMED_FUSE_GER",
+    "Range": 45,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.GERMANS.88MM_TIGER_GER"
+  },
+  {
+    "PBGID": 205243,
+    "Name": "WEAPON.GERMANS.W_AIRCRAFT_BOMBING_OPERATION_GER",
+    "Range": 1000,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 205244,
+    "Name": "WEAPON.GERMANS.W_AIRCRAFT_DIVE_BOMB_OPERATION_GER",
+    "Range": 40,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 205245,
+    "Name": "WEAPON.GERMANS.W_AIRCRAFT_STRAFING_OPERATION_DAMAGE_GER",
+    "Range": 1000,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 205246,
+    "Name": "WEAPON.GERMANS.W_AIRCRAFT_STRAFING_OPERATION_VISUALS_GER",
+    "Range": 1000,
+    "MagazineSize": 45,
+    "FireRate": 45
+  },
+  {
+    "PBGID": 201893,
+    "Name": "WEAPON.GERMANS.ASSAULT_GRENADE_PANZERGRENADIER_GER",
+    "Range": 20,
+    "Damage": 45,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197340,
+    "Name": "WEAPON.GERMANS.FLARE_JAEGER_GER",
+    "Range": 150,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2059140,
+    "Name": "WEAPON.GERMANS.GRENADE_ASSAULT_GRENADIER_GER",
+    "Range": 20,
+    "Damage": 55,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 202472,
+    "Name": "WEAPON.GERMANS.GRENADE_BUNDLE_GER",
+    "Range": 10,
+    "Damage": 180,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 201945,
+    "Name": "WEAPON.GERMANS.GRENADE_FALLSCHIRMJAGER_GER",
+    "Range": 20,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 1080522,
+    "Name": "WEAPON.GERMANS.GRENADE_GRENADIER_GER",
+    "Range": 20,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2059659,
+    "Name": "WEAPON.GERMANS.GRENADE_GUASTATORI_GER",
+    "Range": 20,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 188672,
+    "Name": "WEAPON.GERMANS.GRENADE_PANZERGRENADIER_GER",
+    "Range": 20,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 846722,
+    "Name": "WEAPON.GERMANS.GRENADE_SMOKE_GRENADIER_GER",
+    "Range": 20,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2059658,
+    "Name": "WEAPON.GERMANS.GRENADE_SMOKE_GUASTATORI_GER",
+    "Range": 20,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 173791,
+    "Name": "WEAPON.GERMANS.GRENADE_STORMTROOPER_GER",
+    "Range": 20,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197008,
+    "Name": "WEAPON.GERMANS.GRENADE_VEHICLE_CREW_GER",
+    "Range": 20,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 195377,
+    "Name": "WEAPON.GERMANS.GRENADE_WHITE_PHOSPHORUS_STORMTROOPER_GER",
+    "Range": 15,
+    "Damage": 30,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197229,
+    "Name": "WEAPON.GERMANS.INCENDIARY_GRENADE_GRENADIER_GER",
+    "Range": 20,
+    "Damage": 8,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2061594,
+    "Name": "WEAPON.GERMANS.RIFLE_GRENADE_GRENADIER_GER",
+    "Range": 30,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 195373,
+    "Name": "WEAPON.GERMANS.RIFLE_GRENADE_JAEGER_GER",
+    "Range": 30,
+    "Damage": 87,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197316,
+    "Name": "WEAPON.GERMANS.SMOKE_GRENADE_PANZERGRENADIER_GER",
+    "Range": 20,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 195370,
+    "Name": "WEAPON.GERMANS.SMOKE_RIFLE_GRENADE_JAEGER_GER",
+    "Range": 30,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 170569,
+    "Name": "WEAPON.GERMANS.105MM_DUMMY_HOWITZER_GER",
+    "Range": 250,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 192093,
+    "Name": "WEAPON.GERMANS.105MM_FAKE_WESPE_GER",
+    "Range": 180,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031658,
+    "Name": "WEAPON.GERMANS.105MM_HOWITZER_CANNONE_BARRAGE_GER",
+    "Range": 275,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2072701,
+    "Name": "WEAPON.GERMANS.105MM_HOWITZER_CANNONE_DUMMY_GER",
+    "Range": 275,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031657,
+    "Name": "WEAPON.GERMANS.105MM_HOWITZER_CANNONE_GER",
+    "Range": 275,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031661,
+    "Name": "WEAPON.GERMANS.105MM_HOWITZER_CANNONE_SMOKE_GER",
+    "Range": 275,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 170545,
+    "Name": "WEAPON.GERMANS.105MM_HOWITZER_GER",
+    "Range": 250,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2059973,
+    "Name": "WEAPON.GERMANS.105MM_HOWITZER_OFF_MAP_ASSAULT_ARTILLERY_GER",
+    "Range": 250,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2059974,
+    "Name": "WEAPON.GERMANS.105MM_HOWITZER_OFF_MAP_ASSAULT_ARTILLERY_SMOKE_GER",
+    "Range": 140,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2059956,
+    "Name": "WEAPON.GERMANS.105MM_HOWITZER_OFF_MAP_SNAP_ARTILLERY_GER",
+    "Range": 250,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 191395,
+    "Name": "WEAPON.GERMANS.105MM_LONG_RANGE_SP_WESPE_GER",
+    "Range": 240,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 190228,
+    "Name": "WEAPON.GERMANS.105MM_TIGHT_SCATTER_SP_WESPE_GER",
+    "Range": 180,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2099584,
+    "Name": "WEAPON.GERMANS.105MM_WESPE_CREEPING_GER",
+    "Range": 180,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 184387,
+    "Name": "WEAPON.GERMANS.105MM_WESPE_DUMMY_GER",
+    "Range": 180,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 184379,
+    "Name": "WEAPON.GERMANS.105MM_WESPE_GER",
+    "Range": 180,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 191306,
+    "Name": "WEAPON.GERMANS.105MM_WIDE_SCATTER_SP_WESPE_GER",
+    "Range": 180,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 1058882,
+    "Name": "WEAPON.GERMANS.110LB_BOMB_STUKA_GER",
+    "Range": 200,
+    "Damage": 180,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197187,
+    "Name": "WEAPON.GERMANS.150MM_ANTI_TANK_NEBELWERFER_GER",
+    "Range": 150,
+    "Damage": 180,
+    "MagazineSize": 5,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197073,
+    "Name": "WEAPON.GERMANS.150MM_BRUMMBAR_BUNKER_BUSTER_GER",
+    "Range": 40,
+    "Damage": 180,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 188667,
+    "Name": "WEAPON.GERMANS.150MM_BRUMMBAR_GER",
+    "Range": 30,
+    "Damage": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197074,
+    "Name": "WEAPON.GERMANS.150MM_BRUMMBAR_INCENDIARY_BARRAGE_GER",
+    "Range": 40,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044439,
+    "Name": "WEAPON.GERMANS.150MM_DUMMY_NEBELWERFER_GER",
+    "Range": 150,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2108095,
+    "Name": "WEAPON.GERMANS.150MM_ENCIRCLEMENT_BARRAGE_GER",
+    "Range": 200,
+    "Damage": 180,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 205586,
+    "Name": "WEAPON.GERMANS.150MM_HOWITZER_OFF_MAP_ARTILLERY_GER",
+    "Range": 250,
+    "Damage": 180,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044440,
+    "Name": "WEAPON.GERMANS.150MM_NEBELWERFER_GER",
+    "Range": 150,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044441,
+    "Name": "WEAPON.GERMANS.150MM_WP_SMOKE_NEBELWERFER_GER",
+    "Range": 150,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2044442,
+    "Name": "WEAPON.GERMANS.180MM_OFF_MAP_FIRESTORM_ROCKET_BARRAGE_GER",
+    "Range": 150,
+    "Damage": 80,
+    "MagazineSize": 5,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2122543,
+    "Name": "WEAPON.GERMANS.283MM_RAILWAY_GUN_DUMMY_GER",
+    "Range": 1000,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2059560,
+    "Name": "WEAPON.GERMANS.283MM_RAILWAY_GUN_GER",
+    "Range": 1000,
+    "Damage": 400,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2104581,
+    "Name": "WEAPON.GERMANS.FRAGMENTATION_BOMBS_GER",
+    "Range": 200,
+    "Damage": 80,
+    "MagazineSize": 4,
+    "FireRate": 4
+  },
+  {
+    "PBGID": 832090,
+    "Name": "WEAPON.GERMANS.OFF_MAP_HEAVY_ARTILLERY_GER",
+    "Range": 250,
+    "Damage": 240,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2031680,
+    "Name": "WEAPON.GERMANS.OFF_MAP_SCORCHED_EARTH_BARRAGE_GER",
+    "Range": 5000,
+    "Damage": 200,
+    "MagazineSize": 5,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2030231,
+    "Name": "WEAPON.GERMANS.OFF_MAP_WHITE_PHOSPHORUS_BARRAGE_GER",
+    "Range": 100,
+    "Damage": 30,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 199426,
+    "Name": "WEAPON.GERMANS.ROCKET_STUKA_DIVE_BOMB_GER",
+    "Range": 200,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2029843,
+    "Name": "WEAPON.GERMANS.SMOKE_BOMBING_RUN_GER",
+    "Range": 1000,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 202115,
+    "Name": "WEAPON.GERMANS.STUKA_INCENDIARY_BOMB_GER",
+    "Range": 200,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 224342,
+    "Name": "WEAPON.GERMANS.STUKA_ROCKET_STRAFE_GER",
+    "Range": 200,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 195701,
+    "Name": "WEAPON.GERMANS.75MM_BARRAGE_HALFTRACK_STUMMEL_GER",
+    "Range": 50,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2032819,
+    "Name": "WEAPON.GERMANS.75MM_BARRAGE_LEIG_GER",
+    "Range": 160,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 195683,
+    "Name": "WEAPON.GERMANS.75MM_HALFTRACK_STUMMEL_GER",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2032816,
+    "Name": "WEAPON.GERMANS.75MM_LEIG_GER",
+    "Range": 110,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 195725,
+    "Name": "WEAPON.GERMANS.75MM_SMOKE_BARRAGE_HALFTRACK_STUMMEL_GER",
+    "Range": 50,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2032822,
+    "Name": "WEAPON.GERMANS.75MM_SMOKE_BARRAGE_LEIG_GER",
+    "Range": 160,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 210727,
+    "Name": "WEAPON.GERMANS.BARRAGE_LIGHT_ARTILLERY_OFF_MAP_GER",
+    "Range": 250,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 831178,
+    "Name": "WEAPON.GERMANS.OFF_MAP_ARTILLERY_FLARES_GER",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2099597,
+    "Name": "WEAPON.GERMANS.WHITE_PHOSPHOROUS_STUMMEL_GER",
+    "Range": 45,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197383,
+    "Name": "WEAPON.GERMANS.BOOBY_TRAP_PIONEER",
+    "Range": 35,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 206564,
+    "Name": "WEAPON.GERMANS.BOOBY_TRAP_SABOTAGE",
+    "Range": 35,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 199428,
+    "Name": "WEAPON.GERMANS.BUTTERFLY_BOMB_GER",
+    "Range": 20,
+    "Damage": 30,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 797353,
+    "Name": "WEAPON.GERMANS.MINE_RIEGEL_43_GER",
+    "Range": 35,
+    "Damage": 300,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 173765,
+    "Name": "WEAPON.GERMANS.S_MINE_FIELD_STURMPIONEER_GER",
+    "Range": 35,
+    "Damage": 40,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 170290,
+    "Name": "WEAPON.GERMANS.S_MINE_PIONEER_GER",
+    "Range": 35,
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 204693,
+    "Name": "WEAPON.GERMANS.TELLER_MINE_PIONEER_GER",
+    "Range": 35,
+    "Damage": 400,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 173749,
+    "Name": "WEAPON.GERMANS.TELLER_MINE_STURMPIONEER_GER",
+    "Range": 35,
+    "Damage": 400,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 174876,
+    "Name": "WEAPON.GERMANS.TRIP_FLARE_KETTENKRAD_GER",
+    "Range": 35,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197054,
+    "Name": "WEAPON.GERMANS.25MM_TANK_MORTAR_SMOKE_GER",
+    "Range": 55,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 204781,
+    "Name": "WEAPON.GERMANS.81MM_HALFTRACK_MORTAR_BARRAGE_GER",
+    "Range": 100,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 204542,
+    "Name": "WEAPON.GERMANS.81MM_HALFTRACK_MORTAR_GER",
+    "Range": 75,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 204780,
+    "Name": "WEAPON.GERMANS.81MM_HALFTRACK_SMOKE_BARRAGE_GER",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197159,
+    "Name": "WEAPON.GERMANS.81MM_MORTAR_AP_BARRAGE_GER",
+    "Range": 100,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 194420,
+    "Name": "WEAPON.GERMANS.81MM_MORTAR_BARRAGE_GER",
+    "Range": 100,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2062549,
+    "Name": "WEAPON.GERMANS.81MM_MORTAR_BUNKER_BARRAGE_GER",
+    "Range": 110,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2062548,
+    "Name": "WEAPON.GERMANS.81MM_MORTAR_BUNKER_GER",
+    "Range": 90,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2062550,
+    "Name": "WEAPON.GERMANS.81MM_MORTAR_BUNKER_SMOKE_BARRAGE_GER",
+    "Range": 110,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 170349,
+    "Name": "WEAPON.GERMANS.81MM_MORTAR_GER",
+    "Range": 75,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197133,
+    "Name": "WEAPON.GERMANS.81MM_MORTAR_RAPID_DISPLACE_GER",
+    "Range": 80,
+    "Damage": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 194421,
+    "Name": "WEAPON.GERMANS.81MM_MORTAR_SMOKE_GER",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 197138,
+    "Name": "WEAPON.GERMANS.FLARE_81MM_MORTAR_GER",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2032875,
+    "Name": "WEAPON.GERMANS.FLARE_HEINKEL_FLASHLIGHT_BOMB_GER",
+    "Range": 85,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2075440,
+    "Name": "WEAPON.GERMANS.OFF_MAP_81MM_MORTAR_BARRAGE_GER",
+    "Range": 80,
+    "Damage": 80,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2075442,
+    "Name": "WEAPON.GERMANS.OFF_MAP_81MM_MORTAR_SMOKE_GER",
+    "Range": 100,
+    "MagazineSize": 1,
+    "FireRate": 1
+  },
+  {
+    "PBGID": 2105265,
+    "Name": "WEAPON.AFRIKA_KORPS.TUNGSTEN_20MM_222_AK",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.AFRIKA_KORPS.20MM_KWK38_ARMORED_CAR_AK"
+  },
+  {
+    "PBGID": 2105256,
+    "Name": "WEAPON.AFRIKA_KORPS.TUNGSTEN_20MM_250_AK",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.AFRIKA_KORPS.20MM_250_AK"
+  },
+  {
+    "PBGID": 2105255,
+    "Name": "WEAPON.AFRIKA_KORPS.TUNGSTEN_20MM_8_RAD_AK",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.AFRIKA_KORPS.20MM_8_RAD_AK"
+  },
+  {
+    "PBGID": 2104881,
+    "Name": "WEAPON.AFRIKA_KORPS.TUNGSTEN_20MM_HALFTRACK_FLAK_AK",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.AFRIKA_KORPS.20MM_HALFTRACK_FLAK_AK"
+  },
+  {
+    "PBGID": 2105501,
+    "Name": "WEAPON.AFRIKA_KORPS.TUNGSTEN_37MM_PANZER_III_AK",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.AFRIKA_KORPS.37MM_PANZER_III_AK"
+  },
+  {
+    "PBGID": 2105257,
+    "Name": "WEAPON.AFRIKA_KORPS.TUNGSTEN_50MM_PANZER_III_AK",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.AFRIKA_KORPS.50MM_LONG_BARREL_PANZER_III_AK"
+  },
+  {
+    "PBGID": 2105499,
+    "Name": "WEAPON.AFRIKA_KORPS.TUNGSTEN_50MM_SHORT_PANZER_III_AK",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.AFRIKA_KORPS.50MM_PANZER_III_AK"
+  },
+  {
+    "PBGID": 2104871,
+    "Name": "WEAPON.AFRIKA_KORPS.TUNGSTEN_75MM_MARDER_III_AK",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.AFRIKA_KORPS.75MM_MARDER_III_AK"
+  },
+  {
+    "PBGID": 2105497,
+    "Name": "WEAPON.AFRIKA_KORPS.TUNGSTEN_75MM_PANZER_III_AK",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.AFRIKA_KORPS.75MM_PANZER_III_AK"
+  },
+  {
+    "PBGID": 2128078,
+    "Name": "WEAPON.AFRIKA_KORPS.TUNGSTEN_75MM_PANZER_IV_AK",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2128080,
+    "Name": "WEAPON.AFRIKA_KORPS.TUNGSTEN_75MM_STUG_III_AK",
+    "Range": 40,
+    "Damage": 120,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.COMMON.BALLISTIC_PARENT"
+  },
+  {
+    "PBGID": 2105258,
+    "Name": "WEAPON.AFRIKA_KORPS.TUNGSTEN_88MM_TIGER_AK",
+    "Damage": 200,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "ballistic",
+    "BalisticType": "tankgun",
+    "ParentFilepath": "WEAPON.AFRIKA_KORPS.88MM_TIGER_AK"
+  },
+  {
+    "PBGID": 198386,
+    "Name": "WEAPON.AFRIKA_KORPS.MG34_HMG_AK",
+    "Range": 45,
+    "Damage": 4,
+    "MagazineSize": 48,
+    "FireRate": 16,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 2103687,
+    "Name": "WEAPON.AFRIKA_KORPS.MG34_HMG_BUNKER_AK",
+    "Range": 45,
+    "Damage": 5,
+    "MagazineSize": 32,
+    "FireRate": 16,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 2074465,
+    "Name": "WEAPON.AFRIKA_KORPS.STUKA_ANTI_VEHICLE_STRAFE_AK",
+    "Range": 60,
+    "Damage": 33,
+    "MagazineSize": 10,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 2064592,
+    "Name": "WEAPON.AFRIKA_KORPS.BREDA_38_COAXIAL_M13_40_AK",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 42,
+    "FireRate": 6,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2064605,
+    "Name": "WEAPON.AFRIKA_KORPS.BREDA_38_HULL_M13_40_AK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 42,
+    "FireRate": 6,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2074733,
+    "Name": "WEAPON.AFRIKA_KORPS.LMG_BREDA_M30_BERSAGLIERI_AK",
+    "Range": 35,
+    "Damage": 5.25,
+    "MagazineSize": 56,
+    "FireRate": 7,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 226933,
+    "Name": "WEAPON.AFRIKA_KORPS.LMG_PANZERGRENADIER_AK",
+    "Range": 35,
+    "Damage": 3.5,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2134769,
+    "Name": "WEAPON.AFRIKA_KORPS.LMG_PANZERJAEGER_42_AK",
+    "Range": 35,
+    "Damage": 3.5,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2058304,
+    "Name": "WEAPON.AFRIKA_KORPS.LMG_PANZERJAEGER_AK",
+    "Range": 35,
+    "Damage": 3.5,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2072798,
+    "Name": "WEAPON.AFRIKA_KORPS.MG34_COAXIAL_250_222_AK",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 1854703,
+    "Name": "WEAPON.AFRIKA_KORPS.MG34_COAXIAL_8_RAD_AK",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 198387,
+    "Name": "WEAPON.AFRIKA_KORPS.MG34_COAXIAL_PANZER_III_AK",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 198389,
+    "Name": "WEAPON.AFRIKA_KORPS.MG34_HALFTRACK_250_AK",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 112,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 198390,
+    "Name": "WEAPON.AFRIKA_KORPS.MG34_HALFTRACK_251_AK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 168,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 198391,
+    "Name": "WEAPON.AFRIKA_KORPS.MG34_HULL_PANZER_III_AK",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 198392,
+    "Name": "WEAPON.AFRIKA_KORPS.MG34_KRADSCHUTZEN_MOTORCYCLE_AK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2072423,
+    "Name": "WEAPON.AFRIKA_KORPS.MG34_PANZER_III_AK",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 198393,
+    "Name": "WEAPON.AFRIKA_KORPS.MG34_REAR_HALFTRACK_251_AK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 168,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 198388,
+    "Name": "WEAPON.AFRIKA_KORPS.MG34_TRACTOR_254_DUMMY_AK",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 112,
+    "FireRate": 16,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 198395,
+    "Name": "WEAPON.AFRIKA_KORPS.MG42_PANZERGRENADIER_AK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 96,
+    "FireRate": 16,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 198394,
+    "Name": "WEAPON.AFRIKA_KORPS.MG42_PANZER_III_AK",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 105,
+    "FireRate": 15,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2057911,
+    "Name": "WEAPON.AFRIKA_KORPS.BERETTA_M38_GUASTATORI_AK",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 198396,
+    "Name": "WEAPON.AFRIKA_KORPS.BERETTA_M38_PANZERGRENADIER_AK",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2072105,
+    "Name": "WEAPON.AFRIKA_KORPS.MP40_ASSAULT_PANZERGRENADIER_AK",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 198397,
+    "Name": "WEAPON.AFRIKA_KORPS.MP40_CREW_AK",
+    "Range": 35,
+    "Damage": 2,
+    "MagazineSize": 32,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 198398,
+    "Name": "WEAPON.AFRIKA_KORPS.MP40_PANZERGRENADIER_AK",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 40,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2058524,
+    "Name": "WEAPON.AFRIKA_KORPS.MP40_PANZERPIONEER_AK",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 32,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2034271,
+    "Name": "WEAPON.AFRIKA_KORPS.MP43_PANZERGRENADIER_AK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 45,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2065005,
+    "Name": "WEAPON.AFRIKA_KORPS.MP43_PANZERPIONEERS_AK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 45,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2065004,
+    "Name": "WEAPON.AFRIKA_KORPS.MP43_PANZERPIONEER_AK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 45,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2074687,
+    "Name": "WEAPON.AFRIKA_KORPS.CARCANO_BERSAGLIERI_AK",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 7,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2100260,
+    "Name": "WEAPON.AFRIKA_KORPS.CARCANO_CARBINE_BERSAGLIERI_AK",
+    "Range": 35,
+    "Damage": 12,
+    "MagazineSize": 7,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2057908,
+    "Name": "WEAPON.AFRIKA_KORPS.CARCANO_GUASTATORI_AK",
+    "Range": 35,
+    "Damage": 16,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2076042,
+    "Name": "WEAPON.AFRIKA_KORPS.KAR98K_JAEGAR_AK",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 198399,
+    "Name": "WEAPON.AFRIKA_KORPS.KAR98K_KRADSCHUTZEN_AK",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 198400,
+    "Name": "WEAPON.AFRIKA_KORPS.KAR98K_PANZERGRENADIER_AK",
+    "Range": 35,
+    "Damage": 16,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 198401,
+    "Name": "WEAPON.AFRIKA_KORPS.KAR98K_PANZERJAEGER_AK",
+    "Range": 35,
+    "Damage": 16,
+    "MagazineSize": 5,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 1335223,
+    "Name": "WEAPON.AFRIKA_KORPS.KAR98K_PANZERPIONEER_AK",
+    "Range": 35,
+    "Damage": 16,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2076044,
+    "Name": "WEAPON.AFRIKA_KORPS.KAR98K_SCOPED_JAEGAR_AK",
+    "Range": 35,
+    "Damage": 80,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 198402,
+    "Name": "WEAPON.AFRIKA_KORPS.KAR98K_SCOPED_KRADSCHUTZEN_AK",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2034282,
+    "Name": "WEAPON.AFRIKA_KORPS.KAR98K_SCOPED_SNIPE_KRADSCHUTZEN_AK",
+    "Range": 50,
+    "Damage": 80,
+    "MagazineSize": 8,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2058521,
+    "Name": "WEAPON.AFRIKA_KORPS.KAR98K_SCOPED_ZF41_PANZERGRENADIER_AK",
+    "Range": 35,
+    "Damage": 16,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 1306256,
+    "Name": "WEAPON.30CAL_DUMMY_QUAD_HALFTRACK_US",
+    "Range": 45,
+    "Damage": 10,
+    "MagazineSize": 80,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 187560,
+    "Name": "WEAPON.30CAL_FIGHTING_POSITION_US",
+    "Range": 45,
+    "Damage": 10,
+    "MagazineSize": 80,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 181683,
+    "Name": "WEAPON.30CAL_HMG_BUTTON_VEHICLE_US",
+    "Range": 45,
+    "MagazineSize": 16,
+    "FireRate": 16,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 167211,
+    "Name": "WEAPON.30CAL_HMG_US",
+    "Range": 45,
+    "Damage": 5,
+    "MagazineSize": 24,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 170195,
+    "Name": "WEAPON.30CAL_TRUCK_4X4_US",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 56,
+    "FireRate": 7,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 201776,
+    "Name": "WEAPON.30CAL_WEASAL_US",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 56,
+    "FireRate": 7,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 171790,
+    "Name": "WEAPON.50CAL_GREYHOUND_US",
+    "Range": 35,
+    "Damage": 7,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 400818,
+    "Name": "WEAPON.50CAL_HALFTRACK_DUMMY_US",
+    "Range": 35,
+    "Damage": 7,
+    "MagazineSize": 48,
+    "FireRate": 6,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 170191,
+    "Name": "WEAPON.50CAL_HALFTRACK_US",
+    "Range": 35,
+    "Damage": 7,
+    "MagazineSize": 56,
+    "FireRate": 7,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 2035979,
+    "Name": "WEAPON.50CAL_HAWKER_TYPHOON_AOT_UK",
+    "Range": 60,
+    "Damage": 40,
+    "MagazineSize": 20,
+    "FireRate": 20,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 171789,
+    "Name": "WEAPON.50CAL_HELLCAT_US",
+    "Range": 35,
+    "Damage": 11.5,
+    "MagazineSize": 56,
+    "FireRate": 7,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 198058,
+    "Name": "WEAPON.50CAL_P47_AOT_US",
+    "Range": 60,
+    "Damage": 30,
+    "MagazineSize": 20,
+    "FireRate": 20,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 201948,
+    "Name": "WEAPON.50CAL_P47_STRAFING_SUPPORT_US",
+    "Range": 1000,
+    "Damage": 15,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 183732,
+    "Name": "WEAPON.50CAL_P47_US",
+    "Range": 60,
+    "Damage": 40,
+    "MagazineSize": 20,
+    "FireRate": 20,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 1505096,
+    "Name": "WEAPON.50CAL_QUADMOUNT_BUTTON_HALFTRACK_US",
+    "Range": 45,
+    "MagazineSize": 288,
+    "FireRate": 24,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 171797,
+    "Name": "WEAPON.50CAL_QUADMOUNT_HALFTRACK_US",
+    "Range": 45,
+    "Damage": 8,
+    "MagazineSize": 288,
+    "FireRate": 24,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 171785,
+    "Name": "WEAPON.50CAL_SHERMAN_US",
+    "Range": 35,
+    "Damage": 11.5,
+    "MagazineSize": 56,
+    "FireRate": 7,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 206052,
+    "Name": "WEAPON.C_AIRBORNE_PARATROOPERS_LOITER_SUPPORT_LOITER_US",
+    "Range": 1000,
+    "Damage": 15,
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 1176298,
+    "Name": "WEAPON.30CAL_COAXIAL_CHAFFEE_US",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 35,
+    "FireRate": 7,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 170187,
+    "Name": "WEAPON.30CAL_COAXIAL_GREYHOUND_US",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 170198,
+    "Name": "WEAPON.30CAL_COAXIAL_SHERMAN_US",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 35,
+    "FireRate": 7,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 1176299,
+    "Name": "WEAPON.30CAL_HULL_CHAFFEE_US",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 35,
+    "FireRate": 7,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 170199,
+    "Name": "WEAPON.30CAL_HULL_SHERMAN_US",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 35,
+    "FireRate": 7,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 173285,
+    "Name": "WEAPON.BAR_RIFLEMEN_FIRE_SUPERIORITY_US",
+    "Range": 35,
+    "Damage": 5.25,
+    "MagazineSize": 56,
+    "FireRate": 7,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 172987,
+    "Name": "WEAPON.BAR_RIFLEMEN_US",
+    "Range": 35,
+    "Damage": 5.25,
+    "MagazineSize": 56,
+    "FireRate": 7,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2027470,
+    "Name": "WEAPON.BREDA_M1930_LMG_RESISTANCE_FIGHTERS_PARTISAN",
+    "Range": 35,
+    "Damage": 5.25,
+    "MagazineSize": 24,
+    "FireRate": 6,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 182825,
+    "Name": "WEAPON.M1919A6_PARATROOPER_US",
+    "Range": 35,
+    "Damage": 6,
+    "MagazineSize": 64,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 201505,
+    "Name": "WEAPON.M1941_LMG_DEVILS_BRIGADE_US",
+    "Range": 35,
+    "Damage": 5.25,
+    "MagazineSize": 60,
+    "FireRate": 6,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2027733,
+    "Name": "WEAPON.BERETTA_MODEL_38_RESISTANCE_FIGHTERS_PARTISAN",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 30,
+    "FireRate": 6,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 196969,
+    "Name": "WEAPON.GREASE_GUN_ASSAULT_ENGINEER_US",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 170203,
+    "Name": "WEAPON.GREASE_GUN_ENGINEER_US",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2027724,
+    "Name": "WEAPON.MP40_RESISTANCE_FIGHTERS_PARTISAN",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2099574,
+    "Name": "WEAPON.MP44_SABOTEURS_PARTISAN",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 50,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2085260,
+    "Name": "WEAPON.THOMPSON_ASSAULT_ENGINEERS_US",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 24,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 205414,
+    "Name": "WEAPON.THOMPSON_CAPTAIN_RIFLEMEN_US",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 50,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 172964,
+    "Name": "WEAPON.THOMPSON_CAPTAIN_US",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 50,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 170207,
+    "Name": "WEAPON.THOMPSON_RANGER_US",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 24,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 187774,
+    "Name": "WEAPON.THOMPSON_RIFLEMEN_LEADER_FIRE_SUPERIORITY_US",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 20,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 187763,
+    "Name": "WEAPON.THOMPSON_RIFLEMEN_LEADER_US",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 20,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2033282,
+    "Name": "WEAPON.CARBINE_BAZOOKA_TEAM_US",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 170200,
+    "Name": "WEAPON.CARBINE_CREW_US",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 14,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 170204,
+    "Name": "WEAPON.CARBINE_PARATROOPER_US",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 14,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2026628,
+    "Name": "WEAPON.CARCANO_RESISTANCE_FIGHTER_PARTISAN",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 201469,
+    "Name": "WEAPON.GARAND_DEVILS_BRIGADE_US",
+    "Range": 35,
+    "Damage": 12,
+    "MagazineSize": 7,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2063130,
+    "Name": "WEAPON.GARAND_PATHFINDER_US",
+    "Range": 35,
+    "Damage": 12,
+    "MagazineSize": 7,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 173283,
+    "Name": "WEAPON.GARAND_RIFLEMAN_FIRE_SUPERIORITY_US",
+    "Range": 35,
+    "Damage": 12,
+    "MagazineSize": 7,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 137212,
+    "Name": "WEAPON.GARAND_RIFLEMAN_US",
+    "Range": 35,
+    "Damage": 12,
+    "MagazineSize": 7,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 170208,
+    "Name": "WEAPON.GARAND_SCOUT_US",
+    "Range": 35,
+    "Damage": 12,
+    "MagazineSize": 7,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 177758,
+    "Name": "WEAPON.GARAND_TRACER_ROUNDS_SCOUT_US",
+    "Range": 35,
+    "MagazineSize": 8,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2027433,
+    "Name": "WEAPON.LEE_ENFIELD_SCOPED_MARKSMAN_TEAM_PARTISAN",
+    "Range": 50,
+    "Damage": 110,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 170215,
+    "Name": "WEAPON.SPRINGFIELD_SNIPER_US",
+    "Range": 50,
+    "Damage": 110,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 911232,
+    "Name": "WEAPON.BRITISH.20MM_OERLIKON_MOUNT_CWT_UK",
+    "Range": 45,
+    "Damage": 15,
+    "MagazineSize": 10,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 2085195,
+    "Name": "WEAPON.BRITISH.20MM_OERLIKON_MOUNT_SUPRESSING_FIRE_CWT_UK",
+    "Range": 45,
+    "Damage": 15,
+    "MagazineSize": 10,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 197702,
+    "Name": "WEAPON.BRITISH.30CAL_DINGO_UK",
+    "Range": 35,
+    "Damage": 3.5,
+    "MagazineSize": 42,
+    "FireRate": 7,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 2085144,
+    "Name": "WEAPON.BRITISH.30CAL_HMG_PLUNGING_FIRE_UK",
+    "Range": 45,
+    "Damage": 5,
+    "MagazineSize": 24,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 197704,
+    "Name": "WEAPON.BRITISH.30CAL_HMG_UK",
+    "Range": 45,
+    "Damage": 5,
+    "MagazineSize": 24,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 217177,
+    "Name": "WEAPON.BRITISH.30CAL_VICKERS_BUNKER_UK",
+    "Range": 45,
+    "Damage": 10,
+    "MagazineSize": 80,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 197705,
+    "Name": "WEAPON.BRITISH.50CAL_BESSA_MOUNTED_CRUSADER_UK",
+    "Range": 35,
+    "Damage": 8,
+    "MagazineSize": 72,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 197706,
+    "Name": "WEAPON.BRITISH.50CAL_BROWNING_MOUNTED_GRANT_UK",
+    "Range": 35,
+    "Damage": 8,
+    "MagazineSize": 72,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 197708,
+    "Name": "WEAPON.BRITISH.50CAL_MOUNTED_STUART_UK",
+    "Range": 35,
+    "Damage": 8,
+    "MagazineSize": 72,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 2061839,
+    "Name": "WEAPON.BRITISH.30CAL_COAXIAL_CENTAUR_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 45,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2033379,
+    "Name": "WEAPON.BRITISH.30CAL_COAXIAL_CHURCHILL_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 45,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2081178,
+    "Name": "WEAPON.BRITISH.30CAL_COAXIAL_CRUSADER_MKIII_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 45,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 197713,
+    "Name": "WEAPON.BRITISH.30CAL_COAXIAL_CRUSADER_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 45,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 197718,
+    "Name": "WEAPON.BRITISH.30CAL_COAXIAL_GRANT_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 45,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 205189,
+    "Name": "WEAPON.BRITISH.30CAL_COAXIAL_HUMBER_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 72,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 197717,
+    "Name": "WEAPON.BRITISH.30CAL_COAXIAL_MATILDA_UK",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 45,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2058128,
+    "Name": "WEAPON.BRITISH.30CAL_COAXIAL_STUART_ACE_SP_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 35,
+    "FireRate": 7,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 197714,
+    "Name": "WEAPON.BRITISH.30CAL_COAXIAL_STUART_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 45,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2034083,
+    "Name": "WEAPON.BRITISH.30CAL_COAXIAL_VALENTINE_UK",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 45,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 197703,
+    "Name": "WEAPON.BRITISH.30CAL_CWT_DUMMY_UK",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 112,
+    "FireRate": 16,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2033761,
+    "Name": "WEAPON.BRITISH.30CAL_HULL_CHURCHILL_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 45,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 197709,
+    "Name": "WEAPON.BRITISH.30CAL_HULL_CRUSADER_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 45,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 197710,
+    "Name": "WEAPON.BRITISH.30CAL_HULL_GRANT_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 197715,
+    "Name": "WEAPON.BRITISH.30CAL_HULL_MATILDA_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 45,
+    "FireRate": 9,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 197712,
+    "Name": "WEAPON.BRITISH.30CAL_HULL_STUART_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2028329,
+    "Name": "WEAPON.BRITISH.BREN_LMG_GURKHAS_UK",
+    "Range": 35,
+    "Damage": 3.5,
+    "MagazineSize": 64,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 197722,
+    "Name": "WEAPON.BRITISH.BREN_LMG_UK",
+    "Range": 35,
+    "Damage": 3.5,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2031396,
+    "Name": "WEAPON.BRITISH.VICKERS_K_LMG_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 60,
+    "FireRate": 12,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 197723,
+    "Name": "WEAPON.BRITISH.9MM_STEN_SAPPER_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 48,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2029892,
+    "Name": "WEAPON.BRITISH.STEN_COMMANDO_UK",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 50,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 197724,
+    "Name": "WEAPON.BRITISH.THOMPSON_GUARDS_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 30,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 227025,
+    "Name": "WEAPON.BRITISH.THOMPSON_GURKHAS_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 30,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2031492,
+    "Name": "WEAPON.BRITISH.LEE_ENFIELD_AUSTRALIAN_UK",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2077107,
+    "Name": "WEAPON.BRITISH.LEE_ENFIELD_CANADIAN_SHOCK_UK",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 205455,
+    "Name": "WEAPON.BRITISH.LEE_ENFIELD_CREW_UK",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 14,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 197726,
+    "Name": "WEAPON.BRITISH.LEE_ENFIELD_GUARDS_UK",
+    "Range": 35,
+    "Damage": 12,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 206656,
+    "Name": "WEAPON.BRITISH.LEE_ENFIELD_GURKHAS_UK",
+    "Range": 35,
+    "Damage": 12,
+    "MagazineSize": 10,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 197725,
+    "Name": "WEAPON.BRITISH.LEE_ENFIELD_TOMMY_UK",
+    "Range": 35,
+    "Damage": 12,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 197727,
+    "Name": "WEAPON.BRITISH.SCOPED_LEE_ENFIELD_SNIPER_UK",
+    "Range": 50,
+    "Damage": 110,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 197728,
+    "Name": "WEAPON.BRITISH.SCOPED_LEE_ENFIELD_TOMMY_UK",
+    "Range": 35,
+    "Damage": 12,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 204432,
+    "Name": "WEAPON.BRITISH.WEBLEY_REVOLVER_UK",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "smallarms"
+  },
+  {
+    "PBGID": 2071918,
+    "Name": "WEAPON.BRITISH_AFRICA.30CAL_HMG_AFRICA_UK",
+    "Range": 45,
+    "Damage": 5,
+    "MagazineSize": 24,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 2071702,
+    "Name": "WEAPON.BRITISH_AFRICA.BREN_LMG_AFRICA_UK",
+    "Range": 35,
+    "Damage": 3.5,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2088936,
+    "Name": "WEAPON.BRITISH_AFRICA.BREN_LMG_VOLLEY_AFRICA_UK",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 75,
+    "FireRate": 15,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2071642,
+    "Name": "WEAPON.BRITISH_AFRICA.9MM_STEN_SAPPER_AFRICA_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 48,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2071753,
+    "Name": "WEAPON.BRITISH_AFRICA.STEN_COMMANDO_AFRICA_UK",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 50,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2071790,
+    "Name": "WEAPON.BRITISH_AFRICA.THOMPSON_GUARDS_AFRICA_UK",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 30,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2071788,
+    "Name": "WEAPON.BRITISH_AFRICA.LEE_ENFIELD_GUARDS_AFRICA_UK",
+    "Range": 35,
+    "Damage": 12,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2071350,
+    "Name": "WEAPON.BRITISH_AFRICA.LEE_ENFIELD_TOMMY_AFRICA_UK",
+    "Range": 35,
+    "Damage": 12,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2080275,
+    "Name": "WEAPON.BRITISH_AFRICA.LEE_ENFIELD_TOMMY_AFRICA_VOLLEY_FIRE_UK",
+    "Range": 35,
+    "Damage": 14,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2071422,
+    "Name": "WEAPON.BRITISH_AFRICA.SCOPED_LEE_ENFIELD_TOMMY_AFRICA_UK",
+    "Range": 35,
+    "Damage": 12,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 610472,
+    "Name": "WEAPON.COMMON.CARCANO_PARTISAN_COM",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 8,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 202104,
+    "Name": "WEAPON.GERMANS.30MM_JU87_GER",
+    "Range": 60,
+    "Damage": 10,
+    "MagazineSize": 12,
+    "FireRate": 12,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 200616,
+    "Name": "WEAPON.GERMANS.MG42_BUNKER_GER",
+    "Range": 45,
+    "Damage": 10,
+    "MagazineSize": 80,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 126,
+    "Name": "WEAPON.GERMANS.MG42_HMG_GER",
+    "Range": 45,
+    "Damage": 4,
+    "MagazineSize": 60,
+    "FireRate": 20,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 205613,
+    "Name": "WEAPON.GERMANS.MG42_HMG_GER_SP",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun",
+    "ParentFilepath": "WEAPON.GERMANS.MG42_HMG_GER"
+  },
+  {
+    "PBGID": 2126325,
+    "Name": "WEAPON.GERMANS.MG42_HMG_GER_SP_GELA",
+    "MagazineSize": 1,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun",
+    "ParentFilepath": "WEAPON.GERMANS.MG42_HMG_GER"
+  },
+  {
+    "PBGID": 197119,
+    "Name": "WEAPON.GERMANS.MG42_HMG_RAPID_DISPLACE_GER",
+    "Range": 45,
+    "Damage": 7.6,
+    "MagazineSize": 80,
+    "FireRate": 16,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 197096,
+    "Name": "WEAPON.GERMANS.MG42_WP_HMG_GER",
+    "Range": 45,
+    "Damage": 4,
+    "MagazineSize": 100,
+    "FireRate": 20,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 204875,
+    "Name": "WEAPON.GERMANS.STUKA_STRAFING_RUN",
+    "Range": 60,
+    "Damage": 20,
+    "MagazineSize": 20,
+    "FireRate": 20,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 2031063,
+    "Name": "WEAPON.GERMANS.STUKA_STRAFING_RUN_FOGGIA_GER",
+    "Range": 60,
+    "Damage": 20,
+    "MagazineSize": 20,
+    "FireRate": 20,
+    "Category": "smallarms",
+    "SmallArmsType": "heavymachinegun"
+  },
+  {
+    "PBGID": 170378,
+    "Name": "WEAPON.GERMANS.8MM_COAXIAL_L6_40_GER",
+    "Range": 35,
+    "Damage": 4,
+    "MagazineSize": 64,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 201943,
+    "Name": "WEAPON.GERMANS.FG_42_FALLSCHIRMJAGER_GER",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 24,
+    "FireRate": 12,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 202960,
+    "Name": "WEAPON.GERMANS.FG_42_PIONEER_GER",
+    "Range": 35,
+    "Damage": 6,
+    "MagazineSize": 18,
+    "FireRate": 6,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 205382,
+    "Name": "WEAPON.GERMANS.MG15_JAEGER_GER",
+    "Range": 35,
+    "Damage": 5.25,
+    "MagazineSize": 84,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 170367,
+    "Name": "WEAPON.GERMANS.MG34_ARMORED_CAR_GER",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2032842,
+    "Name": "WEAPON.GERMANS.MG34_COAXIAL_8_RAD_GER",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 30,
+    "FireRate": 6,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2061853,
+    "Name": "WEAPON.GERMANS.MG34_COAXIAL_PANTHER_GER",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2032845,
+    "Name": "WEAPON.GERMANS.MG34_COAXIAL_PANZER_III_GER",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 35,
+    "FireRate": 5,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 170371,
+    "Name": "WEAPON.GERMANS.MG34_COAXIAL_PANZER_IV_GER",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2031705,
+    "Name": "WEAPON.GERMANS.MG34_COAXIAL_TIGER_I_GER",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 195448,
+    "Name": "WEAPON.GERMANS.MG34_HALFTRACK_GER",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 204816,
+    "Name": "WEAPON.GERMANS.MG34_HULL_MARDER_GER",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 170369,
+    "Name": "WEAPON.GERMANS.MG34_HULL_PANZER_IV_GER",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2031704,
+    "Name": "WEAPON.GERMANS.MG34_HULL_TIGER_I_GER",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 174020,
+    "Name": "WEAPON.GERMANS.MG34_KETTENKRAD_DUMMY_GER",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 112,
+    "FireRate": 16,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 170368,
+    "Name": "WEAPON.GERMANS.MG34_KETTENKRAD_GER",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 195449,
+    "Name": "WEAPON.GERMANS.MG34_REAR_HALFTRACK_GER",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 195816,
+    "Name": "WEAPON.GERMANS.MG42_BRUMMBAR_GER",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 80,
+    "FireRate": 16,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 2099592,
+    "Name": "WEAPON.GERMANS.MG42_HALFTRACK_GER",
+    "Range": 35,
+    "Damage": 3,
+    "MagazineSize": 70,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 176985,
+    "Name": "WEAPON.GERMANS.MG42_PANZER_IV_GER",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 80,
+    "FireRate": 16,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 188690,
+    "Name": "WEAPON.GERMANS.MG42_STORMTROOPER_GER",
+    "Range": 35,
+    "Damage": 3.5,
+    "MagazineSize": 84,
+    "FireRate": 14,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 176979,
+    "Name": "WEAPON.GERMANS.MG42_STUG_III_GER",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 80,
+    "FireRate": 16,
+    "Category": "smallarms",
+    "SmallArmsType": "lightmachinegun"
+  },
+  {
+    "PBGID": 170337,
+    "Name": "WEAPON.GERMANS.MP40_CREW_GER",
+    "Range": 35,
+    "Damage": 2,
+    "MagazineSize": 32,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2117166,
+    "Name": "WEAPON.GERMANS.MP40_GRENADIER_GER",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2031684,
+    "Name": "WEAPON.GERMANS.MP40_GUASTATORI_GER",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 188645,
+    "Name": "WEAPON.GERMANS.MP40_PANZERGRENADIER_GER",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 40,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 168617,
+    "Name": "WEAPON.GERMANS.MP40_PIONEER_GER",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 32,
+    "FireRate": 8,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 195351,
+    "Name": "WEAPON.GERMANS.MP44_PANZERGRENADIER_GER",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 40,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2108100,
+    "Name": "WEAPON.GERMANS.MP44_STORMTROOPER_GER",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 40,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 170341,
+    "Name": "WEAPON.GERMANS.MP44_STORMTROOPER_OFFICER_GER",
+    "Range": 35,
+    "Damage": 5,
+    "MagazineSize": 40,
+    "FireRate": 10,
+    "Category": "smallarms",
+    "SmallArmsType": "submachinegun"
+  },
+  {
+    "PBGID": 2033248,
+    "Name": "WEAPON.GERMANS.CARCANO_RESERVE_GER",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 8,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 195354,
+    "Name": "WEAPON.GERMANS.G43_JAEGER_GER",
+    "Range": 35,
+    "Damage": 13,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2059845,
+    "Name": "WEAPON.GERMANS.G43_SCOPED_JAEGER_GER",
+    "Range": 35,
+    "Damage": 13,
+    "MagazineSize": 9,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 202496,
+    "Name": "WEAPON.GERMANS.G43_SNIPER_GER",
+    "Range": 50,
+    "Damage": 110,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2090101,
+    "Name": "WEAPON.GERMANS.G43_SNIPER_PINNING_SHOT_GER",
+    "Range": 50,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 170339,
+    "Name": "WEAPON.GERMANS.G43_STORMTROOPER_GER",
+    "Range": 35,
+    "Damage": 13,
+    "MagazineSize": 8,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2061879,
+    "Name": "WEAPON.GERMANS.KAR98K_FALLSCHIRMPIONEER_GER",
+    "Range": 35,
+    "Damage": 14,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 137303,
+    "Name": "WEAPON.GERMANS.KAR98K_GRENADIER_GER",
+    "Range": 35,
+    "Damage": 14,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 188641,
+    "Name": "WEAPON.GERMANS.KAR98K_JAEGER_GER",
+    "Range": 35,
+    "Damage": 10,
+    "MagazineSize": 5,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 1927545,
+    "Name": "WEAPON.GERMANS.KAR98K_STORMTROOPER_GER",
+    "Range": 35,
+    "Damage": 12,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 2027926,
+    "Name": "WEAPON.GERMANS.LUGER_PISTOL_GER",
+    "Range": 35,
+    "Damage": 11.5,
+    "MagazineSize": 6,
+    "FireRate": 1,
+    "Category": "smallarms"
+  },
+  {
+    "PBGID": 2127076,
+    "Name": "WEAPON.SPRINGFIELD_ASSASSIN_US",
+    "Range": 50,
+    "Damage": 110,
+    "MagazineSize": 4,
+    "FireRate": 1,
+    "Category": "smallarms",
+    "SmallArmsType": "rifle"
+  },
+  {
+    "PBGID": 205374,
+    "Name": "WEAPON.GERMANS.M_BARRAGE_LIGHT_ARTILLERY_OFF_MAP_GER",
+    "Range": 1000,
+    "Damage": 60,
+    "MagazineSize": 1,
+    "FireRate": 1
+  }
+]

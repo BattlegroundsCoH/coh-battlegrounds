@@ -1,4 +1,4 @@
-﻿using Battlegrounds.Game.Database;
+﻿using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Gameplay;
 
 namespace Battlegrounds.Game.Match.Analyze;

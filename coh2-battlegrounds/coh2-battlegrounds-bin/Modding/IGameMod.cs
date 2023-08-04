@@ -35,7 +35,7 @@ public interface IGameMod {
     /// <summary>
     /// Get the associated mod package.
     /// </summary>
-    ModPackage Package { get; }
+    IModPackage Package { get; }
 
     /// <summary>
     /// Get the <see cref="ModGuid"/> used to identify the mod.

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Battlegrounds.Logging;
 using Battlegrounds.Networking.Communication.Golang;
 
 namespace Battlegrounds.Networking.Communication.Connections;
@@ -35,6 +35,8 @@ public delegate void UploadProgressCallbackHandler(int currentChunk, int expecte
 /// Represents a connection to a server endpoint from local machine. Implements <see cref="IConnection"/>. This class cannot be inherited.
 /// </summary>
 public sealed class ServerConnection : IConnection {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     private bool m_listen;
     private readonly Socket m_socket;
@@ -132,7 +134,7 @@ public sealed class ServerConnection : IConnection {
             }
 
         } catch (Exception ex) {
-            Trace.WriteLine(ex, nameof(ServerConnection));
+            logger.ExceptionWithDetails(ex, (nameof(slice), slice), (nameof(received), received));
             return null;
         }
 
@@ -158,7 +160,7 @@ public sealed class ServerConnection : IConnection {
                         return;
                     }
                 } catch (Exception e) {
-                    Trace.WriteLine(e, nameof(ServerConnection));
+                    logger.Exception(e);
                     this.OnConnectionLost?.Invoke(true);
                     this.m_listen = false;
                     return;
@@ -230,7 +232,7 @@ public sealed class ServerConnection : IConnection {
             }
 
         } catch (SocketException soc) {
-            Trace.WriteLine($"SendMessage - Socket Exception: {soc.Message}", nameof(ServerConnection));
+            logger.Error($"SendMessage - Socket Exception: {soc.Message}");
         }
 
         // Release lock
@@ -296,7 +298,7 @@ public sealed class ServerConnection : IConnection {
     public static ServerConnection? ConnectToServer(string ipaddress, int port, IntroMessage introduction, out ulong lobbyID) {
 
         // Set socket
-        Socket? socket = null;
+        Socket? socket;
         lobbyID = introduction.LobbyUID;
 
         // Try
@@ -338,16 +340,17 @@ public sealed class ServerConnection : IConnection {
             }
 
         } catch (Exception ex) {
-            Trace.WriteLine(ex, nameof(ServerConnection));
+            logger.Error(ex);
             return null;
         }
 
         // Create connection object
-        ServerConnection conn = new(socket, introduction.PlayerUID);
+        ServerConnection conn = new(socket, introduction.PlayerUID) {
+            m_listen = true
+        };
 
         // Start listen thread
-        conn.m_listen = true;
-        conn.m_lthread.Start();
+        conn.m_lthread.Start(); 
 
         // Register in network interface
         NetworkInterface.RegisterConnection(conn);

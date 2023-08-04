@@ -1,7 +1,7 @@
 ﻿namespace Battlegrounds.Game.Match.Play.Factory;
 
-public class BattleSimulatorStrategyFactory : IPlayStrategyFactory {
+public sealed class BattleSimulatorStrategyFactory : IPlayStrategyFactory {
 
-    public IPlayStrategy CreateStrategy(ISession session) => new BattleSimulatorStrategy(session);
+    public IPlayStrategy CreateStrategy(ISession session, ISessionHandler sessionHandler) => new BattleSimulatorStrategy(session);
 
 }

@@ -41,7 +41,7 @@ public static class Update {
 	public static bool IsNewVersion() {
 
 		var latestVersion = new Version(Regex.Replace(_latestRelease.TagName, @"[-]?[a-zA-Z]+", ""));
-        var assemblyVersion = new Version(BattlegroundsInstance.Version.ApplicationVersion);
+        var assemblyVersion = new Version(BattlegroundsContext.Version.ApplicationVersion);
 
 		if (latestVersion.CompareTo(assemblyVersion) > 0) return true; 
 
@@ -59,7 +59,7 @@ public static class Update {
 		Trace.WriteLine("Starting download", nameof(Update));
 
 		using var stream = await httpClient.GetStreamAsync(downloadUrl);
-		using var fileStream = new FileStream($"{BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.UPDATE_FOLDER, Path.GetFileName(downloadName))}", FileMode.Create); 
+		using var fileStream = new FileStream($"{BattlegroundsContext.GetRelativePath(BattlegroundsPaths.UPDATE_FOLDER, Path.GetFileName(downloadName))}", FileMode.Create); 
 		
 		await stream.CopyToAsync(fileStream);
 
@@ -74,7 +74,7 @@ public static class Update {
         ProcessStartInfo msiexec_bin = new ProcessStartInfo() {
             UseShellExecute = false,
             FileName = "msiexec.exe",
-            Arguments = $"/package {BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.UPDATE_FOLDER)}\\{_latestRelease.Assets[0].Name} /passive /norestart",
+            Arguments = $"/package {BattlegroundsContext.GetRelativePath(BattlegroundsPaths.UPDATE_FOLDER)}\\{_latestRelease.Assets[0].Name} /passive /norestart",
         };
 
         // Trigger compile

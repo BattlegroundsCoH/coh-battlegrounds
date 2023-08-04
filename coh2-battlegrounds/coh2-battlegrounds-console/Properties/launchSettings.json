@@ -7,6 +7,22 @@
     "AITest": {
       "commandName": "Project",
       "commandLineArgs": "aipdef"
+    },
+    "Playback": {
+      "commandName": "Project",
+      "commandLineArgs": "playback -coh3 -json"
+    },
+    "GfxCoH3": {
+      "commandName": "Project",
+      "commandLineArgs": "gfxdir -d 3/icons/races -p 3/icons -o coh3_races.dat -v 300 -t2p"
+    },
+    "GfxCoH3-Unpack": {
+      "commandName": "Project",
+      "commandLineArgs": "gfxun -gfx coh3_races.dat -o coh3_races"
+    },
+    "CoH3Maps": {
+      "commandName": "Project",
+      "commandLineArgs": "coh2-extract-maps -coh3"
     }
   }
 }

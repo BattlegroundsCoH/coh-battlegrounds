@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -8,6 +7,7 @@ using System.Text.RegularExpressions;
 using Battlegrounds.Functional;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
+using Battlegrounds.Logging;
 using Battlegrounds.Verification;
 
 namespace Battlegrounds.DataLocal;
@@ -21,6 +21,8 @@ public delegate void LocalCompaniesLoadedHandler();
 /// Static utility class for handling local player companies.
 /// </summary>
 public static class Companies {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     /// <summary>
     /// 
@@ -47,7 +49,7 @@ public static class Companies {
 
         try {
 
-            string companyFolder = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, string.Empty);
+            string companyFolder = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, string.Empty);
             string[] companies = Directory.GetFiles(companyFolder, "*.json");
 
             if (__companies.Count == companies.Length) {
@@ -61,16 +63,16 @@ public static class Companies {
                     if (CompanySerializer.GetCompanyFromFile(companypath, true) is Company company)
                         __companies.Add(company);
                 } catch (ChecksumViolationException checksumViolation) {
-                    Trace.WriteLine($"Failed to verify company \"{companypath}\" ({checksumViolation.Message})", nameof(Companies));
+                    logger.Warning($"Failed to verify company \"{companypath}\" ({checksumViolation.Message})");
                 }
             }
 
             PlayerCompaniesLoaded?.Invoke();
 
-            Trace.WriteLine($"Loaded {__companies.Count} user companies", nameof(Companies));
+            logger.Info($"Loaded {__companies.Count} user companies");
 
         } catch (Exception ex) {
-            Trace.WriteLine(ex, nameof(Companies));
+            logger.Exception(ex);
         }
 
     }
@@ -108,21 +110,24 @@ public static class Companies {
     /// <param name="company">The <see cref="Company"/> instance to save.</param>
     public static void SaveCompany(Company company) {
         try {
-            string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{Regex.Replace(company.Name, @"[$&+,:;=?@#|'<>.^\\/""*()%!-]", " ").Replace(" ", "")}.json");
+            string filename = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{Regex.Replace(company.Name, @"[$&+,:;=?@#|'<>.^\\/""*()%!-]", " ").Replace(" ", "")}.json");
             if (File.Exists(filename)) {
-                Trace.WriteLine($"Deleting existing player company '{company.Name}'", nameof(Companies));
+                logger.Info($"Deleting existing player company '{company.Name}'");
                 File.Delete(filename);
             }
             CompanySerializer.SaveCompanyToFile(company, filename);
-            Trace.WriteLine($"Saved player company '{company.Name}'.", nameof(Companies));
+            logger.Info($"Saved player company '{company.Name}'.");
         } catch (IOException ioex) {
-            Trace.WriteLine($"Failed to save player company '{company.Name}'. ", nameof(Companies));
-            Trace.WriteLine(ioex, nameof(Companies));
+            logger.Info($"Failed to save player company '{company.Name}' (IO Exception).");
+            logger.Exception(ioex);
+        } catch (Exception e) {
+            logger.Info($"Failed to save player company '{company.Name}'.");
+            logger.Exception(e);
         } finally {
             Company? oldCompany = __companies.FirstOrDefault(x => x.Name == company.Name && x.Army == company.Army);
             if (oldCompany is not null && oldCompany != company) { // If new reference
                 __companies[__companies.IndexOf(oldCompany)] = company;
-                Trace.WriteLine($"Updated player company '{company.Name}' object", nameof(Companies));
+                logger.Info($"Updated player company '{company.Name}' object");
             } else if (oldCompany is null) {
                 __companies.Add(company);
             }
@@ -134,7 +139,7 @@ public static class Companies {
     /// </summary>
     /// <param name="company">The company to delete.</param>
     public static void DeleteCompany(Company company) {
-        string filename = BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{Regex.Replace(company.Name, @"[$&+,:;=?@#|'<>.^\\/""*()%!-]", " ").Replace(" ", "")}.json");
+        string filename = BattlegroundsContext.GetRelativePath(BattlegroundsPaths.COMPANY_FOLDER, $"{Regex.Replace(company.Name, @"[$&+,:;=?@#|'<>.^\\/""*()%!-]", "").Replace(" ", "")}.json");
         if (File.Exists(filename)) {
             File.Delete(filename);
         }
@@ -145,5 +150,13 @@ public static class Companies {
     /// </summary>
     /// <returns>List of <see cref="Company"/> instances.</returns>
     public static List<Company> GetAllCompanies() => __companies;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="company"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    public static void Register(Company company)
+        => __companies.Add(company);
 
 }

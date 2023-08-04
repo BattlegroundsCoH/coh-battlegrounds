@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Battlegrounds.Functional;
+﻿namespace Battlegrounds.Functional;
 
 /// <summary>
 /// Static functional helper functions for casting between types and performing actions if cast is possible.

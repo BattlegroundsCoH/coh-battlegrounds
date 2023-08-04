@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using Battlegrounds.Game;
 using Battlegrounds.Game.DataSource;
 
 namespace Battlegrounds.Modding;
@@ -154,5 +155,10 @@ public interface IGamemode {
     /// Get the name of the second team.
     /// </summary>
     string? TeamName2 { get; }
+
+    /// <summary>
+    /// Get the game supported by this <see cref="IGamemode"/>.
+    /// </summary>
+    GameCase SupportedGame { get; }
 
 }

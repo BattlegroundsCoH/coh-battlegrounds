@@ -45,7 +45,7 @@ public struct SessionInfo {
     /// <summary>
     /// The selected scenario.
     /// </summary>
-    public Scenario SelectedScenario { get; set; }
+    public IScenario SelectedScenario { get; set; }
 
     /// <summary>
     /// The Allied players participating in the <see cref="Session"/>.

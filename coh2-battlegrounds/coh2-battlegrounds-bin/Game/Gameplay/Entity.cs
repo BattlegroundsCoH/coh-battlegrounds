@@ -1,6 +1,5 @@
 ﻿using System;
-
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Blueprints;
 
 namespace Battlegrounds.Game.Gameplay;
 
