@@ -97,11 +97,26 @@ public class BasePlayModelTest : TestWithMockedBattlegroundsContext {
 
         // Assert: Verify that the method set the correct info on the play model
         Assert.Multiple(() => { 
+            
+            // Assert basics
             Assert.That(this.playModel.SessionInfo.SelectedScenario.Name, Is.EqualTo(scenario));
             Assert.That(this.playModel.SessionInfo.SelectedGamemode.Name, Is.EqualTo(gamemode));
             Assert.That(this.playModel.SessionInfo.SelectedGamemodeOption, Is.EqualTo(gamemodeOption));
             Assert.That(this.playModel.SessionInfo.EnableSupply, Is.EqualTo(enableSupply));
             Assert.That(this.playModel.SessionInfo.EnableDayNightCycle, Is.EqualTo(enableWeather));
+
+            // Assert Allies
+            Assert.That(this.playModel.SessionInfo.Allies, Has.Length.EqualTo(1));
+            Assert.That(this.playModel.SessionInfo.Allies[0].UserID, Is.EqualTo(0));
+            Assert.That(this.playModel.SessionInfo.Allies[0].IsHuman, Is.True);
+            Assert.That(this.playModel.SessionInfo.Allies[0].UserDisplayname, Is.EqualTo("Alfredo"));
+
+            // Assert Axis
+            Assert.That(this.playModel.SessionInfo.Axis, Has.Length.EqualTo(1));
+            Assert.That(this.playModel.SessionInfo.Axis[0].UserID, Is.EqualTo(1));
+            Assert.That(this.playModel.SessionInfo.Axis[0].IsHuman, Is.True);
+            Assert.That(this.playModel.SessionInfo.Axis[0].UserDisplayname, Is.EqualTo("Alfredo's Friend"));
+
         });
 
     }
