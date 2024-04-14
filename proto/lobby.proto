@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "Battlegrounds.Grpc";
+
+package lobby;
+
+service LobbyService {
+    rpc GetLobbies (GetLobbiesRequest) returns (GetLobbiesResponse);
+}
+
+message GetLobbiesRequest {}
+
+message GetLobbiesResponse {
+    repeated Lobby lobbies = 1;
+}
+
+message Lobby {
+    string guid = 1;
+}

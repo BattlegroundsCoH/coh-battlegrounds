@@ -1,7 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Battlegrounds.Core.Services;
+
+using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.App;
+
 public static class MauiProgram {
+
     public static MauiApp CreateMauiApp() {
         var builder = MauiApp.CreateBuilder();
         builder
@@ -11,6 +15,8 @@ public static class MauiProgram {
             });
 
         builder.Services.AddMauiBlazorWebView();
+        builder.Services.AddLogging();
+        builder.Services.AddSingleton<ILobbyService, LobbyService>();
 
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();
@@ -19,4 +25,5 @@ public static class MauiProgram {
 
         return builder.Build();
     }
+
 }
