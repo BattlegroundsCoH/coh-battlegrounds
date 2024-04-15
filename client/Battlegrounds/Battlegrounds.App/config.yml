@@ -1,0 +1,4 @@
+grpc-config:
+    host: "prod.service.battlegrounds.com"
+    port: "443"
+    enable-tls: true

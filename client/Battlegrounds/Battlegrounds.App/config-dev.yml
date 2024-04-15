@@ -1,0 +1,4 @@
+grpc-config:
+    host: "test.service.battlegrounds.com"
+    port: "8443"
+    enable-tls: false

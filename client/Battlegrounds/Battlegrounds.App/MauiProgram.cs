@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Core.Services;
+﻿using Battlegrounds.Core.Configuration;
+using Battlegrounds.Core.Services;
 
 using Microsoft.Extensions.Logging;
 
@@ -7,6 +8,13 @@ namespace Battlegrounds.App;
 public static class MauiProgram {
 
     public static MauiApp CreateMauiApp() {
+
+        string cfgSource = "config.yml";
+#if DEBUG
+        cfgSource = "config-dev.yml";
+#endif
+        using var configFileSource = FileSystem.Current.OpenAppPackageFileAsync(cfgSource).Result;
+
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
@@ -15,8 +23,10 @@ public static class MauiProgram {
             });
 
         builder.Services.AddMauiBlazorWebView();
-        builder.Services.AddLogging();
-        builder.Services.AddSingleton<ILobbyService, LobbyService>();
+        builder.Services.AddLogging()
+            .AddConfig(configFileSource)
+            .AddSingleton(GrpcConfig.LobbyServiceClientFactory)
+            .AddSingleton<ILobbyService, LobbyService>();
 
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();

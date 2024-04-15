@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Battlegrounds.Grpc;
+﻿using Battlegrounds.Grpc;
 
 using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.Core.Services;
 
-public class LobbyService : ILobbyService {
+public class LobbyService(
+    ILogger<LobbyService> logger, 
+    Grpc.LobbyService.LobbyServiceClient client) : ILobbyService {
 
-    private readonly ILogger<LobbyService> _logger;
-    private readonly Grpc.LobbyService.LobbyServiceClient _client;
-
-    public LobbyService(ILogger<LobbyService> logger) { 
-        _logger = logger;
-    }
+    private readonly ILogger<LobbyService> _logger = logger;
+    private readonly Grpc.LobbyService.LobbyServiceClient _client = client;
 
     public async Task<ILobbyService.LobbyDTO[]> GetLobbiesAsync() {
         _logger.LogInformation("Fetching lobbies");
