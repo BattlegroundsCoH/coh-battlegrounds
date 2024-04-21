@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battlegrounds.Core", "Battl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battlegrounds.Core.Test", "Battlegrounds.Core.Test\Battlegrounds.Core.Test.csproj", "{6DA16255-D514-4938-855B-D7A7ADD1C703}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battlegrounds.App", "Battlegrounds.App\Battlegrounds.App.csproj", "{E6495ABF-1F66-4A67-9048-767ED82CCB4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battlegrounds.App", "Battlegrounds.App\Battlegrounds.App.csproj", "{E6495ABF-1F66-4A67-9048-767ED82CCB4F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

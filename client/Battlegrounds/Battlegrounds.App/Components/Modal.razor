@@ -1,0 +1,20 @@
+﻿<div class="modal-background" style="@(IsVisible ? "display:block;" : "display:none;")">
+    <div class="modal-content">
+        <h2>@Title</h2>
+        <div>
+            @ChildContent
+        </div>
+        <button @onclick=Close>Close</button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private void Close() {
+        OnClose.InvokeAsync();
+    }
+}

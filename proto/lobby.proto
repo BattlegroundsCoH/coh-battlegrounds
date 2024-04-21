@@ -1,11 +1,25 @@
 syntax = "proto3";
 
 option csharp_namespace = "Battlegrounds.Grpc";
+option go_package = "grpc/pb";
 
 package lobby;
 
 service LobbyService {
+    
+    // Getting, creating and joining lobbies
     rpc GetLobbies (GetLobbiesRequest) returns (GetLobbiesResponse);
+    rpc HostLobby (HostLobbyRequest) returns (stream LobbyStatusResponse);
+    rpc JoinLobby (JoinLobbyRequest) returns (stream LobbyStatusResponse);
+
+    // Being in a lobby
+    rpc SendChatMessage (SendLobbyChatMessageRequest) returns (SendLobbyChatMessageResponse);
+    rpc ChangeSlot (ChangeSlotRequest) returns (ChangeSlotResponse);
+    rpc UpdateSlot (UpdateSlotRequest) returns (UpdateSlotResponse);
+    rpc UpdateSettings (UpdateSettingsRequest) returns (UpdateSettingsResponse);
+    rpc UpdateScenario (UpdateScenarioRequest) returns (UpdateScenarioResponse);
+    rpc Leave (LeaveRequest) returns (LeaveResponse);
+
 }
 
 message GetLobbiesRequest {}
@@ -14,6 +28,141 @@ message GetLobbiesResponse {
     repeated Lobby lobbies = 1;
 }
 
+enum LobbySlotState {
+    STATE_UNAVAILABLE = 0;
+    STATE_UNLOCKED = 1;
+    STATE_OCCUPIED = 2;
+    STATE_LOCKED = 3;
+}
+
+enum LobbySlotAIState {
+    AI_HUMAN = 0;
+    AI_EASY = 1;
+    AI_NORMAL = 2;
+    AI_HARD = 3;
+    AI_EXPERT = 4;
+}
+
 message Lobby {
     string guid = 1;
+    string name = 2;
+    string game = 3;
+    bool isPasswordProtected = 4;
+    LobbyTeam teamA = 5;
+    LobbyTeam teamB = 6;
+    map<string,string> settings = 7;
+    uint64 host_id = 8;
+    LobbyScenario scenario = 9;
 }
+
+message LobbyTeam {
+    string name = 1;
+    string alliance = 2;
+    repeated LobbySlot slots = 3;
+}
+
+message LobbySlot {
+    LobbySlotState state = 1;
+    LobbySlotAIState ai_level = 2;
+    optional uint64 user_id = 3;
+    optional string user_display_name = 4;
+    optional string user_company = 5;
+}
+
+message LobbyScenario {
+    string scenario_name = 1;
+    string scenario_filename = 2;
+    int32 scenario_playercount = 3;
+}
+
+message LobbyUserContext {
+    uint64 user_id = 1;
+    string user_display_name = 2;
+    string guid = 3;
+    uint64 client_hash = 4;
+}
+
+message HostLobbyRequest {
+    LobbyUserContext user = 1;
+    string name = 2;
+    string password = 3;
+    string game = 4;
+    LobbyScenario scenario = 5;
+    map<string, string> settings = 6;
+}
+
+message JoinLobbyRequest {
+    LobbyUserContext user = 1;
+    string guid = 2;
+    string password = 3;
+}
+
+enum LobbyStatusEvent {
+    STATUS_NOP = 0;
+    STATUS_CHAT = 1;
+    STATUS_NEWPLAYER = 2;
+}
+
+message LobbyStatusResponse {
+    LobbyUserContext user = 1;
+    LobbyStatusEvent event_type = 2;
+    oneof response_data {
+        Lobby lobby = 3;
+        LobbyChatMessage message = 4;
+    }
+}
+
+message LobbyChatMessage {
+    uint64 senderId = 1;
+    string timestamp = 2;
+    string message = 3;
+}
+
+message SendLobbyChatMessageRequest {
+    LobbyUserContext user = 1;
+    int32 channel = 2;
+    LobbyChatMessage message = 3;
+}
+
+message SendLobbyChatMessageResponse {}
+
+message ChangeSlotRequest {
+    LobbyUserContext user = 1;
+    int32 team = 2;
+    int32 slot = 3;
+}
+
+message ChangeSlotResponse {}
+
+message UpdateSlotRequest {
+    LobbyUserContext user = 1;
+    int32 team = 2;
+    int32 slot = 3;
+    LobbySlotState state = 4;
+    LobbySlotAIState ai_level = 5;
+    optional string user_company = 6;
+}
+
+message UpdateSlotResponse {}
+
+message UpdateSettingsRequest {
+    LobbyUserContext user = 1;
+    bool override = 2;
+    map<string,string> settings = 3;
+}
+
+message UpdateSettingsResponse {}
+
+message UpdateScenarioRequest {
+    LobbyUserContext user = 1;
+    LobbyScenario scenario = 2;
+}
+
+message UpdateScenarioResponse {}
+
+message LeaveRequest {
+    LobbyUserContext user = 1;
+    string reason = 2;
+}
+
+message LeaveResponse {}

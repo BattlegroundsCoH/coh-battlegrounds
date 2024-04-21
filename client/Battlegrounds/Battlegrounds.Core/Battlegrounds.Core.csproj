@@ -15,7 +15,7 @@
     <Folder Include="Games\Controllers\" />
     <Folder Include="Games\Replays\" />
     <Folder Include="Localisation\" />
-    <Folder Include="Users\" />
+    <Folder Include="Utilities\" />
   </ItemGroup>
 
   <ItemGroup>

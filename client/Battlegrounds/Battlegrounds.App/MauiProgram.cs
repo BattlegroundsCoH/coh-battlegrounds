@@ -26,7 +26,8 @@ public static class MauiProgram {
         builder.Services.AddLogging()
             .AddConfig(configFileSource)
             .AddSingleton(GrpcConfig.LobbyServiceClientFactory)
-            .AddSingleton<ILobbyService, LobbyService>();
+            .AddSingleton<ILobbyService, LobbyService>()
+            .AddSingleton<IUserService, UserService>();
 
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();

@@ -12,7 +12,8 @@ public record GrpcConfig(string Host, string Port, bool EnableTls) {
 
     private static GrpcChannelOptions BuildOptions(GrpcConfig grpcConfig) {
         return new GrpcChannelOptions() {
-            Credentials = grpcConfig.EnableTls ? ChannelCredentials.SecureSsl : ChannelCredentials.Insecure
+            Credentials = grpcConfig.EnableTls ? ChannelCredentials.SecureSsl : ChannelCredentials.Insecure,
+            HttpClient = new HttpClient() {}
         };
     }
 
