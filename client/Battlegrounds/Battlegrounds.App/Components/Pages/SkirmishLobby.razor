@@ -1,7 +1,35 @@
-﻿@page "/skirmish/lobby"
+﻿@page "/skirmish/lobby/{lobbyId}"
+@using Battlegrounds.Core.Lobbies
+@using Battlegrounds.Core.Services
 
-<h3>SkirmishLobby</h3>
+@inject ILobbyService LobbyService
+
+@if (lobby is null) {
+    <p>Loading...</p>
+} else {
+    <h3>@this.lobby.Name</h3>
+    <p>@this.lobby.Guid</p>
+    <p>Hello world!</p>
+}
 
 @code {
+    [Parameter]
+    public string lobbyId { get; set; } = Guid.Empty.ToString();
+
+    private Guid guid;
+    private ILobby? lobby;
+
+    protected override Task OnParametersSetAsync() {
+
+        guid = Guid.Parse(this.lobbyId);
+
+        lobby = LobbyService.GetActiveLobby(guid);
+        if (lobby is null) {
+            return base.OnParametersSetAsync();
+        }
+
+        return base.OnParametersSetAsync();
+
+    }
 
 }

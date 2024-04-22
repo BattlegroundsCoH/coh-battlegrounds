@@ -2,7 +2,7 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace Battlegrounds.Core.Services;
+namespace Battlegrounds.Core.Services.Standard;
 
 public class UserService(
     ILogger<UserService> logger) : IUserService {

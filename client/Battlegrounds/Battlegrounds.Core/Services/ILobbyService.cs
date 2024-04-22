@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Core.Lobbies;
+﻿using Battlegrounds.Core.Games.Scenarios;
+using Battlegrounds.Core.Lobbies;
 using Battlegrounds.Core.Users;
 
 namespace Battlegrounds.Core.Services;
@@ -11,8 +12,10 @@ public interface ILobbyService {
 
     Task<LobbyDTO[]> GetLobbiesAsync();
 
-    Task<ILobby> HostLobby(UserContext userContext, string name, string game, string password);
+    Task<ILobby?> HostLobby(UserContext userContext, string name, string game, string password, IScenario scenario, IDictionary<string, string> settings);
 
-    Task<ILobby> JoinLobby(UserContext userContext, Guid guid, string password);
+    Task<ILobby?> JoinLobby(UserContext userContext, Guid guid, string password);
+
+    ILobby? GetActiveLobby(Guid guid);
 
 }

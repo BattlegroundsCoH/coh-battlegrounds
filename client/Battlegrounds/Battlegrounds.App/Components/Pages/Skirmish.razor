@@ -4,6 +4,8 @@
 
 @inject ILobbyService LobbyService
 @inject IUserService UserService
+@inject IScenarioService ScenarioService
+@inject IGameService GameService
 @inject ILogger<Skirmish> Logger
 @inject NavigationManager NavManager
 
@@ -55,12 +57,24 @@
 
     private async Task OnHost() {
 
-        var lobby = await LobbyService.HostLobby(UserService.UserContext, "", "", ""); 
+        var game = GameService.FromName("");
+        if (game is null) {
+            return;
+        }
+
+        var scenario = ScenarioService.GetScenario(game, "");
+        if (scenario is null) {
+            return;
+        }
+
+        var settings = new Dictionary<string, string>(); // TODO: Get from preferences
+
+        var lobby = await LobbyService.HostLobby(UserService.UserContext, "", "", "", scenario, settings); 
         if (lobby is null) {
             return;
         }
 
-        NavManager.NavigateTo($"/skirmish/lobby?id={lobby.Guid}");
+        NavManager.NavigateTo($"/skirmish/lobby/{lobby.Guid}");
 
     }
 

@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Core.Lobbies;
+﻿using Battlegrounds.Core.Games.Scenarios;
+using Battlegrounds.Core.Lobbies;
 using Battlegrounds.Core.Users;
 using Battlegrounds.Grpc;
 
@@ -6,15 +7,19 @@ using Grpc.Core;
 
 using Microsoft.Extensions.Logging;
 
-namespace Battlegrounds.Core.Services;
+namespace Battlegrounds.Core.Services.Standard;
 
 public class LobbyService(
-    ILogger<LobbyService> logger, 
+    ILogger<LobbyService> logger,
     Grpc.LobbyService.LobbyServiceClient client,
     IServiceProvider serviceProvider) : ILobbyService {
 
     private readonly ILogger<LobbyService> _logger = logger;
     private readonly Grpc.LobbyService.LobbyServiceClient _client = client;
+    private readonly Dictionary<Guid, ILobby> _activeLobbies = [];
+
+    public ILobby? GetActiveLobby(Guid guid) 
+        => _activeLobbies.TryGetValue(guid, out var activeLobby) ? activeLobby : null;
 
     public async Task<ILobbyService.LobbyDTO[]> GetLobbiesAsync() {
         _logger.LogInformation("Fetching lobbies");
@@ -24,18 +29,21 @@ public class LobbyService(
             return [];
         }
 
-        return result.Lobbies.Select(x => new ILobbyService.LobbyDTO(Guid.Parse(x.Guid), x.Name, Array.Empty<ILobbyService.LobbyTeamDTO>(), x.IsPasswordProtected, x.Game)).ToArray();
+        return result.Lobbies.Select(x => new ILobbyService.LobbyDTO(Guid.Parse(x.Guid), x.Name, [], x.IsPasswordProtected, x.Game)).ToArray();
 
     }
 
-    public async Task<ILobby> HostLobby(UserContext userContext, string name, string game, string password) {
+    public async Task<ILobby?> HostLobby(UserContext userContext, string name, string game, string password, IScenario scenario, IDictionary<string, string> settings) {
 
         HostLobbyRequest request = new HostLobbyRequest {
             Name = name,
             Game = game,
             Password = password,
             User = new LobbyUserContext { UserDisplayName = userContext.UserDisplayName, UserId = userContext.UserId, ClientHash = userContext.ClientHash },
+            Scenario = scenario.AsProto(),
         };
+
+        request.Settings.Add(settings);
 
         var stream = _client.HostLobby(request);
 
@@ -48,11 +56,14 @@ public class LobbyService(
             return null;
         }
 
-        return GRPCLobby.New(serviceProvider, client, stream, response.User);
+        var lobby = GRPCLobby.New(serviceProvider, response.Lobby, _client, stream, response.User);
+        _activeLobbies[Guid.Parse(response.User.Guid)] = lobby;
+
+        return lobby;
 
     }
 
-    public Task<ILobby> JoinLobby(UserContext userContext, Guid guid, string password) {
+    public Task<ILobby?> JoinLobby(UserContext userContext, Guid guid, string password) {
         throw new NotImplementedException();
     }
 
