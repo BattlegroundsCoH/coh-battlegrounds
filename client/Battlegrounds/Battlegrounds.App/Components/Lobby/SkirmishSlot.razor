@@ -1,0 +1,47 @@
+﻿@using Battlegrounds.Core.Games
+@using Battlegrounds.Core.Lobbies
+
+<style>
+    .slot-flex-row {
+        display: flex;
+        align-items: center; /* Aligns items vertically in the center */
+        justify-content: space-between; /* Spaces out items with space between them */
+        width: 100%; /* Ensures the div takes full width */
+    }
+</style>
+
+<div class="slot-flex-row">
+    @if (Slot.IsVisible) {
+        @if (Slot.Player is not null) {
+            <!-- TODO: Faction logo -->
+            <h3> @Slot.Player.Name </h3>
+            @if (CanEditCompany) {
+                <select></select>
+            } else {
+                <h2> @Slot.Player.CompanyName </h2>
+            }
+            @if (!IsLocalPlayer && Lobby.IsHost) {
+                <button>Kick</button>
+            }
+        } else {
+            @if (Slot.IsLocked) {
+                <p>Locked</p>
+            } else {
+                <p>Open</p>
+            }
+        }
+    }
+</div>
+
+@code {
+
+    [Parameter] public ILobby Lobby { get; set; }
+    [Parameter] public ILobbySlot Slot { get; set; }
+
+    private bool IsLocalPlayer => Slot.Player.PlayerId == Lobby.LocalPlayerId;
+
+    private bool IsAI => Slot.Difficulty != AIDifficulty.AI_HUMAN;
+
+    private bool CanEditCompany => Slot.Player is not null && (IsLocalPlayer || (IsAI && Lobby.IsHost));
+
+}

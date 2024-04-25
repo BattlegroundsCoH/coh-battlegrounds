@@ -1,5 +1,6 @@
 ﻿using Battlegrounds.Core.Games.Scenarios;
 using Battlegrounds.Core.Lobbies;
+using Battlegrounds.Core.Lobbies.GRPC;
 using Battlegrounds.Core.Users;
 using Battlegrounds.Grpc;
 
@@ -56,7 +57,7 @@ public class LobbyService(
             return null;
         }
 
-        var lobby = GRPCLobby.New(serviceProvider, response.Lobby, _client, stream, response.User);
+        var lobby = GrpcLobby.New(serviceProvider, response.Lobby, _client, stream, response.User, isHost: true);
         _activeLobbies[Guid.Parse(response.User.Guid)] = lobby;
 
         return lobby;
@@ -65,6 +66,10 @@ public class LobbyService(
 
     public Task<ILobby?> JoinLobby(UserContext userContext, Guid guid, string password) {
         throw new NotImplementedException();
+    }
+
+    public void RemoveActiveLobby(Guid guid) {
+        _activeLobbies.Remove(guid);
     }
 
 }

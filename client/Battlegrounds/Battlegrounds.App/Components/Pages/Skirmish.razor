@@ -1,3 +1,4 @@
+@using Battlegrounds.App.Services
 @using Battlegrounds.Core.Services
 @using Microsoft.Extensions.Logging
 @page "/skirmish"
@@ -6,6 +7,7 @@
 @inject IUserService UserService
 @inject IScenarioService ScenarioService
 @inject IGameService GameService
+@inject PreferencesService PreferenceService
 @inject ILogger<Skirmish> Logger
 @inject NavigationManager NavManager
 
@@ -15,7 +17,9 @@
     <p>Loading...</p>
 } else {
     @foreach (var lobby in lobbies) {
-        
+        <div>
+            <p>@lobby.GameId</p>
+        </div>
     }
 }
 
@@ -62,14 +66,14 @@
             return;
         }
 
-        var scenario = ScenarioService.GetScenario(game, "");
+        var scenario = ScenarioService.GetScenario(game, PreferenceService.GetLastSkirmishScenarioName(game));
         if (scenario is null) {
             return;
         }
 
-        var settings = new Dictionary<string, string>(); // TODO: Get from preferences
+        var settings = PreferenceService.GetLastSkirmishSettings(game);
 
-        var lobby = await LobbyService.HostLobby(UserService.UserContext, "", "", "", scenario, settings); 
+        var lobby = await LobbyService.HostLobby(UserService.UserContext, "Test-Lobby", game.Name, "", scenario, settings); 
         if (lobby is null) {
             return;
         }

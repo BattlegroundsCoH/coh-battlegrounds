@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Core.Configuration;
+﻿using Battlegrounds.App.Services;
+using Battlegrounds.Core.Configuration;
 using Battlegrounds.Core.Services;
 using Battlegrounds.Core.Services.Standard;
 using Microsoft.Extensions.Logging;
@@ -26,6 +27,7 @@ public static class MauiProgram {
         builder.Services.AddLogging()
             .AddConfig(configFileSource)
             .AddSingleton(GrpcConfig.LobbyServiceClientFactory)
+            .AddSingleton<PreferencesService>()
             .AddSingleton<ILobbyService, LobbyService>()
             .AddSingleton<IUserService, UserService>()
             .AddSingleton<IGameService, GameService>()

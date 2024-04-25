@@ -1,15 +1,69 @@
 ﻿@page "/skirmish/lobby/{lobbyId}"
+@using Battlegrounds.App.Components.Lobby
 @using Battlegrounds.Core.Lobbies
 @using Battlegrounds.Core.Services
 
 @inject ILobbyService LobbyService
+@inject NavigationManager NavManager
+
+<style>
+
+    .skirmish-lobby-flex-container {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .skirmish-lobby-flex-container-col {
+        flex: 1; /* Each child div will take an equal amount of space */
+        padding: 10px; /* Add some space around the contents of each column */
+    }
+
+</style>
 
 @if (lobby is null) {
     <p>Loading...</p>
 } else {
-    <h3>@this.lobby.Name</h3>
-    <p>@this.lobby.Guid</p>
-    <p>Hello world!</p>
+    <h3>@this.lobby.Name (@this.lobby.Guid)</h3>
+
+    <div class="skirmish-lobby-flex-container">
+        <!-- Team 1 -->
+        <div class="skirmish-lobby-flex-container-col">
+            <h4>@lobby.Team1.Name</h4>
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[0]" />
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[1]" />
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[2]" />
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[3]" />
+        </div>
+
+        <!-- Settings -->
+        <div class="skirmish-lobby-flex-container-col">
+            <h4>Settings</h4>
+            <div>
+                <!-- Map Preview -->
+            </div>
+            <div>
+                <!-- Settings -->
+                <SkirmishSetting Lobby="@lobby" ValueType="string" Key="gamemode" />
+                <SkirmishSetting Lobby="@lobby" ValueType="string" Key="gamemode_vp_option" />
+                <SkirmishSetting Lobby="@lobby" ValueType="number" Key="income_modifier" />
+                <SkirmishSetting Lobby="@lobby" ValueType="number" Key="damage_modifier" />
+                <SkirmishSetting Lobby="@lobby" ValueType="bool" Key="supply" />
+                <SkirmishSetting Lobby="@lobby" ValueType="bool" Key="weather" />
+            </div>
+            <button @onclick="Launch">Launch</button>
+            <button @onclick="Leave">Leave</button>
+        </div>
+
+        <!-- Team 2 -->
+        <div class="skirmish-lobby-flex-container-col">
+            <h4>@lobby.Team2.Name</h4>
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[0]" />
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[1]" />
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[2]" />
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[3]" />
+        </div>
+    </div>
+
 }
 
 @code {
@@ -28,7 +82,30 @@
             return base.OnParametersSetAsync();
         }
 
+        lobby.SetUpdateCallback(async () => await VisualRefresh());
+        lobby.SetChatCallback(async x => await ChatCallback(x));
+
         return base.OnParametersSetAsync();
+
+    }
+
+    private async Task VisualRefresh() {
+        await Task.FromResult(true);
+        this.StateHasChanged();
+    }
+
+    private async Task ChatCallback(ILobbyChatMessage chatMessage) {
+        await Task.CompletedTask;
+    }
+
+    private async Task Launch() {
+        await Task.CompletedTask;
+    }
+
+    private async Task Leave() {
+        await lobby.Leave();
+        LobbyService.RemoveActiveLobby(lobby.Guid);
+        NavManager.NavigateTo("/skirmish");
 
     }
 

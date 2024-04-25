@@ -18,4 +18,6 @@ public interface ILobbyService {
 
     ILobby? GetActiveLobby(Guid guid);
 
+    void RemoveActiveLobby(Guid guid);
+
 }

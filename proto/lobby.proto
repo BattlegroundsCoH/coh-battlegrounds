@@ -16,9 +16,16 @@ service LobbyService {
     rpc SendChatMessage (SendLobbyChatMessageRequest) returns (SendLobbyChatMessageResponse);
     rpc ChangeSlot (ChangeSlotRequest) returns (ChangeSlotResponse);
     rpc UpdateSlot (UpdateSlotRequest) returns (UpdateSlotResponse);
+    rpc UpdateTeam (UpdateTeamRequest) returns (UpdateTeamResponse);
     rpc UpdateSettings (UpdateSettingsRequest) returns (UpdateSettingsResponse);
     rpc UpdateScenario (UpdateScenarioRequest) returns (UpdateScenarioResponse);
+    rpc SetPlayerState (SetPlayerStateRequest) returns (SetPlayerStateResponse);
     rpc Leave (LeaveRequest) returns (LeaveResponse);
+
+    // Playing a match
+    rpc StartPlay (StartPlayRequest) returns (StartPlayResponse);
+    rpc CancelPlay (CancelPlayRequest) returns (CancelPlayResponse);
+    rpc StopPlay (StopPlayRequest) returns (StopPlayResponse);
 
 }
 
@@ -66,7 +73,13 @@ message LobbySlot {
     LobbySlotAIState ai_level = 2;
     optional uint64 user_id = 3;
     optional string user_display_name = 4;
-    optional string user_company = 5;
+    optional LobbyCompany user_company = 5;
+}
+
+message LobbyCompany {
+    string company_id = 1;
+    string company_name = 2;
+    string company_faction_id = 3;
 }
 
 message LobbyScenario {
@@ -145,6 +158,15 @@ message UpdateSlotRequest {
 
 message UpdateSlotResponse {}
 
+message UpdateTeamRequest {
+    LobbyUserContext user = 1;
+    int32 team = 2;
+    string name = 3;
+    string alliance = 4;
+}
+
+message UpdateTeamResponse {}
+
 message UpdateSettingsRequest {
     LobbyUserContext user = 1;
     bool override = 2;
@@ -160,9 +182,36 @@ message UpdateScenarioRequest {
 
 message UpdateScenarioResponse {}
 
+message SetPlayerStateRequest {
+    LobbyUserContext user = 1;
+    bool is_ready = 2;
+}
+
+message SetPlayerStateResponse {}
+
 message LeaveRequest {
     LobbyUserContext user = 1;
     string reason = 2;
 }
 
 message LeaveResponse {}
+
+message StartPlayRequest {
+    LobbyUserContext user = 1;
+}
+
+message StartPlayResponse {}
+
+message CancelPlayRequest {
+    LobbyUserContext user = 1;
+    string reason = 2;
+}
+
+message CancelPlayResponse {}
+
+message StopPlayRequest {
+    LobbyUserContext user = 1;
+    bytes json_results = 2;
+}
+
+message StopPlayResponse {}

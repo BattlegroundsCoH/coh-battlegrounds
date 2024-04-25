@@ -1,0 +1,57 @@
+﻿@using Battlegrounds.Core.Lobbies
+
+<style>
+    .settings-item {
+        margin-bottom: 20px;
+    }
+
+    .settings-key {
+        font-weight: bold;
+    }
+
+    .settings-select, .settings-checkbox, .settings-slider {
+        margin-top: 5px;
+        display: block;
+    }
+
+    .settings-value {
+        font-size: 16px;
+        color: #666;
+    }
+</style>
+
+<div class="settings-item">
+    @if (Lobby?.Settings.TryGetValue(this.Key ?? string.Empty, out string? val) ?? false) {
+        <div class="settings-key">@Key:</div>
+        @if (Lobby.IsHost) {
+            @switch (ValueType) {
+                case "string":
+                    <select class="settings-select" @bind="val">
+                        <!-- Populate options here -->
+                        <option value="Option1">Option 1</option>
+                        <option value="Option2">Option 2</option>
+                    </select>
+                    break;
+                case "bool":
+                    <input type="checkbox" class="settings-checkbox" @bind="val" />
+                    break;
+                case "number":
+                    <input type="range" class="settings-slider" min="0" max="100" @bind="val" />
+                    break;
+                default:
+                    <div class="settings-display">@val</div>
+                    break;
+            }
+        } else {
+            <p class="settings-value">@val</p>
+        }
+    }
+</div>
+
+@code {
+
+    [Parameter] public string? Key { get; set; }
+    [Parameter] public string ValueType { get; set; } = "string";
+    [Parameter] public ILobby? Lobby { get; set; }
+
+}
