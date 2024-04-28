@@ -8,6 +8,7 @@
 @inject ILobbyService LobbyService
 @inject IGameService GameService
 @inject IGamemodeService GamemodeService
+@inject IScenarioService ScenarioService
 @inject NavigationManager NavManager
 
 <style>
@@ -33,17 +34,24 @@
         <!-- Team 1 -->
         <div class="skirmish-lobby-flex-container-col">
             <h4>@lobby.Team1.Name</h4>
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[0]" TeamAlliance="@lobby.Team1.Alliance" />
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[1]" TeamAlliance="@lobby.Team1.Alliance" />
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[2]" TeamAlliance="@lobby.Team1.Alliance" />
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[3]" TeamAlliance="@lobby.Team1.Alliance" />
+            <SkirmishSlot Lobby="@lobby" TeamIndex="0" SlotIndex="0" />
+            <SkirmishSlot Lobby="@lobby" TeamIndex="0" SlotIndex="1" />
+            <SkirmishSlot Lobby="@lobby" TeamIndex="0" SlotIndex="2" />
+            <SkirmishSlot Lobby="@lobby" TeamIndex="0" SlotIndex="3" />
         </div>
 
         <!-- Settings -->
         <div class="skirmish-lobby-flex-container-col">
             <h4>Settings</h4>
             <div>
-                <!-- Map Preview -->
+                <div>
+                    <!-- Map Preview -->
+                </div>
+                <select>
+                    @foreach (var scenario in ScenarioService.GetScenarios(game!)) {
+                        <option value=""></option>
+                    }
+                </select>
             </div>
             <div>
                 <!-- Settings -->
@@ -61,11 +69,16 @@
         <!-- Team 2 -->
         <div class="skirmish-lobby-flex-container-col">
             <h4>@lobby.Team2.Name</h4>
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[0]" TeamAlliance="@lobby.Team2.Alliance" />
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[1]" TeamAlliance="@lobby.Team2.Alliance" />
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[2]" TeamAlliance="@lobby.Team2.Alliance" />
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[3]" TeamAlliance="@lobby.Team2.Alliance" />
+            <SkirmishSlot Lobby="@lobby" TeamIndex="1" SlotIndex="0" />
+            <SkirmishSlot Lobby="@lobby" TeamIndex="1" SlotIndex="1" />
+            <SkirmishSlot Lobby="@lobby" TeamIndex="1" SlotIndex="2" />
+            <SkirmishSlot Lobby="@lobby" TeamIndex="1" SlotIndex="3" />
         </div>
+    </div>
+
+    <!-- Chat component -->
+    <div>
+
     </div>
 
 }
@@ -82,6 +95,18 @@
 
     private OptionsProvider gamemodeProvider = new OptionsProvider();
     private OptionsProvider gamemodeOptionsProvider = new OptionsProvider();
+
+    private string SelectedScenario {
+        get => "";
+        set {
+            Task.Run(() => {
+                var scen = ScenarioService.GetScenario(game!, value);
+                if (scen is not null) {
+                    lobby!.SetScenario(scen); 
+                }
+            });
+        }
+    }
 
     protected override Task OnParametersSetAsync() {
 

@@ -55,11 +55,11 @@
     [Parameter] public ISkirmishSettingsValueProvider? ValueProvider { get; set; } = null;
     [Parameter] public ILobby? Lobby { get; set; }
 
-    public string? Value {
+    public string Value {
         get => Lobby!.Settings[Key!];
         set {
             Task.Run(() => {
-                Lobby!.SetSetting(Key!, value ?? string.Empty);
+                Lobby!.SetSetting(Key!, value);
             });
         }
     }

@@ -7,4 +7,6 @@ public interface IScenarioService {
 
     IScenario? GetScenario(IGame game, string scenarioFilename);
 
+    IScenario[] GetScenarios(IGame game);
+
 }

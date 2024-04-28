@@ -9,4 +9,8 @@ public class ScenarioService : IScenarioService {
         return new BaseScenario();
     }
 
+    public IScenario[] GetScenarios(IGame game) {
+        return [];
+    }
+
 }

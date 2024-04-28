@@ -17,24 +17,38 @@
     @if (Slot.IsVisible) {
         @if (Slot.Player is not null) {
             <!-- TODO: Faction logo -->
-            <h3> @Slot.Player.Name </h3>
+            @if (IsAI && Lobby.IsHost) {
+                <select @bind="PickedDifficulty">
+                    <option value="0">Remove AI</option>
+                    <option value="1">AI - Easy</option>
+                    <option value="2">AI - Normal</option>
+                    <option value="3">AI - Hard</option>
+                    <option value="4">AI - Expert</option>
+                </select>
+            } else {
+                <h3> @Slot.Player.Name </h3>
+            }
             @if (CanEditCompany) {
-                <select>
-                    @foreach (var company in CompanyService.GetCompanies(TeamAlliance)) {
-                        <option value="test">@company</option>
+                <select @bind="PickedCompany">
+                    <option value="none">None</option>
+                    @foreach (var company in CompanyService.GetCompanies(Team.Alliance)) {
+                        <option value="@company.Id">@company.Name</option>
                     }
                 </select>
             } else {
                 <h2> @Slot.Player.CompanyName </h2>
             }
             @if (!IsLocalPlayer && Lobby.IsHost) {
-                <button>Kick</button>
+                <button @onclick="RemovePlayer">Kick</button>
             }
         } else {
             @if (Slot.IsLocked) {
                 <p>Locked</p>
             } else {
                 <p>Open</p>
+                @if (Lobby.IsHost) {
+                    <button @onclick="AddAI">Add AI</button>
+                }
             }
         }
     }
@@ -43,13 +57,53 @@
 @code {
 
     [Parameter] public ILobby Lobby { get; set; }
-    [Parameter] public ILobbySlot Slot { get; set; }
-    [Parameter] public string TeamAlliance { get; set; } = "allies";
+    [Parameter] public int TeamIndex { get; set; }
+    [Parameter] public int SlotIndex { get; set; }
+
+    private ILobbyTeam Team => TeamIndex switch {
+        0 => Lobby.Team1,
+        1 => Lobby.Team2,
+        _ => throw new InvalidDataException()
+    };
+
+    private ILobbySlot Slot => Team.Slots[SlotIndex];
 
     private bool IsLocalPlayer => Slot?.Player?.PlayerId == Lobby.LocalPlayerId;
 
     private bool IsAI => Slot.Difficulty != AIDifficulty.AI_HUMAN;
 
     private bool CanEditCompany => Slot.Player is not null && (IsLocalPlayer || (IsAI && Lobby.IsHost));
+
+    private string PickedCompany {
+        get => Slot.Player?.CompanyName ?? "none";
+        set {
+            Task.Run(() => {
+                Lobby!.SetCompany(TeamIndex, SlotIndex, value);
+            });
+        }
+    }
+
+    private string PickedDifficulty {
+        get => ((int)Slot.Difficulty).ToString();
+        set {
+            if (int.TryParse(value, out int v)) {
+                Task.Run(() => {
+                    Lobby!.SetDifficulty(TeamIndex, SlotIndex, v);
+                });
+            }
+        }
+    }
+
+    private async Task AddAI() {
+        await Lobby.SetDifficulty(TeamIndex, SlotIndex, AIDifficulty.AI_NORMAL);
+    }
+
+    private async Task RemovePlayer() {
+        if (Slot.Difficulty == AIDifficulty.AI_HUMAN) {
+            
+        } else {
+            
+        }
+    }
 
 }
