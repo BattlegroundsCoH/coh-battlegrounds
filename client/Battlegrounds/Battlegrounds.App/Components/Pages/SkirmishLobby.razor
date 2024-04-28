@@ -1,9 +1,13 @@
 ﻿@page "/skirmish/lobby/{lobbyId}"
 @using Battlegrounds.App.Components.Lobby
+@using Battlegrounds.App.Providers.Lobby
+@using Battlegrounds.Core.Games
 @using Battlegrounds.Core.Lobbies
 @using Battlegrounds.Core.Services
 
 @inject ILobbyService LobbyService
+@inject IGameService GameService
+@inject IGamemodeService GamemodeService
 @inject NavigationManager NavManager
 
 <style>
@@ -29,10 +33,10 @@
         <!-- Team 1 -->
         <div class="skirmish-lobby-flex-container-col">
             <h4>@lobby.Team1.Name</h4>
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[0]" />
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[1]" />
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[2]" />
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[3]" />
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[0]" TeamAlliance="@lobby.Team1.Alliance" />
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[1]" TeamAlliance="@lobby.Team1.Alliance" />
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[2]" TeamAlliance="@lobby.Team1.Alliance" />
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team1.Slots[3]" TeamAlliance="@lobby.Team1.Alliance" />
         </div>
 
         <!-- Settings -->
@@ -43,12 +47,12 @@
             </div>
             <div>
                 <!-- Settings -->
-                <SkirmishSetting Lobby="@lobby" ValueType="string" Key="gamemode" />
-                <SkirmishSetting Lobby="@lobby" ValueType="string" Key="gamemode_vp_option" />
-                <SkirmishSetting Lobby="@lobby" ValueType="number" Key="income_modifier" />
-                <SkirmishSetting Lobby="@lobby" ValueType="number" Key="damage_modifier" />
-                <SkirmishSetting Lobby="@lobby" ValueType="bool" Key="supply" />
-                <SkirmishSetting Lobby="@lobby" ValueType="bool" Key="weather" />
+                <SkirmishSetting Lobby="@lobby" ValueProvider="@gamemodeProvider" Key="gamemode" />
+                <SkirmishSetting Lobby="@lobby" ValueProvider="@gamemodeOptionsProvider" Key="gamemode_vp_option" />
+                <SkirmishSetting Lobby="@lobby" ValueProvider="@percentProvider" Key="income_modifier" />
+                <SkirmishSetting Lobby="@lobby" ValueProvider="@percentProvider" Key="damage_modifier" />
+                <SkirmishSetting Lobby="@lobby" ValueProvider="@ToggleProvider.Instance" Key="supply" />
+                <SkirmishSetting Lobby="@lobby" ValueProvider="@ToggleProvider.Instance" Key="weather" />
             </div>
             <button @onclick="Launch">Launch</button>
             <button @onclick="Leave">Leave</button>
@@ -57,10 +61,10 @@
         <!-- Team 2 -->
         <div class="skirmish-lobby-flex-container-col">
             <h4>@lobby.Team2.Name</h4>
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[0]" />
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[1]" />
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[2]" />
-            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[3]" />
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[0]" TeamAlliance="@lobby.Team2.Alliance" />
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[1]" TeamAlliance="@lobby.Team2.Alliance" />
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[2]" TeamAlliance="@lobby.Team2.Alliance" />
+            <SkirmishSlot Lobby="@lobby" Slot="@lobby.Team2.Slots[3]" TeamAlliance="@lobby.Team2.Alliance" />
         </div>
     </div>
 
@@ -72,6 +76,12 @@
 
     private Guid guid;
     private ILobby? lobby;
+    private IGame? game;
+
+    private RangeProvider percentProvider = new RangeProvider(0,100);
+
+    private OptionsProvider gamemodeProvider = new OptionsProvider();
+    private OptionsProvider gamemodeOptionsProvider = new OptionsProvider();
 
     protected override Task OnParametersSetAsync() {
 
@@ -82,16 +92,22 @@
             return base.OnParametersSetAsync();
         }
 
-        lobby.SetUpdateCallback(async () => await VisualRefresh());
+        game = GameService.FromName(lobby.Game);
+
+        OptionsProvider.SourceFetch fetcher = () => GamemodeService.GetGamemodes(game!).Select(x => (x.Id, x.Name));
+        gamemodeProvider.SetOptionsSource(fetcher);
+
+        OptionsProvider.SourceFetch optionsFetcher = () => {
+            var gamemode = GamemodeService.GetGamemode(game!, lobby.Settings["gamemode"]);
+            return gamemode.Options.Select(x => (x.Key, x.Value)).ToArray();
+        };
+        gamemodeOptionsProvider.SetOptionsSource(optionsFetcher);
+
+        lobby.SetUpdateCallback(() => this.InvokeAsync(StateHasChanged));
         lobby.SetChatCallback(async x => await ChatCallback(x));
 
         return base.OnParametersSetAsync();
 
-    }
-
-    private async Task VisualRefresh() {
-        await Task.FromResult(true);
-        this.StateHasChanged();
     }
 
     private async Task ChatCallback(ILobbyChatMessage chatMessage) {
@@ -103,8 +119,12 @@
     }
 
     private async Task Leave() {
-        await lobby.Leave();
-        LobbyService.RemoveActiveLobby(lobby.Guid);
+
+        if (lobby is not null) {
+            await lobby.Leave();
+            LobbyService.RemoveActiveLobby(lobby.Guid);
+        }
+
         NavManager.NavigateTo("/skirmish");
 
     }

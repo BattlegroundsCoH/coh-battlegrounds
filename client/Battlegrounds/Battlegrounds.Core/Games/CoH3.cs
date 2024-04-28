@@ -3,8 +3,8 @@
 public sealed class CoH3 : IGame {
 
     private static readonly (string, string)[] COH3_SKIRMISH_SETTINGS = [
-        ("gamemode", "vp"),
-        ("gamemode_vp_option", "500"),
+        ("gamemode", "victory_points"),
+        ("gamemode_option", "500"),
         ("income_modifier", "1.0"),
         ("damage_modifier", "1.0"),
         ("supply", "1"),

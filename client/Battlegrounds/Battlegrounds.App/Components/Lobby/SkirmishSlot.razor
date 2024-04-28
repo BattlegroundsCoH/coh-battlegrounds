@@ -1,5 +1,8 @@
 ﻿@using Battlegrounds.Core.Games
 @using Battlegrounds.Core.Lobbies
+@using Battlegrounds.Core.Services
+
+@inject ICompanyService CompanyService
 
 <style>
     .slot-flex-row {
@@ -16,7 +19,11 @@
             <!-- TODO: Faction logo -->
             <h3> @Slot.Player.Name </h3>
             @if (CanEditCompany) {
-                <select></select>
+                <select>
+                    @foreach (var company in CompanyService.GetCompanies(TeamAlliance)) {
+                        <option value="test">@company</option>
+                    }
+                </select>
             } else {
                 <h2> @Slot.Player.CompanyName </h2>
             }
@@ -37,8 +44,9 @@
 
     [Parameter] public ILobby Lobby { get; set; }
     [Parameter] public ILobbySlot Slot { get; set; }
+    [Parameter] public string TeamAlliance { get; set; } = "allies";
 
-    private bool IsLocalPlayer => Slot.Player.PlayerId == Lobby.LocalPlayerId;
+    private bool IsLocalPlayer => Slot?.Player?.PlayerId == Lobby.LocalPlayerId;
 
     private bool IsAI => Slot.Difficulty != AIDifficulty.AI_HUMAN;
 

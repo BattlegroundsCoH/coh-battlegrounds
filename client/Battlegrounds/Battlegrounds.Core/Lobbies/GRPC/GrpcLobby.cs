@@ -31,6 +31,8 @@ public sealed class GrpcLobby(
 
     public string Name { get; init; } = string.Empty;
 
+    public string Game { get; init; } = string.Empty;
+
     public bool IsHost => _isHost;
 
     public ILobbyTeam Team1 => _team1;
@@ -116,7 +118,15 @@ public sealed class GrpcLobby(
 
     public async Task SetSetting(string setting, string value) {
         var request = new UpdateSettingsRequest { User = _userContext, Override = false, Settings = { [setting] = value } };
-        await _client.UpdateSettingsAsync(request);
+        var response = await _client.UpdateSettingsAsync(request);
+        if (request.Override) {
+            _settings.Clear();
+            foreach (var (k,v) in response.Settings) {
+                _settings[k] = v;
+            }
+        } else {
+            _settings[setting] = response.Settings[setting];
+        }
     }
 
     public async Task SetScenario(IScenario scenario) {
@@ -159,6 +169,7 @@ public sealed class GrpcLobby(
         GrpcLobby gRPCLobby = new(client, stream, userContext, serviceProvider.GetService(typeof(ILogger<GrpcLobby>)) as ILogger<GrpcLobby> ?? throw new Exception()) {
             Guid = Guid.Parse(userContext.Guid),
             Name = lobby.Name,
+            Game = lobby.Game,
             _isHost = isHost
         };
 

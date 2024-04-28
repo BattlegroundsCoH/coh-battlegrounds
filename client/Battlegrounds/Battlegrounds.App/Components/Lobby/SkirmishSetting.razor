@@ -1,4 +1,5 @@
-﻿@using Battlegrounds.Core.Lobbies
+﻿@using Battlegrounds.App.Providers.Lobby
+@using Battlegrounds.Core.Lobbies
 
 <style>
     .settings-item {
@@ -24,22 +25,22 @@
     @if (Lobby?.Settings.TryGetValue(this.Key ?? string.Empty, out string? val) ?? false) {
         <div class="settings-key">@Key:</div>
         @if (Lobby.IsHost) {
-            @switch (ValueType) {
-                case "string":
-                    <select class="settings-select" @bind="val">
-                        <!-- Populate options here -->
-                        <option value="Option1">Option 1</option>
-                        <option value="Option2">Option 2</option>
+            @switch (ValueProvider) {
+                case OptionsProvider options:
+                    <select class="settings-select" @bind="Value">
+                        @foreach (var (value, text) in options.Values) {
+                            <option value="@value">@text</option>
+                        }
                     </select>
                     break;
-                case "bool":
-                    <input type="checkbox" class="settings-checkbox" @bind="val" />
+                case ToggleProvider:
+                    <input type="checkbox" class="settings-checkbox" @bind="Value" />
                     break;
-                case "number":
-                    <input type="range" class="settings-slider" min="0" max="100" @bind="val" />
+                case RangeProvider range:
+                    <input type="range" class="settings-slider" min="@range.Min" max="@range.Max" @bind="Value" />
                     break;
                 default:
-                    <div class="settings-display">@val</div>
+                    <div class="settings-display">@Value</div>
                     break;
             }
         } else {
@@ -51,7 +52,16 @@
 @code {
 
     [Parameter] public string? Key { get; set; }
-    [Parameter] public string ValueType { get; set; } = "string";
+    [Parameter] public ISkirmishSettingsValueProvider? ValueProvider { get; set; } = null;
     [Parameter] public ILobby? Lobby { get; set; }
+
+    public string? Value {
+        get => Lobby!.Settings[Key!];
+        set {
+            Task.Run(() => {
+                Lobby!.SetSetting(Key!, value ?? string.Empty);
+            });
+        }
+    }
 
 }

@@ -114,6 +114,8 @@ enum LobbyStatusEvent {
     STATUS_NOP = 0;
     STATUS_CHAT = 1;
     STATUS_NEWPLAYER = 2;
+    STATUS_REMOVEPLAYER = 3;
+    STATUS_SETTING_UPDATE = 4;
 }
 
 message LobbyStatusResponse {
@@ -173,7 +175,9 @@ message UpdateSettingsRequest {
     map<string,string> settings = 3;
 }
 
-message UpdateSettingsResponse {}
+message UpdateSettingsResponse {
+    map<string,string> settings = 1;
+}
 
 message UpdateScenarioRequest {
     LobbyUserContext user = 1;

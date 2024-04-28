@@ -8,6 +8,8 @@ public interface ILobby {
 
     string Name { get; }
 
+    string Game { get; }
+
     bool IsHost { get; }
 
     ILobbyTeam Team1 { get; }
