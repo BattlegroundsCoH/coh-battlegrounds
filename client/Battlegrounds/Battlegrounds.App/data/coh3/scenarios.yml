@@ -1,0 +1,7 @@
+target-game: "company_of_heroes_3"
+scenarios:
+    desert_village_2p_mkiii:
+        name: "Desert Village (2)"
+        description: "Some lame description"
+        player-count: 2
+        entities: []

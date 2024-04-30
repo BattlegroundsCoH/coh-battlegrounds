@@ -33,7 +33,8 @@ public static class MauiProgram {
             .AddSingleton<IGameService, GameService>()
             .AddSingleton<IGamemodeService, GamemodeService>()
             .AddSingleton<ICompanyService, CompanyService>()
-            .AddSingleton<IScenarioService, ScenarioService>();
+            .AddSingleton<IScenarioService, ScenarioService>()
+            .AddSingleton<AppLoader>();
 
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();

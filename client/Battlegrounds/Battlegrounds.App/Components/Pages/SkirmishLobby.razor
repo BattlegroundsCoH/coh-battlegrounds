@@ -49,7 +49,7 @@
                 </div>
                 <select>
                     @foreach (var scenario in ScenarioService.GetScenarios(game!)) {
-                        <option value=""></option>
+                        <option value="@scenario.FileName">@scenario.Name</option>
                     }
                 </select>
             </div>

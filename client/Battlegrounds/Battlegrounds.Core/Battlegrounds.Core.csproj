@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Campaigns\" />
-    <Folder Include="Companies\Builders\" />
     <Folder Include="Companies\Templates\" />
     <Folder Include="Games\Archivers\" />
     <Folder Include="Games\Blueprints\" />

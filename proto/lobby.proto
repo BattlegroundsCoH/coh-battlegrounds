@@ -116,6 +116,8 @@ enum LobbyStatusEvent {
     STATUS_NEWPLAYER = 2;
     STATUS_REMOVEPLAYER = 3;
     STATUS_SETTING_UPDATE = 4;
+    STATUS_CHANGE_SLOT = 5;
+    STATUS_UPDATE_SLOT = 6;
 }
 
 message LobbyStatusResponse {

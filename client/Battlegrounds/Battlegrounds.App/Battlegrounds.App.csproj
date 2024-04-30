@@ -61,9 +61,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.21" />
+        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.21" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.21" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     </ItemGroup>
 
@@ -78,9 +78,19 @@
       <None Update="config.yml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="data\coh3\blueprints.yml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="data\coh3\scenarios.yml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="data\locale\english.yml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="data\coh2\" />
       <Folder Include="Services\Standard\" />
     </ItemGroup>
 
