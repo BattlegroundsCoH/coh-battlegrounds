@@ -2,6 +2,6 @@
 
 public interface IBlueprintService {
 
-    Task<bool> LoadBlueprintsFromStream(Stream stream);
+    Task<bool> LoadBlueprintsFromStream(Stream? stream);
 
 }

@@ -34,6 +34,7 @@ public static class MauiProgram {
             .AddSingleton<IGamemodeService, GamemodeService>()
             .AddSingleton<ICompanyService, CompanyService>()
             .AddSingleton<IScenarioService, ScenarioService>()
+            .AddSingleton<IBlueprintService, BlueprintService>()
             .AddSingleton<AppLoader>();
 
 #if DEBUG

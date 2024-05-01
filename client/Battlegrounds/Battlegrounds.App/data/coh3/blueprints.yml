@@ -1,7 +1,10 @@
-abilities: []
-critials: []
-entities: []
-squads: []
-items: []
-upgrades: []
-weapons: []
+target-game: "company_of_heroes_3"
+abilities:
+critials:
+entities:
+squads:
+ SBP.BRITISH.TOMMY_UK:
+  id: 191559
+items: 
+upgrades:
+weapons:

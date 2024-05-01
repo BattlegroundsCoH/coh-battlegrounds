@@ -8,9 +8,9 @@
 
   <ItemGroup>
     <Folder Include="Campaigns\" />
+    <Folder Include="Companies\Serializing\" />
     <Folder Include="Companies\Templates\" />
     <Folder Include="Games\Archivers\" />
-    <Folder Include="Games\Blueprints\" />
     <Folder Include="Games\Controllers\" />
     <Folder Include="Games\Replays\" />
     <Folder Include="Localisation\" />
