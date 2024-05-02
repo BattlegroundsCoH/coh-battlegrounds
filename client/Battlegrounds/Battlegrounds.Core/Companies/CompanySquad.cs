@@ -1,15 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Battlegrounds.Core.Games.Blueprints;
+﻿using Battlegrounds.Core.Games.Blueprints;
 
 namespace Battlegrounds.Core.Companies;
 
-public class CompanySquad : ISquad {
-    
-    public SquadBlueprint Blueprint => throw new NotImplementedException();
+public sealed class CompanySquad(
+    ushort squadId, 
+    SquadBlueprint blueprint, 
+    string? name, 
+    float experience, 
+    IReadOnlySet<PropertyBagGroupId> upgrades, 
+    IReadOnlyList<PropertyBagGroupId> items,
+    ISquadTransport? transport = null,
+    ISquadCrew? crew = null) : ISquad {
+
+    public ushort SquadId => squadId;
+
+    public SquadBlueprint Blueprint => blueprint;
+
+    public string? Name => name;
+
+    public float Experience => experience;
+
+    public IReadOnlySet<PropertyBagGroupId> Upgrades => upgrades;
+
+    public IReadOnlyList<PropertyBagGroupId> Items => items;
+
+    public ISquadCrew? Crew => crew;
+
+    public ISquadTransport? Transport => transport;
 
 }

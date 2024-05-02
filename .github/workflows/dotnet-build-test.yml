@@ -1,0 +1,35 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  TEST_LOCATION: "github"
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+    - name: Restore dependencies
+      run: cd client\Battlegrounds && dotnet restore
+    - name: Build
+      run: cd client\Battlegrounds && dotnet build --no-restore
+    - name: Test
+      run: cd client\Battlegrounds && dotnet test --no-build --verbosity normal
