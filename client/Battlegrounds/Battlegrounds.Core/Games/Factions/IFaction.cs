@@ -1,0 +1,11 @@
+﻿namespace Battlegrounds.Core.Games.Factions;
+
+public interface IFaction {
+
+    byte FactionIndex { get; }
+
+    string Name { get; }
+
+    string Alliance { get; }
+
+}

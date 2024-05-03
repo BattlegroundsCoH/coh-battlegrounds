@@ -1,25 +1,23 @@
 ﻿using Battlegrounds.Core.Companies.Templates;
-using Battlegrounds.Core.Factions;
+using Battlegrounds.Core.Games.Factions;
 
 namespace Battlegrounds.Core.Companies;
 
-public sealed class Company(Guid guid, string name, IFaction faction, ICompanyTemplate template) : ICompany {
-
-    private readonly List<CompanySquad> _squads = [];
+public sealed class Company(Guid guid, string name, IFaction faction, ICompanyTemplate template, IList<ISquad> squads, IList<IEquipment> equipment, IList<IDeploymentPhase> phases) : ICompany {
 
     public Guid Id => guid;
-
+    
     public string Name => name;
 
     public IFaction Faction => faction;
 
     public ICompanyTemplate Template => template;
 
-    public IReadOnlyList<ISquad> Squads => _squads;
+    public IReadOnlyList<ISquad> Squads => (IReadOnlyList<ISquad>)squads;
 
-    public IReadOnlyList<IEquipment> Equipment => throw new NotImplementedException();
+    public IReadOnlyList<IEquipment> Equipment => (IReadOnlyList<IEquipment>)equipment;
 
-    public IReadOnlyList<IDeploymentPhase> DeploymentPhases => throw new NotImplementedException();
+    public IReadOnlyList<IDeploymentPhase> DeploymentPhases => (IReadOnlyList<IDeploymentPhase>)phases;
 
 
 }

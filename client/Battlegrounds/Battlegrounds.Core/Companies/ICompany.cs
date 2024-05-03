@@ -1,5 +1,5 @@
 ﻿using Battlegrounds.Core.Companies.Templates;
-using Battlegrounds.Core.Factions;
+using Battlegrounds.Core.Games.Factions;
 
 namespace Battlegrounds.Core.Companies;
 

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Battlegrounds.Core.Companies.Builders;
+﻿namespace Battlegrounds.Core.Companies.Builders;
 
 public interface ICompanyBuilder {
+
+    ICompanyBuilder AddSquad(ISquad squad);
+    ICompanyBuilder AddSquad(ISquadBuilder squadBuilder);
+
+    ICompany Build();
 
 }
