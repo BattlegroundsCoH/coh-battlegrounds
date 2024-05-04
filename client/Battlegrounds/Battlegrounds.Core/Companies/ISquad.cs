@@ -16,8 +16,8 @@ public interface ISquad {
 
     ISquadTransport? Transport { get; }
 
-    IReadOnlySet<PropertyBagGroupId> Upgrades { get; }
+    IReadOnlySet<UpgradeBlueprint> Upgrades { get; }
 
-    IReadOnlyList<PropertyBagGroupId> Items { get; }
+    IReadOnlyList<IBlueprint> Items { get; }
 
 }

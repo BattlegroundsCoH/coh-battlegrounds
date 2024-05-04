@@ -59,7 +59,25 @@ public class BinaryCompanySerializer(ILogger<BinaryCompanySerializer> logger, IC
 
         int equipmentCount = binaryReader.ReadInt32();
         for (int i = 0; i < equipmentCount; i++) {
-            throw new NotImplementedException();
+            byte ty = binaryReader.ReadByte();
+            ushort equipmentIndex = binaryReader.ReadUInt16();
+            ushort captureIndex = binaryReader.ReadUInt16();
+            PropertyBagGroupId pbgId = new(binaryReader.ReadUInt64());
+            switch (ty) {
+                case 0:
+                    if (_blueprintService.GetBlueprintById(builder.Faction.GameId, pbgId) is IBlueprint ibp) {
+                        builder.WithEquipment(new WeaponEquipment(equipmentIndex, captureIndex, ibp));
+                    }
+                    break;
+                case 1:
+                    if (_blueprintService.GetBlueprintById<EntityBlueprint>(builder.Faction.GameId, pbgId) is EntityBlueprint ebp) {
+                        builder.WithEquipment(new VehicleEquipment(equipmentIndex, captureIndex, ebp));
+                    }
+                    break;
+                default:
+                    _logger.LogError("Encountered invalid equipment type {type} while reading company {company}", ty, builder.Name);
+                    return null;
+            }
         }
 
         int squads = binaryReader.ReadInt32();
@@ -70,15 +88,15 @@ public class BinaryCompanySerializer(ILogger<BinaryCompanySerializer> logger, IC
             }
         }
 
-        int phases = binaryReader.ReadInt32();
-        for (int i = 0; i < phases; i++) {
+        int phaseCount = binaryReader.ReadInt32();
+        for (int i = 0; i < phaseCount; i++) {
             int priority = binaryReader.ReadInt32();
             int phaseUnitCount = binaryReader.ReadInt32();
             HashSet<ushort> phaseUnits = [];
             for (int j = 0; j < phaseUnitCount; j++) {
                 phaseUnits.Add(binaryReader.ReadUInt16());
             }
-            throw new NotImplementedException();
+            builder.WithPhase(new DeploymentPhase(priority, phaseUnits));
         }
 
         return builder.Build();
@@ -107,12 +125,22 @@ public class BinaryCompanySerializer(ILogger<BinaryCompanySerializer> logger, IC
 
         byte itemCount = reader.ReadByte();
         for (int i = 0; i < itemCount; i++) {
-            throw new NotImplementedException();
+            ulong itemPbgid = reader.ReadUInt64();
+            if (_blueprintService.GetBlueprintById(companyBuilder.Faction.GameId, new PropertyBagGroupId(itemPbgid)) is IBlueprint bp) {
+                builder.WithItem(bp);
+            } else {
+                _logger.LogWarning("Encountered invalid property bag group id {pbgid} while loading item/weapon for squad {index} in company '{company}'", itemPbgid, index, companyBuilder.Name);
+            }
         }
 
         byte upgradeCount = reader.ReadByte();
         for (int i = 0; i < upgradeCount; i++) {
-            throw new NotImplementedException();
+            ulong upgradePbgid = reader.ReadUInt64();
+            if (_blueprintService.GetBlueprintById<UpgradeBlueprint>(companyBuilder.Faction.GameId, new PropertyBagGroupId(upgradePbgid)) is UpgradeBlueprint upg) {
+                builder.WithUpgrade(upg);
+            } else {
+                _logger.LogWarning("Encountered invalid property bag group id {pbgid} while loading upgrade for squad {index} in company '{company}'", upgradePbgid, index, companyBuilder.Name);
+            }
         }
 
         byte crewData = reader.ReadByte();
@@ -152,7 +180,23 @@ public class BinaryCompanySerializer(ILogger<BinaryCompanySerializer> logger, IC
         binaryWriter.Write(company.Equipment.Count);
         for (int i = 0; i < company.Equipment.Count; i++) {
             var equipment = company.Equipment[i];
-            throw new NotImplementedException();
+            switch (equipment) {
+                case WeaponEquipment we:
+                    binaryWriter.Write((byte)0);
+                    binaryWriter.Write(we.ItemIndex);
+                    binaryWriter.Write(we.Capturer);
+                    binaryWriter.Write(we.EquipmentBlueprint.Pbgid.Ppbgid);
+                    break;
+                case VehicleEquipment ve:
+                    binaryWriter.Write((byte)1);
+                    binaryWriter.Write(ve.ItemIndex);
+                    binaryWriter.Write(ve.Capturer);
+                    binaryWriter.Write(ve.EquipmentBlueprint.Pbgid.Ppbgid);
+                    break;
+                default:
+                    _logger.LogError("Cannot serialize company {company} with equipment type {type}", company.Name, equipment.GetType().Name);
+                    return false;
+            }
         }
 
         binaryWriter.Write(company.Squads.Count);
@@ -174,34 +218,45 @@ public class BinaryCompanySerializer(ILogger<BinaryCompanySerializer> logger, IC
     });
 
     private void SerializeSquad(ISquad squad, BinaryWriter binaryWriter) {
+
         binaryWriter.Write(squad.SquadId);
         binaryWriter.Write(squad.Blueprint.Pbgid.Ppbgid);
         binaryWriter.Write(squad.Experience);
+        
         if (string.IsNullOrEmpty(squad.Name)) {
             binaryWriter.Write(false);
         } else {
             var squadNameEncoded = Encoding.UTF8.GetBytes(squad.Name);
+            if (squadNameEncoded.Length >= 256) {
+                _logger.LogWarning("Truncating custom unit name to 255 characters {idx} '{name}'", squad.SquadId, squad.Name);
+                squadNameEncoded = squadNameEncoded[.. byte.MaxValue];
+            }
             binaryWriter.Write((byte)squadNameEncoded.Length); // So custom names may only be < 256 characters
             binaryWriter.Write(squadNameEncoded);
         }
+        
         binaryWriter.Write((byte)squad.Items.Count);
         foreach (var item in squad.Items) {
-            throw new NotImplementedException();
+            binaryWriter.Write(item.Pbgid.Ppbgid);
         }
+        
         binaryWriter.Write((byte)squad.Upgrades.Count);
         foreach (var upgrade in squad.Upgrades) {
-            throw new NotImplementedException();
+            binaryWriter.Write(upgrade.Pbgid.Ppbgid);
         }
+
         if (squad.Crew is null) {
             binaryWriter.Write(false);
         } else {
             throw new NotImplementedException();
         }
+        
         if (squad.Transport is null) {
             binaryWriter.Write(false);
         } else {
             throw new NotImplementedException();
         }
+
     }
 
 }

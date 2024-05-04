@@ -16,20 +16,31 @@ public sealed class BlueprintService(ILogger<BlueprintService> logger) : IBluepr
 
     private sealed class GameBlueprintContainer {
 
+        public IDictionary<string, EntityBlueprint> Entities { get; set; } = new Dictionary<string, EntityBlueprint>();
+
         public IDictionary<string, SquadBlueprint> Squads { get; set; } = new Dictionary<string, SquadBlueprint>();
+
+        public IDictionary<string, UpgradeBlueprint> Upgrades { get; set; } = new Dictionary<string, UpgradeBlueprint>();
 
         public IDictionary<PropertyBagGroupId, IBlueprint> PropertyBagGroups { get; set; } = new Dictionary<PropertyBagGroupId, IBlueprint>();
 
         public GameBlueprintContainer FromContainer(BlueprintsContainer container) {
+            this.Entities = (container.Entities ?? []).ToDictionary(x => x.Key, x => x.Value.SetReferenceId(x.Key).Build()).ToFrozenDictionary();
             this.Squads = (container.Squads ?? []).ToDictionary(x => x.Key, x => x.Value.SetReferenceId(x.Key).Build()).ToFrozenDictionary();
-            this.PropertyBagGroups = this.Squads.ToDictionary(x => x.Value.Pbgid, x => (IBlueprint)x.Value).ToFrozenDictionary();
+            this.Upgrades = (container.Upgrades ?? []).ToDictionary(x => x.Key, x => x.Value.SetReferenceId(x.Key).Build()).ToFrozenDictionary();
+            this.PropertyBagGroups = this.Entities.ToDictionary(x => x.Value.Pbgid, x => (IBlueprint)x.Value)
+                .Union(this.Squads.ToDictionary(x => x.Value.Pbgid, x => (IBlueprint)x.Value))
+                .Union(this.Upgrades.ToDictionary(x => x.Value.Pbgid, x => (IBlueprint)x.Value))
+                .ToFrozenDictionary();
             return this;
         }
     }
 
     private sealed class BlueprintsContainer {
         public string TargetGame { get; set; } = string.Empty;
+        public Dictionary<string, EntityBlueprint.Builder> Entities { get; set; } = [];
         public Dictionary<string, SquadBlueprint.Builder> Squads { get; set; } = [];
+        public Dictionary<string, UpgradeBlueprint.Builder> Upgrades { get; set; } = [];
     }
 
 

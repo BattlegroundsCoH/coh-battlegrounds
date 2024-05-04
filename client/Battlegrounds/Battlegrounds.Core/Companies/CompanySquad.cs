@@ -7,8 +7,8 @@ public sealed class CompanySquad(
     SquadBlueprint blueprint, 
     string? name, 
     float experience, 
-    IReadOnlySet<PropertyBagGroupId> upgrades, 
-    IReadOnlyList<PropertyBagGroupId> items,
+    IReadOnlySet<UpgradeBlueprint> upgrades, 
+    IReadOnlyList<IBlueprint> items,
     ISquadTransport? transport = null,
     ISquadCrew? crew = null) : ISquad {
 
@@ -20,9 +20,9 @@ public sealed class CompanySquad(
 
     public float Experience => experience;
 
-    public IReadOnlySet<PropertyBagGroupId> Upgrades => upgrades;
+    public IReadOnlySet<UpgradeBlueprint> Upgrades => upgrades;
 
-    public IReadOnlyList<PropertyBagGroupId> Items => items;
+    public IReadOnlyList<IBlueprint> Items => items;
 
     public ISquadCrew? Crew => crew;
 

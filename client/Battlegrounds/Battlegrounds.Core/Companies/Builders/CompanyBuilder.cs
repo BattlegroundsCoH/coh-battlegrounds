@@ -15,6 +15,10 @@ public sealed class CompanyBuilder : ICompanyBuilder {
 
     public ICompanyTemplate Template { get; set; } = new CompanyTemplate(string.Empty, string.Empty, 0, 0, 0, 0);
 
+    public List<IDeploymentPhase> Phases { get; set; } = [];
+
+    public List<IEquipment> Equipment { get; set; } = [];
+
     public CompanyBuilder() { }
 
     public CompanyBuilder(ICompany source) {
@@ -23,6 +27,8 @@ public sealed class CompanyBuilder : ICompanyBuilder {
         this.Squads = new List<ISquad>(source.Squads);
         this.Faction = source.Faction;
         this.Template = source.Template;
+        this.Phases = new List<IDeploymentPhase>(source.DeploymentPhases);
+        this.Equipment = new List<IEquipment>(source.Equipment);
     }
 
     public CompanyBuilder WithId(Guid id) {
@@ -65,6 +71,16 @@ public sealed class CompanyBuilder : ICompanyBuilder {
 
     public CompanyBuilder WithTemplate(ICompanyTemplate template) {
         this.Template = template;
+        return this;
+    }
+
+    public CompanyBuilder WithPhase(DeploymentPhase deploymentPhase) {
+        this.Phases.Add(deploymentPhase);
+        return this;
+    }
+
+    public CompanyBuilder WithEquipment(IEquipment equipment) {
+        this.Equipment.Add(equipment);
         return this;
     }
 

@@ -13,16 +13,16 @@ public sealed class SquadBuilder(ushort? squadIndex, ICompanyBuilder? builder) :
 
     public float Experience { get; set; } = 0f;
 
-    public HashSet<PropertyBagGroupId> Upgrades { get; set; } = [];
+    public HashSet<UpgradeBlueprint> Upgrades { get; set; } = [];
 
-    public List<PropertyBagGroupId> Items { get; set; } = [];
+    public List<IBlueprint> Items { get; set; } = [];
 
     public SquadBuilder(ISquad squad, ICompanyBuilder? builder = null) : this(squad.SquadId, builder) {
         this.Blueprint = squad.Blueprint;
         this.Name = squad.Name;
         this.Experience = squad.Experience;
-        this.Upgrades = new HashSet<PropertyBagGroupId>(squad.Upgrades);
-        this.Items = new List<PropertyBagGroupId>(squad.Items);
+        this.Upgrades = new HashSet<UpgradeBlueprint>(squad.Upgrades);
+        this.Items = new List<IBlueprint>(squad.Items);
     }
 
     public ICompanyBuilder AddToCompany()
@@ -68,12 +68,12 @@ public sealed class SquadBuilder(ushort? squadIndex, ICompanyBuilder? builder) :
         return this;
     }
 
-    public SquadBuilder WithUpgrade(PropertyBagGroupId upgradeId) {
-        Upgrades.Add(upgradeId);
+    public SquadBuilder WithUpgrade(UpgradeBlueprint upgrade) {
+        Upgrades.Add(upgrade);
         return this;
     }
 
-    public SquadBuilder WithItem(PropertyBagGroupId itemId) {
+    public SquadBuilder WithItem(IBlueprint itemId) {
         Items.Add(itemId);
         return this;
     }
