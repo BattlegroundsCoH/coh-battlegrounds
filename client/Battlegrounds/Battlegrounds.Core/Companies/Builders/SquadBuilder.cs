@@ -20,6 +20,9 @@ public sealed class SquadBuilder(ushort? squadIndex, ICompanyBuilder? builder) :
     public SquadBuilder(ISquad squad, ICompanyBuilder? builder = null) : this(squad.SquadId, builder) {
         this.Blueprint = squad.Blueprint;
         this.Name = squad.Name;
+        this.Experience = squad.Experience;
+        this.Upgrades = new HashSet<PropertyBagGroupId>(squad.Upgrades);
+        this.Items = new List<PropertyBagGroupId>(squad.Items);
     }
 
     public ICompanyBuilder AddToCompany()

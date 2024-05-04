@@ -32,6 +32,24 @@ public sealed class BlueprintService(ILogger<BlueprintService> logger) : IBluepr
         public Dictionary<string, SquadBlueprint.Builder> Squads { get; set; } = [];
     }
 
+
+    public IBlueprint? GetBlueprintById(string game, PropertyBagGroupId propertyBagGroupId) {
+        if (!_gameBlueprints.TryGetValue(game, out var blueprints)) {
+            return null;
+        }
+        if (!blueprints.PropertyBagGroups.TryGetValue(propertyBagGroupId, out var bp)) {
+            return null;
+        }
+        return bp;
+    }
+
+    public TBlueprint? GetBlueprintById<TBlueprint>(string game, PropertyBagGroupId propertyBagGroupId) where TBlueprint : class, IBlueprint {
+        if (GetBlueprintById(game, propertyBagGroupId) is TBlueprint bp) {
+            return bp;
+        }
+        return null;
+    }
+
     public async Task<bool> LoadBlueprintsFromStream(Stream? stream) {
 
         var deserialiser = new DeserializerBuilder()

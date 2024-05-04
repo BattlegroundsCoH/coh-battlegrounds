@@ -12,7 +12,7 @@ public static class CompanyFixture {
         .WithId(Guid.Parse("df6100e1-30cd-4338-ac81-8d54d60f6c29"))
         .WithName("Desert Rats")
         .WithTemplate(CompanyTemplateFixture.DESERT_RATS)
-        .WithFaction(CoH3Faction.British)
+        .WithFaction(Faction.British)
         .WithSquad(
             squad => squad.WithBlueprint(BlueprintFixture.SBP_COH3_BRITISH_TOMMY)
                 .AddToCompany(4)

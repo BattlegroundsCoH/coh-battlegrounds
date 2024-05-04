@@ -1,6 +1,8 @@
 ﻿namespace Battlegrounds.Core.Games;
 
-public sealed class CoH3 : IGame {
+public sealed class CoH3() : Game(COH3_NAME) {
+
+    public const string COH3_NAME = "company_of_heroes_3";
 
     private static readonly (string, string)[] COH3_SKIRMISH_SETTINGS = [
         ("gamemode", "victory_points"),
@@ -11,10 +13,8 @@ public sealed class CoH3 : IGame {
         ("weather", "1"),
     ];
 
-    public string Name => "company_of_heroes_3";
+    public override string DefaultScenario => "desert_village_2p_mkiii";
 
-    public string DefaultScenario => "desert_village_2p_mkiii";
-
-    public (string, string)[] SkirmishSettings => COH3_SKIRMISH_SETTINGS;
+    public override (string, string)[] SkirmishSettings => COH3_SKIRMISH_SETTINGS;
 
 }

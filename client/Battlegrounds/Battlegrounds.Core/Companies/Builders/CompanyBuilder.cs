@@ -11,7 +11,7 @@ public sealed class CompanyBuilder : ICompanyBuilder {
 
     public List<ISquad> Squads { get; set; } = [];
 
-    public IFaction Faction { get; set; } = CoH3Faction.British;
+    public IFaction Faction { get; set; } = Games.Factions.Faction.British;
 
     public ICompanyTemplate Template { get; set; } = new CompanyTemplate(string.Empty, string.Empty, 0, 0, 0, 0);
 
@@ -21,6 +21,8 @@ public sealed class CompanyBuilder : ICompanyBuilder {
         this.Id = source.Id;
         this.Name = source.Name;
         this.Squads = new List<ISquad>(source.Squads);
+        this.Faction = source.Faction;
+        this.Template = source.Template;
     }
 
     public CompanyBuilder WithId(Guid id) {

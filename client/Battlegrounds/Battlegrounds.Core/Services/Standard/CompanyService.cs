@@ -1,4 +1,5 @@
 ﻿using Battlegrounds.Core.Companies;
+using Battlegrounds.Core.Companies.Templates;
 
 using Microsoft.Extensions.Logging;
 
@@ -11,6 +12,10 @@ public class CompanyService(ILogger<CompanyService> logger) : ICompanyService {
     public ICompany[] GetCompanies(string alliance) => [];
 
     public ICompany GetCompany(string companyId) {
+        throw new NotImplementedException();
+    }
+
+    public ICompanyTemplate? GetCompanyTemplate(string templateId) {
         throw new NotImplementedException();
     }
 

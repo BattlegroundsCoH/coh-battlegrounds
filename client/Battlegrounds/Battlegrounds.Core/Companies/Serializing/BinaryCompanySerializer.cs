@@ -1,33 +1,142 @@
 ﻿using System.Text;
 
+using Battlegrounds.Core.Companies.Builders;
+using Battlegrounds.Core.Companies.Templates;
+using Battlegrounds.Core.Games.Blueprints;
+using Battlegrounds.Core.Games.Factions;
+using Battlegrounds.Core.Services;
+
 using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.Core.Companies.Serializing;
 
-public class BinaryCompanySerializer(ILogger<BinaryCompanySerializer> logger) : ICompanySerializer {
+public class BinaryCompanySerializer(ILogger<BinaryCompanySerializer> logger, ICompanyService companyService, IBlueprintService blueprintService) : ICompanySerializer {
 
-    private readonly Version basic_version = new Version(2, 0, 0);
+    private static readonly Version current_version = Version.CoreVersion;
+    //private static readonly Version basic_version = new Version(2, 0, 0);
     // Note: Please add more Version instances when major changes are made to company serialisation
     //       That way we can easily read outdated companies
 
     private readonly ILogger<BinaryCompanySerializer> _logger = logger;
+    private readonly ICompanyService _companyService = companyService;
+    private readonly IBlueprintService _blueprintService = blueprintService;
 
     public ICompany? Deserialise(Stream inputStream) => DeserializeAsync(inputStream).Result;
 
-    public Task<ICompany?> DeserializeAsync(Stream inputStream) {
-        throw new NotImplementedException();
+    public async Task<ICompany?> DeserializeAsync(Stream inputStream) => await Task.Run(() => {
+
+        CompanyBuilder builder = new CompanyBuilder();
+
+        using var binaryReader = new BinaryReader(inputStream);
+        var major = binaryReader.ReadInt32();
+        var minor = binaryReader.ReadInt32();
+        var patch = binaryReader.ReadInt32();
+        var version = new Version(major, minor, patch);
+
+        if (current_version.IsGreaterThan(version)) {
+            _logger.LogInformation("Loading outdated company {v1} (Current: {v2})", version, current_version);
+        }
+
+        var guidBytes = binaryReader.ReadBytes(16);
+        builder.WithId(new Guid(guidBytes))
+            .WithFaction(Faction.FromIndex(binaryReader.ReadByte()));
+
+        byte[] templateId = binaryReader.ReadBytes(128);
+        int cut = Array.FindIndex(templateId, b => b == 0);
+        if (cut == -1) {
+            throw new InvalidDataException("Cannot read company template name, since it exceeds 128 characters!");
+        }
+        string templateName = Encoding.ASCII.GetString(templateId[..cut]);
+        if (_companyService.GetCompanyTemplate(templateName) is not ICompanyTemplate template) {
+            _logger.LogError("Cannot load company with invalid company template id {id}", templateName);
+            return null;
+        }
+
+        builder.WithTemplate(template);
+
+        int nameLen = binaryReader.ReadInt32();
+        builder.WithName(Encoding.UTF8.GetString(binaryReader.ReadBytes(nameLen)));
+
+        int equipmentCount = binaryReader.ReadInt32();
+        for (int i = 0; i < equipmentCount; i++) {
+            throw new NotImplementedException();
+        }
+
+        int squads = binaryReader.ReadInt32();
+        for (int i = 0; i < squads; i++) {
+            var sb = DeserializeSquad(binaryReader, builder);
+            if (sb is not null) {
+                builder.AddSquad(sb.Build());
+            }
+        }
+
+        int phases = binaryReader.ReadInt32();
+        for (int i = 0; i < phases; i++) {
+            int priority = binaryReader.ReadInt32();
+            int phaseUnitCount = binaryReader.ReadInt32();
+            HashSet<ushort> phaseUnits = [];
+            for (int j = 0; j < phaseUnitCount; j++) {
+                phaseUnits.Add(binaryReader.ReadUInt16());
+            }
+            throw new NotImplementedException();
+        }
+
+        return builder.Build();
+
+    });
+
+    private ISquadBuilder? DeserializeSquad(BinaryReader reader, CompanyBuilder companyBuilder) {
+
+        ushort index = reader.ReadUInt16();
+        SquadBuilder builder = new SquadBuilder(index, companyBuilder);
+
+        ulong pbgid = reader.ReadUInt64();
+        SquadBlueprint? sbp = _blueprintService.GetBlueprintById<SquadBlueprint>(companyBuilder.Faction.GameId, new PropertyBagGroupId(pbgid));
+        if (sbp is not null) {
+            builder.WithBlueprint(sbp);
+        } else {
+            _logger.LogWarning("Encountered invalid property bag group id {pbgid} while loading squad {index} for company '{company}'", pbgid, index, companyBuilder.Name);
+        }
+
+        builder.WithExperience(reader.ReadSingle());
+        
+        byte nameLen = reader.ReadByte();
+        if (nameLen > 0) {
+            builder.WithName(Encoding.UTF8.GetString(reader.ReadBytes(nameLen)));
+        }
+
+        byte itemCount = reader.ReadByte();
+        for (int i = 0; i < itemCount; i++) {
+            throw new NotImplementedException();
+        }
+
+        byte upgradeCount = reader.ReadByte();
+        for (int i = 0; i < upgradeCount; i++) {
+            throw new NotImplementedException();
+        }
+
+        byte crewData = reader.ReadByte();
+        if (crewData > 0) {
+            throw new NotImplementedException();
+        }
+
+        byte transportData = reader.ReadByte();
+        if (transportData > 0) {
+            throw new NotImplementedException();
+        }
+
+        return builder.Blueprint is null ? null : builder;
+
     }
 
     public bool Serialize(ICompany company, Stream outputStream) => SerializeAsync(company, outputStream).Result;
 
     public async Task<bool> SerializeAsync(ICompany company, Stream outputStream) => await Task.Run(() => {
 
-        var coreVersion = Version.CoreVersion; // Always use latest version when saving
-
-        using BinaryWriter binaryWriter = new BinaryWriter(outputStream);
-        binaryWriter.Write(coreVersion.Major);
-        binaryWriter.Write(coreVersion.Minor);
-        binaryWriter.Write(coreVersion.Build);
+        using BinaryWriter binaryWriter = new BinaryWriter(outputStream, Encoding.UTF8, true);
+        binaryWriter.Write(current_version.Major);
+        binaryWriter.Write(current_version.Minor);
+        binaryWriter.Write(current_version.Patch);
         binaryWriter.Write(company.Id.ToByteArray());
 
         binaryWriter.Write(company.Faction.FactionIndex); // This also carries information about what game the company is for
@@ -43,6 +152,7 @@ public class BinaryCompanySerializer(ILogger<BinaryCompanySerializer> logger) : 
         binaryWriter.Write(company.Equipment.Count);
         for (int i = 0; i < company.Equipment.Count; i++) {
             var equipment = company.Equipment[i];
+            throw new NotImplementedException();
         }
 
         binaryWriter.Write(company.Squads.Count);

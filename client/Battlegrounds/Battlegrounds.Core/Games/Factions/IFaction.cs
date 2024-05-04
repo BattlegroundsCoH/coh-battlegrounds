@@ -8,4 +8,6 @@ public interface IFaction {
 
     string Alliance { get; }
 
+    string GameId { get; }
+
 }
