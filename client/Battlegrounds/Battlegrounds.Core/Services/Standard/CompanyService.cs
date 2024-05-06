@@ -10,33 +10,53 @@ public class CompanyService(ILogger<CompanyService> logger, ICompanySerializer c
     private readonly ILogger<CompanyService> _logger = logger;
     private readonly ICompanySerializer _companySerializer = companySerializer;
 
+    private readonly Dictionary<Guid, ICompany> _companies = [];
+
     public Task<ICompany?> DownloadSyncedCompany(string companyId) {
         throw new NotImplementedException();
     }
 
-    public IList<ICompany> GetCompanies(string alliance) => [];
+    public IList<ICompany> GetCompanies(string alliance) => _companies.Values.Where(x => x.Faction.Alliance == alliance).ToList();
 
-    public IList<ICompany> GetCompanies() {
-        throw new NotImplementedException();
-    }
+    public IList<ICompany> GetCompanies() => [.. _companies.Values];
 
-    public ICompany GetCompany(string companyId) {
-        throw new NotImplementedException();
-    }
+    public ICompany? GetCompany(string companyId) => Guid.TryParse(companyId, out var guid) ? GetCompany(guid) : throw new ArgumentException("Expected UUID4 compliant id", nameof(companyId));
 
-    public Task<ICompany> LoadCompanyFromFile(Stream stream) {
-        throw new NotImplementedException();
+    public ICompany? GetCompany(Guid companyId) => _companies.TryGetValue(companyId, out var company) ? company : null;
+
+    public async Task<ICompany?> LoadCompanyFromStream(Stream inputStream) {
+        try {
+            return await _companySerializer.DeserializeAsync(inputStream);
+        } catch (Exception e) {
+            _logger.LogError(e, "Failed to load company from stream");
+            return null;
+        } finally {
+            await inputStream.DisposeAsync();
+        }
     }
 
     public void RegisterCompany(ICompany company) {
-        throw new NotImplementedException();
+        _companies[company.Id] = company;
     }
 
-    public Task<bool> SaveCompany(ICompany company) {
-        throw new NotImplementedException();
+    public async Task<bool> SaveCompany(ICompany company, Stream outputStream) {
+        try {
+            return await _companySerializer.SerializeAsync(company, outputStream);
+        } catch (Exception e) {
+            _logger.LogError(e, "Failed saving company {id} - {company}", company.Id, company.Name);
+            return false;
+        } finally {
+            await outputStream.DisposeAsync();
+        }
     }
 
-    public Task<bool> SynchronizeCompany(ICompany company) {
+    public async Task<bool> SynchronizeCompany(ICompany company) {
+        MemoryStream outputStream = new MemoryStream();
+        if (!await SaveCompany(company, outputStream)) {
+            _logger.LogWarning("Failed synchronozing company {id} with cloud", company.Id);
+            return false;
+        }
+        // TODO: Upload to cloud
         throw new NotImplementedException();
     }
 
