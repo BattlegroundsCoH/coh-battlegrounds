@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.Core.Companies.Serializing;
 
-public class BinaryCompanySerializer(ILogger<BinaryCompanySerializer> logger, ICompanyService companyService, IBlueprintService blueprintService) : ICompanySerializer {
+public class BinaryCompanySerializer(ILogger<BinaryCompanySerializer> logger, ICompanyTemplateService companyTemplateService, IBlueprintService blueprintService) : ICompanySerializer {
 
     private static readonly Version current_version = Version.CoreVersion;
     //private static readonly Version basic_version = new Version(2, 0, 0);
@@ -18,7 +18,7 @@ public class BinaryCompanySerializer(ILogger<BinaryCompanySerializer> logger, IC
     //       That way we can easily read outdated companies
 
     private readonly ILogger<BinaryCompanySerializer> _logger = logger;
-    private readonly ICompanyService _companyService = companyService;
+    private readonly ICompanyTemplateService _companyTemplateService = companyTemplateService;
     private readonly IBlueprintService _blueprintService = blueprintService;
 
     public ICompany? Deserialise(Stream inputStream) => DeserializeAsync(inputStream).Result;
@@ -47,7 +47,7 @@ public class BinaryCompanySerializer(ILogger<BinaryCompanySerializer> logger, IC
             throw new InvalidDataException("Cannot read company template name, since it exceeds 128 characters!");
         }
         string templateName = Encoding.ASCII.GetString(templateId[..cut]);
-        if (_companyService.GetCompanyTemplate(templateName) is not ICompanyTemplate template) {
+        if (_companyTemplateService.GetCompanyTemplate(templateName) is not ICompanyTemplate template) {
             _logger.LogError("Cannot load company with invalid company template id {id}", templateName);
             return null;
         }
@@ -103,7 +103,7 @@ public class BinaryCompanySerializer(ILogger<BinaryCompanySerializer> logger, IC
 
     });
 
-    private ISquadBuilder? DeserializeSquad(BinaryReader reader, CompanyBuilder companyBuilder) {
+    private SquadBuilder? DeserializeSquad(BinaryReader reader, CompanyBuilder companyBuilder) {
 
         ushort index = reader.ReadUInt16();
         SquadBuilder builder = new SquadBuilder(index, companyBuilder);

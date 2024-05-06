@@ -1,4 +1,5 @@
 ﻿using Battlegrounds.App.Services;
+using Battlegrounds.Core.Companies.Serializing;
 using Battlegrounds.Core.Configuration;
 using Battlegrounds.Core.Services;
 using Battlegrounds.Core.Services.Standard;
@@ -35,6 +36,8 @@ public static class MauiProgram {
             .AddSingleton<ICompanyService, CompanyService>()
             .AddSingleton<IScenarioService, ScenarioService>()
             .AddSingleton<IBlueprintService, BlueprintService>()
+            .AddSingleton<ICompanyTemplateService, CompanyTemplateService>()
+            .AddSingleton<ICompanySerializer, BinaryCompanySerializer>()
             .AddSingleton<AppLoader>();
 
 #if DEBUG

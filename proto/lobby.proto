@@ -27,6 +27,10 @@ service LobbyService {
     rpc CancelPlay (CancelPlayRequest) returns (CancelPlayResponse);
     rpc StopPlay (StopPlayRequest) returns (StopPlayResponse);
 
+    // Lobby resource
+    rpc UploadLobbyResource(stream UploadLobbyResourceRequest) returns (UploadLobbyResourceResponse);
+    rpc DownloadLobbyResource(DownloadLobbyResourceRequest) returns (stream DownloadLobbyResourceResponse);
+
 }
 
 message GetLobbiesRequest {}
@@ -221,3 +225,24 @@ message StopPlayRequest {
 }
 
 message StopPlayResponse {}
+
+message UploadLobbyResourceRequest {
+    LobbyUserContext user = 1;
+    string resource = 2;
+    bytes contents = 3;
+}
+
+message UploadLobbyResourceResponse {
+    int32 received = 1;
+}
+
+message DownloadLobbyResourceRequest {
+    LobbyUserContext user = 1;
+    string resource = 2;
+}
+
+message DownloadLobbyResourceResponse {
+    bytes contents = 1;
+    int32 chunk_total = 2;
+    int32 chunk_this = 3;
+}
