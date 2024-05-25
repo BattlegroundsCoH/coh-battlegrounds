@@ -1,6 +1,7 @@
 ﻿using Battlegrounds.App.Services;
 using Battlegrounds.Core.Companies.Serializing;
 using Battlegrounds.Core.Configuration;
+using Battlegrounds.Core.Matches;
 using Battlegrounds.Core.Services;
 using Battlegrounds.Core.Services.Standard;
 using Microsoft.Extensions.Logging;
@@ -38,6 +39,9 @@ public static class MauiProgram {
             .AddSingleton<IBlueprintService, BlueprintService>()
             .AddSingleton<ICompanyTemplateService, CompanyTemplateService>()
             .AddSingleton<ICompanySerializer, BinaryCompanySerializer>()
+            .AddSingleton<IMatchModBuilderService, MatchModBuilderService>()
+            .AddSingleton<IFileSystemService, FileSystemService>()
+            .AddTransient<MatchDataBuilder>()
             .AddSingleton<AppLoader>();
 
 #if DEBUG

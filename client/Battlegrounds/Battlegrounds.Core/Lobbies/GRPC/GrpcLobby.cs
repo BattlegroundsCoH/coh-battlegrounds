@@ -1,8 +1,12 @@
-﻿using Battlegrounds.Core.Games.Scenarios;
+﻿using Battlegrounds.Core.Companies;
+using Battlegrounds.Core.Games.Scenarios;
+using Battlegrounds.Core.Lobbies.Standard;
+using Battlegrounds.Core.Services;
 using Battlegrounds.Grpc;
 
 using Grpc.Core;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.Core.Lobbies.GRPC;
@@ -11,17 +15,25 @@ public sealed class GrpcLobby(
     LobbyService.LobbyServiceClient client,
     AsyncServerStreamingCall<LobbyStatusResponse> stream,
     LobbyUserContext userContext,
+    ICompanyService companyService,
+    IMatchModBuilderService matchModBuilderService,
+    GrpcLobbyResources grpcLobbyResources,
     ILogger<GrpcLobby> logger) : ILobby {
 
     private readonly ILogger<GrpcLobby> _logger = logger;
     private readonly LobbyService.LobbyServiceClient _client = client;
     private readonly AsyncServerStreamingCall<LobbyStatusResponse> _stream = stream;
     private readonly LobbyUserContext _userContext = userContext;
+    private readonly ICompanyService _companyService = companyService;
+    private readonly IMatchModBuilderService _matchModBuilderService = matchModBuilderService;
+    private readonly GrpcLobbyResources _resources = grpcLobbyResources;
 
     private readonly GrpcLobbyTeam _team1 = new();
     private readonly GrpcLobbyTeam _team2 = new();
     private readonly Dictionary<string, string> _settings = [];
+    private readonly HashSet<ulong> _readyPlayers = [];
 
+    private IScenario _scenario = new GrpcLobbyScenario(new LobbyScenario());
     private Task _listenTask = Task.CompletedTask;
     private bool _isHost;
     private Action? _onUpdate;
@@ -43,12 +55,24 @@ public sealed class GrpcLobby(
 
     public ulong LocalPlayerId => _userContext.UserId;
 
+    public ISet<ulong> ReadyPlayers => _readyPlayers;
+
+    public IScenario Scenario => _scenario;
+
     private async Task ListenChanges() {
         _logger.LogInformation("Started listening for incoming lobby messages");
         try {
             await foreach (var next in _stream.ResponseStream.ReadAllAsync()) {
+                switch (next.EventType) {
+                    case LobbyStatusEvent.StatusCompileGamemode:
+                        _ = Task.Run(_compileGamemode);
+                        break;
+                    default:
+                        break;
+                }
                 switch (next.ResponseDataCase) {
                     case LobbyStatusResponse.ResponseDataOneofCase.Message:
+                        PublishMessage(next.Message);
                         break;
                     case LobbyStatusResponse.ResponseDataOneofCase.Lobby:
                         FromProto(next.Lobby);
@@ -67,6 +91,56 @@ public sealed class GrpcLobby(
         _logger.LogInformation("Stopped listening for incoming lobby messages");
     }
 
+    private async Task _compileGamemode() {
+
+        // Try compile
+        if (!await _matchModBuilderService.BuildMatchGamemode(this)) {
+            _logger.LogCritical("Failed compiling gamemode");
+            // TODO: Somehow notify server?
+            return;
+        }
+
+        // Open the stream
+        var gamemode = await _matchModBuilderService.OpenReadGamemodeArchive(Guid);
+        if (gamemode is null) {
+            _logger.LogCritical("Failed reading gamemode file");
+            // TODO: Somehow notify server?
+            return;
+        }
+
+        // Upload it
+        if (!await _resources.UploadResourceAsync(_userContext, "gamemode", LobbyResourceKind.ResourceKindGamemode, gamemode)) {
+            _logger.LogCritical("Failed reading uploading file");
+            // TODO: Somehow notify server?
+            return;
+        }
+
+    }
+
+    private void PublishMessage(LobbyChatMessage chatMessage) {
+        var timestamp = DateTime.TryParse(chatMessage.Timestamp, out var st) ? st : DateTime.Now;
+        ILobbyChatMessage msg = chatMessage.SenderId switch {
+            0 => new SystemMessage(timestamp, chatMessage.Message),
+            _ => new ChatMessage(timestamp, TryFindUsername(chatMessage.SenderId) ?? chatMessage.SenderId.ToString(), chatMessage.Message)
+        };
+        _onChatMessage?.Invoke(msg);
+    }
+
+    private string? TryFindUsername(ulong userId) {
+      
+        // Find slot with player
+        var slot =
+            _team1.Slots.FirstOrDefault(x => x.Player is not null && x.Player.PlayerId == userId) ??
+            _team2.Slots.FirstOrDefault(x => x.Player is not null && x.Player.PlayerId == userId);
+
+        if (slot is not null && slot.Player is not null) {
+            return slot.Player.Name;
+        }
+        
+        return null;
+
+    }
+
     public void SetUpdateCallback(Action callback) => _onUpdate = callback;
 
     public void SetChatCallback(Action<ILobbyChatMessage> callback) => _onChatMessage = callback;
@@ -83,6 +157,8 @@ public sealed class GrpcLobby(
             _settings.Add(k, v);
         }
 
+        _scenario = new GrpcLobbyScenario(lobby.Scenario);
+
         if (triggerUpdate) {
             _onUpdate?.Invoke();
         }
@@ -90,8 +166,13 @@ public sealed class GrpcLobby(
     }
 
     public async Task SetTeamNames(string team1, string team2) {
-        await _client.UpdateTeamAsync(new UpdateTeamRequest { User = _userContext, Alliance = _team1.Alliance, Name = team1, Team = 0 });
-        await _client.UpdateTeamAsync(new UpdateTeamRequest { User = _userContext, Alliance = _team2.Alliance, Name = team2, Team = 1 });
+        await _client.UpdateTeamAsync(new UpdateTeamRequest { 
+            User = _userContext, 
+            Team1Alliance = _team1.Alliance, 
+            Team1Name = team1, 
+            Team2Alliance = _team2.Alliance, 
+            Team2Name = team2 
+        });
     }
 
     public async Task MoveToSlot(int team, int slot) {
@@ -130,11 +211,33 @@ public sealed class GrpcLobby(
     }
 
     public async Task SetScenario(IScenario scenario) {
-        throw new NotImplementedException();
+        var request = new UpdateScenarioRequest { User = _userContext, Scenario = scenario.AsProto() };
+        await _client.UpdateScenarioAsync(request);
     }
 
-    public async Task LaunchMatch() {
-        throw new NotImplementedException();
+    public async Task SetState(bool ready) {
+        var request = new SetPlayerStateRequest { User = _userContext, IsReady = ready };
+        await _client.SetPlayerStateAsync(request);
+    }
+
+    public async Task<bool> UploadCompanyAsync(ICompany company) {
+        using var memoryStream = new MemoryStream();
+        if (!await _companyService.SaveCompany(company, memoryStream)) {
+            return false;
+        }
+        memoryStream.Seek(0, SeekOrigin.Begin);
+        return await _resources.UploadResourceAsync(_userContext, company.Id.ToString(), LobbyResourceKind.ResourceKindCompany, memoryStream);
+    }
+
+    public Task<bool> UploadGamemodeAsync(Stream inputStream) => _resources.UploadResourceAsync(_userContext, "gamemode", LobbyResourceKind.ResourceKindGamemode, inputStream);
+
+    public async Task<bool> LaunchMatchAsync() {
+        var request = new StartPlayRequest { User = _userContext };
+        var response = await _client.StartPlayAsync(request);
+        if (response != null) {
+            return response.IsStarting;
+        }
+        return false;
     }
 
     public async Task Leave() {
@@ -164,9 +267,17 @@ public sealed class GrpcLobby(
 
     private GrpcLobbyTeam TeamFromIndex(int index) => index == 0 ? _team1 : _team2;
 
+    public Task<IDictionary<ulong, ICompany>> DownloadCompaniesAsync() {
+        throw new NotImplementedException();
+    }
+
     public static GrpcLobby New(IServiceProvider serviceProvider, Lobby lobby, LobbyService.LobbyServiceClient client, AsyncServerStreamingCall<LobbyStatusResponse> stream, LobbyUserContext userContext, bool isHost) {
 
-        GrpcLobby gRPCLobby = new(client, stream, userContext, serviceProvider.GetService(typeof(ILogger<GrpcLobby>)) as ILogger<GrpcLobby> ?? throw new Exception()) {
+        var companyService = serviceProvider.GetService<ICompanyService>() ?? throw new Exception("No company service found!");
+        var matchModBuilderService = serviceProvider.GetService<IMatchModBuilderService>() ?? throw new Exception("No match builder service found!");
+        var lobbyResourcesLogger = serviceProvider.GetService<ILogger<GrpcLobbyResources>>() ?? throw new Exception("No logger for gRPC resources class found!");
+        var logger = serviceProvider.GetService<ILogger<GrpcLobby>>() ?? throw new Exception("No logger for gRPC lobby found!");
+        GrpcLobby gRPCLobby = new(client, stream, userContext, companyService, matchModBuilderService, new GrpcLobbyResources(client, lobbyResourcesLogger), logger) {
             Guid = Guid.Parse(userContext.Guid),
             Name = lobby.Name,
             Game = lobby.Game,

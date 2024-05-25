@@ -9,7 +9,9 @@ public class GamemodeService(ILogger<GamemodeService> logger) : IGamemodeService
     
     private readonly ILogger<GamemodeService> _logger = logger;
 
-    public IGamemode GetGamemode(IGame game, string gamemodeName) {
+    public IGamemode GetGamemode(IGame game, string gamemodeName) => GetGamemode(game.Name, gamemodeName);
+
+    public IGamemode GetGamemode(string gameId, string gamemodeName) {
         return new CoH3Gamemode(gamemodeName, "Victory Points", []);
     }
 

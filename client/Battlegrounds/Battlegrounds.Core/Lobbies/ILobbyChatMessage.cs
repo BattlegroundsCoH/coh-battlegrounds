@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Battlegrounds.Core.Lobbies;
+﻿namespace Battlegrounds.Core.Lobbies;
 
 public interface ILobbyChatMessage {
+
+    string Sender { get; }
+
+    string Message { get; }
+
+    DateTime Timestamp { get; }
+
 }

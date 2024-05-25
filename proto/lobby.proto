@@ -58,12 +58,13 @@ message Lobby {
     string guid = 1;
     string name = 2;
     string game = 3;
-    bool isPasswordProtected = 4;
+    bool is_password_protected = 4;
     LobbyTeam teamA = 5;
     LobbyTeam teamB = 6;
     map<string,string> settings = 7;
     uint64 host_id = 8;
     LobbyScenario scenario = 9;
+    repeated uint64 ready_players = 10;
 }
 
 message LobbyTeam {
@@ -122,6 +123,9 @@ enum LobbyStatusEvent {
     STATUS_SETTING_UPDATE = 4;
     STATUS_CHANGE_SLOT = 5;
     STATUS_UPDATE_SLOT = 6;
+    STATUS_COMPILE_GAMEMODE = 7;
+    STATUS_START_GAME = 8;
+    STATUS_UPDATE_PLAYER_STATE = 9;
 }
 
 message LobbyStatusResponse {
@@ -168,9 +172,10 @@ message UpdateSlotResponse {}
 
 message UpdateTeamRequest {
     LobbyUserContext user = 1;
-    int32 team = 2;
-    string name = 3;
-    string alliance = 4;
+    string team1_name = 2;
+    string team1_alliance = 3;
+    string team2_name = 4;
+    string team2_alliance = 5;
 }
 
 message UpdateTeamResponse {}
@@ -210,7 +215,10 @@ message StartPlayRequest {
     LobbyUserContext user = 1;
 }
 
-message StartPlayResponse {}
+message StartPlayResponse {
+    bool is_starting = 1;
+    string reason = 2;
+}
 
 message CancelPlayRequest {
     LobbyUserContext user = 1;
@@ -226,10 +234,18 @@ message StopPlayRequest {
 
 message StopPlayResponse {}
 
+enum LobbyResourceKind {
+    RESOURCE_KIND_GAMEMODE = 0;
+    RESOURCE_KIND_COMPANY = 1;
+}
+
 message UploadLobbyResourceRequest {
     LobbyUserContext user = 1;
-    string resource = 2;
-    bytes contents = 3;
+    LobbyResourceKind kind = 2;
+    string resource = 3;
+    bytes contents = 4;
+    int32 chunk_total = 5;
+    int32 chunk_this = 6;
 }
 
 message UploadLobbyResourceResponse {

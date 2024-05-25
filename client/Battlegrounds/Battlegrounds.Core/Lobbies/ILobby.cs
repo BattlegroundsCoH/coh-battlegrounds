@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Core.Games.Scenarios;
+﻿using Battlegrounds.Core.Companies;
+using Battlegrounds.Core.Games.Scenarios;
 
 namespace Battlegrounds.Core.Lobbies;
 
@@ -18,7 +19,11 @@ public interface ILobby {
 
     IDictionary<string, string> Settings { get; }
 
+    ISet<ulong> ReadyPlayers { get; }
+
     ulong LocalPlayerId { get; }
+
+    IScenario Scenario { get; }
 
     void SetUpdateCallback(Action callback);
 
@@ -38,8 +43,16 @@ public interface ILobby {
 
     Task SetScenario(IScenario scenario);
 
-    Task LaunchMatch();
+    Task<bool> LaunchMatchAsync();
 
     Task Leave();
+
+    Task SetState(bool ready);
+
+    Task<bool> UploadCompanyAsync(ICompany company);
+
+    Task<bool> UploadGamemodeAsync(Stream inputStream);
+
+    Task<IDictionary<ulong, ICompany>> DownloadCompaniesAsync();
 
 }

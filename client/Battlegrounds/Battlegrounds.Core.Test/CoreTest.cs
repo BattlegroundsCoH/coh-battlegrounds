@@ -3,6 +3,8 @@ global using Microsoft.Extensions.Logging;
 
 global using NSubstitute;
 
+using Battlegrounds.Core.Matches;
+
 namespace Battlegrounds.Core.Test;
 
 [SetUpFixture]
@@ -15,6 +17,7 @@ public static class CoreTest {
     [OneTimeSetUp]
     public static void Setup() {
         Services = new ServiceCollection().AddLogging()
+            .AddTransient<MatchDataBuilder>()
             .BuildServiceProvider();
     }
 

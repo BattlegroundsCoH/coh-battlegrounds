@@ -7,6 +7,7 @@ public sealed class GrpcLobbyPlayer : ILobbyPlayer {
     private string _name = string.Empty;
     private string _faction = "none";
     private string _company = "none";
+    private string _companyId = Guid.Empty.ToString();
     private ulong _id = 0;
 
     public string Name => _name;
@@ -17,10 +18,13 @@ public sealed class GrpcLobbyPlayer : ILobbyPlayer {
 
     public ulong PlayerId => _id;
 
+    public string CompanyId => _companyId;
+
     public GrpcLobbyPlayer? FromProto(LobbySlot lobbySlot) {
         _name = lobbySlot.HasUserDisplayName ? lobbySlot.UserDisplayName : "";
         _faction = lobbySlot.UserCompany is not null ? lobbySlot.UserCompany.CompanyFactionId : "none";
         _company = lobbySlot.UserCompany is not null ? lobbySlot.UserCompany.CompanyName : "none";
+        _companyId = lobbySlot.UserCompany is not null ? lobbySlot.UserCompany.CompanyId : Guid.Empty.ToString();
         _id = lobbySlot.HasUserId ? lobbySlot.UserId : 0;
         return this;
     }

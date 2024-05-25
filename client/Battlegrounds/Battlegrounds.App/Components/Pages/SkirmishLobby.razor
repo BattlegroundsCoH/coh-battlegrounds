@@ -62,7 +62,7 @@
                 <SkirmishSetting Lobby="@lobby" ValueProvider="@ToggleProvider.Instance" Key="supply" />
                 <SkirmishSetting Lobby="@lobby" ValueProvider="@ToggleProvider.Instance" Key="weather" />
             </div>
-            <button @onclick="Launch">Launch</button>
+            <button disabled="@(!canLaunch)" @onclick="Launch">Launch</button>
             <button @onclick="Leave">Leave</button>
         </div>
 
@@ -78,7 +78,13 @@
 
     <!-- Chat component -->
     <div>
-
+        @foreach (var message in chatMessages) {
+            <div>
+                <label>@message.Timestamp</label>
+                <label>@message.Sender</label>
+                <label>@message.Message</label>
+            </div>
+        }
     </div>
 
 }
@@ -95,6 +101,10 @@
 
     private OptionsProvider gamemodeProvider = new OptionsProvider();
     private OptionsProvider gamemodeOptionsProvider = new OptionsProvider();
+
+    private List<ILobbyChatMessage> chatMessages = [];
+
+    private bool canLaunch = true;
 
     private string SelectedScenario {
         get => "";
@@ -129,18 +139,31 @@
         gamemodeOptionsProvider.SetOptionsSource(optionsFetcher);
 
         lobby.SetUpdateCallback(() => this.InvokeAsync(StateHasChanged));
-        lobby.SetChatCallback(async x => await ChatCallback(x));
+        lobby.SetChatCallback(x => ChatCallback(x));
 
         return base.OnParametersSetAsync();
 
     }
 
-    private async Task ChatCallback(ILobbyChatMessage chatMessage) {
-        await Task.CompletedTask;
+    private void ChatCallback(ILobbyChatMessage chatMessage) {
+
+        chatMessages.Add(chatMessage);
+
+        this.StateHasChanged();
+
     }
 
     private async Task Launch() {
-        await Task.CompletedTask;
+
+        if (lobby is null) {
+            return;
+        }
+
+        var isLaunching = await lobby.LaunchMatchAsync();
+        if (!isLaunching) {
+            return;
+        }
+
     }
 
     private async Task Leave() {

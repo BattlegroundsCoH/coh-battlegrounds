@@ -8,6 +8,8 @@ public interface ILobbyPlayer {
 
     string CompanyName { get; }
 
+    string CompanyId { get; }
+
     ulong PlayerId { get; }
 
 }

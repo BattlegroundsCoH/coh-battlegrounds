@@ -9,4 +9,6 @@ public interface IGamemodeService {
 
     IGamemode GetGamemode(IGame game, string gamemodeName);
 
+    IGamemode GetGamemode(string gameId, string gamemodeName);
+
 }

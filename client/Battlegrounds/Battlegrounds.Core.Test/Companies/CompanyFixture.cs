@@ -19,4 +19,11 @@ public static class CompanyFixture {
         )
         .Build();
 
+    public static ICompany AfrikaKorps => new CompanyBuilder()
+        .WithId(Guid.Parse("d6145b20-6c70-4bad-900e-d7bafc12b06c"))
+        .WithName("Afrika Korps")
+        .WithTemplate(CompanyTemplateFixture.DESERT_RATS)
+        .WithFaction(Faction.AfrikaKorps)
+        .Build();
+
 }
