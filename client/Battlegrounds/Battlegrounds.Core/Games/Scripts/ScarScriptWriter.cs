@@ -112,8 +112,9 @@ public sealed class ScarScriptWriter(Stream stream) : IDisposable {
         return this;
     }
 
-    public void NewLine() {
+    public ScarScriptWriter NewLine() {
         _writer.WriteLine();
+        return this;
     }
 
     private void WriteTrailingComma() {

@@ -10,4 +10,6 @@ public interface IFaction {
 
     string GameId { get; }
 
+    string ScarReferenceId { get; }
+
 }
