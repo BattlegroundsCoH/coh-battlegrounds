@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="BackgroundDeepBlue">#1f2833</Color>
+    <SolidColorBrush x:Key="BackgroundDeepBlueBrush" Color="{StaticResource BackgroundDeepBlue}" />
+
+    <Color x:Key="BackgroundDarkBlue">#212d3a</Color>
+    <SolidColorBrush x:Key="BackgroundDarkBlueBrush" Color="{StaticResource BackgroundDarkBlue}" />
+
+    <Color x:Key="BackgroundBlue">#273441</Color>
+    <SolidColorBrush x:Key="BackgroundBlueBrush" Color="{StaticResource BackgroundBlue}" />
+    
+    <Color x:Key="BackgroundLightBlue">#334252</Color>
+    <SolidColorBrush x:Key="BackgroundLightBlueBrush" Color="{StaticResource BackgroundLightBlue}" />
+    
+    <Color x:Key="BackgroundPurple">#523352</Color>
+    <SolidColorBrush x:Key="BackgroundPurpleBrush" Color="{StaticResource BackgroundPurple}" />
+
+    <Color x:Key="ForegroundWhite">#ffffff</Color>
+    <SolidColorBrush x:Key="ForegroundWhiteBrush" Color="{StaticResource ForegroundWhite}" />
+    
+    <Color x:Key="AccentBlue">#45a7e5</Color>
+    <SolidColorBrush x:Key="AccentBlueBrush" Color="{StaticResource AccentBlue}" />
+    
+</ResourceDictionary>
