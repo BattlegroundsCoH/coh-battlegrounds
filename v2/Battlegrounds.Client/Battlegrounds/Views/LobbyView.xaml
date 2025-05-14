@@ -4,13 +4,220 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Battlegrounds.Views"
+             xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodels:LobbyViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="LOBBY VIEW" 
-                       FontSize="20" 
+             d:DesignHeight="720" d:DesignWidth="1280">
+    <Grid> <!-- No need for margin, outer container already has one -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Header -->
+            <RowDefinition Height="*"/>    <!-- Main Content -->
+            <RowDefinition Height="Auto"/> <!-- Footer -->
+        </Grid.RowDefinitions>
+
+        <!-- Header with Lobby Name and Back Button -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Content="← Go Back" 
+                    Command="{Binding LeaveCommand}"/>
+
+            <TextBlock Grid.Column="1"
+                       Text="{Binding LobbyName}" 
+                       FontSize="24" 
                        FontWeight="Bold"
                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                       HorizontalAlignment="Center"
                        VerticalAlignment="Center"/>
+        </Grid>
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>    <!-- Teams Area -->
+                <ColumnDefinition Width="300"/>  <!-- Right Panel -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Side - Teams and Chat -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>    <!-- Teams -->
+                    <RowDefinition Height="250"/>  <!-- Chat -->
+                </Grid.RowDefinitions>
+
+                <!-- Teams Section -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Team Labels -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="TEAM 1" 
+                                 FontSize="20" 
+                                 FontWeight="Bold"
+                                 Foreground="{StaticResource ForegroundWhiteBrush}"
+                                 HorizontalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="1" 
+                                 Text="VS" 
+                                 FontSize="24"
+                                 Margin="20,0"
+                                 Foreground="{StaticResource AccentBlueBrush}"
+                                 FontWeight="Bold"/>
+
+                        <TextBlock Grid.Column="2" 
+                                 Text="TEAM 2" 
+                                 FontSize="20"
+                                 FontWeight="Bold"
+                                 Foreground="{StaticResource ForegroundWhiteBrush}"
+                                 HorizontalAlignment="Center"/>
+                    </Grid>
+
+                    <!-- Team Slots -->
+                    <Grid Grid.Row="1" Margin="0,20,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/> <!-- Spacing -->
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Team 1 Slots -->
+                        <ItemsControl ItemsSource="{Binding Team1Players}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Height="60" 
+                                            Margin="0,0,0,10"
+                                            Background="{StaticResource BackgroundBlueBrush}"
+                                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="4"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <!-- Team 2 Slots -->
+                        <ItemsControl Grid.Column="2" 
+                                    ItemsSource="{Binding Team2Players}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Height="60" 
+                                            Margin="0,0,0,10"
+                                            Background="{StaticResource BackgroundBlueBrush}"
+                                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="4"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </Grid>
+
+                <!-- Chat Section -->
+                <Border Grid.Row="1" 
+                        Margin="0,20,0,0"
+                        Background="{StaticResource BackgroundBlueBrush}"
+                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Chat Messages -->
+                        <ScrollViewer>
+                            <ItemsControl ItemsSource="{Binding ChatMessages}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}"
+                                                 Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                 Margin="0,2"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+
+                        <!-- Chat Input -->
+                        <Grid Grid.Row="1" Margin="0,10,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Text="{Binding ChatMessage, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Grid.Column="1" 
+                                    Content="Send"
+                                    Margin="10,0,0,0"
+                                    Command="{Binding SendMessageCommand}"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Right Side - Map and Settings -->
+            <Border Grid.Column="1" 
+                    Margin="20,0,0,0"
+                    Background="{StaticResource BackgroundBlueBrush}"
+                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="200"/> <!-- Map Preview -->
+                        <RowDefinition Height="*"/>   <!-- Settings -->
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="MATCH SETTINGS"
+                             FontSize="18"
+                             FontWeight="Bold"
+                             Foreground="{StaticResource ForegroundWhiteBrush}"
+                             Margin="0,0,0,15"/>
+
+                    <!-- Map Preview -->
+                    <Border Grid.Row="1"
+                            Background="{StaticResource BackgroundDarkBlueBrush}"
+                            CornerRadius="4">
+                        <Image Source="{Binding SelectedMap.PreviewImage}"
+                               Stretch="UniformToFill"/>
+                    </Border>
+
+                    <!-- Settings List -->
+                    <StackPanel Grid.Row="2" Margin="0,15,0,0">
+                        <TextBlock Text="{Binding SelectedMap.Name}"
+                                 FontWeight="SemiBold"
+                                 Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                        
+                        <TextBlock Text="{Binding GameMode}"
+                                 Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                        
+                        <!-- Add more settings as needed -->
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Footer with Start Button -->
+        <Grid Grid.Row="2" Margin="0,20,0,0">
+            <Button Content="START MATCH"
+                    Command="{Binding StartMatchCommand}"
+                    HorizontalAlignment="Right"
+                    Width="200"
+                    Height="50"
+                    IsEnabled="{Binding CanStartMatch}"/>
+        </Grid>
     </Grid>
 </UserControl>
