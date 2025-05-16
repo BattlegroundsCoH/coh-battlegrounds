@@ -1,4 +1,0 @@
-grpc-config:
-    host: "localhost" #"bg.test.service.cohbattlegrounds.com"
-    port: "8443"
-    enable-tls: false

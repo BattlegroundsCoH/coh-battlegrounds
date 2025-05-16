@@ -1,4 +1,0 @@
-grpc-config:
-    host: "bg.prod.service.cohbattlegrounds.com"
-    port: "443"
-    enable-tls: true
