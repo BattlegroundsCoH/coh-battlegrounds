@@ -44,4 +44,8 @@
     </Resource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Blueprints\" />
+  </ItemGroup>
+
 </Project>

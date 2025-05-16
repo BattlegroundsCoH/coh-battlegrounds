@@ -80,7 +80,7 @@
                 <RadioButton Style="{StaticResource NavigationButton}" Content="Home" Margin="0,0,0,10"/>
                 <RadioButton Style="{StaticResource NavigationButton}" Content="Companies" Margin="0,0,0,10"/>
                 <RadioButton x:Name="MultiplayerButton" Style="{StaticResource NavigationButton}" Content="Multiplayer" Margin="0,0,0,10"/>
-                <RadioButton Style="{StaticResource NavigationButton}" Content="Single Player" Margin="0,0,0,10"/>
+                <RadioButton Style="{StaticResource NavigationButton}" Content="Single Player" Margin="0,0,0,10" Command="{Binding SingleplayerCommand}" />
             </StackPanel>
 
             <!-- Content Presenter -->

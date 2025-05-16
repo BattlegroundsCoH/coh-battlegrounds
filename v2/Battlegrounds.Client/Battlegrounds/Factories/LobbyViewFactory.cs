@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-using Battlegrounds.Models;
+using Battlegrounds.Models.Lobbies;
 using Battlegrounds.ViewModels;
 using Battlegrounds.Views;
 

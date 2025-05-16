@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Battlegrounds.Services;
+﻿namespace Battlegrounds.Services;
 
 public interface IArchiverService {
+
+    Task<bool> CreateModArchiveAsync(string manifestFile);
 
 }

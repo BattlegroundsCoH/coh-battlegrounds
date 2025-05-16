@@ -1,9 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Windows.Controls;
 
+using Battlegrounds.Factories;
 using Battlegrounds.Helpers;
+using Battlegrounds.Models.Playing;
 using Battlegrounds.Services;
 using Battlegrounds.Views;
+
+using CommunityToolkit.Mvvm.Input;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -46,9 +50,12 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
 
     public bool HasMainContent => _currentContent != null;
 
+    public IAsyncRelayCommand SingleplayerCommand { get; }
+
     public MainWindowViewModel(IServiceProvider serviceProvider) {
         _serviceProvider = serviceProvider;
         _serviceProvider.GetRequiredService<IDialogService>().RegisterHost(this);
+        SingleplayerCommand = new AsyncRelayCommand(StartSingleplayerLobby);
     }
 
     public void PresentDialog(object dialog) {
@@ -61,6 +68,18 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
 
     public void SetContent(UserControl view) {
         CurrentContent = view;
+    }
+
+    private async Task StartSingleplayerLobby() {
+
+        var lobby = await _serviceProvider.GetRequiredService<ILobbyService>().CreateLobbyAsync("Private Skirmish", null, false, _serviceProvider.GetRequiredService<IGameService>().GetGame<CoH3>());
+        if (lobby is null) {
+            return;
+        }
+
+        // Set lobby view as content
+        SetContent(LobbyViewFactory.CreateLobbyViewForLobby(_serviceProvider, lobby));
+    
     }
 
 }

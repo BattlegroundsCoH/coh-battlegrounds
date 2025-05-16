@@ -28,6 +28,9 @@ public sealed class BattlegroundsApp {
 
     public void ConfigureServices(ServiceCollection services) {
 
+        // Register self
+        services.AddSingleton(this);
+
         // Register configuration
         services.AddSingleton(x => new Configuration());
 
@@ -52,6 +55,10 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<ILobbyBrowserService, LobbyBrowserService>();
         services.AddSingleton<ILobbyService, LobbyService>();
+        services.AddSingleton<IPlayService, PlayService>();
+        services.AddSingleton<IReplayService, ReplayService>();
+        services.AddSingleton<IGameService, GameService>();
+        services.AddSingleton<IArchiverService, CoH3ArchiverService>();
 
         // Register default HTTP client
         services.AddSingleton(new HttpClient()); // TODO: Make a wrapper for HttpClient and specify an interface to decouple it from the implementation

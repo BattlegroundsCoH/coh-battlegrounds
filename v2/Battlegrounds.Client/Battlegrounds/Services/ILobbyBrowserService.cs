@@ -1,4 +1,4 @@
-﻿using Battlegrounds.Models;
+﻿using Battlegrounds.Models.Lobbies;
 
 namespace Battlegrounds.Services;
 

@@ -1,4 +1,4 @@
-﻿namespace Battlegrounds.Models;
+﻿namespace Battlegrounds.Models.Lobbies;
 
 public sealed class BrowserLobby {
 

@@ -94,7 +94,7 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Team 1 Slots -->
-                        <ItemsControl ItemsSource="{Binding Team1Players}">
+                        <ItemsControl ItemsSource="{Binding Team1Slots}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border Height="60" 
@@ -109,7 +109,7 @@
 
                         <!-- Team 2 Slots -->
                         <ItemsControl Grid.Column="2" 
-                                    ItemsSource="{Binding Team2Players}">
+                                    ItemsSource="{Binding Team2Slots}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border Height="60" 
@@ -191,7 +191,7 @@
                     <Border Grid.Row="1"
                             Background="{StaticResource BackgroundDarkBlueBrush}"
                             CornerRadius="4">
-                        <Image Source="{Binding SelectedMap.PreviewImage}"
+                        <Image Source="{Binding SelectedMap.Preview}"
                                Stretch="UniformToFill"/>
                     </Border>
 
@@ -201,8 +201,7 @@
                                  FontWeight="SemiBold"
                                  Foreground="{StaticResource ForegroundWhiteBrush}"/>
                         
-                        <TextBlock Text="{Binding GameMode}"
-                                 Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                        <!-- TODO: Iterate over the SelectedSettings property -->
                         
                         <!-- Add more settings as needed -->
                     </StackPanel>

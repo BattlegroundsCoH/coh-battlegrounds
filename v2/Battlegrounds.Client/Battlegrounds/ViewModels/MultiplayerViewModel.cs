@@ -4,7 +4,8 @@ using System.Windows.Data;
 
 using Battlegrounds.Factories;
 using Battlegrounds.Helpers;
-using Battlegrounds.Models;
+using Battlegrounds.Models.Lobbies;
+using Battlegrounds.Models.Playing;
 using Battlegrounds.Services;
 using Battlegrounds.ViewModels.Modals;
 using Battlegrounds.Views.Modals;
@@ -141,7 +142,8 @@ public sealed class MultiplayerViewModel : INotifyPropertyChanged {
             return;
         }
 
-        var lobby = await _serviceProvider.GetRequiredService<ILobbyService>().CreateLobbyAsync(result.Name, result.Password, true);
+        var gameService = _serviceProvider.GetRequiredService<IGameService>();
+        var lobby = await _serviceProvider.GetRequiredService<ILobbyService>().CreateLobbyAsync(result.Name, result.Password, true, gameService.GetGame<CoH3>());
         if (lobby is null) {
             StatusMessage = "Failed to create lobby.";
             return;
