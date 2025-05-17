@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Battlegrounds.Models.Companies;
 
 namespace Battlegrounds.Services;
 
 public interface ICompanyService {
+    
+    Task<List<Company>> GetLocalPlayerCompaniesForFaction(string faction);
+
 }

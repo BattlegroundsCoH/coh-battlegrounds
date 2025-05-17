@@ -8,4 +8,6 @@ public abstract class Game {
 
     public abstract string ArchiverExecutable { get; }
 
+    public abstract string[] FactionIds { get; }
+
 }

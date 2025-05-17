@@ -22,12 +22,16 @@ public interface ILobby {
 
     Team Team2 { get; }
 
+    (Team? team, int slotId) GetLocalPlayerSlot();
+
     ValueTask<LobbyEvent?> GetNextEvent();
     
     Task<LaunchGameResult> LaunchGame();
     
     Task ReportMatchResult(ReplayAnalysisResult matchResult);
     
+    Task SetCompany(Team team, int slotId, string id);
+
     Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation);
 
 }

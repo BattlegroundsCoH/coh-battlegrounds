@@ -22,6 +22,10 @@ public sealed class MultiplayerLobby : ILobby {
 
     public Dictionary<string, Company> Companies => throw new NotImplementedException();
 
+    public (Team? team, int slotId) GetLocalPlayerSlot() {
+        throw new NotImplementedException();
+    }
+
     public ValueTask<LobbyEvent?> GetNextEvent() {
         throw new NotImplementedException();
     }
@@ -34,7 +38,12 @@ public sealed class MultiplayerLobby : ILobby {
         throw new NotImplementedException();
     }
 
+    public Task SetCompany(Team team, int slotId, string id) {
+        throw new NotImplementedException();
+    }
+
     public Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) {
         throw new NotImplementedException();
     }
+
 }

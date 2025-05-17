@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 
+using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Services;
 
@@ -14,7 +15,9 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     private readonly ILobbyService _lobbyService;
     private readonly IPlayService _playService;
     private readonly IReplayService _replayService;
+    private readonly ICompanyService _companyService;
     private readonly ObservableCollection<string> _chatMessages = [];
+    private readonly Dictionary<string, List<Company>> _localPlayerCompanies = [];
 
     private string _chatMessage = string.Empty;
 
@@ -63,18 +66,42 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
     }
 
-    public LobbyViewModel(ILobby lobby, ILobbyService lobbyService, IPlayService playService, IReplayService replayService) {
+    public LobbyViewModel(ILobby lobby, ILobbyService lobbyService, IPlayService playService, IReplayService replayService, ICompanyService companyService) {
         
         _lobby = lobby;
         _lobbyService = lobbyService;
         _playService = playService;
         _replayService = replayService;
+        _companyService = companyService;
 
         LeaveCommand = new AsyncRelayCommand(LeaveLobby);
         SendMessageCommand = new AsyncRelayCommand(SendChatMessage);
         StartMatchCommand = new AsyncRelayCommand(StartGame, () => CanStartMatch);
         
         PollLobbyEvents();
+        LoadLocalPlayerCompanies();
+
+    }
+
+    private async void LoadLocalPlayerCompanies() {
+
+        string[] factions = _lobby.Game.FactionIds;
+        foreach (string faction in factions) {
+            _localPlayerCompanies[faction] = await _companyService.GetLocalPlayerCompaniesForFaction(faction);
+        }
+
+        var (team, slotId) = _lobby.GetLocalPlayerSlot();
+        if (team is null) {
+            return;
+        }
+
+        var slot = team.Slots[slotId];
+        var company = _localPlayerCompanies[slot.Faction].FirstOrDefault();
+        if (company is null) {
+            return;
+        }
+
+        await _lobby.SetCompany(team, slotId, company.Id);
 
     }
 
