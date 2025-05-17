@@ -196,6 +196,10 @@ public class CoH3MatchDataBuilderTests {
             ]
         );
 
+        public (Team? team, int slotId) GetLocalPlayerSlot() {
+            throw new NotImplementedException();
+        }
+
         public ValueTask<LobbyEvent?> GetNextEvent() =>
             ValueTask.FromResult<LobbyEvent?>(null);
 
@@ -204,6 +208,10 @@ public class CoH3MatchDataBuilderTests {
 
         public Task ReportMatchResult(ReplayAnalysisResult matchResult) =>
             Task.CompletedTask;
+
+        public Task SetCompany(Team team, int slotId, string id) {
+            throw new NotImplementedException();
+        }
 
         public Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) =>
             Task.FromResult(new UploadGamemodeResult());
