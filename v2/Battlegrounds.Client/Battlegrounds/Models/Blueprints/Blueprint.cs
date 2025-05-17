@@ -1,0 +1,22 @@
+﻿using Battlegrounds.Models.Blueprints.Extensions;
+
+namespace Battlegrounds.Models.Blueprints;
+
+public abstract class Blueprint(string id, HashSet<BlueprintExtension> extensions) {
+    
+    protected readonly Dictionary<string, BlueprintExtension> _extensions = extensions.ToDictionary(k => k.Name);
+
+    public string Id => id;
+
+    public T GetExtension<T>() where T : BlueprintExtension {
+        if (_extensions.TryGetValue(typeof(T).Name, out var extension)) {
+            return (T)extension;
+        }
+        throw new KeyNotFoundException($"Extension of type {typeof(T).Name} not found.");
+    }
+
+    public bool HasExtension<T>() where T : BlueprintExtension {
+        return _extensions.ContainsKey(typeof(T).Name);
+    }
+
+}

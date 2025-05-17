@@ -132,6 +132,20 @@ public sealed class LuaSourceFileBuilder {
             return this;
         }
 
+        public TableBuilder AddNestedTable(string key, Action<TableBuilder> tableBuilder) {
+            var builder = new TableBuilder(_indentLevel);
+            tableBuilder(builder);
+            _elements.Add($"[\"{key}\"] = {builder}");
+            return this;
+        }
+
+        public TableBuilder AddNestedTable(int key, Action<TableBuilder> tableBuilder) {
+            var builder = new TableBuilder(_indentLevel);
+            tableBuilder(builder);
+            _elements.Add($"[{key}] = {builder}");
+            return this;
+        }
+
         public TableBuilder AddDictionary<T>(Dictionary<string, T> dictionary) {
             ArgumentNullException.ThrowIfNull(dictionary);
 
