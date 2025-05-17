@@ -8,4 +8,6 @@ public sealed class BuildGamemodeResult {
 
     public string GamemodeSgaFileLocation { get; init; } = string.Empty;
 
+    public Guid MatchId { get; init; } = Guid.Empty;
+
 }

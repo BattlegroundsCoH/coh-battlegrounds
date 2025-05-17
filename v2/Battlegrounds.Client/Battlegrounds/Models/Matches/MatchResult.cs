@@ -2,12 +2,14 @@
 
 public sealed class MatchResult {
 
-    public bool Failed { get; }
+    public bool Failed { get; init; }
 
-    public bool ScarError { get; }
+    public string ErrorMessage { get; init; } = string.Empty;
 
-    public bool BugSplat { get; }
+    public bool ScarError { get; init; }
 
-    public string ReplayFilePath { get; }
+    public bool BugSplat { get; init; }
+
+    public string ReplayFilePath { get; init; } = string.Empty;
 
 }

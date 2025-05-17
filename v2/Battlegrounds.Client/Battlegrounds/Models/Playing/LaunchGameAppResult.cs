@@ -5,8 +5,10 @@ namespace Battlegrounds.Models.Playing;
 public sealed class LaunchGameAppResult {
 
     [MemberNotNullWhen(false, nameof(GameInstance))]
-    public bool Failed { get; }
+    public bool Failed { get; init; }
 
-    public GameAppInstance? GameInstance { get; }
+    public string ErrorMessage { get; init; } = string.Empty;
+
+    public GameAppInstance? GameInstance { get; init; }
 
 }

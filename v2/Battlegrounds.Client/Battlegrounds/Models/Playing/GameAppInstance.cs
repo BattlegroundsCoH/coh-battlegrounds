@@ -6,8 +6,8 @@ public abstract class GameAppInstance {
 
     public abstract Game Game { get; }
 
-    public async Task<MatchResult> WaitForMatch() {
-        throw new NotImplementedException();
-    }
+    public abstract Task<bool> Launch(params string[] args);
+
+    public abstract Task<MatchResult> WaitForMatch();
 
 }

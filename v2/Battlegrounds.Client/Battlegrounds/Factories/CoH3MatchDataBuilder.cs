@@ -10,9 +10,14 @@ namespace Battlegrounds.Factories;
 
 public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
 
+    public Guid MatchId { get; } = Guid.CreateVersion7();
+
     public Task<string> BuildMatchData() => Task.Run(() => {
         LuaSourceFileBuilder luaSourceFileBuilder = new();
-        BuildTeamData(luaSourceFileBuilder);
+        luaSourceFileBuilder.DeclareGlobal("match_id", MatchId.ToString());
+        luaSourceFileBuilder.DeclareTable("teams", table =>
+            table.AddNestedTable(teamTable => BuildTeamData(teamTable, 1, lobby.Team1))
+                .AddNestedTable(teamTable => BuildTeamData(teamTable, 2, lobby.Team2)));
         luaSourceFileBuilder.DeclareTable("companies", table => {
             foreach (var company in lobby.Companies) {
                 table.AddNestedTable(company.Key, subTable => BuildCompanyData(subTable, company.Value));
@@ -30,12 +35,6 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
             throw new Exception($"Failed to create match data file: {ex.Message}", ex);
         }
         return true;
-    }
-
-    private void BuildTeamData(LuaSourceFileBuilder luaSourceFile) {
-        luaSourceFile.DeclareTable("teams", table => 
-            table.AddNestedTable(teamTable => BuildTeamData(teamTable, 1, lobby.Team1))
-                .AddNestedTable(teamTable => BuildTeamData(teamTable, 2, lobby.Team2)));
     }
 
     private void BuildTeamData(LuaSourceFileBuilder.TableBuilder table, int teamNumber, Team team) {
