@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Globalization;
+using System.IO;
 
 namespace Battlegrounds.Factories;
 
@@ -55,6 +56,11 @@ public sealed class LuaSourceFileBuilder {
             sb.AppendLine(declaration);
         }
         return sb.ToString();
+    }
+
+    public LuaSourceFileBuilder WriteToFile(string testFilePath) {
+        File.WriteAllText(testFilePath, ToString(), Encoding.UTF8);
+        return this;
     }
 
     public class TableBuilder(int parentIndentLevel) {
@@ -128,21 +134,21 @@ public sealed class LuaSourceFileBuilder {
         public TableBuilder AddNestedTable(Action<TableBuilder> tableBuilder) {
             var builder = new TableBuilder(_indentLevel);
             tableBuilder(builder);
-            _elements.Add(builder.ToString());
+            _elements.Add($"{CurrentIndent}{builder}");
             return this;
         }
 
         public TableBuilder AddNestedTable(string key, Action<TableBuilder> tableBuilder) {
             var builder = new TableBuilder(_indentLevel);
             tableBuilder(builder);
-            _elements.Add($"[\"{key}\"] = {builder}");
+            _elements.Add($"{CurrentIndent}[\"{key}\"] = {builder}");
             return this;
         }
 
         public TableBuilder AddNestedTable(int key, Action<TableBuilder> tableBuilder) {
             var builder = new TableBuilder(_indentLevel);
             tableBuilder(builder);
-            _elements.Add($"[{key}] = {builder}");
+            _elements.Add($"{CurrentIndent}[{key}] = {builder}");
             return this;
         }
 
@@ -225,9 +231,18 @@ public sealed class LuaSourceFileBuilder {
             if (_elements.Count == 0)
                 return "{}";
 
-            return "{\n" +
-                   string.Join(",\n", _elements) +
-                   $"\n{ParentIndent}}}";
+            StringBuilder sb = new("{"+Environment.NewLine);
+            for (int i = 0; i < _elements.Count; i++) {
+                sb.Append(_elements[i]);
+                if (i < _elements.Count - 1) {
+                    sb.Append("," + Environment.NewLine);
+                }
+            }
+            sb.Append(Environment.NewLine);
+            sb.Append(ParentIndent);
+            sb.Append('}');
+            return sb.ToString();
+
         }
 
     }
