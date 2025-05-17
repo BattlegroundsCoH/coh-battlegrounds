@@ -13,23 +13,53 @@ public sealed class Squad {
 
     private TransportSquad? _transport = null;
 
-    public int Id { get; } = 0;
+    public int Id { get; init; } = 0;
 
-    public string Name => _name;
+    public string Name {
+        get => _name;
+        init => _name = value ?? string.Empty;
+    }
 
     public bool HasCustomName => !string.IsNullOrEmpty(_name);
 
-    public float Experience { get; } = 0f;
+    public float Experience { get; init; } = 0f;
 
     public int Rank => Blueprint.Veterancy.GetRank(Experience);
 
     public required SquadBlueprint Blueprint { get; init; } = null!;
 
-    public IReadOnlyList<SlotItem> SlotItems => _slotItems.ToList().AsReadOnly();
+    public IReadOnlyList<SlotItem> SlotItems {
+        get => _slotItems.ToList().AsReadOnly();
+        init {
+            _slotItems.Clear();
+            if (value is not null) {
+                foreach (var item in value) {
+                    if (item is not null) {
+                        _slotItems.Add(item);
+                    }
+                }
+            }
+        }
+    }
 
-    public IReadOnlyList<UpgradeBlueprint> Upgrades => _upgrades.ToList().AsReadOnly();
+    public IReadOnlyList<UpgradeBlueprint> Upgrades {
+        get => _upgrades.ToList().AsReadOnly();
+        init {
+            _upgrades.Clear();
+            if (value is not null) {
+                foreach (var item in value) {
+                    if (item is not null) {
+                        _upgrades.Add(item);
+                    }
+                }
+            }
+        }
+    }
 
-    public TransportSquad? Transport => _transport;
+    public TransportSquad? Transport {
+        get => _transport;
+        init => _transport = value;
+    }
 
     public bool HasTransport => _transport is not null;
 

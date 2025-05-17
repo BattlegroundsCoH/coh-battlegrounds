@@ -2,13 +2,13 @@
 
 namespace Battlegrounds.Models.Blueprints;
 
-public enum SquadCateogry : byte {
+public enum SquadCategory : byte {
     Infantry,
     Support,
     Armour
 }
 
-public sealed class SquadBlueprint(string id, SquadCateogry cateogry, HashSet<BlueprintExtension> extensions) : Blueprint(id, extensions) {
+public sealed class SquadBlueprint(string id, SquadCategory category, HashSet<BlueprintExtension> extensions) : Blueprint(id, extensions) {
     
     public CostExtension Cost => GetExtension<CostExtension>();
 
@@ -18,6 +18,6 @@ public sealed class SquadBlueprint(string id, SquadCateogry cateogry, HashSet<Bl
 
     public VeterancyExtension Veterancy => GetExtension<VeterancyExtension>();
 
-    public SquadCateogry Cateogry => cateogry;
+    public SquadCategory Cateogry => category;
 
 }

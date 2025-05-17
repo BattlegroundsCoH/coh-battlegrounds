@@ -90,6 +90,38 @@ public sealed class LuaSourceFileBuilder {
             return this;
         }
 
+        public TableBuilder AddFieldValue(string key, string value) {
+            if (key.Any(char.IsWhiteSpace)) {
+                throw new ArgumentException("Key cannot contain whitespace characters.", nameof(key));
+            }
+            _elements.Add($"{CurrentIndent}{key} = \"{value}\"");
+            return this;
+        }
+
+        public TableBuilder AddFieldValue(string key, bool value) {
+            if (key.Any(char.IsWhiteSpace)) {
+                throw new ArgumentException("Key cannot contain whitespace characters.", nameof(key));
+            }
+            _elements.Add($"{CurrentIndent}{key}  = {value.ToString().ToLower()}");
+            return this;
+        }
+        
+        public TableBuilder AddFieldValue(string key, int value) {
+            if (key.Any(char.IsWhiteSpace)) {
+                throw new ArgumentException("Key cannot contain whitespace characters.", nameof(key));
+            }
+            _elements.Add($"{CurrentIndent}{key} = {value}");
+            return this;
+        }
+
+        public TableBuilder AddFieldValue(string key, double value) {
+            if (key.Any(char.IsWhiteSpace)) {
+                throw new ArgumentException("Key cannot contain whitespace characters.", nameof(key));
+            }
+            _elements.Add($"{CurrentIndent}{key} = {value.ToString(CultureInfo.InvariantCulture)}");
+            return this;
+        }
+
         public TableBuilder AddKeyValue(string key, string value) {
             _elements.Add($"{CurrentIndent}[\"{key}\"] = \"{value}\"");
             return this;
@@ -99,7 +131,7 @@ public sealed class LuaSourceFileBuilder {
             _elements.Add($"{CurrentIndent}[\"{key}\"] = {value.ToString().ToLower()}");
             return this;
         }
-        
+
         public TableBuilder AddKeyValue(string key, int value) {
             _elements.Add($"{CurrentIndent}[\"{key}\"] = {value}");
             return this;
@@ -109,7 +141,6 @@ public sealed class LuaSourceFileBuilder {
             _elements.Add($"{CurrentIndent}[\"{key}\"] = {value.ToString(CultureInfo.InvariantCulture)}");
             return this;
         }
-
 
         public TableBuilder AddKeyValue(int key, string value) {
             _elements.Add($"{CurrentIndent}[{key}] = \"{value}\"");
@@ -135,6 +166,16 @@ public sealed class LuaSourceFileBuilder {
             var builder = new TableBuilder(_indentLevel);
             tableBuilder(builder);
             _elements.Add($"{CurrentIndent}{builder}");
+            return this;
+        }
+
+        public TableBuilder AddNestedFieldTable(string key, Action<TableBuilder> tableBuilder) {
+            if (key.Any(char.IsWhiteSpace)) {
+                throw new ArgumentException("Key cannot contain whitespace characters.", nameof(key));
+            }
+            var builder = new TableBuilder(_indentLevel);
+            tableBuilder(builder);
+            _elements.Add($"{CurrentIndent}{key} = {builder}");
             return this;
         }
 

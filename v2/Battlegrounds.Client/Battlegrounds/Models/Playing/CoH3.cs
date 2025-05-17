@@ -1,6 +1,6 @@
 ﻿namespace Battlegrounds.Models.Playing;
 
-public sealed class CoH3(Configuration configuration) : Game {
+public sealed class CoH3(Configuration configuration) : Game, ICoH3Game {
 
     public const string GameId = "coh3";
 
