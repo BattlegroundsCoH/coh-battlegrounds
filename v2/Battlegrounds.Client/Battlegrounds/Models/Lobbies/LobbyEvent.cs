@@ -14,6 +14,7 @@ public enum LobbyEventType {
     GameEnded,
     SystemMessage,
     SystemError,
+    UpdatedCompany,
 }
 
 public sealed record LobbyEvent(LobbyEventType EventType, object? Arg = null);

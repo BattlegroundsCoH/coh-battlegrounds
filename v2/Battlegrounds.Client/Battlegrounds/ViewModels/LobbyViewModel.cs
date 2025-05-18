@@ -29,6 +29,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         string CompanyName, 
         IAsyncRelayCommand<AddAIPlayerToSlotEventArgs> DifficultyCommand, 
         IAsyncRelayCommand<int> LockUnlockCommand,
+        IAsyncRelayCommand<PickableCompany> SetCompanyCommand,
         LobbyViewModel ParentContext) {
 
         private PickableCompany? _selectedCompany = null;
@@ -78,14 +79,14 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                 if (string.IsNullOrEmpty(Slot.CompanyId)) {
                     return new PickableCompany(true, false, null);
                 }
-                var company = ParentContext._lobby.Companies[Slot.CompanyId];
+                var company = ParentContext._lobbyCompanies[Slot.CompanyId];
                 return new PickableCompany(false, false, company);
             }
             set {
                 if (_selectedCompany == value)
                     return;
                 _selectedCompany = value;
-                // TODO: Handle
+                SetCompanyCommand.Execute(value);
             }
         }
         public bool CanSetCompany => (ParentContext.IsHost && IsAIPlayer) || (Slot.ParticipantId == ParentContext._lobby.GetLocalPlayerId());
@@ -98,6 +99,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     private readonly ICompanyService _companyService;
     private readonly ObservableCollection<string> _chatMessages = [];
     private readonly Dictionary<string, List<Company>> _localPlayerCompaniesByFaction = [];
+    private readonly Dictionary<string, Company> _lobbyCompanies = [];
 
     private ICollection<LobbySlot> _team1Slots = [];
     private ICollection<LobbySlot> _team2Slots = [];
@@ -192,6 +194,9 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         string[] factions = _lobby.Game.FactionIds;
         foreach (string faction in factions) {
             _localPlayerCompaniesByFaction[faction] = [.. (await _companyService.GetLocalPlayerCompaniesForFaction(faction))];
+            foreach (var factionCompany in _localPlayerCompaniesByFaction[faction]) {
+                _lobbyCompanies[factionCompany.Id] = factionCompany;
+            }
         }
 
         var (team, slotId) = _lobby.GetLocalPlayerSlot();
@@ -205,7 +210,6 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             return;
         }
 
-        _lobby.Companies[company.Id] = company;
         await _lobby.SetCompany(team, slotId, company.Id);
 
     }
@@ -237,6 +241,12 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                         Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
                     }
 
+                    break;
+                case LobbyEventType.UpdatedCompany:
+                    if (lobbyEvent.Arg is not Company updatedCompany) {
+                        break;
+                    }
+                    _lobbyCompanies[updatedCompany.Id] = updatedCompany;
                     break;
                 default:
                     break;
@@ -317,17 +327,14 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     }
 
     private async Task SyncLobbyCompanies() {
+        _lobby.Companies.Clear();
         var t1PickedCompanies = from slot in Team1Slots where !slot.Slot.Hidden && !slot.Slot.Locked select slot.SelectedCompany;
         var t2PickedCompanies = from slot in Team2Slots where !slot.Slot.Hidden && !slot.Slot.Locked select slot.SelectedCompany;
         var t1MappedCompanies = t1PickedCompanies.ToAsyncEnumerable().SelectAwait(MapPickableCompanyToCompany);
         var t2MappedCompanies = t2PickedCompanies.ToAsyncEnumerable().SelectAwait(MapPickableCompanyToCompany);
         var picked = new List<Company>();
         await foreach (var company in t1MappedCompanies.Concat(t2MappedCompanies).Where(x => x is not null)) {
-            picked.Add(company!);
-        }
-        _lobby.Companies.Clear();
-        foreach (var company in picked) {
-            _lobby.Companies.Add(company.Id, company);
+            _lobby.Companies.Add(company!.Id, company);
         }
     }
 
@@ -348,6 +355,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     private async ValueTask<LobbySlot> MapToLobbySlot(int teamIndex, Team.Slot slot) {
         var addAICommand = new AsyncRelayCommand<AddAIPlayerToSlotEventArgs>(args => AddAIToSlot(teamIndex, args));
         var lockUnlockCommand = new AsyncRelayCommand<int>(args => LockOrUnlockSlot(teamIndex, args));
+        var setCompanyCommand = new AsyncRelayCommand<PickableCompany>(args => SetSlotCompany(teamIndex, slot.Index, args));
         Participant? p = (from participant in _lobby.Participants where participant.ParticipantId == slot.ParticipantId select participant).FirstOrDefault();
         Company? c = string.IsNullOrEmpty(slot.CompanyId) ? null : (from company in _lobby.Companies where company.Key == slot.CompanyId select company.Value).FirstOrDefault();
         if (c is null && !string.IsNullOrEmpty(slot.CompanyId)) {
@@ -358,9 +366,9 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             if (!string.IsNullOrEmpty(slot.Difficulty)) {
                 companyName = c?.Name ?? string.Empty;
             }
-            return new LobbySlot(slot, string.Empty, companyName, addAICommand, lockUnlockCommand, this);
+            return new LobbySlot(slot, string.Empty, companyName, addAICommand, lockUnlockCommand, setCompanyCommand, this);
         }
-        return new LobbySlot(slot, p.ParticipantName, c?.Name ?? string.Empty, addAICommand, lockUnlockCommand, this);
+        return new LobbySlot(slot, p.ParticipantName, c?.Name ?? string.Empty, addAICommand, lockUnlockCommand, setCompanyCommand, this);
     }
 
     private async Task AddAIToSlot(int teamIndex, AddAIPlayerToSlotEventArgs? args) {
@@ -369,6 +377,16 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
     private async Task LockOrUnlockSlot(int teamIndex, int slotIndex) {
         throw new NotImplementedException();
+    }
+
+    private async Task SetSlotCompany(int teamIndex, int slotIndex, PickableCompany? company) {
+        if (company is null) {
+            return;
+        }
+        if (company.Company is not null) {
+            await _lobby.SetCompany(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, slotIndex, company.Company.Id);
+            return;
+        }
     }
 
 }
