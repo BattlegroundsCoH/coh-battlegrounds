@@ -83,9 +83,11 @@ public sealed class SingleplayerLobby : ILobby {
         return (null, -1);
     }
 
-    public Task SetCompany(Team team, int slotId, string id) {
+    public async Task SetCompany(Team team, int slotId, string id) {
         team.Slots[slotId] = team.Slots[slotId] with { CompanyId = id };
-        return Task.CompletedTask;
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI
     }
+
+    public string? GetLocalPlayerId() => _localParticipant.ParticipantId;
 
 }

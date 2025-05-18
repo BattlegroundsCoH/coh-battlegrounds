@@ -196,6 +196,10 @@ public class CoH3MatchDataBuilderTests {
             ]
         );
 
+        public string? GetLocalPlayerId() {
+            throw new NotImplementedException();
+        }
+
         public (Team? team, int slotId) GetLocalPlayerSlot() {
             throw new NotImplementedException();
         }

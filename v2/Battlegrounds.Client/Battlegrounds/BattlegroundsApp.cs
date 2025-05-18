@@ -59,11 +59,24 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<IReplayService, ReplayService>();
         services.AddSingleton<IGameService, GameService>();
         services.AddSingleton<IArchiverService, CoH3ArchiverService>();
+        services.AddSingleton<CoH3ArchiverService>();
         services.AddSingleton<IUserService, UserService>();
         services.AddSingleton<ICompanyService, CompanyService>();
+        services.AddSingleton<IBlueprintService, BlueprintService>();
 
         // Register default HTTP client
         services.AddSingleton(new HttpClient()); // TODO: Make a wrapper for HttpClient and specify an interface to decouple it from the implementation
+
+    }
+
+    public void FinishStartup() {
+
+        if (ServiceProvider is null)
+            throw new Exception("ServiceProvider is not set.");
+
+        // Trigger async loading of blueprints
+        var blueprintService = ServiceProvider.GetRequiredService<IBlueprintService>();
+        blueprintService.LoadBlueprints();
 
     }
 

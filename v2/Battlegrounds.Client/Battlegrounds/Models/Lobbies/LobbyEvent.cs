@@ -16,4 +16,4 @@ public enum LobbyEventType {
     SystemError,
 }
 
-public sealed record LobbyEvent(LobbyEventType EventType, object? Arg);
+public sealed record LobbyEvent(LobbyEventType EventType, object? Arg = null);

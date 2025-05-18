@@ -22,6 +22,8 @@ public interface ILobby {
 
     Team Team2 { get; }
 
+    string? GetLocalPlayerId();
+
     (Team? team, int slotId) GetLocalPlayerSlot();
 
     ValueTask<LobbyEvent?> GetNextEvent();

@@ -19,4 +19,18 @@ public abstract class Blueprint(string id, HashSet<BlueprintExtension> extension
         return _extensions.ContainsKey(typeof(T).Name);
     }
 
+    public bool HasExtension(string name) {
+        return _extensions.ContainsKey(name);
+    }
+
+    public override bool Equals(object? obj) {
+        return obj is Blueprint blueprint && Id == blueprint.Id && obj.GetType() == this.GetType();
+    }
+
+    public override int GetHashCode() {
+        return Id.GetHashCode();
+    }
+
+    public override string ToString() => $"{GetType().Name}({Id})";
+
 }

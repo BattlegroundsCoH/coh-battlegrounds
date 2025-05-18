@@ -18,8 +18,14 @@
 
     <Color x:Key="ForegroundWhite">#ffffff</Color>
     <SolidColorBrush x:Key="ForegroundWhiteBrush" Color="{StaticResource ForegroundWhite}" />
-    
+
+    <Color x:Key="ForegroundGray">#a0a0a0</Color>
+    <SolidColorBrush x:Key="ForegroundGrayBrush" Color="{StaticResource ForegroundGray}" />
+
     <Color x:Key="AccentBlue">#45a7e5</Color>
     <SolidColorBrush x:Key="AccentBlueBrush" Color="{StaticResource AccentBlue}" />
-    
+
+    <Color x:Key="AccentRed">#e54545</Color>
+    <SolidColorBrush x:Key="AccentRedBrush" Color="{StaticResource AccentRed}" />
+
 </ResourceDictionary>

@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-    <system:Double x:Key="DEFAULT_APP_WIDTH">960</system:Double>
-    <system:Double x:Key="DEFAULT_APP_HEIGHT">540</system:Double>
+    <system:Double x:Key="DEFAULT_APP_WIDTH">1720</system:Double>
+    <system:Double x:Key="DEFAULT_APP_HEIGHT">980</system:Double>
 
 </ResourceDictionary>

@@ -5,9 +5,138 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Battlegrounds.Views"
              xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels"
+             xmlns:converters="clr-namespace:Battlegrounds.Converters"
              d:DataContext="{d:DesignInstance Type=viewmodels:LobbyViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1280">
+
+    <UserControl.Resources>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:InvertedBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+        <converters:LockImageConverter x:Key="LockImageConverter"/>
+        <converters:LockStateConverter x:Key="LockStateConverter"/>
+        <converters:EmptyStringToVisibilityConverter x:Key="EmptyStringToVisibilityConverter"/>
+
+        <Style x:Key="Slot" TargetType="{x:Type ContentControl}">
+            <Style.Setters>
+                <Setter Property="Height" Value="60"/>
+                <Setter Property="Margin" Value="0,0,0,10"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                <Setter Property="Background" Value="{StaticResource BackgroundBlueBrush}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ContentControl}">
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Visibility="{Binding Slot.Hidden, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                                    CornerRadius="4">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Player Icon/Avatar -->
+                                    <Ellipse Width="40" Height="40" Margin="10,0,0,0" Grid.Column="0" VerticalAlignment="Center">
+                                        <Ellipse.Fill>
+                                            <ImageBrush 
+                                                ImageSource="pack://application:,,,/Battlegrounds;component/Assets/dummy_avatar.png"/>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+
+                                    <!-- Player Name -->
+                                    <TextBlock Text="{Binding DisplayName}" 
+                                               Grid.Column="1"
+                                               FontWeight="SemiBold"
+                                               Margin="10,0,0,0"
+                                               VerticalAlignment="Center"
+                                               Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                                    
+                                    <!-- Company Selection -->
+                                    <Grid
+                                        Grid.Column="2">
+                                        
+                                        <!-- Company selection -->
+                                        <ComboBox
+                                            Width="150" Height="30"
+                                            ItemsSource="{Binding AvailableCompanies}"
+                                            SelectedItem="{Binding SelectedCompany, Mode=TwoWay}"
+                                            DisplayMemberPath="DisplayName"
+                                            Visibility="{Binding CanSetCompany, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock>
+                                                        <TextBlock.Text>
+                                                            <MultiBinding StringFormat="{}{0}">
+                                                                <Binding Path="Company.Name" FallbackValue="None" TargetNullValue="Random AI Company"/>
+                                                            </MultiBinding>
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                        
+                                        <!-- Selected company -->
+                                        <TextBlock Text="{Binding DisplayName}"
+                                                   FontWeight="SemiBold"
+                                                   Margin="10,0,0,0"
+                                                   Visibility="{Binding CanSetCompany, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                                                   Foreground="{StaticResource ForegroundGrayBrush}"/>
+
+
+                                    </Grid>
+                                    
+                                    <!-- Controls (Lock/Unlock, AI Options) -->
+                                    <StackPanel Grid.Column="3" 
+                                            Orientation="Horizontal" 
+                                            Margin="0,0,10,0"
+                                            Visibility="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=ItemsControl}, Converter={StaticResource BoolToVisibilityConverter}}">
+
+                                        <!-- AI Difficulty ComboBox (shown only when adding an AI) -->
+                                        <ComboBox Width="90" Height="30"
+                                                  SelectedItem="{Binding AIDifficulty, Mode=TwoWay}"
+                                                  SelectedIndex="0"
+                                                  Visibility="{Binding DisplayName, Converter={StaticResource EmptyStringToVisibilityConverter}}">
+                                            <ComboBoxItem Content="Select AI Difficulty" Tag="NONE"/>
+                                            <ComboBoxItem Content="Easy" />
+                                            <ComboBoxItem Content="Standard" />
+                                            <ComboBoxItem Content="Expert" />
+                                        </ComboBox>
+
+                                        <!-- Lock/Unlock Button (shown only if slot is unoccupied) -->
+                                        <Button Width="30" Height="30" 
+                                            Margin="5,0"
+                                            ToolTip="{Binding Slot.Locked, Converter={StaticResource LockStateConverter}}"
+                                            Command="{Binding LockUnlockCommand}"
+                                            CommandParameter="{Binding Slot.Index}"
+                                            Visibility="{Binding DisplayName, Converter={StaticResource EmptyStringToVisibilityConverter}}">
+                                            <Image 
+                                                Source="{Binding Slot.Locked, Converter={StaticResource LockImageConverter}}"/>
+                                        </Button>
+
+                                    </StackPanel>
+
+                                    <!-- Locked Icon (if slot is locked) -->
+                                    <!--<Image Grid.Column="3"
+                                       Source="/Resources/Images/locked_icon.png" 
+                                       Width="20" Height="20"
+                                       Margin="0,0,10,0"
+                                       Visibility="{Binding Slot.Locked, Converter={StaticResource BoolToVisibilityConverter}}"/> -->
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+        </Style>
+        
+    </UserControl.Resources>
+    
     <Grid> <!-- No need for margin, outer container already has one -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- Header -->
@@ -97,27 +226,16 @@
                         <ItemsControl ItemsSource="{Binding Team1Slots}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Height="60" 
-                                            Margin="0,0,0,10"
-                                            Background="{StaticResource BackgroundBlueBrush}"
-                                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
-                                            BorderThickness="1"
-                                            CornerRadius="4"/>
+                                    <ContentControl Style="{StaticResource Slot}"/>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
                         <!-- Team 2 Slots -->
-                        <ItemsControl Grid.Column="2" 
-                                    ItemsSource="{Binding Team2Slots}">
+                        <ItemsControl Grid.Column="2" ItemsSource="{Binding Team2Slots}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Height="60" 
-                                            Margin="0,0,0,10"
-                                            Background="{StaticResource BackgroundBlueBrush}"
-                                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
-                                            BorderThickness="1"
-                                            CornerRadius="4"/>
+                                    <ContentControl Style="{StaticResource Slot}"/>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>

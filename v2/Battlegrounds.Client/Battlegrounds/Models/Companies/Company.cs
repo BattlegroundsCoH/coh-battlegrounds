@@ -8,6 +8,10 @@ public sealed class Company {
 
     public string Name { get; init; } = string.Empty;
 
+    public string Faction { get; init; } = string.Empty;
+
+    public string GameId { get; init; } = string.Empty;
+
     public IReadOnlyList<Squad> Squads {
         get => _squads.AsReadOnly();
         init => _squads = [.. value];

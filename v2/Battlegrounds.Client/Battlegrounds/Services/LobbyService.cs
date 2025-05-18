@@ -14,7 +14,7 @@ public sealed class LobbyService(IUserService userService) : ILobbyService {
 
     private async Task<ILobby> CreateSingleplayerLobbyAsync(string name, Game game) {
         var localUser = await userService.GetLocalUserAsync();
-        var localUserParticipant = new Participant(localUser.UserId, localUser.Username);
+        var localUserParticipant = new Participant(localUser.UserId, localUser.UserDisplayName);
         return new SingleplayerLobby(name, game, localUserParticipant);
     }
 

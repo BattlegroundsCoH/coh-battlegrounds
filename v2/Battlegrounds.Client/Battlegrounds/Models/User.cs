@@ -2,7 +2,7 @@
 
 public sealed class User {
 
-    private string _username = string.Empty;
+    private string _displayName = string.Empty;
     private string _userId = string.Empty;
 
     public string UserId {
@@ -16,14 +16,14 @@ public sealed class User {
         }
     }
 
-    public string Username {
-        get => _username;
+    public string UserDisplayName {
+        get => _displayName;
         init {
-            if (value == _username)
+            if (value == _displayName)
                 return;
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Username cannot be null or empty.", nameof(value));
-            _username = value;
+            _displayName = value;
         }
     }
 

@@ -22,12 +22,13 @@ public partial class App : Application {
         services.AddSingleton(bgApp);
 
         bgApp.ConfigureServices(services);
-
+        
         _serviceProvider = services.BuildServiceProvider();
         bgApp.ServiceProvider = _serviceProvider;
+        bgApp.FinishStartup();
 
         var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-        mainWindow.Title = "CoH: Battlegrounds";
+        mainWindow.Title = "Company of Heroes: Battlegrounds";
         mainWindow.Show();
 
     }

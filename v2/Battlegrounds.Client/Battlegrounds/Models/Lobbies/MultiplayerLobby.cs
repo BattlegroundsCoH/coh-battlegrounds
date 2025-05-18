@@ -22,6 +22,10 @@ public sealed class MultiplayerLobby : ILobby {
 
     public Dictionary<string, Company> Companies => throw new NotImplementedException();
 
+    public string? GetLocalPlayerId() {
+        throw new NotImplementedException();
+    }
+
     public (Team? team, int slotId) GetLocalPlayerSlot() {
         throw new NotImplementedException();
     }
