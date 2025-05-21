@@ -141,10 +141,10 @@ public class CoH3MatchDataBuilderTests {
         public Game Game { get; } = null!;  // Not used in tests
 
         public ISet<Participant> Participants { get; } = new HashSet<Participant> {
-            new("player1", "Player 1"),
-            new("player2", "Player 2"),
-            new("player3", "Player 3"),
-            new("player4", "Player 4")
+            new("player1", "Player 1", false),
+            new("player2", "Player 2", false),
+            new("player3", "Player 3", false),
+            new("player4", "Player 4", false)
         };
 
         public Dictionary<string, Company> Companies { get; } = new() {
@@ -196,6 +196,10 @@ public class CoH3MatchDataBuilderTests {
             ]
         );
 
+        public IList<LobbySetting> Settings => throw new NotImplementedException();
+
+        public Map Map => throw new NotImplementedException();
+
         public string? GetLocalPlayerId() {
             throw new NotImplementedException();
         }
@@ -210,10 +214,26 @@ public class CoH3MatchDataBuilderTests {
         public Task<LaunchGameResult> LaunchGame() =>
             Task.FromResult(new LaunchGameResult());
 
+        public Task RemoveAI(Team team, int slotIndex) {
+            throw new NotImplementedException();
+        }
+
         public Task ReportMatchResult(ReplayAnalysisResult matchResult) =>
             Task.CompletedTask;
 
         public Task SetCompany(Team team, int slotId, string id) {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> SetMap(Map map) {
+            throw new NotImplementedException();
+        }
+
+        public Task SetSlotAIDifficulty(Team team, int slotIndex, string difficulty) {
+            throw new NotImplementedException();
+        }
+
+        public Task ToggleSlotLock(Team team, int slotIndex) {
             throw new NotImplementedException();
         }
 

@@ -315,10 +315,20 @@
 
                     <!-- Settings List -->
                     <StackPanel Grid.Row="2" Margin="0,15,0,0">
-                        <TextBlock Text="{Binding SelectedMap.Name}"
-                                 FontWeight="SemiBold"
-                                 Foreground="{StaticResource ForegroundWhiteBrush}"/>
-                        
+
+                        <Grid>
+                            <TextBlock Text="{Binding SelectedMap.Name}"
+                                     FontWeight="SemiBold"
+                                     Foreground="{StaticResource ForegroundWhiteBrush}"
+                                       Visibility="{Binding IsHost, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                            <ComboBox
+                                DisplayMemberPath="Name"
+                                SelectedItem="{Binding SelectedMap}"
+                                ItemsSource="{Binding AvailableMaps}"
+                                Visibility="{Binding IsHost, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        </Grid>
+
+
                         <!-- TODO: Iterate over the SelectedSettings property -->
                         
                         <!-- Add more settings as needed -->

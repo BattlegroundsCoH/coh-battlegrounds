@@ -58,6 +58,7 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<IPlayService, PlayService>();
         services.AddSingleton<IReplayService, ReplayService>();
         services.AddSingleton<IGameService, GameService>();
+        services.AddSingleton<IGameMapService, GameMapService>();
         services.AddSingleton<IArchiverService, CoH3ArchiverService>();
         services.AddSingleton<CoH3ArchiverService>();
         services.AddSingleton<IUserService, UserService>();

@@ -6,6 +6,8 @@ public sealed class CoH3(Configuration configuration) : Game, ICoH3Game {
 
     public const string GameId = "coh3";
 
+    public override string Id => GameId;
+
     public override string GameName => "Company of Heroes 3";
 
     public override string AppExecutableFullPath => "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Company of Heroes 3\\RelicCoH3.exe"; /* TODO: Get app path from configuration */

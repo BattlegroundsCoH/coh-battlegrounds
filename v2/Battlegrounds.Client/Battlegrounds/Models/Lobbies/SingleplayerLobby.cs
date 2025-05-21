@@ -11,10 +11,16 @@ public sealed class SingleplayerLobby : ILobby {
     private readonly Channel<LobbyEvent> _internalEvents;
     private readonly HashSet<Participant> _participants = [];
     private readonly Dictionary<string, Company> _companies = [];
-    private readonly Dictionary<string, string> _settings = [];
+    private readonly List<LobbySetting> _settings = [
+        new LobbySetting { Name = LobbySetting.SETTING_GAMEMODE, Type = LobbySettingType.Selection, Options = [
+            new ("Domunation", "domination"),
+            new ("Victory Points", "victory_points")]
+        },
+        // TODO: More settings
+    ];
     private readonly Participant _localParticipant;
 
-    private Map _map = null!;
+    private Map _map;
     private bool _isActive = true;
 
     private readonly Team _team1 = new Team(TeamType.Allies, "Allies", [
@@ -47,15 +53,24 @@ public sealed class SingleplayerLobby : ILobby {
 
     public Game Game { get; }
 
-    public SingleplayerLobby(string name, Game game, Participant localParticipant) {
+    public IList<LobbySetting> Settings => _settings;
+
+    public Map Map => _map;
+
+    public SingleplayerLobby(string name, Game game, Map map, Participant localParticipant) {
         Name = name;
         Game = game;
 
         _internalEvents = Channel.CreateUnbounded<LobbyEvent>();
+        _map = map;
         _localParticipant = localParticipant;
         _participants.Add(localParticipant);
 
+        Participant aiParticipant = new Participant(Guid.NewGuid().ToString(), "AI - Standard", true); // TODO: Make constructor caller handle this
+        _participants.Add(aiParticipant);
+
         _team1.Slots[0] = _team1.Slots[0] with { ParticipantId = _localParticipant.ParticipantId };
+        _team2.Slots[0] = _team2.Slots[0] with { ParticipantId = aiParticipant.ParticipantId };
 
     }
 
@@ -89,5 +104,39 @@ public sealed class SingleplayerLobby : ILobby {
     }
 
     public string? GetLocalPlayerId() => _localParticipant.ParticipantId;
+
+    public Task RemoveAI(Team team, int slotIndex) {
+        throw new NotImplementedException();
+    }
+
+    public Task SetSlotAIDifficulty(Team team, int slotIndex, string difficulty) {
+        throw new NotImplementedException();
+    }
+
+    public async Task ToggleSlotLock(Team team, int slotIndex) {
+        team.Slots[slotIndex] = team.Slots[slotIndex] with { Locked = !team.Slots[slotIndex].Locked };
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI
+    }
+
+    public async Task<bool> SetMap(Map map) {
+        if (_map == map) {
+            return true; // Map is already set
+        }
+        if (map.MaxPlayers != _map.MaxPlayers) {
+            if (map.MaxPlayers < _participants.Count) {
+                return false; // Cannot set map with less players than current participant count
+            }
+            int slotsPerTeam = map.MaxPlayers / 2;
+            for (int i = 0; i < _team1.Slots.Length; i++) { // TODO: More graceful handling (ie. if a player is in slot 3 and only 2 slots are available, move them to slot 1 or 2)
+                var isHidden = i >= slotsPerTeam;
+                _team1.Slots[i] = _team1.Slots[i] with { Hidden = isHidden };
+                _team2.Slots[i] = _team2.Slots[i] with { Hidden = isHidden };
+            }
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated)); // Notify the UI of changes to teams
+        }
+        _map = map; // Set the new map
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.MapUpdated, map)); // Notify the UI of map change
+        return true; // Map set successfully
+    }
 
 }

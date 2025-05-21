@@ -22,6 +22,10 @@ public interface ILobby {
 
     Team Team2 { get; }
 
+    IList<LobbySetting> Settings { get; }
+
+    Map Map { get; }
+
     string? GetLocalPlayerId();
 
     (Team? team, int slotId) GetLocalPlayerSlot();
@@ -29,11 +33,13 @@ public interface ILobby {
     ValueTask<LobbyEvent?> GetNextEvent();
     
     Task<LaunchGameResult> LaunchGame();
-    
+    Task RemoveAI(Team team, int slotIndex);
     Task ReportMatchResult(ReplayAnalysisResult matchResult);
     
     Task SetCompany(Team team, int slotId, string id);
-
+    Task<bool> SetMap(Map map);
+    Task SetSlotAIDifficulty(Team team, int slotIndex, string difficulty);
+    Task ToggleSlotLock(Team team, int slotIndex);
     Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation);
 
 }

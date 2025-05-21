@@ -22,6 +22,10 @@ public sealed class MultiplayerLobby : ILobby {
 
     public Dictionary<string, Company> Companies => throw new NotImplementedException();
 
+    public IList<LobbySetting> Settings => throw new NotImplementedException();
+
+    public Map Map => throw new NotImplementedException();
+
     public string? GetLocalPlayerId() {
         throw new NotImplementedException();
     }
@@ -38,11 +42,27 @@ public sealed class MultiplayerLobby : ILobby {
         throw new NotImplementedException();
     }
 
+    public Task RemoveAI(Team team, int slotIndex) {
+        throw new NotImplementedException();
+    }
+
     public Task ReportMatchResult(ReplayAnalysisResult matchResult) {
         throw new NotImplementedException();
     }
 
     public Task SetCompany(Team team, int slotId, string id) {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> SetMap(Map map) {
+        throw new NotImplementedException();
+    }
+
+    public Task SetSlotAIDifficulty(Team team, int slotIndex, string difficulty) {
+        throw new NotImplementedException();
+    }
+
+    public Task ToggleSlotLock(Team team, int slotIndex) {
         throw new NotImplementedException();
     }
 

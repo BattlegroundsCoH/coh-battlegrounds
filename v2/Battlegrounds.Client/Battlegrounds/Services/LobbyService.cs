@@ -3,7 +3,7 @@ using Battlegrounds.Models.Playing;
 
 namespace Battlegrounds.Services;
 
-public sealed class LobbyService(IUserService userService) : ILobbyService {
+public sealed class LobbyService(IUserService userService, IGameMapService mapService) : ILobbyService {
     
     public async Task<ILobby> CreateLobbyAsync(string name, string? password, bool multiplayer, Game game) {
         if (multiplayer) {
@@ -14,8 +14,9 @@ public sealed class LobbyService(IUserService userService) : ILobbyService {
 
     private async Task<ILobby> CreateSingleplayerLobbyAsync(string name, Game game) {
         var localUser = await userService.GetLocalUserAsync();
-        var localUserParticipant = new Participant(localUser.UserId, localUser.UserDisplayName);
-        return new SingleplayerLobby(name, game, localUserParticipant);
+        var localUserParticipant = new Participant(localUser.UserId, localUser.UserDisplayName, false);
+        var latestMap = await mapService.GetLatestMapAsync(game.Id);
+        return new SingleplayerLobby(name, game, latestMap, localUserParticipant);
     }
 
     private Task<ILobby> CreateMultiplayerLobbyAsync(string name, string? password, Game game) {

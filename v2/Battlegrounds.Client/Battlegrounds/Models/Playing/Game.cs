@@ -2,6 +2,8 @@
 
 public abstract class Game {
 
+    public abstract string Id { get; }
+
     public abstract string GameName { get; }
 
     public abstract string AppExecutableFullPath { get; }
