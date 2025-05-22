@@ -19,6 +19,9 @@
     <Color x:Key="ForegroundWhite">#ffffff</Color>
     <SolidColorBrush x:Key="ForegroundWhiteBrush" Color="{StaticResource ForegroundWhite}" />
 
+    <Color x:Key="ForegroundLightBlue">#66b8f0</Color>
+    <SolidColorBrush x:Key="ForegroundLightBlueBrush" Color="{StaticResource ForegroundLightBlue}" />
+
     <Color x:Key="ForegroundGray">#a0a0a0</Color>
     <SolidColorBrush x:Key="ForegroundGrayBrush" Color="{StaticResource ForegroundGray}" />
 

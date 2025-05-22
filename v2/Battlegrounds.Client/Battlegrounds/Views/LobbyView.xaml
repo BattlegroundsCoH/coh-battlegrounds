@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Battlegrounds.Views"
              xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels"
              xmlns:converters="clr-namespace:Battlegrounds.Converters"
+             xmlns:selectors="clr-namespace:Battlegrounds.Selectors"
              d:DataContext="{d:DesignInstance Type=viewmodels:LobbyViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1280">
@@ -134,7 +135,82 @@
                 </Setter>
             </Style.Setters>
         </Style>
-        
+
+        <DataTemplate x:Key="BooleanSettingTemplate">
+            <CheckBox Content="{Binding Name}"
+             IsChecked="{Binding BoolValue, Mode=TwoWay}"
+             Foreground="{StaticResource ForegroundWhiteBrush}"
+             IsEnabled="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}}"
+             Margin="0,5"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="IntegerSettingTemplate">
+            <Grid Margin="0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="{Binding Name}"
+                 Foreground="{StaticResource ForegroundWhiteBrush}"
+                 Grid.Column="0" Grid.Row="0"/>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
+                    <TextBlock Text="{Binding IntValue}"
+                     Foreground="{StaticResource ForegroundLightBlueBrush}"
+                     Margin="5,0,0,0"/>
+                </StackPanel>
+
+                <Slider Grid.Row="1" Grid.ColumnSpan="2"
+               Minimum="{Binding MinValue}"
+               Maximum="{Binding MaxValue}"
+               Value="{Binding IntValue, Mode=TwoWay}"
+               IsSnapToTickEnabled="True"
+               TickFrequency="{Binding Step}"
+               IsEnabled="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}}"
+               Margin="0,5,0,0"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="SelectionSettingTemplate">
+            <Grid Margin="0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{Binding Name}"
+                 Foreground="{StaticResource ForegroundWhiteBrush}"
+                 VerticalAlignment="Center"/>
+
+                <Grid Grid.Column="1">
+                    <!-- For host: editable combo box -->
+                    <ComboBox
+                ItemsSource="{Binding Options}"
+                DisplayMemberPath="Name"
+                SelectedIndex="{Binding SelectedOptionIndex, Mode=TwoWay}"
+                Width="150"
+                Visibility="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                    <!-- For non-host: read-only text -->
+                    <TextBlock 
+                Text="{Binding SelectedOption.Name}"
+                Foreground="{StaticResource ForegroundGrayBrush}"
+                VerticalAlignment="Center"
+                Visibility="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+
+        <selectors:SettingTemplateSelector x:Key="SettingTemplateSelector"
+            BooleanSettingTemplate="{StaticResource BooleanSettingTemplate}"
+            IntegerSettingTemplate="{StaticResource IntegerSettingTemplate}"
+            SelectionSettingTemplate="{StaticResource SelectionSettingTemplate}"/>
+
     </UserControl.Resources>
     
     <Grid> <!-- No need for margin, outer container already has one -->
@@ -309,13 +385,12 @@
                     <Border Grid.Row="1"
                             Background="{StaticResource BackgroundDarkBlueBrush}"
                             CornerRadius="4">
-                        <Image Source="{Binding SelectedMap.Preview}"
+                        <Image Source="{Binding SelectedMapPreview, FallbackValue='Assets/Scenarios/CoH3/pachino_2p_mm_handmade.png'}"
                                Stretch="UniformToFill"/>
                     </Border>
 
                     <!-- Settings List -->
                     <StackPanel Grid.Row="2" Margin="0,15,0,0">
-
                         <Grid>
                             <TextBlock Text="{Binding SelectedMap.Name}"
                                      FontWeight="SemiBold"
@@ -328,10 +403,16 @@
                                 Visibility="{Binding IsHost, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         </Grid>
 
-
-                        <!-- TODO: Iterate over the SelectedSettings property -->
-                        
-                        <!-- Add more settings as needed -->
+                        <!-- Settings ItemsControl with TemplateSelector -->
+                        <ItemsControl ItemsSource="{Binding SelectedSettings}"
+                                     ItemTemplateSelector="{StaticResource SettingTemplateSelector}"
+                                     Margin="0,10,0,0">
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="ContentPresenter">
+                                    <Setter Property="Margin" Value="0,0,0,5"/>
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
                     </StackPanel>
                 </Grid>
             </Border>

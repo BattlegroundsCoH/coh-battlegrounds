@@ -45,4 +45,17 @@
     </Resource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Assets\Scenarios\CoH3\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Assets\Scenarios\CoH3\pachino_2p_mm_handmade.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Scenarios\CoH3\semois_2p_mm_handmade.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

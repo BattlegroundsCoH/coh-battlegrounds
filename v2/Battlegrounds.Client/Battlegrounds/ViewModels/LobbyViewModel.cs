@@ -95,8 +95,49 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
         public bool CanSetCompany => (ParentContext.IsHost && IsAIPlayer) || (Slot.ParticipantId == ParentContext._lobby.GetLocalPlayerId());
     }
-    public sealed record LobbySettingWrapper(LobbySetting Setting) {
-        public string DisplayName => Setting.Name;
+    public sealed record LobbySettingWrapper(LobbySetting Setting, IAsyncRelayCommand<LobbySetting> SettingChangeCommand) { // TODO: Make bindings use the Setting object directly instead of duplicating references
+        public string Name => Setting.Name;
+        public LobbySettingType Type => Setting.Type;
+
+        public bool BoolValue {
+            get => Setting.Value != 0;
+            set {
+                if (value == (Setting.Value != 0)) return;
+                Setting.Value = value ? 1 : 0;
+                SettingChangeCommand.Execute(Setting);
+            }
+        }
+
+        public int IntValue {
+            get => Setting.Value;
+            set {
+                if (value == Setting.Value) return;
+                Setting.Value = Math.Clamp(value, Setting.MinValue, Setting.MaxValue);
+                SettingChangeCommand.Execute(Setting);
+            }
+        }
+
+        public int SelectedOptionIndex {
+            get => Setting.Value;
+            set {
+                if (value == Setting.Value) return;
+                if (Setting.Options != null && value >= 0 && value < Setting.Options.Length) {
+                    Setting.Value = value;
+                    SettingChangeCommand.Execute(Setting);
+                }
+            }
+        }
+
+        public LobbySettingOption? SelectedOption =>
+            Setting.Options != null && Setting.Value >= 0 && Setting.Value < Setting.Options.Length
+                ? Setting.Options[Setting.Value]
+                : null;
+
+        public LobbySettingOption[]? Options => Setting.Options;
+
+        public int MinValue => Setting.MinValue;
+        public int MaxValue => Setting.MaxValue;
+        public int Step => Setting.Step;
     }
 
     private readonly ILobby _lobby;
@@ -172,8 +213,11 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             _selectedMap = value;
             SetMapCommand.Execute(value);
             PropertyChanged?.Invoke(this, new(nameof(SelectedMap)));
+            PropertyChanged?.Invoke(this, new(nameof(SelectedMapPreview)));
         }
     }
+
+    public string SelectedMapPreview => $"pack://siteoforigin:,,,/Assets/Scenarios/{_lobby.Game.Id}/{_selectedMap.Preview}.png";
 
     public ICollection<LobbySettingWrapper> SelectedSettings {
         get => _settings;
@@ -233,7 +277,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     }
 
     private void SyncLobbySettings() {
-        SelectedSettings = [.. _lobby.Settings.Select(x => new LobbySettingWrapper(x))];
+        SelectedSettings = [.. _lobby.Settings.Select(x => new LobbySettingWrapper(x, new AsyncRelayCommand<LobbySetting>(SetSetting)))];
     }
 
     private async void LoadLocalPlayerCompanies() {
@@ -301,6 +345,9 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                     }
                     _selectedMap = updatedMap; // NOP if already selected (so NOP for host)
                     break;
+                case LobbyEventType.SettingUpdated:
+                    PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
+                    break;
                 default:
                     break;
             }
@@ -315,9 +362,13 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         throw new NotImplementedException();
     }
 
-    private Task SendChatMessage() {
+    private async Task SendChatMessage() {
+        string msg = ChatMessage.Trim();
         ChatMessage = string.Empty;
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(msg)) {
+            return;
+        }
+        await _lobby.SendMessage("all", msg); // TODO: Support team chat
     }
 
     private async Task StartGame() {
@@ -455,7 +506,15 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         if (!await _lobby.SetMap(map)) {
             _selectedMap = _lobby.Map; // RESET to _lobby map
             PropertyChanged?.Invoke(this, new(nameof(SelectedMap)));
+            PropertyChanged?.Invoke(this, new(nameof(SelectedMapPreview)));
         }
+    }
+
+    private async Task SetSetting(LobbySetting? newSetting) {
+        if (newSetting is null) {
+            return;
+        }
+        await _lobby.SetSetting(newSetting);
     }
 
 }

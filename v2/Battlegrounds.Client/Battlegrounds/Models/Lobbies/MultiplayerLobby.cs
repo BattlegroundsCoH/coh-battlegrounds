@@ -50,11 +50,19 @@ public sealed class MultiplayerLobby : ILobby {
         throw new NotImplementedException();
     }
 
+    public Task SendMessage(string channel, string msg) {
+        throw new NotImplementedException();
+    }
+
     public Task SetCompany(Team team, int slotId, string id) {
         throw new NotImplementedException();
     }
 
     public Task<bool> SetMap(Map map) {
+        throw new NotImplementedException();
+    }
+
+    public Task SetSetting(LobbySetting newSetting) {
         throw new NotImplementedException();
     }
 

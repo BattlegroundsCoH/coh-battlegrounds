@@ -139,4 +139,28 @@ public sealed class SingleplayerLobby : ILobby {
         return true; // Map set successfully
     }
 
+    public async Task SetSetting(LobbySetting newSetting) {
+        int indexOfSetting = _settings.FindIndex(x => x.Name == newSetting.Name);
+        if (newSetting.Name == LobbySetting.SETTING_GAMEMODE) {
+            // TODO: Handle gamemode change
+            // ie. if gamemode == victory_points add a new setting for specifying amount of victory points (250, 500, etc)
+        }
+        if (indexOfSetting != -1) { // Swapping existing setting
+            _settings[indexOfSetting] = newSetting;
+        } else {
+            _settings.Add(newSetting);
+        }
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated)); // Notify the UI of setting change
+    }
+
+    public async Task SendMessage(string channel, string msg) {
+        var chatChannel = channel switch {
+            "team" => ChatChannel.Team,
+            "all" => ChatChannel.All,
+            _ => throw new ArgumentException($"Invalid chat channel: {channel}")
+        };
+        var chatMessage = new ChatMessage(_localParticipant.ParticipantName, chatChannel, msg);
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.ParticipantMessage, chatMessage)); // Notify the UI of message
+    }
+
 }
