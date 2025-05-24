@@ -13,6 +13,7 @@ namespace Battlegrounds.ViewModels;
 public sealed class LobbyViewModel : INotifyPropertyChanged {
 
     public sealed record AddAIPlayerToSlotEventArgs(int SlotIndex, string Difficulty);
+
     public sealed record PickableCompany(bool IsNone, bool GenerateRandom, Company? Company) {
         public string DisplayName {
             get {
@@ -23,6 +24,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             }
         }
     }
+
     public sealed record LobbySlot( // Should probably be a class, but for now it's a record
         Team.Slot Slot, 
         string UserName, 
@@ -95,6 +97,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
         public bool CanSetCompany => (ParentContext.IsHost && IsAIPlayer) || (Slot.ParticipantId == ParentContext._lobby.GetLocalPlayerId());
     }
+
     public sealed record LobbySettingWrapper(LobbySetting Setting, IAsyncRelayCommand<LobbySetting> SettingChangeCommand) { // TODO: Make bindings use the Setting object directly instead of duplicating references
         public string Name => Setting.Name;
         public LobbySettingType Type => Setting.Type;
@@ -416,7 +419,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                 return;
             }
 
-            var replayAnalysis = await _replayService.AnalyseReplay(matchResult.ReplayFilePath);
+            var replayAnalysis = await _replayService.AnalyseReplay(matchResult.ReplayFilePath, _lobby.Game.Id);
             if (replayAnalysis.Failed) {
                 // TODO: Show error message
                 return;

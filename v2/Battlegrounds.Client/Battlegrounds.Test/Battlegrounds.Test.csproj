@@ -24,4 +24,23 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestData\Playbacks\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="TestData\Playbacks\temp_10-05-2025__20_55.rec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Playbacks\temp_10-05-2025__20_57.rec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Playbacks\temp_10-05-2025__21_16.rec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Playbacks\temp_23-05-2025__23_51.rec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

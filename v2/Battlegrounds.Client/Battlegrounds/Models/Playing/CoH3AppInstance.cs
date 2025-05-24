@@ -75,14 +75,25 @@ public sealed class CoH3AppInstance(Game game) : GameAppInstance {
             };
         }
 
-        string replayFilePath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-            "my games",
-            "Company of Heroes 3",
-            "playback",
-            "replay.rec"
+        string[] replayFiles = Directory.GetFiles(
+            Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "my games",
+                "Company of Heroes 3",
+                "playback"
+            ),
+            "*.rec",
+            SearchOption.TopDirectoryOnly
         );
-        if (!File.Exists(replayFilePath)) {
+
+        string replayFilePath = replayFiles.Length > 0 ? replayFiles[0] : string.Empty;
+        for (int i = 1; i < replayFiles.Length; i++) {
+            if (File.GetLastWriteTime(replayFiles[i]) > File.GetLastWriteTime(replayFilePath)) {
+                replayFilePath = replayFiles[i];
+            }
+        }
+
+        if (string.IsNullOrEmpty(replayFilePath)) {
             return new MatchResult {
                 Failed = true,
                 ErrorMessage = "Replay file not found."
