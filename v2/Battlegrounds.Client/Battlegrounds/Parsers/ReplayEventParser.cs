@@ -1,6 +1,8 @@
 ﻿using System.Text;
 
-namespace Battlegrounds.Models.Replays;
+using Battlegrounds.Models.Replays;
+
+namespace Battlegrounds.Parsers;
 
 public static class ReplayEventParser {
 

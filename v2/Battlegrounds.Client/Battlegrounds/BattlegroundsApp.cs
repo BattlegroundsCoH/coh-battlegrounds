@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 
 using Battlegrounds.Models;
+using Battlegrounds.Parsers;
 using Battlegrounds.Services;
 using Battlegrounds.ViewModels;
 using Battlegrounds.ViewModels.Modals;
@@ -61,6 +62,7 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<IGameMapService, GameMapService>();
         services.AddSingleton<IArchiverService, CoH3ArchiverService>();
         services.AddSingleton<CoH3ArchiverService>();
+        services.AddSingleton<CoH3ReplayParser>();
         services.AddSingleton<IUserService, UserService>();
         services.AddSingleton<ICompanyService, CompanyService>();
         services.AddSingleton<IBlueprintService, BlueprintService>();

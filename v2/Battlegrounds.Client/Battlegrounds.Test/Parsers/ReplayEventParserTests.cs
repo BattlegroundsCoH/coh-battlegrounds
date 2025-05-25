@@ -1,6 +1,8 @@
 ﻿using Battlegrounds.Models.Replays;
+using Battlegrounds.Parsers;
+using Battlegrounds.Test.Models.Replays;
 
-namespace Battlegrounds.Test.Models.Replays;
+namespace Battlegrounds.Test.Parsers;
 
 [TestFixture]
 public class ReplayEventParserTests {
