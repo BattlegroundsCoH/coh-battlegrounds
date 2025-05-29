@@ -66,7 +66,7 @@ public sealed class SingleplayerLobby : ILobby {
         _localParticipant = localParticipant;
         _participants.Add(localParticipant);
 
-        Participant aiParticipant = new Participant(Guid.NewGuid().ToString(), "AI - Standard", true); // TODO: Make constructor caller handle this
+        Participant aiParticipant = new Participant(1, Guid.NewGuid().ToString(), "AI - Standard", true); // TODO: Make constructor caller handle this
         _participants.Add(aiParticipant);
 
         _team1.Slots[0] = _team1.Slots[0] with { ParticipantId = _localParticipant.ParticipantId };

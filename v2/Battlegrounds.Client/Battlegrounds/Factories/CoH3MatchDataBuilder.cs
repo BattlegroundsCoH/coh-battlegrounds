@@ -14,15 +14,19 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
 
     public Task<string> BuildMatchData() => Task.Run(() => {
         LuaSourceFileBuilder luaSourceFileBuilder = new();
-        luaSourceFileBuilder.DeclareGlobal("match_id", MatchId.ToString());
-        luaSourceFileBuilder.DeclareTable("teams", table =>
-            table.AddNestedTable(teamTable => BuildTeamData(teamTable, 1, lobby.Team1))
-                .AddNestedTable(teamTable => BuildTeamData(teamTable, 2, lobby.Team2)));
-        luaSourceFileBuilder.DeclareTable("companies", table => {
-            foreach (var company in lobby.Companies) {
-                table.AddNestedTable(company.Key, subTable => BuildCompanyData(subTable, company.Value));
-            }
-        });
+        luaSourceFileBuilder
+            .DeclareGlobal("match_id", MatchId.ToString())
+            .DeclareTable("teams", table =>
+                table.AddNestedTable(teamTable => BuildTeamData(teamTable, 1, lobby.Team1))
+                    .AddNestedTable(teamTable => BuildTeamData(teamTable, 2, lobby.Team2)))
+            .DeclareTable("companies", table => {
+                foreach (var company in lobby.Companies) {
+                    table.AddNestedTable(company.Key, subTable => BuildCompanyData(subTable, company.Value));
+                }
+            })
+            .DeclareGlobal("bg_is_dev", false)
+            .DeclareGlobal("bg_is_realistic_damage_model", false)  // TODO: Get from game settings
+            .DeclareGlobal("bg_is_supply_mode", false); // TODO: Get from game settings
         return luaSourceFileBuilder.ToString();
     });
 
@@ -53,7 +57,9 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
     private void BuildPlayerInfo(LuaSourceFileBuilder.TableBuilder table, Team.Slot slot) {
         var participant = lobby.Participants.FirstOrDefault(x => x.ParticipantId == slot.ParticipantId)
             ?? throw new Exception($"Unable to find participant with ID {slot.ParticipantId}");
-        table.AddFieldValue("name", participant.ParticipantName)
+        table
+            .AddFieldValue("id", participant.LobbyId)
+            .AddFieldValue("name", participant.ParticipantName)
             .AddFieldValue("faction", slot.Faction)
             .AddFieldValue("difficulty", slot.Difficulty)
             .AddFieldValue("company", slot.CompanyId);
@@ -73,6 +79,7 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
             table.AddFieldValue("name", squad.Name);
         }
         table.AddFieldValue("experience", squad.Experience)
+            .AddFieldValue("rank", squad.Rank) // Rank is calculated based on experience and needed for the ingame UI to display the correct rank icon
             .AddFieldValue("blueprint", squad.Blueprint.Id)
             .AddFieldValue("category", (byte)squad.Blueprint.Cateogry)
             .AddNestedFieldTable("cost", subTable => BuildCostData(subTable, squad.Blueprint.Cost)); // TODO: Make cost calculation based on transport and upgrades

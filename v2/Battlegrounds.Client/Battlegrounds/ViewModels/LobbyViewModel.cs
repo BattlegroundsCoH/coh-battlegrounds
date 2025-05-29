@@ -374,7 +374,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         await _lobby.SendMessage("all", msg); // TODO: Support team chat
     }
 
-    private async Task StartGame() {
+    private async Task StartGame() { // TODO: Move to a separate controller class?
 
         try {
 

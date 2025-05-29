@@ -124,8 +124,7 @@ public class CoH3MatchDataBuilderTests {
         _mockLobby.Team1.Slots[0] = _mockLobby.Team1.Slots[0] with { ParticipantId = "non_existent_id" };
 
         // Act & Assert
-        var ex = Assert.ThrowsAsync<Exception>(async () =>
-            await _builder.BuildMatchData());
+        var ex = Assert.ThrowsAsync<Exception>(_builder.BuildMatchData);
 
         Assert.That(ex.Message, Does.Contain("Unable to find participant with ID"));
     }
@@ -141,10 +140,10 @@ public class CoH3MatchDataBuilderTests {
         public Game Game { get; } = null!;  // Not used in tests
 
         public ISet<Participant> Participants { get; } = new HashSet<Participant> {
-            new("player1", "Player 1", false),
-            new("player2", "Player 2", false),
-            new("player3", "Player 3", false),
-            new("player4", "Player 4", false)
+            new(0, "player1", "Player 1", false),
+            new(1, "player2", "Player 2", false),
+            new(2, "player3", "Player 3", false),
+            new(3, "player4", "Player 4", false)
         };
 
         public Dictionary<string, Company> Companies { get; } = new() {

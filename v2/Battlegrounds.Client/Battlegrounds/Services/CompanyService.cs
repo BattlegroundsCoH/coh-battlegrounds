@@ -110,7 +110,7 @@ public sealed class CompanyService(IUserService userService, IBlueprintService b
                         Id = 6,
                         Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("panzergrenadier_ak"),
                         Experience = 6000.0f,
-                        Transport = new Squad.TransportSquad(_blueprintService.GetBlueprint<CoH3, SquadBlueprint>("hafltrack_250_ak"), DropOffOnly: true),
+                        Transport = new Squad.TransportSquad(_blueprintService.GetBlueprint<CoH3, SquadBlueprint>("halftrack_250_ak"), DropOffOnly: true),
                     },
                     new Squad {
                         Id = 7,

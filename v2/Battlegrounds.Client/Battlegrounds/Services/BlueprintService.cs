@@ -76,7 +76,7 @@ public sealed class BlueprintService : IBlueprintService {
                         new CostExtension(300, 0, 0),
                         new UIExtension("Panzergrenadiers", "", "", "", "", "")
                         ])),
-                    new SquadBlueprint("hafltrack_250_ak", SquadCategory.Support, new HashSet<BlueprintExtension>([
+                    new SquadBlueprint("halftrack_250_ak", SquadCategory.Support, new HashSet<BlueprintExtension>([
                         new CostExtension(260, 0, 15),
                         new UIExtension("Sdkfz 250 Halftrack", "", "", "", "", "")
                         ])),
