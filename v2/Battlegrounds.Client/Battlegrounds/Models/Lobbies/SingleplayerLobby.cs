@@ -6,7 +6,7 @@ using Battlegrounds.Models.Replays;
 
 namespace Battlegrounds.Models.Lobbies;
 
-public sealed class SingleplayerLobby : ILobby {
+public sealed class SingleplayerLobby : ILobby, IDisposable {
 
     private readonly Channel<LobbyEvent> _internalEvents;
     private readonly HashSet<Participant> _participants = [];
@@ -22,19 +22,19 @@ public sealed class SingleplayerLobby : ILobby {
 
     private Map _map;
     private bool _isActive = true;
-
+    private bool disposedValue;
     private readonly Team _team1 = new Team(TeamType.Allies, "Allies", [
-        new Team.Slot(0, null, "british_africa", string.Empty, string.Empty, false, false),
-        new Team.Slot(1, null, string.Empty, string.Empty, string.Empty, true, false),
-        new Team.Slot(2, null, string.Empty, string.Empty, string.Empty, true, false),
-        new Team.Slot(3, null, string.Empty, string.Empty, string.Empty, true, false),
+        new Team.Slot(0, null, "british_africa", string.Empty, AIDifficulty.HUMAN, false, false),
+        new Team.Slot(1, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
+        new Team.Slot(2, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
+        new Team.Slot(3, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
         ]);
 
     private readonly Team _team2 = new Team(TeamType.Axis, "Axis", [
-        new Team.Slot(0, null, "afrika_korps", string.Empty, "Expert", false, false),
-        new Team.Slot(1, null, string.Empty, string.Empty, string.Empty, true, false),
-        new Team.Slot(2, null, string.Empty, string.Empty, string.Empty, true, false),
-        new Team.Slot(3, null, string.Empty, string.Empty, string.Empty, true, false),
+        new Team.Slot(0, null, "afrika_korps", string.Empty, AIDifficulty.HARD, false, false),
+        new Team.Slot(1, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
+        new Team.Slot(2, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
+        new Team.Slot(3, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
         ]);
 
     public string Name { get; }
@@ -75,7 +75,11 @@ public sealed class SingleplayerLobby : ILobby {
     }
 
     public async ValueTask<LobbyEvent?> GetNextEvent() {
-        return await _internalEvents.Reader.ReadAsync();
+        try {
+            return await _internalEvents.Reader.ReadAsync();
+        } catch (ChannelClosedException) {
+            return null; // Channel is closed, no more events (why must this be an exception...)
+        }
     }
 
     public Task<LaunchGameResult> LaunchGame() => Task.FromResult(new LaunchGameResult()); // NOP operation in singleplayer mode
@@ -105,12 +109,30 @@ public sealed class SingleplayerLobby : ILobby {
 
     public string? GetLocalPlayerId() => _localParticipant.ParticipantId;
 
-    public Task RemoveAI(Team team, int slotIndex) {
-        throw new NotImplementedException();
+    public async Task RemoveAI(Team team, int slotIndex) {
+        var slot = team.Slots[slotIndex];
+        if (slot.ParticipantId is null || slot.ParticipantId == _localParticipant.ParticipantId) {
+            return; // Cannot remove local player or empty slot
+        }
+        _participants.RemoveWhere(x => x.ParticipantId == slot.ParticipantId && x.IsAIParticipant); // Remove the AI participant
+        team.Slots[slotIndex] = slot with { ParticipantId = null, Difficulty = AIDifficulty.HUMAN, Locked = false, CompanyId = string.Empty };
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI
     }
 
-    public Task SetSlotAIDifficulty(Team team, int slotIndex, string difficulty) {
-        throw new NotImplementedException();
+    public async Task SetSlotAIDifficulty(Team team, int slotIndex, AIDifficulty difficulty) {
+        if (difficulty == AIDifficulty.HUMAN) {
+            await RemoveAI(team, slotIndex); // If setting to human, remove AI participant
+            return;
+        }
+        var slot = team.Slots[slotIndex];
+        Participant? participant = _participants.FirstOrDefault(x => x.ParticipantId == slot.ParticipantId);
+        if (participant is null) {
+            int id = team == _team1 ? slotIndex : (slotIndex + 4); // Slot index is 0-3 for team1 and 4-7 for team2
+            participant = new Participant(id, Guid.CreateVersion7().ToString(), string.Empty, true);
+            _participants.Add(participant);
+        }
+        team.Slots[slotIndex] = slot with { ParticipantId = participant.ParticipantId, Difficulty = difficulty, CompanyId = string.Empty, Locked = false };
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI
     }
 
     public async Task ToggleSlotLock(Team team, int slotIndex) {
@@ -159,8 +181,24 @@ public sealed class SingleplayerLobby : ILobby {
             "all" => ChatChannel.All,
             _ => throw new ArgumentException($"Invalid chat channel: {channel}")
         };
-        var chatMessage = new ChatMessage(_localParticipant.ParticipantName, chatChannel, msg);
+        var chatMessage = new ChatMessage(_localParticipant.ParticipantId, _localParticipant.ParticipantName, chatChannel, msg);
         await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.ParticipantMessage, chatMessage)); // Notify the UI of message
+    }
+
+    private void Dispose(bool disposing) {
+        if (!disposedValue) {
+            if (disposing) {
+                _internalEvents.Writer.Complete();
+            }
+            _isActive = false; // Mark the lobby as inactive
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose() {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 
 }

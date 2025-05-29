@@ -5,4 +5,4 @@ public enum ChatChannel {
     Team
 }
 
-public sealed record ChatMessage(string Sender, ChatChannel Channel, string Message);
+public sealed record ChatMessage(string SenderId, string Sender, ChatChannel Channel, string Message);

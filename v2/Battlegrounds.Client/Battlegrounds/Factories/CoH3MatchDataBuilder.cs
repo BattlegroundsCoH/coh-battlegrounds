@@ -61,7 +61,7 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
             .AddFieldValue("id", participant.LobbyId)
             .AddFieldValue("name", participant.ParticipantName)
             .AddFieldValue("faction", slot.Faction)
-            .AddFieldValue("difficulty", slot.Difficulty)
+            .AddFieldValue("difficulty", (byte)slot.Difficulty)
             .AddFieldValue("company", slot.CompanyId);
     }
 

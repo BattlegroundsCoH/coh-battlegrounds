@@ -20,4 +20,15 @@ public sealed class CoH3(Configuration configuration) : Game, ICoH3Game {
 
     public override string[] FactionIds => Factions;
 
+    public override FactionAlliance GetFactionAlliance(string factionId) {
+        if (factionId is "british_africa" or "american") {
+            return FactionAlliance.Allies;
+        } else if (factionId is "afrika_korps" or "german") {
+            return FactionAlliance.Axis;
+        } else {
+            //throw new ArgumentException($"Unknown faction ID: {factionId}");
+            return FactionAlliance.Unspecified; // Default to unspecified for unknown factions
+        }
+    }
+
 }

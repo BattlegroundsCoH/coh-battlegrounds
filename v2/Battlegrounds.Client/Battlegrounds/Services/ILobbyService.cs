@@ -5,6 +5,12 @@ namespace Battlegrounds.Services;
 
 public interface ILobbyService {
     
+    bool HasActiveLobby { get; }
+
+    ILobby? ActiveLobby { get; }
+
     Task<ILobby> CreateLobbyAsync(string name, string? password, bool multiplayer, Game game);
+    
+    Task LeaveLobbyAsync(ILobby lobby);
 
 }

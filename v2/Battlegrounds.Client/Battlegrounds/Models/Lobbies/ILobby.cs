@@ -39,7 +39,7 @@ public interface ILobby {
     Task SetCompany(Team team, int slotId, string id);
     Task<bool> SetMap(Map map);
     Task SetSetting(LobbySetting newSetting);
-    Task SetSlotAIDifficulty(Team team, int slotIndex, string difficulty);
+    Task SetSlotAIDifficulty(Team team, int slotIndex, AIDifficulty difficulty);
     Task ToggleSlotLock(Team team, int slotIndex);
     Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation);
 

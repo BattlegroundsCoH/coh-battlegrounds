@@ -66,7 +66,7 @@ public sealed class MultiplayerLobby : ILobby {
         throw new NotImplementedException();
     }
 
-    public Task SetSlotAIDifficulty(Team team, int slotIndex, string difficulty) {
+    public Task SetSlotAIDifficulty(Team team, int slotIndex, AIDifficulty difficulty) {
         throw new NotImplementedException();
     }
 

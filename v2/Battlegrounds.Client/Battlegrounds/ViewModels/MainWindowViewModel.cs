@@ -66,7 +66,7 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
         DialogContent = null;
     }
 
-    public void SetContent(UserControl view) {
+    public void SetContent(UserControl? view) {
         CurrentContent = view;
     }
 

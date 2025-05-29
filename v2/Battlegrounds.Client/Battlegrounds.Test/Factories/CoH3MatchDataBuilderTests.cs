@@ -181,8 +181,8 @@ public class CoH3MatchDataBuilderTests {
             TeamType.Axis,
             "Team 1",
             [
-                new Team.Slot(1, "player1", "german", "company1", "hard", false, false),
-                new Team.Slot(2, "player2", "german", "company2", "normal", false, false)
+                new Team.Slot(1, "player1", "german", "company1", AIDifficulty.HUMAN, false, false),
+                new Team.Slot(2, "player2", "german", "company2", AIDifficulty.EASY, false, false)
             ]
         );
 
@@ -190,8 +190,8 @@ public class CoH3MatchDataBuilderTests {
             TeamType.Allies,
             "Team 2",
             [
-                new Team.Slot(3, "player3", "american", "company2", "hard", false, false),
-                new Team.Slot(4, "player4", "british", "company2", "normal", false, false)
+                new Team.Slot(3, "player3", "american", "company2", AIDifficulty.HARD, false, false),
+                new Team.Slot(4, "player4", "british", "company2", AIDifficulty.EXPERT, false, false)
             ]
         );
 
@@ -236,7 +236,7 @@ public class CoH3MatchDataBuilderTests {
             throw new NotImplementedException();
         }
 
-        public Task SetSlotAIDifficulty(Team team, int slotIndex, string difficulty) {
+        public Task SetSlotAIDifficulty(Team team, int slotIndex, AIDifficulty difficulty) {
             throw new NotImplementedException();
         }
 

@@ -2,7 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 
 using Battlegrounds.Models.Lobbies;
-using Battlegrounds.ViewModels;
+using Battlegrounds.ViewModels.LobbyHelpers;
 
 namespace Battlegrounds.Selectors;
 
@@ -13,7 +13,7 @@ public sealed class SettingTemplateSelector : DataTemplateSelector {
     public DataTemplate SelectionSettingTemplate { get; set; } = null!;
 
     public override DataTemplate SelectTemplate(object item, DependencyObject container) {
-        if (item is LobbyViewModel.LobbySettingWrapper setting) {
+        if (item is LobbySettingViewModel setting) {
             return setting.Setting.Type switch {
                 LobbySettingType.Boolean => BooleanSettingTemplate,
                 LobbySettingType.Integer => IntegerSettingTemplate,

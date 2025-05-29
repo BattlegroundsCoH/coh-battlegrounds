@@ -1,147 +1,22 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows.Controls;
 
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Lobbies;
+using Battlegrounds.Models.Playing;
 using Battlegrounds.Services;
+using Battlegrounds.ViewModels.LobbyHelpers;
 
 using CommunityToolkit.Mvvm.Input;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Battlegrounds.ViewModels;
 
 public sealed class LobbyViewModel : INotifyPropertyChanged {
 
-    public sealed record AddAIPlayerToSlotEventArgs(int SlotIndex, string Difficulty);
-
-    public sealed record PickableCompany(bool IsNone, bool GenerateRandom, Company? Company) {
-        public string DisplayName {
-            get {
-                if (IsNone) 
-                    return "None";
-                if (GenerateRandom) return "Random AI Company";
-                return Company?.Name ?? "Unknown Company";
-            }
-        }
-    }
-
-    public sealed record LobbySlot( // Should probably be a class, but for now it's a record
-        Team.Slot Slot, 
-        string UserName, 
-        string CompanyName, 
-        bool IsAIPlayer,
-        IAsyncRelayCommand<AddAIPlayerToSlotEventArgs> DifficultyCommand, 
-        IAsyncRelayCommand<int> LockUnlockCommand,
-        IAsyncRelayCommand<PickableCompany> SetCompanyCommand,
-        LobbyViewModel ParentContext) {
-
-        private PickableCompany? _selectedCompany = null;
-        private string _companyId = Slot.CompanyId;
-
-        public object AIDifficulty {
-            get => string.IsNullOrEmpty(Slot.Difficulty) ? "Select AI Difficulty" : Slot.Difficulty;
-            set {
-                if (value is string)
-                    return;
-                if (value is ComboBoxItem item && item.Content is string content) {
-                    if (item.Tag is "NONE") {
-                        return;
-                    }
-                    DifficultyCommand.Execute(new(Slot.Index, content));
-                }
-            }
-        }
-        public string DisplayName {
-            get {
-                if (IsAIPlayer)
-                    return $"AI - {Slot.Difficulty}";
-                return UserName;
-            }
-        }
-        public List<PickableCompany> AvailableCompanies {
-            get {
-                if (string.IsNullOrEmpty(Slot.Faction)) {
-                    return [new PickableCompany(true, false, null)];
-                }
-                var companies = ParentContext._localPlayerCompaniesByFaction[Slot.Faction].Select(x => new PickableCompany(false, false, x));
-                var available = (IsAIPlayer ? companies.Append(new PickableCompany(false, true, null)) : companies).ToList();
-                // WARNING : SIDE_EFFECT!!!!
-                if (string.IsNullOrEmpty(_companyId) && IsAIPlayer) {
-                    _selectedCompany = available.FirstOrDefault(x => x.Company is not null) ?? new PickableCompany(true, false, null);
-                    _companyId = _selectedCompany?.Company?.Id ?? string.Empty;
-                }
-                if (available.Count == 0)
-                    return [new PickableCompany(true, false, null)];
-                else
-                    return available;
-            }
-        }
-        public PickableCompany SelectedCompany {
-            get {
-                if (_selectedCompany is not null) {
-                    return _selectedCompany;
-                }
-                if (string.IsNullOrEmpty(_companyId)) {
-                    return new PickableCompany(true, false, null);
-                }
-                var company = ParentContext._lobbyCompanies[_companyId];
-                return new PickableCompany(false, false, company);
-            }
-            set {
-                if (_selectedCompany == value)
-                    return;
-                _selectedCompany = value;
-                _companyId = _selectedCompany?.Company?.Id ?? string.Empty;
-                SetCompanyCommand.Execute(value);
-            }
-        }
-        public bool CanSetCompany => (ParentContext.IsHost && IsAIPlayer) || (Slot.ParticipantId == ParentContext._lobby.GetLocalPlayerId());
-    }
-
-    public sealed record LobbySettingWrapper(LobbySetting Setting, IAsyncRelayCommand<LobbySetting> SettingChangeCommand) { // TODO: Make bindings use the Setting object directly instead of duplicating references
-        public string Name => Setting.Name;
-        public LobbySettingType Type => Setting.Type;
-
-        public bool BoolValue {
-            get => Setting.Value != 0;
-            set {
-                if (value == (Setting.Value != 0)) return;
-                Setting.Value = value ? 1 : 0;
-                SettingChangeCommand.Execute(Setting);
-            }
-        }
-
-        public int IntValue {
-            get => Setting.Value;
-            set {
-                if (value == Setting.Value) return;
-                Setting.Value = Math.Clamp(value, Setting.MinValue, Setting.MaxValue);
-                SettingChangeCommand.Execute(Setting);
-            }
-        }
-
-        public int SelectedOptionIndex {
-            get => Setting.Value;
-            set {
-                if (value == Setting.Value) return;
-                if (Setting.Options != null && value >= 0 && value < Setting.Options.Length) {
-                    Setting.Value = value;
-                    SettingChangeCommand.Execute(Setting);
-                }
-            }
-        }
-
-        public LobbySettingOption? SelectedOption =>
-            Setting.Options != null && Setting.Value >= 0 && Setting.Value < Setting.Options.Length
-                ? Setting.Options[Setting.Value]
-                : null;
-
-        public LobbySettingOption[]? Options => Setting.Options;
-
-        public int MinValue => Setting.MinValue;
-        public int MaxValue => Setting.MaxValue;
-        public int Step => Setting.Step;
-    }
+    public const int MAX_CHAT_MESSAGE_LENGTH = 180; // Maximum length of a chat message
+    public const string MAX_MESSAGE_LENGTH_REACHED = "Chat message truncated to 180 characters.";
 
     private readonly ILobby _lobby;
     private readonly ILobbyService _lobbyService;
@@ -149,24 +24,31 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     private readonly IReplayService _replayService;
     private readonly ICompanyService _companyService;
     private readonly IGameMapService _gameMapService;
-    private readonly ObservableCollection<string> _chatMessages = [];
-    private readonly Dictionary<string, List<Company>> _localPlayerCompaniesByFaction = [];
+    private readonly ObservableCollection<ChatMessageViewModel> _chatMessages = [];
+    private readonly Dictionary<FactionAlliance, List<Company>> _localPlayerCompaniesByAlliance = [];
     private readonly Dictionary<string, Company> _lobbyCompanies = [];
+    private readonly MainWindowViewModel _mainWindowVm;
 
-    private ICollection<LobbySlot> _team1Slots = [];
-    private ICollection<LobbySlot> _team2Slots = [];
+    private ICollection<LobbySlotViewModel> _team1Slots = [];
+    private ICollection<LobbySlotViewModel> _team2Slots = [];
     private ICollection<Map> _availableMaps = [];
-    private ICollection<LobbySettingWrapper> _settings = [];
+    private ICollection<LobbySettingViewModel> _settings = [];
 
+    private PickableChatChannel _selectedChatChannel = new PickableChatChannel("all"); // TODO: Support chat channels properly
     private Map _selectedMap;
 
     private string _chatMessage = string.Empty;
+    private string _state = "Loading match information";
 
     private bool _isPlaying = false;
+    private bool _isMatchStarting = false;
+    private bool _isWaitingForMatchOver = false;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public string LobbyName => _lobby.Name;
+
+    public ILobby Model => _lobby;
 
     public IAsyncRelayCommand LeaveCommand { get; }
 
@@ -178,11 +60,27 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
     public bool IsHost => _lobby.IsHost;
 
-    public bool CanStartMatch => _lobby.IsHost && !_isPlaying /* && _lobby.Players.Count > 1*/;
+    public IReadOnlyDictionary<FactionAlliance, List<Company>> CompaniesByAlliance => _localPlayerCompaniesByAlliance;
 
-    public ObservableCollection<string> ChatMessages => _chatMessages;
+    public IReadOnlyDictionary<string, Company> LobbyCompanies => _lobbyCompanies;
 
-    public ICollection<LobbySlot> Team1Slots {
+    public bool CanStartMatch {
+        get {
+            if (!_lobby.IsHost)
+                return false;
+            if (_isPlaying || _isMatchStarting || _isWaitingForMatchOver)
+                return false;
+            var team1Ready = _lobby.Team1.Slots.Any(x => x.ParticipantId is not null && !string.IsNullOrEmpty(x.CompanyId));
+            var team2Ready = _lobby.Team2.Slots.Any(x => x.ParticipantId is not null && !string.IsNullOrEmpty(x.CompanyId));
+            return team1Ready && team2Ready;
+        }
+    }
+
+    public ObservableCollection<ChatMessageViewModel> ChatMessages => _chatMessages;
+
+    public string GameId => _lobby.Game.Id;
+
+    public ICollection<LobbySlotViewModel> Team1Slots {
         get => _team1Slots;
         private set {
             if (value == _team1Slots) return;
@@ -191,7 +89,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
     }
 
-    public ICollection<LobbySlot> Team2Slots {
+    public ICollection<LobbySlotViewModel> Team2Slots {
         get => _team2Slots;
         private set {
             if (value == _team2Slots) return;
@@ -222,7 +120,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
     public string SelectedMapPreview => $"pack://siteoforigin:,,,/Assets/Scenarios/{_lobby.Game.Id}/{_selectedMap.Preview}.png";
 
-    public ICollection<LobbySettingWrapper> SelectedSettings {
+    public ICollection<LobbySettingViewModel> SelectedSettings {
         get => _settings;
         private set {
             if (value == _settings) return;
@@ -234,8 +132,14 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     public string ChatMessage {
         get => _chatMessage;
         set {
-            if (value == _chatMessage) return;
-            _chatMessage = value;
+            if (value == _chatMessage) 
+                return;
+            if (value.Length > MAX_CHAT_MESSAGE_LENGTH) {
+                SystemWarnMessageTooLong(); // Warn user that message was truncated
+                _chatMessage = value[..MAX_CHAT_MESSAGE_LENGTH]; // Limit chat message length to MAX_CHAT_MESSAGE_LENGTH characters
+            } else {
+                _chatMessage = value;
+            }
             PropertyChanged?.Invoke(this, new(nameof(ChatMessage)));
         }
     }
@@ -250,14 +154,55 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
     }
 
-    public LobbyViewModel(ILobby lobby, ILobbyService lobbyService, IPlayService playService, IReplayService replayService, ICompanyService companyService, IGameMapService gameMapService) {
-        
+    public bool IsMatchStarting {
+        get => _isMatchStarting;
+        private set {
+            if (value == _isMatchStarting) return;
+            _isMatchStarting = value;
+            PropertyChanged?.Invoke(this, new(nameof(IsMatchStarting)));
+            PropertyChanged?.Invoke(this, new(nameof(CanStartMatch)));
+        }
+    }
+
+    public bool IsWaitingForMatchOver {
+        get => _isWaitingForMatchOver;
+        private set {
+            if (value == _isWaitingForMatchOver) return;
+            _isWaitingForMatchOver = value;
+            PropertyChanged?.Invoke(this, new(nameof(IsWaitingForMatchOver)));
+        }
+    }
+
+    public string LobbyState {
+        get => _state;
+        set {
+            if (value == _state) return;
+            _state = value;
+            PropertyChanged?.Invoke(this, new(nameof(LobbyState)));
+        }
+    }
+
+    public PickableChatChannel[] AvailableChatChannels => [new PickableChatChannel("all"), new PickableChatChannel("team")];
+
+    public PickableChatChannel SelectedChatChannel {
+        get => _selectedChatChannel;
+        set {
+            if (_selectedChatChannel == value) return;
+            _selectedChatChannel = value;
+        }
+    }
+
+    public LobbyViewModel(ILobby lobby, IServiceProvider serviceProvider) {
+        // Probably an anti-pattern to pass IServiceProvider instead of the specific services, but this class has many dependencies 
+        // So... collect the services in a facade class to make it easier to test and maintain (Probably also solves the comment regarding a separate controller class for the StartGame method)
+
         _lobby = lobby;
-        _lobbyService = lobbyService;
-        _playService = playService;
-        _replayService = replayService;
-        _companyService = companyService;
-        _gameMapService = gameMapService;
+        _lobbyService = serviceProvider.GetRequiredService<ILobbyService>();
+        _playService = serviceProvider.GetRequiredService<IPlayService>();
+        _replayService = serviceProvider.GetRequiredService<IReplayService>();
+        _companyService = serviceProvider.GetRequiredService<ICompanyService>();
+        _gameMapService = serviceProvider.GetRequiredService<IGameMapService>();
+        _mainWindowVm = serviceProvider.GetRequiredService<MainWindowViewModel>();
         _selectedMap = lobby.Map;
 
         LeaveCommand = new AsyncRelayCommand(LeaveLobby);
@@ -277,20 +222,41 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
         PollLobbyEvents();
         LoadLocalPlayerCompanies();
+        SyncState();
+    }
+
+    private void SyncState() {
+        if (!CanStartMatch) {
+            LobbyState = "Waiting for players to select companies and factions";
+            PropertyChanged?.Invoke(this, new(nameof(CanStartMatch)));
+            return;
+        }
+        LobbyState = "Ready to start the match";
+        PropertyChanged?.Invoke(this, new(nameof(CanStartMatch)));
     }
 
     private void SyncLobbySettings() {
-        SelectedSettings = [.. _lobby.Settings.Select(x => new LobbySettingWrapper(x, new AsyncRelayCommand<LobbySetting>(SetSetting)))];
+        SelectedSettings = [.. _lobby.Settings.Select(x => new LobbySettingViewModel(x, new AsyncRelayCommand<LobbySetting>(SetSetting)))];
     }
 
     private async void LoadLocalPlayerCompanies() {
 
         string[] factions = _lobby.Game.FactionIds;
         foreach (string faction in factions) {
-            _localPlayerCompaniesByFaction[faction] = [.. (await _companyService.GetLocalPlayerCompaniesForFaction(faction))];
-            foreach (var factionCompany in _localPlayerCompaniesByFaction[faction]) {
-                _lobbyCompanies[factionCompany.Id] = factionCompany;
+            var alliance = _lobby.Game.GetFactionAlliance(faction);
+            if (!_localPlayerCompaniesByAlliance.TryGetValue(alliance, out var existingCompanies)) {
+                _localPlayerCompaniesByAlliance[alliance] = existingCompanies = [];
             }
+            var factionCompanies = (await _companyService.GetLocalPlayerCompaniesForFaction(faction)).ToArray();
+            if (factionCompanies.Length == 0) {
+                continue; // No companies for this faction
+            }
+            foreach (var toCache in factionCompanies) {
+                if (!_lobbyCompanies.ContainsKey(toCache.Id)) {
+                    _lobbyCompanies[toCache.Id] = toCache; // Cache company in lobby
+                }
+            }
+            existingCompanies.AddRange(factionCompanies); // Filter existing?
         }
 
         var (team, slotId) = _lobby.GetLocalPlayerSlot();
@@ -299,7 +265,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
 
         var slot = team.Slots[slotId];
-        var company = _localPlayerCompaniesByFaction[slot.Faction].FirstOrDefault();
+        var company = _localPlayerCompaniesByAlliance[_lobby.Game.GetFactionAlliance(slot.Faction)].FirstOrDefault();
         if (company is null) {
             return;
         }
@@ -320,21 +286,21 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                     if (lobbyEvent.Arg is not ChatMessage chatEvent) {
                         break; // Error?
                     }
-                    ChatMessages.Add($"{chatEvent.Sender}: {chatEvent.Message}");
-                    PropertyChanged?.Invoke(this, new(nameof(ChatMessages))); // Superfluous?
+                    bool isSelf = chatEvent.SenderId == _lobby.GetLocalPlayerId();
+                    var (localPlayerTeam, _) = _lobby.GetLocalPlayerSlot();
+                    bool isAllied = localPlayerTeam?.Participants.Any(x => x == chatEvent.SenderId) ?? false;
+                    ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, chatEvent.Channel, isSelf, isAllied, chatEvent.Sender, chatEvent.Message));
+                    PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
                     break;
                 case LobbyEventType.TeamUpdated:
                     bool updateTeam1 = lobbyEvent is null || (lobbyEvent.Arg is TeamType t1t && t1t == _lobby.Team1.TeamType);
                     bool updateTeam2 = lobbyEvent is null || (lobbyEvent.Arg is TeamType t2t && t2t == _lobby.Team2.TeamType);
-
                     if (updateTeam1) {
                         Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
                     }
-
                     if (updateTeam2) {
                         Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
                     }
-
                     break;
                 case LobbyEventType.UpdatedCompany:
                     if (lobbyEvent.Arg is not Company updatedCompany) {
@@ -354,15 +320,22 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                 default:
                     break;
             }
+            SyncState();
 
         }
     }
 
-    private ValueTask<List<LobbySlot>> MapTeamSlotsToLobbySlots(int index, Team.Slot[] slots) 
+    private ValueTask<List<LobbySlotViewModel>> MapTeamSlotsToLobbySlots(int index, Team.Slot[] slots) 
         => slots.ToAsyncEnumerable().SelectAwait(x => MapToLobbySlot(index, x)).ToListAsync();
 
-    private Task LeaveLobby() {
-        throw new NotImplementedException();
+    private async Task LeaveLobby() {
+        // TODO: Show confirmation dialog before leaving lobby?
+        if (!_lobby.IsActive) {
+            return; // Already left
+        }
+        await _lobbyService.LeaveLobbyAsync(_lobby);
+        _mainWindowVm.SetContent(null); // Return to multiplayer view
+        // TODO: Tell main window to return to multiplayer view (if multiplayer lobby) or home if singleplayer lobby
     }
 
     private async Task SendChatMessage() {
@@ -371,42 +344,64 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         if (string.IsNullOrWhiteSpace(msg)) {
             return;
         }
-        await _lobby.SendMessage("all", msg); // TODO: Support team chat
+        if (msg.Length > MAX_CHAT_MESSAGE_LENGTH) {
+            msg = msg[..MAX_CHAT_MESSAGE_LENGTH]; // Limit chat message length to MAX_CHAT_MESSAGE_LENGTH characters
+            SystemWarnMessageTooLong(); // Warn user that message was truncated
+        }
+        await _lobby.SendMessage(SelectedChatChannel.ChannelName, msg); // TODO: Support team chat
+    }
+
+    private void SystemWarnMessageTooLong() {
+        if (ChatMessages.OrderByDescending(x => x.Timestamp).FirstOrDefault() is not ChatMessageViewModel { IsSystemMessage: true, Message: MAX_MESSAGE_LENGTH_REACHED }) {
+            ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, ChatChannel.All, true, false, "System", MAX_MESSAGE_LENGTH_REACHED, IsSystemMessage: true));
+        }
     }
 
     private async Task StartGame() { // TODO: Move to a separate controller class?
 
-        try {
+        if (!CanStartMatch) {
+            return; // Should never happen, but just in case
+        }
 
-            IsPlaying = true;
+        try {
+            IsMatchStarting = true;
 
             // Sync corrent lobby view status with backing model based on selected PickableCompany (based on host client view!)
             await SyncLobbyCompanies();
 
             var buildResult = await _playService.BuildGamemode(_lobby);
             if (buildResult.Failed) {
+                IsMatchStarting = false;
                 // TODO: Show error message
                 return;
             }
 
             var uploadResult = await _lobby.UploadGamemode(buildResult.GamemodeSgaFileLocation); // NOP operation in singleplayer mode
             if (uploadResult.Failed) {
+                IsMatchStarting = false;
                 // TODO: Show error message
                 return;
             }
 
             var launchResult = await _lobby.LaunchGame(); // for multiplayer this means tell other players to launch (NOP in singleplayer)
             if (launchResult.Failed) {
+                IsMatchStarting = false;
                 // TODO: Show error message
                 return;
             }
+
+            IsMatchStarting = false;
+            IsWaitingForMatchOver = true;
+            IsPlaying = true;
 
             var playResult = await _playService.LaunchGameApp(_lobby.Game);
             if (playResult.Failed) {
                 // TODO: Show error message
+                IsWaitingForMatchOver = false;
                 return;
             }
 
+            IsPlaying = false;
             var matchResult = await playResult.GameInstance.WaitForMatch();
             if (matchResult.Failed) {
                 // TODO: Show error message
@@ -428,6 +423,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             await _lobby.ReportMatchResult(replayAnalysis);
 
         } finally {
+            IsMatchStarting = false;
+            IsWaitingForMatchOver = false;
             IsPlaying = false;
         }
 
@@ -459,8 +456,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         return ValueTask.FromResult<Company?>(pickableCompany.Company);
     }
 
-    private async ValueTask<LobbySlot> MapToLobbySlot(int teamIndex, Team.Slot slot) {
-        var addAICommand = new AsyncRelayCommand<AddAIPlayerToSlotEventArgs>(args => AddAIToSlot(teamIndex, args));
+    private async ValueTask<LobbySlotViewModel> MapToLobbySlot(int teamIndex, Team.Slot slot) {
+        var addAICommand = new AsyncRelayCommand<AIDifficulty>(args => AddAIToSlot(teamIndex, slot.Index, args));
         var lockUnlockCommand = new AsyncRelayCommand<int>(args => LockOrUnlockSlot(teamIndex, args));
         var setCompanyCommand = new AsyncRelayCommand<PickableCompany>(args => SetSlotCompany(teamIndex, slot.Index, args));
         Participant? p = (from participant in _lobby.Participants where participant.ParticipantId == slot.ParticipantId select participant).FirstOrDefault();
@@ -468,24 +465,19 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         if (c is null && !string.IsNullOrEmpty(slot.CompanyId)) {
             c = await _companyService.GetCompanyAsync(slot.CompanyId); // Fetch from remote (or local cache) (TODO: Handle case where company was changed on remote server)
         }
+        FactionAlliance alliance = teamIndex == 0 ? FactionAlliance.Allies : FactionAlliance.Axis;
         if (p is null) {
-            string companyName = string.Empty;
-            if (!string.IsNullOrEmpty(slot.Difficulty)) {
-                companyName = c?.Name ?? string.Empty;
-            }
-            return new LobbySlot(slot, string.Empty, companyName, true, addAICommand, lockUnlockCommand, setCompanyCommand, this);
+            string companyName = c?.Name ?? string.Empty;
+            return new LobbySlotViewModel(slot, string.Empty, companyName, true, alliance, addAICommand, lockUnlockCommand, setCompanyCommand, this);
         }
-        return new LobbySlot(slot, p.ParticipantName, c?.Name ?? string.Empty, p.IsAIParticipant, addAICommand, lockUnlockCommand, setCompanyCommand, this);
+        return new LobbySlotViewModel(slot, p.ParticipantName, c?.Name ?? string.Empty, p.IsAIParticipant, alliance, addAICommand, lockUnlockCommand, setCompanyCommand, this);
     }
 
-    private async Task AddAIToSlot(int teamIndex, AddAIPlayerToSlotEventArgs? args) {
-        if (args is null) {
-            return;
+    private async Task AddAIToSlot(int teamIndex, int slotIndex, AIDifficulty difficulty) {
+        if (difficulty == AIDifficulty.HUMAN) {
+            await _lobby.RemoveAI(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, slotIndex);
         }
-        if (string.IsNullOrEmpty(args.Difficulty)) {
-            await _lobby.RemoveAI(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, args.SlotIndex);
-        }
-        await _lobby.SetSlotAIDifficulty(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, args.SlotIndex, args.Difficulty);
+        await _lobby.SetSlotAIDifficulty(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, slotIndex, difficulty);
     }
 
     private async Task LockOrUnlockSlot(int teamIndex, int slotIndex) {
@@ -510,6 +502,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             _selectedMap = _lobby.Map; // RESET to _lobby map
             PropertyChanged?.Invoke(this, new(nameof(SelectedMap)));
             PropertyChanged?.Invoke(this, new(nameof(SelectedMapPreview)));
+            SyncState();
         }
     }
 
