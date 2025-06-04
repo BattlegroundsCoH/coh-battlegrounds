@@ -66,7 +66,7 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
         _localParticipant = localParticipant;
         _participants.Add(localParticipant);
 
-        Participant aiParticipant = new Participant(1, Guid.NewGuid().ToString(), "AI - Standard", true); // TODO: Make constructor caller handle this
+        Participant aiParticipant = new Participant(1, Guid.NewGuid().ToString(), "AI - Standard", true, true); // TODO: Make constructor caller handle this
         _participants.Add(aiParticipant);
 
         _team1.Slots[0] = _team1.Slots[0] with { ParticipantId = _localParticipant.ParticipantId };
@@ -84,9 +84,7 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
 
     public Task<LaunchGameResult> LaunchGame() => Task.FromResult(new LaunchGameResult()); // NOP operation in singleplayer mode
 
-    public Task ReportMatchResult(ReplayAnalysisResult matchResult) {
-        throw new NotImplementedException();
-    }
+    public Task ReportMatchResult(ReplayAnalysisResult matchResult) => Task.CompletedTask; // NOP operation in singleplayer mode
 
     public Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) => Task.FromResult(new UploadGamemodeResult()); // NOP operation in singleplayer mode
 
@@ -128,7 +126,7 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
         Participant? participant = _participants.FirstOrDefault(x => x.ParticipantId == slot.ParticipantId);
         if (participant is null) {
             int id = team == _team1 ? slotIndex : (slotIndex + 4); // Slot index is 0-3 for team1 and 4-7 for team2
-            participant = new Participant(id, Guid.CreateVersion7().ToString(), string.Empty, true);
+            participant = new Participant(id, Guid.CreateVersion7().ToString(), string.Empty, true, true);
             _participants.Add(participant);
         }
         team.Slots[slotIndex] = slot with { ParticipantId = participant.ParticipantId, Difficulty = difficulty, CompanyId = string.Empty, Locked = false };

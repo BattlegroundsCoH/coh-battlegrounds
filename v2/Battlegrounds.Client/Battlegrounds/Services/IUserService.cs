@@ -4,8 +4,16 @@ namespace Battlegrounds.Services;
 
 public interface IUserService {
 
-    Task<User> GetLocalUserAsync();
+    Task<User?> GetLocalUserAsync();
 
     Task<User> GetUserAsync(string userId);
+
+    Task<User?> LoginAsync(string userName, string password);
+
+    Task<bool> LogOutAsync();
+
+    string GetLocalUserToken();
+
+    string GetLocalUserRefreshToken();
 
 }

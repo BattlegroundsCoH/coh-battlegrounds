@@ -2,6 +2,24 @@
 
 public sealed class Configuration {
 
+    private const bool _isLocalBuild = false; // Set to false for production builds
+
+    public sealed class APIConfiguration {
+        private string _loginUrlOverride =
+#if DEBUG
+            _isLocalBuild ? "http://localhost:8087" : "http://bg.test.service.cohbattlegrounds.com:8087";
+            #else
+            string.Empty;
+#endif
+        public string BaseUrl { get; set; } = "https://api.cohbattlegrounds.com";
+        public string LoginEndpoint { get; set; } = "/login";
+        public string LoginUrlOverride {
+            get => string.IsNullOrEmpty(_loginUrlOverride) ? BaseUrl : _loginUrlOverride;
+            set => _loginUrlOverride = value;
+        }
+
+    }
+
     public string CompanyOfHeroes3InstallPath { get; set; } = string.Empty;
 
     public bool HasCompanyOfHeroes3InstallPath => !string.IsNullOrEmpty(CompanyOfHeroes3InstallPath);
@@ -25,5 +43,7 @@ public sealed class Configuration {
     public bool GameDevMode { get; set; } = false; // Should the '-dev' flag be passed to the game?
 
     public bool GameDebugMode { get; set; } = false; // Should the '-debug' flag be passed to the game?
+
+    public APIConfiguration API { get; set; } = new APIConfiguration(); // Configuration for the Battlegrounds API
 
 }

@@ -140,10 +140,10 @@ public class CoH3MatchDataBuilderTests {
         public Game Game { get; } = null!;  // Not used in tests
 
         public ISet<Participant> Participants { get; } = new HashSet<Participant> {
-            new(0, "player1", "Player 1", false),
-            new(1, "player2", "Player 2", false),
-            new(2, "player3", "Player 3", false),
-            new(3, "player4", "Player 4", false)
+            new(0, "player1", "Player 1", false, true),
+            new(1, "player2", "Player 2", false, true),
+            new(2, "player3", "Player 3", false, true),
+            new(3, "player4", "Player 4", false, true)
         };
 
         public Dictionary<string, Company> Companies { get; } = new() {

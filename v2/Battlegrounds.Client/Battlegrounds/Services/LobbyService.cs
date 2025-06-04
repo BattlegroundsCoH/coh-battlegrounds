@@ -55,7 +55,7 @@ public sealed class LobbyService(IUserService userService, IGameMapService mapSe
 
     private async Task<ILobby> CreateSingleplayerLobbyAsync(string name, Game game) {
         var localUser = await userService.GetLocalUserAsync();
-        var localUserParticipant = new Participant(0, localUser.UserId, localUser.UserDisplayName, false);
+        var localUserParticipant = new Participant(0, localUser.UserId, localUser.UserDisplayName, false, true);
         var latestMap = await mapService.GetLatestMapAsync(game.Id);
         return new SingleplayerLobby(name, game, latestMap, localUserParticipant);
     }

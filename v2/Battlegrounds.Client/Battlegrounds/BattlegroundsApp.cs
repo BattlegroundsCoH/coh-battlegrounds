@@ -41,10 +41,15 @@ public sealed class BattlegroundsApp {
         // Register main window
         services.AddTransient<MainWindow>();
         services.AddSingleton<MainWindowViewModel>();
-        
+        services.AddSingleton<UserViewModel>();
+
         // Register Multiplayer view
         services.AddTransient<MultiplayerView>();
         services.AddSingleton<MultiplayerViewModel>();
+
+        // Register Login view model
+        services.AddTransient<LoginView>();
+        services.AddSingleton<LoginViewModel>();
 
         // Register other view models as needed
 

@@ -24,6 +24,10 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
 
     public MultiplayerView MultiplayerView => _serviceProvider.GetRequiredService<MultiplayerView>();
 
+    public UserViewModel UserViewModel => _serviceProvider.GetRequiredService<UserViewModel>();
+
+    public LoginViewModel LoginViewModel { get; }
+
     public object? DialogContent {
         get => _dialogContent;
         private set {
@@ -52,10 +56,11 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
 
     public IAsyncRelayCommand SingleplayerCommand { get; }
 
-    public MainWindowViewModel(IServiceProvider serviceProvider) {
+    public MainWindowViewModel(IServiceProvider serviceProvider, LoginViewModel loginViewModel) {
         _serviceProvider = serviceProvider;
         _serviceProvider.GetRequiredService<IDialogService>().RegisterHost(this);
         SingleplayerCommand = new AsyncRelayCommand(StartSingleplayerLobby);
+        LoginViewModel = loginViewModel ?? throw new ArgumentNullException(nameof(loginViewModel));
     }
 
     public void PresentDialog(object dialog) {

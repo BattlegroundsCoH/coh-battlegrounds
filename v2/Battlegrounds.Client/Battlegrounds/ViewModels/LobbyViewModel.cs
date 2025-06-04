@@ -334,7 +334,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             return; // Already left
         }
         await _lobbyService.LeaveLobbyAsync(_lobby);
-        _mainWindowVm.SetContent(null); // Return to multiplayer view
+        _mainWindowVm.SetContent(null); // Return to default content (probably multiplayer view or home view)
         // TODO: Tell main window to return to multiplayer view (if multiplayer lobby) or home if singleplayer lobby
     }
 
@@ -348,7 +348,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             msg = msg[..MAX_CHAT_MESSAGE_LENGTH]; // Limit chat message length to MAX_CHAT_MESSAGE_LENGTH characters
             SystemWarnMessageTooLong(); // Warn user that message was truncated
         }
-        await _lobby.SendMessage(SelectedChatChannel.ChannelName, msg); // TODO: Support team chat
+        await _lobby.SendMessage(SelectedChatChannel.ChannelName, msg);
     }
 
     private void SystemWarnMessageTooLong() {
@@ -365,10 +365,12 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
         try {
             IsMatchStarting = true;
+            LobbyState = "Starting match...";
 
             // Sync corrent lobby view status with backing model based on selected PickableCompany (based on host client view!)
             await SyncLobbyCompanies();
 
+            LobbyState = "Building gamemode...";
             var buildResult = await _playService.BuildGamemode(_lobby);
             if (buildResult.Failed) {
                 IsMatchStarting = false;
@@ -376,6 +378,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                 return;
             }
 
+            LobbyState = "Uploading gamemode...";
             var uploadResult = await _lobby.UploadGamemode(buildResult.GamemodeSgaFileLocation); // NOP operation in singleplayer mode
             if (uploadResult.Failed) {
                 IsMatchStarting = false;
@@ -383,6 +386,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                 return;
             }
 
+            LobbyState = "Launching game...";
             var launchResult = await _lobby.LaunchGame(); // for multiplayer this means tell other players to launch (NOP in singleplayer)
             if (launchResult.Failed) {
                 IsMatchStarting = false;
@@ -393,6 +397,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             IsMatchStarting = false;
             IsWaitingForMatchOver = true;
             IsPlaying = true;
+            LobbyState = "Waiting for ingame results...";
 
             var playResult = await _playService.LaunchGameApp(_lobby.Game);
             if (playResult.Failed) {
@@ -414,18 +419,21 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                 return;
             }
 
+            LobbyState = "Match over, analysing replay...";
             var replayAnalysis = await _replayService.AnalyseReplay(matchResult.ReplayFilePath, _lobby.Game.Id);
             if (replayAnalysis.Failed) {
                 // TODO: Show error message
                 return;
             }
 
+            LobbyState = "Match over, reporting results to lobby...";
             await _lobby.ReportMatchResult(replayAnalysis);
 
         } finally {
             IsMatchStarting = false;
             IsWaitingForMatchOver = false;
             IsPlaying = false;
+            SyncState(); // Resync state after match is over (or an error occurred)
         }
 
     }
@@ -436,7 +444,6 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         var t2PickedCompanies = from slot in Team2Slots where !slot.Slot.Hidden && !slot.Slot.Locked select slot.SelectedCompany;
         var t1MappedCompanies = t1PickedCompanies.ToAsyncEnumerable().SelectAwait(MapPickableCompanyToCompany);
         var t2MappedCompanies = t2PickedCompanies.ToAsyncEnumerable().SelectAwait(MapPickableCompanyToCompany);
-        var picked = new List<Company>();
         await foreach (var company in t1MappedCompanies.Concat(t2MappedCompanies).Where(x => x is not null)) {
             _lobby.Companies.Add(company!.Id, company);
         }

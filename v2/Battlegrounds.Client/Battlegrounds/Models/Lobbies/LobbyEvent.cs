@@ -11,6 +11,7 @@ public enum LobbyEventType {
     SettingUpdated,
     MapUpdated,
     GameStarted,
+    GameCancelled,
     GameEnded,
     SystemMessage,
     SystemError,
