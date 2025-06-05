@@ -165,4 +165,6 @@ public sealed class UserService(HttpClient client, Configuration configuration) 
         return JsonSerializer.DeserializeAsync<T>(source, _jsonOptions);
     }
 
+    public Task<string> GetLocalUserTokenAsync() => GetToken();
+
 }

@@ -7,10 +7,21 @@ using Battlegrounds.Test.Models.Blueprints;
 
 namespace Battlegrounds.Test.Services;
 
-public sealed class BlueprintFixtureService : IBlueprintService {
+public sealed class BlueprintFixtureService : IBlueprintService { // Test fixture for IBlueprintService
 
     public static readonly SquadBlueprint[] COH3_SQUADS = [
         SquadBlueprintFixture.SBP_TOMMY_UK,
+        SquadBlueprintFixture.SBP_HALFTRACK_M3_UK,
+        SquadBlueprintFixture.SBP_MATILDA_UK,
+        SquadBlueprintFixture.SBP_CRUSADER_UK,
+        SquadBlueprintFixture.SBP_PANZERGRENADIER_AK,
+        SquadBlueprintFixture.SBP_HALFTRACK_250_AK,
+        SquadBlueprintFixture.SBP_PANZER_III_AK
+    ];
+
+    public static readonly UpgradeBlueprint[] COH3_UPGRADES = [
+        UpgradeBlueprintFixture.UPG_LMG_BREN,
+        UpgradeBlueprintFixture.UPG_LMG_PANZERGRENADIER_AK
     ];
 
     public bool IsLoaded => true;
@@ -30,6 +41,11 @@ public sealed class BlueprintFixtureService : IBlueprintService {
                 return bp;
             }
             throw new KeyNotFoundException($"Squad blueprint with ID '{blueprintId}' not found for game '{gameId}'.");
+        } else if (typeof(T) == typeof(UpgradeBlueprint)) {
+            if (gameId == CoH3.GameId && COH3_UPGRADES.FirstOrDefault(u => u.Id == blueprintId) is T bp) {
+                return bp;
+            }
+            throw new KeyNotFoundException($"Upgrade blueprint with ID '{blueprintId}' not found for game '{gameId}'.");
         }
         throw new NotImplementedException($"Blueprints of type {typeof(T).Name} are not supported in this fixture service.");
     }

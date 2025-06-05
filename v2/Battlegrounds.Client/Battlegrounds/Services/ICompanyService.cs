@@ -71,9 +71,11 @@ public interface ICompanyService {
     /// identifier  provided is valid and corresponds to an existing company. If the company does not exist, the method 
     /// will return <see langword="false"/> without throwing an exception.</remarks>
     /// <param name="companyId">The unique identifier of the company to delete. Cannot be null or empty.</param>
+    /// <param name="syncWithRemote">Flag to determine if the deletion should be synchronized with the remote server.
+    /// <see langword="true"/> to synchronize with the remote server; otherwise, <see langword="false"/>.</param>
     /// <returns>A <see cref="ValueTask{TResult}"/> representing the asynchronous operation.  The result is <see
     /// langword="true"/> if the company was successfully deleted; otherwise, <see langword="false"/>.</returns>
-    ValueTask<bool> DeleteCompany(string companyId);
+    ValueTask<bool> DeleteCompany(string companyId, bool syncWithRemote = true);
 
     /// <summary>
     /// Saves the specified company to the local database and optionally synchronizes it with a remote server.

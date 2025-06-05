@@ -14,6 +14,8 @@ public interface IUserService {
 
     string GetLocalUserToken();
 
+    Task<string> GetLocalUserTokenAsync(); // Will refresh token if expired
+
     string GetLocalUserRefreshToken();
 
 }

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Net.Http;
 
+using Battlegrounds.Facades.API;
 using Battlegrounds.Logging;
 using Battlegrounds.Models;
 using Battlegrounds.Parsers;
@@ -163,6 +164,7 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<IBlueprintService, BlueprintService>();
         services.AddSingleton<ICompanySerializer, BinaryCompanySerializer>();
         services.AddSingleton<ICompanyDeserializer, BinaryCompanyDeserializer>();
+        services.AddSingleton<IBattlegroundsServerAPI, HttpBattlegroundsServerAPI>();
 
         // Register default HTTP client
         services.AddSingleton(new HttpClient()); // TODO: Make a wrapper for HttpClient and specify an interface to decouple it from the implementation

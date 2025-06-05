@@ -1,5 +1,6 @@
 ﻿using System.IO;
 
+using Battlegrounds.Facades.API;
 using Battlegrounds.Models;
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Serializers;
@@ -12,10 +13,12 @@ public sealed class CompanyService(
     IUserService userService,
     ICompanyDeserializer companyDeserializer,
     ICompanySerializer companySerializer,
+    IBattlegroundsServerAPI serverAPI,
     ILogger<CompanyService> logger,
     Configuration configuration) : ICompanyService {
 
     private readonly ILogger<CompanyService> _logger = logger;
+    private readonly IBattlegroundsServerAPI _serverAPI = serverAPI;
     private readonly IUserService _userService = userService;
     private readonly ICompanyDeserializer _companyDeserializer = companyDeserializer;
     private readonly ICompanySerializer _companySerializer = companySerializer;
@@ -25,12 +28,40 @@ public sealed class CompanyService(
     private readonly HashSet<Company> _localCompanyCache = [];
     private readonly HashSet<Company> _localCompanies = []; // This is the list of companies that are loaded from the local file system.
 
-    public ValueTask<bool> DeleteCompany(string companyId) {
-        throw new NotImplementedException();
+    public async ValueTask<bool> DeleteCompany(string companyId, bool syncWithRemote = true) {
+        if (string.IsNullOrEmpty(companyId)) {
+            throw new ArgumentException("Company ID cannot be null or empty.", nameof(companyId));
+        }
+        string companyFilePath = Path.Combine(_configuration.CompaniesPath, $"{companyId}.bgc");
+        if (!File.Exists(companyFilePath)) {
+            _logger.LogWarning("Company file {CompanyFile} does not exist.", companyFilePath);
+            return false; // Return false if the company file does not exist
+        }
+        try {
+            File.Delete(companyFilePath); // Delete the company file from the local file system
+            _localCompanyCache.RemoveWhere(c => c.Id == companyId); // Remove from the local cache
+            _localCompanies.RemoveWhere(c => c.Id == companyId); // Remove from the local companies list
+        } catch (Exception ex) {
+            _logger.LogError(ex, "Error deleting company file {CompanyFile}: {ExMessage}", companyFilePath, ex.Message);
+            return false; // Return false if deletion failed
+        }
+        if (syncWithRemote) {
+            return await _serverAPI.DeleteCompanyAsync(companyId); // Sync with remote store
+        }
+        return true; // Return true if deletion was successful and no remote sync is needed
     }
 
-    public Task<Company?> DownloadRemoteCompanyAsync(string companyId, string? userId = null, bool storeLocally = false) {
-        throw new NotImplementedException();
+    public async Task<Company?> DownloadRemoteCompanyAsync(string companyId, string? userId = null, bool storeLocally = false) {
+        string actualUserId = await ResolveUserId(userId); // Resolve the user ID synchronously for simplicity
+        Company? company = await _serverAPI.GetCompanyAsync(companyId, actualUserId); // Download the company from the remote store
+        if (company is null) {
+            _logger.LogWarning("Company with ID {CompanyId} not found for user {UserId}.", companyId, actualUserId);
+            return null;
+        }
+        if (storeLocally) {
+            await SaveCompany(company, syncWithRemote: false); // Save the company locally without syncing with remote
+        }
+        return company; // Return the downloaded company
     }
 
     public async Task<Company?> GetCompanyAsync(string companyId, string? userId = null, bool localOnly = false) {
@@ -82,9 +113,8 @@ public sealed class CompanyService(
 
         bool success = true;
         if (syncWithRemote) {
-            var userId = await ResolveUserId(null); // Resolve the user ID synchronously for simplicity
             serializedCompanyStream.Seek(0, SeekOrigin.Begin); // Reset the stream position to the beginning
-            success = await SyncCompanyWithRemoteInternal(userId, serializedCompanyStream); // Call the internal method to handle the actual synchronization
+            success = await SyncCompanyWithRemoteInternal(company.Id, company.Faction, serializedCompanyStream); // Call the internal method to handle the actual synchronization
         }
 
         if (success) {
@@ -102,14 +132,11 @@ public sealed class CompanyService(
         using var serializedCompanyStream = new MemoryStream();
         _companySerializer.SerializeCompany(serializedCompanyStream, company);
         serializedCompanyStream.Seek(0, SeekOrigin.Begin); // Reset the stream position to the beginning
-        string userId = await ResolveUserId(null); // Resolve the user ID asynchronously
-        return await SyncCompanyWithRemoteInternal(userId, serializedCompanyStream); // Call the internal method to handle the actual synchronization
+        return await SyncCompanyWithRemoteInternal(company.Id, company.Faction, serializedCompanyStream); // Call the internal method to handle the actual synchronization
     }
 
-    private ValueTask<bool> SyncCompanyWithRemoteInternal(string userId, Stream serializedCompanyStream) {
-               // This method should handle the actual synchronization with the remote store.
-        // It will likely involve making an HTTP request to the remote API with the serialized company data.
-        throw new NotImplementedException();
+    private ValueTask<bool> SyncCompanyWithRemoteInternal(string companyId, string faction, Stream serializedCompanyStream) {
+        return _serverAPI.UploadCompanyAsync(companyId, faction, serializedCompanyStream); // Upload the serialized company to the remote store
     }
 
     private async ValueTask<string> ResolveUserId(string? userId) {
@@ -119,166 +146,5 @@ public sealed class CompanyService(
         var localUser = await _userService.GetLocalUserAsync() ?? throw new InvalidOperationException("No local user found. Please log in first.");
         return localUser.UserId;
     }
-
-
-
-
-
-
-    /*public Task<bool> DeleteCompanyFromLocalCache(string companyId) {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> DeleteCompanyFromRemoteStore(string companyId) {
-        throw new NotImplementedException();
-    }
-
-    public Task<Company?> DownloadRemoteCompany(string companyId) {
-        throw new NotImplementedException();
-    }
-
-    public async Task<Company?> GetCompanyAsync(string companyId) {
-        var localVersion = _localCompanyCache.FirstOrDefault(c => c.Id == companyId);
-        if (localVersion is not null) {
-            return localVersion;
-        }
-        return await DownloadRemoteCompany(companyId);
-    }
-
-    public async Task<IEnumerable<Company>> GetLocalCompanies() {
-        if (_localCompanyCache.Count is 0) {
-            if (!await SyncCompaniesWithRemote()) {
-                throw new InvalidOperationException("Failed to sync companies with remote store.");
-            }
-        }
-        return _localCompanyCache.AsEnumerable();
-    }
-
-    public async Task<IEnumerable<Company>> GetLocalPlayerCompaniesForFaction(string faction) {
-        if (_syncStatus is SyncStatus.NotSyncedRemotely) {
-            var remoteCompanies = await GetPlayerCompaniesRemoteAsync(await _userService.GetLocalUserAsync());
-            _localCompanyCache.Clear();
-            _localCompanyCache.AddRange(remoteCompanies);
-            _isLocalCompanyCacheDirty = false;
-        }
-        return from company in _localCompanyCache where company.Faction == faction select company;
-    }
-
-    public Task<IEnumerable<Company>> GetPlayerCompaniesRemoteAsync(User user) {
-        var fakeCompanies = new List<Company> {
-            new Company { 
-                Id = Guid.CreateVersion7().ToString(),
-                Name = "Desert Rats",
-                Faction = "british_africa",
-                GameId = CoH3.GameId,
-                Squads = [
-                    new Squad {
-                        Id = 1,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("tommy_uk")
-                    },
-                    new Squad {
-                        Id = 2,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("tommy_uk")
-                    },
-                    new Squad {
-                        Id = 3,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("tommy_uk")
-                    },
-                    new Squad {
-                        Id = 4,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("tommy_uk"),
-                        Experience = 2750.0f,
-                    },
-                    new Squad {
-                        Id = 5,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("tommy_uk"),
-                    },
-                    new Squad {
-                        Id = 17,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("tommy_uk"),
-                        Experience = 5400.0f,
-                        Transport = new Squad.TransportSquad(_blueprintService.GetBlueprint<CoH3, SquadBlueprint>("halftrack_m3_uk"), DropOffOnly: true),
-                    },
-                    new Squad {
-                        Id = 19,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("tommy_uk"),
-                        Experience = 5400.0f,
-                        Upgrades = [_blueprintService.GetBlueprint<CoH3, UpgradeBlueprint>("lmg_bren_tommy_uk")],
-                    },
-                    new Squad {
-                        Id = 28,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("matilda_uk"),
-                    },
-                ]
-            },
-            new Company {
-                Id = Guid.CreateVersion7().ToString(),
-                Name = "Afrika Korps",
-                Faction = "afrika_korps",
-                GameId = CoH3.GameId,
-                Squads = [
-                    new Squad {
-                        Id = 1,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("panzergrenadier_ak"),
-                    },
-                    new Squad {
-                        Id = 2,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("panzergrenadier_ak"),
-                    },
-                    new Squad {
-                        Id = 3,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("panzergrenadier_ak"),
-                    },
-                    new Squad {
-                        Id = 4,
-                        Experience = 3000.0f,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("panzergrenadier_ak"),
-                    },
-                    new Squad {
-                        Id = 5,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("panzergrenadier_ak"),
-                    },
-                    new Squad {
-                        Id = 6,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("panzergrenadier_ak"),
-                        Experience = 6000.0f,
-                        Transport = new Squad.TransportSquad(_blueprintService.GetBlueprint<CoH3, SquadBlueprint>("halftrack_250_ak"), DropOffOnly: true),
-                    },
-                    new Squad {
-                        Id = 7,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("panzergrenadier_ak"),
-                        Experience = 6000.0f,
-                        Upgrades = [_blueprintService.GetBlueprint<CoH3, UpgradeBlueprint>("lmg_panzergrenaider_ak")],
-                    },
-                    new Squad {
-                        Id = 8,
-                        Blueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>("panzer_iii_ak"),
-                    },
-                ]
-            }
-        };
-        return Task.FromResult(fakeCompanies.AsEnumerable());
-    }
-
-    public int LoadCompaniesFromLocalCache() {
-        string[] files = Directory.GetFiles(configuration.CompaniesPath, "*.bgc", SearchOption.TopDirectoryOnly);
-        _localCompanyCache.Clear();
-        int loaded = 0;
-        for (int i = 0; i < files.Length; i++) { 
-            
-        }
-    }
-
-    public Task<bool> SyncCompaniesToRemote() {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> SyncCompaniesWithRemote() { // This method should fetch the latest companies from the remote store and update the local cache.
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> UploadCompanyToRemoteStore(Company company) {
-        throw new NotImplementedException();
-    }*/
 
 }

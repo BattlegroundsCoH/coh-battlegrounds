@@ -9,4 +9,8 @@ public static class UpgradeBlueprintFixture {
         new CostExtension(0.0f, 70.0f, 0.0f)
         ]);
 
+    public static readonly UpgradeBlueprint UPG_LMG_PANZERGRENADIER_AK = new UpgradeBlueprint("lmg_panzergrenaider_ak", [
+        new CostExtension(0.0f, 70.0f, 0.0f)
+        ]);
+
 }
