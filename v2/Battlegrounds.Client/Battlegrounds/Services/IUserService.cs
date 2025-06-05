@@ -17,5 +17,7 @@ public interface IUserService {
     Task<string> GetLocalUserTokenAsync(); // Will refresh token if expired
 
     string GetLocalUserRefreshToken();
+    
+    ValueTask<bool> AutoLoginAsync();
 
 }

@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -8,6 +10,8 @@ using Battlegrounds.Models;
 namespace Battlegrounds.Services;
 
 public sealed class UserService(HttpClient client, Configuration configuration) : IUserService {
+
+    private static readonly string _userTokenStore = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CoHBattlegrounds", "local_user.dat");
 
     private sealed record LoginRequest(
         [property: JsonPropertyName("username")] string UserName,
@@ -29,6 +33,12 @@ public sealed class UserService(HttpClient client, Configuration configuration) 
         [property: JsonPropertyName("alg")] string Algorithm,
         [property: JsonPropertyName("typ")] string Type = "JWT"
     );
+    private sealed record StoredTokenData(
+        [property: JsonPropertyName("token")] string Token,
+        [property: JsonPropertyName("refresh_token")] string RefreshToken,
+        [property: JsonPropertyName("issued_at")] DateTime IssuedAt,
+        [property: JsonPropertyName("expiration")] DateTime Expiration
+    );
 
     private static readonly JsonSerializerOptions _jsonOptions = new() {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -37,12 +47,7 @@ public sealed class UserService(HttpClient client, Configuration configuration) 
 
     private readonly HttpClient _httpClient = client ?? throw new ArgumentNullException(nameof(client));
 
-    private User? _localUser =
-        #if DEBUG
-        new User() { UserId = "localUserId", UserDisplayName = "Local User" };
-#else
-        null; // In production, local user is null until logged in
-#endif
+    private User? _localUser;
     private string _token = string.Empty;
     private DateTime _tokenExpiration = DateTime.MinValue;
     private string _refreshToken = string.Empty;
@@ -96,7 +101,7 @@ public sealed class UserService(HttpClient client, Configuration configuration) 
 
     }
 
-    private User? GetUserFromToken(string token) {
+    private static User? GetUserFromToken(string token) {
         if (string.IsNullOrWhiteSpace(token)) {
             throw new ArgumentException("Token cannot be null or empty.", nameof(token));
         }
@@ -143,14 +148,14 @@ public sealed class UserService(HttpClient client, Configuration configuration) 
         return _token; // Return the existing token if it's still valid
     }
 
-    private void StoreToken(string token, string refreshToken) {         
+    private void StoreToken(string token, string refreshToken) {
         if (string.IsNullOrWhiteSpace(token)) {
             throw new ArgumentException("Token cannot be null or empty.", nameof(token));
         }
         _token = token;
         _refreshToken = refreshToken;
         _tokenExpiration = DateTime.UtcNow.AddMinutes(30); // Assuming token is valid for 30 minutes, adjust as necessary (TODO: Extract from JWT)
-        // TODO: Store tokens securely, e.g., in a secure storage or encrypted file
+        StoreTokenInEncryptedFile(_token, _refreshToken, _tokenExpiration, DateTime.UtcNow);
     }
 
     private static StringContent ToJson<T>(T value) {
@@ -166,5 +171,52 @@ public sealed class UserService(HttpClient client, Configuration configuration) 
     }
 
     public Task<string> GetLocalUserTokenAsync() => GetToken();
+
+    public ValueTask<bool> AutoLoginAsync() {
+
+        if (_localUser is not null) {
+            return new ValueTask<bool>(true); // Already logged in
+        }
+
+        if (!File.Exists(_userTokenStore)) {
+            return new ValueTask<bool>(false); // No local user token file found
+        }
+
+        StoredTokenData? tokenData = GetTokenFromEncryptedFile();
+        if (tokenData is null) {
+            return new ValueTask<bool>(false); // Token is empty or null
+        }
+
+        if (DateTime.UtcNow >= tokenData.Expiration) {
+            return new ValueTask<bool>(false); // Token is expired (TODO: Implement refresh logic if needed)
+        }
+
+        _token = tokenData.Token;
+        _refreshToken = tokenData.RefreshToken;
+        _tokenExpiration = tokenData.Expiration;
+        _localUser = GetUserFromToken(_token);
+
+        return ValueTask.FromResult(true);
+
+    }
+
+    private static StoredTokenData? GetTokenFromEncryptedFile() {
+        if (!File.Exists(_userTokenStore)) {
+            throw new FileNotFoundException("Local user token file not found.", _userTokenStore);
+        }
+        byte[] cipherText = File.ReadAllBytes(_userTokenStore);
+        byte[] plainText = ProtectedData.Unprotect(cipherText, null, DataProtectionScope.CurrentUser);
+        return JsonSerializer.Deserialize<StoredTokenData>(Encoding.UTF8.GetString(plainText));
+    }
+
+    private static async void StoreTokenInEncryptedFile(string token, string refreshToken, DateTime expiration, DateTime issuedAt) {
+        if (string.IsNullOrWhiteSpace(token)) {
+            throw new ArgumentException("Token cannot be null or empty.", nameof(token));
+        }
+        var tokenData = new StoredTokenData(token, refreshToken, issuedAt, expiration);
+        byte[] plainText = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(tokenData));
+        byte[] cipherText = ProtectedData.Protect(plainText, null, DataProtectionScope.CurrentUser);
+        await File.WriteAllBytesAsync(_userTokenStore, cipherText);
+    }
 
 }

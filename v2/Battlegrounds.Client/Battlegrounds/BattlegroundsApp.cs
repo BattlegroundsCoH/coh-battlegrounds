@@ -25,7 +25,7 @@ public sealed class BattlegroundsApp {
     private bool _isFirstRun = false;
 
     private readonly string _appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CoHBattlegrounds");
-    private readonly string _documentsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "CoHBattlegrounds");
+    public static readonly string DocumentsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "CoHBattlegrounds");
 
     private readonly string _configFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "CoHBattlegrounds", "config.json");
 
@@ -57,8 +57,8 @@ public sealed class BattlegroundsApp {
 
     private void InitMyGamesFolder() {
 
-        if (!Directory.Exists(_documentsPath)) {
-            Directory.CreateDirectory(_documentsPath);
+        if (!Directory.Exists(DocumentsPath)) {
+            Directory.CreateDirectory(DocumentsPath);
             _isFirstRun = true;
         }
 
@@ -109,7 +109,7 @@ public sealed class BattlegroundsApp {
             .WriteTo.Console(
                 outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({ClassName}) {Message}{NewLine}{Exception}"
             )  // Custom format with full log level and class name
-            .WriteTo.File(Path.Combine(_documentsPath, "logs", $"battlegrounds-{timestamp}.log"), retainedFileCountLimit: 7,
+            .WriteTo.File(Path.Combine(DocumentsPath, "logs", $"battlegrounds-{timestamp}.log"), retainedFileCountLimit: 7,
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] ({ClassName}) {Message}{NewLine}{Exception}"
             )
             .CreateLogger();
@@ -182,6 +182,16 @@ public sealed class BattlegroundsApp {
         // Trigger async loading of blueprints
         var blueprintService = ServiceProvider.GetRequiredService<IBlueprintService>();
         blueprintService.LoadBlueprints();
+
+        // Trigger auto login
+        var loginViewModel = ServiceProvider.GetRequiredService<LoginViewModel>();
+        if (_isFirstRun) {
+            logger.LogInformation("This is the first run of Battlegrounds. Unable to auto-login");
+        } else {
+            if (!await loginViewModel.AutoLoginAsync()) {
+                logger.LogWarning("Auto-login failed. Please log in manually.");
+            }
+        }
 
         // Trigger load of companies
         var companyService = ServiceProvider.GetRequiredService<ICompanyService>();
