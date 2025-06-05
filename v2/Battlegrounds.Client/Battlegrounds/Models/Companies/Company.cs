@@ -6,6 +6,10 @@ public sealed class Company {
 
     public string Id { get; init; } = string.Empty;
 
+    public DateTime CreatedAt { get; init; } = DateTime.Now;
+
+    public DateTime UpdatedAt { get; init; } = DateTime.Now;
+
     public string Name { get; init; } = string.Empty;
 
     public string Faction { get; init; } = string.Empty;

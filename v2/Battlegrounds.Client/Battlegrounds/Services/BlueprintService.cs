@@ -1,4 +1,6 @@
-﻿using Battlegrounds.Models.Blueprints;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Battlegrounds.Models.Blueprints;
 using Battlegrounds.Models.Blueprints.Extensions;
 using Battlegrounds.Models.Playing;
 
@@ -25,6 +27,18 @@ public sealed class BlueprintService : IBlueprintService {
             throw new KeyNotFoundException($"Blueprint of type {blueprintType} with ID {blueprintId} not found.");
         }
 
+        public bool TryGetBlueprint<T>(string blueprintId, [NotNullWhen(true)] out T? blueprint) where T : Blueprint {
+            string blueprintType = typeof(T).Name;
+            if (_blueprints.TryGetValue(blueprintType, out var blueprints)) {
+                if (blueprints.TryGetValue(blueprintId, out var foundBlueprint)) {
+                    blueprint = (T)foundBlueprint;
+                    return true;
+                }
+            }
+            blueprint = null;
+            return false;
+        }
+
     }
 
     private readonly Dictionary<string, BlueprintRepository> _gameBlueprintRepositories = [];
@@ -37,6 +51,34 @@ public sealed class BlueprintService : IBlueprintService {
         where T1 : Game
         where T2 : Blueprint {
         return GetBlueprintRepository<T1>().GetBlueprint<T2>(blueprintId);
+    }
+
+    public T GetBlueprint<T>(string gameId, string blueprintId) where T : Blueprint {
+        if (_gameBlueprintRepositories.TryGetValue(gameId, out var repository)) {
+            return repository.GetBlueprint<T>(blueprintId);
+        }
+        throw new KeyNotFoundException($"Blueprint repository for game {gameId} not found.");
+    }
+
+    public bool TryGetBlueprint<T>(string gameId, string blueprintId, [NotNullWhen(true)] out T? blueprint) where T : Blueprint {
+        if (_gameBlueprintRepositories.TryGetValue(gameId, out var repository)) {
+            if (repository.TryGetBlueprint<T>(blueprintId, out var foundBlueprint)) {
+                blueprint = foundBlueprint;
+                return true;
+            }
+        }
+        blueprint = null;
+        return false;
+    }
+
+    public bool TryGetBlueprint<T1, T2>(string blueprintId, [NotNullWhen(true)] out T2? blueprint)
+        where T1 : Game
+        where T2 : Blueprint {
+        if (_gameBlueprintRepositories.TryGetValue(typeof(T1).Name, out var repository)) {
+            return repository.TryGetBlueprint(blueprintId, out blueprint);
+        }
+        blueprint = null;
+        return false;
     }
 
     private BlueprintRepository GetBlueprintRepository<T1>()
