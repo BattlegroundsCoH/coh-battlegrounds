@@ -18,6 +18,8 @@ public partial class App : Application {
         base.OnStartup(e);
 
         var bgApp = new BattlegroundsApp();
+        bgApp.ConfigureFileStorage();
+
         var services = new ServiceCollection();
         services.AddSingleton(bgApp);
 

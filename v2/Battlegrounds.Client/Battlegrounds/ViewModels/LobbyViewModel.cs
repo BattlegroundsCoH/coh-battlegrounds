@@ -10,6 +10,7 @@ using Battlegrounds.ViewModels.LobbyHelpers;
 using CommunityToolkit.Mvvm.Input;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.ViewModels;
 
@@ -18,6 +19,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     public const int MAX_CHAT_MESSAGE_LENGTH = 180; // Maximum length of a chat message
     public const string MAX_MESSAGE_LENGTH_REACHED = "Chat message truncated to 180 characters.";
 
+    private readonly ILogger<LobbyViewModel> _logger;
     private readonly ILobby _lobby;
     private readonly ILobbyService _lobbyService;
     private readonly IPlayService _playService;
@@ -178,6 +180,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         set {
             if (value == _state) return;
             _state = value;
+            _logger.LogInformation("Lobby state changed to: {State}", _state);
             PropertyChanged?.Invoke(this, new(nameof(LobbyState)));
         }
     }
@@ -192,11 +195,12 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
     }
 
-    public LobbyViewModel(ILobby lobby, IServiceProvider serviceProvider) {
+    public LobbyViewModel(ILobby lobby, IServiceProvider serviceProvider, ILogger<LobbyViewModel> logger) {
         // Probably an anti-pattern to pass IServiceProvider instead of the specific services, but this class has many dependencies 
         // So... collect the services in a facade class to make it easier to test and maintain (Probably also solves the comment regarding a separate controller class for the StartGame method)
 
         _lobby = lobby;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _lobbyService = serviceProvider.GetRequiredService<ILobbyService>();
         _playService = serviceProvider.GetRequiredService<IPlayService>();
         _replayService = serviceProvider.GetRequiredService<IReplayService>();
@@ -247,7 +251,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             if (!_localPlayerCompaniesByAlliance.TryGetValue(alliance, out var existingCompanies)) {
                 _localPlayerCompaniesByAlliance[alliance] = existingCompanies = [];
             }
-            var factionCompanies = (await _companyService.GetLocalPlayerCompaniesForFaction(faction)).ToArray();
+            var localPlayerCompanies = await _companyService.GetLocalCompaniesAsync();
+            var factionCompanies = (from c in localPlayerCompanies where c.Faction == faction select c).ToArray();
             if (factionCompanies.Length == 0) {
                 continue; // No companies for this faction
             }
