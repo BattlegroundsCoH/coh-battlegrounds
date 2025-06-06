@@ -43,6 +43,7 @@ public sealed class BinaryCompanySerializer : ICompanySerializer {
         writer.Write(squad.Id); // Squad ID
         WriteASCIIString(writer, squad.Blueprint.Id); // Squad Blueprint ID will always be ASCII
         WriteUtf8String(writer, squad.Name); // Squad name can be UTF-8
+        writer.Write((byte)squad.Phase); // Squad phase as byte
         writer.Write(squad.Experience); // Squad experience
 
         // Write slot items

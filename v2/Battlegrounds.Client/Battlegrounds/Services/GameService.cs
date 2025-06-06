@@ -19,4 +19,6 @@ public sealed class GameService(Configuration configuration) : IGameService {
         throw new NotImplementedException();
     }
 
+    public ICollection<Game> GetGames() => [_coh3];
+
 }

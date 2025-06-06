@@ -127,4 +127,67 @@
         </Setter>
     </Style>
 
+    <!-- BackButton Style for LobbyView -->
+    <Style x:Key="BackButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundWhiteBrush}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="MainBorder"
+                Background="{DynamicResource BackgroundBlueBrush}"
+                BorderBrush="{DynamicResource BackgroundLightBlueBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="{TemplateBinding Padding}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Back Arrow Icon -->
+                            <Path x:Name="ArrowIcon"
+                      Data="M 0,8 L 8,0 L 8,4 L 18,4 L 18,12 L 8,12 L 8,16 Z"
+                      Fill="{DynamicResource ForegroundLightBlueBrush}"
+                      Stretch="Uniform"
+                      Width="16"
+                      Height="16"
+                      VerticalAlignment="Center"/>
+
+                            <!-- Text Content -->
+                            <TextBlock Grid.Column="1"
+                           Text="Go Back"
+                           Margin="8,0,0,0"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource ForegroundWhiteBrush}"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!-- Hover state -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="MainBorder" Property="Background" Value="{DynamicResource BackgroundLightBlueBrush}"/>
+                            <Setter TargetName="ArrowIcon" Property="Fill" Value="{DynamicResource ForegroundWhiteBrush}"/>
+                        </Trigger>
+
+                        <!-- Pressed state -->
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="MainBorder" Property="Background" Value="{DynamicResource BackgroundDarkBlueBrush}"/>
+                        </Trigger>
+
+                        <!-- Disabled state -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="MainBorder" Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

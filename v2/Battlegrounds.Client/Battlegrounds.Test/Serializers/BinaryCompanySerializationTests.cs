@@ -43,6 +43,7 @@ public sealed class BinaryCompanySerializationTests {
                 Assert.That(deserializedSquad.Id, Is.EqualTo(originalSquad.Id), $"Deserialized squad ID at index {i} should match.");
                 Assert.That(deserializedSquad.Blueprint.Id, Is.EqualTo(originalSquad.Blueprint.Id), $"Deserialized squad blueprint ID at index {i} should match.");
                 Assert.That(deserializedSquad.Experience, Is.EqualTo(originalSquad.Experience).Within(0.01f), $"Deserialized squad experience at index {i} should match.");
+                Assert.That(deserializedSquad.Phase, Is.EqualTo(originalSquad.Phase), $"Deserialized squad phase at index {i} should match.");
             });
         }
 

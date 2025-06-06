@@ -142,11 +142,23 @@ public sealed class BattlegroundsApp {
         services.AddTransient<LoginView>();
         services.AddSingleton<LoginViewModel>();
 
+        // Register Company Browser view model
+        services.AddTransient<CompanyBrowserView>();
+        services.AddSingleton<CompanyBrowserViewModel>();
+
+        // Register Company Editor view model
+        services.AddTransient<CompanyEditorView>();
+        services.AddSingleton<CompanyEditorViewModel>();
+
         // Register other view models as needed
 
         // Regiser modal for create lobby
         services.AddTransient<CreateLobbyModalView>();
         services.AddTransient<CreateLobbyModalViewModel>(); // Note: this is transient, so a new instance will be created each time it's requested
+
+        // Register modal for create company
+        services.AddTransient<CreateCompanyModalView>();
+        services.AddTransient<CreateCompanyModalViewModel>(); // Note: this is transient, so a new instance will be created each time it's requested
 
         // Register services
         services.AddSingleton<IDialogService, DialogService>();
@@ -161,6 +173,7 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<CoH3ReplayParser>();
         services.AddSingleton<IUserService, UserService>();
         services.AddSingleton<ICompanyService, CompanyService>();
+        services.AddSingleton<IGameLocaleService, GameLocaleService>();
         services.AddSingleton<IBlueprintService, BlueprintService>();
         services.AddSingleton<ICompanySerializer, BinaryCompanySerializer>();
         services.AddSingleton<ICompanyDeserializer, BinaryCompanyDeserializer>();
@@ -178,6 +191,14 @@ public sealed class BattlegroundsApp {
 
         var logger = ServiceProvider.GetRequiredService<ILogger<BattlegroundsApp>>();
         logger.LogInformation("Battlegrounds is finishing startup...");
+
+        // Trigger async loading of locales
+        var localeService = ServiceProvider.GetRequiredService<IGameLocaleService>();
+        if (!await localeService.LoadLocalesAsync()) {
+            logger.LogError("Failed to load game locales. The application may not function correctly.");
+        } else {
+            logger.LogInformation("Game locales loaded successfully.");
+        }
 
         // Trigger async loading of blueprints
         var blueprintService = ServiceProvider.GetRequiredService<IBlueprintService>();

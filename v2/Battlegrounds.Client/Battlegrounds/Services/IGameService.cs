@@ -8,4 +8,6 @@ public interface IGameService {
 
     T GetGame<T>() where T : Game;
 
+    ICollection<Game> GetGames();
+
 }

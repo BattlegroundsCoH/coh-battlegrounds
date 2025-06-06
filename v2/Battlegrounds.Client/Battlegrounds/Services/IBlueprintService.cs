@@ -22,5 +22,13 @@ public interface IBlueprintService {
         where T2 : Blueprint;
 
     void LoadBlueprints();
+    
+    ICollection<Blueprint> GetBlueprintsForGame(string gameId);
+
+    ICollection<Blueprint> GetBlueprintsForGame<T>() where T : Game;
+
+    ICollection<T2> GetBlueprintsForGame<T1, T2>() where T1 : Game where T2 : Blueprint;
+
+    ICollection<T> GetBlueprintsForGame<T>(string gameId) where T : Blueprint;
 
 }

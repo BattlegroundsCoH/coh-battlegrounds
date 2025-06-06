@@ -78,6 +78,7 @@ public sealed class CompanyService(
     public Task<IEnumerable<Company>> GetLocalCompanyCacheAsync() => Task.FromResult(_localCompanyCache.AsEnumerable());
 
     public ValueTask<int> LoadPlayerCompaniesAsync() { // This method loads all companies from the local file system into the local cache. (May be asynced in the future)
+        _localCompanies.Clear(); // Clear the local companies list before loading
         int loaded = 0;
         string[] companyFiles = Directory.GetFiles(_configuration.CompaniesPath, "*.bgc", SearchOption.TopDirectoryOnly);
         for (int i = 0; i < companyFiles.Length; i++) {

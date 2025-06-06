@@ -1,4 +1,6 @@
-﻿using Battlegrounds.Models.Blueprints.Extensions;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Battlegrounds.Models.Blueprints.Extensions;
 
 namespace Battlegrounds.Models.Blueprints;
 
@@ -7,6 +9,8 @@ public abstract class Blueprint(string id, HashSet<BlueprintExtension> extension
     protected readonly Dictionary<string, BlueprintExtension> _extensions = extensions.ToDictionary(k => k.Name);
 
     public string Id => id;
+
+    public string? FactionAssociation { get; init; } = string.Empty;
 
     public T GetExtension<T>() where T : BlueprintExtension {
         if (_extensions.TryGetValue(typeof(T).Name, out var extension)) {
@@ -21,6 +25,15 @@ public abstract class Blueprint(string id, HashSet<BlueprintExtension> extension
 
     public bool HasExtension(string name) {
         return _extensions.ContainsKey(name);
+    }
+
+    public bool TryGetExtension<T>([NotNullWhen(true)] out T? extension) where T : BlueprintExtension {
+        if (_extensions.TryGetValue(typeof(T).Name, out var ext) && ext is T t) {
+            extension = t;
+            return true;
+        }
+        extension = null;
+        return false;
     }
 
     public override bool Equals(object? obj) {

@@ -6,13 +6,13 @@ namespace Battlegrounds.Converters;
 
 public sealed class MathConverter : IValueConverter {
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-        if (value == null || parameter == null) {
+    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+        if (value is null || parameter is null) {
             return value;
         }
 
         // Replace 'x' with the value in the expression
-        string expression = parameter.ToString()?.Replace("x", value.ToString());
+        string expression = parameter.ToString()?.Replace("x", value.ToString()) ?? string.Empty;
         if (string.IsNullOrEmpty(expression)) {
             return value;
         }

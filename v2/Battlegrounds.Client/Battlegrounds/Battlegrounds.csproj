@@ -52,10 +52,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Assets\Factions\coh3\icons\" />
     <Folder Include="Assets\Scenarios\CoH3\" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\Factions\coh3\icons\tommy_uk.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Factions\coh3\portraits\tommy_uk_portrait.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3_afrika_korps.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -66,6 +73,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3_german.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Resources\coh3_fuel_small.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Resources\coh3_manpower_small.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Resources\coh3_munitions_small.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Scenarios\CoH3\pachino_2p_mm_handmade.png">

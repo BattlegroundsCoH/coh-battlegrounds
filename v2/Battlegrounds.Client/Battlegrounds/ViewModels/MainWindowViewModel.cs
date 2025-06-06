@@ -24,6 +24,8 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
 
     public MultiplayerView MultiplayerView => _serviceProvider.GetRequiredService<MultiplayerView>();
 
+    public CompanyBrowserView CompanyBrowserView => _serviceProvider.GetRequiredService<CompanyBrowserView>();
+
     public UserViewModel UserViewModel => _serviceProvider.GetRequiredService<UserViewModel>();
 
     public LoginViewModel LoginViewModel { get; }

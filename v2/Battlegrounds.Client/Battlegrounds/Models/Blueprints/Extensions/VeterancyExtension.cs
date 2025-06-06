@@ -2,7 +2,9 @@
 
 public sealed record VeterancyExtension(VeterancyExtension.VeterancyRank[] Ranks)
     : BlueprintExtension(nameof(VeterancyExtension)) {
-    public sealed record VeterancyRank(float Experience, string ScreenName);   
+    public sealed record VeterancyRank(float Experience, string ScreenName);
+
+    public int MaxRank => Ranks.Length;
 
     public int GetRank(float experience) {
         int rank = 0;

@@ -76,4 +76,23 @@ public sealed class BlueprintFixtureService : IBlueprintService { // Test fixtur
         }
     }
 
+    public ICollection<Blueprint> GetBlueprintsForGame(string gameId) => gameId switch {
+        CoH3.GameId => [.. COH3_SQUADS, .. COH3_UPGRADES],
+        _ => throw new KeyNotFoundException($"Blueprint repository for game {gameId} not found.")
+    };
+
+    public ICollection<Blueprint> GetBlueprintsForGame<T>() where T : Game => GetBlueprintsForGame(GetGameId<T>());
+
+    public ICollection<T2> GetBlueprintsForGame<T1, T2>()
+        where T1 : Game
+        where T2 : Blueprint => GetBlueprintsForGame<T2>(GetGameId<T1>());
+
+    public ICollection<T> GetBlueprintsForGame<T>(string gameId) where T : Blueprint
+        => [.. GetBlueprintsForGame(gameId).OfType<T>()];
+
+    private static string GetGameId<T>() where T : Game {
+        return typeof(T).Name;
+    }
+
+
 }

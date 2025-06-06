@@ -82,6 +82,7 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
 
         string customName = ReadUtf8String(reader);
 
+        SquadPhase phase = (SquadPhase)reader.ReadByte(); // Squad phase as byte
         float experience = reader.ReadSingle(); // Squad experience
 
         ushort slotItemCount = reader.ReadUInt16(); // Number of slot items
@@ -159,6 +160,7 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
             Blueprint = blueprint,
             Name = customName,
             Experience = experience,
+            Phase = phase,
             SlotItems = parsedSlotItems.ToList().AsReadOnly(),
             Upgrades = parsedUpgrades.ToList().AsReadOnly(),
             Transport = transportSquad

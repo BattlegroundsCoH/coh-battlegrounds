@@ -2,6 +2,13 @@
 
 namespace Battlegrounds.Models.Companies;
 
+public enum SquadPhase : byte {
+    ReservesPhase = 0,
+    SkirmishPhase = 1,
+    BattlePhase = 2,
+    StartingPhase = 3,
+}
+
 public sealed class Squad {
 
     public sealed record SlotItem(int Count, UpgradeBlueprint? UpgradeBlueprint, SlotItemBlueprint? SlotItemBlueprint); // UpgradeBlueprint for CoH3, SlotItemBlueprint for CoH2 because reasons...
@@ -25,6 +32,8 @@ public sealed class Squad {
     public float Experience { get; init; } = 0f;
 
     public int Rank => Blueprint.Veterancy.GetRank(Experience);
+
+    public SquadPhase Phase { get; init; } = SquadPhase.ReservesPhase;
 
     public required SquadBlueprint Blueprint { get; init; } = null!;
 
