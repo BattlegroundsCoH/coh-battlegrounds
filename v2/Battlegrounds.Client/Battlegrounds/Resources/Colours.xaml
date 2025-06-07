@@ -31,4 +31,13 @@
     <Color x:Key="AccentRed">#e54545</Color>
     <SolidColorBrush x:Key="AccentRedBrush" Color="{StaticResource AccentRed}" />
 
+    <Color x:Key="AccentGreen">#45e545</Color>
+    <SolidColorBrush x:Key="AccentGreenBrush" Color="{StaticResource AccentGreen}" />
+
+    <Color x:Key="AccentYellow">#e5e545</Color>
+    <SolidColorBrush x:Key="AccentYellowBrush" Color="{StaticResource AccentYellow}" />
+
+    <Color x:Key="AccentOrange">#e57f45</Color>
+    <SolidColorBrush x:Key="AccentOrangeBrush" Color="{StaticResource AccentOrange}" />
+
 </ResourceDictionary>

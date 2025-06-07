@@ -84,6 +84,12 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
 
         SquadPhase phase = (SquadPhase)reader.ReadByte(); // Squad phase as byte
         float experience = reader.ReadSingle(); // Squad experience
+        DateTime addedToCompanyAt = new DateTime(reader.ReadInt64(), DateTimeKind.Utc); // Added to company at timestamp
+        DateTime lastUpdatedAt = new DateTime(reader.ReadInt64(), DateTimeKind.Utc); // Last updated at timestamp
+
+        int totalInfantryKills = reader.ReadInt32(); // Total infantry kills
+        int totalVehicleKills = reader.ReadInt32(); // Total vehicle kills
+        int matchCounts = reader.ReadInt32(); // Match counts as a 64-bit integer
 
         ushort slotItemCount = reader.ReadUInt16(); // Number of slot items
         var slotItems = new IntermediateSlotItem[slotItemCount];
@@ -163,7 +169,12 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
             Phase = phase,
             SlotItems = parsedSlotItems.ToList().AsReadOnly(),
             Upgrades = parsedUpgrades.ToList().AsReadOnly(),
-            Transport = transportSquad
+            Transport = transportSquad,
+            AddedToCompanyAt = addedToCompanyAt,
+            LastUpdatedAt = lastUpdatedAt,
+            MatchCounts = matchCounts,
+            TotalInfantryKills = totalInfantryKills,
+            TotalVehicleKills = totalVehicleKills
         };
 
     }

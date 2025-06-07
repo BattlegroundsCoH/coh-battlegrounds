@@ -45,6 +45,13 @@ public sealed class BinaryCompanySerializer : ICompanySerializer {
         WriteUtf8String(writer, squad.Name); // Squad name can be UTF-8
         writer.Write((byte)squad.Phase); // Squad phase as byte
         writer.Write(squad.Experience); // Squad experience
+        writer.Write(squad.AddedToCompanyAt.Ticks); // Added to company at timestamp
+        writer.Write(squad.LastUpdatedAt.Ticks); // Last updated at timestamp
+
+        // Write stats
+        writer.Write(squad.TotalInfantryKills); // Total infantry kills
+        writer.Write(squad.TotalVehicleKills); // Total vehicle kills
+        writer.Write(squad.MatchCounts); // Match counts as a 64-bit integer
 
         // Write slot items
         writer.Write((ushort)squad.SlotItems.Count); // Number of slot items

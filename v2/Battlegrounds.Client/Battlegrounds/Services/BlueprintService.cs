@@ -104,43 +104,90 @@ public sealed class BlueprintService(IGameLocaleService localeService) : IBluepr
                 { nameof(SquadBlueprint), new List<Blueprint>() {
                     new SquadBlueprint("tommy_uk", SquadCategory.Infantry, new HashSet<BlueprintExtension>([
                         new CostExtension(300, 0, 0),
-                        new UIExtension(COH3STR(11153223), COH3STR(11265170), COH3STR(11266227), "tommy_uk", "", "tommy_uk_portrait")
-                        ])) { FactionAssociation = "british_africa" },
-                    new SquadBlueprint("halftrack_m3_uk", SquadCategory.Support, new HashSet<BlueprintExtension>([
-                        new CostExtension(260, 0, 15),
-                        new UIExtension((LocaleString)"M3 Halftrack", LocaleString.Empty, LocaleString.Empty, "", "", "")
-                        ])) { FactionAssociation = "british_africa" },
+                        new UIExtension(COH3STR(11153223), COH3STR(11265170), COH3STR(11266227), "tommy_uk", "", "tommy_uk_portrait"),
+                        new UpgradesExtension(1, ["recon_package_tommy_uk", "boys_anti_tank_rifles_tommy_uk", "lmg_bren_tommy_uk"]),
+                        new VeterancyExtension([
+                            new VeterancyExtension.VeterancyRank(900, "Vet1"),
+                            new VeterancyExtension.VeterancyRank(2700, "Vet2"),
+                            new VeterancyExtension.VeterancyRank(5400, "Vet3")
+                            ])
+                        ])) { FactionAssociation = "british_africa", IsInfantry = true },
+                    new SquadBlueprint("cwt_15_truck_uk", SquadCategory.Support, new HashSet<BlueprintExtension>([
+                        new CostExtension(200, 0, 20),
+                        new UIExtension((LocaleString)"CWT 15 Truck", LocaleString.Empty, LocaleString.Empty, "cwt_15_uk", "cwt_truck", ""),
+                        new VeterancyExtension([
+                            new VeterancyExtension.VeterancyRank(1000, "Vet1"),
+                            new VeterancyExtension.VeterancyRank(3000, "Vet2"),
+                            new VeterancyExtension.VeterancyRank(6000, "Vet3")
+                            ]),
+                        new HoldExtension(),
+                        ])) { FactionAssociation = "british_africa", IsInfantry = false },
                     new SquadBlueprint("matilda_uk", SquadCategory.Armour, new HashSet<BlueprintExtension>([
-                        new CostExtension(360, 0, 80),
-                        new UIExtension((LocaleString)"Matilda Infantry Support Vehicle", LocaleString.Empty, LocaleString.Empty, "", "", "")
-                        ])) { FactionAssociation = "british_africa" },
+                        new CostExtension(360, 0, 90),
+                        new UIExtension((LocaleString)"Matilda Tank", LocaleString.Empty, LocaleString.Empty, "matilda_africa_uk", "", ""),
+                        new VeterancyExtension([
+                            new VeterancyExtension.VeterancyRank(1800, "Vet1"),
+                            new VeterancyExtension.VeterancyRank(5400, "Vet2"),
+                            new VeterancyExtension.VeterancyRank(10800, "Vet3")
+                            ])
+                        ])) { FactionAssociation = "british_africa", IsInfantry = false },
                     new SquadBlueprint("crusader_uk", SquadCategory.Armour, new HashSet<BlueprintExtension>([
-                        new CostExtension(320, 0, 60),
-                        new UIExtension((LocaleString)"Crusader Tank", LocaleString.Empty, LocaleString.Empty, "", "", "")
-                        ])) { FactionAssociation = "british_africa" },
+                        new CostExtension(300, 0, 60),
+                        new UIExtension((LocaleString)"Crusader Tank", LocaleString.Empty, LocaleString.Empty, "crusader_uk", "", ""),
+                        new VeterancyExtension([
+                            new VeterancyExtension.VeterancyRank(1800, "Vet1"),
+                            new VeterancyExtension.VeterancyRank(5400, "Vet2"),
+                            new VeterancyExtension.VeterancyRank(10800, "Vet3")
+                            ])
+                        ])) { FactionAssociation = "british_africa", IsInfantry = false },
                     new SquadBlueprint("panzergrenadier_ak", SquadCategory.Infantry, new HashSet<BlueprintExtension>([
                         new CostExtension(300, 0, 0),
-                        new UIExtension((LocaleString)"Panzergrenadiers", LocaleString.Empty, LocaleString.Empty, "", "", "")
-                        ])) { FactionAssociation = "afrika_korps" },
+                        new UIExtension((LocaleString)"Panzergrenadiers", LocaleString.Empty, LocaleString.Empty, "", "", ""),
+                        new VeterancyExtension([
+                            new VeterancyExtension.VeterancyRank(1400, "Vet1"),
+                            new VeterancyExtension.VeterancyRank(2800, "Vet2"),
+                            new VeterancyExtension.VeterancyRank(4200, "Vet3")
+                            ])
+                        ])) { FactionAssociation = "afrika_korps", IsInfantry = true },
                     new SquadBlueprint("halftrack_250_ak", SquadCategory.Support, new HashSet<BlueprintExtension>([
                         new CostExtension(260, 0, 15),
-                        new UIExtension((LocaleString)"Sdkfz 250 Halftrack", LocaleString.Empty, LocaleString.Empty, "", "", "")
-                        ])) { FactionAssociation = "afrika_korps" },
+                        new UIExtension((LocaleString)"Sdkfz 250 Halftrack", LocaleString.Empty, LocaleString.Empty, "", "", ""),
+                        new VeterancyExtension([
+                            new VeterancyExtension.VeterancyRank(1400, "Vet1"),
+                            new VeterancyExtension.VeterancyRank(2800, "Vet2"),
+                            new VeterancyExtension.VeterancyRank(4200, "Vet3")
+                            ]),
+                        new HoldExtension(),
+                        ])) { FactionAssociation = "afrika_korps", IsInfantry = false },
                     new SquadBlueprint("panzer_iii_ak", SquadCategory.Armour, new HashSet<BlueprintExtension>([
                         new CostExtension(360, 0, 80),
-                        new UIExtension((LocaleString)"Panzer III", LocaleString.Empty, LocaleString.Empty, "", "", "")
-                        ])) { FactionAssociation = "afrika_korps" },
+                        new UIExtension((LocaleString)"Panzer III", LocaleString.Empty, LocaleString.Empty, "", "", ""),
+                        new VeterancyExtension([
+                            new VeterancyExtension.VeterancyRank(1400, "Vet1"),
+                            new VeterancyExtension.VeterancyRank(2800, "Vet2"),
+                            new VeterancyExtension.VeterancyRank(4200, "Vet3")
+                            ])
+                        ])) { FactionAssociation = "afrika_korps", IsInfantry = false },
                 }.ToDictionary(k => k.Id)},
                 { nameof(UpgradeBlueprint), new List<Blueprint>() {
                     new UpgradeBlueprint("lmg_bren_tommy_uk", new HashSet<BlueprintExtension>([
                         new CostExtension(0, 90, 0),
-                        new UIExtension((LocaleString)"Bren Light Machine Gun Package", LocaleString.Empty, LocaleString.Empty, "", "", "")
+                        new UIExtension((LocaleString)"Bren Light Machine Gun Package", LocaleString.Empty, LocaleString.Empty, "icon_upgrade_british_bren", "weapon_bren", "")
+                        ])) { FactionAssociation = "british_africa" },
+                    new UpgradeBlueprint("boys_anti_tank_rifles_tommy_uk", new HashSet<BlueprintExtension>([
+                        new CostExtension(0, 60, 0),
+                        new UIExtension((LocaleString)"Boys Anti-Tank Rifles Package", LocaleString.Empty, LocaleString.Empty, "icon_upgrade_boys_at_gun", "weapon_boys_at_gun", "")
+                        ])) { FactionAssociation = "british_africa" },
+                    new UpgradeBlueprint("recon_package_tommy_uk", new HashSet<BlueprintExtension>([
+                        new CostExtension(0, 60, 0),
+                        new UIExtension((LocaleString)"Recce Package", LocaleString.Empty, LocaleString.Empty, "scoped_lee_enfield_flare_gun", "sniper", "")
                         ])) { FactionAssociation = "british_africa" },
                     new UpgradeBlueprint("lmg_panzergrenaider_ak", new HashSet<BlueprintExtension>([
                         new CostExtension(0, 90, 0),
                         new UIExtension((LocaleString)"MG-34 Light Machine Gun Package", LocaleString.Empty, LocaleString.Empty, "", "", "")
                         ])) { FactionAssociation = "afrika_korps" },
-                }.ToDictionary(k => k.Id)}
+                }.ToDictionary(k => k.Id)},
+                { nameof(SlotItemBlueprint), [] } // No slot items for CoH3, but we need it here to avoid NPEs later
             }
         };
         _gameBlueprintRepositories.Add(CoH3.GameId, coh3BpRepository);

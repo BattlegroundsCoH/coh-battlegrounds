@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 
 using Battlegrounds.Models.Blueprints;
+using Battlegrounds.Models.Blueprints.Extensions;
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Services;
@@ -35,6 +36,8 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     private string _companyState = string.Empty;
     private SelectionViewModel? _selectionViewModel;
 
+    private string _selectionTitle = "No Selection";
+
     private readonly List<Squad> _startingUnits = [];
     private readonly List<Squad> _skirmishPhaseUnits = [];
     private readonly List<Squad> _battlePhaseUnits = [];
@@ -43,6 +46,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     private ICollection<SquadBlueprint> _availableInfantryUnits = Array.Empty<SquadBlueprint>();
     private ICollection<SquadBlueprint> _availableSupportUnits = Array.Empty<SquadBlueprint>();
     private ICollection<SquadBlueprint> _availableArmourUnits = Array.Empty<SquadBlueprint>();
+    private ICollection<SquadBlueprint> _availableTransportUnits = Array.Empty<SquadBlueprint>();
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -96,6 +100,8 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
     public ICollection<SquadBlueprint> AvailableArmourUnits => _availableArmourUnits;
 
+    public ICollection<SquadBlueprint> AvailableTransportUnits => _availableTransportUnits;
+
     public ICollection<Squad> StartingUnits => _startingUnits.AsReadOnly();
 
     public ICollection<Squad> SkirmishPhaseUnits => _skirmishPhaseUnits.AsReadOnly();
@@ -103,6 +109,41 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     public ICollection<Squad> BattlePhaseUnits => _battlePhaseUnits.AsReadOnly();
 
     public ICollection<Squad> ReservesPhaseUnits => _reservesPhaseUnits.AsReadOnly();
+
+    public int StartingUnitsCount => StartingUnits.Count;
+    public int StartingUnitsMax => 4;
+    public bool CanAddStartingUnit => StartingUnitsCount < StartingUnitsMax;
+
+    public int SkirmishPhaseUnitsCount => SkirmishPhaseUnits.Count;
+    public int SkirmishPhaseUnitsMax => 8;
+    public bool CanAddSkirmishPhaseUnit => SkirmishPhaseUnitsCount < SkirmishPhaseUnitsMax;
+
+    public int BattlePhaseUnitsCount => BattlePhaseUnits.Count;
+    public int BattlePhaseUnitsMax => 12;
+    public bool CanAddBattlePhaseUnit => BattlePhaseUnitsCount < BattlePhaseUnitsMax;
+
+    public int ReservesPhaseUnitsCount => ReservesPhaseUnits.Count;
+    public int ReservesPhaseUnitsMax => 6;
+    public bool CanAddReservesPhaseUnit => ReservesPhaseUnitsCount < ReservesPhaseUnitsMax;
+
+    public IBlueprintService BlueprintService => _blueprintService; // Expose the blueprint service for use in the view model
+
+    public int TotalManpowerCost => (int)_startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits)
+        .Sum(squad => squad.Blueprint.Cost.Manpower);
+
+    public int TotalMunitionsCost => (int)_startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits)
+        .Sum(squad => squad.Blueprint.Cost.Munitions);
+    public int TotalFuelCost => (int)_startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits)
+        .Sum(squad => squad.Blueprint.Cost.Fuel);
+
+    public string SelectionTitle {
+        get => _selectionTitle;
+        set {
+            if (value == _selectionTitle) return;
+            _selectionTitle = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectionTitle)));
+        }
+    }
 
     public CompanyEditorViewModel(CompanyEditorViewModelContext context, ICompanyService companyService, IBlueprintService blueprintService, IGameService gameService) {
         ArgumentNullException.ThrowIfNull(context, nameof(context));
@@ -118,12 +159,12 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             _game = _context.Parameters.Game ?? throw new ArgumentNullException(nameof(context), "Game must be provided for a new company.");
             _faction = _context.Parameters.Faction;
             CompanyName = _context.Parameters.Name;
-            CompanyState = "Creating new company...";
+            CompanyState = $"Creating company {CompanyName}";
         } else {
             _game = gameService.GetGame(_context.Company.GameId) ?? throw new ArgumentNullException(nameof(context), "Game must be provided for an existing company.");
             _faction = _context.Company.Faction;
             CompanyName = _context.Company.Name;
-            CompanyState = "Loaded existing company...";
+            CompanyState = $"Loaded company {CompanyName}";
             _startingUnits.AddRange(_context.Company.Squads.Where(s => s.Phase == SquadPhase.StartingPhase));
             _skirmishPhaseUnits.AddRange(_context.Company.Squads.Where(s => s.Phase == SquadPhase.SkirmishPhase));
             _battlePhaseUnits.AddRange(_context.Company.Squads.Where(s => s.Phase == SquadPhase.BattlePhase));
@@ -147,6 +188,9 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         _availableArmourUnits = [..from bp in squadBlueprints
                                   where bp.Cateogry == SquadCategory.Armour
                                   select bp];
+        _availableTransportUnits = [..from bp in squadBlueprints
+                                      where bp.HasExtension<HoldExtension>() && bp.Cateogry == SquadCategory.Support
+                                      select bp];
     }
 
     private void ExitEditor() {
@@ -203,54 +247,184 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
     private void SetSelectedSquad(object? any) {
         if (any is SquadBlueprint squad) {
-            SelectionViewModel = new SelectionViewModel(squad, AddSquadToCompany);
+            SelectionViewModel = new SelectionViewModel(this, squad);
+            SelectionTitle = "Squad Overview";
         } else if (any is Squad existingSquad) {
-            SelectionViewModel = new SelectionViewModel(existingSquad, RetireSquadFromCompany);
+            SelectionViewModel = new SelectionViewModel(this, existingSquad);
+            SelectionTitle = $"Squad #{existingSquad.Id}";
         } else {
             SelectionViewModel = null; // Clear selection if not a valid squad or blueprint
+            SelectionTitle = "No Selection";
         }
     }
 
-    private void AddSquadToCompany(SquadPhase phase, SquadBlueprint blueprint) {
+    public void AddSquadToCompany(SquadPhase phase, SquadBlueprint blueprint) {
         Squad squad = new Squad() {
             Id = GetNextSquadId(),
             Phase = phase,
             Blueprint = blueprint,
+            AddedToCompanyAt = DateTime.UtcNow,
         };
         switch (phase) {
             case SquadPhase.StartingPhase:
                 _startingUnits.Add(squad);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StartingUnits)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StartingUnitsCount)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddStartingUnit)));
                 break;
             case SquadPhase.SkirmishPhase:
                 _skirmishPhaseUnits.Add(squad);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SkirmishPhaseUnits)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SkirmishPhaseUnitsCount)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddSkirmishPhaseUnit)));
                 break;
             case SquadPhase.BattlePhase:
                 _battlePhaseUnits.Add(squad);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BattlePhaseUnits)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BattlePhaseUnitsCount)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddBattlePhaseUnit)));
                 break;
             case SquadPhase.ReservesPhase:
                 _reservesPhaseUnits.Add(squad);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ReservesPhaseUnits)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ReservesPhaseUnitsCount)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddReservesPhaseUnit)));
                 break;
         }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalManpowerCost)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalMunitionsCost)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalFuelCost)));
         IsDirty = true; // Mark the company as dirty after adding a squad
     }
 
-    private void RetireSquadFromCompany(Squad squad) {
+    public void RetireSquadFromCompany(Squad squad) {
         // Remove the squad from its current phase
         if (_startingUnits.Remove(squad)) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StartingUnits)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StartingUnitsCount)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddStartingUnit)));
         } else if (_skirmishPhaseUnits.Remove(squad)) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SkirmishPhaseUnits)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SkirmishPhaseUnitsCount)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddSkirmishPhaseUnit)));
         } else if (_battlePhaseUnits.Remove(squad)) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BattlePhaseUnits)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BattlePhaseUnitsCount)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddBattlePhaseUnit)));
         } else if (_reservesPhaseUnits.Remove(squad)) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ReservesPhaseUnits)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ReservesPhaseUnitsCount)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddReservesPhaseUnit)));
         }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalManpowerCost)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalMunitionsCost)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalFuelCost)));
         IsDirty = true; // Mark the company as dirty after removing a squad
         SetSelectedSquad(null); // Clear the selection after retiring a squad
+    }
+
+    public void SetSquadDeploymentMethod(Squad squad, SquadBlueprint? transport, bool isDropOffOnly) {
+
+        if (squad.HasTransport == transport is not null)
+            return; // No change in transport status
+
+        Squad.TransportSquad? transportSquad = null;
+        if (transport is not null) {
+            transportSquad = new Squad.TransportSquad(transport, isDropOffOnly);
+        }
+        
+        SwapSquad(squad, new Squad { 
+            Id = squad.Id,
+            SlotItems = squad.SlotItems,
+            Upgrades = squad.Upgrades,
+            Blueprint = squad.Blueprint,
+            Experience = squad.Experience,
+            Name = squad.Name,
+            Phase = squad.Phase,
+            Transport = transportSquad,
+            LastUpdatedAt = DateTime.UtcNow,
+            AddedToCompanyAt = squad.AddedToCompanyAt,
+            MatchCounts = squad.MatchCounts,
+            TotalVehicleKills = squad.TotalVehicleKills,
+            TotalInfantryKills = squad.TotalInfantryKills,
+        });
+        
+        IsDirty = true; // Mark the company as dirty after changing deployment method
+
+    }
+
+    public void ApplyUpgradeToSquad(Squad squad, UpgradeBlueprint upgrade) {
+        var upgrades = squad.Upgrades.ToList();
+        if (squad.Upgrades.Any(x => x.Id == upgrade.Id)) { // Check if already applied, then remove it
+            if (!upgrades.Remove(upgrade)) {
+                return; // Upgrade not found, nothing to do
+            }
+        } else {
+            // Otherwise, add the upgrade
+            upgrades.Add(upgrade);
+        }
+        Squad updatedSquad = new Squad {
+            Id = squad.Id,
+            SlotItems = squad.SlotItems,
+            Upgrades = upgrades,
+            Blueprint = squad.Blueprint,
+            Experience = squad.Experience,
+            Name = squad.Name,
+            Phase = squad.Phase,
+            Transport = squad.Transport,
+            LastUpdatedAt = DateTime.UtcNow,
+            AddedToCompanyAt = squad.AddedToCompanyAt,
+            MatchCounts = squad.MatchCounts,
+            TotalVehicleKills = squad.TotalVehicleKills,
+            TotalInfantryKills = squad.TotalInfantryKills
+        };
+        SwapSquad(squad, updatedSquad);
+        SetSelectedSquad(updatedSquad); // Update the selection to the upgraded squad
+        IsDirty = true; // Mark the company as dirty after applying an upgrade
+    }
+
+    private void SwapSquad(Squad oldSquad, Squad newSquad) {
+        switch (oldSquad.Phase) {
+            case SquadPhase.StartingPhase:
+                var startingIndex = _startingUnits.IndexOf(oldSquad);
+                if (startingIndex >= 0) {
+                    _startingUnits[startingIndex] = newSquad;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StartingUnits)));
+                } else {
+                    throw new InvalidOperationException("Squad not found in Starting Phase.");
+                }
+                break;
+            case SquadPhase.SkirmishPhase:
+                var skirmishIndex = _skirmishPhaseUnits.IndexOf(oldSquad);
+                if (skirmishIndex >= 0) {
+                    _skirmishPhaseUnits[skirmishIndex] = newSquad;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SkirmishPhaseUnits)));
+                } else {
+                    throw new InvalidOperationException("Squad not found in Skirmish Phase.");
+                }
+                break;
+            case SquadPhase.BattlePhase:
+                var battleIndex = _battlePhaseUnits.IndexOf(oldSquad);
+                if (battleIndex >= 0) {
+                    _battlePhaseUnits[battleIndex] = newSquad;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BattlePhaseUnits)));
+                } else {
+                    throw new InvalidOperationException("Squad not found in Battle Phase.");
+                }
+                break;
+            case SquadPhase.ReservesPhase:
+                var reservesIndex = _reservesPhaseUnits.IndexOf(oldSquad);
+                if (reservesIndex >= 0) {
+                    _reservesPhaseUnits[reservesIndex] = newSquad;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ReservesPhaseUnits)));
+                } else {
+                    throw new InvalidOperationException("Squad not found in Reserves Phase.");
+                }
+                break;
+        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalManpowerCost)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalMunitionsCost)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalFuelCost)));
     }
 
     private int GetNextSquadId() {
