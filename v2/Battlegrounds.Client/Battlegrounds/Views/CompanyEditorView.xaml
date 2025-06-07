@@ -20,12 +20,13 @@
         <converters:BlueprintHelpTextConverter x:Key="BlueprintHelpTextConverter"/>
         <converters:BlueprintIconConverter x:Key="BlueprintIconConverter"/>
         <converters:BlueprintIconMultiBindingConverter x:Key="BlueprintIconMultiConverter"/>
-        <converters:BlueprintPortraitMultiBindingConverter x:Key="BlueprintPortraitMultiConverter"/>
+        <converters:BlueprintSymbolMultiBindingConverter x:Key="BlueprintSymbolMultiConverter"/>
         <converters:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
         <converters:NullVisibilityConverter x:Key="NotNullVisibilityConverter" IsInverted="True"/>
         <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
         <converters:RankStarColourConverter x:Key="RankStarColourConverter"/>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
         <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
 
@@ -115,6 +116,8 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
                                 <!-- Unit Icon -->
@@ -131,15 +134,64 @@
                                     </Image.Source>
                                 </Image>
 
-                                <!-- Unit Name -->
-                                <TextBlock 
-                                    Grid.Column="1"
-                                    Foreground="{StaticResource ForegroundWhiteBrush}"
-                                    VerticalAlignment="Center">
-                                    <TextBlock.Text>
-                                        <Binding Path="Blueprint" Converter="{StaticResource BlueprintNameConverter}"/>
-                                    </TextBlock.Text>
-                                </TextBlock>
+                                <!-- Unit Name (and ID) -->
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock 
+                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        VerticalAlignment="Center">
+                                        <Run Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}}"/> (#<Run Text="{Binding Id, Mode=OneWay}"/>)
+                                    </TextBlock>
+                                    <!-- Custom Name (if any)-->
+                                    <TextBlock 
+                                        FontStyle="Italic"
+                                        Visibility="{Binding HasCustomName, Converter={StaticResource BooleanToVisibility}}"
+                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        VerticalAlignment="Center">
+                                        
+                                    </TextBlock>
+                                </StackPanel>
+                                
+                                <!-- Unit upgrades -->
+                                <ItemsControl 
+                                    Grid.Column="2"
+                                    ItemsSource="{Binding Upgrades}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Image 
+                                                Width="24"
+                                                Height="24"
+                                                Margin="0,0,4,0">
+                                                <Image.Source>
+                                                    <MultiBinding Converter="{StaticResource BlueprintSymbolMultiConverter}">
+                                                        <Binding Path="."/>
+                                                        <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                                    </MultiBinding>
+                                                </Image.Source>
+                                            </Image>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!-- Unit transport -->
+                                <Image 
+                                    Width="24"
+                                    Height="24"
+                                    Margin="0,0,4,0"
+                                    Grid.Column="3"
+                                    Visibility="{Binding HasTransport, Converter={StaticResource BooleanToVisibility}}">
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource BlueprintSymbolMultiConverter}">
+                                            <Binding Path="Transport.TransportBlueprint"/>
+                                            <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -172,23 +224,26 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Ellipse x:Name="RadioOuter"
-                                Width="16"
-                                Height="16"
-                                Stroke="{StaticResource ForegroundGrayBrush}"
-                                StrokeThickness="1"
-                                Fill="Transparent"/>
+                                <Ellipse 
+                                    x:Name="RadioOuter"
+                                    Width="16"
+                                    Height="16"
+                                    Stroke="{StaticResource ForegroundGrayBrush}"
+                                    StrokeThickness="1"
+                                    Fill="Transparent"/>
 
-                                <Ellipse x:Name="RadioInner"
-                                Width="8"
-                                Height="8"
-                                Fill="{StaticResource AccentBlueBrush}"
-                                Visibility="Collapsed"/>
+                                <Ellipse 
+                                    x:Name="RadioInner"
+                                    Width="8"
+                                    Height="8"
+                                    Fill="{StaticResource AccentBlueBrush}"
+                                    Visibility="Collapsed"/>
 
-                                <ContentPresenter Grid.Column="1"
-                                        Margin="8,0,0,0"
-                                        VerticalAlignment="Center"
-                                        Content="{TemplateBinding Content}"/>
+                                <ContentPresenter 
+                                    Grid.Column="1"
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Content="{TemplateBinding Content}"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -389,7 +444,7 @@
 
 
         <!-- Header with Lobby Name and Back Button -->
-        <Grid Grid.Row="0" Margin="0,0,0,20">
+        <Grid Grid.Row="0" Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -407,7 +462,19 @@
                Foreground="{StaticResource ForegroundWhiteBrush}"
                HorizontalAlignment="Center"
                VerticalAlignment="Center"/>
-            
+
+            <Image 
+                Width="36" 
+                Height="36"
+                Grid.Column="2">
+                <Image.Source>
+                    <MultiBinding Converter="{StaticResource FactionIconConverter}">
+                        <Binding Path="Faction"/>
+                        <Binding Path="Game"/>
+                    </MultiBinding>
+                </Image.Source>
+            </Image>
+
         </Grid>
 
         <!-- Main Content Area -->

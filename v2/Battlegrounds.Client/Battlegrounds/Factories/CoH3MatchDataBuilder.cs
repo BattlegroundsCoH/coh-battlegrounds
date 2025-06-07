@@ -81,6 +81,7 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
         table.AddFieldValue("experience", squad.Experience)
             .AddFieldValue("rank", squad.Rank) // Rank is calculated based on experience and needed for the ingame UI to display the correct rank icon
             .AddFieldValue("blueprint", squad.Blueprint.Id)
+            .AddFieldValue("phase", (int)squad.Phase) // Phase is an enum, but we store it as an int for Lua compatibility
             .AddFieldValue("category", (byte)squad.Blueprint.Cateogry)
             .AddNestedFieldTable("cost", subTable => BuildCostData(subTable, squad.Blueprint.Cost)); // TODO: Make cost calculation based on transport and upgrades
         var items = from item in squad.SlotItems

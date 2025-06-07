@@ -3,6 +3,39 @@
 namespace Battlegrounds.Services;
 
 /// <summary>
+/// Represents the result of an attempt to save a company.
+/// </summary>
+/// <remarks>This enumeration is used to indicate the outcome of a company save operation. The result can be one
+/// of the following values: <list type="bullet"> <item> <term><see cref="Success"/></term> <description>The operation
+/// completed successfully.</description> </item> <item> <term><see cref="FailedSave"/></term> <description>The
+/// operation failed during the save process.</description> </item> <item> <term><see cref="FailedSync"/></term>
+/// <description>The operation failed during synchronization but a local save was made.</description> </item> </list></remarks>
+public enum SaveCompanyResult {
+
+    /// <summary>
+    /// Represents the success status of an operation.
+    /// </summary>
+    /// <remarks>This enumeration can be used to indicate whether an operation completed successfully or
+    /// encountered an error.</remarks>
+    Success,
+
+    /// <summary>
+    /// Represents the result of a failed save operation.
+    /// </summary>
+    /// <remarks>This enumeration value is typically used to indicate that a save operation did not complete
+    /// successfully. It can be used in error handling or logging scenarios to identify the failure.</remarks>
+    FailedSave,
+
+    /// <summary>
+    /// Represents the result of a failed synchronization operation.
+    /// </summary>
+    /// <remarks>This type is typically used to encapsulate information about synchronization failures, such
+    /// as error details or retry recommendations.</remarks>
+    FailedSync,
+
+}
+
+/// <summary>
 /// Defines a service for managing company data, including loading, retrieving, saving, synchronizing, and deleting
 /// companies.
 /// </summary>
@@ -88,6 +121,6 @@ public interface ICompanyService {
     /// synchronize with the remote server; otherwise, <see langword="false"/>.</param>
     /// <returns>A <see cref="ValueTask{TResult}"/> representing the asynchronous operation.  The result is <see
     /// langword="true"/> if the company was successfully saved; otherwise, <see langword="false"/>.</returns>
-    ValueTask<bool> SaveCompany(Company company, bool syncWithRemote = true);
+    ValueTask<SaveCompanyResult> SaveCompany(Company company, bool syncWithRemote = true);
 
 }

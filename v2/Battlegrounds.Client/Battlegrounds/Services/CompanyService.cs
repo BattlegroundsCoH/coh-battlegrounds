@@ -23,9 +23,8 @@ public sealed class CompanyService(
     private readonly ICompanyDeserializer _companyDeserializer = companyDeserializer;
     private readonly ICompanySerializer _companySerializer = companySerializer;
     private readonly Configuration _configuration = configuration;
-
-    // This is the local cache of companies, which is used to avoid unnecessary remote calls.
-    private readonly HashSet<Company> _localCompanyCache = [];
+        
+    private readonly HashSet<Company> _localCompanyCache = []; // This is the local cache of companies, which is used to avoid unnecessary remote calls.
     private readonly HashSet<Company> _localCompanies = []; // This is the list of companies that are loaded from the local file system.
 
     public async ValueTask<bool> DeleteCompany(string companyId, bool syncWithRemote = true) {
@@ -96,7 +95,7 @@ public sealed class CompanyService(
         return ValueTask.FromResult(loaded); // Return the number of loaded companies
     }
 
-    public async ValueTask<bool> SaveCompany(Company company, bool syncWithRemote = true) {
+    public async ValueTask<SaveCompanyResult> SaveCompany(Company company, bool syncWithRemote = true) {
         if (company is null) {
             throw new ArgumentNullException(nameof(company), "Company cannot be null.");
         }
@@ -109,7 +108,7 @@ public sealed class CompanyService(
             File.WriteAllBytes(companyFilePath, serializedCompanyStream.ToArray()); // Save the serialized company to a file
         } catch (Exception ex) {
             _logger.LogError(ex, "Error saving company to file {CompanyFile}: {ExMessage}", companyFilePath, ex.Message);
-            return false; // Return false if saving failed
+            return SaveCompanyResult.FailedSave;
         }
 
         bool success = true;
@@ -119,10 +118,10 @@ public sealed class CompanyService(
         }
 
         if (success) {
+            _localCompanies.Add(company); // Add to the local companies
             _localCompanyCache.Add(company); // Add the company to the local cache
-            _localCompanies.Add(company); // Add to the local companies list as well
         }
-        return success;
+        return success ? SaveCompanyResult.Success : SaveCompanyResult.FailedSync;
 
     }
 

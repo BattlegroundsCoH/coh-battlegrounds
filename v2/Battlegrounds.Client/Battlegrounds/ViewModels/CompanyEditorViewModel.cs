@@ -58,6 +58,8 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
     public Game Game => _game;
 
+    public string Faction => _faction;
+
     public bool IsDirty {
         get => _isDirty;
         set {
@@ -128,13 +130,10 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
     public IBlueprintService BlueprintService => _blueprintService; // Expose the blueprint service for use in the view model
 
-    public int TotalManpowerCost => (int)_startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits)
-        .Sum(squad => squad.Blueprint.Cost.Manpower);
+    public int TotalManpowerCost => (int)_startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits).Sum(SumManpowerCost);
 
-    public int TotalMunitionsCost => (int)_startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits)
-        .Sum(squad => squad.Blueprint.Cost.Munitions);
-    public int TotalFuelCost => (int)_startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits)
-        .Sum(squad => squad.Blueprint.Cost.Fuel);
+    public int TotalMunitionsCost => (int)_startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits).Sum(SumMunitionsCost);
+    public int TotalFuelCost => (int)_startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits).Sum(SumFuelCost);
 
     public string SelectionTitle {
         get => _selectionTitle;
@@ -203,7 +202,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         if (!IsDirty) {
             return; // No changes to save
         } else {
-            CompanyState = "Saving company...";
+            CompanyState = "Building company...";
         }
 
         try {
@@ -231,11 +230,13 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             // Update the context with the new or modified company
             _context = new CompanyEditorViewModelContext(Company: company);
 
-            if (await _companyService.SaveCompany(company)) {
-                CompanyState = "Company saved successfully.";
-            } else {
-                CompanyState = "Failed to save company.";
-            }
+            CompanyState = "Saving company...";
+            CompanyState = await _companyService.SaveCompany(company) switch {
+                SaveCompanyResult.Success => "Company saved successfully.",
+                SaveCompanyResult.FailedSave => "Failed to save company to disk",
+                SaveCompanyResult.FailedSync => "Failed to save company to Battlegrounds server...",
+                _ => "Unknown result while saving company."
+            };
 
         } catch (Exception ex) {
             CompanyState = $"Error saving company: {ex.Message}";
@@ -434,5 +435,9 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         var all = _startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits);
         return all.Max(x => x.Id) + 1; // Get the next available ID for a new squad
     }
+
+    private static float SumManpowerCost(Squad squad) => squad.Blueprint.Cost.Manpower + squad.Upgrades.Sum(static x => x.Cost.Manpower);
+    private static float SumMunitionsCost(Squad squad) => squad.Blueprint.Cost.Munitions + squad.Upgrades.Sum(static x => x.Cost.Munitions);
+    private static float SumFuelCost(Squad squad) => squad.Blueprint.Cost.Fuel + squad.Upgrades.Sum(static x => x.Cost.Fuel);
 
 }
