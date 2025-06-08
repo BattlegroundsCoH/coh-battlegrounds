@@ -46,7 +46,7 @@ public sealed class MultiplayerLobby : ILobby {
         throw new NotImplementedException();
     }
 
-    public Task ReportMatchResult(ReplayAnalysisResult matchResult) {
+    public ValueTask<bool> ReportMatchResult(ReplayAnalysisResult matchResult) {
         throw new NotImplementedException();
     }
 

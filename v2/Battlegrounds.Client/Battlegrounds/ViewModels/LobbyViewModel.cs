@@ -431,8 +431,12 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                 return;
             }
 
-            LobbyState = "Match over, reporting results to lobby...";
-            await _lobby.ReportMatchResult(replayAnalysis);
+            LobbyState = "Match over, reporting results to server...";
+            if (!await _lobby.ReportMatchResult(replayAnalysis)) {
+                LobbyState = "Failed to report match results to server...";
+            } else {
+                LobbyState = "Match results reported successfully!";
+            }
 
         } finally {
             IsMatchStarting = false;

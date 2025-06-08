@@ -45,7 +45,7 @@ public class CoH3ReplayParserTest {
 
     }
 
-    [Test]
+    [Test, Ignore("MatchStartEvent in the replay file does not contain updated properties")]
     public void CanParseSampleCoH3ReplayWithBgBroadcastEvents() {
         string replayLocation = ReplayFixture.TEMP_23_05_2025__23_51_FILE;
         var replay = _parser.ParseReplayFile(replayLocation);

@@ -1,11 +1,12 @@
-﻿using Battlegrounds.Models.Lobbies;
+﻿using Battlegrounds.Facades.API;
+using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 
 namespace Battlegrounds.Services;
 
-public sealed class LobbyService(IUserService userService, IGameMapService mapService) : ILobbyService {
+public sealed class LobbyService(IUserService userService, IGameMapService mapService, ICompanyService companyService, IBattlegroundsServerAPI serverAPI) : ILobbyService {
 
-    private ReaderWriterLockSlim _activeLobbyLock = new();
+    private readonly ReaderWriterLockSlim _activeLobbyLock = new();
     private ILobby? _activeLobby;
 
     public bool HasActiveLobby {
@@ -54,10 +55,10 @@ public sealed class LobbyService(IUserService userService, IGameMapService mapSe
     }
 
     private async Task<ILobby> CreateSingleplayerLobbyAsync(string name, Game game) {
-        var localUser = await userService.GetLocalUserAsync();
+        var localUser = await userService.GetLocalUserAsync() ?? throw new InvalidOperationException("Cannot create a singleplayer lobby without a local user.");
         var localUserParticipant = new Participant(0, localUser.UserId, localUser.UserDisplayName, false, true);
         var latestMap = await mapService.GetLatestMapAsync(game.Id);
-        return new SingleplayerLobby(name, game, latestMap, localUserParticipant);
+        return new SingleplayerLobby(name, game, latestMap, localUserParticipant, serverAPI, companyService);
     }
 
     private Task<ILobby> CreateMultiplayerLobbyAsync(string name, string? password, Game game) {

@@ -3,6 +3,7 @@
 using Battlegrounds.Facades.API;
 using Battlegrounds.Models;
 using Battlegrounds.Models.Companies;
+using Battlegrounds.Models.Replays;
 using Battlegrounds.Serializers;
 
 using Microsoft.Extensions.Logging;
@@ -145,6 +146,51 @@ public sealed class CompanyService(
         }
         var localUser = await _userService.GetLocalUserAsync() ?? throw new InvalidOperationException("No local user found. Please log in first.");
         return localUser.UserId;
+    }
+
+    public async ValueTask<Company?> ApplyEvents(LinkedList<ReplayEvent>? localEvents, Company company, bool commitLocally = false) {
+
+        List<Squad> squads = [.. company.Squads];
+        var enumerator = localEvents?.GetEnumerator() ?? throw new ArgumentNullException(nameof(localEvents), "Local events cannot be null.");
+        while (enumerator.MoveNext()) {
+            ReplayEvent replayEvent = enumerator.Current;
+            switch (replayEvent) {
+                case SquadKilledEvent killedEvent: {
+                    Squad? squad = squads.FirstOrDefault(s => s.Id == killedEvent.SquadCompanyId);
+                    if (squad is not null) {
+                        squads.Remove(squad);
+                        _logger.LogInformation("Squad {SquadId} killed in replay event.", killedEvent.SquadCompanyId);
+                    } else {
+                        _logger.LogWarning("Squad {SquadId} not found for killing event.", killedEvent.SquadCompanyId);
+                    }
+                    break;
+                }
+                default:
+                    _logger.LogWarning("Unknown replay event type: {ReplayEventType}", replayEvent.GetType().Name);
+                    break;
+            }
+        }
+
+        Company updatedCompany = new Company {
+            Id = company.Id,
+            Name = company.Name,
+            Faction = company.Faction,
+            GameId = company.GameId,
+            CreatedAt = company.CreatedAt,
+            UpdatedAt = DateTime.Now, // Update the timestamp to now
+            Squads = squads,
+        };
+
+        if (commitLocally) {
+            if (await SaveCompany(updatedCompany, syncWithRemote: false) != SaveCompanyResult.Success) {
+                _logger.LogError("Failed to commit changes to the local company file for company {CompanyId}.", company.Id);
+                return null; // Return null => indicating that the company was not updated successfully
+            }
+        }
+
+        _logger.LogInformation("Applied {EventCount} replay events to company {CompanyId}.", localEvents?.Count ?? 0, company.Id);
+        return updatedCompany; // Return true if events were successfully applied and company was updated
+
     }
 
 }

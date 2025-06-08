@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Battlegrounds.Test.Services;
 
 [TestFixture]
-public class ReplayServiceTest {
+public class ReplayServiceTests {
 
     private ServiceProvider _serviceProvider;
     private ReplayService _replayService;

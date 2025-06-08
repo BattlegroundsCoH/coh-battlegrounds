@@ -217,8 +217,7 @@ public class CoH3MatchDataBuilderTests {
             throw new NotImplementedException();
         }
 
-        public Task ReportMatchResult(ReplayAnalysisResult matchResult) =>
-            Task.CompletedTask;
+        public ValueTask<bool> ReportMatchResult(ReplayAnalysisResult matchResult) => new ValueTask<bool>(true);
 
         public Task SendMessage(string channel, string msg) {
             throw new NotImplementedException();

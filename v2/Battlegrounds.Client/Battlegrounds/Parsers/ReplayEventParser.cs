@@ -2,9 +2,13 @@
 
 using Battlegrounds.Models.Replays;
 
+using Serilog;
+
 namespace Battlegrounds.Parsers;
 
 public static class ReplayEventParser {
+
+    private static readonly ILogger _logger = Log.ForContext<ReplayEvent>();
 
     public static readonly string BGMATCH_EVENT_PREFIX = "bg_match_event";
 
@@ -37,7 +41,7 @@ public static class ReplayEventParser {
                 (eventTable.TryGetValue("ebp", out object? value) ? value.ToString() : eventTable["upg"].ToString()) ?? throw new ArgumentException("Weapon name not found in event table.", nameof(luaEncodedTable)),
                 eventTable.ContainsKey("ebp")),
             "match_data" => MapToMatchStartReplayEvent(timestamp, eventTable),
-            _ => null
+            _ => MapToUnknownEvent(timestamp, eventTable["type"].ToString() ?? string.Empty, eventTable)
         };
 
         return parsedEvent;
@@ -83,6 +87,8 @@ public static class ReplayEventParser {
     }
 
     private static MatchStartReplayEvent MapToMatchStartReplayEvent(TimeSpan timestamp, Dictionary<string, object> eventTable) {
+        string mathId = eventTable["match_id"] as string ?? throw new ArgumentException("Match Id not found in event table.", nameof(eventTable));
+        string modVersion = eventTable["mod_version"] as string ?? throw new ArgumentException("Mod version not found in event table.", nameof(eventTable));
         string scenario = eventTable["scenario"] as string ?? throw new ArgumentException("Scenario not found in event table.", nameof(eventTable));
         List<MatchStartReplayEvent.PlayerData> players = [];
         foreach (var playerEntry in eventTable["playerdata"] as Dictionary<string, object> ?? throw new ArgumentException("Player data not found in event table.", nameof(eventTable))) {
@@ -95,7 +101,12 @@ public static class ReplayEventParser {
             int modId = playerData.TryGetValue("mod_id", out object? value) ? int.Parse(value.ToString() ?? "0") : 0;
             players.Add(new MatchStartReplayEvent.PlayerData(playerId, name, companyId, modId));
         }
-        return new MatchStartReplayEvent(timestamp, scenario, players);
+        return new MatchStartReplayEvent(timestamp, mathId, modVersion, scenario, players);
+    }
+
+    private static UnknownReplayEvent MapToUnknownEvent(TimeSpan timestamp, string eventType, Dictionary<string, object> details) {
+        _logger.Warning("Unknown event type '{EventType}' at {Timestamp} with details: {Details}", eventType, timestamp, details);
+        return new UnknownReplayEvent(timestamp, eventType, details);
     }
 
 }

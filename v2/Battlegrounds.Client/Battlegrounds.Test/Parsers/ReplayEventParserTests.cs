@@ -59,7 +59,7 @@ public class ReplayEventParserTests {
 
     [Test]
     public void CanParseMatchStartEvent() {
-        string encodedStr = "bg_match_event({<type=match_data><scenario=pachino_2p><playerdata={<1000={<mod_id=0><name=CoDiEx><company=df6100e1-30cd-4338-ac81-8d54d60f6c29>}>}>})";
+        string encodedStr = "bg_match_event({<type=match_data><match_id=0><mod_version=1.0><scenario=pachino_2p><playerdata={<1000={<mod_id=0><name=CoDiEx><company=df6100e1-30cd-4338-ac81-8d54d60f6c29>}>}>})";
         var players = new[] { ReplayPlayerFixture.CODIEX };
         var timestamp = TimeSpan.FromSeconds(10);
         var replayEvent = ReplayEventParser.ParseEvent(encodedStr, players, timestamp);
@@ -68,6 +68,8 @@ public class ReplayEventParserTests {
         var matchStartEvent = replayEvent as MatchStartReplayEvent;
         Assert.That(matchStartEvent, Is.Not.Null, "MatchStartReplayEvent should not be null.");
         Assert.Multiple(() => {
+            Assert.That(matchStartEvent.MatchId, Is.EqualTo("0"), "Match ID should match.");
+            Assert.That(matchStartEvent.ModVersion, Is.EqualTo("1.0"), "Mod version should match.");
             Assert.That(matchStartEvent.Timestamp, Is.EqualTo(timestamp), "Timestamp should match.");
             Assert.That(matchStartEvent.Player, Is.Null, "Player should be null for MatchStartReplayEvent.");
             Assert.That(matchStartEvent.Scenario, Is.EqualTo("pachino_2p"), "Scenario should match.");

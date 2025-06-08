@@ -2,9 +2,11 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 using Battlegrounds.Models;
 using Battlegrounds.Models.Companies;
+using Battlegrounds.Models.Replays;
 using Battlegrounds.Serializers;
 using Battlegrounds.Services;
 
@@ -23,6 +25,8 @@ public sealed class HttpBattlegroundsServerAPI(ILogger<HttpBattlegroundsServerAP
     public static readonly string UploadCompanyEndpoint = "/api/v1/companies/upload"; // Requires authentication
     public static readonly string DeleteCompanyEndpoint = "/api/v1/companies/delete"; // Requires authentication
     public static readonly string DownloadCompanyEndpoint = "/api/v1/companies/download"; // No authentication required
+
+    public static readonly string ReportMatchResultsEndpoint = "/api/v1/match/report"; // Requires authentication
 
     public string BaseUrl => $"{_configuration.BattlegroundsServerHost}:{_configuration.BattlegroundsHttpServerPort}";
 
@@ -101,6 +105,42 @@ public sealed class HttpBattlegroundsServerAPI(ILogger<HttpBattlegroundsServerAP
             return true;
         } else {
             _logger.LogError("Failed to upload company {CompanyId}. Status code: {StatusCode}, Reason: {ReasonPhrase}", companyId, response.StatusCode, response.ReasonPhrase);
+            return false;
+        }
+
+    }
+
+    public async ValueTask<bool> ReportMatchResults(MatchResult result) {
+
+        if (result is null) {
+            _logger.LogError("Match result is null. Cannot report match results.");
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(result.LobbyId)) {
+            _logger.LogError("LobbyId is missing. Cannot report match results.");
+            return false;
+        }
+
+        string endpoint = $"{BaseUrl}{ReportMatchResultsEndpoint}";
+        var parameters = new Dictionary<string, string> {
+            { "guid", result.LobbyId },
+            { "userId", (await _userService.GetLocalUserAsync())!.UserId }, // Temp for testing, should rely on user claim in the future
+        };
+
+        string requestUri = $"{endpoint}?{ToUrlEncodedString(parameters)}";
+        _logger.LogInformation("Sending POST request to {RequestUri}", requestUri);
+
+        HttpRequestMessage request = await GetHttpRequestWithAuthHeaders(HttpMethod.Post, requestUri);
+        request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
+        request.Content = JsonContent.Create(result);
+
+        HttpResponseMessage response = await SendRequestAsync(request);
+        if (response.IsSuccessStatusCode) {
+            _logger.LogInformation("Match results for lobby {LobbyId} reported successfully.", result.LobbyId);
+            return true;
+        } else {
+            _logger.LogError("Failed to report match results for lobby {LobbyId}. Status code: {StatusCode}, Reason: {ReasonPhrase}", result.LobbyId, response.StatusCode, response.ReasonPhrase);
             return false;
         }
 

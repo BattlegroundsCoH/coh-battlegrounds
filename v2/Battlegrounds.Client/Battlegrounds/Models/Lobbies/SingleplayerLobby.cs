@@ -1,13 +1,21 @@
 ﻿using System.Threading.Channels;
 
+using Battlegrounds.Facades.API;
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Models.Replays;
+using Battlegrounds.Services;
+
+using Serilog;
 
 namespace Battlegrounds.Models.Lobbies;
 
 public sealed class SingleplayerLobby : ILobby, IDisposable {
 
+    private static readonly ILogger _logger = Log.ForContext<SingleplayerLobby>();
+
+    private readonly ICompanyService _companyService;
+    private readonly IBattlegroundsServerAPI _serverAPI;
     private readonly Channel<LobbyEvent> _internalEvents;
     private readonly HashSet<Participant> _participants = [];
     private readonly Dictionary<string, Company> _companies = [];
@@ -57,9 +65,12 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
 
     public Map Map => _map;
 
-    public SingleplayerLobby(string name, Game game, Map map, Participant localParticipant) {
+    public SingleplayerLobby(string name, Game game, Map map, Participant localParticipant, IBattlegroundsServerAPI serverAPI, ICompanyService companyService) {
         Name = name;
         Game = game;
+
+        _companyService = companyService ?? throw new ArgumentNullException(nameof(companyService), "Company service cannot be null");
+        _serverAPI = serverAPI ?? throw new ArgumentNullException(nameof(serverAPI), "Server API cannot be null");
 
         _internalEvents = Channel.CreateUnbounded<LobbyEvent>();
         _map = map;
@@ -84,7 +95,48 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
 
     public Task<LaunchGameResult> LaunchGame() => Task.FromResult(new LaunchGameResult()); // NOP operation in singleplayer mode
 
-    public Task ReportMatchResult(ReplayAnalysisResult matchResult) => Task.CompletedTask; // NOP operation in singleplayer mode
+    public async ValueTask<bool> ReportMatchResult(ReplayAnalysisResult matchResult) {
+        if (matchResult.Failed || matchResult.Replay is null) {
+            return false; // Cannot report match result if it failed or replay is null
+        }
+
+        var result = matchResult.GetMatchResult(this);
+        if (result == MatchResult.Unknown) {
+            return false; // Cannot determine match result
+        }
+
+        if (!result.IsValid) {
+            // Not valid, nothing more to do, no reason to report
+            return false;
+        }
+
+        if (result.PlayerEvents.TryGetValue(_localParticipant.ParticipantId, out var localEvents) && localEvents.Count == 0) {
+            _logger.Warning("No events for local participant {ParticipantId} in match result", _localParticipant.ParticipantId);
+            return false; // No events for local participant, nothing to report
+        }
+
+        // Apply the company changes to the local company
+        Company? updatedCompany = await _companyService.ApplyEvents(localEvents, _companies[_localParticipant.ParticipantId], commitLocally: true);
+        if (updatedCompany is null) {
+            _logger.Error("Failed to apply company changes for local participant {ParticipantId} in match result", _localParticipant.ParticipantId);
+            return false; // Failed to apply company changes, cannot report
+        }
+
+        result.LobbyId = "local-singleplayer"; // Set the lobby ID to indicate this is a local singleplayer match
+        var reported = await _serverAPI.ReportMatchResults(result); // Report the match result to the server
+        if (!reported) {
+            _logger.Error("Failed to report match result for game {GameId} to the server", matchResult.GameId);
+        } else {
+            if (!await _companyService.SyncCompanyWithRemote(updatedCompany)) {
+                _logger.Error("Failed to synchronize company {CompanyId} with remote server after match result report", updatedCompany.Id);
+            } else {
+                _logger.Information("Match result for game {GameId} reported successfully and company synchronized", matchResult.GameId);
+            }
+        }
+
+        return true; // Done what we needed to do, match result reported if possible
+
+    }
 
     public Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) => Task.FromResult(new UploadGamemodeResult()); // NOP operation in singleplayer mode
 
