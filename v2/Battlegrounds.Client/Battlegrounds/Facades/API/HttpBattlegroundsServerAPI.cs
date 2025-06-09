@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -14,10 +13,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.Facades.API;
 
-public sealed class HttpBattlegroundsServerAPI(ILogger<HttpBattlegroundsServerAPI> logger, IUserService userService, ICompanyDeserializer companyDeserializer, Configuration configuration) : IBattlegroundsServerAPI {
+public sealed class HttpBattlegroundsServerAPI(
+    ILogger<HttpBattlegroundsServerAPI> logger, 
+    IAsyncHttpClient asyncHttpClient, 
+    IUserService userService, 
+    ICompanyDeserializer companyDeserializer, 
+    Configuration configuration) : IBattlegroundsServerAPI {
 
     private readonly ILogger<HttpBattlegroundsServerAPI> _logger = logger;
-    private readonly HttpClient _httpClient = new();
+    private readonly IAsyncHttpClient _httpClient = asyncHttpClient;
     private readonly IUserService _userService = userService;
     private readonly ICompanyDeserializer _companyDeserializer = companyDeserializer;
     private readonly Configuration _configuration = configuration;
@@ -45,7 +49,7 @@ public sealed class HttpBattlegroundsServerAPI(ILogger<HttpBattlegroundsServerAP
         HttpRequestMessage request = await GetHttpRequestWithAuthHeaders(HttpMethod.Delete, requestUri);
         request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
 
-        HttpResponseMessage response = await SendRequestAsync(request);
+        HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
         if (response.IsSuccessStatusCode) {
             _logger.LogInformation("Company {CompanyId} deleted successfully.", companyId);
             return true;
@@ -69,7 +73,7 @@ public sealed class HttpBattlegroundsServerAPI(ILogger<HttpBattlegroundsServerAP
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri); // No authentication required for this endpoint
         request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
 
-        HttpResponseMessage response = await SendRequestAsync(request);
+        HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
         if (response.IsSuccessStatusCode) {
             _logger.LogInformation("Company {CompanyId} retrieved successfully.", companyId);
             Stream contentStream = await response.Content.ReadAsStreamAsync();
@@ -99,7 +103,7 @@ public sealed class HttpBattlegroundsServerAPI(ILogger<HttpBattlegroundsServerAP
         request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
         request.Content.Headers.ContentLength = serializedCompanyStream.Length; // Set content length for the stream
 
-        HttpResponseMessage response = await SendRequestAsync(request);
+        HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
         if (response.IsSuccessStatusCode) {
             _logger.LogInformation("Company {CompanyId} uploaded successfully.", companyId);
             return true;
@@ -135,7 +139,7 @@ public sealed class HttpBattlegroundsServerAPI(ILogger<HttpBattlegroundsServerAP
         request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
         request.Content = JsonContent.Create(result);
 
-        HttpResponseMessage response = await SendRequestAsync(request);
+        HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
         if (response.IsSuccessStatusCode) {
             _logger.LogInformation("Match results for lobby {LobbyId} reported successfully.", result.LobbyId);
             return true;
@@ -158,31 +162,6 @@ public sealed class HttpBattlegroundsServerAPI(ILogger<HttpBattlegroundsServerAP
         HttpRequestMessage request = new(method, requestUri);
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         return request;
-    }
-
-    private async Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage request) {
-        using var context = new CancellationTokenSource(_configuration.API.RequestTimeout);
-        try {
-            return await _httpClient.SendAsync(request, context.Token);
-        } catch (TaskCanceledException) when (!context.Token.IsCancellationRequested) {
-            _logger.LogError("Request to {RequestUri} was canceled.", request.RequestUri);
-            return new HttpResponseMessage(HttpStatusCode.RequestTimeout) {
-                RequestMessage = request,
-                ReasonPhrase = "Request timed out or was canceled."
-            };
-        } catch (TaskCanceledException) {
-            _logger.LogError("Request to {RequestUri} timed out after {Timeout} seconds.", request.RequestUri, _configuration.API.RequestTimeout.TotalSeconds);
-            return new HttpResponseMessage(HttpStatusCode.RequestTimeout) {
-                RequestMessage = request,
-                ReasonPhrase = "Request timed out or was canceled."
-            };
-        } catch (Exception ex) {
-            _logger.LogError(ex, "An error occurred while sending request to {RequestUri}.", request.RequestUri);
-            return new HttpResponseMessage(HttpStatusCode.Conflict) {
-                RequestMessage = request,
-                ReasonPhrase = ex.Message
-            };
-        }
     }
 
 }

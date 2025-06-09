@@ -11,17 +11,17 @@ public sealed class Configuration {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
-    private const bool _isLocalBuild = false; // Set to false for production builds
-
     public sealed class APIConfiguration {
         private string _loginUrlOverride =
 #if DEBUG
-            _isLocalBuild ? "http://localhost:8087" : "http://bg.test.service.cohbattlegrounds.com:8087";
+            "http://bg.test.service.cohbattlegrounds.com:8087";
             #else
             string.Empty;
 #endif
         public string BaseUrl { get; set; } = "https://api.cohbattlegrounds.com";
         public string LoginEndpoint { get; set; } = "/login";
+        public string RefreshEndpoint { get; set; } = "/refresh";
+        public string PublicKeyEndpoint { get; set; } = "/publickey";
         public string LoginUrlOverride {
             get => string.IsNullOrEmpty(_loginUrlOverride) ? BaseUrl : _loginUrlOverride;
             set => _loginUrlOverride = value;

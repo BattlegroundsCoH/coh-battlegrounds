@@ -97,6 +97,7 @@ public sealed class BattlegroundsApp {
         string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Is(_configuration.LogLevel switch {
+                "trace" => Serilog.Events.LogEventLevel.Verbose,
                 "debug" => Serilog.Events.LogEventLevel.Debug,
                 "info" => Serilog.Events.LogEventLevel.Information,
                 "warning" => Serilog.Events.LogEventLevel.Warning,
@@ -178,9 +179,11 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<ICompanySerializer, BinaryCompanySerializer>();
         services.AddSingleton<ICompanyDeserializer, BinaryCompanyDeserializer>();
         services.AddSingleton<IBattlegroundsServerAPI, HttpBattlegroundsServerAPI>();
+        services.AddSingleton<IBattlegroundsWebAPI, HttpBattlegroundsWebAPI>();
 
         // Register default HTTP client
-        services.AddSingleton(new HttpClient()); // TODO: Make a wrapper for HttpClient and specify an interface to decouple it from the implementation
+        services.AddSingleton(new HttpClient());
+        services.AddSingleton<IAsyncHttpClient, AsyncHttpClient>();
 
     }
 

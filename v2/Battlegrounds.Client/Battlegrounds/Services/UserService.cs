@@ -1,34 +1,19 @@
 ﻿using System.IO;
-using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Battlegrounds.Facades.API;
 using Battlegrounds.Models;
+using Battlegrounds.Security;
+
+using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.Services;
 
-public sealed class UserService(HttpClient client, Configuration configuration) : IUserService {
-
-    private static readonly string _userTokenStore = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CoHBattlegrounds", "local_user.dat");
-
-    private sealed record LoginRequest(
-        [property: JsonPropertyName("username")] string UserName,
-        [property: JsonPropertyName("password")] string Password
-    );
-    private sealed record LoginResponse(
-        [property: JsonPropertyName("token")] string Token,
-        [property: JsonPropertyName("refresh_token")] string RefreshToken,
-        [property: JsonPropertyName("user")] User User
-    );
-    private sealed record RefreshRequest(
-        [property: JsonPropertyName("refresh_token")] string RefreshToken
-    );
-    private sealed record RefreshResponse(
-        [property: JsonPropertyName("token")] string Token,
-        [property: JsonPropertyName("refresh_token")] string RefreshToken
-    );
+public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAPI webAPI) : IUserService {
+        
     private sealed record JWTHeader(
         [property: JsonPropertyName("alg")] string Algorithm,
         [property: JsonPropertyName("typ")] string Type = "JWT"
@@ -44,15 +29,16 @@ public sealed class UserService(HttpClient client, Configuration configuration) 
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
+    private static readonly string _userTokenStore = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CoHBattlegrounds", "local_user.dat");
 
-    private readonly HttpClient _httpClient = client ?? throw new ArgumentNullException(nameof(client));
+    private readonly ILogger<UserService> _logger = logger;
+    private readonly IBattlegroundsWebAPI _webAPI = webAPI;
 
     private User? _localUser;
     private string _token = string.Empty;
     private DateTime _tokenExpiration = DateTime.MinValue;
     private string _refreshToken = string.Empty;
-
-    public string LoginEndpoint => $"{configuration.API.LoginUrlOverride}{configuration.API.LoginEndpoint}";
+    private RSA? _publicKey = null;
 
     public async Task<User?> GetLocalUserAsync() {
         if (_localUser is not null) {
@@ -87,21 +73,16 @@ public sealed class UserService(HttpClient client, Configuration configuration) 
             throw new ArgumentException("Password cannot be null or empty.", nameof(password));
         }
 
-        HttpResponseMessage response = await _httpClient.PostAsync(LoginEndpoint, ToJson(new LoginRequest(userName, password)));
-        if (!response.IsSuccessStatusCode) {
-            //string errorContent = await response.Content.ReadAsStringAsync() ?? string.Empty; // TODO: Log this...
-            throw new HttpRequestException($"Login failed with status code {response.StatusCode}.");
-        }
-
-        Stream contentStream = await response.Content.ReadAsStreamAsync() ?? throw new InvalidOperationException("Response content is null.");
-        LoginResponse? loginResponse = await FromJson<LoginResponse>(contentStream) ?? throw new InvalidOperationException("Failed to deserialize login response.");
+        LoginResponse loginResponse = await _webAPI.LoginAsync(new LoginRequest(userName, password)) ?? throw new InvalidOperationException("Login response is null.");
         StoreToken(loginResponse.Token, loginResponse.RefreshToken);
-        _localUser = GetUserFromToken(loginResponse.Token);
+        _localUser = await GetUserFromToken(loginResponse.Token);
         return _localUser;
 
     }
 
-    private static User? GetUserFromToken(string token) {
+    private async Task<User> GetUserFromToken(string token) {
+        _logger.LogDebug("Extracting user from JWT token.");
+
         if (string.IsNullOrWhiteSpace(token)) {
             throw new ArgumentException("Token cannot be null or empty.", nameof(token));
         }
@@ -109,21 +90,72 @@ public sealed class UserService(HttpClient client, Configuration configuration) 
         if (parts.Length != 3) {
             throw new ArgumentException("Invalid JWT token format.", nameof(token));
         }
-        byte[] headerBytes = Convert.FromBase64String(parts[0]);
+        string headerEncoded = parts[0];
+        byte[] headerBytes = Base64URLDecode(headerEncoded);
         JWTHeader? header = JsonSerializer.Deserialize<JWTHeader>(headerBytes, _jsonOptions) ?? throw new InvalidOperationException("Failed to deserialize JWT header.");
         if (header.Algorithm != "RS256") {
             throw new NotSupportedException($"Unsupported JWT algorithm: {header.Algorithm}");
         }
-        byte[] payloadBytes = Convert.FromBase64String(parts[1]);
+
+        string payloadEncoded = parts[1];
+        byte[] payloadBytes = Base64URLDecode(payloadEncoded);
         UserClaim? userClaim = JsonSerializer.Deserialize<UserClaim>(payloadBytes, _jsonOptions) ?? throw new InvalidOperationException("Failed to deserialize JWT payload.");
         if (string.IsNullOrWhiteSpace(userClaim.Subject) || string.IsNullOrWhiteSpace(userClaim.UserName)) {
             throw new InvalidOperationException("Invalid user claim in JWT payload.");
         }
-        // TODO: Validate signature using public key
+
+        if (!await ValidateSignature(headerEncoded, payloadEncoded, parts[2])) {
+            throw new InvalidOperationException("JWT token signature validation failed.");
+        }
+
+        _logger.LogDebug("JWT token signature validated successfully.");
+
+        if (userClaim.ExpiresAt <= DateTimeOffset.UtcNow.ToUnixTimeSeconds()) {
+            throw new InvalidOperationException("JWT token has expired.");
+        }
+
+        if (userClaim.IssuedAt > DateTimeOffset.UtcNow.ToUnixTimeSeconds()) {
+            throw new InvalidOperationException("JWT token is not yet valid.");
+        }
+
         return new User {
             UserId = userClaim.Subject,
             UserDisplayName = userClaim.UserName
         };
+    }
+
+    private async Task<bool> ValidateSignature(string headerEncoded, string payloadEncoded, string signatureEncoded) {
+
+        // Ensure public key is available for signature validation
+        if (_publicKey is null) {
+            _logger.LogDebug("Retrieving public key for signature validation.");
+            string publicKeyPem = await _webAPI.GetPublicKeyAsync() ?? throw new InvalidOperationException("Failed to retrieve public key.");
+            _publicKey = RSAPublicKey.FromPem(publicKeyPem);
+        }
+
+        byte[] signature = Base64URLDecode(signatureEncoded);
+        byte[] signedData = Encoding.UTF8.GetBytes($"{headerEncoded}.{payloadEncoded}");
+
+        // Verify RS256 Signature (RSA + SHA256)
+        var isValidSignature = _publicKey.VerifyData(
+            signedData,
+            signature,
+            HashAlgorithmName.SHA256,
+            RSASignaturePadding.Pkcs1
+        );
+
+        return isValidSignature;
+
+    }
+
+    private static byte[] Base64URLDecode(string input) {
+        // Replace URL-safe characters and pad with '='
+        string base64 = input.Replace('-', '+').Replace('_', '/');
+        switch (base64.Length % 4) {
+            case 2: base64 += "=="; break;
+            case 3: base64 += "="; break;
+        }
+        return Convert.FromBase64String(base64);
     }
 
     public Task<bool> LogOutAsync() {
@@ -136,12 +168,7 @@ public sealed class UserService(HttpClient client, Configuration configuration) 
             if (string.IsNullOrWhiteSpace(_refreshToken)) {
                 throw new InvalidOperationException("Refresh token is not available. Please log in again.");
             }
-            HttpResponseMessage response = await _httpClient.PostAsync($"{LoginEndpoint}/refresh", ToJson(new RefreshRequest(_refreshToken)));
-            if (!response.IsSuccessStatusCode) {
-                throw new HttpRequestException($"Token refresh failed with status code {response.StatusCode}.");
-            }
-            Stream contentStream = await response.Content.ReadAsStreamAsync() ?? throw new InvalidOperationException("Response content is null.");
-            RefreshResponse? refreshResponse = await FromJson<RefreshResponse>(contentStream) ?? throw new InvalidOperationException("Failed to deserialize refresh response.");
+            RefreshResponse? refreshResponse = await _webAPI.RefreshTokenAsync(new RefreshRequest(_refreshToken));
             StoreToken(refreshResponse.Token, refreshResponse.RefreshToken);
             return _token;
         }
@@ -156,47 +183,36 @@ public sealed class UserService(HttpClient client, Configuration configuration) 
         _refreshToken = refreshToken;
         _tokenExpiration = DateTime.UtcNow.AddMinutes(30); // Assuming token is valid for 30 minutes, adjust as necessary (TODO: Extract from JWT)
         StoreTokenInEncryptedFile(_token, _refreshToken, _tokenExpiration, DateTime.UtcNow);
-    }
-
-    private static StringContent ToJson<T>(T value) {
-        string json = JsonSerializer.Serialize(value, _jsonOptions);
-        return new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-    }
-
-    private static ValueTask<T?> FromJson<T>(Stream source) {
-        if (source is null) {
-            throw new ArgumentNullException(nameof(source), "Source stream cannot be null.");
-        }
-        return JsonSerializer.DeserializeAsync<T>(source, _jsonOptions);
+        _webAPI.SetAuthenticationToken(_token); // Set the authentication token for the web API
     }
 
     public Task<string> GetLocalUserTokenAsync() => GetToken();
 
-    public ValueTask<bool> AutoLoginAsync() {
+    public async ValueTask<bool> AutoLoginAsync() {
 
         if (_localUser is not null) {
-            return new ValueTask<bool>(true); // Already logged in
+            return true; // Already logged in
         }
 
         if (!File.Exists(_userTokenStore)) {
-            return new ValueTask<bool>(false); // No local user token file found
+            return false; // No local user token file found
         }
 
         StoredTokenData? tokenData = GetTokenFromEncryptedFile();
         if (tokenData is null) {
-            return new ValueTask<bool>(false); // Token is empty or null
+            return false; // Token is empty or null
         }
 
         if (DateTime.UtcNow >= tokenData.Expiration) {
-            return new ValueTask<bool>(false); // Token is expired (TODO: Implement refresh logic if needed)
+            return false; // Token is expired (TODO: Implement refresh logic if needed)
         }
 
         _token = tokenData.Token;
         _refreshToken = tokenData.RefreshToken;
         _tokenExpiration = tokenData.Expiration;
-        _localUser = GetUserFromToken(_token);
+        _localUser = await GetUserFromToken(_token);
 
-        return ValueTask.FromResult(true);
+        return true; // Successfully auto-logged in with the stored token
 
     }
 
