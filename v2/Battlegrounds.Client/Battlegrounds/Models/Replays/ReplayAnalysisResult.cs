@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Models.Lobbies;
+﻿using Battlegrounds.Models.Companies;
+using Battlegrounds.Models.Lobbies;
 
 using Serilog;
 
@@ -133,9 +134,9 @@ public sealed class ReplayAnalysisResult {
         var participantCompanyChanges =
             (from kvp in companyChanges
             where playerIdToParticipantId.ContainsKey(kvp.Key)
-            select new KeyValuePair<string, LinkedList<ReplayEvent>>(
+            select new KeyValuePair<string, LinkedList<CompanyEventModifier>>(
                 playerIdToParticipantId[kvp.Key],
-                kvp.Value
+                ConvertToModifiers(kvp.Value)
             )).ToDictionary();
 
         if (participantCompanyChanges.Count != playerIdToParticipantId.Count) {
@@ -149,7 +150,7 @@ public sealed class ReplayAnalysisResult {
             ModVersion = registeredStartEvent.ModVersion,
             Scenario = registeredStartEvent.Scenario,
             MatchDuration = Replay.Duration,
-            PlayerEvents = participantCompanyChanges,
+            CompanyModifiers = participantCompanyChanges,
             BadEvents = badEvents,
             Concluded = registeredOverEvent is not null,
             Winners = winners,
@@ -157,6 +158,30 @@ public sealed class ReplayAnalysisResult {
             IsValid = badEvents.Count == 0 && !string.IsNullOrEmpty(registeredStartEvent.MatchId) && !string.IsNullOrEmpty(registeredStartEvent.ModVersion),
         };
 
+    }
+
+    private static LinkedList<CompanyEventModifier> ConvertToModifiers(LinkedList<ReplayEvent> events) {
+        LinkedList<CompanyEventModifier> modifiers = new LinkedList<CompanyEventModifier>();
+        foreach (var replayEvent in events) {
+            if (replayEvent is SquadDeployedEvent deployedEvent) {
+                modifiers.AddLast(CompanyEventModifier.InMatch(deployedEvent.SquadCompanyId));
+            } else if (replayEvent is SquadKilledEvent killedEvent) {
+                modifiers.AddLast(CompanyEventModifier.Kill(killedEvent.SquadCompanyId));
+            } else if (replayEvent is SquadWeaponPickupEvent pickupEvent) {
+                modifiers.AddLast(CompanyEventModifier.Pickup(pickupEvent.SquadCompanyId, pickupEvent.IsEntityBlueprint ? pickupEvent.WeaponName : string.Empty)); // Warning, may be a problem for CoH2 which uses slot items
+            } else if (replayEvent is SquadRecalledEvent recalledEvent) {
+                modifiers.AddLast(CompanyEventModifier.ExperienceGain(recalledEvent.SquadCompanyId, recalledEvent.Experience));
+                modifiers.AddLast(CompanyEventModifier.Statistics(recalledEvent.SquadCompanyId, recalledEvent.InfantryKills, recalledEvent.VehicleKills));
+            } else if (replayEvent is MatchPlayerOverEvent playerOver) {
+                foreach (var squad in playerOver.DeployedUnits) {
+                    modifiers.AddLast(CompanyEventModifier.ExperienceGain(squad.SquadCompanyId, squad.Experience));
+                    modifiers.AddLast(CompanyEventModifier.Statistics(squad.SquadCompanyId, squad.InfantryKills, squad.VehicleKills));
+                }
+            } else {
+                _logger.Warning("Unhandled replay event type: {ReplayType}", replayEvent.GetType().Name);
+            }
+        }
+        return modifiers;
     }
 
 }

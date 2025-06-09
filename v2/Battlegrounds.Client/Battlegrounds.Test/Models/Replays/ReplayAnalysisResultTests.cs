@@ -60,11 +60,13 @@ public sealed class ReplayAnalysisResultTests {
         var matchResult = result.GetMatchResult(lobby);
 
         // Assert
-        Assert.That(matchResult.IsValid, Is.True);
-        Assert.That(matchResult.GameId, Is.EqualTo("TestGameId")); // Default value
-        Assert.That(matchResult.MatchId, Is.EqualTo("TestId")); // Default value
-        Assert.That(matchResult.ModVersion, Is.EqualTo("v1.0")); // Default value
-        Assert.That(matchResult.BadEvents, Is.Empty); // No bad events in this case
+        Assert.Multiple(() => {
+            Assert.That(matchResult.IsValid, Is.True);
+            Assert.That(matchResult.GameId, Is.EqualTo("TestGameId")); // Default value
+            Assert.That(matchResult.MatchId, Is.EqualTo("TestId")); // Default value
+            Assert.That(matchResult.ModVersion, Is.EqualTo("v1.0")); // Default value
+            Assert.That(matchResult.BadEvents, Is.Empty); // No bad events in this case
+        });
 
     }
 
@@ -101,13 +103,17 @@ public sealed class ReplayAnalysisResultTests {
         var matchResult = result.GetMatchResult(lobby);
 
         // Assert
-        Assert.That(matchResult.IsValid, Is.False);
-        Assert.That(matchResult.GameId, Is.EqualTo("TestGameId")); // Default value
-        Assert.That(matchResult.MatchId, Is.EqualTo("TestId")); // Default value
-        Assert.That(matchResult.ModVersion, Is.EqualTo("v1.0")); // Default value
-        Assert.That(matchResult.BadEvents.Count, Is.EqualTo(1)); // One bad event due to killed squad not deployed
-        Assert.That(matchResult.BadEvents[0].Event, Is.InstanceOf<SquadKilledEvent>());
-        Assert.That(matchResult.BadEvents[0].Reason, Is.EqualTo("Squad 200 killed without being deployed"));
+        Assert.Multiple(() => {
+            Assert.That(matchResult.IsValid, Is.False);
+            Assert.That(matchResult.GameId, Is.EqualTo("TestGameId")); // Default value
+            Assert.That(matchResult.MatchId, Is.EqualTo("TestId")); // Default value
+            Assert.That(matchResult.ModVersion, Is.EqualTo("v1.0")); // Default value
+            Assert.That(matchResult.BadEvents, Has.Count.EqualTo(1)); // One bad event due to killed squad not deployed
+        });
+        Assert.Multiple(() => {
+            Assert.That(matchResult.BadEvents[0].Event, Is.InstanceOf<SquadKilledEvent>());
+            Assert.That(matchResult.BadEvents[0].Reason, Is.EqualTo("Squad 200 killed without being deployed"));
+        });
 
     }
 
@@ -143,16 +149,19 @@ public sealed class ReplayAnalysisResultTests {
         // Act
         var matchResult = result.GetMatchResult(lobby);
 
-        // Assert
-        Assert.That(matchResult.IsValid, Is.False);
-        Assert.That(matchResult.GameId, Is.EqualTo("TestGameId")); // Default value
-        Assert.That(matchResult.MatchId, Is.EqualTo("TestId")); // Default value
-        Assert.That(matchResult.ModVersion, Is.EqualTo("v1.0")); // Default value
-        Assert.That(matchResult.BadEvents.Count, Is.EqualTo(2)); // Two bad events due to killed squads not deployed
-        Assert.That(matchResult.BadEvents[0].Event, Is.InstanceOf<SquadKilledEvent>());
-        Assert.That(matchResult.BadEvents[0].Reason, Is.EqualTo("Squad 200 killed without being deployed"));
-        Assert.That(matchResult.BadEvents[1].Event, Is.InstanceOf<SquadKilledEvent>());
-        Assert.That(matchResult.BadEvents[1].Reason, Is.EqualTo("Squad 400 killed without being deployed"));
+        Assert.Multiple(() => {
+            Assert.That(matchResult.IsValid, Is.False);
+            Assert.That(matchResult.GameId, Is.EqualTo("TestGameId")); // Default value
+            Assert.That(matchResult.MatchId, Is.EqualTo("TestId")); // Default value
+            Assert.That(matchResult.ModVersion, Is.EqualTo("v1.0")); // Default value
+            Assert.That(matchResult.BadEvents, Has.Count.EqualTo(2)); // Two bad events due to killed squads not deployed
+        });
+        Assert.Multiple(() => {
+            Assert.That(matchResult.BadEvents[0].Event, Is.InstanceOf<SquadKilledEvent>());
+            Assert.That(matchResult.BadEvents[0].Reason, Is.EqualTo("Squad 200 killed without being deployed"));
+            Assert.That(matchResult.BadEvents[1].Event, Is.InstanceOf<SquadKilledEvent>());
+            Assert.That(matchResult.BadEvents[1].Reason, Is.EqualTo("Squad 400 killed without being deployed"));
+        });
 
     }
 
@@ -280,8 +289,10 @@ public sealed class ReplayAnalysisResultTests {
         var matchResult = result.GetMatchResult(lobby);
 
         // Assert
-        Assert.That(matchResult.IsValid, Is.False);
-        Assert.That(matchResult.Concluded, Is.False);
+        Assert.Multiple(() => {
+            Assert.That(matchResult.IsValid, Is.False);
+            Assert.That(matchResult.Concluded, Is.False);
+        });
     }
 
     [Test]
@@ -344,10 +355,12 @@ public sealed class ReplayAnalysisResultTests {
         var matchResult = result.GetMatchResult(lobby);
 
         // Assert
-        Assert.That(matchResult.IsValid, Is.True);
-        Assert.That(matchResult.MatchDuration, Is.EqualTo(TimeSpan.FromSeconds(60)));
-        Assert.That(matchResult.Winners, Does.Contain("p1"));
-        Assert.That(matchResult.Losers, Is.Empty);
+        Assert.Multiple(() => {
+            Assert.That(matchResult.IsValid, Is.True);
+            Assert.That(matchResult.MatchDuration, Is.EqualTo(TimeSpan.FromSeconds(60)));
+            Assert.That(matchResult.Winners, Does.Contain("p1"));
+            Assert.That(matchResult.Losers, Is.Empty);
+        });
     }
 
     [Test]
@@ -410,9 +423,11 @@ public sealed class ReplayAnalysisResultTests {
         var matchResult = result.GetMatchResult(lobby);
 
         // Assert
-        Assert.That(matchResult.PlayerEvents.Count, Is.EqualTo(2));
-        Assert.That(matchResult.PlayerEvents["p1"].Count, Is.EqualTo(1)); // Player 1 has one events
-        Assert.That(matchResult.PlayerEvents["p2"].Count, Is.EqualTo(1)); // Player 2 has one event
+        Assert.That(matchResult.CompanyModifiers, Has.Count.EqualTo(2));
+        Assert.Multiple(() => {
+            Assert.That(matchResult.CompanyModifiers["p1"], Has.Count.EqualTo(1)); // Player 1 has one events
+            Assert.That(matchResult.CompanyModifiers["p2"], Has.Count.EqualTo(1)); // Player 2 has one event
+        });
 
     }
 

@@ -1,5 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
+using Battlegrounds.Models.Companies;
+
 namespace Battlegrounds.Models.Replays;
 
 public sealed record BadMatchEvent(ReplayEvent Event, string Reason);
@@ -26,7 +28,7 @@ public sealed class MatchResult {
     [JsonIgnore]
     public IReadOnlyList<BadMatchEvent> BadEvents { get; init; } = []; // List of events that indicate issues with the match
 
-    public IReadOnlyDictionary<string, LinkedList<ReplayEvent>> PlayerEvents { get; init; } = new Dictionary<string, LinkedList<ReplayEvent>>(); // Events associated with each player, keyed by player ID
+    public IReadOnlyDictionary<string, LinkedList<CompanyEventModifier>> CompanyModifiers { get; init; } = new Dictionary<string, LinkedList<CompanyEventModifier>>(); // Events associated with each player, keyed by player ID
 
     public IReadOnlySet<string> Winners { get; init; } = new HashSet<string>(); // Set of player IDs who won the match
 

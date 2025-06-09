@@ -1,5 +1,4 @@
 ﻿using Battlegrounds.Models.Companies;
-using Battlegrounds.Models.Replays;
 
 namespace Battlegrounds.Services;
 
@@ -131,6 +130,6 @@ public interface ICompanyService {
     /// <param name="company">The company to update</param>
     /// <param name="commitLocally">Value indicating if the changes should be saved to the locally stored company file</param>
     /// <returns>If events were applied successfully, <see langword="true"/>; otherwise <see langword="false"/>.</returns>
-    ValueTask<Company?> ApplyEvents(LinkedList<ReplayEvent>? events, Company company, bool commitLocally = false);
+    ValueTask<Company?> ApplyEvents(LinkedList<CompanyEventModifier>? events, Company company, bool commitLocally = false);
 
 }

@@ -6,10 +6,8 @@ public sealed record UnknownReplayEvent(TimeSpan Timestamp, string EventType, Di
 public sealed record SquadDeployedEvent(TimeSpan Timestamp, ReplayPlayer Player, ushort SquadCompanyId) : ReplayEvent(Timestamp, Player);
 public sealed record SquadKilledEvent(TimeSpan Timestamp, ReplayPlayer Player, ushort SquadCompanyId) : ReplayEvent(Timestamp, Player);
 public sealed record SquadWeaponPickupEvent(TimeSpan Timestamp, ReplayPlayer Player, ushort SquadCompanyId, string WeaponName, bool IsEntityBlueprint) : ReplayEvent(Timestamp, Player);
-public sealed record SquadRecalledEvent(TimeSpan Timestamp, ReplayPlayer Player, ushort SquadCompanyId, float Experience) : ReplayEvent(Timestamp, Player);
-public sealed record MatchPlayerOverEvent(TimeSpan Timestamp, ReplayPlayer Player, bool IsWinner, List<MatchPlayerOverEvent> DeployedUnits) : ReplayEvent(Timestamp, Player) {
-    public sealed record SquadData(ushort SquadCompanyId, float Experience, int InfantryKills, int VehicleKills);
-}
+public sealed record SquadRecalledEvent(TimeSpan Timestamp, ReplayPlayer Player, ushort SquadCompanyId, float Experience, int InfantryKills, int VehicleKills) : ReplayEvent(Timestamp, Player);
+public sealed record MatchPlayerOverEvent(TimeSpan Timestamp, ReplayPlayer Player, bool IsWinner, List<SquadRecalledEvent> DeployedUnits) : ReplayEvent(Timestamp, Player);
 public sealed record MatchStartReplayEvent(TimeSpan Timestamp, string MatchId, string ModVersion, string Scenario, List<MatchStartReplayEvent.PlayerData> Players) : ReplayEvent(Timestamp, null) {
     public sealed record PlayerData(int PlayerId, string Name, string CompanyId, int ModId);
 }

@@ -3,7 +3,6 @@
 using Battlegrounds.Facades.API;
 using Battlegrounds.Models;
 using Battlegrounds.Models.Companies;
-using Battlegrounds.Models.Replays;
 using Battlegrounds.Serializers;
 
 using Microsoft.Extensions.Logging;
@@ -14,6 +13,7 @@ public sealed class CompanyService(
     IUserService userService,
     ICompanyDeserializer companyDeserializer,
     ICompanySerializer companySerializer,
+    IBlueprintService blueprintService,
     IBattlegroundsServerAPI serverAPI,
     ILogger<CompanyService> logger,
     Configuration configuration) : ICompanyService {
@@ -21,6 +21,7 @@ public sealed class CompanyService(
     private readonly ILogger<CompanyService> _logger = logger;
     private readonly IBattlegroundsServerAPI _serverAPI = serverAPI;
     private readonly IUserService _userService = userService;
+    private readonly IBlueprintService _blueprintService = blueprintService; // Blueprint service for handling squad blueprints
     private readonly ICompanyDeserializer _companyDeserializer = companyDeserializer;
     private readonly ICompanySerializer _companySerializer = companySerializer;
     private readonly Configuration _configuration = configuration;
@@ -148,25 +149,68 @@ public sealed class CompanyService(
         return localUser.UserId;
     }
 
-    public async ValueTask<Company?> ApplyEvents(LinkedList<ReplayEvent>? localEvents, Company company, bool commitLocally = false) {
+    public async ValueTask<Company?> ApplyEvents(LinkedList<CompanyEventModifier>? localEvents, Company company, bool commitLocally = false) {
 
         List<Squad> squads = [.. company.Squads];
         var enumerator = localEvents?.GetEnumerator() ?? throw new ArgumentNullException(nameof(localEvents), "Local events cannot be null.");
         while (enumerator.MoveNext()) {
-            ReplayEvent replayEvent = enumerator.Current;
-            switch (replayEvent) {
-                case SquadKilledEvent killedEvent: {
-                    Squad? squad = squads.FirstOrDefault(s => s.Id == killedEvent.SquadCompanyId);
+            CompanyEventModifier modifierEvent = enumerator.Current;
+            switch (modifierEvent.EventType) {
+                case CompanyEventModifier.EVENT_TYPE_IN_MATCH: {
+                    int indexOfSquad = squads.FindIndex(s => s.Id == modifierEvent.SquadId);
+                    if (indexOfSquad >= 0) {
+                        squads[indexOfSquad] = squads[indexOfSquad].Update(matchCounts: squads[indexOfSquad].MatchCounts + 1); // Update the squad in the list
+                        _logger.LogInformation("Squad {SquadId} updated in replay event with match count increment.", modifierEvent.SquadId);
+                    } else {
+                        _logger.LogWarning("Squad {SquadId} not found for in-match event.", modifierEvent.SquadId);
+                    }
+                    break;
+                }
+                case CompanyEventModifier.EVENT_TYPE_KILL_SQUAD: {
+                    Squad? squad = squads.FirstOrDefault(s => s.Id == modifierEvent.SquadId);
                     if (squad is not null) {
                         squads.Remove(squad);
-                        _logger.LogInformation("Squad {SquadId} killed in replay event.", killedEvent.SquadCompanyId);
+                        _logger.LogInformation("Squad {SquadId} killed in replay event.", modifierEvent.SquadId);
                     } else {
-                        _logger.LogWarning("Squad {SquadId} not found for killing event.", killedEvent.SquadCompanyId);
+                        _logger.LogWarning("Squad {SquadId} not found for killing event.", modifierEvent.SquadId);
+                    }
+                    break;
+                }
+                case CompanyEventModifier.EVENT_TYPE_EXPERIENCE_GAIN: {
+                    int indexOfSquad = squads.FindIndex(s => s.Id == modifierEvent.SquadId);
+                    if (indexOfSquad >= 0) {
+                        squads[indexOfSquad] = squads[indexOfSquad].Update(experience: modifierEvent.FloatValue); // Update the squad in the list
+                        _logger.LogInformation("Squad {SquadId} gained {Experience} experience in replay event.", modifierEvent.SquadId, modifierEvent.FloatValue);
+                    } else {
+                        _logger.LogWarning("Squad {SquadId} not found for experience gain event.", modifierEvent.SquadId);
+                    }
+                    break;
+                }
+                case CompanyEventModifier.EVENT_TYPE_STATISTICS: {
+                    int indexOfSquad = squads.FindIndex(s => s.Id == modifierEvent.SquadId);
+                    if (indexOfSquad >= 0) {
+                        Squad updatedSquad = squads[indexOfSquad].Update(
+                            infantryKills: squads[indexOfSquad].TotalInfantryKills + modifierEvent.IntValue1,
+                            vehicleKills: squads[indexOfSquad].TotalVehicleKills + modifierEvent.IntValue2
+                        );
+                        squads[indexOfSquad] = updatedSquad; // Update the squad in the list
+                        _logger.LogInformation("Squad {SquadId} statistics updated in replay event.", modifierEvent.SquadId);
+                    } else {
+                        _logger.LogWarning("Squad {SquadId} not found for statistics update event.", modifierEvent.SquadId);
+                    }
+                    break;
+                }
+                case CompanyEventModifier.EVENT_TYPE_PICKUP: {
+                    int indexOfSquad = squads.FindIndex(s => s.Id == modifierEvent.SquadId);
+                    if (indexOfSquad >= 0) {
+                        throw new NotImplementedException("Pickup event handling is not implemented yet."); // Placeholder for pickup event handling
+                    } else {
+                        _logger.LogWarning("Squad {SquadId} not found for pickup event.", modifierEvent.SquadId);
                     }
                     break;
                 }
                 default:
-                    _logger.LogWarning("Unknown replay event type: {ReplayEventType}", replayEvent.GetType().Name);
+                    _logger.LogWarning("Unknown replay event type: {ReplayEventType}", modifierEvent.EventType);
                     break;
             }
         }

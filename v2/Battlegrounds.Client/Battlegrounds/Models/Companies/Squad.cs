@@ -182,4 +182,22 @@ public sealed class Squad {
         return $"({Blueprint.Id}) - Phase: {Phase}, Rank: {Rank}, Experience: {Experience:F2}";
     }
 
+    public Squad Update(float? experience = null, int? matchCounts = null, int? infantryKills = null, int? vehicleKills = null, List<SlotItem>? slotItems = null) {
+        return new Squad() {
+            Id = this.Id,
+            Name = this.Name,
+            Experience = experience ?? this.Experience,
+            Phase = this.Phase,
+            AddedToCompanyAt = this.AddedToCompanyAt,
+            LastUpdatedAt = DateTime.UtcNow, // Update the last updated time
+            TotalInfantryKills = infantryKills ?? this.TotalInfantryKills,
+            TotalVehicleKills = vehicleKills ?? this.TotalVehicleKills,
+            MatchCounts = matchCounts ?? this.MatchCounts,
+            Blueprint = this.Blueprint,
+            SlotItems = slotItems ?? [.. this.SlotItems], // Use existing slot items if not provided
+            Upgrades = this.Upgrades, // Keep existing upgrades
+            Transport = this.Transport // Keep existing transport squad if any
+        };
+    }
+
 }

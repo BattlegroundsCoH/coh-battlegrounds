@@ -110,7 +110,7 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
             return false;
         }
 
-        if (result.PlayerEvents.TryGetValue(_localParticipant.ParticipantId, out var localEvents) && localEvents.Count == 0) {
+        if (result.CompanyModifiers.TryGetValue(_localParticipant.ParticipantId, out var localEvents) && localEvents.Count == 0) {
             _logger.Warning("No events for local participant {ParticipantId} in match result", _localParticipant.ParticipantId);
             return false; // No events for local participant, nothing to report
         }
