@@ -102,6 +102,7 @@ public sealed class ReplayAnalysisResult {
 
         // Now we map ingame player IDs to participant IDs
         Dictionary<int, string> playerIdToParticipantId = [];
+        Dictionary<string, string> playerCompanies = [];
         HashSet<string> winners = [];
         HashSet<string> losers = [];
         foreach (var playerData in registeredStartEvent.Players) {
@@ -128,6 +129,7 @@ public sealed class ReplayAnalysisResult {
                 }
             }
             playerIdToParticipantId[playerData.PlayerId] = participant.ParticipantId;
+            playerCompanies[participant.ParticipantId] = playerData.CompanyId; // Map participant ID to company ID
         }
 
         // Transform company changes to match the participant IDs and filter companies not mapped to a participant
@@ -151,6 +153,7 @@ public sealed class ReplayAnalysisResult {
             Scenario = registeredStartEvent.Scenario,
             MatchDuration = Replay.Duration,
             CompanyModifiers = participantCompanyChanges,
+            PlayerCompanies = playerCompanies,
             BadEvents = badEvents,
             Concluded = registeredOverEvent is not null,
             Winners = winners,

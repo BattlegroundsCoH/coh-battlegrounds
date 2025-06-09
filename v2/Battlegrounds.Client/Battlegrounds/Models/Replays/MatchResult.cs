@@ -30,6 +30,8 @@ public sealed class MatchResult {
 
     public IReadOnlyDictionary<string, LinkedList<CompanyEventModifier>> CompanyModifiers { get; init; } = new Dictionary<string, LinkedList<CompanyEventModifier>>(); // Events associated with each player, keyed by player ID
 
+    public IReadOnlyDictionary<string, string> PlayerCompanies { get; init; } = new Dictionary<string, string>(); // Mapping of player IDs to their company IDs
+
     public IReadOnlySet<string> Winners { get; init; } = new HashSet<string>(); // Set of player IDs who won the match
 
     public IReadOnlySet<string> Losers { get; init; } = new HashSet<string>(); // Set of player IDs who lost the match
