@@ -6,18 +6,19 @@ using Battlegrounds.Models.Playing;
 
 using Microsoft.Extensions.Logging;
 
-using Serilog;
-
 namespace Battlegrounds.Services;
 
-public sealed class CoH3ArchiverService(IGameService gameService, Configuration configuration, ILogger<CoH3ArchiverService> logger) : IArchiverService {
+public sealed class CoH3ArchiverService(CoH3 game, Configuration configuration, ILogger<CoH3ArchiverService> logger, ILogger<CoH3ArchiverService.EssenceEditor> eeLogger) : IArchiverService {
 
     private readonly ILogger<CoH3ArchiverService> _logger = logger;
+    private readonly ILogger<EssenceEditor> _eeLogger = eeLogger ?? throw new ArgumentNullException(nameof(eeLogger));
+    private readonly CoH3 _game = game ?? throw new ArgumentNullException(nameof(game));
+    private readonly Configuration _configuration = configuration;
 
-    private sealed class EssenceEditor() {
+    public sealed class EssenceEditor(ILogger<EssenceEditor> logger) {
         private Process? _eeProcess;
         private bool _failedToStart = false;
-        private readonly Serilog.ILogger _logger = Log.ForContext<EssenceEditor>();
+        private readonly ILogger<EssenceEditor> _logger = logger;
         public bool FailedToStart => _failedToStart;
         public void Launch(string absolutePath, string[] args) { 
             if (_eeProcess is not null) {
@@ -47,26 +48,24 @@ public sealed class CoH3ArchiverService(IGameService gameService, Configuration 
             }
             string output = await _eeProcess.StandardOutput.ReadToEndAsync();
             if (!string.IsNullOrEmpty(output)) {
-                _logger.Information("Essence Editor output: {Output}", output);
+                _logger.LogInformation("Essence Editor output: \n{Output}", output);
             }
             _eeProcess.Dispose();
             _eeProcess = null;
         }
     }
 
-    private readonly CoH3 _game = gameService.GetGame<CoH3>();
-    private readonly Configuration _configuration = configuration;
 
     public async Task<bool> CreateModArchiveAsync(string modProjectFilePath) { // TODO: More error handling
 
         _logger.LogInformation("Creating mod archive for {ModProjectFilePath}", modProjectFilePath);
 
-        EssenceEditor ee = new();
+        EssenceEditor ee = new(_eeLogger);
         ee.Launch(_game.ArchiverExecutable, [
             "--build_mod",
-            modProjectFilePath,
+            $"\"{modProjectFilePath}\"",
             "--build_path",
-            _configuration.CoH3.ModBuildPath,
+            $"\"{_configuration.CoH3.ModBuildPath}\"",
             "--no_burn_window" // Prevents the Essence Editor from showing a window during the build process
         ]);
 
@@ -96,7 +95,7 @@ public sealed class CoH3ArchiverService(IGameService gameService, Configuration 
             if (File.Exists(finalArchivePath)) {
                 File.Delete(finalArchivePath); // Remove existing archive if it exists
             }
-            File.Move(archivePath, finalArchivePath);
+            File.Copy(archivePath, finalArchivePath);
             _logger.LogInformation("Mod archive created successfully at {FinalArchivePath}", finalArchivePath);
         } catch (Exception ex) {
             _logger.LogError(ex, "Failed to move mod archive to {FinalArchivePath}", finalArchivePath);

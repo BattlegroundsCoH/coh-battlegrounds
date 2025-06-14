@@ -4,6 +4,7 @@ using System.Net.Http;
 using Battlegrounds.Facades.API;
 using Battlegrounds.Logging;
 using Battlegrounds.Models;
+using Battlegrounds.Models.Playing;
 using Battlegrounds.Parsers;
 using Battlegrounds.Serializers;
 using Battlegrounds.Services;
@@ -193,6 +194,10 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<ICompanyDeserializer, BinaryCompanyDeserializer>();
         services.AddSingleton<IBattlegroundsServerAPI, HttpBattlegroundsServerAPI>();
         services.AddSingleton<IBattlegroundsWebAPI, HttpBattlegroundsWebAPI>();
+
+        // Add getters
+        services.AddSingleton(services => services.GetRequiredService<IGameService>().GetGame<CoH3>());
+        // TODO: Add getter for CoH2
 
         // Register default HTTP client
         services.AddSingleton(new HttpClient());

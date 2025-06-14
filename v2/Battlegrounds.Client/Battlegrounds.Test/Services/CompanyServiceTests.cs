@@ -9,11 +9,9 @@ using Microsoft.Extensions.Logging;
 
 using NSubstitute;
 
-using NUnit.Framework.Internal;
-
 namespace Battlegrounds.Test.Services;
 
-[TestFixture]
+[TestOf(nameof(CompanyService))]
 public class CompanyServiceTests {
 
     private CompanyService _companyService;
