@@ -4,13 +4,20 @@ using System.IO;
 using Battlegrounds.Models;
 using Battlegrounds.Models.Playing;
 
+using Microsoft.Extensions.Logging;
+
+using Serilog;
+
 namespace Battlegrounds.Services;
 
-public sealed class CoH3ArchiverService(IGameService gameService, Configuration configuration) : IArchiverService {
+public sealed class CoH3ArchiverService(IGameService gameService, Configuration configuration, ILogger<CoH3ArchiverService> logger) : IArchiverService {
 
-    private sealed class EssenceEditor {
+    private readonly ILogger<CoH3ArchiverService> _logger = logger;
+
+    private sealed class EssenceEditor() {
         private Process? _eeProcess;
         private bool _failedToStart = false;
+        private readonly Serilog.ILogger _logger = Log.ForContext<EssenceEditor>();
         public bool FailedToStart => _failedToStart;
         public void Launch(string absolutePath, string[] args) { 
             if (_eeProcess is not null) {
@@ -40,7 +47,7 @@ public sealed class CoH3ArchiverService(IGameService gameService, Configuration 
             }
             string output = await _eeProcess.StandardOutput.ReadToEndAsync();
             if (!string.IsNullOrEmpty(output)) {
-                Console.WriteLine(output);
+                _logger.Information("Essence Editor output: {Output}", output);
             }
             _eeProcess.Dispose();
             _eeProcess = null;
@@ -52,7 +59,7 @@ public sealed class CoH3ArchiverService(IGameService gameService, Configuration 
 
     public async Task<bool> CreateModArchiveAsync(string modProjectFilePath) { // TODO: More error handling
 
-        string destination = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Games", "Company of Heroes 3", "Mods");
+        string destination = _configuration.CoH3.ModBuildPath;
         EssenceEditor ee = new();
         ee.Launch(_game.ArchiverExecutable, [
             "--build_mod",

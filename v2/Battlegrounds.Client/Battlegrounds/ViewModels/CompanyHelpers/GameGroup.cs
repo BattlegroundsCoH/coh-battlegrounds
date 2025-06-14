@@ -13,6 +13,6 @@ public sealed class GameGroup(string id, ICollection<Company> companies) {
     public ICollection<FactionGroup> Factions { get; } = 
         [..from company in companies
         group company by company.Faction into factionGroup
-        select new FactionGroup(factionGroup.Key, [.. factionGroup])];
+        select new FactionGroup(factionGroup.Key, id, [.. factionGroup])];
 
 }

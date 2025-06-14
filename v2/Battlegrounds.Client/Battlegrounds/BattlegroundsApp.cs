@@ -21,6 +21,8 @@ namespace Battlegrounds;
 
 public sealed class BattlegroundsApp {
 
+    public static BattlegroundsApp? Instance { get; private set; }
+
     private IServiceProvider? _serviceProvider = null!;
     private bool _isFirstRun = false;
 
@@ -43,6 +45,13 @@ public sealed class BattlegroundsApp {
     }
 
     public bool IsFirstRun => _isFirstRun;
+
+    public BattlegroundsApp() {
+        if (Instance is not null) {
+            throw new InvalidOperationException("BattlegroundsApp instance already exists.");
+        }
+        Instance = this;
+    }
 
     public void ConfigureFileStorage() {
 

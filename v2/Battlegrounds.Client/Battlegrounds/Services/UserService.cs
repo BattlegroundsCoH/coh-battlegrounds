@@ -118,6 +118,8 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
             throw new InvalidOperationException("JWT token is not yet valid.");
         }
 
+        _logger.LogDebug("JWT token is valid and not expired.");
+
         return new User {
             UserId = userClaim.Subject,
             UserDisplayName = userClaim.UserName

@@ -1,4 +1,6 @@
-﻿namespace Battlegrounds.Models.Playing;
+﻿using System.IO;
+
+namespace Battlegrounds.Models.Playing;
 
 public sealed class CoH3(Configuration configuration) : Game, ICoH3Game {
 
@@ -10,13 +12,13 @@ public sealed class CoH3(Configuration configuration) : Game, ICoH3Game {
 
     public override string GameName => "Company of Heroes 3";
 
-    public override string AppExecutableFullPath => "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Company of Heroes 3\\RelicCoH3.exe"; /* TODO: Get app path from configuration */
+    public override string AppExecutableFullPath => Path.Combine(configuration.CoH3.InstallPath, "RelicCoH3.exe");
 
-    public string ModProjectPath => "E:\\coh3-dev\\coh3-bg-wincondition\\bg_wincondition\\bg_wincondition.coh3mod"; /* TODO: Get project path from configuration */
+    public string ModProjectPath => configuration.CoH3.ModProjectPath;
 
-    public string MatchDataPath => "E:\\coh3-dev\\coh3-bg-wincondition\\bg_wincondition\\assets\\scar\\winconditions\\match_data.scar"; /* TODO: Get match data path from configuration */
+    public string MatchDataPath => configuration.CoH3.MatchDataPath;
 
-    public override string ArchiverExecutable => "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Company of Heroes 3\\EssenceEditor.exe"; // AKA Essence Editor
+    public override string ArchiverExecutable => Path.Combine(configuration.CoH3.InstallPath, "EssenceEditor.exe"); // AKA Essence Editor
 
     public override string[] FactionIds => Factions;
 
@@ -30,5 +32,13 @@ public sealed class CoH3(Configuration configuration) : Game, ICoH3Game {
             return FactionAlliance.Unspecified; // Default to unspecified for unknown factions
         }
     }
+
+    public override string GetFactionName(string factionId) => factionId switch {
+        "british_africa" => "British",
+        "afrika_korps" => "Afrika Korps",
+        "german" => "German",
+        "american" => "American",
+        _ => throw new ArgumentException($"Unknown faction ID: {factionId}")
+    };
 
 }

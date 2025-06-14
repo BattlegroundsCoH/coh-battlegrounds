@@ -6,12 +6,16 @@
              xmlns:local="clr-namespace:Battlegrounds.Views"
              xmlns:vm="clr-namespace:Battlegrounds.ViewModels"
              xmlns:vmh="clr-namespace:Battlegrounds.ViewModels.CompanyHelpers"
+             xmlns:converters="clr-namespace:Battlegrounds.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:CompanyBrowserViewModel}">
     
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+        <converters:GameIdToGameNameConverter x:Key="GameIdToGameNameConverter"/>
+        <converters:FactionIconMultiBindingConverter x:Key="FactionIconMultiBindingConverter"/>
+        <converters:FactionIdToNameConverter x:Key="FactionIdToNameConverter"/>
     </UserControl.Resources>
     
     <Grid>
@@ -154,23 +158,45 @@
                             <HierarchicalDataTemplate DataType="{x:Type vmh:GameGroup}" 
                                                       ItemsSource="{Binding Factions}">
                                 <StackPanel Orientation="Horizontal" Margin="2">
-                                    <TextBlock Text="{Binding GameType}" 
+                                    <TextBlock Text="{Binding GameType, Converter={StaticResource GameIdToGameNameConverter}}" 
                                                Foreground="{StaticResource ForegroundLightBlueBrush}"
-                                               FontWeight="SemiBold"/>
-                                    <TextBlock Text="{Binding Factions.Count, StringFormat=' ({0} factions)'}" 
-                                               Foreground="{StaticResource ForegroundGrayBrush}"
-                                               Margin="4,0,0,0"/>
+                                               FontWeight="SemiBold"
+                                               FontSize="18"/>
+                                    <TextBlock 
+                                        Text="{Binding Companies.Count, StringFormat=' ({0} companies)'}" 
+                                        FontSize="16"
+                                        Foreground="{StaticResource ForegroundGrayBrush}"
+                                        Margin="4,0,0,0"/>
                                 </StackPanel>
                                 
                                 <HierarchicalDataTemplate.ItemTemplate>
                                     <HierarchicalDataTemplate DataType="{x:Type vmh:FactionGroup}"
                                                              ItemsSource="{Binding Companies}">
                                         <StackPanel Orientation="Horizontal" Margin="2">
-                                            <TextBlock Text="{Binding Faction}" 
-                                                       Foreground="{StaticResource ForegroundWhiteBrush}"/>
-                                            <TextBlock Text="{Binding Companies.Count, StringFormat=' ({0} companies)'}" 
-                                                       Foreground="{StaticResource ForegroundGrayBrush}"
-                                                       Margin="4,0,0,0"/>
+                                            <Image Width="24" Height="24" 
+                                                   Margin="0,0,8,0">
+                                                <Image.Source>
+                                                    <MultiBinding Converter="{StaticResource FactionIconMultiBindingConverter}">
+                                                        <Binding Path="Faction"/>
+                                                        <Binding Path="GameType"/>
+                                                    </MultiBinding>
+                                                </Image.Source>
+                                            </Image>
+                                            <TextBlock 
+                                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                FontSize="16">
+                                                <TextBlock.Text>
+                                                    <MultiBinding Converter="{StaticResource FactionIdToNameConverter}">
+                                                        <Binding Path="Faction"/>
+                                                        <Binding Path="GameType"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <TextBlock 
+                                                Text="{Binding Companies.Count, StringFormat=' ({0} companies)'}" 
+                                                Foreground="{StaticResource ForegroundGrayBrush}"
+                                                FontSize="16"
+                                                Margin="4,0,0,0"/>
                                         </StackPanel>
                                         
                                         <HierarchicalDataTemplate.ItemTemplate>

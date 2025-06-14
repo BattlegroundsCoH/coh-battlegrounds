@@ -14,4 +14,6 @@ public abstract class Game {
 
     public abstract FactionAlliance GetFactionAlliance(string factionId);
 
+    public abstract string GetFactionName(string factionId);
+
 }

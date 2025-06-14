@@ -29,17 +29,29 @@ public sealed class Configuration {
         public TimeSpan RequestTimeout { get; set; } = TimeSpan.FromSeconds(15); // Default timeout for API requests
     }
 
+    public sealed class CoH3Configuration {
+
+        public string InstallPath { get; set; } = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Company of Heroes 3";
+
+        public string ModProjectPath { get; set; } = "E:\\coh3-dev\\coh3-bg-wincondition\\bg_wincondition\\bg_wincondition.coh3mod";
+
+        public string MatchDataPath { get; set; } = "E:\\coh3-dev\\coh3-bg-wincondition\\bg_wincondition\\assets\\scar\\winconditions\\match_data.scar";
+
+        public string ModBuildPath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "CoHBattlegrounds", "build", "coh3");
+
+        [JsonIgnore]
+        public bool HasInstallPath => !string.IsNullOrEmpty(InstallPath) && Directory.Exists(InstallPath);
+
+    }
+
     public string CompaniesPath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "CoHBattlegrounds", "companies");
 
-    public string CompanyOfHeroes3InstallPath { get; set; } = string.Empty;
+    public CoH3Configuration CoH3 { get; set; } = new CoH3Configuration(); // Configuration for Company of Heroes 3
+
+    public string CompanyOfHeroes2InstallPath { get; set; } = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Company of Heroes 2";
 
     [JsonIgnore]
-    public bool HasCompanyOfHeroes3InstallPath => !string.IsNullOrEmpty(CompanyOfHeroes3InstallPath);
-
-    public string CompanyOfHeroes2InstallPath { get; set; } = string.Empty;
-
-    [JsonIgnore]
-    public bool HasCompanyOfHeroes2InstallPath => !string.IsNullOrEmpty(CompanyOfHeroes2InstallPath);
+    public bool HasCompanyOfHeroes2InstallPath => !string.IsNullOrEmpty(CompanyOfHeroes2InstallPath) && Directory.Exists(CompanyOfHeroes2InstallPath);
 
     public string BattlegroundsServerHost { get; set; } = "https://bg.prod.service.cohbattlegrounds.com";
 
