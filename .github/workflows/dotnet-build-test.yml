@@ -18,9 +18,6 @@ jobs:
       packages: write
       contents: read
 
-    env:
-      TEST_LOCATION: "github"
-
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET

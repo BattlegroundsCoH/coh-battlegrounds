@@ -12,6 +12,8 @@ public sealed class SquadBlueprint(string id, SquadCategory category, HashSet<Bl
 
     public bool IsInfantry { get; init; } = false; // TODO: Fetch from a type list at some point
 
+    public SquadCategory Category { get; init; } = category;
+
     public CostExtension Cost => GetExtension<CostExtension>();
 
     public UIExtension UI => GetExtension<UIExtension>();
@@ -22,6 +24,8 @@ public sealed class SquadBlueprint(string id, SquadCategory category, HashSet<Bl
 
     public UpgradesExtension Upgrades => TryGetExtension(out UpgradesExtension? ext) ? ext : UpgradesExtension.Default;
 
-    public SquadCategory Cateogry => category;
+    public SquadBlueprint() : this(string.Empty, SquadCategory.Infantry, []) {
+        // Default constructor for deserialization or empty instances
+    }
 
 }

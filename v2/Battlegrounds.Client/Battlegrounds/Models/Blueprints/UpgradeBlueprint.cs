@@ -8,4 +8,8 @@ public sealed class UpgradeBlueprint(string id, HashSet<BlueprintExtension> exte
 
     public CostExtension Cost => GetExtension<CostExtension>();
 
+    public UpgradeBlueprint() : this(string.Empty, []) {
+        // Default constructor for deserialization or empty instances
+    }
+
 }

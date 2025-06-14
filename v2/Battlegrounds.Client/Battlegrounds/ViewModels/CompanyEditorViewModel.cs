@@ -182,16 +182,16 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
                               where bp.FactionAssociation == _faction
                               select bp).ToHashSet();
         _availableInfantryUnits = [..from bp in squadBlueprints
-                                  where bp.Cateogry == SquadCategory.Infantry
+                                  where bp.Category is SquadCategory.Infantry
                                   select bp];
         _availableSupportUnits = [..from bp in squadBlueprints
-                                  where bp.Cateogry == SquadCategory.Support 
+                                  where bp.Category is SquadCategory.Support 
                                   select bp];
         _availableArmourUnits = [..from bp in squadBlueprints
-                                  where bp.Cateogry == SquadCategory.Armour
+                                  where bp.Category is SquadCategory.Armour
                                   select bp];
         _availableTransportUnits = [..from bp in squadBlueprints
-                                      where bp.HasExtension<HoldExtension>() && bp.Cateogry == SquadCategory.Support
+                                      where bp.HasExtension<HoldExtension>() && bp.Category is SquadCategory.Support
                                       select bp];
     }
 

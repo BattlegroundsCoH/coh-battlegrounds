@@ -104,7 +104,7 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
 
     public bool HasUpgrades => IsSquad && _upgrades.Count > 0;
 
-    public bool CanUpgrade => IsSquad && _squad.Upgrades.Count < _squad.Blueprint.Upgrades.UpgradeSlots;
+    public bool CanUpgrade => IsSquad && _squad.Upgrades.Count < _squad.Blueprint.Upgrades.Slots;
 
     public bool HasItems => IsSquad && _items.Count > 0;
 
@@ -183,7 +183,7 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
         var bps = _parentViewModel.BlueprintService.GetBlueprintsForGame<UpgradeBlueprint>(_parentViewModel.Game.Id).ToDictionary(x => x.Id, x => x);
 
         List<UpgradeViewModel> availableUpgrades = 
-            [..from upg in upgrades.Upgrades 
+            [..from upg in upgrades.Available 
                select bps.GetValueOrDefault(upg) into bp
                where bp is not null
                select new UpgradeViewModel(bp, IsSquad && _squad.Upgrades.Contains(bp), CanUpgrade, UpgradeCommand)];

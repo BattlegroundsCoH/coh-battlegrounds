@@ -110,11 +110,14 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
 
         _logger.LogDebug("JWT token signature validated successfully.");
 
-        if (userClaim.ExpiresAt <= DateTimeOffset.UtcNow.ToUnixTimeSeconds()) {
+        var utcNow = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        if (userClaim.ExpiresAt <= utcNow) {
+            _logger.LogDebug("JWT token has expired. Expires at: {ExpiresAt}, Current time: {CurrentTime}", userClaim.ExpiresAt, utcNow);
             throw new InvalidOperationException("JWT token has expired.");
         }
 
-        if (userClaim.IssuedAt > DateTimeOffset.UtcNow.ToUnixTimeSeconds()) {
+        if (userClaim.IssuedAt >= utcNow) {
+            _logger.LogDebug("JWT token is not yet valid. Issued at: {IssuedAt}, Current time: {CurrentTime}", userClaim.IssuedAt, utcNow);
             throw new InvalidOperationException("JWT token is not yet valid.");
         }
 

@@ -1,13 +1,27 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
-using Battlegrounds.Models;
 using Battlegrounds.Models.Blueprints;
-using Battlegrounds.Models.Blueprints.Extensions;
 using Battlegrounds.Models.Playing;
+using Battlegrounds.Parsers;
+
+using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.Services;
 
-public sealed class BlueprintService(IGameLocaleService localeService) : IBlueprintService {
+/// <summary>
+/// Provides functionality for managing and retrieving blueprints associated with different games.
+/// </summary>
+/// <remarks>The <see cref="BlueprintService"/> class is responsible for loading, organizing, and accessing
+/// blueprints for various games. Blueprints are categorized by game and type, and can be retrieved using specific
+/// methods based on game identifiers and blueprint types. This service supports asynchronous loading of blueprints from
+/// external files and ensures thread-safe access to blueprint repositories.  Use this service to retrieve blueprints by
+/// ID, check for their existence, or access collections of blueprints for a specific game. The service also provides
+/// properties to check the loading state of blueprints.</remarks>
+/// <param name="localeService"></param>
+/// <param name="logger"></param>
+public sealed class BlueprintService(IGameLocaleService localeService, ILogger<BlueprintService> logger) : IBlueprintService {
 
     private class BlueprintRepository {
 
@@ -42,12 +56,16 @@ public sealed class BlueprintService(IGameLocaleService localeService) : IBluepr
 
     }
 
+    private readonly ILogger<BlueprintService> _logger = logger;
     private readonly IGameLocaleService _localeService = localeService;
     private readonly Dictionary<string, BlueprintRepository> _gameBlueprintRepositories = [];
 
-    private bool isLoaded = false;
+    private bool _isLoaded = false;
+    private bool _isLoading = false;
 
-    public bool IsLoaded => isLoaded;
+    public bool IsLoaded => _isLoaded;
+
+    public bool IsLoading => _isLoading;
 
     public T2 GetBlueprint<T1, T2>(string blueprintId)
         where T1 : Game
@@ -92,108 +110,75 @@ public sealed class BlueprintService(IGameLocaleService localeService) : IBluepr
         return repository;
     }
 
+    private async Task<List<T>> LoadAndLogBlueprints<T>(string path, Func<Stream, Task<List<T>>> loader) where T : Blueprint {
+        if (!File.Exists(path)) {
+            throw new FileNotFoundException($"Blueprint file not found: {path}");
+        }
+        var stopwatch = Stopwatch.StartNew();
+        List<T> blueprints;
+        try {
+            using var fs = File.OpenRead(path);
+            blueprints = await loader(fs);
+        } catch (Exception ex) {
+            _logger.LogError(ex, "Failed to load blueprints from {Path}.", path);
+            throw new InvalidOperationException($"Failed to load blueprints from {path}.", ex);
+        }
+        stopwatch.Stop();
+        _logger.LogInformation("Loaded {Count} blueprints from {Path} in {ElapsedMilliseconds} ms.", blueprints.Count, path, stopwatch.ElapsedMilliseconds);
+        return blueprints;
+    }
+
+    /// <summary>
+    /// Loads blueprints for the game and initializes the blueprint repositories.
+    /// </summary>
+    /// <remarks>This method loads blueprints from predefined YAML files, parses them, and organizes them into
+    /// repositories for use within the application. If the blueprints are already loaded, the method logs a message and
+    /// exits.  The method performs asynchronous operations to load and parse blueprints, and waits for all tasks to
+    /// complete before updating the repositories. If an error occurs during the loading process, the exception is
+    /// logged and rethrown.</remarks>
     public async void LoadBlueprints() {
 
-        await Task.Delay(50); // Simulate loading time
+        if (_isLoaded) {
+            _logger.LogInformation("Blueprints are already loaded.");
+            return;
+        }
 
-        var COH3STR = _localeService.FromGame<CoH3>; // For mock use until proper blueprint loading is implemented
+        if (_isLoading) {
+            _logger.LogInformation("Blueprints are currently loading. Please wait until the loading is complete.");
+            return;
+        }
 
-        // Load blueprints for CoH3
-        var coh3BpRepository = new BlueprintRepository() {
-            Blueprints = new Dictionary<string, Dictionary<string, Blueprint>>() {
-                { nameof(SquadBlueprint), new List<Blueprint>() {
-                    new SquadBlueprint("tommy_uk", SquadCategory.Infantry, new HashSet<BlueprintExtension>([
-                        new CostExtension(300, 0, 0),
-                        new UIExtension(COH3STR(11153223), COH3STR(11265170), COH3STR(11266227), "tommy_uk", "", "tommy_uk_portrait"),
-                        new UpgradesExtension(1, ["recon_package_tommy_uk", "boys_anti_tank_rifles_tommy_uk", "lmg_bren_tommy_uk"]),
-                        new VeterancyExtension([
-                            new VeterancyExtension.VeterancyRank(900, "Vet1"),
-                            new VeterancyExtension.VeterancyRank(2700, "Vet2"),
-                            new VeterancyExtension.VeterancyRank(5400, "Vet3")
-                            ])
-                        ])) { FactionAssociation = "british_africa", IsInfantry = true },
-                    new SquadBlueprint("cwt_15_truck_uk", SquadCategory.Support, new HashSet<BlueprintExtension>([
-                        new CostExtension(200, 0, 20),
-                        new UIExtension((LocaleString)"CWT 15 Truck", LocaleString.Empty, LocaleString.Empty, "cwt_15_uk", "cwt_truck", ""),
-                        new VeterancyExtension([
-                            new VeterancyExtension.VeterancyRank(1000, "Vet1"),
-                            new VeterancyExtension.VeterancyRank(3000, "Vet2"),
-                            new VeterancyExtension.VeterancyRank(6000, "Vet3")
-                            ]),
-                        new HoldExtension(),
-                        ])) { FactionAssociation = "british_africa", IsInfantry = false },
-                    new SquadBlueprint("matilda_uk", SquadCategory.Armour, new HashSet<BlueprintExtension>([
-                        new CostExtension(360, 0, 90),
-                        new UIExtension((LocaleString)"Matilda Tank", LocaleString.Empty, LocaleString.Empty, "matilda_africa_uk", "", ""),
-                        new VeterancyExtension([
-                            new VeterancyExtension.VeterancyRank(1800, "Vet1"),
-                            new VeterancyExtension.VeterancyRank(5400, "Vet2"),
-                            new VeterancyExtension.VeterancyRank(10800, "Vet3")
-                            ])
-                        ])) { FactionAssociation = "british_africa", IsInfantry = false },
-                    new SquadBlueprint("crusader_uk", SquadCategory.Armour, new HashSet<BlueprintExtension>([
-                        new CostExtension(300, 0, 60),
-                        new UIExtension((LocaleString)"Crusader Tank", LocaleString.Empty, LocaleString.Empty, "crusader_uk", "", ""),
-                        new VeterancyExtension([
-                            new VeterancyExtension.VeterancyRank(1800, "Vet1"),
-                            new VeterancyExtension.VeterancyRank(5400, "Vet2"),
-                            new VeterancyExtension.VeterancyRank(10800, "Vet3")
-                            ])
-                        ])) { FactionAssociation = "british_africa", IsInfantry = false },
-                    new SquadBlueprint("panzergrenadier_ak", SquadCategory.Infantry, new HashSet<BlueprintExtension>([
-                        new CostExtension(300, 0, 0),
-                        new UIExtension((LocaleString)"Panzergrenadiers", LocaleString.Empty, LocaleString.Empty, "", "", ""),
-                        new VeterancyExtension([
-                            new VeterancyExtension.VeterancyRank(1400, "Vet1"),
-                            new VeterancyExtension.VeterancyRank(2800, "Vet2"),
-                            new VeterancyExtension.VeterancyRank(4200, "Vet3")
-                            ])
-                        ])) { FactionAssociation = "afrika_korps", IsInfantry = true },
-                    new SquadBlueprint("halftrack_250_ak", SquadCategory.Support, new HashSet<BlueprintExtension>([
-                        new CostExtension(260, 0, 15),
-                        new UIExtension((LocaleString)"Sdkfz 250 Halftrack", LocaleString.Empty, LocaleString.Empty, "", "", ""),
-                        new VeterancyExtension([
-                            new VeterancyExtension.VeterancyRank(1400, "Vet1"),
-                            new VeterancyExtension.VeterancyRank(2800, "Vet2"),
-                            new VeterancyExtension.VeterancyRank(4200, "Vet3")
-                            ]),
-                        new HoldExtension(),
-                        ])) { FactionAssociation = "afrika_korps", IsInfantry = false },
-                    new SquadBlueprint("panzer_iii_ak", SquadCategory.Armour, new HashSet<BlueprintExtension>([
-                        new CostExtension(360, 0, 80),
-                        new UIExtension((LocaleString)"Panzer III", LocaleString.Empty, LocaleString.Empty, "", "", ""),
-                        new VeterancyExtension([
-                            new VeterancyExtension.VeterancyRank(1400, "Vet1"),
-                            new VeterancyExtension.VeterancyRank(2800, "Vet2"),
-                            new VeterancyExtension.VeterancyRank(4200, "Vet3")
-                            ])
-                        ])) { FactionAssociation = "afrika_korps", IsInfantry = false },
-                }.ToDictionary(k => k.Id)},
-                { nameof(UpgradeBlueprint), new List<Blueprint>() {
-                    new UpgradeBlueprint("lmg_bren_tommy_uk", new HashSet<BlueprintExtension>([
-                        new CostExtension(0, 90, 0),
-                        new UIExtension((LocaleString)"Bren Light Machine Gun Package", LocaleString.Empty, LocaleString.Empty, "icon_upgrade_british_bren", "weapon_bren", "")
-                        ])) { FactionAssociation = "british_africa" },
-                    new UpgradeBlueprint("boys_anti_tank_rifles_tommy_uk", new HashSet<BlueprintExtension>([
-                        new CostExtension(0, 60, 0),
-                        new UIExtension((LocaleString)"Boys Anti-Tank Rifles Package", LocaleString.Empty, LocaleString.Empty, "icon_upgrade_boys_at_gun", "weapon_boys_at_gun", "")
-                        ])) { FactionAssociation = "british_africa" },
-                    new UpgradeBlueprint("recon_package_tommy_uk", new HashSet<BlueprintExtension>([
-                        new CostExtension(0, 60, 0),
-                        new UIExtension((LocaleString)"Recce Package", LocaleString.Empty, LocaleString.Empty, "scoped_lee_enfield_flare_gun", "sniper", "")
-                        ])) { FactionAssociation = "british_africa" },
-                    new UpgradeBlueprint("lmg_panzergrenaider_ak", new HashSet<BlueprintExtension>([
-                        new CostExtension(0, 90, 0),
-                        new UIExtension((LocaleString)"MG-34 Light Machine Gun Package", LocaleString.Empty, LocaleString.Empty, "", "", "")
-                        ])) { FactionAssociation = "afrika_korps" },
-                }.ToDictionary(k => k.Id)},
-                { nameof(SlotItemBlueprint), [] } // No slot items for CoH3, but we need it here to avoid NPEs later
-            }
-        };
-        _gameBlueprintRepositories.Add(CoH3.GameId, coh3BpRepository);
+        _isLoading = true;
 
+        try {
 
-        isLoaded = true;
+            // Create a new blueprint parser for CoH3
+            var coh3BpParser = new BlueprintParser<CoH3>(_localeService);
+
+            // Load blueprints for CoH3 from YAML files
+            var coh3SbpTask = LoadAndLogBlueprints("Assets/Factions/CoH3/sbps.yaml", coh3BpParser.ParseSquadBlueprints);
+            var coh3UpgTask = LoadAndLogBlueprints("Assets/Factions/CoH3/upgs.yaml", coh3BpParser.ParseUpgradeBlueprints);
+
+            // Wait for all tasks to complete before proceeding
+            await Task.WhenAll(coh3SbpTask, coh3UpgTask);
+
+            // Add blueprints for CoH3
+            _gameBlueprintRepositories.Add(CoH3.GameId, new BlueprintRepository() {
+                Blueprints = new Dictionary<string, Dictionary<string, Blueprint>>() {
+                    { nameof(SquadBlueprint), (await coh3SbpTask).ToDictionary(k => k.Id, v => v as Blueprint) },
+                    { nameof(UpgradeBlueprint), (await coh3UpgTask).ToDictionary(k => k.Id, v => v as Blueprint)},
+                    { nameof(SlotItemBlueprint), [] } // No slot items for CoH3, but we need it here to avoid NPEs later
+                }
+            });
+
+            _isLoaded = true;
+
+        } catch (Exception e) {
+            _logger.LogError(e, "An error occurred while loading blueprints.");
+            throw;
+        } finally {
+            _isLoading = false;
+        }
     }
 
     public ICollection<Blueprint> GetBlueprintsForGame(string gameId) {

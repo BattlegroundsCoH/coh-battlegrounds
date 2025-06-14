@@ -1,0 +1,49 @@
+upgrades:
+    # British Africa
+    # Tommy Upgrades
+    # These upgrades are available to the Tommy unit in the British Africa faction.
+    lmg_bren_tommy_uk:
+      factionAssociation: british_africa
+      extensions:
+        cost:
+          manpower: 0
+          munitions: 90
+          fuel: 0
+        ui:
+          screen-name: Bren Light Machine Gun Package
+          icon-name: icon_upgrade_british_bren
+          symbol-icon-name: weapon_bren
+
+    boys_anti_tank_rifles_tommy_uk:
+      factionAssociation: british_africa
+      extensions:
+        cost:
+          manpower: 0
+          munitions: 60
+          fuel: 0
+        ui:
+          screen-name: Boys Anti-Tank Rifles Package
+          icon-name: icon_upgrade_boys_at_gun
+          symbol-icon-name: weapon_boys_at_gun
+
+    recon_package_tommy_uk:
+      factionAssociation: british_africa
+      extensions:
+        cost:
+          manpower: 0
+          munitions: 60
+          fuel: 0
+        ui:
+          screen-name: Recce Package
+          icon-name: scoped_lee_enfield_flare_gun
+          symbol-icon-name: sniper
+
+    lmg_panzergrenaider_ak:
+      factionAssociation: afrika_korps
+      extensions:
+        cost: 
+          manpower: 0
+          munitions: 90
+          fuel: 0
+        ui:
+          screen-name: MG-34 Light Machine Gun Package

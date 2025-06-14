@@ -1,0 +1,155 @@
+squads:
+    tommy_uk:
+        category: Infantry
+        faction-association: british_africa
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 300
+                munitions: 0
+                fuel: 0
+            ui:
+                screen-name: 11153223
+                help-text: 11265170
+                brief-text: 11266227
+                icon-name: tommy_uk
+            upgrades:
+                slots: 1
+                available:
+                    - recon_package_tommy_uk
+                    - boys_anti_tank_rifles_tommy_uk
+                    - lmg_bren_tommy_uk
+            veterancy:
+                ranks:
+                    - experience: 900
+                      name: Vet1
+                    - experience: 2700
+                      name: Vet2
+                    - experience: 5400
+                      name: Vet3
+
+    cwt_15_truck_uk:
+        category: Support
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 200
+                munitions: 0
+                fuel: 20
+            ui:
+                screen-name: CWT 15 Truck
+                icon-name: cwt_15_uk
+                symbol-icon-name: cwt_truck
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            hold: {}
+
+    matilda_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 360
+                munitions: 0
+                fuel: 90
+            ui:
+                screen-name: Matilda Tank
+                icon-name: matilda_africa_uk
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+
+    crusader_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 300
+                munitions: 0
+                fuel: 60
+            ui:
+                screen-name: Crusader Tank
+                icon-name: crusader_uk
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+
+    panzergrenadier_ak:
+        category: Infantry
+        faction-association: afrika_korps
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 300
+                munitions: 0
+                fuel: 0
+            ui:
+                screen-name: Panzergrenadiers
+            veterancy:
+                ranks:
+                    - experience: 1400
+                      name: Vet1
+                    - experience: 2800
+                      name: Vet2
+                    - experience: 4200
+                      name: Vet3
+
+    halftrack_250_ak:
+        category: Support
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 260
+                munitions: 0
+                fuel: 15
+            ui:
+                screen-name: Sdkfz 250 Halftrack
+            veterancy:
+                ranks:
+                    - experience: 1400
+                      name: Vet1
+                    - experience: 2800
+                      name: Vet2
+                    - experience: 4200
+                      name: Vet3
+            hold: {}
+
+    panzer_iii_ak:
+        category: Armour
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 360
+                munitions: 0
+                fuel: 80
+            ui:
+                screen-name: Panzer III
+            veterancy:
+                ranks:
+                    - experience: 1400
+                      name: Vet1
+                    - experience: 2800
+                      name: Vet2
+                    - experience: 4200
+                      name: Vet3

@@ -20,7 +20,7 @@ public readonly struct LocaleString(uint key, ResolveLocaleString resolver) {
         if (string.IsNullOrEmpty(value)) {
             throw new ArgumentException("Temporary strings must not be null or empty.", nameof(value));
         }
-        return new LocaleString(uint.MaxValue, (_, _) => value);
+        return new LocaleString(uint.MaxValue, (_, _) => $"TEMP: {value}");
     }
 
     public static explicit operator LocaleString(string value) => TempString(value);
