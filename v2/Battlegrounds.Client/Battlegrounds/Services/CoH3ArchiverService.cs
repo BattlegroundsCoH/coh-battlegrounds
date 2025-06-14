@@ -59,21 +59,49 @@ public sealed class CoH3ArchiverService(IGameService gameService, Configuration 
 
     public async Task<bool> CreateModArchiveAsync(string modProjectFilePath) { // TODO: More error handling
 
-        string destination = _configuration.CoH3.ModBuildPath;
+        _logger.LogInformation("Creating mod archive for {ModProjectFilePath}", modProjectFilePath);
+
         EssenceEditor ee = new();
         ee.Launch(_game.ArchiverExecutable, [
             "--build_mod",
             modProjectFilePath,
             "--build_path",
-            destination,
+            _configuration.CoH3.ModBuildPath,
+            "--no_burn_window" // Prevents the Essence Editor from showing a window during the build process
         ]);
 
         if (ee.FailedToStart) {
-            // TODO: Log error
+            _logger.LogError("Failed to start Essence Editor. Please ensure it is installed and the path is correct.");
             return false;
         }
 
         await ee.WaitForExitAsync();
+
+        // Move the mod archive to the correct location
+        string archivePath = Path.Combine(_configuration.CoH3.ModBuildPath, "extension", "bg_wincondition", "bg_wincondition.sga");
+        if (!File.Exists(archivePath)) {
+            _logger.LogError("Mod archive not found at {ArchivePath}", archivePath);
+            return false;
+        }
+
+        _logger.LogInformation("Mod archive found at {ArchivePath}", archivePath);
+
+        // Maybe use "subscriptions" instead of "local" in the final path?
+        string finalArchiveDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "Company of Heroes 3", "mods", "extension", "local", "bg_wincondition");
+        string finalArchivePath = Path.Combine(finalArchiveDirectory, "bg_wincondition.sga");
+        try {
+            if (!Directory.Exists(finalArchiveDirectory)) {
+                Directory.CreateDirectory(finalArchiveDirectory); // Ensure the directory exists
+            }
+            if (File.Exists(finalArchivePath)) {
+                File.Delete(finalArchivePath); // Remove existing archive if it exists
+            }
+            File.Move(archivePath, finalArchivePath);
+            _logger.LogInformation("Mod archive created successfully at {FinalArchivePath}", finalArchivePath);
+        } catch (Exception ex) {
+            _logger.LogError(ex, "Failed to move mod archive to {FinalArchivePath}", finalArchivePath);
+            return false;
+        }
 
         return true;
 
