@@ -8,7 +8,7 @@ public static class Github {
         get {
             if (_isGithubActions) 
                 return true;
-            _isGithubActions = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("TEST_LOCATION"));
+            _isGithubActions = Environment.GetEnvironmentVariable("TEST_LOCATION") == "github";
             TestContext.Out.WriteLine($"IsGithubActions: {_isGithubActions}");
             return _isGithubActions;
         }

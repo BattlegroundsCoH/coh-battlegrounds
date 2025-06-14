@@ -29,7 +29,5 @@ jobs:
         dotnet-version: 7.0.x
     - name: Restore dependencies
       run: cd v2\Battlegrounds.Client && dotnet restore
-    - name: Build
-      run: cd v2\Battlegrounds.Client && dotnet build --no-restore
-    - name: Test
-      run: cd v2\Battlegrounds.Client && dotnet test --no-build --verbosity normal
+    - name: Build and Test
+      run: cd v2\Battlegrounds.Client && dotnet test --verbosity=diag
