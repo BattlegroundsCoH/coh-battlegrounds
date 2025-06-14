@@ -5,7 +5,7 @@ using Battlegrounds.Services;
 namespace Battlegrounds.Test.Services;
 
 [TestOf(nameof(CoH3ArchiverService))]
-public class CoH3ArchiverServiceTests {
+public class CoH3ArchiverServiceTests : LocalTestOnly {
 
     private Configuration _cfg = null!;
     private CoH3ArchiverService _archiverService = null!;
