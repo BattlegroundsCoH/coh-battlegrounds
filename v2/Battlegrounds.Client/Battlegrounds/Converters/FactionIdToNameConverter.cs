@@ -17,6 +17,8 @@ public sealed class FactionIdToNameConverter : AbstractAppDependable, IMultiValu
         if (values is [string factionId, string gameId]) {
             Game game = GameService.GetGame(gameId);
             return game.GetFactionName(factionId) ?? DependencyProperty.UnsetValue;
+        } else if (values is [string factionId2, Game game2]) {
+            return game2.GetFactionName(factionId2) ?? DependencyProperty.UnsetValue;
         }
         return DependencyProperty.UnsetValue;
     }

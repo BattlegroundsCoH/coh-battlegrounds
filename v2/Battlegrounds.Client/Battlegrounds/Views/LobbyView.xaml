@@ -18,7 +18,6 @@
         <converters:LockImageConverter x:Key="LockImageConverter"/>
         <converters:LockStateConverter x:Key="LockStateConverter"/>
         <converters:EmptyStringToVisibilityConverter x:Key="EmptyStringToVisibilityConverter"/>
-        <converters:MathConverter x:Key="MathConverter"/>
         <converters:MatchButtonStateConverter x:Key="MatchButtonStateConverter"/>
         <converters:ButtonStateToContentConverter x:Key="ButtonStateToContentConverter"/>
         <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>

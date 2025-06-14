@@ -16,6 +16,8 @@
         <converters:GameIdToGameNameConverter x:Key="GameIdToGameNameConverter"/>
         <converters:FactionIconMultiBindingConverter x:Key="FactionIconMultiBindingConverter"/>
         <converters:FactionIdToNameConverter x:Key="FactionIdToNameConverter"/>
+        <CircleEase x:Key="MaterialDesignEasingFunction" 
+                     EasingMode="EaseInOut"/>
     </UserControl.Resources>
     
     <Grid>
@@ -39,7 +41,8 @@
             
             <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <Button Content="Refresh" Style="{StaticResource ActionButton}"
-                        Command="{Binding LoadCompaniesCommand}"/>
+                        Command="{Binding LoadCompaniesCommand}"
+                        Margin="8,0,0,0"/>
                 <Button Content="New Company" Style="{StaticResource ActionButton}"
                         Command="{Binding CreateCompanyCommand}"
                         Margin="8,0,0,0"/>
@@ -58,16 +61,11 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     
-                    <TextBlock Grid.Row="0" Text="Companies" 
-                               Foreground="{StaticResource ForegroundWhiteBrush}"
-                               FontSize="16" FontWeight="SemiBold" 
-                               Margin="8,8,8,16"/>
-                    
                     <TreeView Grid.Row="1" 
+                              x:Name="CompanySelectionTreeView"
+                              MouseDoubleClick="CompanySelectionTreeView_MouseDoubleClick"
                               Background="Transparent" 
                               BorderThickness="0"
-                              SelectedItemChanged="TreeView_SelectedItemChanged"
-                              MouseDoubleClick="TreeView_MouseDoubleClick"
                               Foreground="{StaticResource ForegroundWhiteBrush}">
                         <TreeView.Resources>
                             <!-- Style for TreeViewItems -->
@@ -156,80 +154,96 @@
                         
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate DataType="{x:Type vmh:GameGroup}" 
-                                                      ItemsSource="{Binding Factions}">
+                                                      ItemsSource="{Binding Companies}">
                                 <StackPanel Orientation="Horizontal" Margin="2">
                                     <TextBlock Text="{Binding GameType, Converter={StaticResource GameIdToGameNameConverter}}" 
                                                Foreground="{StaticResource ForegroundLightBlueBrush}"
                                                FontWeight="SemiBold"
                                                FontSize="18"/>
                                     <TextBlock 
-                                        Text="{Binding Companies.Count, StringFormat=' ({0} companies)'}" 
+                                        Text="{Binding CompanyCount}" 
                                         FontSize="16"
+                                        VerticalAlignment="Center"
                                         Foreground="{StaticResource ForegroundGrayBrush}"
                                         Margin="4,0,0,0"/>
                                 </StackPanel>
                                 
                                 <HierarchicalDataTemplate.ItemTemplate>
-                                    <HierarchicalDataTemplate DataType="{x:Type vmh:FactionGroup}"
-                                                             ItemsSource="{Binding Companies}">
-                                        <StackPanel Orientation="Horizontal" Margin="2">
-                                            <Image Width="24" Height="24" 
-                                                   Margin="0,0,8,0">
-                                                <Image.Source>
-                                                    <MultiBinding Converter="{StaticResource FactionIconMultiBindingConverter}">
-                                                        <Binding Path="Faction"/>
-                                                        <Binding Path="GameType"/>
-                                                    </MultiBinding>
-                                                </Image.Source>
-                                            </Image>
-                                            <TextBlock 
-                                                Foreground="{StaticResource ForegroundWhiteBrush}"
-                                                FontSize="16">
-                                                <TextBlock.Text>
-                                                    <MultiBinding Converter="{StaticResource FactionIdToNameConverter}">
-                                                        <Binding Path="Faction"/>
-                                                        <Binding Path="GameType"/>
-                                                    </MultiBinding>
-                                                </TextBlock.Text>
-                                            </TextBlock>
-                                            <TextBlock 
-                                                Text="{Binding Companies.Count, StringFormat=' ({0} companies)'}" 
-                                                Foreground="{StaticResource ForegroundGrayBrush}"
-                                                FontSize="16"
-                                                Margin="4,0,0,0"/>
-                                        </StackPanel>
-                                        
-                                        <HierarchicalDataTemplate.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Name}"
-                                                           Foreground="{StaticResource ForegroundWhiteBrush}">
-                                                    <TextBlock.InputBindings>
-                                                        <MouseBinding MouseAction="LeftClick" 
-                                                                      Command="{Binding DataContext.SelectCompanyCommand, 
-                                                                                RelativeSource={RelativeSource FindAncestor, 
-                                                                                               AncestorType={x:Type TreeView}}}"
-                                                                      CommandParameter="{Binding}"/>
-                                                    </TextBlock.InputBindings>
-                                                </TextBlock>
-                                            </DataTemplate>
-                                        </HierarchicalDataTemplate.ItemTemplate>
-                                    </HierarchicalDataTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                Grid.Column="0">
+
+                                                <Image 
+                                                    Width="28"
+                                                    Height="28">
+                                                    <Image.Source>
+                                                        <MultiBinding Converter="{StaticResource FactionIconMultiBindingConverter}">
+                                                            <Binding Path="Faction"/>
+                                                            <Binding Path="GameId"/>
+                                                        </MultiBinding>
+                                                    </Image.Source>
+                                                </Image>
+
+                                                <TextBlock
+                                                  Text="{Binding Name}"
+                                                    Margin="12,0,0,0"
+                                                  Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                  VerticalAlignment="Center"/>
+
+                                            </StackPanel>
+                                            
+                                            <Button Grid.Column="1" 
+                                                Style="{StaticResource ActionButton}"
+                                                Command="{Binding DataContext.EditCompanyCommand, 
+                                                          RelativeSource={RelativeSource FindAncestor, 
+                                                          AncestorType={x:Type TreeView}}}"
+                                                CommandParameter="{Binding}"
+                                                Margin="8,0,4,0"
+                                                Height="24"
+                                                MinWidth="50"
+                                                Padding="8,2"
+                                                Content="Edit"/>
+
+                                            <Button Grid.Column="2" 
+                                                Style="{StaticResource DangerActionButton}"
+                                                Command="{Binding DataContext.DeleteCompanyCommand, 
+                                                          RelativeSource={RelativeSource FindAncestor, 
+                                                          AncestorType={x:Type TreeView}}}"
+                                                CommandParameter="{Binding}"
+                                                Height="24"
+                                                MinWidth="50"
+                                                Padding="8,2"
+                                                Content="Delete"/>
+                                        </Grid>
+                                    </DataTemplate>
                                 </HierarchicalDataTemplate.ItemTemplate>
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
                     
                     <!-- Busy/Loading Indicator -->
-                    <Grid Grid.Row="1" 
-                          Background="#80000000"
-                          Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
+                    <Grid 
+                        Grid.Row="1" 
+                        Background="#80000000"
+                        Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <TextBlock Text="Loading..." 
-                                       Foreground="{StaticResource ForegroundWhiteBrush}"
-                                       HorizontalAlignment="Center"/>
-                            <ProgressBar IsIndeterminate="True" 
-                                         Width="150" Height="5"
-                                         Margin="0,8,0,0"/>
+                            <TextBlock Text="Loading..."
+                              Foreground="{StaticResource ForegroundWhiteBrush}"
+                              HorizontalAlignment="Center"
+                              FontSize="16"
+                              Margin="0,0,0,12"/>
+
+                            <ProgressBar 
+                                Style="{StaticResource AnimatedProgressBar}"
+                                 IsIndeterminate="True"/>
                         </StackPanel>
                     </Grid>
                 </Grid>
@@ -251,10 +265,6 @@
                            Text="{Binding StatusMessage}"
                            Foreground="{StaticResource ForegroundGrayBrush}"/>
                 
-                <ProgressBar Grid.Column="1"
-                             Width="100" Height="5"
-                             IsIndeterminate="True"
-                             Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}"/>
             </Grid>
         </Border>
     </Grid>

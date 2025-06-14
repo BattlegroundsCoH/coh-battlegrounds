@@ -1,7 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
-using Battlegrounds.Models.Companies;
 using Battlegrounds.ViewModels;
 
 namespace Battlegrounds.Views;
@@ -16,15 +14,12 @@ public partial class CompanyBrowserView : UserControl {
         DataContext = companyBrowserViewModel;
     }
 
-    private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
-        if (this.DataContext is CompanyBrowserViewModel viewModel) {
-            viewModel.SelectedCompany = e.NewValue as Company;
-        }
-    }
-
-    private void TreeView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-        if (this.DataContext is CompanyBrowserViewModel viewModel && viewModel.SelectedCompany is not null) {
-            viewModel.EditCompany(viewModel.SelectedCompany);   
+    private void CompanySelectionTreeView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+        if (DataContext is CompanyBrowserViewModel vm) {
+            var selectedItem = CompanySelectionTreeView.SelectedItem;
+            if (selectedItem is not null) {
+                vm.EditCompanyCommand.Execute(selectedItem);
+            }
         }
     }
 

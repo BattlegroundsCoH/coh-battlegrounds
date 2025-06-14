@@ -2,6 +2,7 @@
 
 namespace Battlegrounds.ViewModels.CompanyHelpers;
 
+[Obsolete("This class will not be used but is here for reference.")]
 public sealed class FactionGroup(string id, string game, ICollection<Company> companies) {
     
     public string Id { get; } = id;

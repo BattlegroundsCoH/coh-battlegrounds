@@ -8,11 +8,12 @@ public sealed class GameGroup(string id, ICollection<Company> companies) {
 
     public string GameType => Id;
 
-    public ICollection<Company> Companies { get; } = companies;
+    public string CompanyCount => companies.Count switch {
+        0 => "(No companies)",
+        1 => "(1 company)",
+        _ => $"({companies.Count} companies)"
+    };
 
-    public ICollection<FactionGroup> Factions { get; } = 
-        [..from company in companies
-        group company by company.Faction into factionGroup
-        select new FactionGroup(factionGroup.Key, id, [.. factionGroup])];
+    public ICollection<Company> Companies { get; } = [.. companies.OrderBy(x => x.Faction)];
 
 }

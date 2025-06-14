@@ -8,7 +8,7 @@ public sealed class NullVisibilityConverter : IValueConverter {
     
     public bool IsInverted { get; set; } = false;
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value switch {
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value switch {
         null => IsInverted ? Visibility.Visible : Visibility.Collapsed,
         _ => IsInverted ? Visibility.Collapsed : Visibility.Visible
     };

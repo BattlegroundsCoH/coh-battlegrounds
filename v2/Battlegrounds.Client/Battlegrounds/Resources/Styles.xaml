@@ -148,6 +148,68 @@
         </Setter>
     </Style>
 
+    <Style x:Key="NameTextBox" TargetType="TextBox">
+        <Setter Property="Background" Value="{StaticResource BackgroundDarkBlueBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+        <Setter Property="CaretBrush" Value="{StaticResource ForegroundWhiteBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BackgroundLightBlueBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="Border"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="4">
+                        <Grid>
+                            <!-- Text placeholder when empty -->
+                            <TextBlock x:Name="PART_Placeholder" 
+                               Text="Enter name here..." 
+                               Foreground="{StaticResource ForegroundGrayBrush}"
+                               Padding="{TemplateBinding Padding}"
+                               Visibility="Collapsed"
+                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+
+                            <!-- Actual TextBox content -->
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                  Padding="{TemplateBinding Padding}"
+                                  BorderThickness="0"
+                                  IsTabStop="False"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!-- Show placeholder when text is empty -->
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="PART_Placeholder" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+
+                        <!-- Focus state -->
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource AccentBlueBrush}"/>
+                            <Setter TargetName="Border" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect ShadowDepth="0" 
+                                              BlurRadius="4" 
+                                              Color="{StaticResource AccentBlue}" 
+                                              Opacity="0.3"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+
+                        <!-- Disabled state -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="SettingsComboBox" TargetType="ComboBox">
         <Setter Property="Background" Value="{StaticResource BackgroundDarkBlueBrush}"/>
         <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
@@ -352,6 +414,79 @@
                         </Border.Effect>
                         <ContentPresenter/>
                     </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="AnimatedProgressBar" TargetType="ProgressBar">
+        <Setter Property="Background" Value="{StaticResource BackgroundBlueBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource AccentBlueBrush}"/>
+        <Setter Property="Height" Value="4"/>
+        <Setter Property="Width" Value="200"/>
+        <Setter Property="IsIndeterminate" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ProgressBar">
+                    <!-- Wrap everything in a Border that clips content -->
+                    <Border x:Name="RootBorder" 
+                        ClipToBounds="True"
+                        CornerRadius="2">
+                        <Grid x:Name="TemplateRoot">
+                            <!-- Background Track -->
+                            <Border x:Name="PART_Track" 
+                                Background="{TemplateBinding Background}"
+                                BorderThickness="0"
+                                CornerRadius="2"/>
+
+                            <!-- Progress Indicator -->
+                            <Border x:Name="PART_Indicator" 
+                                Background="{TemplateBinding Foreground}"
+                                BorderThickness="0"
+                                CornerRadius="2"
+                                HorizontalAlignment="Left">
+                                <Border.Effect>
+                                    <DropShadowEffect ShadowDepth="0" 
+                                                BlurRadius="4"
+                                                Color="{StaticResource AccentBlue}"
+                                                Opacity="0.5"/>
+                                </Border.Effect>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsIndeterminate" Value="True">
+                            <Setter TargetName="PART_Indicator" Property="Width" Value="20"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <!-- Animate the position relative to the control's width -->
+                                        <ThicknessAnimation 
+                                        Storyboard.TargetName="PART_Indicator"
+                                        Storyboard.TargetProperty="Margin"
+                                        From="-200,0,0,0" 
+                                        To="200,0,-20,0"
+                                        Duration="0:0:2">
+                                            <ThicknessAnimation.EasingFunction>
+                                                <CircleEase EasingMode="EaseInOut"/>
+                                            </ThicknessAnimation.EasingFunction>
+                                        </ThicknessAnimation>
+
+                                        <!-- Animate the glow effect -->
+                                        <DoubleAnimation 
+                                            Storyboard.TargetName="PART_Indicator"
+                                            Storyboard.TargetProperty="Effect.Opacity"
+                                            From="0.3" To="0.7"
+                                            Duration="0:0:1"
+                                            AutoReverse="True"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                        </Trigger>
+                        <Trigger Property="IsIndeterminate" Value="False">
+                            <Setter TargetName="PART_Indicator" Property="Width" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Value}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -170,6 +170,10 @@ public sealed class BattlegroundsApp {
         services.AddTransient<CreateCompanyModalView>();
         services.AddTransient<CreateCompanyModalViewModel>(); // Note: this is transient, so a new instance will be created each time it's requested
 
+        // Register generic modal
+        services.AddTransient<DialogModalView>();
+        services.AddTransient<DialogModalViewModel>(); // Note: this is transient, so a new instance will be created each time it's requested
+
         // Register services
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<ILobbyBrowserService, LobbyBrowserService>();

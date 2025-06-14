@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 
+using Battlegrounds.Helpers;
 using Battlegrounds.Models.Blueprints;
 using Battlegrounds.Models.Blueprints.Extensions;
 using Battlegrounds.Models.Companies;
@@ -27,6 +28,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
     private readonly ICompanyService _companyService;
     private readonly IBlueprintService _blueprintService;
+    private readonly MainWindowViewModel _mainWindowViewModel;
     private readonly string _faction = string.Empty;
     private readonly Game _game;
 
@@ -50,7 +52,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public ICommand LeaveCommand { get; }
+    public IAsyncRelayCommand LeaveCommand { get; }
 
     public IAsyncRelayCommand SaveCommand { get; }
 
@@ -144,13 +146,14 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         }
     }
 
-    public CompanyEditorViewModel(CompanyEditorViewModelContext context, ICompanyService companyService, IBlueprintService blueprintService, IGameService gameService) {
+    public CompanyEditorViewModel(CompanyEditorViewModelContext context, ICompanyService companyService, IBlueprintService blueprintService, IGameService gameService, MainWindowViewModel mainWindowViewModel) {
         ArgumentNullException.ThrowIfNull(context, nameof(context));
         _context = context;
         _companyService = companyService;
         _blueprintService = blueprintService;
+        _mainWindowViewModel = mainWindowViewModel;
 
-        LeaveCommand = new RelayCommand(ExitEditor);
+        LeaveCommand = new AsyncRelayCommand(ExitEditor);
         SaveCommand = new AsyncRelayCommand(SaveCompany);
         SetSelectedSquadCommand = new RelayCommand<object>(SetSelectedSquad);
 
@@ -192,9 +195,16 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
                                       select bp];
     }
 
-    private void ExitEditor() {
-        // Logic to exit the editor, e.g., close the view or navigate away
-        // This could involve raising an event or calling a service method
+    private async Task ExitEditor() {
+
+        if (IsDirty) {
+            if (await DialogModal.ShowModalAsync(DialogType.YesNo, "Unsaved Changes", "You have unsaved changes. Do you want to save your company before leaving?") == DialogResult.Yes) {
+                await SaveCompany();
+            }
+        }
+
+        _mainWindowViewModel.GoBack(); // Navigate back to the previous view (e.g., Company Browser)
+
     }
 
     private async Task SaveCompany() {

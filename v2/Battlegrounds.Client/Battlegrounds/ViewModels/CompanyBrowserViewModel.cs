@@ -24,17 +24,6 @@ public sealed class CompanyBrowserViewModel : INotifyPropertyChanged {
     private readonly IServiceProvider _serviceProvider;
 
     public ObservableCollection<GameGroup> GameGroups { get; } = [];
-    public ObservableCollection<Company> SelectedCompanies { get; } = [];
-
-    private Company? _selectedCompany;
-    private object? _selectedValuePath = null;
-
-    public Company? SelectedCompany {
-        get => _selectedCompany;
-        set {
-            _selectedCompany = value;
-        }
-    }
 
     private bool _isBusy;
     public bool IsBusy {
@@ -68,12 +57,9 @@ public sealed class CompanyBrowserViewModel : INotifyPropertyChanged {
 
     // Commands
     public ICommand LoadCompaniesCommand { get; }
-    public IRelayCommand<Company> SelectCompanyCommand { get; }
     public IAsyncRelayCommand CreateCompanyCommand { get; }
-    public ICommand DeleteCompanyCommand { get; }
-    public ICommand EditCompanyCommand { get; }
-    public ICommand SyncCompanyCommand { get; }
-    public ICommand SyncAllCompaniesCommand { get; }
+    public IAsyncRelayCommand<Company> DeleteCompanyCommand { get; }
+    public IRelayCommand<Company> EditCompanyCommand { get; }
 
     public CompanyBrowserViewModel(ILogger<CompanyBrowserViewModel> logger, ICompanyService companyService, IServiceProvider serviceProvider) {
         _logger = logger;
@@ -82,37 +68,19 @@ public sealed class CompanyBrowserViewModel : INotifyPropertyChanged {
 
         // Initialize commands
         LoadCompaniesCommand = new RelayCommand(async () => await LoadCompaniesAsync());
-        SelectCompanyCommand = new RelayCommand<Company>(company => SelectedCompany = company);
         CreateCompanyCommand = new AsyncRelayCommand(CreateCompany);
-        DeleteCompanyCommand = new RelayCommand(async () => await DeleteCompanyAsync(), CanDeleteCompany);
-        EditCompanyCommand = new RelayCommand(EditCompany, CanEditCompany);
-        SyncCompanyCommand = new RelayCommand(async () => await SyncCompanyAsync(), CanSyncCompany);
-        SyncAllCompaniesCommand = new RelayCommand(async () => await SyncAllCompaniesAsync());
+        DeleteCompanyCommand = new AsyncRelayCommand<Company>(DeleteCompanyAsync);
+        EditCompanyCommand = new RelayCommand<Company>(EditCompany);
 
         // Load companies when view model is created
         LoadCompaniesCommand.Execute(null);
     }
 
-    private async Task SyncAllCompaniesAsync() {
-        throw new NotImplementedException();
-    }
-
-    private bool CanSyncCompany() => false;
-
-    private async Task SyncCompanyAsync() {
-        throw new NotImplementedException();
-    }
-
-    private bool CanEditCompany() => false;
-
-    public void EditCompany(Company company) {
-        if (company == null) return;
+    public void EditCompany(Company? company) {
+        if (company == null) 
+            return;
         var mainWindow = _serviceProvider.GetRequiredService<MainWindowViewModel>();
         mainWindow.SetContent(CompanyEditorViewFactory.CreateCompanyEditorView(_serviceProvider, company));
-    }
-
-    private void EditCompany() {
-        throw new NotImplementedException();
     }
 
     private async Task LoadCompaniesAsync() {
@@ -160,36 +128,31 @@ public sealed class CompanyBrowserViewModel : INotifyPropertyChanged {
 
     }
 
-    private bool CanDeleteCompany() {
-        return SelectedCompany != null;
-    }
-
-    private async Task DeleteCompanyAsync() {
-        if (SelectedCompany == null)
+    private async Task DeleteCompanyAsync(Company? companyy) {
+        if (companyy is null)
             return;
 
-        string companyName = SelectedCompany.Name ?? "Unknown Company";
+        if (await DialogModal.ShowModalAsync(DialogType.YesNo, "Delete Company", $"Are you sure you want to delete the company '{companyy.Name}'?") != DialogResult.Yes) {
+            return;
+        }
 
         try {
             IsBusy = true;
-            StatusMessage = $"Deleting company {companyName}...";
-
-            bool result = await _companyService.DeleteCompany(SelectedCompany.Id);
-
-            if (result) {
-                StatusMessage = $"Company {companyName} deleted successfully";
-                // Refresh the company list
-                await LoadCompaniesAsync();
-                SelectedCompany = null;
+            StatusMessage = "Deleting company...";
+            bool success = await _companyService.DeleteCompany(companyy.Id);
+            if (success) {
+                StatusMessage = $"Company '{companyy.Name}' deleted successfully";
+                await LoadCompaniesAsync(); // Refresh the list
             } else {
-                StatusMessage = $"Failed to delete company {companyName}";
+                StatusMessage = $"Failed to delete company '{companyy.Name}'";
             }
         } catch (Exception ex) {
             _logger.LogError(ex, "Error deleting company");
-            StatusMessage = $"Error deleting company {companyName}";
+            StatusMessage = $"Error deleting company '{companyy.Name}'";
         } finally {
             IsBusy = false;
         }
+
     }
 
 }

@@ -77,6 +77,12 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
         CurrentContent = view;
     }
 
+    public void GoBack() {
+        // This method is intended to navigate back to the previous content
+        // In this case, it will set the content to the CompanyBrowserView
+        SetContent(null); // Currently, we don't have a back stack, so we just clear the content
+    }
+
     private async Task StartSingleplayerLobby() {
 
         var lobby = await _serviceProvider.GetRequiredService<ILobbyService>().CreateLobbyAsync("Private Skirmish", null, false, _serviceProvider.GetRequiredService<IGameService>().GetGame<CoH3>());
