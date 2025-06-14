@@ -26,6 +26,8 @@ public class CoH3ArchiverServiceTests : LocalTestOnly {
     [Explicit, Test, NoGithubActions("Requires a local installation of Company of Heroes 3")]
     public async Task TestCoH3Archiver() {
 
+        Github.SkipIfGitubActions();
+
         bool built = await _archiverService.CreateModArchiveAsync(_cfg.CoH3.ModProjectPath);
         Assert.That(built, Is.True, "Mod archive should be built successfully.");
 
