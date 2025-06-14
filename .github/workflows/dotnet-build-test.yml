@@ -9,9 +9,6 @@ on:
   pull_request:
     branches: [ "master" ]
 
-env:
-  TEST_LOCATION: "github"
-
 jobs:
   build:
 
@@ -20,6 +17,9 @@ jobs:
     permissions:
       packages: write
       contents: read
+
+    env:
+      TEST_LOCATION: "github"
 
     steps:
     - uses: actions/checkout@v3
@@ -30,4 +30,4 @@ jobs:
     - name: Restore dependencies
       run: cd v2\Battlegrounds.Client && dotnet restore
     - name: Build and Test
-      run: cd v2\Battlegrounds.Client && dotnet test --verbosity=n
+      run: cd v2\Battlegrounds.Client && dotnet test --verbosity=n --filter=TestCategory!=Integration

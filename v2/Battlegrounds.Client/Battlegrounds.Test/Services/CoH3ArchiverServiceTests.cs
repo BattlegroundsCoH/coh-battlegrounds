@@ -5,7 +5,7 @@ using Battlegrounds.Services;
 namespace Battlegrounds.Test.Services;
 
 [TestOf(nameof(CoH3ArchiverService))]
-public class CoH3ArchiverServiceTests : LocalTestOnly {
+public class CoH3ArchiverServiceTests {
 
     private Configuration _cfg = null!;
     private CoH3ArchiverService _archiverService = null!;
@@ -23,14 +23,10 @@ public class CoH3ArchiverServiceTests : LocalTestOnly {
         _archiverService = new CoH3ArchiverService(new CoH3(_cfg), _cfg, new TestLogger<CoH3ArchiverService>(), new TestLogger<CoH3ArchiverService.EssenceEditor>());
     }
 
-    [Explicit, Test, NoGithubActions("Requires a local installation of Company of Heroes 3")]
+    [Explicit, Test, Category("Integration")]
     public async Task TestCoH3Archiver() {
-
-        Github.SkipIfGitubActions();
-
         bool built = await _archiverService.CreateModArchiveAsync(_cfg.CoH3.ModProjectPath);
         Assert.That(built, Is.True, "Mod archive should be built successfully.");
-
     }
 
 }
