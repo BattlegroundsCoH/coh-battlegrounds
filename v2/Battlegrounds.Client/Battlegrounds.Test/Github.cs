@@ -8,7 +8,8 @@ public static class Github {
         get {
             if (_isGithubActions) 
                 return true;
-            _isGithubActions = Environment.GetEnvironmentVariable("GITHUB_ACTIONS") == "true";
+            _isGithubActions = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("TEST_LOCATION"));
+            TestContext.Out.WriteLine($"IsGithubActions: {_isGithubActions}");
             return _isGithubActions;
         }
     }
