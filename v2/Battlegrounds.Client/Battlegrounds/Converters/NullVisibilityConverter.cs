@@ -13,7 +13,7 @@ public sealed class NullVisibilityConverter : IValueConverter {
         _ => IsInverted ? Visibility.Collapsed : Visibility.Visible
     };
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) {
         throw new NotImplementedException();
     }
 
