@@ -44,7 +44,7 @@
                             x:Name="UnitBorder"
                             Padding="12,8"
                             Margin="4"
-                            Width="340"
+                            Width="320"
                             Background="{StaticResource BackgroundBlueBrush}"
                             BorderBrush="{StaticResource BackgroundLightBlueBrush}"
                             BorderThickness="1"

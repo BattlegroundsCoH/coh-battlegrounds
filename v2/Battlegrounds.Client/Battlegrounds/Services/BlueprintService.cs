@@ -8,6 +8,8 @@ using Battlegrounds.Parsers;
 
 using Microsoft.Extensions.Logging;
 
+using Serilog;
+
 namespace Battlegrounds.Services;
 
 /// <summary>
@@ -153,7 +155,7 @@ public sealed class BlueprintService(IGameLocaleService localeService, ILogger<B
         try {
 
             // Create a new blueprint parser for CoH3
-            var coh3BpParser = new BlueprintParser<CoH3>(_localeService);
+            var coh3BpParser = new BlueprintParser<CoH3>(_localeService, LoggerFactory.Create(x => x.AddSerilog()).CreateLogger<BlueprintParser<CoH3>>());
 
             // Load blueprints for CoH3 from YAML files
             var coh3SbpTask = LoadAndLogBlueprints("Assets/Factions/CoH3/sbps.yaml", coh3BpParser.ParseSquadBlueprints);

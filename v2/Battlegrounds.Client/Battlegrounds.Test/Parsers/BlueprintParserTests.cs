@@ -18,12 +18,12 @@ public class BlueprintParserTests {
     [SetUp]
     public void SetUp() {
         _gameLocaleService = Substitute.For<IGameLocaleService>();
-        _parser = new BlueprintParser<CoH3>(_gameLocaleService);
+        _parser = new BlueprintParser<CoH3>(_gameLocaleService, new TestLogger<BlueprintParser<CoH3>>());
     }
 
     [Test]
     public void Constructor_ThrowsArgumentNullException_WhenLocaleServiceIsNull() {
-        Assert.Throws<ArgumentNullException>(() => new BlueprintParser<CoH3>(null!));
+        Assert.Throws<ArgumentNullException>(() => new BlueprintParser<CoH3>(null!, null!));
     }
 
     [Test]
@@ -70,6 +70,13 @@ public class BlueprintParserTests {
             Assert.That(tommyUK.HasExtension<HoldExtension>(), Is.False, "Expected tommy_uk squad blueprint to not have a HoldExtension.");
             Assert.That(tommyUK.HasExtension<UIExtension>(), Is.True, "Expected tommy_uk squad blueprint to have a UIExtension.");
             Assert.That(tommyUK.UI.IconName, Is.EqualTo("tommy_uk"), "Expected tommy_uk squad blueprint to have the correct icon name in UIExtension.");
+            LoadoutExtension loadout = tommyUK.Loadout;
+            Assert.That(loadout, Is.Not.Null, "Expected tommy_uk squad blueprint to have a LoadoutExtension.");
+            Assert.That(loadout.Entities, Has.Count.EqualTo(2), "Expected tommy_uk squad blueprint to have two entities in LoadoutExtension.");
+            Assert.That(loadout.Entities[0].Count, Is.EqualTo(1), "Expected first entity in tommy_uk squad blueprint LoadoutExtension to have a count of 1.");
+            Assert.That(loadout.Entities[0].EBP, Is.EqualTo("officer_tommy_uk"), "Expected first entity in tommy_uk squad blueprint LoadoutExtension to have the correct entity ID.");
+            Assert.That(loadout.Entities[1].Count, Is.EqualTo(4), "Expected second entity in tommy_uk squad blueprint LoadoutExtension to have a count of 4.");
+            Assert.That(loadout.Entities[1].EBP, Is.EqualTo("tommy_uk"), "Expected second entity in tommy_uk squad blueprint LoadoutExtension to have the correct entity ID.");
         }
 
         // Grab CWT15 Truck
@@ -79,6 +86,9 @@ public class BlueprintParserTests {
             Assert.That(cwt15Truck.Category, Is.EqualTo(SquadCategory.Support), "Expected cwt_15_truck_uk squad blueprint to be in the Support category.");
             Assert.That(cwt15Truck.HasExtension<HoldExtension>(), Is.True, "Expected cwt_15_truck_uk squad blueprint to have a HoldExtension.");
         }
+
+        // Assert all blueprints are frozen
+        Assert.That(result.All(bp => bp.IsFrozen), Is.True, "Expected all squad blueprints to be frozen after parsing.");
 
     }
 

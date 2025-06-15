@@ -7,6 +7,8 @@ using Battlegrounds.Models.Playing;
 using Battlegrounds.Serializers;
 using Battlegrounds.Services;
 
+using Microsoft.Extensions.Logging;
+
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -34,11 +36,13 @@ public sealed class BlueprintParser<G> where G : Game {
         public Dictionary<string, Dictionary<string, object>> Upgrades { get; set; } = [];
     }
 
+    private readonly ILogger<BlueprintParser<G>> _logger;
     private readonly IGameLocaleService _localeService;
     private readonly IDeserializer _deserializer;
     private readonly DictionaryDeserializer _dictionaryDeserializer;
 
-    public BlueprintParser(IGameLocaleService localeService) {
+    public BlueprintParser(IGameLocaleService localeService, ILogger<BlueprintParser<G>> logger) {
+        _logger = logger;
         _localeService = localeService ?? throw new ArgumentNullException(nameof(localeService));
         _deserializer = new DeserializerBuilder()
             .WithNamingConvention(HyphenatedNamingConvention.Instance)
@@ -103,18 +107,26 @@ public sealed class BlueprintParser<G> where G : Game {
         { "veterancy", typeof(VeterancyExtension) },
         { nameof(LoadoutExtension), typeof(LoadoutExtension) },
         { "loadout", typeof(LoadoutExtension) },
+        { nameof(TypesExtension), typeof(TypesExtension) },
+        { "types", typeof(TypesExtension) },
     };
 
     private T DeserializeFromDictionary<T>(Dictionary<string, object> data) where T : Blueprint, new() {
         T v = _dictionaryDeserializer.DeserializeFromDictionary<T>(data);
         if (data.TryGetValue("Extensions", out var extensionsObj) && extensionsObj is Dictionary<object, object> extensions) {
             foreach (var (extName, extData) in extensions) {
-                var extType = (_extensionTypes.TryGetValue(extName.ToString()!, out var type) ? type : null) 
-                    ?? throw new InvalidOperationException($"Unknown extension type: {extName}");
-                Dictionary<string, object> extDataDictionary = ((Dictionary<object, object>)extData)
-                    .Select(x => new KeyValuePair<string, object>(HyphenatedNamingConvention.Instance.Reverse(x.Key.ToString()!), x.Value)).ToDictionary();
-                var value = _dictionaryDeserializer.DeserializeFromDictionary(extType, extDataDictionary);
-                v.AddExtension((BlueprintExtension)value);
+                if (!_extensionTypes.TryGetValue(extName.ToString()!, out var extType)) {
+                    _logger.LogWarning("Unknown extension type: {ExtensionName}, skipping deserialization.", extName);
+                    continue;
+                }
+                if (extData is Dictionary<object, object> extObjData) {
+                    Dictionary<string, object> extDataDictionary = extObjData.Select(x => new KeyValuePair<string, object>(HyphenatedNamingConvention.Instance.Reverse(x.Key.ToString()!), x.Value)).ToDictionary();
+                    var value = _dictionaryDeserializer.DeserializeFromDictionary(extType, extDataDictionary);
+                    v.AddExtension((BlueprintExtension)value);
+                } else {
+                    _logger.LogWarning("Extension data for {ExtensionName} is not a dictionary, skipping deserialization.", extName);
+                    continue;
+                }
             }
         }
         v.Freeze(); // Freeze the blueprint after deserialization to prevent further modifications

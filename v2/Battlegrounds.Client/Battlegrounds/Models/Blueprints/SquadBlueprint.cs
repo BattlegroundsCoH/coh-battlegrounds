@@ -10,7 +10,11 @@ public enum SquadCategory : byte {
 
 public sealed class SquadBlueprint(string id, SquadCategory category, HashSet<BlueprintExtension> extensions) : Blueprint(id, extensions) {
 
-    public bool IsInfantry { get; init; } = false; // TODO: Fetch from a type list at some point
+    public bool IsInfantry { get; init; } = false;
+
+    public bool IsTeamWeapon { get; init; } = false;
+
+    public bool IsTowable { get; init; } = false;
 
     public SquadCategory Category { get; init; } = category;
 

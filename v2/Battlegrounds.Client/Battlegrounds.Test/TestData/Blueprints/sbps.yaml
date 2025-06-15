@@ -13,6 +13,12 @@ squads:
         help-text: 11265170
         brief-text: 11266227
         icon-name: tommy_uk
+      loadout:
+       entities:
+          - ebp: officer_tommy_uk
+            count: 1
+          - ebp: tommy_uk
+            count: 4
       upgrades:
         slots: 1
         available:

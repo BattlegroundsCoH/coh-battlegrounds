@@ -1,49 +1,151 @@
 upgrades:
-    # British Africa
-    # Tommy Upgrades
-    # These upgrades are available to the Tommy unit in the British Africa faction.
+
     lmg_bren_tommy_uk:
-      factionAssociation: british_africa
-      extensions:
-        cost:
-          manpower: 0
-          munitions: 90
-          fuel: 0
-        ui:
-          screen-name: Bren Light Machine Gun Package
-          icon-name: icon_upgrade_british_bren
-          symbol-icon-name: weapon_bren
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 90
+            ui:
+                screen-name: Bren Light Machine Gun Package
+                icon-name: icon_upgrade_british_bren
+                symbol-icon-name: weapon_bren
+
+    lmg_bren_gurkhas_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 75
+            ui:
+                screen-name: Bren Light Machine Gun Package
+                icon-name: icon_upgrade_british_bren
+                symbol-icon-name: weapon_bren
+
+    smg_thompson_gurkhas_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: 11189629
+                help-text: 11242613
+                brief-text: 11242884
+                icon-name: m1_thompson_sub_machine_gun
+                symbol-icon-name: m1_thompson_sub_machine_gun
 
     boys_anti_tank_rifles_tommy_uk:
-      factionAssociation: british_africa
-      extensions:
-        cost:
-          manpower: 0
-          munitions: 60
-          fuel: 0
-        ui:
-          screen-name: Boys Anti-Tank Rifles Package
-          icon-name: icon_upgrade_boys_at_gun
-          symbol-icon-name: weapon_boys_at_gun
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: Boys Anti-Tank Rifles Package
+                icon-name: icon_upgrade_boys_at_gun
+                symbol-icon-name: weapon_boys_at_gun
 
     recon_package_tommy_uk:
-      factionAssociation: british_africa
-      extensions:
-        cost:
-          manpower: 0
-          munitions: 60
-          fuel: 0
-        ui:
-          screen-name: Recce Package
-          icon-name: scoped_lee_enfield_flare_gun
-          symbol-icon-name: sniper
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: Recce Package
+                icon-name: scoped_lee_enfield_flare_gun
+                symbol-icon-name: sniper
+
+    flamethrower_sapper_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: 11206886
+                icon-name: british_flamethrower
+                symbol-icon-name: weapon_flamethrower
+
+    utility_sapper_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 30
+            ui:
+                screen-name: 11154006
+                icon-name: utility_engineer_us
+                symbol-icon-name: blow_torch
+
+    piat_sapper_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 75
+            ui:
+                screen-name: 11242522
+                icon-name: piat_2
+                symbol-icon-name: weapon_piat
+
+    weapon_flak_mount_cwt_truck_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: 11242536
+                icon-name: cwt_15_quad_mount_uk
+                symbol-icon-name: tank_quad
+
+    medical_truck_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: 11242533
+                icon-name: cwt_15_medical_uk
+                symbol-icon-name: cwt_medical
+
+    weapon_75mm_churchill_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 100
+            ui:
+                screen-name: 11199758
+                icon-name: ability_main_gun
+                symbol-icon-name: tank_kwk
+
+    hmg_sherman_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: 11242531
+                icon-name: hmg_us
+                symbol-icon-name: tank_mg42
+
+    utility_kit_stuart_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 40
+            ui:
+                screen-name: 11242534
+                icon-name: ability_crew_repair
+                symbol-icon-name: weapon_wrench
+
+    commander_stuart_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: 11186706
+                icon-name: ability_british_tank_commander
+                symbol-icon-name: tank_vision
 
     lmg_panzergrenaider_ak:
-      factionAssociation: afrika_korps
-      extensions:
-        cost: 
-          manpower: 0
-          munitions: 90
-          fuel: 0
-        ui:
-          screen-name: MG-34 Light Machine Gun Package
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 90
+            ui:
+                screen-name: MG-34 Light Machine Gun Package

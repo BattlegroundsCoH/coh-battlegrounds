@@ -11,7 +11,7 @@ public readonly struct LocaleString(uint key, ResolveLocaleString resolver) {
 
     public override string ToString() => $"${_key}";
     
-    public string AsString(params object[] args) => _resolver(_key, args);
+    public string AsString(params object[] args) => _resolver?.Invoke(_key, args) ?? ToString();
 
     public static implicit operator string(LocaleString localeString) => localeString._resolver(localeString._key);
     public static implicit operator uint(LocaleString localeString) => localeString._key;

@@ -79,16 +79,26 @@ public class DictionaryDeserializer {
         var parameters = ctor.GetParameters() ?? [];
         var args = new object[parameters.Length];
         for (int i = 0; i < parameters.Length; i++) {
-            if (dictionary.TryGetValue(parameters[i].Name ?? string.Empty, out var value)) {
-                args[i] = MapType(value, parameters[i].ParameterType) ?? throw new InvalidOperationException($"Cannot convert value '{value}' to type '{parameters[i].ParameterType.FullName}'");
-            } else if (dictionary.TryGetValue(HyphenatedNamingConvention.Instance.Apply(parameters[i].Name ?? string.Empty), out var otherValue)) { 
-                args[i] = MapType(otherValue, parameters[i].ParameterType) ?? throw new InvalidOperationException($"Cannot convert value '{otherValue}' to type '{parameters[i].ParameterType.FullName}'");
-            } else {
-                args[i] = GetDefaultValue(parameters[i].ParameterType)!; // Default value for missing parameters
-            }
+            args[i] = TryGetParameterValue(dictionary, parameters[i]);
         }
         var instance = ctor.Invoke(args);
         return DeserializeFromDictionaryInternal(type, instance!, dictionary);
+    }
+
+    private object TryGetParameterValue(Dictionary<string, object> dictionary, ParameterInfo parameter) {
+        string parameterName = parameter.Name ?? string.Empty;
+        if (!dictionary.TryGetValue(parameterName, out object? value)) {
+            if (!dictionary.TryGetValue(HyphenatedNamingConvention.Instance.Apply(parameterName), out value)) {
+                if (!dictionary.TryGetValue(parameterName.ToUpperInvariant(), out value)) {
+                    if (!dictionary.TryGetValue(parameterName.ToLowerInvariant(), out value)) {
+                        // If the parameter name is not found, return the default value for the type
+                        return GetDefaultValue(parameter.ParameterType)!;
+                    }
+                }
+            }
+        }
+        return MapType(value, parameter.ParameterType) ??
+               throw new InvalidOperationException($"Cannot convert value '{value}' to type '{parameter.ParameterType.FullName}'");
     }
 
     private object DeserializeFromDictionaryInternal(Type type, object instance, Dictionary<string, object> dictionary) {
