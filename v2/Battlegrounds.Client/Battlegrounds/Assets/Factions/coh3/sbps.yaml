@@ -1404,25 +1404,379 @@ squads:
                     - infantry_anti_infantry 
                     - mortar
 
+    armored_car_8_rad_ak:
+        category: Support
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 240
+                fuel: 50
+            ui:
+                screen-name: $11241637 # SdKfz 8 Rad Armoured Car
+                icon-name: armored_car_8_rad_ak
+            loadout:
+                entities:
+                    - ebp: armored_car_8_rad_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+
+    armored_car_222_ak:
+        category: Support
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 240
+                fuel: 40
+            ui:
+                screen-name: $11241636 # SdKfz 222 Armoured Car
+                icon-name: armored_car_222_ak
+            loadout:
+                entities:
+                    - ebp: armored_car_222_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+
+    armored_tractor_254_ak:
+        category: Support
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 240
+                fuel: 40
+            ui:
+                screen-name: $11241640 # SdKfz 254 Armoured Tractor
+                icon-name: armored_tractor_254_ak
+            loadout:
+                entities:
+                    - ebp: armored_tractor_254_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 800
+                      name: Vet1
+                    - experience: 2400
+                      name: Vet2
+                    - experience: 4800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+
+    # There's technically a "Bison" unit in the game files that's fully animated and has a model but is not given proper UI
+    # We can add it later - we can always make our own UI if needed
+
+    elefant_tank_destroyer_ak:
+        category: Armour
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                manpower: 700
+                fuel: 180
+            ui:
+                screen-name: $11266549 # Elefant Tank Destroyer
+                icon-name: elefant_tank_destroyer_ak
+            loadout:
+                entities:
+                    - ebp: elefant_tank_destroyer_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 2750
+                      name: Vet1
+                    - experience: 8250
+                      name: Vet2
+                    - experience: 16500
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - heavy_armor 
+                    - vehicle_casemate_anti_tank
+                    - vehicle_anti_tank
+                    - apex_armor 
+
+    goliath_ak:
+        category: Support
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 100
+            ui:
+                screen-name: $11241736 # Goliath Remote-Controlled Demolition Vehicle
+                icon-name: goliath_ak_icon
+            loadout:
+                entities:
+                    - ebp: goliath_ak
+                      count: 1
+            # No veterancy, since this unit's only purpose is to blow up
+            types:
+                values:
+                    - vehicle 
+                    - goliath
+
+    halftrack_7_flak_ak:
+        category: Support
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 280
+                fuel: 50
+            ui:
+                screen-name: $11241647 # Sdkfz 7 Flak Halftrack
+                icon-name: halftrack_7_flak_ak
+            loadout:
+                entities:
+                    - ebp: halftrack_7_flak_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor 
+                    - anti_air
+
     halftrack_250_ak:
         category: Support
         faction-association: afrika_korps
         is-infantry: false
         extensions:
             cost:
-                manpower: 260
-                fuel: 15
+                manpower: 250
+                fuel: 35
             ui:
-                screen-name: Sdkfz 250 Halftrack
+                screen-name: $11241641 # Sdkfz 250 Halftrack
+                icon-name: halftrack_250_ak
             veterancy:
                 ranks:
-                    - experience: 1400
+                    - experience: 500
                       name: Vet1
-                    - experience: 2800
+                    - experience: 1500
                       name: Vet2
-                    - experience: 4200
+                    - experience: 3000
                       name: Vet3
             hold: {}
+            upgrades:
+                slots: 1
+                available:
+                    - 20mm_halftrack_250_ak
+                    - 81mm_mortar_halftrack_250_ak
+                    - vampire_halftrack_250_ak
+
+    halftrack_251_stuka:
+        category: Support
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 320
+                fuel: 85
+            ui:
+                screen-name: $11241645 # Sdkfz 251 Stuka Halftrack
+                icon-name: halftrack_251_stuka_ak
+            loadout:
+                entities:
+                    - ebp: halftrack_251_stuka_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1500
+                      name: Vet1
+                    - experience: 4500
+                      name: Vet2
+                    - experience: 9000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor 
+                    - vehicle_artillery
+
+    halftrack_recovery_ak:
+        category: Support
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 250
+                fuel: 30
+            ui:
+                screen-name: $11241649 # Sdkfz 251 Recovery Halftrack
+                icon-name: halftrack_recovery_ak
+            loadout:
+                entities:
+                    - ebp: halftrack_recovery_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 500
+                      name: Vet1
+                    - experience: 1000
+                      name: Vet2
+                    - experience: 1500
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor 
+                    - vehicle_support
+                    - recovery_vehicle
+                    - vehicle_repair_recovery 
+
+    kradschutzen_motorcycle_ak:
+        category: Support
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 180
+            ui:
+                screen-name: $11181945 # Kradschützen Motorcycle
+                icon-name: kradschutzen_motorcycle_ak
+            loadout:
+                entities:
+                    - ebp: kradschutzen_motorcycle_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 800
+                      name: Vet1
+                    - experience: 2400
+                      name: Vet2
+                    - experience: 4800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - ultra_light 
+                    - vehicle_support
+
+    l6_40_ak:
+        category: Armour
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 240
+                fuel: 35
+            ui:
+                screen-name: $11153595 # L6/40 Tank
+                icon-name: l6_40_ak
+            loadout:
+                entities:
+                    - ebp: l6_40_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 800
+                      name: Vet1
+                    - experience: 2400
+                      name: Vet2
+                    - experience: 4800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor 
+                    - italian 
+            upgrades:
+                slots: 1
+                available:
+                    - spotting_scope_l6_40_ger
+                    - flamethrower_l640_ak
+
+    m13_40_ak:
+        category: Armour
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 320
+                fuel: 60
+            ui:
+                screen-name: $11238856 # M13/40 Tank
+                icon-name: m13_40_ak
+            loadout:
+                entities:
+                    - ebp: m13_40_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+                    - vehicle_turret 
+                    - italian
+
+    marder_iii_ak:
+        category: Armour
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 240
+                fuel: 35
+            ui:
+                screen-name: $11241651 # Marder III Tank Destroyer
+                icon-name: marder_iii_ak
+            loadout:
+                entities:
+                    - ebp: marder_iii_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1500
+                      name: Vet1
+                    - experience: 4500
+                      name: Vet2
+                    - experience: 9000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor 
+                    - vehicle_anti_tank 
+                    - vehicle_casemate_anti_tank
 
     panzer_iii_ak:
         category: Armour
@@ -1430,15 +1784,291 @@ squads:
         is-infantry: false
         extensions:
             cost:
-                manpower: 360
+                manpower: 340
                 fuel: 80
             ui:
-                screen-name: Panzer III
+                screen-name: $11241656 # Panzer III
+                icon-name: panzer_iii_ak
+            loadout:
+                entities:
+                    - ebp: panzer_iii_ak
+                      count: 1
             veterancy:
                 ranks:
-                    - experience: 1400
+                    - experience: 1800
                       name: Vet1
-                    - experience: 2800
+                    - experience: 5400
                       name: Vet2
-                    - experience: 4200
+                    - experience: 10800
                       name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - medium_armor 
+                    - vehicle_turret 
+                    - vehicle_anti_infantry
+            upgrades:
+                slots: 1
+                available:
+                    - mg34_panzer_ak
+
+    panzer_iii_flame_ak:
+        category: Armour
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 300
+                fuel: 55
+            ui:
+                screen-name: $11238847 # Panzer III Flame Tank
+                icon-name: panzer_iii_flame_ak
+            loadout:
+                entities:
+                    - ebp: panzer_iii_flame_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - medium_armor 
+
+    panzer_iv_ak:
+        category: Armour
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 380
+                fuel: 90
+            ui:
+                screen-name: $11153600 # Panzer IV
+                icon-name: panzer_iv_ak
+            loadout:
+                entities:
+                    - ebp: panzer_iv_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - medium_armor 
+                    - vehicle_anti_tank
+            upgrades:
+                slots: 1
+                available:
+                    - mg42_panzer_ger
+
+    panzer_iv_stubby_ak:
+        category: Armour
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 400
+                fuel: 90
+            ui:
+                screen-name: $11241661 # Panzer IV Stubby
+                icon-name: panzer_iv_command_stubby_ak
+            loadout:
+                entities:
+                    - ebp: panzer_iv_stubby_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - medium_armor 
+                    - vehicle_turret 
+
+    semovente_75_18_ak:
+        category: Armour
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 300
+                fuel: 45
+            ui:
+                screen-name: $11216342 # Semovente 75/18
+                icon-name: semovente_75_18_ak
+            loadout:
+                entities:
+                    - ebp: semovente_75_18_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1600
+                      name: Vet1
+                    - experience: 4800
+                      name: Vet2
+                    - experience: 9600
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor 
+                    - vehicle_casemate_anti_tank 
+                    - italian
+            upgrades:
+                slots: 1
+                available:
+                    - camouflage_special_ops_ger
+                    - side_skirts_mechanized_ger
+
+    stug_iii_ak:
+        category: Armour
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 300
+                fuel: 60
+            ui:
+                screen-name: $11241750 # StuG III Assault Gun
+                icon-name: stug_iii_ak
+            loadout:
+                entities:
+                    - ebp: stug_iii_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1500
+                      name: Vet1
+                    - experience: 4500
+                      name: Vet2
+                    - experience: 9600
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - medium_armor 
+                    - vehicle_casemate_anti_tank 
+                    - vehicle_anti_tank
+            upgrades:
+                slots: 1
+                available:
+                    - mg42_stug_ak
+
+    stug_iii_d_ak:
+        category: Armour
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 280
+                fuel: 55
+            ui:
+                screen-name: $11241663 # StuG III Ausf. D
+                icon-name: stug_iii_d_ak
+            loadout:
+                entities:
+                    - ebp: stug_iii_d_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - medium_armor 
+                    - vehicle_casemate 
+                    - vehicle_anti_tank 
+            upgrades:
+                slots: 1
+                available:
+                    - mg42_stug_ak
+
+    tiger_ak:
+        category: Armour
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 700
+                fuel: 180
+            ui:
+                screen-name: $11183176 # Tiger I
+                icon-name: tiger_ak
+            loadout:
+                entities:
+                    - ebp: tiger_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 2750
+                      name: Vet1
+                    - experience: 8250
+                      name: Vet2
+                    - experience: 16500
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - heavy_armor 
+                    - vehicle_turret 
+                    - vehicle_anti_tank
+                    - apex_armor 
+            upgrades:
+                slots: 1
+                available:
+                    - mg42_tiger_ak
+
+    truck_2_5_ak:
+        category: Support
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 240
+                fuel: 15
+            ui:
+                screen-name: $11241652 # Opel Blitz Truck
+                icon-name: 2_5_truck_german
+            loadout:
+                entities:
+                    - ebp: truck_2_5_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            hold: {}
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+            upgrades:
+                slots: 1
+                available:
+                    - medical_truck_ak

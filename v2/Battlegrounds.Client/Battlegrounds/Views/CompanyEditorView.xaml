@@ -1190,7 +1190,7 @@
                             Margin="8"
                             Content="Retire Squad"
                             Command="{Binding RetireSquadCommand}"
-                            Style="{StaticResource ActionButton}"
+                            Style="{StaticResource DangerActionButton}"
                             />
                     </Grid>
                     

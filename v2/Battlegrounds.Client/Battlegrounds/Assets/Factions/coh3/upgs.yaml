@@ -211,3 +211,123 @@ upgrades:
                 screen-name: $11221245 # GrB39 Grenade Launcher Package
                 icon-name: grb39_grenade_launcher_ger
                 symbol-icon-name: weapon_grb_grenade_launcher
+
+    20mm_halftrack_250_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: $11242457 # 20mm Autcannon
+                icon-name: halftrack_250_20mm_ak
+                symbol-icon-name: halftrack_250_20mm_ger
+
+    81mm_mortar_halftrack_250_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 75
+            ui:
+                screen-name: $11242460 # Mortar Halftrack
+                icon-name: halftrack_250_mortar_ak
+                symbol-icon-name: halftrack_250_mortar_ger
+
+    vampire_halftrack_250_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 15
+            ui:
+                screen-name: $11263186 # Vampire Halftrack
+                icon-name: vampire_ht_ak_icon
+                symbol-icon-name: vampire_ht_ak_dec
+
+    spotting_scope_l6_40_ger:
+        faction-association: german # Also used by Afrika Korps
+        extensions:
+            cost:
+                munitions: 30
+            ui:
+                screen-name: $11158350 # Spotting Scope
+                icon-name: spotting_scopes
+                symbol-icon-name: tank_vision
+
+    flamethrower_l640_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: $11242461 # Flamethrower L6/40
+                icon-name: lanciaflamme
+                symbol-icon-name: tank_flamethrower
+
+    mg34_panzer_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11235857 # MG-34 Top Gunner
+                icon-name: mg34_kettenkrad_ger
+                symbol-icon-name: weapon_mg42
+
+    mg42_panzer_ger:
+        faction-association: german # Also used by Afrika Korps
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11235786 # MG-42 Top Gunner
+                icon-name: mg34_kettenkrad_ger
+                symbol-icon-name: weapon_mg42
+
+    camouflage_special_ops_ger:
+        faction-association: german # Also used by Afrika Korps
+        extensions:
+            cost:
+                munitions: 30
+            ui:
+                screen-name: $11170515 # Camouflage Special Ops
+                icon-name: camouflage_special_ops_ger
+                symbol-icon-name: spotter
+
+    side_skirts_mechanized_ger:
+        faction-association: german # Also used by Afrika Korps
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11179606 # Side Skirts Mechanized
+                icon-name: side_skirts_mechanized_ger
+                symbol-icon-name: shield
+
+    mg42_stug_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11235786 # MG-42 Top Gunner
+                icon-name: mg34_kettenkrad_ger
+                symbol-icon-name: weapon_mg42
+
+    mg42_tiger_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11235786 # MG-42 Top Gunner
+                icon-name: mg34_kettenkrad_ger
+                symbol-icon-name: weapon_mg42
+
+    medical_truck_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: $11242533 # Medical Truck
+                icon-name: 2_5_truck_medical_ak
+                symbol-icon-name: 2_5_truck_medical_ger

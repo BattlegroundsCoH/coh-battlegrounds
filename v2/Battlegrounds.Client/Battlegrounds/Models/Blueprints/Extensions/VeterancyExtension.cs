@@ -4,6 +4,8 @@ namespace Battlegrounds.Models.Blueprints.Extensions;
 public sealed record VeterancyExtension(VeterancyExtension.VeterancyRank[] Ranks)
     : BlueprintExtension(nameof(VeterancyExtension)) {
 
+    public static readonly VeterancyExtension None = new([]); // Represents no veterancy
+
     public sealed record VeterancyRank(float Experience, string ScreenName);
 
     private readonly VeterancyRank[] _ranks = [.. Ranks.OrderBy(rank => rank.Experience)]; // Ensure ranks are sorted by experience

@@ -26,7 +26,7 @@ public sealed class SquadBlueprint(string id, SquadCategory category, HashSet<Bl
 
     public LoadoutExtension Loadout => GetExtension<LoadoutExtension>();
 
-    public VeterancyExtension Veterancy => GetExtension<VeterancyExtension>();
+    public VeterancyExtension Veterancy => TryGetExtension(out VeterancyExtension? ext) ? ext : VeterancyExtension.None;
 
     public UpgradesExtension Upgrades => TryGetExtension(out UpgradesExtension? ext) ? ext : UpgradesExtension.Default;
 
