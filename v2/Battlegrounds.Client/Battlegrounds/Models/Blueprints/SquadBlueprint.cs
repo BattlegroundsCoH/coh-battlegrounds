@@ -16,6 +16,8 @@ public sealed class SquadBlueprint(string id, SquadCategory category, HashSet<Bl
 
     public bool IsTowable { get; init; } = false;
 
+    public bool RequiresTowing { get; init; } = false; // Cannot move unless towed by a vehicle
+
     public SquadCategory Category { get; init; } = category;
 
     public CostExtension Cost => GetExtension<CostExtension>();
@@ -24,7 +26,7 @@ public sealed class SquadBlueprint(string id, SquadCategory category, HashSet<Bl
 
     public LoadoutExtension Loadout => GetExtension<LoadoutExtension>();
 
-    public VeterancyExtension Veterancy => GetExtension<VeterancyExtension>();
+    public VeterancyExtension Veterancy => TryGetExtension(out VeterancyExtension? ext) ? ext : VeterancyExtension.None;
 
     public UpgradesExtension Upgrades => TryGetExtension(out UpgradesExtension? ext) ? ext : UpgradesExtension.Default;
 

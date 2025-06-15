@@ -21,8 +21,8 @@ namespace Battlegrounds.Services;
 /// external files and ensures thread-safe access to blueprint repositories.  Use this service to retrieve blueprints by
 /// ID, check for their existence, or access collections of blueprints for a specific game. The service also provides
 /// properties to check the loading state of blueprints.</remarks>
-/// <param name="localeService"></param>
-/// <param name="logger"></param>
+/// <param name="localeService">The service responsible for handling game localized text</param>
+/// <param name="logger">The service logger</param>
 public sealed class BlueprintService(IGameLocaleService localeService, ILogger<BlueprintService> logger) : IBlueprintService {
 
     private class BlueprintRepository {

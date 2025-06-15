@@ -53,6 +53,10 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
 
     public int Rank => _squad?.Rank ?? 0; // Rank is only available if this is a squad, otherwise it's 0.
 
+    public bool IsTransportable => IsSquad && (_squad.Blueprint.IsTowable || _squad.Blueprint.IsInfantry); // Check if the squad is transportable based on its blueprint.
+
+    public bool CanDisableTransport => IsSquad && !_squad.Blueprint.RequiresTowing; // Check if the squad requires towing, which disallows disabling transport.
+
     public bool HasTransport {
         get => _hasTransport;
         set {
