@@ -378,24 +378,24 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             LobbyState = "Building gamemode...";
             var buildResult = await _playService.BuildGamemode(_lobby);
             if (buildResult.Failed) {
-                IsMatchStarting = false;
-                // TODO: Show error message
+                LobbyState = "Failed to build gamemode, please check logs for details.";
+                await Task.Delay(5000); // Wait for 5 seconds before resetting state
                 return;
             }
 
             LobbyState = "Uploading gamemode...";
             var uploadResult = await _lobby.UploadGamemode(buildResult.GamemodeSgaFileLocation); // NOP operation in singleplayer mode
             if (uploadResult.Failed) {
-                IsMatchStarting = false;
-                // TODO: Show error message
+                LobbyState = "Failed to upload gamemode, please check logs for details.";
+                await Task.Delay(5000); // Wait for 5 seconds before resetting state
                 return;
             }
 
             LobbyState = "Launching game...";
             var launchResult = await _lobby.LaunchGame(); // for multiplayer this means tell other players to launch (NOP in singleplayer)
             if (launchResult.Failed) {
-                IsMatchStarting = false;
-                // TODO: Show error message
+                LobbyState = "Failed to launch game, please check logs for details.";
+                await Task.Delay(5000); // Wait for 5 seconds before resetting state
                 return;
             }
 
@@ -414,20 +414,24 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             IsPlaying = false;
             var matchResult = await playResult.GameInstance.WaitForMatch();
             if (matchResult.Failed) {
-                // TODO: Show error message
+                LobbyState = "Match failed to complete, please check logs for details.";
+                await Task.Delay(5000); // Wait for 5 seconds before resetting state
                 return;
             } else if (matchResult.ScarError) {
-                // TODO: Show error message
+                LobbyState = "Fatal SCAR error occurred during match, please check logs.";
+                await Task.Delay(5000); // Wait for 5 seconds before resetting state
                 return;
             } else if (matchResult.BugSplat) {
-                // TODO: Show error message
+                LobbyState = "BugSplat occurred during match, please check logs.";
+                await Task.Delay(5000); // Wait for 5 seconds before resetting state
                 return;
             }
 
             LobbyState = "Match over, analysing replay...";
             var replayAnalysis = await _replayService.AnalyseReplay(matchResult.ReplayFilePath, _lobby.Game.Id);
             if (replayAnalysis.Failed) {
-                // TODO: Show error message
+                LobbyState = "Failed to analyse replay, please check logs for details.";
+                await Task.Delay(5000); // Wait for 5 seconds before resetting state
                 return;
             }
 
@@ -437,6 +441,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             } else {
                 LobbyState = "Match results reported successfully!";
             }
+
+            await Task.Delay(5000); // Wait for 5 seconds before resetting state
 
         } finally {
             IsMatchStarting = false;

@@ -108,10 +108,13 @@ public sealed class CompanyService(
         string companyFilePath = Path.Combine(_configuration.CompaniesPath, $"{company.Id}.bgc");
         try {
             File.WriteAllBytes(companyFilePath, serializedCompanyStream.ToArray()); // Save the serialized company to a file
+            UpdateLocalCompanies(company);
         } catch (Exception ex) {
             _logger.LogError(ex, "Error saving company to file {CompanyFile}: {ExMessage}", companyFilePath, ex.Message);
             return SaveCompanyResult.FailedSave;
         }
+
+        UpdateLocalCompanyCache(company);
 
         bool success = true;
         if (syncWithRemote) {
@@ -119,12 +122,24 @@ public sealed class CompanyService(
             success = await SyncCompanyWithRemoteInternal(company.Id, company.Faction, serializedCompanyStream); // Call the internal method to handle the actual synchronization
         }
 
-        if (success) {
-            _localCompanies.Add(company); // Add to the local companies
-            _localCompanyCache.Add(company); // Add the company to the local cache
-        }
         return success ? SaveCompanyResult.Success : SaveCompanyResult.FailedSync;
 
+    }
+
+    private void UpdateLocalCompanyCache(Company company) {
+        if (company is null) {
+            throw new ArgumentNullException(nameof(company), "Company cannot be null.");
+        }
+        _localCompanyCache.RemoveWhere(c => c.Id == company.Id); // Remove the old company from the cache
+        _localCompanyCache.Add(company); // Add the updated company to the cache
+    }
+
+    private void UpdateLocalCompanies(Company company) {
+        if (company is null) {
+            throw new ArgumentNullException(nameof(company), "Company cannot be null.");
+        }
+        _localCompanies.RemoveWhere(c => c.Id == company.Id); // Remove the old company from the cache
+        _localCompanies.Add(company); // Add the updated company to the cache
     }
 
     public async ValueTask<bool> SyncCompanyWithRemote(Company company) {

@@ -118,8 +118,18 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
             return false; // No events for local participant, nothing to report
         }
 
+        // Get local participant slot
+        var (team, slot) = GetLocalPlayerSlot();
+        if (team is null || slot == -1) {
+            _logger.Error("Local participant {ParticipantId} not found in any team", _localParticipant.ParticipantId);
+            return false; // Local participant not found in any team, cannot report match result
+        }
+
+        var localCompanyId = team.Slots[slot].CompanyId;
+        _logger.Information("Reporting match result for game {GameId} with local company ID {CompanyId}", matchResult.GameId, localCompanyId);
+
         // Apply the company changes to the local company
-        Company? updatedCompany = await _companyService.ApplyEvents(localEvents, _companies[_localParticipant.ParticipantId], commitLocally: true);
+        Company? updatedCompany = await _companyService.ApplyEvents(localEvents, _companies[localCompanyId], commitLocally: true);
         if (updatedCompany is null) {
             _logger.Error("Failed to apply company changes for local participant {ParticipantId} in match result", _localParticipant.ParticipantId);
             return false; // Failed to apply company changes, cannot report
