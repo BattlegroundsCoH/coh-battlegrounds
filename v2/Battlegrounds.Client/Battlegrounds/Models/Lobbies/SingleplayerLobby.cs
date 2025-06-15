@@ -96,17 +96,20 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
     public Task<LaunchGameResult> LaunchGame() => Task.FromResult(new LaunchGameResult()); // NOP operation in singleplayer mode
 
     public async ValueTask<bool> ReportMatchResult(ReplayAnalysisResult matchResult) {
+
         if (matchResult.Failed || matchResult.Replay is null) {
+            _logger.Error("Match result for game {GameId} failed or replay is null", matchResult.GameId);
             return false; // Cannot report match result if it failed or replay is null
         }
 
         var result = matchResult.GetMatchResult(this);
         if (result == MatchResult.Unknown) {
+            _logger.Error("Match result for game {GameId} could not be determined", matchResult.GameId);
             return false; // Cannot determine match result
         }
 
         if (!result.IsValid) {
-            // Not valid, nothing more to do, no reason to report
+            _logger.Error("Match result for game {GameId} is invalid", matchResult.GameId);
             return false;
         }
 

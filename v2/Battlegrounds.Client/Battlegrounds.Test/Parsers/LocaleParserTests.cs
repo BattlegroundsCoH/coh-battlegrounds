@@ -11,7 +11,7 @@ public sealed class LocaleParserTests {
 
     [SetUp]
     public void SetUp() {
-        _parser = new LocaleParser(new TestLogger<LocaleParser>());
+        _parser = new LocaleParser();
     }
 
     [Test]

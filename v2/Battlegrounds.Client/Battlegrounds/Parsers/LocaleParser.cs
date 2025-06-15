@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
@@ -17,9 +17,9 @@ namespace Battlegrounds.Parsers;
 /// unsupported languages,  and convert locale keys to their numeric representations. It ensures that only languages
 /// specified in  <see cref="Consts.SupportedLanguages"/> are included in the parsed result.</remarks>
 /// <param name="logger">The service logger</param>
-public sealed class LocaleParser(ILogger<LocaleParser> logger) {
+public sealed class LocaleParser() {
 
-    private struct LocaleRefStr : IYamlConvertible {
+    private class LocaleRefStr : IYamlConvertible {
         public uint Value { get; set; }
 
         public void Read(IParser parser, Type expectedType, ObjectDeserializer nestedObjectDeserializer) {
@@ -39,7 +39,7 @@ public sealed class LocaleParser(ILogger<LocaleParser> logger) {
         }
     }
 
-    private readonly ILogger<LocaleParser> _logger = logger;
+    private readonly ILogger _logger = Log.ForContext<LocaleParser>();
     private readonly IDeserializer _deserializer = 
         new DeserializerBuilder()
             .WithNamingConvention(HyphenatedNamingConvention.Instance)
@@ -69,12 +69,12 @@ public sealed class LocaleParser(ILogger<LocaleParser> logger) {
         }
 
         using StreamReader reader = new(source, encoding: Encoding.UTF8, leaveOpen: true);
-        Dictionary<string, Dictionary<LocaleRefStr, string>> locales = await DeserializeYamlContents(reader);
+        Dictionary<string, Dictionary<LocaleRefStr, string>> locales = await Task.Run(() => DeserializeYamlContents(reader));
         Dictionary<string, Dictionary<uint, string>> result = [];
         
         foreach (var (lang, entries) in locales) {
             if (!Consts.SupportedLanguages.Contains(lang)) {
-                _logger.LogWarning("Unsupported language '{Language}' found in locale data, skipping.", lang);
+                _logger.Warning("Unsupported language '{Language}' found in locale data, skipping.", lang);
                 continue;
             }
             result[lang] = entries.ToDictionary(kvp => kvp.Key.Value, kvp => kvp.Value);
@@ -83,15 +83,15 @@ public sealed class LocaleParser(ILogger<LocaleParser> logger) {
 
     }
 
-    private Task<Dictionary<string, Dictionary<LocaleRefStr, string>>> DeserializeYamlContents(StreamReader reader) => Task.Run(() => {
-        Dictionary<string, Dictionary<LocaleRefStr, string>> result = [];
+    private Dictionary<string, Dictionary<LocaleRefStr, string>> DeserializeYamlContents(StreamReader reader) {
+        Dictionary<string, Dictionary<LocaleRefStr, string>> result;
         try {
             result = _deserializer.Deserialize<Dictionary<string, Dictionary<LocaleRefStr, string>>>(reader);
         } catch (YamlException ex) {
-            _logger.LogError(ex, "Failed to deserialize YAML content: {Message}", ex.Message);
+            _logger.Error(ex, "Failed to deserialize YAML content: {Message}", ex.Message);
             throw new InvalidDataException("The provided stream does not contain valid YAML content.", ex); // Needs to wrap the exception for better clarity
         }
         return result;
-    });
+    }
 
 }

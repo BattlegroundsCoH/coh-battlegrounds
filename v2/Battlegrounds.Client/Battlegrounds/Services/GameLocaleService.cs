@@ -11,10 +11,12 @@ using Serilog;
 
 namespace Battlegrounds.Services;
 
-public sealed class GameLocaleService : IGameLocaleService {
+public sealed class GameLocaleService(ILogger<GameLocaleService> logger) : IGameLocaleService {
 
-    private readonly Dictionary<uint, string> _localeStringsCoH3 = [];
-    private readonly Dictionary<uint, string> _localeStringsCoH2 = [];
+    private readonly ILogger<GameLocaleService> _logger = logger;
+
+    private Dictionary<uint, string> _localeStringsCoH3 = [];
+    private Dictionary<uint, string> _localeStringsCoH2 = [];
 
     private readonly Dictionary<Type, string> _identifiers = new() {
         { typeof(CoH3), CoH3.GameId },
@@ -29,23 +31,21 @@ public sealed class GameLocaleService : IGameLocaleService {
 
     public async Task<bool> LoadLocalesAsync() { // TODO: Maybe move into a separate method for language selection
 
-        LocaleParser localeParser = new(LoggerFactory.Create(x => x.AddSerilog()).CreateLogger<LocaleParser>());
+        LocaleParser localeParser = new();
 
         // Load CoH3 locale strings
         try {
-            using var coh3localeStream = File.OpenRead("Assets/Factions/coh3/locale.yaml");
             var stopwatch = Stopwatch.StartNew();
+            using var coh3localeStream = File.OpenRead("Assets/Factions/coh3/locale.yaml");
             var coh3Locales = await localeParser.ParseLocalesAsync(coh3localeStream);
             if (!coh3Locales.TryGetValue(Language, out var coh3entries)) {
                 coh3entries = coh3Locales[Consts.UCS_LANG_ENGLISH]; // Fallback to English if the requested language is not available
             }
-            foreach (var (key, value) in coh3entries) {
-                _localeStringsCoH3[key] = value;
-            }
+            _localeStringsCoH3 = coh3entries; // Store the locale strings for CoH3
             stopwatch.Stop();
-            Log.Information("Loaded {Count} CoH3 locale strings in {ElapsedMilliseconds} ms.", _localeStringsCoH3.Count, stopwatch.ElapsedMilliseconds);
+            _logger.LogInformation("Loaded {Count} CoH3 locale strings in {ElapsedMilliseconds} ms.", _localeStringsCoH3.Count, stopwatch.ElapsedMilliseconds);
         } catch (Exception ex) {
-            Log.Error(ex, "Failed to load CoH3 locale strings.");
+            _logger.LogError(ex, "Failed to load CoH3 locale strings.");
             return false;
         }
 

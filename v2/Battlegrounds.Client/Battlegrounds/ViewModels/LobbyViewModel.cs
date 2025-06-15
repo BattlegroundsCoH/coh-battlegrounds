@@ -406,8 +406,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
             var playResult = await _playService.LaunchGameApp(_lobby.Game);
             if (playResult.Failed) {
-                // TODO: Show error message
-                IsWaitingForMatchOver = false;
+                LobbyState = "Failed to launch game application.";
+                await Task.Delay(5000); // Wait for 5 seconds before resetting state
                 return;
             }
 
