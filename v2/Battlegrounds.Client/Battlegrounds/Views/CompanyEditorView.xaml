@@ -1143,7 +1143,7 @@
                                     Content="No Transport"
                                     IsChecked="{Binding HasTransport, Converter={StaticResource InverseBooleanConverter}}"
                                     Margin="4"
-                                    IsEnabled="{Binding CanDisableTranspoert}"
+                                    IsEnabled="{Binding CanDisableTransport}"
                                     Foreground="{StaticResource ForegroundWhiteBrush}"
                                     VerticalContentAlignment="Center"/>
 
