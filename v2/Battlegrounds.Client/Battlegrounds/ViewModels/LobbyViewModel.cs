@@ -211,7 +211,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
         LeaveCommand = new AsyncRelayCommand(LeaveLobby);
         SendMessageCommand = new AsyncRelayCommand(SendChatMessage);
-        StartMatchCommand = new AsyncRelayCommand(StartGame, () => CanStartMatch);
+        StartMatchCommand = new AsyncRelayCommand(StartGame);
         SetMapCommand = new AsyncRelayCommand<Map>(SetMap);
 
         // Sync view with lobby state

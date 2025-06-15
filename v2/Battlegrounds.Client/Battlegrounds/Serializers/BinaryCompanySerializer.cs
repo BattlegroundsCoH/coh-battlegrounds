@@ -13,7 +13,7 @@ public sealed class BinaryCompanySerializer : ICompanySerializer {
     public static readonly byte[] BINARY_COMPANY_HEADER = [0x42, 0x47, 0x43, 0x0]; // "BGC" in ASCII
 
     public void SerializeCompany(Stream destination, Company company) {
-        using var writer = new BinaryWriter(destination, Encoding.UTF8, true);
+        using var writer = new BinaryWriter(destination, Consts.UTF8, true);
 
         writer.Write(BINARY_COMPANY_HEADER);
         writer.Write(BINARY_COMPANY_VERSION);

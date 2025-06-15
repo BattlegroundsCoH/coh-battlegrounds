@@ -44,6 +44,7 @@ public sealed class CoH3ArchiverService(CoH3 game, Configuration configuration, 
             await _eeProcess.WaitForExitAsync();
             if (_eeProcess.ExitCode != 0) {
                 string errorOutput = await _eeProcess.StandardError.ReadToEndAsync();
+                _logger.LogError("Essence Editor exiected with code 0x{Code}, stderr: {Error}", _eeProcess.ExitCode, errorOutput);
                 throw new InvalidOperationException($"Essence Editor exited with code {_eeProcess.ExitCode}: {errorOutput}");
             }
             string output = await _eeProcess.StandardOutput.ReadToEndAsync();

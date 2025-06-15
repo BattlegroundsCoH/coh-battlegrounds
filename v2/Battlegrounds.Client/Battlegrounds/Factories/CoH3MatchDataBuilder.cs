@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Text;
 
 using Battlegrounds.Models.Blueprints.Extensions;
 using Battlegrounds.Models.Companies;
@@ -33,7 +32,7 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
     public async Task<bool> WriteMatchData(string matchData) {
         try {
             using var fs = File.Open(game.MatchDataPath, FileMode.Create);
-            using var writer = new StreamWriter(fs, Encoding.UTF8);
+            using var writer = new StreamWriter(fs, Consts.UTF8);
             await writer.WriteAsync(matchData);
         } catch (IOException ex) {
             throw new Exception($"Failed to create match data file: {ex.Message}", ex);

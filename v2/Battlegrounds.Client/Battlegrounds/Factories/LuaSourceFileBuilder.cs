@@ -59,7 +59,7 @@ public sealed class LuaSourceFileBuilder {
     }
 
     public LuaSourceFileBuilder WriteToFile(string testFilePath) {
-        File.WriteAllText(testFilePath, ToString(), Encoding.UTF8);
+        File.WriteAllText(testFilePath, ToString(), Consts.UTF8);
         return this;
     }
 

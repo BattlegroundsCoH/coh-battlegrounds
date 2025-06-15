@@ -1,4 +1,6 @@
-﻿namespace Battlegrounds;
+﻿using System.Text;
+
+namespace Battlegrounds;
 
 public static class Consts {
 
@@ -13,5 +15,7 @@ public static class Consts {
         UCS_LANG_FRENCH,
         UCS_LANG_POLISH
     ];
+
+    public static readonly Encoding UTF8 = new UTF8Encoding(encoderShouldEmitUTF8Identifier:false, throwOnInvalidBytes:true);
 
 }
