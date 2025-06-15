@@ -53,6 +53,7 @@ public sealed class ReplayAnalysisResult {
                         _logger.Warning("Squad {SquadCompanyId} deployed multiple times by player {PlayerId} at {Timestamp}", deployedEvent.SquadCompanyId, pid, deployedEvent.Timestamp);
                         badEvents.Add(new BadMatchEvent(deployedEvent, $"Squad {deployedEvent.SquadCompanyId} deployed multiple times"));
                     }
+                    _logger.Debug("Squad {SquadCompanyId} deployed by player {PlayerId} at {Timestamp}", deployedEvent.SquadCompanyId, pid, deployedEvent.Timestamp);
                     companyChanges[pid].AddLast(deployedEvent);
                     break;
                 }
@@ -61,6 +62,7 @@ public sealed class ReplayAnalysisResult {
                         _logger.Warning("Squad {SquadCompanyId} killed without being deployed by player {PlayerId} at {Timestamp}", killedEvent.SquadCompanyId, pid, killedEvent.Timestamp);
                         badEvents.Add(new BadMatchEvent(killedEvent, $"Squad {killedEvent.SquadCompanyId} killed without being deployed"));
                     }
+                    _logger.Debug("Squad {SquadCompanyId} killed by player {PlayerId} at {Timestamp}", killedEvent.SquadCompanyId, pid, killedEvent.Timestamp);
                     companyChanges[pid].AddLast(killedEvent);
                     break;
                 }
@@ -69,6 +71,7 @@ public sealed class ReplayAnalysisResult {
                         _logger.Warning("Weapon pickup for undeployed squad {SquadCompanyId} by player {PlayerId} at {Timestamp}", pickupEvent.SquadCompanyId, pid, pickupEvent.Timestamp);
                         badEvents.Add(new BadMatchEvent(pickupEvent, $"Weapon pickup for undeployed squad {pickupEvent.SquadCompanyId}"));
                     }
+                    _logger.Debug("Weapon {WeaponName} picked up by squad {SquadCompanyId} of player {PlayerId} at {Timestamp}", pickupEvent.WeaponName, pickupEvent.SquadCompanyId, pid, pickupEvent.Timestamp);
                     companyChanges[pid].AddLast(pickupEvent);
                     break;
                 }
@@ -77,6 +80,7 @@ public sealed class ReplayAnalysisResult {
                         _logger.Warning("Squad {SquadCompanyId} recalled without being deployed by player {PlayerId} at {Timestamp}", recalledEvent.SquadCompanyId, pid, recalledEvent.Timestamp);
                         badEvents.Add(new BadMatchEvent(recalledEvent, $"Squad {recalledEvent.SquadCompanyId} recalled without being deployed"));
                     }
+                    _logger.Debug("Squad {SquadCompanyId} recalled by player {PlayerId} at {Timestamp}", recalledEvent.SquadCompanyId, pid, recalledEvent.Timestamp);
                     companyChanges[pid].AddLast(recalledEvent);
                     break;
                 }
@@ -87,6 +91,7 @@ public sealed class ReplayAnalysisResult {
                         continue;
                     }
                     playerOverEvents[pid] = playerOverEvent;
+                    _logger.Debug("Match player over event for player {PlayerId} at {Timestamp}", pid, playerOverEvent.Timestamp);
                     break;
                 }
                 default:

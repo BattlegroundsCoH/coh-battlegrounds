@@ -67,7 +67,12 @@ public sealed class Configuration {
 
     public bool GameDebugMode { get; set; } = false; // Should the '-debug' flag be passed to the game?
 
-    public string LogLevel { get; set; } = "info"; // Default log level for the application
+    public string LogLevel { get; set; } =
+        #if DEBUG 
+            "trace"; // Default log level testing
+        #else
+            "info"; // Default log level for production
+        #endif
 
     public APIConfiguration API { get; set; } = new APIConfiguration(); // Configuration for the Battlegrounds API
 
