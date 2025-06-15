@@ -1,13 +1,12 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Game;
 using Battlegrounds.Resources;
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Game.Scenarios.CoH2;
+using Battlegrounds.Game.Scenarios;
 
 namespace Battlegrounds.UI.Controls;
 
@@ -19,7 +18,7 @@ public partial class Minimap : UserControl {
     #region Properties
 
     public static readonly DependencyProperty ScenarioProperty =
-        DependencyProperty.Register(nameof(Scenario), typeof(Scenario), typeof(Minimap),
+        DependencyProperty.Register(nameof(Scenario), typeof(CoH2Scenario), typeof(Minimap),
             new FrameworkPropertyMetadata(
                 null,
                 FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,
@@ -27,8 +26,8 @@ public partial class Minimap : UserControl {
                 null) { BindsTwoWayByDefault = true },
             null);
 
-    public Scenario? Scenario {
-        get => this.GetValue(ScenarioProperty) as Scenario;
+    public CoH2Scenario? Scenario {
+        get => this.GetValue(ScenarioProperty) as CoH2Scenario;
         set {
             this.SetValue(ScenarioProperty, value);
             this.Dispatcher.Invoke(() => this.SetDisplay(value));
@@ -51,7 +50,7 @@ public partial class Minimap : UserControl {
 
         // Get minimap and new scenario
         Minimap m = (Minimap)d;
-        Scenario? scen = e.NewValue as Scenario;
+        CoH2Scenario? scen = e.NewValue as CoH2Scenario;
 
         // Update
         m.Scenario = scen;
@@ -64,7 +63,7 @@ public partial class Minimap : UserControl {
         this.InitializeComponent();
     }
 
-    private async void SetDisplay(Scenario? scenario) {
+    private async void SetDisplay(IScenario? scenario) {
 
         // Clear existing
         this.ScenarioCanvas.Children.Clear();
@@ -81,8 +80,8 @@ public partial class Minimap : UserControl {
         var points = await Task.Run(() => scenario.Points.Map(x => (x.Position, x.Owner switch {
             >= 1000 and < 1008 => (ushort)(x.Owner - 1000),
             _ => ushort.MaxValue
-        }, BlueprintManager.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint))));
-
+        }, BattlegroundsContext.DataSource.GetBlueprints(BattlegroundsContext.ModManager.GetVanillaPackage(scenario.Game), scenario.Game)
+        !.FromBlueprintName<EntityBlueprint>(x.EntityBlueprint))));
 
         // Display basic information
         await this.Dispatcher.BeginInvoke(() => this.TryShowPositions(scenario, points));
@@ -96,7 +95,7 @@ public partial class Minimap : UserControl {
 
     }
 
-    private void TryShowPositions(Scenario scen, (GamePosition pos, ushort owner, EntityBlueprint ebp)[] pointData) {
+    private void TryShowPositions(IScenario scen, (GamePosition pos, ushort owner, EntityBlueprint ebp)[] pointData) {
 
         // Pick from points
         for (int i = 0; i < pointData.Length; i++) {
@@ -108,7 +107,7 @@ public partial class Minimap : UserControl {
 
     }
 
-    public static void AddMinimapItem(Canvas canvas, double width, double height, Scenario scenario, GamePosition pos, ushort owner, EntityBlueprint ebp) {
+    public static void AddMinimapItem(Canvas canvas, double width, double height, IScenario scenario, GamePosition pos, ushort owner, EntityBlueprint ebp) {
 
         // Grab ico
         string ico = ebp.Name switch {

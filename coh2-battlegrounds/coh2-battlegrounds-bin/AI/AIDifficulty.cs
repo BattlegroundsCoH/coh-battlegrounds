@@ -50,6 +50,6 @@ public static class AIExtensions {
     /// </summary>
     /// <param name="difficulty">The difficulty to get display name of.</param>
     /// <returns>The <see cref="string"/> representation of an <see cref="AIDifficulty"/> value. Empty if <see cref="AIDifficulty.Human"/>.</returns>
-    public static string GetIngameDisplayName(this AIDifficulty difficulty) => BattlegroundsInstance.Localize.GetEnum(difficulty);
+    public static string GetIngameDisplayName(this AIDifficulty difficulty) => BattlegroundsContext.Localize.GetEnum(difficulty);
 
 }

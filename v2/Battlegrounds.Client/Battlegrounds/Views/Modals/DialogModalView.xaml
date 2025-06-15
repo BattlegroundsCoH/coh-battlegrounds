@@ -1,0 +1,77 @@
+﻿<helpers:DialogUserControl x:Class="Battlegrounds.Views.Modals.DialogModalView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Battlegrounds.Views.Modals"
+                           xmlns:helpers="clr-namespace:Battlegrounds.Helpers"
+                           xmlns:converters="clr-namespace:Battlegrounds.Converters"
+                           xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels.Modals"
+             mc:Ignorable="d"               
+                           d:DataContext="{d:DesignInstance Type=viewmodels:DialogModalViewModel}"
+            d:DesignHeight="450" d:DesignWidth="800">
+
+    <helpers:DialogUserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </helpers:DialogUserControl.Resources>
+    
+    <Border Background="{StaticResource BackgroundBlueBrush}"
+    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+    BorderThickness="1"
+    CornerRadius="8">
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <TextBlock Text="{Binding Header}"
+               FontSize="20"
+               FontWeight="Bold"
+               Foreground="{StaticResource ForegroundWhiteBrush}"
+               Margin="0,0,0,20"/>
+
+            <!-- Form Content -->
+            <TextBlock Text="{Binding Description}"
+                       Grid.Row="1"
+               FontSize="14"
+               Foreground="{StaticResource ForegroundWhiteBrush}"
+                       TextWrapping="WrapWithOverflow"
+               Margin="0,0,0,20"/>
+
+            <!-- Buttons -->
+            <StackPanel Grid.Row="2" 
+                Orientation="Horizontal" 
+                HorizontalAlignment="Center">
+                <Button 
+                    Content="Cancel"
+                    Width="100"
+                    Visibility="{Binding IsCancelVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Style="{StaticResource DangerActionButton}"
+                    Command="{Binding CancelCommand}"/>
+                <Button Content="No"
+                    Width="100"
+                    Visibility="{Binding IsNoVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Style="{StaticResource ActionButton}"
+                    Margin="8,0,0,0"
+                    Command="{Binding NoCommand}"/>
+                <Button 
+                    Content="Confirm"
+                    Width="100"
+                    Visibility="{Binding IsConfirmVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Style="{StaticResource ActionButton}"
+                    Margin="8,0,0,0"
+                    Command="{Binding ConfirmCommand}"/>
+                <Button 
+                    Content="Yes"
+                    Width="100"
+                    Visibility="{Binding IsYesVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Style="{StaticResource ActionButton}"
+                    Margin="8,0,0,0"
+                    Command="{Binding YesCommand}"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</helpers:DialogUserControl>

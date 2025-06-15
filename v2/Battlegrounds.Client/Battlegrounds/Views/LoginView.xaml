@@ -1,0 +1,113 @@
+<UserControl x:Class="Battlegrounds.Views.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodels:LoginViewModel}"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Border Width="450" 
+                Height="500" 
+                Background="{StaticResource BackgroundDarkBlueBrush}" 
+                CornerRadius="8" 
+                BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                BorderThickness="1">
+
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="0" 
+                                 BlurRadius="15" 
+                                 Color="Black" 
+                                 Opacity="0.3"/>
+            </Border.Effect>
+            
+            <Grid Margin="30">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Logo/Title -->
+                <StackPanel Grid.Row="0" Margin="0,0,0,40" HorizontalAlignment="Center">
+                    <TextBlock Text="BATTLEGROUNDS" 
+                               FontSize="32" 
+                               FontWeight="Bold" 
+                               Foreground="{StaticResource ForegroundWhiteBrush}"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="LOGIN" 
+                               FontSize="18" 
+                               Foreground="{StaticResource ForegroundLightBlueBrush}"
+                               HorizontalAlignment="Center"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <!-- Username Input -->
+                <StackPanel Grid.Row="1" Margin="0,0,0,20">
+                    <TextBlock Text="USERNAME" 
+                               FontSize="12" 
+                               Foreground="{StaticResource ForegroundGrayBrush}" 
+                               Margin="0,0,0,8"/>
+                    <Border Background="{StaticResource BackgroundBlueBrush}" 
+                            CornerRadius="4" 
+                            BorderBrush="{StaticResource BackgroundLightBlueBrush}" 
+                            BorderThickness="1">
+                        <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" 
+                                 Background="Transparent" 
+                                 BorderThickness="0" 
+                                 Padding="10,12" 
+                                 Foreground="{StaticResource ForegroundWhiteBrush}"
+                                 CaretBrush="{StaticResource ForegroundWhiteBrush}"/>
+                    </Border>
+                </StackPanel>
+
+                <!-- Password Input -->
+                <StackPanel Grid.Row="2" Margin="0,0,0,20">
+                    <TextBlock Text="PASSWORD" 
+                               FontSize="12" 
+                               Foreground="{StaticResource ForegroundGrayBrush}" 
+                               Margin="0,0,0,8"/>
+                    <Border Background="{StaticResource BackgroundBlueBrush}" 
+                            CornerRadius="4" 
+                            BorderBrush="{StaticResource BackgroundLightBlueBrush}" 
+                            BorderThickness="1">
+                        <PasswordBox x:Name="PasswordBox"
+                                     Background="Transparent" 
+                                     BorderThickness="0" 
+                                     Padding="10,12" 
+                                     Foreground="{StaticResource ForegroundWhiteBrush}"
+                                     CaretBrush="{StaticResource ForegroundWhiteBrush}"/>
+                    </Border>
+                </StackPanel>
+
+                <!-- Error Message -->
+                <TextBlock Grid.Row="3" 
+                           Text="{Binding ErrorMessage}" 
+                           Foreground="{StaticResource AccentRedBrush}" 
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,15"
+                           Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                <!-- Spacer -->
+                <Grid Grid.Row="4"/>
+
+                <!-- Login Button -->
+                <Button Grid.Row="5" 
+                        Content="LOGIN" 
+                        Style="{StaticResource ActionButton}" 
+                        Height="50" 
+                        FontSize="16"
+                        Background="{StaticResource AccentBlueBrush}"
+                        Command="{Binding LoginCommand}"
+                        CommandParameter="{Binding ElementName=PasswordBox}"
+                        IsEnabled="{Binding CanLogin}"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

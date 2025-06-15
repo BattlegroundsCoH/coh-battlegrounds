@@ -1,0 +1,1223 @@
+﻿<UserControl x:Class="Battlegrounds.Views.CompanyEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Battlegrounds.Views"
+             xmlns:vm="clr-namespace:Battlegrounds.ViewModels"
+             xmlns:bp="clr-namespace:Battlegrounds.Models.Blueprints"
+             xmlns:converters="clr-namespace:Battlegrounds.Converters"
+             xmlns:c="clr-namespace:Battlegrounds.Models.Companies"
+             xmlns:e="clr-namespace:Battlegrounds.Rendering.Effects"
+             mc:Ignorable="d" 
+             d:DesignHeight="720" d:DesignWidth="1280"
+             d:DataContext="{d:DesignInstance Type=vm:CompanyEditorViewModel}">
+
+    <UserControl.Resources>
+
+        <converters:BlueprintNameConverter x:Key="BlueprintNameConverter"/>
+        <converters:BlueprintBriefTextConverter x:Key="BlueprintBriefTextConverter"/>
+        <converters:BlueprintHelpTextConverter x:Key="BlueprintHelpTextConverter"/>
+        <converters:BlueprintIconConverter x:Key="BlueprintIconConverter"/>
+        <converters:BlueprintIconMultiBindingConverter x:Key="BlueprintIconMultiConverter"/>
+        <converters:BlueprintSymbolMultiBindingConverter x:Key="BlueprintSymbolMultiConverter"/>
+        <converters:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
+        <converters:NullVisibilityConverter x:Key="NotNullVisibilityConverter" IsInverted="True"/>
+        <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
+        <converters:RankStarColourConverter x:Key="RankStarColourConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
+        <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
+
+        <DataTemplate x:Key="AvailableUnitTemplate">
+            <Button Command="{Binding DataContext.SetSelectedSquadCommand, 
+            RelativeSource={RelativeSource AncestorType=UserControl}}"
+            CommandParameter="{Binding}"
+            Background="Transparent"
+            BorderThickness="0"
+            Padding="0"
+            Cursor="Hand">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border 
+                            x:Name="UnitBorder"
+                            Padding="12,8"
+                            Margin="4"
+                            Width="320"
+                            Background="{StaticResource BackgroundBlueBrush}"
+                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                            BorderThickness="1"
+                            CornerRadius="4">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Unit Icon -->
+                                <Image 
+                                    Grid.Column="0"
+                                    Width="32"
+                                    Height="32"
+                                    Margin="0,0,12,0">
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
+                                            <Binding Path="."/>
+                                            <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+
+                                <!-- Unit Name -->
+                                <TextBlock Grid.Column="1"
+                                 Foreground="{StaticResource ForegroundWhiteBrush}"
+                                 VerticalAlignment="Center">
+                                    <TextBlock.Text>
+                                        <Binding Path="." Converter="{StaticResource BlueprintNameConverter}"/>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                                <Setter TargetName="UnitBorder" Property="BorderBrush" Value="{StaticResource AccentBlueBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource BackgroundDarkBlueBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="CompanyUnitTemplate">
+            <Button 
+                Command="{Binding DataContext.SetSelectedSquadCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                CommandParameter="{Binding}"
+                Background="Transparent"
+                BorderThickness="0"
+                Padding="0"
+                Cursor="Hand">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border 
+                            x:Name="UnitBorder"
+                            Padding="12,8"
+                            Margin="4"
+                            Width="280"
+                            Background="{StaticResource BackgroundBlueBrush}"
+                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                            BorderThickness="1"
+                            CornerRadius="4">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Unit Icon -->
+                                <Image 
+                                    Grid.Column="0"
+                                    Width="32"
+                                    Height="32"
+                                    Margin="0,0,12,0">
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
+                                            <Binding Path="Blueprint"/>
+                                            <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+
+                                <!-- Unit Name (and ID) -->
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock 
+                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        VerticalAlignment="Center">
+                                        <Run Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}}"/> (#<Run Text="{Binding Id, Mode=OneWay}"/>)
+                                    </TextBlock>
+                                    <!-- Custom Name (if any)-->
+                                    <TextBlock 
+                                        FontStyle="Italic"
+                                        Visibility="{Binding HasCustomName, Converter={StaticResource BooleanToVisibility}}"
+                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        VerticalAlignment="Center">
+                                        
+                                    </TextBlock>
+                                </StackPanel>
+                                
+                                <!-- Unit upgrades -->
+                                <ItemsControl 
+                                    Grid.Column="2"
+                                    ItemsSource="{Binding Upgrades}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Image 
+                                                Width="24"
+                                                Height="24"
+                                                Margin="0,0,4,0">
+                                                <Image.Source>
+                                                    <MultiBinding Converter="{StaticResource BlueprintSymbolMultiConverter}">
+                                                        <Binding Path="."/>
+                                                        <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                                    </MultiBinding>
+                                                </Image.Source>
+                                            </Image>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!-- Unit transport -->
+                                <Image 
+                                    Width="24"
+                                    Height="24"
+                                    Margin="0,0,4,0"
+                                    Grid.Column="3"
+                                    Visibility="{Binding HasTransport, Converter={StaticResource BooleanToVisibility}}">
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource BlueprintSymbolMultiConverter}">
+                                            <Binding Path="Transport.TransportBlueprint"/>
+                                            <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                                <Setter TargetName="UnitBorder" Property="BorderBrush" Value="{StaticResource AccentBlueBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource BackgroundDarkBlueBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </DataTemplate>
+
+        <Style x:Key="TransportRadioButton" TargetType="RadioButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Border"
+                        Background="{StaticResource BackgroundBlueBrush}"
+                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="12,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Ellipse 
+                                    x:Name="RadioOuter"
+                                    Width="16"
+                                    Height="16"
+                                    Stroke="{StaticResource ForegroundGrayBrush}"
+                                    StrokeThickness="1"
+                                    Fill="Transparent"/>
+
+                                <Ellipse 
+                                    x:Name="RadioInner"
+                                    Width="8"
+                                    Height="8"
+                                    Fill="{StaticResource AccentBlueBrush}"
+                                    Visibility="Collapsed"/>
+
+                                <ContentPresenter 
+                                    Grid.Column="1"
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Content="{TemplateBinding Content}"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="RadioInner" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="Border" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource AccentBlueBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="TransportItemTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Transport Icon -->
+                <Image Grid.Column="0"
+               Width="24"
+               Height="24"
+               Margin="0,0,8,0">
+                    <Image.Source>
+                        <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
+                            <Binding Path="."/>
+                            <Binding Path="DataContext.Game" 
+                             RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                        </MultiBinding>
+                    </Image.Source>
+                </Image>
+
+                <!-- Transport Name -->
+                <TextBlock Grid.Column="1"
+                   Text="{Binding Converter={StaticResource BlueprintNameConverter}}"
+                   VerticalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="SquadUpgradeTemplate">
+            <Button 
+                Command="{Binding ApplyUpgradeCommand}"
+                CommandParameter="{Binding Blueprint}"
+                Background="Transparent"
+                BorderThickness="0"
+                Padding="0"
+                IsEnabled="{Binding CanUpdate}"
+                Cursor="Hand">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border 
+                            x:Name="UpgradeBorder"
+                            Margin="4"
+                            Background="{StaticResource BackgroundBlueBrush}"
+                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                            BorderThickness="1"
+                            CornerRadius="4">
+                            <Grid>
+                                <Border 
+                                    x:Name="AppliedOverlay"
+                                    Background="{StaticResource AccentOrangeBrush}"
+                                    Opacity="0.45"
+                                    CornerRadius="4"
+                                    IsHitTestVisible="False"
+                                    Visibility="{Binding IsUpgraded, Converter={StaticResource BooleanToVisibility}}"/>
+                                <Image 
+                                    Grid.Column="0"
+                                    Margin="2"
+                                    Width="42"
+                                    Height="42">
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
+                                            <Binding Path="Blueprint"/>
+                                            <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="UpgradeBorder" Property="Background" 
+                                Value="{StaticResource BackgroundLightBlueBrush}"/>
+                                <Setter TargetName="UpgradeBorder" Property="BorderBrush" 
+                                Value="{StaticResource AccentBlueBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="UpgradeBorder" Property="Background" 
+                                Value="{StaticResource BackgroundDarkBlueBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="UpgradeBorder" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+                <Button.ToolTip>
+
+                    <ToolTip Style="{StaticResource BattlegroundsTooltip}">
+                        <StackPanel>
+                            <TextBlock
+                                Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}}"
+                                FontSize="14"
+                                FontWeight="Bold"
+                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                Margin="0,0,0,4"/>
+
+                            <TextBlock
+                                Text="{Binding Blueprint, Converter={StaticResource BlueprintBriefTextConverter}}"
+                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                TextWrapping="Wrap"
+                                Margin="0,0,0,12"/>
+                            
+                            <!-- Upgrade Costs -->
+                            <StackPanel 
+                                Orientation="Horizontal" 
+                                VerticalAlignment="Bottom" 
+                                Margin="0,18,0,0"
+                                Grid.Row="2">
+
+                                <StackPanel 
+                                    Orientation="Horizontal"
+                                    Visibility="{Binding Blueprint.Cost.Manpower, Converter={StaticResource ZeroToVisibilityConverter}}">
+                                    <Image 
+                                        Width="24"
+                                        Height="24"
+                                        Source="pack://siteoforigin:,,,/Assets/Resources/coh3_manpower_small.png"/>
+                                    <TextBlock 
+                                        Margin="4,0,0,0"
+                                        Text="{Binding Blueprint.Cost.Manpower}"
+                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        VerticalAlignment="Center"
+                                        />
+                                </StackPanel>
+
+                                <StackPanel 
+                                    Orientation="Horizontal"
+                                    Margin="8,0,0,0"
+                                    Visibility="{Binding Blueprint.Cost.Munitions, Converter={StaticResource ZeroToVisibilityConverter}}">
+                                    <Image 
+                                        Width="24"
+                                        Height="24"
+                                        Source="pack://siteoforigin:,,,/Assets/Resources/coh3_munitions_small.png"/>
+                                    <TextBlock 
+                                        Margin="4,0,0,0"
+                                        Text="{Binding Blueprint.Cost.Munitions}"
+                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        VerticalAlignment="Center"
+                                        />
+                                </StackPanel>
+
+                                <StackPanel 
+                                    Orientation="Horizontal"
+                                    Margin="8,0,0,0"
+                                    Visibility="{Binding Blueprint.Cost.Fuel, Converter={StaticResource ZeroToVisibilityConverter}}">
+                                    <Image 
+                                        Width="24"
+                                        Height="24"
+                                        Source="pack://siteoforigin:,,,/Assets/Resources/coh3_fuel_small.png"/>
+                                    <TextBlock 
+                                        Margin="4,0,0,0"
+                                        Text="{Binding Blueprint.Cost.Fuel}"
+                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        VerticalAlignment="Center"
+                                        />
+                                </StackPanel>
+
+                            </StackPanel>
+
+                        </StackPanel>
+                    </ToolTip>
+                    
+                    
+                </Button.ToolTip>
+            </Button>
+        </DataTemplate>
+
+    </UserControl.Resources>
+    
+    <Grid> <!-- No need for margin, outer container already has one -->
+        <Grid.RowDefinitions>
+            <!-- Header -->
+            <RowDefinition Height="Auto"/>
+            <!-- Main Content -->
+            <RowDefinition Height="*"/>
+            <!-- Footer -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- Header with Lobby Name and Back Button -->
+        <Grid Grid.Row="0" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Content="← Go Back" 
+                Style="{StaticResource BackButton}"
+                Command="{Binding LeaveCommand}"/>
+
+            <TextBlock Grid.Column="1"
+               Text="{Binding CompanyName}" 
+               FontSize="24" 
+               FontWeight="Bold"
+               Foreground="{StaticResource ForegroundWhiteBrush}"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
+
+            <Image 
+                Width="36" 
+                Height="36"
+                Grid.Column="2">
+                <Image.Source>
+                    <MultiBinding Converter="{StaticResource FactionIconConverter}">
+                        <Binding Path="Faction"/>
+                        <Binding Path="Game"/>
+                    </MultiBinding>
+                </Image.Source>
+            </Image>
+
+        </Grid>
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="1">
+
+            <Grid.ColumnDefinitions>
+                <!-- Main Content -->
+                <ColumnDefinition Width="*"/>
+                <!-- Right sidebar-->
+                <ColumnDefinition Width="330"/>
+
+            </Grid.ColumnDefinitions>
+
+            <!-- Company Composition Editor -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="36"/> <!-- Divider -->
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Available Units -->
+                <TabControl Grid.Row="0"
+           Background="{StaticResource BackgroundBlueBrush}"
+           BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+           BorderThickness="1"
+           Margin="8">
+                    <TabControl.Resources>
+                        <!-- Style for TabItems -->
+                        <Style TargetType="TabItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="TabItem">
+                                        <Border x:Name="Border"
+                                Margin="4,0,0,0"
+                                Padding="12,8"
+                                BorderThickness="1,1,1,0"
+                                CornerRadius="4,4,0,0">
+                                            <ContentPresenter ContentSource="Header"
+                                            TextBlock.Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                                                <Setter Property="TextBlock.Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                                                <Setter Property="TextBlock.Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+
+                    </TabControl.Resources>
+
+                    <TabItem Header="Infantry">
+                        <ItemsControl ItemsSource="{Binding AvailableInfantryUnits}"
+                            ItemTemplate="{StaticResource AvailableUnitTemplate}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </TabItem>
+                    <TabItem Header="Support">
+                        <ItemsControl ItemsSource="{Binding AvailableSupportUnits}"
+                            ItemTemplate="{StaticResource AvailableUnitTemplate}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </TabItem>
+                    <TabItem Header="Armour">
+                        <ItemsControl ItemsSource="{Binding AvailableArmourUnits}"
+                            ItemTemplate="{StaticResource AvailableUnitTemplate}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </TabItem>
+                </TabControl>
+
+                <!-- Divider -->
+                <Grid Grid.Row="1" Margin="8,0,8,8">
+
+                    <TextBlock
+                        Text="Company Units"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="{StaticResource ForegroundGrayBrush}"/>
+
+                    <StackPanel 
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Center">
+
+                        <TextBlock
+                            Text="Company Value:"
+                            FontSize="12"
+                            FontStyle="Italic"
+                            VerticalAlignment="Center"
+                            Foreground="{StaticResource ForegroundGrayBrush}"
+                            Margin="8,0,8,0"/>
+
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel 
+                                Orientation="Horizontal"
+                                Visibility="{Binding TotalManpowerCost, Converter={StaticResource ZeroToVisibilityConverter}}">
+                                <Image 
+                                    Width="24"
+                                    Height="24"
+                                    Source="pack://siteoforigin:,,,/Assets/Resources/coh3_manpower_small.png"/>
+                                <TextBlock 
+                                    Margin="4,0,0,0"
+                                    Text="{Binding TotalManpowerCost}"
+                                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                                    VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel 
+                                Orientation="Horizontal"
+                                Margin="8,0,0,0"
+                                Visibility="{Binding TotalMunitionsCost, Converter={StaticResource ZeroToVisibilityConverter}}">
+                                <Image 
+                                    Width="24"
+                                    Height="24"
+                                    Source="pack://siteoforigin:,,,/Assets/Resources/coh3_munitions_small.png"/>
+                                <TextBlock 
+                                    Margin="4,0,0,0"
+                                    Text="{Binding TotalMunitionsCost}"
+                                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                                    VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel 
+                                Orientation="Horizontal"
+                                Margin="8,0,0,0"
+                                Visibility="{Binding TotalFuelCost, Converter={StaticResource ZeroToVisibilityConverter}}">
+                                <Image 
+                                    Width="24"
+                                    Height="24"
+                                    Source="pack://siteoforigin:,,,/Assets/Resources/coh3_fuel_small.png"/>
+                                <TextBlock 
+                                    Margin="4,0,0,0"
+                                    Text="{Binding TotalFuelCost}"
+                                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                                    VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                    
+                    
+                </Grid>
+                
+                <!-- Company Composition -->
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border
+                        Grid.Column="0"
+                        Background="{StaticResource BackgroundBlueBrush}"
+                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Margin="8,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                FontSize="14" 
+                                Grid.Row="0"
+                                FontWeight="Bold"
+                                Foreground="{StaticResource ForegroundGrayBrush}"
+                                Margin="0,0,0,8"
+                                HorizontalAlignment="Center">
+                                Starting Units (<Run Text="{Binding StartingUnitsCount, Mode=OneWay}"/>/<Run Text="{Binding StartingUnitsMax, Mode=OneWay}"/>)
+                            </TextBlock>
+                            <ScrollViewer Style="{StaticResource ChatScrollViewer}" Grid.Row="1">
+                                <ItemsControl
+                                    ItemsSource="{Binding StartingUnits}"
+                                    ItemTemplate="{StaticResource CompanyUnitTemplate}"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+
+                    <Border
+                        Background="{StaticResource BackgroundBlueBrush}"
+                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Margin="8,0"
+                        Grid.Column="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock 
+                                FontSize="14" 
+                                Grid.Row="0"
+                                FontWeight="Bold"
+                                Foreground="{StaticResource ForegroundGrayBrush}"
+                                Margin="0,0,0,8"
+                                HorizontalAlignment="Center">                                
+                                Skirmish Units (<Run Text="{Binding SkirmishPhaseUnitsCount, Mode=OneWay}"/>/<Run Text="{Binding SkirmishPhaseUnitsMax, Mode=OneWay}"/>)
+                            </TextBlock>
+                            <ScrollViewer Style="{StaticResource ChatScrollViewer}" Grid.Row="1">
+                                <ItemsControl
+                                    ItemsSource="{Binding SkirmishPhaseUnits}"
+                                    ItemTemplate="{StaticResource CompanyUnitTemplate}"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+
+                    <Border
+                        Background="{StaticResource BackgroundBlueBrush}"
+                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Margin="8,0"
+                        Grid.Column="2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock 
+                                FontSize="14" 
+                                Grid.Row="0"
+                                FontWeight="Bold"
+                                Foreground="{StaticResource ForegroundGrayBrush}"
+                                Margin="0,0,0,8"
+                                HorizontalAlignment="Center">                                
+                                Battle Phase (<Run Text="{Binding BattlePhaseUnitsCount, Mode=OneWay}"/>/<Run Text="{Binding BattlePhaseUnitsMax, Mode=OneWay}"/>)
+                            </TextBlock>
+                            <ScrollViewer Style="{StaticResource ChatScrollViewer}" Grid.Row="1">
+                                <ItemsControl
+                                    ItemsSource="{Binding BattlePhaseUnits}"
+                                    ItemTemplate="{StaticResource CompanyUnitTemplate}"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+
+                    <Border
+                        Background="{StaticResource BackgroundBlueBrush}"
+                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Margin="8,0"
+                        Grid.Column="3">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock 
+                                FontSize="14" 
+                                Grid.Row="0"
+                                FontWeight="Bold"
+                                Foreground="{StaticResource ForegroundGrayBrush}"
+                                Margin="0,0,0,8"
+                                HorizontalAlignment="Center">                       
+                                Reserves (<Run Text="{Binding ReservesPhaseUnitsCount, Mode=OneWay}"/>/<Run Text="{Binding ReservesPhaseUnitsMax, Mode=OneWay}"/>)
+                            </TextBlock>
+                            <ScrollViewer Style="{StaticResource ChatScrollViewer}" Grid.Row="1">
+                                <ItemsControl
+                                    ItemsSource="{Binding ReservesPhaseUnits}"
+                                    ItemTemplate="{StaticResource CompanyUnitTemplate}"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+
+                </Grid>
+
+            </Grid>
+
+            <!-- Selection/Hover infor -->
+            <Border Grid.Column="1"
+                  Margin="10,0,0,0"
+                  Background="{StaticResource BackgroundBlueBrush}"
+                  BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8">
+
+                <Grid DataContext="{Binding SelectionViewModel}">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Selection -->
+                    <TextBlock
+                        Margin="8"
+                        Text="{Binding DataContext.SelectionTitle, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                        HorizontalAlignment="Center"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Foreground="{StaticResource ForegroundWhiteBrush}"/>
+
+                    <!-- Squad details -->
+                    <Border Grid.Row="1"
+                            Background="{StaticResource BackgroundDarkBlueBrush}"
+                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Margin="8,0,8,8"
+                            Padding="8"
+                            Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}">
+
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <!-- Squad name -->
+                            <StackPanel 
+                                Orientation="Horizontal"
+                                Grid.Row="0">
+                                <!-- Squad icon -->
+                                <Image Width="70" Height="70">
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
+                                            <Binding Path="Blueprint"/>
+                                            <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+                                <StackPanel                                    
+                                    VerticalAlignment="Center">
+                                    <TextBlock 
+                                        Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}}"
+                                        FontSize="16" 
+                                        FontWeight="Bold"
+                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        TextWrapping="Wrap"
+                                        Margin="8,0,0,0"/>
+
+                                    <TextBlock
+                                        Text="{Binding CustomName}"
+                                        FontSize="16" 
+                                        FontStyle="Italic"
+                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        TextWrapping="Wrap"
+                                        Margin="8,0,0,0"/>
+                                    
+                                </StackPanel>
+                            </StackPanel>
+                            
+                            <!-- Squad descriptions -->
+                            <StackPanel
+                                Margin="0,8,0,0"
+                                Grid.Row="1">
+
+                                <Grid x:Name="VeterancyDisplay" Margin="0,4,0,4" Visibility="{Binding IsSquad, Converter={StaticResource BooleanToVisibility}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Rank Stars Display -->
+                                    <StackPanel 
+                                        Grid.Column="0"
+                                        Grid.RowSpan="2"
+                                        Orientation="Horizontal" 
+                                        VerticalAlignment="Top"
+                                        HorizontalAlignment="Center">
+                                        <ItemsControl ItemsSource="{Binding RankStars}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Image Width="16" Height="16" Source="pack://siteoforigin:,,,/Assets/Misc/vstar.png">
+                                                        <Image.Effect>
+                                                            <e:ColourTintBitmapEffect 
+                                                                TintColour="{Binding IsEarned, Converter={StaticResource RankStarColourConverter}}"/>
+                                                        </Image.Effect>
+                                                    </Image>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+
+                                    <!-- Rank Progress Bar -->
+                                    <ProgressBar Grid.Column="1" 
+                                         Height="14" 
+                                         Margin="8,0,8,0"
+                                         Value="{Binding RankProgress}" 
+                                         Maximum="1"
+                                                 VerticalAlignment="Center"
+                                         Background="{StaticResource BackgroundDarkBlueBrush}"
+                                         Foreground="{StaticResource AccentBlueBrush}"/>
+
+                                    <!-- Experience Points Display -->
+                                    <TextBlock 
+                                        Grid.Column="1"
+                                        Grid.Row="1"
+                                        FontSize="10"
+                                        HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"
+                                        Foreground="{StaticResource ForegroundGrayBrush}">
+                                        <Run Text="{Binding Experience, StringFormat={}{0}}"/>
+                                        <Run Text="/"/>
+                                        <Run Text="{Binding NextRankExperience, StringFormat={}{0}}"/>
+                                        <Run Text="XP"/>
+                                    </TextBlock>
+                                </Grid>
+
+                                <TextBlock 
+                                    Text="{Binding Blueprint, Converter={StaticResource BlueprintHelpTextConverter}}"
+                                    FontSize="14" 
+                                    Foreground="{StaticResource ForegroundGrayBrush}"
+                                    TextWrapping="Wrap"/>
+                                <TextBlock 
+                                    Text="{Binding Blueprint, Converter={StaticResource BlueprintBriefTextConverter}}"
+                                    FontSize="12"
+                                    FontStyle="Italic"
+                                    Margin="0,8,0,0"
+                                    Foreground="{StaticResource ForegroundGrayBrush}"/>
+                            </StackPanel>
+
+                            <!-- Squad Costs -->
+                            <StackPanel 
+                                Orientation="Horizontal" 
+                                VerticalAlignment="Bottom" 
+                                Margin="0,18,0,0"
+                                Grid.Row="2">
+
+                                <StackPanel 
+                                    Orientation="Horizontal"
+                                    Visibility="{Binding Blueprint.Cost.Manpower, Converter={StaticResource ZeroToVisibilityConverter}}">
+                                    <Image 
+                                        Width="24"
+                                        Height="24"
+                                        Source="pack://siteoforigin:,,,/Assets/Resources/coh3_manpower_small.png"/>
+                                    <TextBlock 
+                                        Margin="4,0,0,0"
+                                        Text="{Binding Blueprint.Cost.Manpower}"
+                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        VerticalAlignment="Center"
+                                        />
+                                </StackPanel>
+
+                                <StackPanel 
+                                    Orientation="Horizontal"
+                                    Margin="8,0,0,0"
+                                    Visibility="{Binding Blueprint.Cost.Munitions, Converter={StaticResource ZeroToVisibilityConverter}}">
+                                    <Image 
+                                        Width="24"
+                                        Height="24"
+                                        Source="pack://siteoforigin:,,,/Assets/Resources/coh3_munitions_small.png"/>
+                                    <TextBlock 
+                                        Margin="4,0,0,0"
+                                        Text="{Binding Blueprint.Cost.Munitions}"
+                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        VerticalAlignment="Center"
+                                        />
+                                </StackPanel>
+                                
+                                <StackPanel 
+                                    Orientation="Horizontal"
+                                    Margin="8,0,0,0"
+                                    Visibility="{Binding Blueprint.Cost.Fuel, Converter={StaticResource ZeroToVisibilityConverter}}">
+                                    <Image 
+                                        Width="24"
+                                        Height="24"
+                                        Source="pack://siteoforigin:,,,/Assets/Resources/coh3_fuel_small.png"/>
+                                    <TextBlock 
+                                        Margin="4,0,0,0"
+                                        Text="{Binding Blueprint.Cost.Fuel}"
+                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        VerticalAlignment="Center"
+                                        />
+                                </StackPanel>
+
+                            </StackPanel>
+
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Squad Purchase options -->
+                    <Grid
+                        Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}"                       
+                        Grid.Row="2">
+
+                        <Border
+                            Visibility="{Binding IsSquad, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
+                            Background="{StaticResource BackgroundDarkBlueBrush}"
+                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Margin="8,0,8,8"
+                            Padding="8">
+
+                            <StackPanel>
+                                <TextBlock
+                                    Margin="4"
+                                    Text="Add to Company"
+                                    HorizontalAlignment="Center"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                <Button 
+                                    Content="Add to Starting Units" 
+                                    Grid.Column="0" 
+                                    Grid.Row="0" 
+                                    Style="{StaticResource ActionButton}" 
+                                    IsEnabled="{Binding DataContext.CanAddStartingUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    Margin="4"
+                                    Command="{Binding AddToCompanyCommand}">
+                                    <Button.CommandParameter>
+                                        <c:SquadPhase>StartingPhase</c:SquadPhase>
+                                    </Button.CommandParameter>
+                                </Button>
+                                <Button 
+                                    Content="Add to Skirmish Phase" 
+                                    Grid.Column="1" 
+                                    Grid.Row="0" 
+                                    Style="{StaticResource ActionButton}" 
+                                    IsEnabled="{Binding DataContext.CanAddSkirmishPhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    Margin="4"
+                                    Command="{Binding AddToCompanyCommand}">
+                                    <Button.CommandParameter>
+                                        <c:SquadPhase>SkirmishPhase</c:SquadPhase>
+                                    </Button.CommandParameter>
+                                </Button>
+                                <Button 
+                                    Content="Add to Battle Phase" 
+                                    Grid.Column="0" 
+                                    Grid.Row="1" 
+                                    Style="{StaticResource ActionButton}" 
+                                    IsEnabled="{Binding DataContext.CanAddBattlePhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    Margin="4"
+                                    Command="{Binding AddToCompanyCommand}">
+                                    <Button.CommandParameter>
+                                        <c:SquadPhase>BattlePhase</c:SquadPhase>
+                                    </Button.CommandParameter>
+                                </Button>
+                                <Button 
+                                    Content="Add to Reserves" 
+                                    Grid.Column="1" 
+                                    Grid.Row="1" 
+                                    Style="{StaticResource ActionButton}" 
+                                    IsEnabled="{Binding DataContext.CanAddReservesPhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    Margin="4"
+                                    Command="{Binding AddToCompanyCommand}">
+                                    <Button.CommandParameter>
+                                        <c:SquadPhase>ReservesPhase</c:SquadPhase>
+                                    </Button.CommandParameter>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    
+                    <!-- Squad Configuration -->
+                    <StackPanel
+                        Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}"                       
+                        Grid.Row="2">
+
+                        <!-- Squad upgrades -->
+                        <Border
+                            Visibility="{Binding HasUpgrades, Converter={StaticResource BooleanToVisibility}}"
+                            Background="{StaticResource BackgroundDarkBlueBrush}"
+                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Margin="8,0,8,8"
+                            Padding="8">
+                            <StackPanel>
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Margin="4"
+                                    Text="Squad Upgrades"
+                                    HorizontalAlignment="Center"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                <ItemsControl
+                                    Grid.Row="1"
+                                    ItemTemplate="{StaticResource SquadUpgradeTemplate}"
+                                    ItemsSource="{Binding Upgrades}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Squad Items -->
+                        <Border
+                            Visibility="{Binding HasItems, Converter={StaticResource BooleanToVisibility}}"
+                            Background="{StaticResource BackgroundDarkBlueBrush}"
+                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Margin="8,0,8,8"
+                            Padding="8">
+                            <StackPanel>
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Margin="4"
+                                    Text="Squad Items"
+                                    HorizontalAlignment="Center"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                <ItemsControl
+                                    Grid.Row="1"
+                                    ItemsSource="{Binding Items}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Squad Deployment -->
+                        <Border
+                            Visibility="{Binding IsInfantry, Converter={StaticResource BooleanToVisibility}}"
+                            Background="{StaticResource BackgroundDarkBlueBrush}"
+                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Margin="8,0,8,8"
+                            Padding="8">
+                            <StackPanel>
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Margin="4"
+                                    Text="Squad Deployment"
+                                    HorizontalAlignment="Center"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="{StaticResource ForegroundGrayBrush}"/>
+
+                                <RadioButton 
+                                    Style="{StaticResource TransportRadioButton}"
+                                    GroupName="TransportSelection"
+                                    x:Name="NoTransportOption"
+                                    Content="No Transport"
+                                    IsChecked="{Binding HasTransport, Converter={StaticResource InverseBooleanConverter}}"
+                                    Margin="4"
+                                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                                    VerticalContentAlignment="Center"/>
+
+                                <RadioButton 
+                                    Style="{StaticResource TransportRadioButton}"
+                                    x:Name="DropOffRadio"
+                                    GroupName="TransportSelection"
+                                    Content="Transport (Drop-Off)"
+                                    IsChecked="{Binding HasDropOffTransport}"
+                                    Margin="4"
+                                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                                    VerticalContentAlignment="Center"/>
+
+                                <RadioButton 
+                                    Style="{StaticResource TransportRadioButton}"
+                                    x:Name="StayRadio"
+                                    GroupName="TransportSelection"
+                                    Content="Transport (Stay)"
+                                    IsChecked="{Binding HasStayTransport}"
+                                    Margin="4"
+                                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                                    VerticalContentAlignment="Center"/>
+
+                                <ComboBox
+                                    Margin="4"
+                                    Style="{StaticResource SettingsComboBox}"
+                                    ItemTemplate="{StaticResource TransportItemTemplate}"
+                                    ItemsSource="{Binding AvailableTransports}"
+                                    SelectedItem="{Binding Transport.TransportBlueprint}"
+                                    Visibility="{Binding HasTransport, Converter={StaticResource BooleanToVisibility}}"
+                                    IsEnabled="{Binding ElementName=NoTransportOption, Path=IsChecked, Converter={StaticResource InverseBooleanConverter}}"/>
+
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                    
+                    <Grid
+                        Grid.Row="4"
+                        Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}">
+
+                        <Button
+                            Visibility="{Binding IsSquad, Converter={StaticResource BooleanToVisibility}}"
+                            VerticalAlignment="Bottom"
+                            Margin="8"
+                            Content="Retire Squad"
+                            Command="{Binding RetireSquadCommand}"
+                            Style="{StaticResource ActionButton}"
+                            />
+                    </Grid>
+                    
+                </Grid>                
+            </Border>
+        </Grid>
+
+        <!-- Footer with Save Button -->
+        <Grid Grid.Row="2" Margin="0,8,0,0">
+
+            <StackPanel 
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center">
+                <Label 
+                    Content="{Binding CompanyState}"
+                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                    VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <Button 
+                Command="{Binding SaveCommand}"
+                HorizontalAlignment="Right"
+                Style="{StaticResource ActionButton}"
+                IsEnabled="{Binding IsDirty}">
+                Save Company
+            </Button>
+        </Grid>
+
+    </Grid>
+</UserControl>

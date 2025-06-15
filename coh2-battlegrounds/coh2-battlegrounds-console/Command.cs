@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Battlegrounds.Functional;
 
-namespace coh2_battlegrounds_console;
+namespace Battlegrounds.Developer;
 
 public abstract class Argument {
     public string Name { get; init; } = "";

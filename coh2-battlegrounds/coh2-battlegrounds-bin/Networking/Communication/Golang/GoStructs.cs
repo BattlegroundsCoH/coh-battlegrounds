@@ -13,13 +13,17 @@ namespace Battlegrounds.Networking.Communication.Golang;
 
 /*
 type IntroMessage struct {
-	Type          int
-	LobbyName     string
-	LobbyUID      uint64
-	LobbyPassword string
-	LobbyType     int
-	PlayerUID     uint64
-	PlayerName    string
+	Type          int           // The type of intro message being sent
+	LobbyName     string        // The name of the lobby/campaign to join
+	LobbyUID      uint64        // The UID of the lobby/campaign to join
+	LobbyPassword string        // Lobby access code field if not join/host request
+	InstanceType  int           // The type of lobby to create; File type if file transfer
+	PlayerUID     Steam.SteamID // Required field, specified the ID of the Steam user we're interacting with
+	PlayerName    string        // The string name of the player
+	IdentityKey   []byte        // Key for identification (Currently not used)
+	AppVersion    []byte        // The application version checksum (Used to check if a player is using the same version as host)
+	ModGuid       string        // The GUID of the mod being used
+	Game          string        // The Game to target with this request (See Server/Game/CoH.go)
 }
  */
 
@@ -38,20 +42,20 @@ public readonly struct IntroMessage {
 	/// </summary>
 	public string LobbyName { get; init; }
 
-	/// <summary>
-	/// Get or init the password to use when joining. Set as <see cref="string.Empty"/> when no password is expected.
-	/// </summary>
-	public string LobbyPassword { get; init; }
+    /// <summary>
+    /// Get or init the UID of the lobby.
+    /// </summary>
+    public ulong LobbyUID { get; init; }
 
-	/// <summary>
-	/// Get or init the UID of the lobby.
-	/// </summary>
-	public ulong LobbyUID { get; init; }
+    /// <summary>
+    /// Get or init the password to use when joining. Set as <see cref="string.Empty"/> when no password is expected.
+    /// </summary>
+    public string LobbyPassword { get; init; }
 
 	/// <summary>
 	/// Get or init the lobby type. For now 1 is sufficient (Match-Lobby)
 	/// </summary>
-	public int LobbyType { get; init; }
+	public int InstanceType { get; init; }
 
 	/// <summary>
 	/// Get or init the Steam ID of the player connecting (Must be set!)
@@ -67,6 +71,21 @@ public readonly struct IntroMessage {
 	/// Identity key (for verifying user)
 	/// </summary>
 	public byte[] IdentityKey { get; init; }
+
+	/// <summary>
+	/// Get or initialise the application verison to use/require
+	/// </summary>
+	public byte[] AppVersion { get; init; }
+
+	/// <summary>
+	/// Get or initialise the mod guid to use
+	/// </summary>
+	public string ModGuid { get; init; }
+
+	/// <summary>
+	/// Get or initialise the game to use
+	/// </summary>
+	public string Game { get; init; }
 
 }
 
@@ -242,7 +261,7 @@ public enum BrokerFirstVal : byte {
 	[Obsolete("Use the broker call for this instead.")]
 	Members
 
-    }
+}
 
 /*
 type ContentMessageArg struct {
@@ -466,7 +485,7 @@ public readonly struct ContentMessage {
 /// <summary>
 /// Represents a message that invoke methods on a remote machine.
 /// </summary>
-public struct RemoteCallMessage {
+public readonly struct RemoteCallMessage {
 	
 	/// <summary>
 	/// Get or initialise the method to invoke.
@@ -484,7 +503,7 @@ public struct RemoteCallMessage {
 	/// <typeparam name="T">First tuple type.</typeparam>
 	/// <returns>Decoded argument tuple.</returns>
 	public T Decode<T>()
-		=> _T<T>(0);
+		=> T<T>(0);
 
 	/// <summary>
 	/// Decode the remote call message to specified arguments.
@@ -493,7 +512,7 @@ public struct RemoteCallMessage {
 	/// <typeparam name="T2">Second tuple type.</typeparam>
 	/// <returns>Decoded argument tuple.</returns>
 	public (T1, T2) Decode<T1, T2>()
-		=> (_T<T1>(0), _T<T2>(1));
+		=> (T<T1>(0), T<T2>(1));
 
 	/// <summary>
 	/// Decode the remote call message to specified arguments.
@@ -503,7 +522,7 @@ public struct RemoteCallMessage {
 	/// <typeparam name="T3">Third tuple type.</typeparam>
 	/// <returns>Decoded argument tuple.</returns>
 	public (T1, T2, T3) Decode<T1, T2, T3>()
-		=> (_T<T1>(0), _T<T2>(1), _T<T3>(2));
+		=> (T<T1>(0), T<T2>(1), T<T3>(2));
 
 	/// <summary>
 	/// Decode the remote call message to specified arguments.
@@ -514,7 +533,7 @@ public struct RemoteCallMessage {
 	/// <typeparam name="T4">Fourth tuple type.</typeparam>
 	/// <returns>Decoded argument tuple.</returns>
 	public (T1, T2, T3, T4) Decode<T1, T2, T3, T4>()
-		=> (_T<T1>(0), _T<T2>(1), _T<T3>(2), _T<T4>(3));
+		=> (T<T1>(0), T<T2>(1), T<T3>(2), T<T4>(3));
 
 	/// <summary>
 	/// Decode the remote call message to specified arguments.
@@ -526,7 +545,7 @@ public struct RemoteCallMessage {
 	/// <typeparam name="T5">Fifth tuple type.</typeparam>
 	/// <returns>Decoded argument tuple.</returns>
 	public (T1, T2, T3, T4, T5) Decode<T1, T2, T3, T4, T5>()
-		=> (_T<T1>(0), _T<T2>(1), _T<T3>(2), _T<T4>(3), _T<T5>(4));
+		=> (T<T1>(0), T<T2>(1), T<T3>(2), T<T4>(3), T<T5>(4));
 
 	/// <summary>
 	/// Decode the remote call message to specified arguments.
@@ -539,7 +558,7 @@ public struct RemoteCallMessage {
 	/// <typeparam name="T6">Sixth tuple type.</typeparam>
 	/// <returns>Decoded argument tuple.</returns>
 	public (T1, T2, T3, T4, T5, T6) Decode<T1, T2, T3, T4, T5, T6>()
-		=> (_T<T1>(0), _T<T2>(1), _T<T3>(2), _T<T4>(3), _T<T5>(4), _T<T6>(5));
+		=> (T<T1>(0), T<T2>(1), T<T3>(2), T<T4>(3), T<T5>(4), T<T6>(5));
 
 	/// <summary>
 	/// Decode the remote call message to specified arguments.
@@ -553,7 +572,7 @@ public struct RemoteCallMessage {
 	/// <typeparam name="T7">Seventh tuple type.</typeparam>
 	/// <returns>Decoded argument tuple.</returns>
 	public (T1, T2, T3, T4, T5, T6, T7) Decode<T1, T2, T3, T4, T5, T6, T7>()
-		=> (_T<T1>(0), _T<T2>(1), _T<T3>(2), _T<T4>(3), _T<T5>(4), _T<T6>(5), _T<T7>(6));
+		=> (T<T1>(0), T<T2>(1), T<T3>(2), T<T4>(3), T<T5>(4), T<T6>(5), T<T7>(6));
 
 	/// <summary>
 	/// Decode the remote call message to specified arguments.
@@ -568,7 +587,7 @@ public struct RemoteCallMessage {
 	/// <typeparam name="T8">Eigth tuple type.</typeparam>
 	/// <returns>Decoded argument tuple.</returns>
 	public (T1, T2, T3, T4, T5, T6, T7, T8) Decode<T1, T2, T3, T4, T5, T6, T7, T8>()
-		=> (_T<T1>(0), _T<T2>(1), _T<T3>(2), _T<T4>(3), _T<T5>(4), _T<T6>(5), _T<T7>(6), _T<T8>(7));
+		=> (T<T1>(0), T<T2>(1), T<T3>(2), T<T4>(3), T<T5>(4), T<T6>(5), T<T7>(6), T<T8>(7));
 
 	/// <summary>
 	/// Decode the remote call message to specified arguments.
@@ -584,7 +603,7 @@ public struct RemoteCallMessage {
 	/// <typeparam name="T9">Ninth tuple type.</typeparam>
 	/// <returns>Decoded argument tuple.</returns>
 	public (T1, T2, T3, T4, T5, T6, T7, T8, T9) Decode<T1, T2, T3, T4, T5, T6, T7, T8, T9>()
-		=> (_T<T1>(0), _T<T2>(1), _T<T3>(2), _T<T4>(3), _T<T5>(4), _T<T6>(5), _T<T7>(6), _T<T8>(7), _T<T9>(8));
+		=> (T<T1>(0), T<T2>(1), T<T3>(2), T<T4>(3), T<T5>(4), T<T6>(5), T<T7>(6), T<T8>(7), T<T9>(8));
 
 	/// <summary>
 	/// Decode the remote call message to specified arguments.
@@ -601,9 +620,9 @@ public struct RemoteCallMessage {
 	/// <typeparam name="T10">Tenth tuple type.</typeparam>
 	/// <returns>Decoded argument tuple.</returns>
 	public (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) Decode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>()
-		=> (_T<T1>(0), _T<T2>(1), _T<T3>(2), _T<T4>(3), _T<T5>(4), _T<T6>(5), _T<T7>(6), _T<T8>(7), _T<T9>(8), _T<T10>(9));
+		=> (T<T1>(0), T<T2>(1), T<T3>(2), T<T4>(3), T<T5>(4), T<T6>(5), T<T7>(6), T<T8>(7), T<T9>(8), T<T10>(9));
 
-	private T _T<T>(int i)
+	private T T<T>(int i)
 		=> (T)Convert.ChangeType(this.Arguments[i], typeof(T));
 
 }

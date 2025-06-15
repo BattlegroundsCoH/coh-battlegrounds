@@ -101,6 +101,7 @@ english:
  CreateCompanyDialogView_Faction: "Faction:"
  CreateCompanyDialogView_Type: "Type:"
  CreateCompanyDialogView_Type_None: "No Company Types Available"
+ CreateCompanyDialogView_Type_None_desc: "No Company Types Available"
  CreateCompanyDialogView_Button_Create: "Create"
  CreateCompanyDialogView_Button_Cancel: "Cancel"
  AbilitySlot_YesNoDialog_Remove_Ability_Title: "Remove Ability"

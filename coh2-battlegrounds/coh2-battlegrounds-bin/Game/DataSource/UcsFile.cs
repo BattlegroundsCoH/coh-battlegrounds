@@ -5,6 +5,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
+using Battlegrounds.Logging;
+
 using RegexMatch = System.Text.RegularExpressions.Match;
 
 namespace Battlegrounds.Game.DataSource;
@@ -13,6 +15,8 @@ namespace Battlegrounds.Game.DataSource;
 /// Represents a localized file used by Company of Heroes to store text data.
 /// </summary>
 public class UcsFile {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     private readonly Dictionary<uint, string> m_content;
 
@@ -121,7 +125,7 @@ public class UcsFile {
     /// <summary>
     /// The locale regex matcher.
     /// </summary>
-    private static readonly Regex locRegex = new Regex(@"(?<key>\d+)\s*(?<value>.*)");
+    private static readonly Regex locRegex = new Regex(@"^((?<key>\d+)\s*)(?<value>.*)");
 
     /// <summary>
     /// Load a UCS file with UTF-8 encoding.
@@ -151,14 +155,22 @@ public class UcsFile {
                     // Try get key
                     if (uint.TryParse(match.Groups["key"].Value, out uint key)) {
 
-                        // Add locstring
-                        file.m_content.Add(key, match.Groups["value"].Value);
+                        try {
+
+                            // Add locstring
+                            file.m_content.Add(key, match.Groups["value"].Value);
+
+                        } catch (ArgumentException) {
+                            logger.Warning("Duplicate locale key ${0} ('{1}' <-> '{2}') in file {4}", key, match.Groups["value"].Value, file.m_content[key], ucsFilePath);
+                        }
 
                     }
 
                 }
 
             }
+
+            logger.Info("Loaded {0} UCS key/value pairs from {1}", file.m_content.Count, Path.GetFileNameWithoutExtension(ucsFilePath));
 
         }
 

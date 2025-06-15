@@ -1,0 +1,271 @@
+﻿<UserControl x:Class="Battlegrounds.Views.CompanyBrowserView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Battlegrounds.Views"
+             xmlns:vm="clr-namespace:Battlegrounds.ViewModels"
+             xmlns:vmh="clr-namespace:Battlegrounds.ViewModels.CompanyHelpers"
+             xmlns:converters="clr-namespace:Battlegrounds.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=vm:CompanyBrowserViewModel}">
+    
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+        <converters:GameIdToGameNameConverter x:Key="GameIdToGameNameConverter"/>
+        <converters:FactionIconMultiBindingConverter x:Key="FactionIconMultiBindingConverter"/>
+        <converters:FactionIdToNameConverter x:Key="FactionIdToNameConverter"/>
+        <CircleEase x:Key="MaterialDesignEasingFunction" 
+                     EasingMode="EaseInOut"/>
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header with Title and Actions -->
+        <Grid Grid.Row="0" Margin="16,16,16,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0" Text="Companies" 
+                       Foreground="{StaticResource ForegroundWhiteBrush}" 
+                       FontSize="24" FontWeight="SemiBold"
+                       VerticalAlignment="Center"/>
+            
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Content="Refresh" Style="{StaticResource ActionButton}"
+                        Command="{Binding LoadCompaniesCommand}"
+                        Margin="8,0,0,0"/>
+                <Button Content="New Company" Style="{StaticResource ActionButton}"
+                        Command="{Binding CreateCompanyCommand}"
+                        Margin="8,0,0,0"/>
+            </StackPanel>
+        </Grid>
+        
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="16,8">
+            
+            <Border Grid.Column="0" 
+                    Background="{StaticResource BackgroundDarkBlueBrush}" 
+                    CornerRadius="8" Padding="8">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TreeView Grid.Row="1" 
+                              x:Name="CompanySelectionTreeView"
+                              MouseDoubleClick="CompanySelectionTreeView_MouseDoubleClick"
+                              Background="Transparent" 
+                              BorderThickness="0"
+                              Foreground="{StaticResource ForegroundWhiteBrush}">
+                        <TreeView.Resources>
+                            <!-- Style for TreeViewItems -->
+                            <Style TargetType="TreeViewItem">
+                                <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+                                <Setter Property="IsExpanded" Value="True"/>
+                                <Setter Property="Padding" Value="4"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="TreeViewItem">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <!-- Header -->
+                                                <Border x:Name="HeaderBorder" 
+                                                        Grid.Row="0"
+                                                        Padding="{TemplateBinding Padding}" 
+                                                        Background="Transparent" 
+                                                        BorderThickness="0" 
+                                                        CornerRadius="4">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="16"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        
+                                                        <!-- Expander Button -->
+                                                        <ToggleButton x:Name="Expander" 
+                                                                      Grid.Column="0" 
+                                                                      Width="16" Height="16"
+                                                                      IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                                                                      Visibility="{Binding HasItems, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibility}}">
+                                                            <ToggleButton.Template>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Border Background="Transparent">
+                                                                        <Path x:Name="ExpanderPath" 
+                                                                              Stroke="{StaticResource ForegroundLightBlueBrush}"
+                                                                              StrokeThickness="1.5"
+                                                                              Data="M 1,5 L 5,9 L 9,5"/>
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsChecked" Value="True">
+                                                                            <Setter TargetName="ExpanderPath" Property="Data" Value="M 1,9 L 5,5 L 9,9"/>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </ToggleButton.Template>
+                                                        </ToggleButton>
+                                                        
+                                                        <!-- Header Content -->
+                                                        <ContentPresenter Grid.Column="1" 
+                                                                          ContentSource="Header"
+                                                                          Margin="4,0,0,0"/>
+                                                    </Grid>
+                                                </Border>
+                                                
+                                                <!-- Child Items -->
+                                                <ItemsPresenter x:Name="ItemsPresenter"
+                                                               Grid.Row="1" 
+                                                               Margin="16,4,0,0"
+                                                               Visibility="Collapsed"/>
+                                            </Grid>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsExpanded" Value="True">
+                                                    <Setter TargetName="ItemsPresenter" Property="Visibility" Value="Visible"/>
+                                                </Trigger>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="HeaderBorder" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="HeaderBorder" Property="Background" Value="{StaticResource AccentBlueBrush}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </TreeView.Resources>
+                        
+                        <!-- Game-Faction-Company Hierarchy -->
+                        <TreeView.ItemsSource>
+                            <Binding Path="GameGroups"/>
+                        </TreeView.ItemsSource>
+                        
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate DataType="{x:Type vmh:GameGroup}" 
+                                                      ItemsSource="{Binding Companies}">
+                                <StackPanel Orientation="Horizontal" Margin="2">
+                                    <TextBlock Text="{Binding GameType, Converter={StaticResource GameIdToGameNameConverter}}" 
+                                               Foreground="{StaticResource ForegroundLightBlueBrush}"
+                                               FontWeight="SemiBold"
+                                               FontSize="18"/>
+                                    <TextBlock 
+                                        Text="{Binding CompanyCount}" 
+                                        FontSize="16"
+                                        VerticalAlignment="Center"
+                                        Foreground="{StaticResource ForegroundGrayBrush}"
+                                        Margin="4,0,0,0"/>
+                                </StackPanel>
+                                
+                                <HierarchicalDataTemplate.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                Grid.Column="0">
+
+                                                <Image 
+                                                    Width="28"
+                                                    Height="28">
+                                                    <Image.Source>
+                                                        <MultiBinding Converter="{StaticResource FactionIconMultiBindingConverter}">
+                                                            <Binding Path="Faction"/>
+                                                            <Binding Path="GameId"/>
+                                                        </MultiBinding>
+                                                    </Image.Source>
+                                                </Image>
+
+                                                <TextBlock
+                                                  Text="{Binding Name}"
+                                                    Margin="12,0,0,0"
+                                                  Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                  VerticalAlignment="Center"/>
+
+                                            </StackPanel>
+                                            
+                                            <Button Grid.Column="1" 
+                                                Style="{StaticResource ActionButton}"
+                                                Command="{Binding DataContext.EditCompanyCommand, 
+                                                          RelativeSource={RelativeSource FindAncestor, 
+                                                          AncestorType={x:Type TreeView}}}"
+                                                CommandParameter="{Binding}"
+                                                Margin="8,0,4,0"
+                                                Height="24"
+                                                MinWidth="50"
+                                                Padding="8,2"
+                                                Content="Edit"/>
+
+                                            <Button Grid.Column="2" 
+                                                Style="{StaticResource DangerActionButton}"
+                                                Command="{Binding DataContext.DeleteCompanyCommand, 
+                                                          RelativeSource={RelativeSource FindAncestor, 
+                                                          AncestorType={x:Type TreeView}}}"
+                                                CommandParameter="{Binding}"
+                                                Height="24"
+                                                MinWidth="50"
+                                                Padding="8,2"
+                                                Content="Delete"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </HierarchicalDataTemplate.ItemTemplate>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                    
+                    <!-- Busy/Loading Indicator -->
+                    <Grid 
+                        Grid.Row="1" 
+                        Background="#80000000"
+                        Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="Loading..."
+                              Foreground="{StaticResource ForegroundWhiteBrush}"
+                              HorizontalAlignment="Center"
+                              FontSize="16"
+                              Margin="0,0,0,12"/>
+
+                            <ProgressBar 
+                                Style="{StaticResource AnimatedProgressBar}"
+                                 IsIndeterminate="True"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+            
+        </Grid>
+        
+        <!-- Status Bar -->
+        <Border Grid.Row="2" 
+                Background="{StaticResource BackgroundDeepBlueBrush}"
+                Padding="16,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Grid.Column="0" 
+                           Text="{Binding StatusMessage}"
+                           Foreground="{StaticResource ForegroundGrayBrush}"/>
+                
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

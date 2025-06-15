@@ -2,35 +2,68 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Diagnostics;
 using System.Collections.Generic;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Logging;
 using Battlegrounds.Modding.Battlegrounds;
+using Battlegrounds.Modding.Vanilla;
+using Battlegrounds.Game;
 
 namespace Battlegrounds.Modding;
 
 /// <summary>
-/// Static manager class for managing <see cref="ModPackage"/> instances.
+/// Manager class for managing <see cref="IModPackage"/> instances. Implements <see cref="IModManager"/> and is the default implementation for <see cref="BattlegroundsContext"/>.
 /// </summary>
-public static class ModManager {
+public sealed class ModManager : IModManager {
 
-    private static readonly List<ModPackage> __packages = new();
-    private static readonly Dictionary<ModGuid, IGameMod> __mods = new();
-    private static readonly Dictionary<string, IModFactory> __modFactories = new();
+    private static readonly Logger logger = Logger.CreateLogger();
+
+    private readonly List<IModPackage> __packages;
+    private readonly Dictionary<ModGuid, IGameMod> __mods;
+    private readonly Dictionary<string, IModFactory> __modFactories;
+
+    private readonly VanillaModPackage _coh2;
+    private readonly VanillaModPackage _coh3;
 
     /// <summary>
-    /// Initialise the <see cref="ModManager"/> and load available <see cref="ModPackage"/> elements.
+    /// Initialise a new <see cref="ModManager"/> instance.
     /// </summary>
-    public static void Init() {
+    public ModManager() {
+        this.__packages = new();
+        this.__mods = new();
+        this.__modFactories = new();
 
-        // Create wincondition list
-        WinconditionList.CreateDatabase();
+        this._coh2 = new VanillaModPackage() {
+            ID = "vcoh2",
+            PackageName = "Company of Heroes 2",
+            SupportedGames = GameCase.CompanyOfHeroes2,
+            LocaleFiles = new ModLocale[] {
+                new ModLocale("Engine", "VCoH2", "CompanyOfHeroes2")
+            }
+        };
+
+        this._coh3 = new VanillaModPackage() {
+            ID = "vcoh3",
+            PackageName = "Company of Heroes 3",
+            SupportedGames = GameCase.CompanyOfHeroes3,
+            LocaleFiles = new ModLocale[] {
+                new ModLocale("Engine", "VCoH3", "CompanyOfHeroes3")
+            }
+        };
+
+        this.__packages.Add(_coh2);
+        this.__packages.Add(_coh3);
+
+
+    }
+
+    /// <inheritdoc/>
+    public void LoadMods() {
 
         // Get package files
-        string[] packageFiles = Directory.GetFiles(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.MOD_USER_FOLDER), "*.package.json")
-            .Append(BattlegroundsInstance.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "battlegrounds.mod.package.json"));
+        string[] packageFiles = Directory.GetFiles(BattlegroundsContext.GetRelativePath(BattlegroundsPaths.MOD_USER_FOLDER), "*.package.json")
+            .Append(BattlegroundsContext.GetRelativePath(BattlegroundsPaths.BINARY_FOLDER, "battlegrounds.mod.package.json"));
 
         // TODO: Add support for plugins such that plugins handle mod creaton themselves.
         // If no plugin, we do completely default behaviour here.
@@ -41,15 +74,15 @@ public static class ModManager {
             try {
 
                 // Read the mod package
-                ModPackage? package = JsonSerializer.Deserialize<ModPackage>(File.OpenRead(packageFilepath));
+                IModPackage? package = JsonSerializer.Deserialize<ModPackage>(File.OpenRead(packageFilepath));
                 if (package is null) {
-                    Trace.WriteLine($"Failed to load mod package '{packageFilepath}' (Error reading file).", nameof(ModManager));
+                    logger.Error($"Failed to load mod package '{packageFilepath}' (Error reading file).");
                     continue;
                 }
 
                 // Ensure no duplicate
                 if (__packages.Any(x => x.ID == package.ID)) {
-                    Trace.WriteLine($"Failed to load mod package '{package.ID}' (Duplicate ID entry).", nameof(ModManager));
+                    logger.Error($"Failed to load mod package '{package.ID}' (Duplicate ID entry).");
                     continue;
                 }
 
@@ -84,28 +117,26 @@ public static class ModManager {
                     __mods[package.GamemodeGUID]
                         = gamemodePack;
 
-                    // Register mod in wincondition list
-                    gamemodePack.Gamemodes.ForEach(WinconditionList.AddWincondition);
-
                     // Increment submod counter
                     submods++;
+
                 }
 
                 // Log
-                Trace.WriteLine($"Loaded mod package '{package.ID}' (With {submods} mods).", nameof(ModManager));
+                logger.Info($"Loaded mod package '{package.ID}' (With {submods} mods).");
 
             } catch (Exception ex) {
 
                 // Log error and file
-                Trace.WriteLine($"Failed to read mod package '{packageName}'.", nameof(ModManager));
-                Trace.WriteLine($"{packageName} Error is: {ex}", nameof(ModManager));
+                logger.Error($"Failed to read mod package '{packageName}'.");
+                logger.Error($"{packageName} Error is: {ex}");
 
             }
         }
 
     }
 
-    private static IModFactory GetModFactory(ModPackage package) { 
+    private IModFactory GetModFactory(IModPackage package) { 
         if (package.ID is "mod_bg") {
             return new BattlegroundsModFactory(package);
         } else if (__modFactories.TryGetValue(package.ID, out IModFactory? factory) && factory is not null) {
@@ -114,44 +145,34 @@ public static class ModManager {
         throw new Exception("Mod factory not found - please verify the plugin is installed correctly.");
     }
 
-    /// <summary>
-    /// Get package from its <paramref name="packageID"/>.
-    /// </summary>
-    /// <param name="packageID">The ID to use to identify the <see cref="ModPackage"/>.</param>
-    /// <returns>The <see cref="ModPackage"/> associated with <paramref name="packageID"/>.</returns>
-    public static ModPackage? GetPackage(string packageID)
+    /// <inheritdoc/>
+    public IModPackage? GetPackage(string packageID)
         => __packages.FirstOrDefault(x => x.ID == packageID);
 
-    /// <summary>
-    /// Get package from its <paramref name="packageID"/>.
-    /// </summary>
-    /// <param name="packageID">The ID to use to identify the <see cref="ModPackage"/>.</param>
-    /// <returns>The <see cref="ModPackage"/> associated with <paramref name="packageID"/>.</returns>
-    public static ModPackage GetPackageOrError(string packageID)
+    /// <inheritdoc/>
+    public IModPackage GetPackageOrError(string packageID)
         => __packages.FirstOrDefault(x => x.ID == packageID) ?? throw new Exception($"Package '{packageID}' not found.");
 
-    /// <summary>
-    /// Iterate over each <see cref="ModPackage"/> in the system.
-    /// </summary>
-    /// <param name="modPackageAction">The action to invoke with each package element.</param>
-    public static void EachPackage(Action<ModPackage> modPackageAction)
+    /// <inheritdoc/>
+    public void EachPackage(Action<IModPackage> modPackageAction)
         => __packages.ForEach(modPackageAction);
 
-    /// <summary>
-    /// Get the abstract <see cref="IGameMod"/> instance represented by <paramref name="guid"/>.
-    /// </summary>
-    /// <typeparam name="TMod">The specifc <see cref="IGameMod"/> type to get.</typeparam>
-    /// <param name="guid">The GUID of the mod to fetch.</param>
-    /// <returns>The <see cref="IGameMod"/> instance associated with the <paramref name="guid"/>.</returns>
-    public static TMod? GetMod<TMod>(ModGuid guid) where TMod : class, IGameMod
-        => __mods[guid] as TMod;
+    /// <inheritdoc/>
+    public TMod? GetMod<TMod>(ModGuid guid) where TMod : class, IGameMod
+        => __mods.TryGetValue(guid, out IGameMod? mod) ? mod as TMod : null;
 
-    /// <summary>
-    /// Get a <see cref="ModPackage"/> based on one of its submod <paramref name="guid"/> elements.
-    /// </summary>
-    /// <param name="guid">The <see cref="ModGuid"/> to get <see cref="ModPackage"/> from.</param>
-    /// <returns>The <see cref="ModPackage"/> associated with the submod associated <paramref name="guid"/>.</returns>
-    public static ModPackage? GetPackageFromGuid(ModGuid guid)
-        => __packages.FirstOrDefault(x => x.TuningGUID == guid || x.GamemodeGUID == guid || x.AssetGUID == guid);
+    /// <inheritdoc/>
+    public IModPackage? GetPackageFromGuid(ModGuid guid, GameCase game)
+        => __packages.FirstOrDefault(x => x.SupportedGames.HasFlag(game) && (x.TuningGUID == guid || x.GamemodeGUID == guid || x.AssetGUID == guid));
+
+    /// <inheritdoc/>
+    public IList<IModPackage> GetPackages() => __packages;
+
+    /// <inheritdoc/>
+    public IModPackage GetVanillaPackage(GameCase gameCase) => gameCase switch {
+        GameCase.CompanyOfHeroes3 => _coh3,
+        GameCase.CompanyOfHeroes2 => _coh2,
+        _ => throw new Exception("invalid game case")
+    };
 
 }

@@ -1,0 +1,58 @@
+squads:
+  tommy_uk:
+    category: Infantry
+    faction-association: british_africa
+    is-infantry: true
+    extensions:
+      cost:
+        manpower: 300
+        munitions: 0
+        fuel: 0
+      ui:
+        screen-name: 11153223
+        help-text: 11265170
+        brief-text: 11266227
+        icon-name: tommy_uk
+      loadout:
+       entities:
+          - ebp: officer_tommy_uk
+            count: 1
+          - ebp: tommy_uk
+            count: 4
+      upgrades:
+        slots: 1
+        available:
+          - recon_package_tommy_uk
+          - boys_anti_tank_rifles_tommy_uk
+          - lmg_bren_tommy_uk
+      veterancy:
+        ranks:
+          - experience: 900
+            name: Vet1
+          - experience: 2700
+            name: Vet2
+          - experience: 5400
+            name: Vet3
+
+  cwt_15_truck_uk:
+    category: Support
+    faction-association: british_africa
+    is-infantry: false
+    extensions:
+      cost:
+        manpower: 200
+        munitions: 0
+        fuel: 20
+      ui:
+        screen-name: CWT 15 Truck
+        icon-name: cwt_15_uk
+        symbol-icon-name: cwt_truck
+      veterancy:
+        ranks:
+          - experience: 1000
+            name: Vet1
+          - experience: 3000
+            name: Vet2
+          - experience: 6000
+            name: Vet3
+      hold: {}

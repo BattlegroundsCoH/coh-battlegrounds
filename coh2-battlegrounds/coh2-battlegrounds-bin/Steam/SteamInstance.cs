@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Battlegrounds.Logging;
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -7,9 +9,11 @@ using System.Text.Json.Serialization;
 namespace Battlegrounds.Steam;
 
 /// <summary>
-/// Class representation of a running Steam instance. Cannot be inheritted. Inherits from <see cref="IJsonObject"/>.
+/// Class representation of a running Steam instance. Cannot be inheritted..
 /// </summary>
 public sealed class SteamInstance {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     // The local user to use
     private SteamUser? m_user;
@@ -87,12 +91,12 @@ public sealed class SteamInstance {
             .Replace("steam.exe", "config\\loginusers.vdf");
 
         // Log from where
-        Trace.WriteLine($"Fetching local user data: {steamInstall}", nameof(SteamUser));
+        logger.Info($"Fetching local user data: {steamInstall}");
 
         // Get VDF
         var vdf = Vdf.FromFile(steamInstall);
         if (vdf is null) {
-            Trace.WriteLine($"Failed to parse local user data in {steamInstall}", nameof(SteamUser));
+            logger.Error($"Failed to parse local user data in {steamInstall}");
             return null;
         }
 
@@ -112,7 +116,7 @@ public sealed class SteamInstance {
         }
 
         // Return null user
-        Trace.WriteLine($"Failed to detect local user data in {steamInstall} (user len = {users?.Count ?? 0})", nameof(SteamUser));
+        logger.Warning($"Failed to detect local user data in {steamInstall} (user len = {users?.Count ?? 0})");
         return null;
 
     }

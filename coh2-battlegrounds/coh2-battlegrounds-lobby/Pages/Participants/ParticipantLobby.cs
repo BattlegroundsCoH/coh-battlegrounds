@@ -15,13 +15,14 @@ using Battlegrounds.Lobby.Components;
 using Battlegrounds.Lobby.Lookups;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.DataLocal;
-using Battlegrounds.Compiler;
-using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Functional;
 using Battlegrounds.Misc.Collections;
 using Battlegrounds.Locale;
 using Battlegrounds.UI;
 using Battlegrounds.Resources;
+using Battlegrounds.Game.Match;
+using Battlegrounds.Compiler.Wincondition;
+using Battlegrounds.Game.Scenarios;
 
 namespace Battlegrounds.Lobby.Pages.Participants;
 
@@ -32,6 +33,9 @@ using static Battlegrounds.UI.AppContext;
 /// 
 /// </summary>
 public sealed class ParticipantLobby : BaseLobby {
+
+    private static readonly SessionHandlerFactory sessionHandlerFactory = new SessionHandlerFactory();
+    private static readonly WinconditionCompilerFactory winconditionCompilerFactory = new WinconditionCompilerFactory();
 
     private bool m_hasDownloadedGamemode = false;
 
@@ -133,9 +137,7 @@ public sealed class ParticipantLobby : BaseLobby {
         this.m_isStarting = true;
 
         // Inform user
-        if (this.m_chatModel is not null) {
-            this.m_chatModel.SystemMessage($"The match is starting", Colors.Gray);
-        }
+        this.m_chatModel?.SystemMessage($"The match is starting", Colors.Gray);
 
         // Invoke on GUI
         Application.Current.Dispatcher.Invoke(() => {
@@ -161,7 +163,8 @@ public sealed class ParticipantLobby : BaseLobby {
         });
 
         // Create overwatch strategy
-        var overwatch = new MemberOverwatchStrategy();
+        var handler = sessionHandlerFactory.GetHandler(m_handle.Game);
+        var overwatch = new MemberOverwatchStrategy(handler);
 
         // Run task
         Task.Run(async () => {
@@ -172,9 +175,7 @@ public sealed class ParticipantLobby : BaseLobby {
             // Wait for gamemode
             while (!this.m_hasDownloadedGamemode) {
                 if ((DateTime.Now - time).TotalSeconds > 15.0) {
-                    if (this.m_chatModel is not null) {
-                        this.m_chatModel.SystemMessage($"Failed to download gamemode file!", Colors.Gray);
-                    }
+                    this.m_chatModel?.SystemMessage($"Failed to download gamemode file!", Colors.Gray);
                     // TODO: Report to host
                     return;
                 }
@@ -242,9 +243,7 @@ public sealed class ParticipantLobby : BaseLobby {
         });
 
         // Inform user
-        if (this.m_chatModel is not null) {
-            this.m_chatModel.SystemMessage($"Match results saved.", Colors.Gray);
-        }
+        this.m_chatModel?.SystemMessage($"Match results saved.", Colors.Gray);
 
     }
 
@@ -265,10 +264,10 @@ public sealed class ParticipantLobby : BaseLobby {
                     if (data is null) {
                         this.m_chatModel?.SystemMessage($"Failed to download gamemode", Colors.DarkRed);
                         return;
-                    }
+                    }                    
 
                     // File sga to gamemode file
-                    File.WriteAllBytes(WinconditionCompiler.GetArchivePath(), data);
+                    File.WriteAllBytes(winconditionCompilerFactory.GetWinconditionCompiler(m_handle.Game).GetArchivePath(), data);
 
                     // Set as true
                     this.m_hasDownloadedGamemode = true;
@@ -387,7 +386,7 @@ public sealed class ParticipantLobby : BaseLobby {
         Application.Current.Dispatcher.Invoke(() => {
 
             // Check if valid
-            if (ScenarioList.FromRelativeFilename(map) is not Scenario scenario) {
+            if (BattlegroundsContext.DataSource.GetScenarioList(m_package!, m_handle.Game)!.FromRelativeFilename(map) is not IScenario scenario) {
                 this.MapDropdown.Label = map;
                 this.ScenarioPreview = ScenarioPreviewLookup.TryGetMapSource(null);
                 this.NotifyProperty(nameof(ScenarioPreview));
@@ -417,7 +416,7 @@ public sealed class ParticipantLobby : BaseLobby {
         Application.Current.Dispatcher.Invoke(() => {
 
             // Set gamemode label
-            this.GamemodeDropdown.Label = SettingsLookup.GetGamemodeName(gamemode, this.m_package);
+            this.GamemodeDropdown.Label = SettingsLookup.GetGamemodeName(gamemode, this.m_package, m_handle.Game);
 
             // Set gamemode
             this.Gamemode = this.ModPackage.Gamemodes
@@ -433,7 +432,7 @@ public sealed class ParticipantLobby : BaseLobby {
             if (this.Gamemode.AdditionalOptions is not null) {
 
                 // Get locale
-                var loc = this.ModPackage.GetLocale(ModType.Gamemode, BattlegroundsInstance.Localize.Language);
+                var loc = this.ModPackage.GetLocale(ModType.Gamemode, BattlegroundsContext.Localize.Language);
 
                 // Read gamemode options
                 foreach (var (k, v) in this.Gamemode.AdditionalOptions) {
@@ -467,16 +466,12 @@ public sealed class ParticipantLobby : BaseLobby {
             this.GamemodeOptionDropdown.Label = gamomodeOption;
         });
 
-
     }
 
     private void OnGamemodeAuxOptionChanged(Setting setting, LobbySettingsChangedEventArgs e) {
 
         // Make sure there are options
         if (this.Gamemode.AdditionalOptions is not null) {
-
-            // Get locale
-            //var loc = this.ModPackage.GetLocale(ModType.Gamemode, BattlegroundsInstance.Localize.Language);
 
             // Read gamemode options
             foreach (var (k, v) in this.Gamemode.AdditionalOptions) {
@@ -508,7 +503,7 @@ public sealed class ParticipantLobby : BaseLobby {
 
     private void OnModPackageChange(string modPackage) {
 
-        if (ModManager.GetPackage(modPackage) is not ModPackage tunning) {
+        if (BattlegroundsContext.ModManager.GetPackage(modPackage) is not ModPackage tunning) {
             this.ModPackageDropdown.Label = modPackage;
             return;
         }

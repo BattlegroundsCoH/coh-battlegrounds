@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Locale;
 
 namespace Battlegrounds.UI.Modals.Prompts;
@@ -62,7 +62,7 @@ public sealed class RenamePrompt : INotifyPropertyChanged {
         // Set title
         this.Title = title switch {
             LocaleValueKey lvk => lvk.Content,
-            _ => BattlegroundsInstance.Localize.GetString(title)
+            _ => BattlegroundsContext.Localize.GetString(title)
         };
         this.OldValue = oldvalue;
 
@@ -72,7 +72,7 @@ public sealed class RenamePrompt : INotifyPropertyChanged {
         // Set accept button
         this.AcceptTitle = acceptTitle switch {
             LocaleValueKey lvk => lvk.Content,
-            _ => BattlegroundsInstance.Localize.GetString(acceptTitle)
+            _ => BattlegroundsContext.Localize.GetString(acceptTitle)
         };
 
         // Set accept button callback

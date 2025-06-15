@@ -36,7 +36,7 @@ public class MultiplayerFinalizer : SingleplayerFinalizer {
         }
 
         // Get player results
-        var playerFiles = this.m_companies.Where(x => x.Key.SteamID != BattlegroundsInstance.Steam.User.ID).Select(
+        var playerFiles = this.m_companies.Where(x => x.Key.SteamID != BattlegroundsContext.Steam.User.ID).Select(
             x => new LobbyPlayerCompanyFile(x.Key.SteamID, CompanySerializer.GetCompanyAsJson(x.Value, indent: false))).ToArray();
 
         // Get overall match results

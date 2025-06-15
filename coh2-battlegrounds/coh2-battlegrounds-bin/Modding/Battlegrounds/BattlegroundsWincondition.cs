@@ -5,17 +5,27 @@
 /// </summary>
 public sealed class BattlegroundsWincondition : IWinconditionMod {
 
+    /// <inheritdoc/>
     public ModGuid Guid { get; }
 
+    /// <inheritdoc/>
     public string Name { get; }
 
+    /// <inheritdoc/>
     public IGamemode[] Gamemodes { get; }
 
-    public ModPackage Package { get; }
+    /// <inheritdoc/>
+    public IModPackage Package { get; }
 
+    /// <inheritdoc/>
     public ModType GameModeType => ModType.Gamemode;
 
-    public BattlegroundsWincondition(ModPackage package, IGamemode[] gamemodes) {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="package"></param>
+    /// <param name="gamemodes"></param>
+    public BattlegroundsWincondition(IModPackage package, IGamemode[] gamemodes) {
 
         // Set basic properties
         this.Guid = package.GamemodeGUID;

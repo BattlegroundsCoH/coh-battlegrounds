@@ -2,8 +2,7 @@
 
 using Battlegrounds.Data.Generators.Lua.RuntimeServices;
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Database.Management;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Gameplay.DataConverters;
 
 namespace Battlegrounds.Game.Gameplay;
@@ -86,10 +85,12 @@ public class Ability {
     /// <param name="MaxUse">The maximum amount of uses each match.</param>
     /// <param name="UsedCount">The amount of times this has been used.</param>
     public Ability(AbilityBlueprint ABP, string UnlockUpgrade, string[] GrantingBlueprints, AbilityCategory Category, int MaxUse, int UsedCount = -1) {
+        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(ABP.PBGID.Mod, ABP.Game) ?? throw new System.Exception();
+        var ds = package.GetDataSource().GetBlueprints(ABP.Game);
         this.ABP = ABP;
         this.Category = Category;
-        this.UnlockUpgrade = BlueprintManager.FromBlueprintName<UpgradeBlueprint>(UnlockUpgrade);
-        this.GrantingBlueprints = GrantingBlueprints.Map(x => BlueprintManager.FromBlueprintName<SquadBlueprint>(x));
+        this.UnlockUpgrade = ds.FromBlueprintName<UpgradeBlueprint>(UnlockUpgrade);
+        this.GrantingBlueprints = GrantingBlueprints.Map(x => ds.FromBlueprintName<SquadBlueprint>(x));
         this.MaxUse = MaxUse;
         this.UsedCount = UsedCount;
     }
@@ -112,4 +113,3 @@ public class Ability {
     }
 
 }
-

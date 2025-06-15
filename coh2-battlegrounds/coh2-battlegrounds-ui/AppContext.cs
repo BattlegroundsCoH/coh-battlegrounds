@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-using Battlegrounds.ErrorHandling.CommonExceptions;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.UI.Modals;
 
 namespace Battlegrounds.UI;

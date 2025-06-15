@@ -1,9 +1,7 @@
-﻿using Battlegrounds.Game.Database.Extensions;
-using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Game.Database;
-using Battlegrounds.Game.Gameplay;
-using Battlegrounds.Locale;
+﻿using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding.Content;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Game.Blueprints.Extensions;
 
 namespace Battlegrounds.Editor.Components;
 
@@ -70,7 +68,7 @@ public class AbilitySlot {
         this.RemoveClick = onRemove;
 
         // Set data
-        this.AbilityName = GameLocale.GetString(this.AbilityInstance.ABP.UI.ScreenName);
+        this.AbilityName = BattlegroundsContext.DataSource.GetLocaleSource(ability.ABP).GetString(this.AbilityInstance.ABP.UI.ScreenName);
         this.AbilityCost = this.AbilityInstance.ABP.Cost;
 
         this.AbilityIcon = this.AbilityInstance.ABP.UI.Icon;
@@ -85,7 +83,7 @@ public class AbilitySlot {
     public void UpdateUnitData(FactionData.UnitAbility unitData) {
 
         // Get blueprint
-        var sbp = BlueprintManager.FromBlueprintName<SquadBlueprint>(unitData.Blueprint);
+        var sbp = BattlegroundsContext.DataSource.GetBlueprintSource(this.AbilityInstance.ABP).FromBlueprintName<SquadBlueprint>(unitData.Blueprint);
         if (sbp is null) {
             return;
         }

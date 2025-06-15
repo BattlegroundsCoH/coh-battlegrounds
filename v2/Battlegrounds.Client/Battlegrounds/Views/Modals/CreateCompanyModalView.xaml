@@ -1,0 +1,120 @@
+﻿<helpers:DialogUserControl x:Class="Battlegrounds.Views.Modals.CreateCompanyModalView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Battlegrounds.Views.Modals"
+                           xmlns:helpers="clr-namespace:Battlegrounds.Helpers"
+                           xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels.Modals"
+             xmlns:converters="clr-namespace:Battlegrounds.Converters"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:CreateCompanyModalViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <helpers:DialogUserControl.Resources>
+        <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
+        <converters:FactionIdToNameConverter x:Key="FactionIdToNameConverter"/>
+
+        <DataTemplate x:Key="FactionComboBoxItemTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Faction icon -->
+                <Image Width="20" Height="20" Margin="0,0,8,0">
+                    <Image.Source>
+                        <MultiBinding Converter="{StaticResource FactionIconConverter}">
+                            <Binding Path="."/>
+                            <Binding Path="DataContext.SelectedGame" RelativeSource="{RelativeSource AncestorType=helpers:DialogUserControl}"/>
+                        </MultiBinding>
+                    </Image.Source>
+                </Image>
+                <!-- Faction name -->
+                <TextBlock Grid.Column="1"
+                    VerticalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource FactionIdToNameConverter}">
+                            <Binding Path="."/>
+                            <Binding Path="DataContext.SelectedGame" RelativeSource="{RelativeSource AncestorType=helpers:DialogUserControl}"/>                            
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </Grid>
+        </DataTemplate>
+
+    </helpers:DialogUserControl.Resources>
+    <Border 
+        Background="{StaticResource BackgroundBlueBrush}"
+        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+        BorderThickness="1"
+        CornerRadius="8">
+        <Grid Margin="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <TextBlock Text="CREATE NEW COMPANY"
+               FontSize="20"
+               FontWeight="Bold"
+               Foreground="{StaticResource ForegroundWhiteBrush}"
+               Margin="0,0,0,20"/>
+
+            <!-- Form Content -->
+            <StackPanel Grid.Row="1">
+                <StackPanel>
+                    <TextBlock Text="Company Name"
+                       Foreground="{StaticResource ForegroundWhiteBrush}"
+                       Margin="0,0,0,5"/>
+                    <TextBox 
+                        Style="{StaticResource NameTextBox}"
+                        Text="{Binding CompanyName, UpdateSourceTrigger=PropertyChanged}"
+                        MaxLength="32"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,8,0,0">
+                    <TextBlock Text="Game"
+                       Foreground="{StaticResource ForegroundWhiteBrush}"
+                       Margin="0,0,0,5"/>
+                    <ComboBox ItemsSource="{Binding AvailableGames}"
+                              SelectedItem="{Binding SelectedGame}"
+                              DisplayMemberPath="GameName"
+                              Style="{StaticResource SettingsComboBox}"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,8,0,0">
+                    <TextBlock Text="Faction"
+                       Foreground="{StaticResource ForegroundWhiteBrush}"
+                       Margin="0,0,0,5"/>
+                    <ComboBox ItemsSource="{Binding AvailableFactions}"
+                              SelectedItem="{Binding SelectedFaction}"
+                              Style="{StaticResource SettingsComboBox}"
+                              ItemTemplate="{StaticResource FactionComboBoxItemTemplate}"/>
+                </StackPanel>
+
+            </StackPanel>
+
+            <!-- Buttons -->
+            <StackPanel 
+                Grid.Row="2" 
+                Orientation="Horizontal" 
+                HorizontalAlignment="Right">
+                <Button 
+                    Content="Cancel"
+                    Style="{StaticResource DangerActionButton}"
+                    Width="100"
+                    Command="{Binding CancelCommand}"/>
+                <Button 
+                    Content="Create"
+                    Style="{StaticResource ActionButton}"
+                    Margin="8,0,0,0"
+                    Width="100"
+                    Command="{Binding CreateCommand}"
+                    IsEnabled="{Binding CanCreate}"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</helpers:DialogUserControl>

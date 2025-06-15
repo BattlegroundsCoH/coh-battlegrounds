@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 using Battlegrounds.Editor.Modals;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Locale;
+using Battlegrounds.Logging;
 
 using Battlegrounds.UI;
 using Battlegrounds.UI.Modals;
@@ -19,6 +19,8 @@ namespace Battlegrounds.Editor.Pages;
 public record CompanyBrowserButton(ICommand? Click, LocaleKey? Tooltip = null);
 
 public class CompanyBrowser : ViewModelBase {
+
+    private static readonly Logger logger = Logger.CreateLogger();
 
     public CompanyBrowserButton Create { get; }
 
@@ -106,7 +108,7 @@ public class CompanyBrowser : ViewModelBase {
 
             // Check return value
             if (vm.SelectedType.Type is null) {
-                Trace.WriteLine($"Fatal error: Tried to create new company with no valid type: '{vm.SelectedType.Name}'", nameof(CompanyBrowser));
+                logger.Warning($"Fatal error: Tried to create new company with no valid type: '{vm.SelectedType.Name}'");
                 return;
             }
 
@@ -230,7 +232,7 @@ public class CompanyBrowser : ViewModelBase {
                 }
 
             } catch (Exception e) { // Catch any error
-                Trace.WriteLine(e, nameof(CompanyBrowser));
+                logger.Error(e);
             }
 
             // Catch all situation

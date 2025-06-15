@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Game.Scenarios;
+using Battlegrounds.Game.Scenarios.CoH2;
 using Battlegrounds.Modding;
 using Battlegrounds.Modding.Content.Companies;
 
@@ -19,12 +20,12 @@ public class NullSession : ISession {
 
     public bool AllowPersistency { get; }
 
-    public Scenario Scenario => new Scenario();
+    public IScenario Scenario => new CoH2Scenario();
 
     public IGamemode Gamemode => new Wincondition("Unknown Gamemode", ModGuid.BaseGame);
 
     public ITuningMod TuningMod 
-        => ModManager.GetMod<ITuningMod>(ModManager.GetPackage("mod_bg")?.TuningGUID ?? throw new Exception("Invalid tuning GUID set for mod_bg")) 
+        => BattlegroundsContext.ModManager.GetMod<ITuningMod>(BattlegroundsContext.ModManager.GetPackage("mod_bg")?.TuningGUID ?? throw new Exception("Invalid tuning GUID set for mod_bg")) 
         ?? throw new Exception("Not tuning mod found for mod_bg");
 
     public string GamemodeOption => "0";

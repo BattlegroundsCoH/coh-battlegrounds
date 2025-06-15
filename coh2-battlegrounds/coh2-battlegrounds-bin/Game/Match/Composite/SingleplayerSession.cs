@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 
+using Battlegrounds.Game.DataSource.Playback;
 using Battlegrounds.Game.Match.Analyze;
 using Battlegrounds.Game.Match.Data;
 using Battlegrounds.Game.Match.Finalizer;
@@ -19,16 +20,22 @@ public class SingleplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFinalize
     protected IPlayStrategy? m_playStrategyResult;
     protected IAnalyzedMatch m_analyzedMatch;
 
+    /// <inheritdoc/>
     public bool HasStarted => this.m_isStarted;
 
+    /// <inheritdoc/>
     public bool IsCancelled => this.m_isCancelled;
 
+    /// <inheritdoc/>
     public IPlayStrategy PlayObject => this.m_playStrategyResult ?? new NoPlayStrategy();
 
+    /// <inheritdoc/>
     public IAnalyzedMatch MatchAnalysis => this.m_analyzedMatch;
 
+    /// <inheritdoc/>
     public bool AnalysisSuccess => this.m_hasSuccessAnalysis;
 
+    /// <inheritdoc/>
     public event AnalysisCancelledHandler? AnalysisCancelled;
 
     public SingleplayerSession() {
@@ -37,6 +44,7 @@ public class SingleplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFinalize
         this.m_analyzedMatch = new NullAnalysis();
     }
 
+    /// <inheritdoc/>
     public async void Startup(IStartupStrategy startupStrategy) {
 
         // Assign cancelled handler
@@ -97,13 +105,14 @@ public class SingleplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFinalize
 
     private void StartupStrategy_StartupCancelled(IStartupStrategy sender, object? caller, string reason) => this.m_isCancelled = true;
 
+    /// <inheritdoc/>
     public void Analyze(IAnalyzeStrategy strategy, IMatchData matchResults) {
 
         // Set to false
         this.m_hasSuccessAnalysis = false;
 
         // Bind to ReplayMatchData -> Get the latest replay match data here
-        if (matchResults.LoadMatchData(ReplayMatchData.LATEST_REPLAY_FILE)) {
+        if (matchResults.LoadMatchData(PlaybackLoader.LATEST_COH2_REPLAY_FILE)) {
 
             // Parse the match results
             if (matchResults.ParseMatchData()) {
@@ -134,6 +143,7 @@ public class SingleplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFinalize
 
     }
 
+    /// <inheritdoc/>
     public void Finalize(IFinalizeStrategy strategy, IAnalyzedMatch analyzedMatch) {
 
         // Finalize
@@ -145,4 +155,3 @@ public class SingleplayerSession : IMatchStarter, IMatchAnalyzer, IMatchFinalize
     }
 
 }
-

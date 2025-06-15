@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿namespace Battlegrounds.Developer; 
 
-namespace coh2_battlegrounds_console {
+public static class CampaignCompiler {
 
-    public static class CampaignCompiler {
-
-        public static void Compile(string dir) {
-
-        }
+    public static void Compile(string dir) {
 
     }
 

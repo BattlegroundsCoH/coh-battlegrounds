@@ -164,7 +164,7 @@ public class SingleplayerFinalizer : IFinalizeStrategy {
 
     protected virtual Company? GetLocalPlayerCompany() {
         try {
-            ulong selfID = BattlegroundsInstance.Steam.User.ID;
+            ulong selfID = BattlegroundsContext.Steam.User.ID;
             return this.m_companies.FirstOrDefault(x => x.Key.SteamID == selfID).Value;
         } catch {
             return null;

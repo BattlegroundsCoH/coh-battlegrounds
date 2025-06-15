@@ -6,33 +6,26 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Input;
 
-using Battlegrounds.Game.Database.Extensions;
-using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
-
-using Battlegrounds.Locale;
-
 using Battlegrounds.Misc.Values;
-
 using Battlegrounds.Resources;
-
 using Battlegrounds.UI;
 using Battlegrounds.UI.Modals;
-
 using Battlegrounds.Editor.Components;
-
 using Battlegrounds.Functional;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Game.Blueprints.Extensions;
+using Battlegrounds.Resources.Extensions;
 
 namespace Battlegrounds.Editor.Modals;
 
 public class SquadSettings : ModalBase, INotifyPropertyChanged {
 
     public record AbilityButton(AbilityBlueprint Abp) {
-        public ImageSource? Icon => ResourceHandler.GetIcon("ability_icons", this.Abp.UI.Icon);
-        public string Title => GameLocale.GetString(this.Abp.UI.ScreenName);
-        public string Desc => GameLocale.GetString(this.Abp.UI.LongDescription);
+        public ImageSource? Icon => ResourceHandler.GetIcon(Abp.GetAbilityIcon());
+        public string Title => BattlegroundsContext.DataSource.GetLocaleSource(Abp).GetString(this.Abp.UI.ScreenName);
+        public string Desc => BattlegroundsContext.DataSource.GetLocaleSource(Abp).GetString(this.Abp.UI.LongDescription);
         public CostExtension Cost => this.Abp.Cost;
     }
 
@@ -40,9 +33,9 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
         public event PropertyChangedEventHandler? PropertyChanged;
         public bool IsApplied => this.CheckApplied();
         public bool IsAvailable => this.CheckAvailable();
-        public ImageSource? Icon => ResourceHandler.GetIcon("upgrade_icons", this.Ubp.UI.Icon);
-        public string Title => GameLocale.GetString(this.Ubp.UI.ScreenName);
-        public string Desc => GameLocale.GetString(this.Ubp.UI.LongDescription);
+        public ImageSource? Icon => ResourceHandler.GetIcon(Ubp.GetUpgradeIcon());
+        public string Title => BattlegroundsContext.DataSource.GetLocaleSource(Ubp).GetString(this.Ubp.UI.ScreenName);
+        public string Desc => BattlegroundsContext.DataSource.GetLocaleSource(Ubp).GetString(this.Ubp.UI.LongDescription);
         public CostExtension Cost => this.Ubp.Cost;
         public void Update() {
             this.PropertyChanged?.Invoke(this, new(nameof(IsAvailable)));
@@ -67,9 +60,9 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
     public record DeployUnitButton(SquadBlueprint Blueprint, Func<bool> IsActive, EventCommand Clicked) : INotifyPropertyChanged {
         public bool IsActiveMethod => this.IsActive();
         public event PropertyChangedEventHandler? PropertyChanged;
-        public ImageSource? Icon => ResourceHandler.GetIcon("unit_icons", this.Blueprint.UI.Icon);
-        public string Title => GameLocale.GetString(this.Blueprint.UI.ScreenName);
-        public string Desc => GameLocale.GetString(this.Blueprint.UI.LongDescription);
+        public ImageSource? Icon => ResourceHandler.GetIcon(this.Blueprint.GetUnitIcon());
+        public string Title => BattlegroundsContext.DataSource.GetLocaleSource(Blueprint).GetString(this.Blueprint.UI.ScreenName);
+        public string Desc => BattlegroundsContext.DataSource.GetLocaleSource(Blueprint).GetString(this.Blueprint.UI.LongDescription);
         public CostExtension Cost => this.Blueprint.Cost;
         public void Update() {
             this.PropertyChanged?.Invoke(this, new(nameof(IsActiveMethod)));
@@ -77,8 +70,8 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
     }
 
     private static string RankToStar(int i, int rank) => i < rank
-        ? "pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/vet/vstar_yes.png"
-        : "pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/vet/vstar_no.png";
+        ? "pack://application:,,,/Battlegrounds;component/Resources/ingame/vet/vstar_yes.png"
+        : "pack://application:,,,/Battlegrounds;component/Resources/ingame/vet/vstar_no.png";
 
     public UnitBuilder BuilderInstance { get; }
 
@@ -88,35 +81,35 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
 
     public SquadSlot TriggerModel { get; }
 
-    public string UnitName => GameLocale.GetString(this.BuilderInstance.GetName());
+    public string UnitName => BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.BuilderInstance.GetName());
 
-    public string UnitRawName => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ScreenName);
+    public string UnitRawName => BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.BuilderInstance.Blueprint.UI.ScreenName);
 
-    public string UnitDesc => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.LongDescription);
+    public string UnitDesc => BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.BuilderInstance.Blueprint.UI.LongDescription);
 
-    public string UnitHelpText => GameLocale.GetString(this.BuilderInstance.Blueprint.UI.ShortDescription);
+    public string UnitHelpText => BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.BuilderInstance.Blueprint.UI.ShortDescription);
 
-    public ImageSource? UnitPortrait => ResourceHandler.GetIcon("portraits", this.BuilderInstance.Blueprint.UI.Portrait);
+    public ImageSource? UnitPortrait => ResourceHandler.GetIcon(this.BuilderInstance.Blueprint.GetPortrait());
 
-    public string CrewTitle => this.CrewBuilderInstance is not null ? GameLocale.GetString(this.CrewBuilderInstance.Blueprint.UI.ScreenName) : "";
+    public string CrewTitle => this.CrewBuilderInstance is not null ? BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.CrewBuilderInstance.Blueprint.UI.ScreenName) : "";
 
-    public string CrewDesc => this.CrewBuilderInstance is not null ? GameLocale.GetString(this.CrewBuilderInstance.Blueprint.UI.LongDescription) : "";
+    public string CrewDesc => this.CrewBuilderInstance is not null ? BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.CrewBuilderInstance.Blueprint.UI.LongDescription) : "";
 
-    public string CrewHelperDesc => this.CrewBuilderInstance is not null ? GameLocale.GetString(this.CrewBuilderInstance.Blueprint.UI.ShortDescription) : "";
+    public string CrewHelperDesc => this.CrewBuilderInstance is not null ? BattlegroundsContext.DataSource.GetLocaleSource(BuilderInstance.Blueprint).GetString(this.CrewBuilderInstance.Blueprint.UI.ShortDescription) : "";
 
-    public ImageSource? CrewPortrait => this.CrewBuilderInstance is not null ? ResourceHandler.GetIcon("portraits", this.CrewBuilderInstance.Blueprint.UI.Portrait) : null;
+    public ImageSource? CrewPortrait => this.CrewBuilderInstance is not null ? ResourceHandler.GetIcon(this.CrewBuilderInstance.Blueprint.GetPortrait()) : null;
 
     public string DeployMethodTitle => this.BuilderInstance.DeployMethod switch {
-        DeploymentMethod.None => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_None"),
-        DeploymentMethod.DeployAndExit => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Exit"),
-        DeploymentMethod.DeployAndStay => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Stay"),
+        DeploymentMethod.None => BattlegroundsContext.Localize.GetString("CompanySquadView_Deploy_None"),
+        DeploymentMethod.DeployAndExit => BattlegroundsContext.Localize.GetString("CompanySquadView_Deploy_Exit"),
+        DeploymentMethod.DeployAndStay => BattlegroundsContext.Localize.GetString("CompanySquadView_Deploy_Stay"),
         _ => throw new InvalidEnumArgumentException()
     };
 
     public string DeployMethodDesc => this.BuilderInstance.DeployMethod switch {
-        DeploymentMethod.None => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_None_Desc"),
-        DeploymentMethod.DeployAndExit => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Exit_Desc"),
-        DeploymentMethod.DeployAndStay => BattlegroundsInstance.Localize.GetString("CompanySquadView_Deploy_Stay_Desc"),
+        DeploymentMethod.None => BattlegroundsContext.Localize.GetString("CompanySquadView_Deploy_None_Desc"),
+        DeploymentMethod.DeployAndExit => BattlegroundsContext.Localize.GetString("CompanySquadView_Deploy_Exit_Desc"),
+        DeploymentMethod.DeployAndStay => BattlegroundsContext.Localize.GetString("CompanySquadView_Deploy_Stay_Desc"),
         _ => throw new InvalidEnumArgumentException()
     };
 
@@ -178,7 +171,7 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
         this.RallyClick = new EventCommand<MouseEventArgs>(this.RallyCommand);
 
         // Collect all abilities
-        var abilities = this.BuilderInstance.Abilities.Filter(x => x.UI.Icon is not "").Filter(x => ResourceHandler.HasIcon("ability_icons", x.UI.Icon));
+        var abilities = this.BuilderInstance.Abilities.Filter(x => x.UI.Icon is not "").Filter(x => ResourceHandler.HasIcon(x.GetAbilityIcon()));
         this.Abilities = new ObservableCollection<AbilityButton>(abilities.Map(x => new AbilityButton(x)));
 
         // Create upgrade cap
@@ -189,8 +182,8 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
 
         // Collect all upgrades
         this.BuilderInstance.Blueprint.Upgrades
-            .Map(BlueprintManager.FromBlueprintName<UpgradeBlueprint>)
-            .Filter(x => x.UI.Icon is not "" && ResourceHandler.HasIcon("upgrade_icons", x.UI.Icon))
+            .Map(companyBuilder.BlueprintDatabase.FromBlueprintName<UpgradeBlueprint>)
+            .Filter(x => x.UI.Icon is not "" && ResourceHandler.HasIcon(x.GetUpgradeIcon()))
             .Map(x => new UpgradeButton(x, () => this.BuilderInstance.Upgrades.Contains(x), () => !this.UpgradeCapacity.IsAtCapacity, new EventCommand<MouseEventArgs>(this.UpgradeCommand)))
             .ForEach(this.Upgrades.Add);
 
@@ -269,7 +262,7 @@ public class SquadSettings : ModalBase, INotifyPropertyChanged {
         // Set method
         this.BuilderInstance.SetDeploymentMethod(model.Method);
         if (model.Method is DeploymentMethod.None) {
-            this.BuilderInstance.SetTransportBlueprint(string.Empty);
+            this.BuilderInstance.SetTransportBlueprint((SquadBlueprint?)null);
         } else if (this.BuilderInstance.Transport is null && model.Method is not DeploymentMethod.None) {
             if (this.DeployUnits.FirstOrDefault() is DeployUnitButton bttn) {
                 this.BuilderInstance.SetTransportBlueprint(bttn.Blueprint);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Media;
 
 using Battlegrounds.Game.Match.Analyze;
@@ -12,21 +11,22 @@ using Battlegrounds.Modding;
 using Battlegrounds.Networking.Communication.Connections;
 
 using Battlegrounds.Networking.LobbySystem;
+using Battlegrounds.Util.Threading;
 
 namespace Battlegrounds.Lobby.Playing;
 
 public sealed class OnlineModel : BasePlayModel, IPlayModel {
 
-    public OnlineModel(ILobbyHandle handler, ChatSpectator lobbyChat, UploadProgressCallbackHandler callbackHandler, uint cancelTime) : base(handler, lobbyChat) {
+    public OnlineModel(ILobbyHandle handler, IChatSpectator lobbyChat, IDispatcher dispatcher, UploadProgressCallbackHandler callbackHandler, uint cancelTime) 
+        : base(handler, lobbyChat, dispatcher) {
 
         // Startup strategy
-        this.m_startupStrategy = new OnlineStartupStrategy {
+        this.m_startupStrategy = new OnlineStartupStrategy(handler.Game) {
             LocalCompanyCollector = () => this.m_selfCompany,
             SessionInfoCollector = () => this.m_info,
             GamemodeUploadProgress = callbackHandler,
-            PlayStrategyFactory = new OverwatchStrategyFactory(),
+            PlayStrategyFactory = new OverwatchStrategyFactory(handler.Game),
             StopMatchSeconds = cancelTime
-
         };
 
         // Analysis strategy
@@ -39,7 +39,7 @@ public sealed class OnlineModel : BasePlayModel, IPlayModel {
 
     }
 
-    public void Prepare(ModPackage modPackage, PrepareOverHandler prepareOver, PrepareCancelHandler prepareCancelled) {
+    public void Prepare(IModPackage modPackage, PrepareOverHandler prepareOver, PrepareCancelHandler prepareCancelled) {
 
         // Invoke async so we can wait on others without freezing
         Task.Run(() => {
@@ -48,7 +48,7 @@ public sealed class OnlineModel : BasePlayModel, IPlayModel {
             this.BasePrepare(modPackage, prepareCancelled);
 
             // Trigger prepare over on GUI thread
-            Application.Current.Dispatcher.Invoke(() => {
+            this.m_dispatcher.Invoke(() => {
                 prepareOver?.Invoke(this);
             });
 
@@ -77,13 +77,13 @@ public sealed class OnlineModel : BasePlayModel, IPlayModel {
     private void GameErrorHandler(string r, PlayOverHandler matchOver) {
 
         // Log error
-        this.m_chat.SystemMessage(BattlegroundsInstance.Localize.GetString("SystemMessage_MatchError", r), Colors.Red);
+        this.m_chat.SystemMessage(BattlegroundsContext.Localize.GetString("SystemMessage_MatchError", r), Colors.Red);
 
         // Notify participants of error
         this.m_handle.NotifyError("MatchError", r);
 
         // Invoke over event in lobby model.
-        Application.Current.Dispatcher.Invoke(() => {
+        this.m_dispatcher.Invoke(() => {
             matchOver.Invoke(this);
         });
 
@@ -93,13 +93,13 @@ public sealed class OnlineModel : BasePlayModel, IPlayModel {
 
         // do stuff with match?
         if (match.IsFinalizableMatch) {
-            this.m_chat.SystemMessage(BattlegroundsInstance.Localize.GetString("SystemMessage_MatchSaved"), Colors.DarkGray);
+            this.m_chat.SystemMessage(BattlegroundsContext.Localize.GetString("SystemMessage_MatchSaved"), Colors.DarkGray);
         } else {
-            this.m_chat.SystemMessage(BattlegroundsInstance.Localize.GetString("SystemMessage_MatchInvalid"), Colors.DarkGray);
+            this.m_chat.SystemMessage(BattlegroundsContext.Localize.GetString("SystemMessage_MatchInvalid"), Colors.DarkGray);
         }
 
         // Invoke over event in lobby model.
-        Application.Current.Dispatcher.Invoke(() => {
+        this.m_dispatcher.Invoke(() => {
             handler.Invoke(this);
         });
 

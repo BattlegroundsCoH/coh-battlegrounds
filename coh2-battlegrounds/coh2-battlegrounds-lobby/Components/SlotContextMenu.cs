@@ -14,15 +14,15 @@ public abstract class SlotContextMenu : INotifyPropertyChanged {
     protected static readonly Func<LobbyContextAction, Visibility> AlwaysVisible = _ => Visibility.Visible;
     protected static readonly Func<LobbyContextAction, Visibility> VisibleIfEnabled = x => x.Enabled ? Visibility.Visible : Visibility.Collapsed;
 
-    protected static readonly Func<string> LOCSTR_SHOWPLAYERCARD = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Menu_Item_Playercard");
-    protected static readonly Func<string> LOCSTR_UNLOCK_SLOT = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Menu_Item_Unlock_Slot");
-    protected static readonly Func<string> LOCSTR_LOCK_SLOT = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Menu_Item_Lock_Slot");
-    protected static readonly Func<string> LOCSTR_MOVE_SLOT = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Menu_Item_Move_Position");
-    protected static readonly Func<string> LOCSTR_KICKPLAYER = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Menu_Item_Kick_Player");
-    protected static readonly Func<string> LOCSTR_EASYAI = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Menu_Item_Add_Easy_Ai");
-    protected static readonly Func<string> LOCSTR_STANDARDAI = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Menu_Item_Add_Standard_Ai");
-    protected static readonly Func<string> LOCSTR_HARDAI = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Menu_Item_Add_Hard_Ai");
-    protected static readonly Func<string> LOCSTR_EXPERTAI = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Menu_Item_Add_Expert_Ai");
+    protected static readonly Func<string> LOCSTR_SHOWPLAYERCARD = () => BattlegroundsContext.Localize.GetString("TeamPlayerCard_Menu_Item_Playercard");
+    protected static readonly Func<string> LOCSTR_UNLOCK_SLOT = () => BattlegroundsContext.Localize.GetString("TeamPlayerCard_Menu_Item_Unlock_Slot");
+    protected static readonly Func<string> LOCSTR_LOCK_SLOT = () => BattlegroundsContext.Localize.GetString("TeamPlayerCard_Menu_Item_Lock_Slot");
+    protected static readonly Func<string> LOCSTR_MOVE_SLOT = () => BattlegroundsContext.Localize.GetString("TeamPlayerCard_Menu_Item_Move_Position");
+    protected static readonly Func<string> LOCSTR_KICKPLAYER = () => BattlegroundsContext.Localize.GetString("TeamPlayerCard_Menu_Item_Kick_Player");
+    protected static readonly Func<string> LOCSTR_EASYAI = () => BattlegroundsContext.Localize.GetString("TeamPlayerCard_Menu_Item_Add_Easy_Ai");
+    protected static readonly Func<string> LOCSTR_STANDARDAI = () => BattlegroundsContext.Localize.GetString("TeamPlayerCard_Menu_Item_Add_Standard_Ai");
+    protected static readonly Func<string> LOCSTR_HARDAI = () => BattlegroundsContext.Localize.GetString("TeamPlayerCard_Menu_Item_Add_Hard_Ai");
+    protected static readonly Func<string> LOCSTR_EXPERTAI = () => BattlegroundsContext.Localize.GetString("TeamPlayerCard_Menu_Item_Add_Expert_Ai");
 
     public event PropertyChangedEventHandler? PropertyChanged;
 

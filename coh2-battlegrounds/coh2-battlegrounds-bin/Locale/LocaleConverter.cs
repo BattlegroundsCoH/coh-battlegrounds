@@ -41,7 +41,7 @@ public abstract class LocaleConverter<T> : LocaleConverter {
     /// <returns>The localised string representation of the <paramref name="localeObject"/>.</returns>
     /// <exception cref="ArgumentException"></exception>
     public sealed override string GetLocalisedString(Localize localize, object localeObject)
-        => localeObject is T tObj ? this.GetLocalisedString(localize, tObj) : throw new ArgumentException($"Argument must be of type {typeof(T).Name}", nameof(localeObject));
+        => localeObject is T tObj ? GetLocalisedString(localize, tObj) : throw new ArgumentException($"Argument must be of type {typeof(T).Name}", nameof(localeObject));
 
     /// <summary>
     /// Get the localised string representation of the given <paramref name="localeObject"/>.

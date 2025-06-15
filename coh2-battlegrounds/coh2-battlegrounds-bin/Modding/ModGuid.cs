@@ -38,18 +38,31 @@ public readonly struct ModGuid {
 
     private ModGuid(string guid) => this.m_guid = guid.Replace("-", "");
 
+    /// <inheritdoc/>
     public override string ToString() => this.m_guid;
 
+    /// <summary>
+    /// Implict conversion to the string representation of the <see cref="ModGuid"/>.
+    /// </summary>
+    /// <param name="guid">The GUID to get string value of.</param>
     public static implicit operator string(ModGuid guid) => guid.m_guid;
 
+    /// <summary>
+    /// Imlicit conversion to the Guid representation of the <see cref="ModGuid"/>.
+    /// </summary>
+    /// <param name="guid">The <see cref="ModGuid"/> to get <see cref="Guid"/> value of.</param>
     public static implicit operator Guid(ModGuid guid) => new Guid(guid.m_guid);
 
+    /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is ModGuid guid && guid.m_guid == this.m_guid;
 
+    /// <inheritdoc/>
     public static bool operator ==(ModGuid left, ModGuid right) => left.Equals(right);
 
+    /// <inheritdoc/>
     public static bool operator !=(ModGuid left, ModGuid right) => !(left == right);
 
+    /// <inheritdoc/>
     public override int GetHashCode() {
         HashCode code = new();
         code.Add(this.m_guid);

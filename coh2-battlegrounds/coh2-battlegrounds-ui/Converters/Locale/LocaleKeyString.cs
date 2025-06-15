@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-
 using Battlegrounds.Locale;
 
 namespace Battlegrounds.UI.Converters.Locale;
@@ -22,7 +21,7 @@ public sealed class LocaleKeyString : IValueConverter {
                     return localeString;
                 }
             }
-            return BattlegroundsInstance.Localize.GetString(key);
+            return BattlegroundsContext.Localize.GetString(key);
         } else if (value is Enum e) {
             // TODO: Implement
         }

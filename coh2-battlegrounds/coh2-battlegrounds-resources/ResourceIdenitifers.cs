@@ -61,9 +61,15 @@ public static class ResourceIdenitifers {
     public static readonly string ENTITY_SYMBOL_ICONS = "entity_symbols";
 
     /// <summary>
+    /// Identifier for CoH3 icons
+    /// </summary>
+    public static readonly string COH3_ICONS = "COH3_ICONS";
+
+    /// <summary>
     /// Array of icon identifier names
     /// </summary>
     public static readonly string[] IconIdentifiers = {
+        // CoH2 stuff
         ABILITY_ICONS,
         ITEM_ICONS,
         SYMBOL_ICONS,
@@ -74,7 +80,9 @@ public static class ResourceIdenitifers {
         PORTRAITS,
         MINIMAP_ICONS,
         ENTITY_ICONS,
-        ENTITY_SYMBOL_ICONS
+        ENTITY_SYMBOL_ICONS,
+        // CoH3 stuff
+        COH3_ICONS
     };
 
 }

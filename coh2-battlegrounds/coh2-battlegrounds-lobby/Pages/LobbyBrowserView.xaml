@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Battlegrounds.Lobby.Pages"
-             xmlns:ui="clr-namespace:Battlegrounds.UI;assembly=coh2-battlegrounds-ui"
-             xmlns:uiloc="clr-namespace:Battlegrounds.UI.Converters.Locale;assembly=coh2-battlegrounds-ui"
-             xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=coh2-battlegrounds-ui"
+             xmlns:ui="clr-namespace:Battlegrounds.UI;assembly=Battlegrounds.UI"
+             xmlns:uiloc="clr-namespace:Battlegrounds.UI.Converters.Locale;assembly=Battlegrounds.UI"
+             xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=Battlegrounds.UI"
              mc:Ignorable="d" Background="{StaticResource BackgroundBlueBrush}"
              d:DesignHeight="850" d:DesignWidth="1100">
     <Grid Margin="15">

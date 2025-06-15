@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Linq;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Text.Json;
-
-using Battlegrounds.Game.Database;
 using Battlegrounds.Game.DataCompany;
 
 using Battlegrounds.Modding;
 
 using Battlegrounds.Functional;
-using System.Globalization;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Modding.Content.Companies;
 using Battlegrounds.Data.Generators.Lua;
 using Battlegrounds.Data.Generators.Lua.RuntimeServices;
+using Battlegrounds.Game.Blueprints;
 
 namespace Battlegrounds.Game.Gameplay.DataConverters;
 
@@ -28,6 +27,7 @@ public static class SquadWriter {
     /// </summary>
     public class SquadLua : LuaConverter<Squad> {
 
+        /// <inheritdoc/>
         public override void Write(LuaSourceBuilder luaSourceBuilder, Squad value) {
 
             // Grab cost
@@ -118,8 +118,19 @@ public static class SquadWriter {
     /// <summary>
     /// Class for constructing a <see cref="Squad"/> from json data.
     /// </summary>
-    public class SquadJson : JsonConverter<Squad> {
+    public sealed class SquadJson : JsonConverter<Squad> {
 
+        private readonly IModBlueprintDatabase blueprintDataSource;
+
+        /// <summary>
+        /// Initialise a new <see cref="SquadJson"/> instance.
+        /// </summary>
+        /// <param name="database"></param>
+        public SquadJson(IModBlueprintDatabase database) {
+            blueprintDataSource = database;
+        }
+
+        /// <inheritdoc/>
         public override Squad Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 
             // Read open object
@@ -137,8 +148,11 @@ public static class SquadWriter {
                 modGuid = ModGuid.FromGuid(ReadStringProperty(ref reader, nameof(Squad.SBP.PBGID.Mod)));
             }
 
+            // Lookup sbp
+            SquadBlueprint SBP = blueprintDataSource.FromBlueprintName<SquadBlueprint>(sbpName);
+
             // Set mod guid and get deployment phase and combat time
-            var unitBuilder = UnitBuilder.NewUnit(sbpName, modGuid);
+            var unitBuilder = UnitBuilder.NewUnit(SBP);
             unitBuilder.SetCustomName(ReadStringPropertyIfThere(ref reader, nameof(Squad.CustomName), string.Empty));
             unitBuilder.SetDeploymentPhase(Enum.Parse<DeploymentPhase>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentPhase), nameof(DeploymentPhase.PhaseNone))));
             unitBuilder.SetDeploymentRole(Enum.Parse<DeploymentRole>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentRole), nameof(DeploymentRole.ReserveRole))));
@@ -147,7 +161,8 @@ public static class SquadWriter {
             // Get deployment method
             string supportBP = ReadStringPropertyIfThere(ref reader, nameof(Squad.SupportBlueprint), string.Empty);
             if (!string.IsNullOrEmpty(supportBP)) {
-                unitBuilder.SetTransportBlueprint(supportBP);
+                SquadBlueprint TransportSBP = blueprintDataSource.FromBlueprintName<SquadBlueprint>(supportBP);
+                unitBuilder.SetTransportBlueprint(TransportSBP);
             }
             unitBuilder.SetDeploymentMethod(Enum.Parse<DeploymentMethod>(ReadStringPropertyIfThere(ref reader, nameof(Squad.DeploymentMethod), nameof(DeploymentMethod.None))));
 
@@ -158,12 +173,12 @@ public static class SquadWriter {
             // Get sync weapon if there
             var syncBp = ReadStringPropertyIfThere(ref reader, nameof(Squad.SyncWeapon), string.Empty);
             if (!string.IsNullOrEmpty(syncBp)) {
-                unitBuilder.SetSyncWeapon(BlueprintManager.FromBlueprintName<EntityBlueprint>(syncBp));
+                unitBuilder.SetSyncWeapon(blueprintDataSource.FromBlueprintName<EntityBlueprint>(syncBp));
                 reader.Read(); // goto next object
             }
 
             // Get crew if there
-            Squad? crew = ReadPropertyThroughSerialisationIfThere<Squad>(ref reader, nameof(Squad.Crew), null);
+            Squad? crew = ReadPropertyThroughSerialisationIfThere<Squad>(ref reader, nameof(Squad.Crew), null, options);
             if (crew is not null) {
                 unitBuilder.SetCrew(crew);
                 reader.Read(); // goto next object
@@ -171,13 +186,13 @@ public static class SquadWriter {
 
             // Get upgrades
             if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() is nameof(Squad.Upgrades) && reader.Read()) {
-                unitBuilder.AddUpgrade(reader.GetStringArray().NotNull());
+                unitBuilder.AddUpgrade(reader.GetStringArray().NotNull().Map(blueprintDataSource.FromBlueprintName<UpgradeBlueprint>));
                 reader.Read();
             }
 
             // Get upgrades
             if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() is nameof(Squad.SlotItems) && reader.Read()) {
-                unitBuilder.AddSlotItem(reader.GetStringArray().NotNull());
+                unitBuilder.AddSlotItem(reader.GetStringArray().NotNull().Map(blueprintDataSource.FromBlueprintName<SlotItemBlueprint>));
                 reader.Read();
             }
 
@@ -234,15 +249,16 @@ public static class SquadWriter {
             }
         }
 
-        public static T? ReadPropertyThroughSerialisationIfThere<T>(ref Utf8JsonReader reader, string property, T? defaultValue) {
+        private static T? ReadPropertyThroughSerialisationIfThere<T>(ref Utf8JsonReader reader, string property, T? defaultValue, JsonSerializerOptions options) {
             if (reader.TokenType is not JsonTokenType.EndObject && reader.GetString() == property) {
                 reader.Read();
-                return JsonSerializer.Deserialize<T>(ref reader);
+                return JsonSerializer.Deserialize<T>(ref reader, options);
             } else {
                 return defaultValue;
             }
         }
 
+        /// <inheritdoc/>
         public override void Write(Utf8JsonWriter writer, Squad value, JsonSerializerOptions options) {
 
             // Start squad object
@@ -304,7 +320,9 @@ public static class SquadWriter {
                 writer.WritePropertyName(nameof(Squad.Upgrades));
                 writer.WriteStartArray();
                 foreach (Blueprint item in value.Upgrades) {
-                    writer.WriteStringValue(item.Name);
+                    if (item is not null) {
+                        writer.WriteStringValue(item.Name);
+                    }
                 }
                 writer.WriteEndArray();
             }

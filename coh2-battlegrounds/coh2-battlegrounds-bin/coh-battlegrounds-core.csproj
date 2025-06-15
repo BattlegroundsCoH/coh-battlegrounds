@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>Battlegrounds</RootNamespace>
+    <LangVersion>preview</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <AssemblyName>Battlegrounds.Core</AssemblyName>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <AssemblyVersion>1.1.0</AssemblyVersion>
+    <FileVersion>1.1.0</FileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\coh2-battlegrounds-functional\coh-battlegrounds-functional.csproj" />
+    <ProjectReference Include="..\coh2-battlegrounds-scripting\coh-battlegrounds-scripting.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Game\DataSource\Archive\CoH2\" />
+    <Folder Include="Game\DataSource\Archive\CoH3\" />
+    <Folder Include="Game\DataSource\Gamedata\CoH2\" />
+  </ItemGroup>
+
+</Project>

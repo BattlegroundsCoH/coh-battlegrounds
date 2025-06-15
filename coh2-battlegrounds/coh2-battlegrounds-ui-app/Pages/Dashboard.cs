@@ -31,7 +31,7 @@ public sealed class Dashboard : ViewModelBase {
     /// <summary>
     /// The name of the currently "loged" in player
     /// </summary>
-    private string m_playerName = BattlegroundsInstance.Steam.HasUser ? BattlegroundsInstance.Steam.User.Name : "Unknown";
+    private string m_playerName = BattlegroundsContext.Steam.HasUser ? BattlegroundsContext.Steam.User.Name : "Unknown";
 
     /// <summary>
     /// The number of games played sumerized
@@ -300,7 +300,7 @@ public sealed class Dashboard : ViewModelBase {
     }
 
     public void UpdateSteamUser() {
-        this.PlayerName = BattlegroundsInstance.Steam.User.Name;
+        this.PlayerName = BattlegroundsContext.Steam.User.Name;
     }
 
     private void OnPlayerCompaniesLoaded() {

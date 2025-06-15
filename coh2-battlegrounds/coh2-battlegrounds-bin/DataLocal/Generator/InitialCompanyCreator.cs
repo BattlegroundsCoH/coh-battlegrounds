@@ -1,37 +1,65 @@
-﻿using Battlegrounds.Game.Database.Management;
-using Battlegrounds.Game.Database;
+﻿using System;
+
 using Battlegrounds.Game.DataCompany;
 using Battlegrounds.Game.Gameplay;
 using Battlegrounds.Modding;
-using System;
+using Battlegrounds.Game.Blueprints;
+using Battlegrounds.Functional;
+using Battlegrounds.Logging;
+using Battlegrounds.Errors.Modding;
 
 namespace Battlegrounds.DataLocal.Generator;
 
+/// <summary>
+/// Static utility class for generating initial company generators.
+/// </summary>
 public static class InitialCompanyCreator {
 
+    private static readonly Logger logger = Logger.CreateLogger();
+
+    /// <summary>
+    /// Initialise basic companies for first time use.
+    /// </summary>
     public static void Init() {
 
-        // Wait for database to be loaded
-        DatabaseManager.LoadedCallback(() => {
+        try {
 
             // Grab package
-            var package = ModManager.GetPackageOrError("mod_bg");
+            var package = BattlegroundsContext.ModManager.GetPackageOrError("mod_bg");
 
-            // Create default companies
-            CreateDefaultSovietCompany(package);
-            CreateDefaultGermanCompany(package);
+            // Create default CoH2 companies
+            var sov_company = CreateDefaultSovietCompany(package);
+            var ost_company = CreateDefaultGermanCompany(package);
 
-        });
+            // Create default CoH3 companies
+            var ukf3_company = CreateDefaultCoH3BritishCompany(package);
+            CreateDefaultCoH3DAKCompany(package);
+
+            // Commit
+            CommitCompanies(sov_company, ost_company, ukf3_company);
+
+        } catch (Exception ex) {
+            logger.Error(ex);
+        }
 
     }
 
-    private static void CreateDefaultSovietCompany(ModPackage package) {
+    private static void CommitCompanies(params Company[] companies) 
+        => companies.ForEach(Companies.SaveCompany).ForEach(Companies.Register);
+
+    /// <summary>
+    /// Generates the default <see cref="Faction.Soviet"/> company.
+    /// </summary>
+    /// <param name="package">The package to use when creating the company</param>
+    /// <returns>A default generated company</returns>
+    /// <exception cref="CompanyTypeNotFoundException"></exception>
+    public static Company CreateDefaultSovietCompany(IModPackage package) {
 
         // Grab faction
         var sov = Faction.Soviet;
 
         // Grab type
-        var typ = package.GetCompanyType(sov, "sov_rifles") ?? throw new System.Exception("Failed to fetch company type");
+        var typ = package.GetCompanyType(sov, "sov_rifles") ?? throw new CompanyTypeNotFoundException("sov_rifles", sov, package);
 
         // Create builder
         CompanyBuilder builder = CompanyBuilder.NewCompany("Default Soviet", typ, CompanyAvailabilityType.MultiplayerOnly, sov, ModGuid.BattlegroundsTuning);
@@ -97,18 +125,24 @@ public static class InitialCompanyCreator {
         AddUnit(builder, "commissar_squad_bg", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
         AddUnit(builder, "soviet_officer_squad_bg", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
 
-        // Save
-        Companies.SaveCompany(builder.Commit().Result);
+        // Build company
+        return builder.Commit().Result;
 
     }
 
-    private static void CreateDefaultGermanCompany(ModPackage package) {
+    /// <summary>
+    /// Generates the default <see cref="Faction.Wehrmacht"/> company.
+    /// </summary>
+    /// <param name="package">The package to use when creating the company</param>
+    /// <returns>A default generated company</returns>
+    /// <exception cref="CompanyTypeNotFoundException"></exception>
+    public static Company CreateDefaultGermanCompany(IModPackage package) {
 
         // Grab faction
         var ger = Faction.Wehrmacht;
 
         // Grab type
-        var typ = package.GetCompanyType("ost_rifles") ?? throw new System.Exception("Failed to fetch company type");
+        var typ = package.GetCompanyType(ger, "ost_rifles") ?? throw new CompanyTypeNotFoundException("ost_rifles", ger, package);
 
         // Create builder
         CompanyBuilder builder = CompanyBuilder.NewCompany("Default German", typ, CompanyAvailabilityType.MultiplayerOnly, ger, ModGuid.BattlegroundsTuning);
@@ -178,14 +212,86 @@ public static class InitialCompanyCreator {
         AddUnit(builder, "assault_officer_squad_bg", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
         AddUnit(builder, "luftwaffe_officer_squad_bg", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
 
-        // Save
-        Companies.SaveCompany(builder.Commit().Result);
+        // Build company and return it
+        return builder.Commit().Result;
 
     }
 
-    private static void AddUnit(CompanyBuilder cb, string bp, DeploymentPhase dp, DeploymentRole role, DeploymentMethod dm = DeploymentMethod.None, string transport = "", string[]? upgardes = null) {
-        var sbp = BlueprintManager.FromBlueprintName<SquadBlueprint>(bp);
-        var tsbp = string.IsNullOrEmpty(transport) ? null : BlueprintManager.FromBlueprintName<SquadBlueprint>(transport);
+    /// <summary>
+    /// Generates the default <see cref="Faction.BritishAfrica"/> company.
+    /// </summary>
+    /// <param name="package">The package to use when creating the company</param>
+    /// <returns>A default generated company</returns>
+    /// <exception cref="CompanyTypeNotFoundException"></exception>
+    public static Company CreateDefaultCoH3BritishCompany(IModPackage package) {
+
+        // Grab faction
+        var ukf = Faction.BritishAfrica;
+
+        // Grab type
+        var typ = package.GetCompanyType(ukf, "ukf3_rifles") ?? throw new CompanyTypeNotFoundException("ukf3_rifles", ukf, package);
+
+        // Create builder
+        CompanyBuilder builder = CompanyBuilder.NewCompany("Desert Rats", typ, CompanyAvailabilityType.MultiplayerOnly, ukf, ModGuid.BattlegroundsTuning);
+
+        // Initial phase
+        AddUnit(builder, "SBP.BRITISH.TOMMY_UK", DeploymentPhase.PhaseInitial, DeploymentRole.DirectCommand);
+        AddUnit(builder, "SBP.BRITISH.TOMMY_UK", DeploymentPhase.PhaseInitial, DeploymentRole.DirectCommand, upgrades: new string[] { "UPGRADE.BRITISH.LMG_BREN_TOMMY_UK" });
+        AddUnit(builder, "SBP.BRITISH.TOMMY_UK", DeploymentPhase.PhaseInitial, DeploymentRole.DirectCommand);
+        AddUnit(builder, "SBP.BRITISH.TOMMY_UK", DeploymentPhase.PhaseInitial, DeploymentRole.DirectCommand);
+        AddUnit(builder, "SBP.BRITISH.TOMMY_UK", DeploymentPhase.PhaseInitial, DeploymentRole.DirectCommand);
+        AddUnit(builder, "SBP.BRITISH.TOMMY_UK", DeploymentPhase.PhaseInitial, DeploymentRole.DirectCommand);
+
+        AddUnit(builder, "SBP.BRITISH.SAPPER_UK", DeploymentPhase.PhaseStandard, DeploymentRole.SupportRole);
+        AddUnit(builder, "SBP.BRITISH.SAPPER_UK", DeploymentPhase.PhaseStandard, DeploymentRole.SupportRole);
+        AddUnit(builder, "SBP.BRITISH.SAPPER_UK", DeploymentPhase.PhaseStandard, DeploymentRole.SupportRole);
+
+        AddUnit(builder, "SBP.BRITISH_AFRICA.CANADIAN_HEAVY_INFANTRY_AFRICA_UK", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
+        AddUnit(builder, "SBP.BRITISH_AFRICA.CANADIAN_HEAVY_INFANTRY_AFRICA_UK", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
+        AddUnit(builder, "SBP.BRITISH_AFRICA.CANADIAN_HEAVY_INFANTRY_AFRICA_UK", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
+
+        AddUnit(builder, "SBP.BRITISH.TOMMY_UK", DeploymentPhase.PhaseStandard, DeploymentRole.SupportRole, upgrades: new[] { "UPGRADE.BRITISH.BOYS_ANTI_TANK_RIFLES_TOMMY_UK" });
+        AddUnit(builder, "SBP.BRITISH.TOMMY_UK", DeploymentPhase.PhaseStandard, DeploymentRole.SupportRole, upgrades: new[] { "UPGRADE.BRITISH.BOYS_ANTI_TANK_RIFLES_TOMMY_UK" });
+
+        AddUnit(builder, "SBP.BRITISH.HMG_VICKERS_UK", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
+        AddUnit(builder, "SBP.BRITISH.HMG_VICKERS_UK", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
+
+        AddUnit(builder, "SBP.BRITISH.AT_GUN_6PDR_UK", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
+        AddUnit(builder, "SBP.BRITISH.AT_GUN_6PDR_UK", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
+        AddUnit(builder, "SBP.BRITISH.AT_GUN_6PDR_UK", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
+
+        AddUnit(builder, "SBP.BRITISH.MORTAR_81MM_UK", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
+        AddUnit(builder, "SBP.BRITISH.MORTAR_81MM_UK", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
+        AddUnit(builder, "SBP.BRITISH.MORTAR_81MM_UK", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
+
+        AddUnit(builder, "SBP.BRITISH.BISHOP_UK", DeploymentPhase.PhaseStandard, DeploymentRole.ReserveRole);
+        AddUnit(builder, "SBP.BRITISH.BISHOP_UK", DeploymentPhase.PhaseStandard, DeploymentRole.ReserveRole);
+
+        AddUnit(builder, "SBP.BRITISH.MATILDA_UK", DeploymentPhase.PhaseStandard, DeploymentRole.ReserveRole);
+        AddUnit(builder, "SBP.BRITISH.MATILDA_UK", DeploymentPhase.PhaseStandard, DeploymentRole.ReserveRole);
+
+        AddUnit(builder, "SBP.BRITISH.ARCHER_UK", DeploymentPhase.PhaseStandard, DeploymentRole.ReserveRole);
+        AddUnit(builder, "SBP.BRITISH.ARCHER_UK", DeploymentPhase.PhaseStandard, DeploymentRole.ReserveRole);
+
+        AddUnit(builder, "SBP.BRITISH.CRUSADER_57MM_UK", DeploymentPhase.PhaseStandard, DeploymentRole.SupportRole);
+        AddUnit(builder, "SBP.BRITISH.CRUSADER_57MM_UK", DeploymentPhase.PhaseStandard, DeploymentRole.SupportRole);
+        AddUnit(builder, "SBP.BRITISH.CRUSADER_57MM_UK", DeploymentPhase.PhaseStandard, DeploymentRole.SupportRole);
+        AddUnit(builder, "SBP.BRITISH.CRUSADER_57MM_UK", DeploymentPhase.PhaseStandard, DeploymentRole.SupportRole);
+
+        AddUnit(builder, "SBP.BRITISH_AFRICA.OFFICER_AFRICA_UK", DeploymentPhase.PhaseStandard, DeploymentRole.DirectCommand);
+
+        // Build company and return
+        return builder.Commit().Result;
+
+    }
+
+    private static void CreateDefaultCoH3DAKCompany(IModPackage package) {
+
+    }
+
+    private static void AddUnit(CompanyBuilder cb, string bp, DeploymentPhase dp, DeploymentRole role, DeploymentMethod dm = DeploymentMethod.None, string transport = "", string[]? upgrades = null) {
+        var sbp = cb.BlueprintDatabase.FromBlueprintName<SquadBlueprint>(bp);
+        var tsbp = string.IsNullOrEmpty(transport) ? null : cb.BlueprintDatabase.FromBlueprintName<SquadBlueprint>(transport);
 
         cb.AddUnit(
             UnitBuilder.NewUnit(sbp)
@@ -193,7 +299,7 @@ public static class InitialCompanyCreator {
                 .SetDeploymentRole(role)
                 .SetDeploymentMethod(dm)
                 .SetTransportBlueprint(tsbp)
-                .AddUpgrade(upgardes ?? Array.Empty<string>())
+                .AddUpgrade(upgrades?.Map(cb.BlueprintDatabase.FromBlueprintName<UpgradeBlueprint>) ?? Array.Empty<UpgradeBlueprint>())
        );
     }
 

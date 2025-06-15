@@ -5,8 +5,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:Battlegrounds.Editor.Components"
-    xmlns:uiico="clr-namespace:Battlegrounds.UI.Converters.Icons;assembly=coh2-battlegrounds-ui"
-    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=coh2-battlegrounds-ui"
+    xmlns:uiico="clr-namespace:Battlegrounds.UI.Converters.Icons;assembly=Battlegrounds.UI"
+    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=Battlegrounds.UI"
     mc:Ignorable="d" 
     d:DesignHeight="78" d:DesignWidth="250"
     Background="{StaticResource BackgroundLightBlueBrush}">
@@ -48,7 +48,7 @@
             Source="{
                 Binding Army, 
                 Converter={StaticResource Str2Fac}, 
-                FallbackValue='pack://application:,,,/coh2-battlegrounds;component/Resources/ingame/german.png'}"/>
+                FallbackValue='pack://application:,,,/Battlegrounds;component/Resources/ingame/german.png'}"/>
 
         <!-- Equip -->
         <Button 

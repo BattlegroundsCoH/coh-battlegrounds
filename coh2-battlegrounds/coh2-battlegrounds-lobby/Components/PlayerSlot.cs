@@ -20,9 +20,9 @@ public abstract class PlayerSlot : INotifyPropertyChanged {
     protected static readonly Func<List<Company>> AlliedCompanies = () => Companies.FindAll(x => x.Army.IsAllied);
     protected static readonly Func<List<Company>> AxisCompanies = () => Companies.FindAll(x => x.Army.IsAxis);
 
-    private static readonly Func<string> LOCSTR_SLOT_OPEN = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Open_Slot");
-    private static readonly Func<string> LOCSTR_SLOT_LOCKED = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Locked_Slot");
-    private static readonly Func<string> LOCSTR_SLOT_JOINING = () => BattlegroundsInstance.Localize.GetString("TeamPlayerCard_Joining_Slot");
+    private static readonly Func<string> LOCSTR_SLOT_OPEN = () => BattlegroundsContext.Localize.GetString("TeamPlayerCard_Open_Slot");
+    private static readonly Func<string> LOCSTR_SLOT_LOCKED = () => BattlegroundsContext.Localize.GetString("TeamPlayerCard_Locked_Slot");
+    private static readonly Func<string> LOCSTR_SLOT_JOINING = () => BattlegroundsContext.Localize.GetString("TeamPlayerCard_Joining_Slot");
 
     protected static readonly ILobbyCompany DummyCompany = new JsonLobbyCompany(false, false, "None", "soviet", 0.0f, "");
 
@@ -182,7 +182,7 @@ public abstract class PlayerSlot : INotifyPropertyChanged {
     }
 
     protected static string GetOccupantName(ILobbyMember mem) => mem.Role switch {
-        3 => BattlegroundsInstance.Localize.GetEnum((AIDifficulty)mem.AILevel),
+        3 => BattlegroundsContext.Localize.GetEnum((AIDifficulty)mem.AILevel),
         _ => mem.State is LobbyMemberState.Joining ? LOCSTR_SLOT_JOINING() : mem.DisplayName
     };
 

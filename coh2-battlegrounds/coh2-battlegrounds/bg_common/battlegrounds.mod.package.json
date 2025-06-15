@@ -1,17 +1,21 @@
 {
   "ID": "mod_bg",
   "Name": "Battlegrounds Mod Pack",
+  "DataSourcePath": "database_folder",
   "TuningGUID": "142b113740474c82a60b0a428bd553d5",
   "GamemodeGUID": "6a0a13b89555402ca75b85dc30f5cb04",
   "AssetGUID": "f0c3cb74008447268cad2804e3b9d565",
+  "SupportedGames": "All",
   "LocaleFiles": [
     {
       "Type": "Gamemode",
-      "Path": "locale\\%LANG%\\%LANG%.gamemode.ucs"
+      "Path": "locale\\%LANG%\\%LANG%.gamemode.ucs",
+      "Game": "CompanyOfHeroes2"
     },
     {
       "Type": "Tuning",
-      "Path": "locale\\%LANG%\\%LANG%.tuning.ucs"
+      "Path": "locale\\%LANG%\\%LANG%.tuning.ucs",
+      "Game": "CompanyOfHeroes2"
     }
   ],
   "Gamemodes": [
@@ -20,6 +24,7 @@
       "Display": "32",
       "DisplayDesc": "33",
       "DefaultOption": 1,
+      "SupportedGame": "CompanyOfHeroes2",
       "Files": [],
       "Options": [
         {
@@ -46,6 +51,7 @@
       "Display": "36",
       "DisplayDesc": "37",
       "DefaultOption": 1,
+      "SupportedGame": "CompanyOfHeroes2",
       "Files": [
         "Gamemode:coh2_battlegrounds_defence;coh2_battlegrounds_defence.scar"
       ],
@@ -219,10 +225,10 @@
       "ID": "bg_attr",
       "Display": "30",
       "DisplayDesc": "31",
-      "DefaultOption": 0
+      "DefaultOption": 0,
+      "SupportedGame": "CompanyOfHeroes2"
     }
   ],
-  "CustomOptions": [],
   "FactionData": [
     {
       "Faction": "soviet",
@@ -694,6 +700,62 @@
             "Id": "ost_sturm",
             "Hidden": true,
             "SourceFile": "Common:bg_ct\\ost_sturm"
+          }
+        ]
+      }
+    },
+    {
+      "Faction": "afrika_korps",
+      "Drivers": [],
+      "Abilities": [],
+      "Companies": {
+        "Types": [
+          {
+            "Id": "dak_mot",
+            "SourceFile": "Common:bg_ct\\3\\dak_mot"
+          },
+          {
+            "Id": "ita_rifles",
+            "SourceFile": "Common:bg_ct\\3\\ita_rifles"
+          }
+        ]
+      }
+    },
+    {
+      "Faction": "germans",
+      "Drivers": [],
+      "Abilities": [],
+      "Companies": {
+        "Types": [
+          {
+            "Id": "ger_rifles",
+            "SourceFile": "Common:bg_ct\\3\\ger_rifles"
+          }
+        ]
+      }
+    },
+    {
+      "Faction": "british_africa",
+      "Drivers": [],
+      "Abilities": [],
+      "Companies": {
+        "Types": [
+          {
+            "Id": "ukf3_rifles",
+            "SourceFile": "Common:bg_ct\\3\\ukf_rifles"
+          }
+        ]
+      }
+    },
+    {
+      "Faction": "americans",
+      "Drivers": [],
+      "Abilities": [],
+      "Companies": {
+        "Types": [
+          {
+            "Id": "usa_rifles",
+            "SourceFile": "Common:bg_ct\\3\\usa_rifles"
           }
         ]
       }

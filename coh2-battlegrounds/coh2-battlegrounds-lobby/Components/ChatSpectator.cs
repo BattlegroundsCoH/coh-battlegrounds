@@ -7,10 +7,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows;
-
-using Battlegrounds.Locale;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.UI;
+using Battlegrounds.Locale;
 
 namespace Battlegrounds.Lobby.Components;
 
@@ -18,13 +17,13 @@ namespace Battlegrounds.Lobby.Components;
 /// 
 /// </summary>
 public sealed record ChatChannel(LocaleKey Display, int ChannelId) {
-    public override string ToString() => BattlegroundsInstance.Localize.GetString(this.Display);
+    public override string ToString() => BattlegroundsContext.Localize.GetString(this.Display);
 }
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class ChatSpectator : ViewModelBase {
+public sealed class ChatSpectator : ViewModelBase, IChatSpectator {
 
     public record ChatButton(string Title, RelayCommand Click);
     public record ChatFilterDropdown(ObservableCollection<ChatChannel> Channels) {
@@ -37,7 +36,7 @@ public sealed class ChatSpectator : ViewModelBase {
         }
     }
 
-    private static readonly Func<string> LOCSTR_SEND = () => BattlegroundsInstance.Localize.GetString("LobbyChat_Send");
+    private static readonly Func<string> LOCSTR_SEND = () => BattlegroundsContext.Localize.GetString("LobbyChat_Send");
 
     private readonly ILobbyHandle m_handle;
     private readonly LocaleKey m_allFilter;
@@ -154,22 +153,15 @@ public sealed class ChatSpectator : ViewModelBase {
         Trace.WriteLine("Sending chat message: " + content);
 
         // Forward declare
-        string channel = "?";
+        string channel = this.SendFilter.CurrentIndex switch {
+            0 => "All",
+            1 => "Team",
+            _ => "?"
+        };
         string timestamp = DateTime.Now.ToShortTimeString();
 
         // Send using broker
-        switch (this.SendFilter.CurrentIndex) {
-            case 0: // All
-                this.m_handle.SendChatMessage(0, this.m_handle.Self.ID, content);
-                channel = "All";
-                break;
-            case 1: // Team
-                this.m_handle.SendChatMessage(1, this.m_handle.Self.ID, content);
-                channel = "Team";
-                break;
-            default:
-                break;
-        }
+        this.m_handle.SendChatMessage(this.SendFilter.CurrentIndex, content);
 
         // Append message
         this.NewMessage(this.m_handle.Self.Name, content, Color.FromRgb(255, 255, 255), timestamp, channel);

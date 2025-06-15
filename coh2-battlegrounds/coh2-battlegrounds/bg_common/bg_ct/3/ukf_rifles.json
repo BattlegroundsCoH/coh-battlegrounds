@@ -1,0 +1,68 @@
+{
+  "UIData": {
+    "Icon": "ct_infantry",
+    "HighlightUnits": [
+      "SBP.BRITISH.TOMMY_UK",
+      "SBP.BRITISH.SAPPER_UK",
+      "SBP.BRITISH.MATILDA_UK"
+    ],
+    "HighlightAbilities": [
+    ]
+  },
+  "MaxInfantry": 20,
+  "MaxTeamWeapons": 10,
+  "MaxVehicles": 8,
+  "MaxLeaders": 2,
+  "MaxAbilities": 4,
+  "Exclude": [
+  ],
+  "DeployTypes": [
+    "DeployAndExit",
+    "DeployAndStay"
+  ],
+  "DeployBlueprints": [
+    {
+      "Blueprint": "SBP.BRITISH.CWT_15_TRUCK_UK",
+      "CostModifier": 1.05,
+      "Tow": true,
+      "TowCostModifier": 1
+    }
+  ],
+  "CostModifiers": {
+    "penal_battalion_bg": {
+      "Manpower": 20
+    }
+  },
+  "Roles": {
+    "DirectCommand": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      }
+    },
+    "SupportRole": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      },
+      "Unlocks": [
+      ]
+    },
+    "ReserveRole": {
+      "UnitCostModifier": {
+        "Manpower": 1,
+        "Munitions": 1,
+        "Fuel": 1,
+        "FieldTime": 1
+      },
+      "Unlocks": [
+      ]
+    }
+  },
+  "Abilities": [
+  ]
+}

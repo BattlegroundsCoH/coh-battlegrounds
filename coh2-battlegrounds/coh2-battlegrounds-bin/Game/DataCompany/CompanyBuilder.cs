@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.DataCompany.Builder;
 using Battlegrounds.Game.Gameplay;
@@ -26,6 +26,7 @@ public class CompanyBuilder : IBuilder<Company> {
         string Name,
         FactionCompanyType Type,
         ModGuid ModGuid,
+        GameCase GameCase,
         Faction Faction,
         UnitBuilder[] Units,
         Ability[] Abilities,
@@ -121,6 +122,8 @@ public class CompanyBuilder : IBuilder<Company> {
     private Company? m_companyResult;
     private BuildableCompany m_target;
 
+    private readonly IModBlueprintDatabase blueprints;
+
     private readonly Stack<IEditAction<BuildableCompany>> m_actions;
     private readonly Stack<IEditAction<BuildableCompany>> m_redoActions;
     private int m_changeCounter;
@@ -129,6 +132,11 @@ public class CompanyBuilder : IBuilder<Company> {
     /// Get or set the <see cref="CompanyAvailabilityType"/> of the company.
     /// </summary>
     public CompanyAvailabilityType AvailabilityType { get; set; }
+
+    /// <summary>
+    /// Get the mod blueprint database associated with the company.
+    /// </summary>
+    public IModBlueprintDatabase BlueprintDatabase => blueprints;
 
     /// <summary>
     /// Get the current company type.
@@ -199,7 +207,7 @@ public class CompanyBuilder : IBuilder<Company> {
     public bool AutoReinforce =>
         this.m_actions.FirstOrDefault(x => x is AutoReinforceAction) is AutoReinforceAction a ? a.NewValue : (this.m_companyResult?.AutoReplenish ?? false);
 
-    private CompanyBuilder(BuildableCompany company) {
+    private CompanyBuilder(BuildableCompany company, IModBlueprintDatabase blueprints) {
 
         // Set private fields
         this.m_target = company;
@@ -208,6 +216,9 @@ public class CompanyBuilder : IBuilder<Company> {
 
         // Set default statistics
         this.Statistics = new();
+
+        // Set blueprints database
+        this.blueprints = blueprints;
 
     }
 
@@ -247,9 +258,9 @@ public class CompanyBuilder : IBuilder<Company> {
         => this.ApplyAction(new RemoveAbilityAction(ability));
 
     /// <summary>
-    /// Remove unit from with <paramref name="unitID"/> from the company.
+    /// Remove unit from the company.
     /// </summary>
-    /// <param name="unitID">The ID of the unit to remove.</param>
+    /// <param name="builder">The <see cref="UnitBuilder"/> to remove.</param>
     /// <returns>The calling <see cref="CompanyBuilder"/> instance.</returns>
     public virtual CompanyBuilder RemoveUnit(UnitBuilder builder)
         => this.ApplyAction(new RemoveUnitAction(builder));
@@ -344,7 +355,7 @@ public class CompanyBuilder : IBuilder<Company> {
     /// </summary>
     /// <param name="phase">The phase to check if new units can be assiged to.</param>
     /// <returns>If phase has capaciy <see langword="true"/>; Otherwise <see langword="false"/>.</returns>
-    public virtual bool IsPhaseAvailable(DeploymentPhase phase, SquadBlueprint? blueprint = null) => (phase, this.CountUnitsInPhase(phase)) switch {
+    public virtual bool IsPhaseAvailable(DeploymentPhase phase) => (phase, this.CountUnitsInPhase(phase)) switch {
         // Check if there's space in initial AND the unit is under direct command
         (DeploymentPhase.PhaseInitial, int x) => x < this.CompanyType.MaxInitialPhase,
         _ => true
@@ -385,9 +396,7 @@ public class CompanyBuilder : IBuilder<Company> {
     public virtual CompanyBuilder CrewCompanyItem(uint itemIndex, SquadBlueprint crew) {
 
         // Grab item
-        var item = this.m_target.Items.FirstOrDefault(x => x.ItemId == itemIndex);
-        if (item is null) 
-            throw new InvalidOperationException("Cannot crew a company item that does not exist");
+        var item = this.m_target.Items.FirstOrDefault(x => x.ItemId == itemIndex) ?? throw new InvalidOperationException("Cannot crew a company item that does not exist");
 
         // Create unit
         var unit = (item.Item switch {
@@ -456,13 +465,6 @@ public class CompanyBuilder : IBuilder<Company> {
     }
 
     /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    public virtual bool HasAbility(string blueprint) => this.m_target.Abilities.Any(x => x.ABP.Name == blueprint);
-
-    /// <summary>
     /// Get if the company under construction has a squad with specified <paramref name="blueprint"/>.
     /// </summary>
     /// <param name="blueprint">The name of the blueprint to check for.</param>
@@ -472,7 +474,8 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="squad"></param>
+    /// <param name="action"></param>
+    /// <param name="sort"></param>
     public virtual void EachUnit(Action<UnitBuilder> action, Func<UnitBuilder, int> sort) => this.m_target.Units.OrderBy(sort).ForEach(action);
 
     /// <summary>
@@ -486,7 +489,7 @@ public class CompanyBuilder : IBuilder<Company> {
     /// </summary>
     /// <param name="action"></param>
     public virtual void EachAbility(Action<Ability, bool> action) {
-        if (ModManager.GetPackageFromGuid(this.m_target.ModGuid) is ModPackage package) {
+        if (BattlegroundsContext.ModManager.GetPackageFromGuid(this.m_target.ModGuid, this.m_target.GameCase) is ModPackage package) {
             Company.GetSpecialUnitAbilities(this.m_target.Faction, package, this.m_target.Units.Map(x => x.Blueprint).Distinct()).ForEach(x => action(x, true));
             this.m_target.Abilities.ForEach(x => action(x, false));
         }
@@ -510,11 +513,15 @@ public class CompanyBuilder : IBuilder<Company> {
 
         // Create buildable variant
         var buildable = new BuildableCompany(company.Name, 
-            company.Type, company.TuningGUID, company.Army, 
+            company.Type, company.TuningGUID, company.Game, company.Army, 
             units, company.Abilities.ToArray(), company.Inventory.ToArray(), company.AutoReplenish);
 
+        // Get blueprints
+        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(company.TuningGUID, company.Game) ?? throw new Exception("Failed finding company mod package");
+        var bpSource = BattlegroundsContext.DataSource.GetBlueprints(package, company.Game) ?? throw new Exception("Failed finding blueprint source for mod package");
+
         // Return company buuilder instance
-        return new CompanyBuilder(buildable) {
+        return new CompanyBuilder(buildable, bpSource) {
             AvailabilityType = company.AvailabilityType,
             Statistics = company.Statistics
         };
@@ -532,8 +539,12 @@ public class CompanyBuilder : IBuilder<Company> {
     /// <returns>A <see cref="CompanyBuilder"/> instance that can construct a new <see cref="Company"/>.</returns>
     public static CompanyBuilder NewCompany(string name, FactionCompanyType type, CompanyAvailabilityType availabilityType, Faction faction, ModGuid modGuid) {
 
+        // Get blueprints
+        var package = BattlegroundsContext.ModManager.GetPackageFromGuid(modGuid, faction.RequiredDLC.Game) ?? throw new Exception("Failed finding company mod package");
+        var bpSource = BattlegroundsContext.DataSource.GetBlueprints(package, faction.RequiredDLC.Game) ?? throw new Exception("Failed finding blueprint source for mod package");
+
         // return new company builder 
-        return new CompanyBuilder(new(name, type, modGuid, faction, Array.Empty<UnitBuilder>(), Array.Empty<Ability>(), Array.Empty<CompanyItem>(), false)) {
+        return new CompanyBuilder(new(name, type, modGuid, faction.RequiredDLC.Game, faction, Array.Empty<UnitBuilder>(), Array.Empty<Ability>(), Array.Empty<CompanyItem>(), false), bpSource) {
             AvailabilityType = availabilityType,
         };
 

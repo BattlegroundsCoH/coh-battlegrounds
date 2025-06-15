@@ -4,9 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=coh2-battlegrounds-ui"
-    xmlns:ui="clr-namespace:Battlegrounds.UI;assembly=coh2-battlegrounds-ui"
-    xmlns:uiloc="clr-namespace:Battlegrounds.UI.Converters.Locale;assembly=coh2-battlegrounds-ui"
+    xmlns:controls="clr-namespace:Battlegrounds.UI.Controls;assembly=Battlegrounds.UI"
+    xmlns:ui="clr-namespace:Battlegrounds.UI;assembly=Battlegrounds.UI"
+    xmlns:uiloc="clr-namespace:Battlegrounds.UI.Converters.Locale;assembly=Battlegrounds.UI"
     xmlns:local="clr-namespace:Battlegrounds.Lobby.Components"
     mc:Ignorable="d" 
     d:DesignHeight="850" 
@@ -57,7 +57,7 @@
             <Grid.Resources>
                 <ResourceDictionary 
                     x:Name="LobbyIcons" 
-                    Source="pack://application:,,,/coh2-battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
+                    Source="pack://application:,,,/Battlegrounds;component/Resources/app/LobbyIcons.xaml"/>
             </Grid.Resources>
             <Grid.RowDefinitions>
                 <RowDefinition/>

@@ -9,8 +9,10 @@ using System.Windows;
 using System.Windows.Media;
 
 using Battlegrounds.AI;
+using Battlegrounds.Errors.Common;
 using Battlegrounds.Functional;
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game;
+using Battlegrounds.Game.Database.Management;
 using Battlegrounds.Game.Scenarios;
 using Battlegrounds.Lobby.Components;
 using Battlegrounds.Lobby.Lookups;
@@ -28,15 +30,15 @@ namespace Battlegrounds.Lobby.Pages.Host;
 /// </summary>
 public sealed class HostLobby : BaseLobby {
 
-    private static readonly string __playabilityAlliesInvalid = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAlliesInvalid");
-    private static readonly string __playabilityAlliesNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAlliesNoPlayers");
-    private static readonly string __playabilityAxisInvalid = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisInvalid");
-    private static readonly string __playabilityAxisNoPlayers = BattlegroundsInstance.Localize.GetString("LobbyView_StartMatchAxisNoPlayers");
-    private static readonly string __playabilityNoticePersistency = BattlegroundsInstance.Localize.GetString("LobbyView_PersistencyDisabled");
+    private static readonly string __playabilityAlliesInvalid = BattlegroundsContext.Localize.GetString("LobbyView_StartMatchAlliesInvalid");
+    private static readonly string __playabilityAlliesNoPlayers = BattlegroundsContext.Localize.GetString("LobbyView_StartMatchAlliesNoPlayers");
+    private static readonly string __playabilityAxisInvalid = BattlegroundsContext.Localize.GetString("LobbyView_StartMatchAxisInvalid");
+    private static readonly string __playabilityAxisNoPlayers = BattlegroundsContext.Localize.GetString("LobbyView_StartMatchAxisNoPlayers");
+    private static readonly string __playabilityNoticePersistency = BattlegroundsContext.Localize.GetString("LobbyView_PersistencyDisabled");
 
-    private static readonly Func<int, string> LOCSTR_GAMEMODEUPLOAD = x => BattlegroundsInstance.Localize.GetString("LobbyView_UploadGamemode", x);
+    private static readonly Func<int, string> LOCSTR_GAMEMODEUPLOAD = x => BattlegroundsContext.Localize.GetString("LobbyView_UploadGamemode", x);
 
-    private ModPackage? m_package;
+    private IModPackage? m_package;
 
     public override MutableButton SwapRoles { get; }
 
@@ -54,9 +56,19 @@ public sealed class HostLobby : BaseLobby {
 
     public override Setting<ModPackageOption> ModPackageDropdown { get; }
 
-    public override ModPackage ModPackage => this.m_package ?? throw new Exception("No Mod Package Defined");
+    public override IModPackage ModPackage => this.m_package ?? throw new Exception("No Mod Package Defined");
 
     public HostLobby(ILobbyHandle handle, ILobbyTeam allies, ILobbyTeam axis) : base(handle, allies, axis) {
+
+        // Get & set tunning list
+        var tunlist = new List<ModPackageOption>();
+        BattlegroundsContext.ModManager.EachPackage(x => tunlist.Add(new ModPackageOption(x)));
+
+        // Init mod package dropdown
+        this.ModPackageDropdown = Setting<ModPackageOption>.NewDropdown("LobbyView_SettingTuning", new(tunlist), this.ModPackageSelectionChanged);
+
+        // Set default package
+        this.m_package = this.ModPackageDropdown.Items[0].ModPackage;
 
         // Init buttons
         this.StartMatchButton = new(new(() => this.m_isStarting.IfFalse().Then(this.BeginMatchSetup).Else(this.CancelMatch)), Visibility.Visible) {
@@ -66,20 +78,10 @@ public sealed class HostLobby : BaseLobby {
         this.SwapRoles = new(new(this.SwapTeamRoles), Visibility.Collapsed);
 
         // Get scenario list
-        var _scenlist = ScenarioList.GetList()
+        var _scenlist = BattlegroundsContext.DataSource.GetScenarioList(m_package, GameCase.CompanyOfHeroes2)!.GetList()
             .Where(x => x.IsVisibleInLobby)
             .OrderBy(x => x.MaxPlayers);
         var scenlist = new List<ScenOp>(_scenlist.Select(x => new ScenOp(x)));
-
-        // Get & set tunning list
-        var tunlist = new List<ModPackageOption>();
-        ModManager.EachPackage(x => tunlist.Add(new ModPackageOption(x)));
-
-        // Init mod package dropdown
-        this.ModPackageDropdown = Setting<ModPackageOption>.NewDropdown("LobbyView_SettingTuning", new(tunlist), this.ModPackageSelectionChanged);
-
-        // Set default package
-        this.m_package = this.ModPackageDropdown.Items[0].ModPackage;
 
         // Get On & Off collection
         ObservableCollection<OnOffOption> onOfflist = new(new[] { new OnOffOption(true), new OnOffOption(false) });
@@ -245,7 +247,7 @@ public sealed class HostLobby : BaseLobby {
                 this.m_handle.SetLobbyState(LobbyState.Starting);
 
                 // Get play model
-                var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, 5, this.UploadGamemodeCallback);
+                var play = PlayModelFactory.GetModel(this.m_handle, this.m_chatModel, BattlegroundsContext.Dispatcher, 5, this.UploadGamemodeCallback);
 
                 // Log Screen change
                 Trace.WriteLine($"{nameof(PlayModelFactory)} picked play model '{play.GetType().Name}'.", nameof(HostLobby));
@@ -331,7 +333,7 @@ public sealed class HostLobby : BaseLobby {
         this.NotifyProperty(nameof(Scenario));
 
         // Update last played
-        BattlegroundsInstance.LastPlayedMap = scen.RelativeFilename;
+        BattlegroundsContext.LastPlayedMap = scen.RelativeFilename;
 
         // Update gamemode
         this.UpdateGamemodeAndOptionsSelection(scen);
@@ -460,17 +462,21 @@ public sealed class HostLobby : BaseLobby {
 
     }
 
-    private void UpdateGamemodeAndOptionsSelection(Scenario scenario) {
+    private void UpdateGamemodeAndOptionsSelection(IScenario scenario) {
 
         // Bail if no package defined
         if (this.m_package is null) {
             return;
         }
 
+        // Get gamemode list
+        IGamemodeList gamemodesSource = BattlegroundsContext.DataSource.GetGamemodeList(m_package, scenario.Game)
+            ?? throw new ObjectNotFoundException("Failed finding gamemode list");
+
         // Get available gamemodes
         var guid = this.m_package.GamemodeGUID;
         List<IGamemode> gamemodes =
-            (scenario.Gamemodes.Count > 0 ? WinconditionList.GetGamemodes(guid, scenario.Gamemodes) : WinconditionList.GetGamemodes(guid)).ToList();
+            (scenario.Gamemodes.Count > 0 ? gamemodesSource.GetGamemodes(guid, scenario.Gamemodes) : gamemodesSource.GetGamemodes(guid)).ToList();
 
         // Update if there's any change in available gamemodes 
         if (this.GamemodeDropdown.Items.Count != gamemodes.Count || gamemodes.Any(x => !this.GamemodeDropdown.Items.Contains(x))) {

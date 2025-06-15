@@ -1,0 +1,1019 @@
+squads:
+    tommy_uk:
+        category: Infantry
+        faction-association: british_africa
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 300
+            ui:
+                screen-name: 11153223
+                help-text: 11265170
+                brief-text: 11266227
+                icon-name: tommy_uk
+            upgrades:
+                slots: 1
+                available:
+                    - recon_package_tommy_uk
+                    - boys_anti_tank_rifles_tommy_uk
+                    - lmg_bren_tommy_uk
+            loadout:
+                entities:
+                    - ebp: officer_tommy_uk
+                      count: 1
+                    - ebp: tommy_uk
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 900
+                      name: Vet1
+                    - experience: 2700
+                      name: Vet2
+                    - experience: 5400
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - standard_infantry
+                    - infantry_anti_infantry
+
+    australian_light_infantry_uk:
+        category: Infantry
+        faction-association: british_africa
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 320
+            ui:
+                screen-name: 11200128
+                help-text: 11265170
+                brief-text: 11248817
+                icon-name: australian_light_infantry_africa_uk
+            loadout:
+                entities:
+                    - ebp: australian_light_infantry_uk
+                      count: 6
+            veterancy:
+                ranks:
+                    - experience: 900
+                      name: Vet1
+                    - experience: 2700
+                      name: Vet2
+                    - experience: 5400
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - elite_infantry
+                    - infantry_anti_infantry
+                    - standard_infantry 
+
+    canadian_heavy_infantry_uk:
+        category: Infantry
+        faction-association: british_africa
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 340
+            ui:
+                screen-name: 11241688
+                help-text: 11241902
+                brief-text: 11248818
+                icon-name: heavy_infantry_canadian_uk
+            loadout:
+                entities:
+                    - ebp: canadian_heavy_infantry_uk
+                      count: 6
+            veterancy:
+                ranks:
+                    - experience: 900
+                      name: Vet1
+                    - experience: 2700
+                      name: Vet2
+                    - experience: 5400
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - elite_infantry
+                    - infantry_assault
+                    - standard_infantry 
+                    - infantry_anti_infantry
+                    - infantry_burst_weapon 
+
+    commando_uk:
+        category: Infantry
+        faction-association: british_africa
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 420
+            ui:
+                screen-name: 11222386
+                help-text: 11265170
+                brief-text: 11265805
+                icon-name: commando_uk
+            loadout:
+                entities:
+                    - ebp: commando_uk
+                      count: 6
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - elite_infantry
+                    - infantry_assault
+                    - infantry_anti_infantry 
+                    - commandos 
+
+    guards_uk:
+        category: Infantry
+        faction-association: british_africa
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 400
+            ui:
+                screen-name: 11180063
+                help-text: 11265170
+                brief-text: 11266224
+                icon-name: guards_uk
+            loadout:
+                entities:
+                    - ebp: guards_uk
+                      count: 6
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - elite_infantry
+                    - infantry_assault 
+                    - infantry_anti_infantry 
+                    - infantry_anti_tank
+
+    gurkhas_uk:
+        category: Infantry
+        faction-association: british_africa
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 360
+            ui:
+                screen-name: 11184154
+                help-text: 11265170
+                brief-text: 11266235
+                icon-name: gurkhas_uk
+            loadout:
+                entities:
+                    - ebp: gurkhas_uk
+                      count: 6
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            upgrades:
+                slots: 1
+                available:
+                    - lmg_bren_gurkhas_uk
+                    - smg_thompson_gurkhas_uk
+            types:
+                values:
+                    - infantry
+                    - elite_infantry 
+                    - infantry_long_range
+                    - infantry_anti_infantry
+
+    sapper_uk:
+        category: Infantry
+        faction-association: british_africa
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 220
+            ui:
+                screen-name: 11153222
+                help-text: 11265170
+                brief-text: 11266413
+                icon-name: sapper_uk
+            loadout:
+                entities:
+                    - ebp: sapper_uk
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 800
+                      name: Vet1
+                    - experience: 2400
+                      name: Vet2
+                    - experience: 4800
+                      name: Vet3
+            upgrades:
+                slots: 1
+                available:
+                    - flamethrower_sapper_uk
+                    - utility_sapper_uk
+                    - piat_sapper_uk 
+            types:
+                values:
+                    - infantry
+                    - standard_infantry
+                    - infantry_anti_infantry
+                    - infantry_support
+                    - combat_engineer 
+
+    medic_uk:
+        category: Support
+        faction-association: british_africa
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 170
+            ui:
+                screen-name: 11241690
+                help-text: 11189891
+                brief-text: 11158242
+                icon-name: medic_uk
+            loadout:
+                entities:
+                    - ebp: medic_uk
+                      count: 3
+            veterancy:
+                ranks:
+                    - experience: 560
+                      name: Vet1
+                    - experience: 1120
+                      name: Vet2
+                    - experience: 2576
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+
+    at_gun_2pdr_uk:
+        category: Support
+        faction-association: british_africa
+        is-team-weapon: true
+        is-towable: true
+        extensions:
+            cost:
+                manpower: 200
+            ui:
+                screen-name: 11241693
+                icon-name: at_gun_2pdr_uk
+            loadout:
+                entities:
+                    - ebp: tw_at_gun_2pdr_uk
+                      count: 1
+                    - ebp: crew_at_gun_uk
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 1300
+                      name: Vet1
+                    - experience: 3900
+                      name: Vet2
+                    - experience: 7800
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - anti_tank
+
+    at_gun_6pdr_uk:
+        category: Support
+        faction-association: british_africa
+        is-team-weapon: true
+        is-towable: true
+        extensions:
+            cost:
+                manpower: 260
+            ui:
+                screen-name: 11241694
+                icon-name: at_gun_6pdr_uk
+            loadout:
+                entities:
+                    - ebp: tw_at_gun_6pdr_uk
+                      count: 1
+                    - ebp: crew_at_gun_uk
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - anti_tank
+
+    at_gun_17pdr_mobile_uk:
+        category: Support
+        faction-association: british_africa
+        is-team-weapon: true
+        is-towable: true
+        extensions:
+            cost:
+                manpower: 290
+            ui:
+                screen-name: 11241691
+                icon-name: at_gun_17pdr_mobile_uk
+            loadout:
+                entities:
+                    - ebp: tw_at_gun_17pdr_mobile_uk
+                      count: 1
+                    - ebp: crew_at_gun_uk
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - anti_tank
+
+    hmg_vickers_uk:
+        category: Support
+        faction-association: british_africa
+        is-team-weapon: true
+        is-towable: false
+        extensions:
+            cost:
+                manpower: 240
+            ui:
+                screen-name: 11180060
+                icon-name: hmg_vickers_uk
+            loadout:
+                entities:
+                    - ebp: w_vickers_hmg_uk
+                      count: 1
+                    - ebp: crew_hmg_uk
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 500
+                      name: Vet1
+                    - experience: 1500
+                      name: Vet2
+                    - experience: 3600
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - infantry_anti_infantry
+                    - suppression
+                    - teamweapon_burst 
+
+    mortar_81mm_uk:
+        category: Support
+        faction-association: british_africa
+        is-team-weapon: true
+        is-towable: false
+        extensions:
+            cost:
+                manpower: 260
+            ui:
+                screen-name: 11241696
+                icon-name: mortar_81mm_uk
+            loadout:
+                entities:
+                    - ebp: w_mortar_81mm_uk
+                      count: 1
+                    - ebp: crew_mortar_indian_uk
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - infantry_anti_infantry
+                    - mortar 
+
+    mortar_heavy_4_2_uk:
+        category: Support
+        faction-association: british_africa
+        is-team-weapon: true
+        is-towable: true
+        extensions:
+            cost:
+                manpower: 270
+            ui:
+                screen-name: 11239092
+                icon-name: mortar_heavy_4_2_uk
+            loadout:
+                entities:
+                    - ebp: tw_4_2_heavy_mortar_uk
+                      count: 1
+                    - ebp: crew_mortar_indian_uk
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 1300
+                      name: Vet1
+                    - experience: 3900
+                      name: Vet2
+                    - experience: 7800
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - infantry_anti_infantry
+                    - mortar
+
+    pack_howitzer_75mm_uk:
+        category: Support
+        faction-association: british_africa
+        is-team-weapon: true
+        is-towable: true
+        extensions:
+            cost:
+                manpower: 340
+            ui:
+                screen-name: 11241712
+                icon-name: pack_howitzer_75mm_uk
+            loadout:
+                entities:
+                    - ebp: tw_pack_howitzer_75mm_uk
+                      count: 1
+                    - ebp: crew_howitzer_commando_uk
+                      count: 5
+            veterancy:
+                ranks:
+                    - experience: 1300
+                      name: Vet1
+                    - experience: 3900
+                      name: Vet2
+                    - experience: 7800
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - artillery
+                    - infantry_anti_infantry 
+
+    cwt_15_truck_uk:
+        category: Support
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 200
+                fuel: 20
+            ui:
+                screen-name: 11202605
+                icon-name: cwt_15_uk
+                symbol-icon-name: cwt_truck
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            loadout:
+                entities:
+                    - ebp: cwt_15_uk
+                      count: 1
+            upgrades:
+                slots: 1
+                available:
+                    - weapon_flak_mount_cwt_truck_uk
+                    - medical_truck_uk 
+            hold: {}
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+
+    dingo_uk:
+        category: Support
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 250
+            ui:
+                screen-name: 11180067
+                icon-name: dingo_uk
+            loadout:
+                entities:
+                    - ebp: dingo_uk
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 600
+                      name: Vet1
+                    - experience: 1800
+                      name: Vet2
+                    - experience: 3600
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - ultra_light
+                    - vehicle_support
+
+    humber_uk:
+        category: Support
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 240
+                fuel: 30
+            ui:
+                screen-name: 11180069 # Humber Armoured Car
+                icon-name: humber_uk
+            loadout:
+                entities:
+                    - ebp: humber_uk
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 800
+                      name: Vet1
+                    - experience: 1600
+                      name: Vet2
+                    - experience: 3200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+
+    archer_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 380
+                fuel: 125
+            ui:
+                screen-name: 11189140 # Archer Tank Destroyer
+                icon-name: archer_uk
+            loadout:
+                entities:
+                    - ebp: archer_uk
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 2020
+                      name: Vet1
+                    - experience: 4040
+                      name: Vet2
+                    - experience: 8080
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - heavy_armor
+                    - vehicle_casemate_anti_tank 
+
+    bishop_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 320
+                fuel: 60
+            ui:
+                screen-name: 11241698 # Bishop Self-Propelled Gun
+                icon-name: bishop_uk
+            loadout:
+                entities:
+                    - ebp: bishop_uk
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+                    - artillery 
+                    - vehicle_artillery
+
+    centaur_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 360
+                fuel: 75
+            ui:
+                screen-name: 11199787 # Centaur Tank
+                icon-name: centaur_uk
+            loadout:
+                entities:
+                    - ebp: centaur_uk
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1500
+                      name: Vet1
+                    - experience: 4500
+                      name: Vet2
+                    - experience: 9000
+                      name: Vet3
+
+    churchill_black_prince_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 690
+                fuel: 180
+            ui:
+                screen-name: 11184728 #Churchill Black Prince
+                icon-name: churchill_black_prince_uk
+            loadout:
+                entities:
+                    - ebp: churchill_black_prince_uk
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 2000
+                      name: Vet1
+                    - experience: 6000
+                      name: Vet2
+                    - experience: 12000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - heavy_armor
+                    - vehicle_turret
+                    - apex_armor
+
+    churchill_crocodile_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 600
+                fuel: 160
+            ui:
+                screen-name: 11216435 #Churchill Crocodile
+                icon-name: churchill_crocodile_uk
+            loadout:
+                entities:
+                    - ebp: churchill_crocodile_uk
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 2000
+                      name: Vet1
+                    - experience: 6000
+                      name: Vet2
+                    - experience: 12000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - heavy_armor
+                    - vehicle_turret
+                    - apex_armor
+
+    churchill_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 460
+                fuel: 120
+            ui:
+                screen-name: 11185284 #Churchill Tank
+                icon-name: churchill_uk
+            loadout:
+                entities:
+                    - ebp: churchill_uk
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 2000
+                      name: Vet1
+                    - experience: 6000
+                      name: Vet2
+                    - experience: 12000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - heavy_armor
+                    - vehicle_turret
+            upgrades:
+                slots: 1
+                available:
+                    - weapon_75mm_churchill_uk
+
+    crusader_57mm_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 300
+                munitions: 60
+                fuel: 60
+            ui:
+                screen-name: 11189924 # Crusader III Tank
+                icon-name: crusader_57mm_uk
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+                    - vehicle_turret
+                    - vehicle_casemate_anti_tank
+
+    crusader_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 300
+                fuel: 60
+            ui:
+                screen-name: 11180065 # Crusader Tank
+                icon-name: crusader_uk
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+                      
+    crusader_aa_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 360
+                fuel: 70
+            ui:
+                screen-name: 11184735 # Crusader AA Tank
+                icon-name: crusader_aa_uk
+            veterancy:
+                ranks:
+                    - experience: 1500
+                      name: Vet1
+                    - experience: 4500
+                      name: Vet2
+                    - experience: 9000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - medium_armor
+                    - anti_air
+
+    grant_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 360
+                fuel: 90
+            ui:
+                screen-name: 11180068 # Grant Tank
+                icon-name: grant_africa_uk
+            loadout:
+                entities:
+                    - ebp: grant_uk
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+
+    matilda_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 360
+                fuel: 90
+            ui:
+                screen-name: 11180070 # Matilda Tank
+                icon-name: matilda_africa_uk
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+
+    sherman_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 380
+                fuel: 90
+            ui:
+                screen-name: 11189939 # Sherman Tank
+                icon-name: sherman_uk
+            loadout:
+                entities:
+                    - ebp: sherman_uk
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - medium_armor
+                    - vehicle_turret
+            upgrades:
+                slots: 1
+                available:
+                    - hmg_sherman_uk
+
+    stuart_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 280
+                fuel: 40
+            ui:
+                screen-name: 11180071 # Stuart Tank
+                icon-name: stuart_uk
+            loadout:
+                entities:
+                    - ebp: stuart_uk
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+                    - vehicle_turret
+            upgrades:
+                slots: 1
+                available:
+                    - utility_kit_stuart_uk
+                    - commander_stuart_uk
+
+    valentine_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 300
+                fuel: 50
+            ui:
+                screen-name: 11189947 # Valentine Tank
+                icon-name: valentine_uk
+            loadout:
+                entities:
+                    - ebp: valentine_uk
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1950
+                      name: Vet1
+                    - experience: 5850
+                      name: Vet2
+                    - experience: 13650
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - medium_armor
+                    - vehicle_turret
+
+    panzergrenadier_ak:
+        category: Infantry
+        faction-association: afrika_korps
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 300
+            ui:
+                screen-name: Panzergrenadiers
+            veterancy:
+                ranks:
+                    - experience: 1400
+                      name: Vet1
+                    - experience: 2800
+                      name: Vet2
+                    - experience: 4200
+                      name: Vet3
+
+    halftrack_250_ak:
+        category: Support
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 260
+                fuel: 15
+            ui:
+                screen-name: Sdkfz 250 Halftrack
+            veterancy:
+                ranks:
+                    - experience: 1400
+                      name: Vet1
+                    - experience: 2800
+                      name: Vet2
+                    - experience: 4200
+                      name: Vet3
+            hold: {}
+
+    panzer_iii_ak:
+        category: Armour
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 360
+                fuel: 80
+            ui:
+                screen-name: Panzer III
+            veterancy:
+                ranks:
+                    - experience: 1400
+                      name: Vet1
+                    - experience: 2800
+                      name: Vet2
+                    - experience: 4200
+                      name: Vet3

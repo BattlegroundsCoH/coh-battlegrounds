@@ -6,13 +6,12 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-
-using Battlegrounds.Game.Database;
+using Battlegrounds.Game.Blueprints;
 using Battlegrounds.Lobby.Lookups;
 using Battlegrounds.Lobby.Planning;
-using Battlegrounds.Locale;
 using Battlegrounds.Networking.LobbySystem;
 using Battlegrounds.Resources;
+using Battlegrounds.Resources.Extensions;
 using Battlegrounds.UI.Controls;
 using Battlegrounds.UI.Graphics;
 using Battlegrounds.Util;
@@ -86,7 +85,8 @@ public partial class PlannerView : UserControl {
                     this.LinePlacementHelperBox.Visibility = Visibility.Visible;
                     this.LinePlacementHelperBox.SetValue(Canvas.TopProperty, clickPos.Y);
                     this.LinePlacementHelperBox.SetValue(Canvas.LeftProperty, clickPos.X);
-                    this.LinePlacementHelperBoxTitle.Content = GameLocale.GetString(this.ContextHandler.PlaceElementBlueprint!.UI.ScreenName);
+                    this.LinePlacementHelperBoxTitle.Content = BattlegroundsContext.DataSource.GetLocaleSource(this.ContextHandler.PlaceElementBlueprint!)
+                        .GetString(this.ContextHandler.PlaceElementBlueprint!.UI.ScreenName);
                 } else {
                     this.LinePlacementHelperBox.Visibility = Visibility.Collapsed;
                 }
@@ -150,7 +150,7 @@ public partial class PlannerView : UserControl {
     private static HelperElement CreateEntityMarker(EntityBlueprint ebp, Point p, int elementId, bool legalPlacement) {
 
         // Grab blueprint
-        var sym = ResourceHandler.GetIcon("entity_symbols", ebp.UI.Symbol);
+        var sym = ResourceHandler.GetIcon(ebp.GetEntitySymbol());
         if (sym is null) {
             return CreateMarker(p);
         }
@@ -171,7 +171,7 @@ public partial class PlannerView : UserControl {
     private static HelperElement CreateSquadMarker(SquadBlueprint sbp, Point p, int elementId) {
 
         // Grab blueprint
-        var sym = ResourceHandler.GetIcon("symbol_icons", sbp.UI.Symbol);
+        var sym = ResourceHandler.GetIcon(sbp.GetSymbol());
         if (sym is null) {
             return CreateMarker(p);
         }
@@ -305,7 +305,7 @@ public partial class PlannerView : UserControl {
                 // Show line helper
                 this.LinePlacementHelperBox.SetValue(Canvas.TopProperty, p.Y);
                 this.LinePlacementHelperBox.SetValue(Canvas.LeftProperty, p.X + 8);
-                this.LinePlacementHelperBoxCapacity.Content = BattlegroundsInstance.Localize.GetString("LobbyPlanning_LinePlacing", selfCap.Current + ingameCount, selfCap.Capacity);
+                this.LinePlacementHelperBoxCapacity.Content = BattlegroundsContext.Localize.GetString("LobbyPlanning_LinePlacing", selfCap.Current + ingameCount, selfCap.Capacity);
                 this.LinePlacementHelperBoxCapacity.Foreground = allowPlacement ? Brushes.White : Brushes.Red;
 
             }
@@ -550,7 +550,7 @@ public partial class PlannerView : UserControl {
     private void DefenceIcon_MouseEnter(object sender, MouseEventArgs e) {
         if (sender is FrameworkElement fe && fe.DataContext is LobbyPlanningDefence def) {
             var cap = def.CapacityFetcher();
-            this.DefenceTooltip.Content = $"{GameLocale.GetString(def.Name)} ({cap.Current}/{cap.Capacity})";
+            this.DefenceTooltip.Content = $"{def.Name} ({cap.Current}/{cap.Capacity})";
             this.DefenceTooltip.Visibility = Visibility.Visible;
         }
     }
