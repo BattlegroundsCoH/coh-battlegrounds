@@ -1,0 +1,12 @@
+english:
+    $11153223: Infantry Section
+    $11265170: Long description for Royal Engineers, which should be very long and detailed to test the formatting and length handling in the UI.
+    $11266227: Good vs Infantry
+    $11241690: Medic
+    $11189891: Long description for medic, which should also be very long and detailed to test the formatting and length handling in the UI.
+    $11158242: Heals infantry
+    $11200128: Australian Infantry Section
+    $11248817: Good vs Infantry
+    $11241688: Canadian Shock Section
+    $11241902: Long description for Canadian Shock Troops, which should be very long and detailed to test the formatting and length handling in the UI.
+    $11248818: Good vs Infantry

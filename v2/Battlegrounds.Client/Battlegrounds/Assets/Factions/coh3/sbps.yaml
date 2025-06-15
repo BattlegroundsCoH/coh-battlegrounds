@@ -961,6 +961,159 @@ squads:
                     - medium_armor
                     - vehicle_turret
 
+    assault_panzergrenadier_ak:
+        category: Infantry
+        faction-association: afrika_korps
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 340
+            ui:
+                screen-name: $11220485 # Assault Panzergrenadiers
+                icon-name: assault_panzergrenadier_ak
+            loadout:
+                entities:
+                    - ebp: assault_panzergrenadier_ak
+                      count: 5
+            veterancy:
+                ranks:
+                    - experience: 900
+                      name: Vet1
+                    - experience: 2700
+                      name: Vet2
+                    - experience: 5400
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - standard_infantry
+                    - infantry_assault
+                    - infantry_anti_infantry
+
+    bersaglieri_ak:
+        category: Infantry
+        faction-association: afrika_korps
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 260
+            ui:
+                screen-name: $11222851 # Bersaglieri
+                icon-name: bersaglieri_ak
+            loadout:
+                entities:
+                    - ebp: bersaglieri_ak
+                      count: 5
+            veterancy:
+                ranks:
+                    - experience: 1025
+                      name: Vet1
+                    - experience: 3075
+                      name: Vet2
+                    - experience: 6150
+                      name: Vet3
+            upgrades:
+                slots: 1
+                available:
+                    - lmg_breda_m30_bersaglieri_ak
+            types:
+                values:
+                    - infantry
+                    - bersaglieri
+                    - italian 
+                    - standard_infantry 
+                    - infantry_anti_infantry
+
+    coastal_reserve_ak:
+        category: Infantry
+        faction-association: afrika_korps
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 270
+            ui:
+                screen-name: $11202089 # Coastal Reserve
+                icon-name: grenadier_ger # For some reason there's no icon for this unit and it uses the grenadier icon
+            loadout:
+                entities:
+                    - ebp: coastal_reserve_ak
+                      count: 6
+            veterancy:
+                ranks:
+                    - experience: 480
+                      name: Vet1
+                    - experience: 960
+                      name: Vet2
+                    - experience: 1920
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - standard_infantry 
+                    - infantry_anti_infantry
+
+    guastatori_ak:
+        category: Infantry
+        faction-association: afrika_korps
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 420
+            ui:
+                screen-name: $11200651 # Guastatori
+                icon-name: guastatori_ak
+            loadout:
+                entities:
+                    - ebp: guastatori_ak
+                      count: 6
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            upgrades:
+                slots: 1
+                available:
+                    - flamethrower_guastatori_ak
+            types:
+                values:
+                    - infantry
+                    - italian 
+                    - standard_infantry 
+                    - infantry_anti_infantry
+                    - elite_infantry
+                    - infantry_assault
+                    - combat_engineer 
+
+    medic_ak:
+        category: Support
+        faction-association: afrika_korps
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 140 # Actual ingame cost is currently calculated as 135
+            ui:
+                screen-name: $11241690 # Medic
+                icon-name: medic_ak
+            loadout:
+                entities:
+                    - ebp: medic_ak
+                      count: 3
+            veterancy:
+                ranks:
+                    - experience: 400
+                      name: Vet1
+                    - experience: 800
+                      name: Vet2
+                    - experience: 1600
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+
     panzergrenadier_ak:
         category: Infantry
         faction-association: afrika_korps
@@ -969,7 +1122,12 @@ squads:
             cost:
                 manpower: 300
             ui:
-                screen-name: Panzergrenadiers
+                screen-name: $11166831 # Panzergrenadiers
+                icon-name: panzergrenadier_ak
+            loadout:
+                entities:
+                    - ebp: panzergrenadier_ak
+                      count: 5
             veterancy:
                 ranks:
                     - experience: 1400
@@ -978,6 +1136,85 @@ squads:
                       name: Vet2
                     - experience: 4200
                       name: Vet3
+            types:
+                values:
+                    - infantry
+                    - standard_infantry 
+                    - infantry_anti_infantry
+            upgrades:
+                slots: 1
+                available:
+                    - lmg_panzergrenadier_ak
+
+    panzerjaeger_inf_ak:
+        category: Infantry
+        faction-association: afrika_korps
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 210 # Actual ingame cost is currently calculated as 208
+            ui:
+                screen-name: $11181909 # Panzerjäger Infantry
+                icon-name: panzerjaegar_ak # Noch ein typo...
+            loadout:
+                entities:
+                    - ebp: panzerjaeger_inf_ak
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 800
+                      name: Vet1
+                    - experience: 2400
+                      name: Vet2
+                    - experience: 4800
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - anti_tank 
+                    - infantry_anti_infantry 
+                    - infantry_anti_tank
+            upgrades:
+                slots: 1
+                available:
+                    - tank_buster_package_panzerjager_ak
+
+    panzerpioneer_ak:
+        category: Infantry
+        faction-association: afrika_korps
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 200
+            ui:
+                screen-name: $11181912 # Panzerpioneers
+                icon-name: panzerpioneer_ak
+            loadout:
+                entities:
+                    - ebp: panzerpioneer_ak
+                      count: 3
+                    - ebp: panzerpioneer_support_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 650
+                      name: Vet1
+                    - experience: 1950
+                      name: Vet2
+                    - experience: 3900
+                      name: Vet3
+            upgrades:
+                slots: 1
+                available:
+                    - fieldcraft_panzerpioneer_ak
+                    - flamethrower_panzerpioneer_ak 
+                    - grb39_grenade_launcher_panzerpioneer_ak
+            types:
+                values:
+                    - infantry
+                    - infantry_support 
+                    - infantry_anti_infantry 
+                    - combat_engineer
 
     halftrack_250_ak:
         category: Support

@@ -52,7 +52,14 @@ public sealed class BlueprintParser<G> where G : Game {
         _dictionaryDeserializer = new();
 
         // Register a type converter for strings to use the locale service
-        _dictionaryDeserializer.RegisterTypeConverter(str => _localeService.FromGame<G>(uint.TryParse(str, out uint k) ? k : LocaleString.TempString(str)));
+        _dictionaryDeserializer.RegisterTypeConverter(ConvertLocStr);
+    }
+
+    private LocaleString ConvertLocStr(string str) {
+        if (str.StartsWith('$')) {
+            str = str[1..]; // Remove the leading dollar sign
+        }
+        return uint.TryParse(str, out uint key) ? _localeService.FromGame<G>(key) : LocaleString.TempString(str);
     }
 
     public async Task<List<SquadBlueprint>> ParseSquadBlueprints(Stream source) {

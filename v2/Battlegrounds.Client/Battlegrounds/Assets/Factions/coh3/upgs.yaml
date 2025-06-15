@@ -142,10 +142,72 @@ upgrades:
                 icon-name: ability_british_tank_commander
                 symbol-icon-name: tank_vision
 
-    lmg_panzergrenaider_ak:
+    lmg_breda_m30_bersaglieri_ak:
         faction-association: afrika_korps
         extensions:
             cost:
-                munitions: 90
+                munitions: 70
             ui:
-                screen-name: MG-34 Light Machine Gun Package
+                screen-name: $11235858 # Breda M30 Light Machine Gun Package
+                icon-name: breda_model_30_ak
+                symbol-icon-name: weapon_breda_model_30lmg
+
+    flamethrower_guastatori_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 80
+            ui:
+                screen-name: $11235856 # Flamethrower Package
+                icon-name: anti_emplacement_package
+                symbol-icon-name: weapon_flamethrower
+
+    lmg_panzergrenadier_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 100
+            ui:
+                screen-name: $11235859 # MG-34 Light Machine Gun Package
+                icon-name: mg34
+                symbol-icon-name: weapon_mg42
+
+    tank_buster_package_panzerjager_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: $11265924 # Tank Buster Package
+                icon-name: tank_busters
+                symbol-icon-name: weapon_panzerschreck
+
+    fieldcraft_panzerpioneer_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 45
+            ui:
+                screen-name: $11242445 # Fieldcraft Package
+                icon-name: advanced_fieldcraft
+                symbol-icon-name: weapon_wrench
+
+    flamethrower_panzerpioneer_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11155599 # Flammenwerfer 34 Flamethrower Package
+                icon-name: flamenwerfer_34_ger
+                symbol-icon-name: weapon_flamethrower
+
+    grb39_grenade_launcher_panzerpioneer_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 85
+            ui:
+                screen-name: $11221245 # GrB39 Grenade Launcher Package
+                icon-name: grb39_grenade_launcher_ger
+                symbol-icon-name: weapon_grb_grenade_launcher

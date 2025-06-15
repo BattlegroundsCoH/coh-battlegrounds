@@ -1,0 +1,72 @@
+﻿english:
+    # Note that both integer values and integers prefixed with a dollar sign are used in this file - it's handled by the parser and makes copying from EE easier.
+    $11153223: Infantry Section
+    $11265170: Long description for Royal Engineers, which should be very long and detailed to test the formatting and length handling in the UI.
+    $11266227: Good vs Infantry
+    $11241690: Medic
+    $11189891: Long description for medic, which should also be very long and detailed to test the formatting and length handling in the UI.
+    $11158242: Heals infantry
+    $11200128: Australian Infantry Section
+    $11248817: Good vs Infantry
+    $11241688: Canadian Shock Section
+    $11241902: Long description for Canadian Shock Troops, which should be very long and detailed to test the formatting and length handling in the UI.
+    $11248818: Good vs Infantry
+    $11222386: Commandos
+    $11265805: Good vs Infantry
+    $11180063: Foot Guards Troops
+    $11266224: "Good vs Infantry, Anti-Tank capabilities"
+    $11184154: Ghurka Rifles
+    $11266235: Good vs Infantry
+    $11189629: Thompson Submachine Gun Package
+    $11242613: Long description for Thompson Submachine Gun Package, which should be very long and detailed to test the formatting and length handling in the UI.
+    $11242884: Good vs Infantry
+    $11153222: Royal Engineers
+    $11266413: Can repair vehicles
+    $11206886: Flamethrower Package
+    $11154006: Utility Package
+    $11242522: Piat Package
+    $11241693: 2-Pounder Anti-Tank Gun
+    $11241694: 6-Pounder Anti-Tank Gun
+    $11241691: 17-Pounder Anti-Tank Gun
+    $11180060: Vickers Machine Gun Team
+    $11241696: 81mm Mortar Team
+    $11239092: ML 4.2 Inch Mortar Team
+    $11241712: 75mm Pack Howitzer Team
+    $11202605: CWT-15 Truck
+    $11242536: Quad Mount .50 Caliber
+    $11242533: Medical Truck
+    $11180067: Dingo Scout Car
+    $11189140: Archer Tank Destroyer
+    $11241698: Bishop Self-Propelled Gun
+    $11199787: Centaur Tank
+    $11184728: Black Prince Heavy Tank
+    $11216435: Churchill Crocodile Flame Tank
+    $11185284: Churchill Tank
+    $11189924: Crusader Mk. III Tank
+    $11180065: Crusader Mk. II Tank
+    $11199758: 75mm Churchill Tank
+    $11184735: Crusader Mk. II AA Tank
+    $11180068: Mk. 3 Grant Tank
+    $11180069: Humber Armoured Car
+    $11189939: M4A1 Sherman Tank
+    $11242531: 50. Caliber M2 Browning Machine Gun Package
+    $11180071: M3 Stuart Light Tank
+    $11242534: Utility Kit
+    $11186706: Tank Commander
+    $11189947: Valentine Tank
+    $11180070: Matilda Mk. II Infantry Tank    
+    $11220485: Assault Panzergrenadiers
+    $11222851: Bersaglieri
+    $11235858: Breda M30 Light Machine Gun Package
+    $11202089: Coastal Defense Infantry
+    $11200651: Guastatori Assault Engineers
+    $11235856: Flamethrower Package
+    $11166831: Panzergrenadiers
+    $11235859: MG34 Machine Gun Package
+    $11181909: Panzerjäger Infantry # Remember to save as UTF-8 with BOM to preserve the special characters
+    $11265924: Tank Buster Package
+    $11181912: Panzerpioneers
+    $11242445: Fieldcraft Package
+    $11155599: Flammenwerfer 34 Flamethrower Package
+    $11221245: GrB39 Grenade Launcher Package
+
