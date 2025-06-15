@@ -21,7 +21,7 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
     private readonly Dictionary<string, Company> _companies = [];
     private readonly List<LobbySetting> _settings = [
         new LobbySetting { Name = LobbySetting.SETTING_GAMEMODE, Type = LobbySettingType.Selection, Options = [
-            new ("Domunation", "domination"),
+            new ("Domination", "domination"),
             new ("Victory Points", "victory_points")]
         },
         // TODO: More settings
