@@ -372,6 +372,9 @@
     <None Update="Assets\Factions\coh3\sbps.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Factions\coh3\symbols\2_5_truck_ger.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3\symbols\2_5_truck_medical_ger.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -385,6 +388,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\symbols\halftrack_250_20mm_ger.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Factions\coh3\symbols\halftrack_250_ger.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\symbols\halftrack_250_mortar_ger.png">

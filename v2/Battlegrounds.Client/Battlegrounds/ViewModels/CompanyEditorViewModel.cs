@@ -13,6 +13,8 @@ using Battlegrounds.ViewModels.Modals;
 
 using CommunityToolkit.Mvvm.Input;
 
+using Microsoft.Extensions.Logging;
+
 namespace Battlegrounds.ViewModels;
 
 public sealed record CompanyEditorViewModelContext(
@@ -29,6 +31,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     private readonly ICompanyService _companyService;
     private readonly IBlueprintService _blueprintService;
     private readonly MainWindowViewModel _mainWindowViewModel;
+    private readonly ILogger<CompanyEditorViewModel> _logger;
     private readonly string _faction = string.Empty;
     private readonly Game _game;
 
@@ -146,9 +149,17 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         }
     }
 
-    public CompanyEditorViewModel(CompanyEditorViewModelContext context, ICompanyService companyService, IBlueprintService blueprintService, IGameService gameService, MainWindowViewModel mainWindowViewModel) {
+    public CompanyEditorViewModel(
+        CompanyEditorViewModelContext context, 
+        ICompanyService companyService, 
+        IBlueprintService blueprintService, 
+        IGameService gameService, 
+        MainWindowViewModel mainWindowViewModel,
+        ILogger<CompanyEditorViewModel> logger) {
+
         ArgumentNullException.ThrowIfNull(context, nameof(context));
         _context = context;
+        _logger = logger;
         _companyService = companyService;
         _blueprintService = blueprintService;
         _mainWindowViewModel = mainWindowViewModel;
@@ -270,10 +281,19 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     }
 
     public void AddSquadToCompany(SquadPhase phase, SquadBlueprint blueprint) {
+        Squad.TransportSquad? transport = null;
+        if (blueprint.RequiresTowing) { // Set mandatory transport for squads that require towing
+            if (_availableTransportUnits.FirstOrDefault() is not SquadBlueprint defaultTransport) {
+                _logger.LogWarning("No available transport units for squad that requires towing. Cannot add squad to company.");
+                return; // No transport available, cannot add squad
+            }
+            transport = new Squad.TransportSquad(defaultTransport, false);
+        }
         Squad squad = new Squad() {
             Id = GetNextSquadId(),
             Phase = phase,
             Blueprint = blueprint,
+            Transport = transport,
             AddedToCompanyAt = DateTime.UtcNow,
         };
         switch (phase) {
@@ -334,16 +354,23 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         SetSelectedSquad(null); // Clear the selection after retiring a squad
     }
 
-    public void SetSquadDeploymentMethod(Squad squad, SquadBlueprint? transport, bool isDropOffOnly) {
+    public void SetSquadDeploymentMethod(Squad refSquad, SquadBlueprint? transport, bool isDropOffOnly) {
 
-        if (squad.HasTransport == transport is not null)
-            return; // No change in transport status
+        var squad = FindSquadFromId(refSquad.Id); // The caller doesn't have latest squad data, so we find it by ID
+        if (squad.Blueprint.RequiresTowing && transport is null) {
+            _logger.LogInformation("Cannot remove transport from a squad that requires towing.");
+            return;
+        }
 
         Squad.TransportSquad? transportSquad = null;
         if (transport is not null) {
             transportSquad = new Squad.TransportSquad(transport, isDropOffOnly);
         }
-        
+
+        if (squad.HasTransport && transportSquad is not null && squad.Transport.TransportBlueprint == transportSquad.TransportBlueprint) {
+            return; // No change needed, already using the same transport
+        }
+
         SwapSquad(squad, new Squad { 
             Id = squad.Id,
             SlotItems = squad.SlotItems,
@@ -359,7 +386,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             TotalVehicleKills = squad.TotalVehicleKills,
             TotalInfantryKills = squad.TotalInfantryKills,
         });
-        
+
         IsDirty = true; // Mark the company as dirty after changing deployment method
 
     }
@@ -389,12 +416,16 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             TotalVehicleKills = squad.TotalVehicleKills,
             TotalInfantryKills = squad.TotalInfantryKills
         };
-        SwapSquad(squad, updatedSquad);
-        SetSelectedSquad(updatedSquad); // Update the selection to the upgraded squad
+        SetSelectedSquad(SwapSquad(squad, updatedSquad)); // Update the selection to the upgraded squad
         IsDirty = true; // Mark the company as dirty after applying an upgrade
     }
 
-    private void SwapSquad(Squad oldSquad, Squad newSquad) {
+    private Squad FindSquadFromId(int id) {
+        var allSquads = _startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits);
+        return allSquads.FirstOrDefault(s => s.Id == id) ?? throw new KeyNotFoundException($"Squad with ID {id} not found.");
+    }
+
+    private Squad SwapSquad(Squad oldSquad, Squad newSquad) {
         switch (oldSquad.Phase) {
             case SquadPhase.StartingPhase:
                 var startingIndex = _startingUnits.IndexOf(oldSquad);
@@ -436,6 +467,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalManpowerCost)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalMunitionsCost)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalFuelCost)));
+        return newSquad; // Return the updated squad
     }
 
     private int GetNextSquadId() {

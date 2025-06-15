@@ -1580,6 +1580,7 @@ squads:
             ui:
                 screen-name: $11241641 # Sdkfz 250 Halftrack
                 icon-name: halftrack_250_ak
+                symbol-icon-name: halftrack_250_ger
             veterancy:
                 ranks:
                     - experience: 500
@@ -2051,6 +2052,7 @@ squads:
             ui:
                 screen-name: $11241652 # Opel Blitz Truck
                 icon-name: 2_5_truck_german
+                symbol-icon-name: 2_5_truck_ger
             loadout:
                 entities:
                     - ebp: truck_2_5_ak

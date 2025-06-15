@@ -21,7 +21,7 @@ public sealed class BlueprintSymbolConverter : IValueConverter {
         if (value is Blueprint blueprint && blueprint.TryGetExtension<UIExtension>(out var uiExtension)) {
             string path = $"Assets/Factions/{parameter}/symbols/{uiExtension.SymbolIconName}.png";
             if (!File.Exists(path)) {
-                logger.Warning("Icon file not found: {Path}", path);
+                logger.Warning("Symbol file not found for blueprint {Blueprint}: {Path}", blueprint.Id, path);
                 return DependencyProperty.UnsetValue; // TODO: Use a fallback icon
             }
             return imageSourceConverter.ConvertFromString($"pack://siteoforigin:,,,/{path}");
