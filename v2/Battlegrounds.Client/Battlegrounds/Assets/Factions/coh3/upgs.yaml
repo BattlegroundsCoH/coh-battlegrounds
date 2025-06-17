@@ -1,6 +1,6 @@
 upgrades:
 
-    lmg_bren_tommy_uk:
+    lmg_bren_tommy_africa_uk:
         faction-association: british_africa
         extensions:
             cost:
@@ -62,7 +62,7 @@ upgrades:
                 icon-name: m1_thompson_sub_machine_gun
                 symbol-icon-name: m1_thompson_sub_machine_gun
 
-    boys_anti_tank_rifles_tommy_uk:
+    boys_anti_tank_rifles_tommy_africa_uk:
         faction-association: british_africa
         extensions:
             cost:
@@ -72,7 +72,7 @@ upgrades:
                 icon-name: icon_upgrade_boys_at_gun
                 symbol-icon-name: weapon_boys_at_gun
 
-    recon_package_tommy_uk:
+    recon_package_tommy_africa_uk:
         faction-association: british_africa
         extensions:
             cost:
