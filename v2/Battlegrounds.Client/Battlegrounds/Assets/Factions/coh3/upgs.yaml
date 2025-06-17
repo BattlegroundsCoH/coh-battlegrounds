@@ -44,9 +44,9 @@ upgrades:
         faction-association: british_africa
         extensions:
             cost:
-                munitions: 75
+                munitions: 35
             ui:
-                screen-name: 11242532 # 2-Inch Mortar Package
+                screen-name: $11265743 # 2-Inch Mortar Package
                 icon-name: 2_inch_mortar
                 symbol-icon-name: mortar
 
@@ -82,7 +82,7 @@ upgrades:
                 icon-name: scoped_lee_enfield_flare_gun
                 symbol-icon-name: sniper
 
-    flamethrower_sapper_uk:
+    flamethrower_sapper_africa_uk:
         faction-association: british_africa
         extensions:
             cost:
@@ -92,7 +92,7 @@ upgrades:
                 icon-name: british_flamethrower
                 symbol-icon-name: weapon_flamethrower
 
-    utility_sapper_uk:
+    utility_sapper_africa_uk:
         faction-association: british_africa
         extensions:
             cost:
@@ -102,7 +102,7 @@ upgrades:
                 icon-name: utility_engineer_us
                 symbol-icon-name: blow_torch
 
-    piat_sapper_uk:
+    piat_sapper_africa_uk:
         faction-association: british_africa
         extensions:
             cost:
