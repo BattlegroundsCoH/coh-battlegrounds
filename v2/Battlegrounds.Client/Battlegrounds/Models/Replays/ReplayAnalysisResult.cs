@@ -22,7 +22,6 @@ public sealed class ReplayAnalysisResult {
         }
 
         Dictionary<int, LinkedList<ReplayEvent>> companyChanges = [];
-        Dictionary<int, MatchPlayerOverEvent> playerOverEvents = [];
         Dictionary<int, HashSet<ushort>> deployedSquads = [];
         foreach (var player in Replay.Players) {
             companyChanges[player.PlayerId] = [];
@@ -82,16 +81,6 @@ public sealed class ReplayAnalysisResult {
                     }
                     _logger.Debug("Squad {SquadCompanyId} recalled by player {PlayerId} at {Timestamp}", recalledEvent.SquadCompanyId, pid, recalledEvent.Timestamp);
                     companyChanges[pid].AddLast(recalledEvent);
-                    break;
-                }
-                case MatchPlayerOverEvent playerOverEvent: {
-                    if (playerOverEvent.Player is null) {
-                        _logger.Warning("{Event} without player at {Timestamp}", nameof(MatchPlayerOverEvent), playerOverEvent.Timestamp);
-                        badEvents.Add(new BadMatchEvent(playerOverEvent, $"{nameof(MatchPlayerOverEvent)} without player"));
-                        continue;
-                    }
-                    playerOverEvents[pid] = playerOverEvent;
-                    _logger.Debug("Match player over event for player {PlayerId} at {Timestamp}", pid, playerOverEvent.Timestamp);
                     break;
                 }
                 default:
@@ -180,11 +169,6 @@ public sealed class ReplayAnalysisResult {
             } else if (replayEvent is SquadRecalledEvent recalledEvent) {
                 modifiers.AddLast(CompanyEventModifier.ExperienceGain(recalledEvent.SquadCompanyId, recalledEvent.Experience));
                 modifiers.AddLast(CompanyEventModifier.Statistics(recalledEvent.SquadCompanyId, recalledEvent.InfantryKills, recalledEvent.VehicleKills));
-            } else if (replayEvent is MatchPlayerOverEvent playerOver) {
-                foreach (var squad in playerOver.DeployedUnits) {
-                    modifiers.AddLast(CompanyEventModifier.ExperienceGain(squad.SquadCompanyId, squad.Experience));
-                    modifiers.AddLast(CompanyEventModifier.Statistics(squad.SquadCompanyId, squad.InfantryKills, squad.VehicleKills));
-                }
             } else {
                 _logger.Warning("Unhandled replay event type: {ReplayType}", replayEvent.GetType().Name);
             }

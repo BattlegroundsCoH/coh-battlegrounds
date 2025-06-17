@@ -34,6 +34,10 @@ public static class ReplayEventParser {
         ReplayEvent? parsedEvent = eventTable["type"] switch {
             "squad_killed" => new SquadKilledEvent(timestamp, player ?? throw new Exception(), ushort.Parse((string)eventTable["companyId"])),
             "squad_deployed" => new SquadDeployedEvent(timestamp, player ?? throw new Exception(), ushort.Parse((string)eventTable["companyId"])),
+            "squad_recalled" => new SquadRecalledEvent(timestamp, player ?? throw new Exception(), ushort.Parse((string)eventTable["companyId"]),
+                float.Parse(eventTable.GetValueOrDefault("experience", "0").ToString() ?? "0"),
+                int.Parse(eventTable.GetValueOrDefault("infantryKills", "0").ToString() ?? "0"),
+                int.Parse(eventTable.GetValueOrDefault("vehicleKills", "0").ToString() ?? "0")),
             "item_pickup" => new SquadWeaponPickupEvent(
                 timestamp,
                 player ?? throw new Exception(),
@@ -41,6 +45,7 @@ public static class ReplayEventParser {
                 (eventTable.TryGetValue("ebp", out object? value) ? value.ToString() : eventTable["upg"].ToString()) ?? throw new ArgumentException("Weapon name not found in event table.", nameof(luaEncodedTable)),
                 eventTable.ContainsKey("ebp")),
             "match_data" => MapToMatchStartReplayEvent(timestamp, eventTable),
+            "match_over_results" => MapToMatchOverReplayEvent(timestamp, eventTable),
             _ => MapToUnknownEvent(timestamp, eventTable["type"].ToString() ?? string.Empty, eventTable)
         };
 
@@ -102,6 +107,25 @@ public static class ReplayEventParser {
             players.Add(new MatchStartReplayEvent.PlayerData(playerId, name, companyId, modId));
         }
         return new MatchStartReplayEvent(timestamp, mathId, modVersion, scenario, players);
+    }
+
+    private static MatchOverReplayEvent MapToMatchOverReplayEvent(TimeSpan timestamp, Dictionary<string, object> eventTable) {
+        /*List<int> winners = []; // eventTable["winners"] as List<int> ?? throw new ArgumentException("Winners not found in event table.", nameof(eventTable));
+        List<int> losers = []; // eventTable["losers"] as List<int> ?? throw new ArgumentException("Losers not found in event table.", nameof(eventTable));
+        List<MatchOverReplayEvent.PlayerStatistics> playerStats = [];
+        foreach (var playerEntry in eventTable["player_stats"] as Dictionary<string, object> ?? throw new ArgumentException("Player stats not found in event table.", nameof(eventTable))) {
+            if (playerEntry.Value is not Dictionary<string, object> playerData) {
+                throw new ArgumentException("Invalid player stats format.", nameof(eventTable));
+            }
+            int playerId = int.Parse(playerEntry.Key);
+            int teamId = int.Parse(playerData["team_id"].ToString() ?? "0");
+            string name = playerData["name"] as string ?? throw new ArgumentException("Player name not found in player data.", nameof(eventTable));
+            int modId = int.Parse(playerData["mod_id"].ToString() ?? "0");
+            int kills = int.Parse(playerData["kills"].ToString() ?? "0");
+            playerStats.Add(new MatchOverReplayEvent.PlayerStatistics(playerId, teamId, name, modId, kills));
+        }*/
+        // TODO: Wait for a real example of this event to implement it properly
+        return new MatchOverReplayEvent(timestamp, [], [], []);
     }
 
     private static UnknownReplayEvent MapToUnknownEvent(TimeSpan timestamp, string eventType, Dictionary<string, object> details) {
