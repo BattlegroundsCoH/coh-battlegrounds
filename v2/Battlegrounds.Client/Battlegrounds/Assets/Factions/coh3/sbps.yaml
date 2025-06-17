@@ -10,7 +10,7 @@ squads:
                 screen-name: 11153223
                 help-text: 11265170
                 brief-text: 11266227
-                icon-name: tommy_africa_uk
+                icon-name: tommy_uk
             upgrades:
                 slots: 1
                 available:
@@ -253,6 +253,7 @@ squads:
         category: Support
         faction-association: british_africa
         is-infantry: true
+        enabled: false # Disabled since they're not actually available in the game
         extensions:
             cost:
                 manpower: 170
@@ -655,7 +656,7 @@ squads:
                 icon-name: centaur_uk
             loadout:
                 entities:
-                    - ebp: centaur_africa_uk
+                    - ebp: centaur_uk
                       count: 1
             veterancy:
                 ranks:
@@ -770,7 +771,7 @@ squads:
                 fuel: 60
             ui:
                 screen-name: 11189924 # Crusader III Tank
-                icon-name: crusader_57mm_africa_uk
+                icon-name: crusader_57mm_uk
             veterancy:
                 ranks:
                     - experience: 1800
@@ -796,7 +797,11 @@ squads:
                 fuel: 60
             ui:
                 screen-name: 11180065 # Crusader Tank
-                icon-name: crusader_africa_uk
+                icon-name: crusader_uk
+            loadout:
+                entities:
+                    - ebp: crusader_africa_uk
+                      count: 1
             veterancy:
                 ranks:
                     - experience: 1800
@@ -816,7 +821,7 @@ squads:
                 fuel: 70
             ui:
                 screen-name: 11184735 # Crusader AA Tank
-                icon-name: crusader_aa_africa_uk
+                icon-name: crusader_aa_uk
             veterancy:
                 ranks:
                     - experience: 1500
@@ -841,7 +846,7 @@ squads:
                 fuel: 90
             ui:
                 screen-name: 11180068 # Grant Tank
-                icon-name: grant_africa_africa_uk
+                icon-name: grant_africa_uk
             loadout:
                 entities:
                     - ebp: grant_uk
@@ -1106,6 +1111,7 @@ squads:
         category: Support
         faction-association: afrika_korps
         is-infantry: true
+        enabled: false # Disabled since they're not actually available in the game
         extensions:
             cost:
                 manpower: 140 # Actual ingame cost is currently calculated as 135

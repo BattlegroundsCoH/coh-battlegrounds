@@ -90,6 +90,8 @@ public sealed class CoH3AppInstance(Game game) : GameAppInstance {
 
     }
 
+    private const string SCAR_ERROR_INDICATOR = "GameWorld::OnFatalScarError";
+
     public override async Task<MatchResult> WaitForMatch() {
 
         if (_process is null) {
@@ -134,6 +136,23 @@ public sealed class CoH3AppInstance(Game game) : GameAppInstance {
         }
 
         _logger.Information("Found replay file: {ReplayFileLocation}", replayFilePath);
+
+        string warnings = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "Company of Heroes 3", "warnings.log");
+        if (!File.Exists(warnings)) {
+            _logger.Warning("Warnings log file not found: {WarningsLogPath}", warnings);
+        } else {
+            string contents = await File.ReadAllTextAsync(warnings);
+            if (contents.Contains(SCAR_ERROR_INDICATOR)) {
+                _logger.Error("Found SCAR error in warnings log: {WarningsLogPath}", warnings);
+                return new MatchResult {
+                    Failed = true,
+                    ScarError = true,
+                    ErrorMessage = "SCAR error detected in warnings log."
+                };
+            } else {
+                _logger.Information("No SCAR errors found in warnings log.");
+            }
+        }
 
         // TODO: Check for scar errors in warnings log
 

@@ -18,6 +18,8 @@ public sealed class SquadBlueprint(string id, SquadCategory category, HashSet<Bl
 
     public bool RequiresTowing { get; init; } = false; // Cannot move unless towed by a vehicle
 
+    public bool Enabled { get; init; } = true; // Sets whether the squad blueprint is enabled or not (ie. can be added to a company or not)
+
     public SquadCategory Category { get; init; } = category;
 
     public CostExtension Cost => GetExtension<CostExtension>();
