@@ -119,7 +119,7 @@ public sealed class CompanyService(
         bool success = true;
         if (syncWithRemote) {
             serializedCompanyStream.Seek(0, SeekOrigin.Begin); // Reset the stream position to the beginning
-            success = await SyncCompanyWithRemoteInternal(company.Id, company.Faction, serializedCompanyStream); // Call the internal method to handle the actual synchronization
+            success = await SyncCompanyWithRemoteInternal(company, serializedCompanyStream); // Call the internal method to handle the actual synchronization
         }
 
         return success ? SaveCompanyResult.Success : SaveCompanyResult.FailedSync;
@@ -149,11 +149,11 @@ public sealed class CompanyService(
         using var serializedCompanyStream = new MemoryStream();
         _companySerializer.SerializeCompany(serializedCompanyStream, company);
         serializedCompanyStream.Seek(0, SeekOrigin.Begin); // Reset the stream position to the beginning
-        return await SyncCompanyWithRemoteInternal(company.Id, company.Faction, serializedCompanyStream); // Call the internal method to handle the actual synchronization
+        return await SyncCompanyWithRemoteInternal(company, serializedCompanyStream); // Call the internal method to handle the actual synchronization
     }
 
-    private ValueTask<bool> SyncCompanyWithRemoteInternal(string companyId, string faction, Stream serializedCompanyStream) {
-        return _serverAPI.UploadCompanyAsync(companyId, faction, serializedCompanyStream); // Upload the serialized company to the remote store
+    private ValueTask<bool> SyncCompanyWithRemoteInternal(Company company, Stream serializedCompanyStream) {
+        return _serverAPI.UploadCompanyAsync(company.Id, $"{company.GameId}_{company.Faction}", serializedCompanyStream); // Upload the serialized company to the remote store
     }
 
     private async ValueTask<string> ResolveUserId(string? userId) {
