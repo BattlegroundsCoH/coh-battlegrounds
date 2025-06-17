@@ -72,6 +72,9 @@
     <None Update="Assets\Factions\coh3\icons\2_5_truck_medical_ak.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Factions\coh3\icons\2_inch_mortar.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3\icons\ability_british_tank_commander.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -166,6 +169,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\icons\cwt_15_uk.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Factions\coh3\icons\democharge_icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\icons\dingo_uk.png">
@@ -315,6 +321,9 @@
     <None Update="Assets\Factions\coh3\icons\scoped_lee_enfield_flare_gun.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Factions\coh3\icons\scoped_lee_enfield_multi.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3\icons\semovente_75_18_ak.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -387,6 +396,9 @@
     <None Update="Assets\Factions\coh3\symbols\cwt_truck.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Factions\coh3\symbols\demo_mine.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3\symbols\halftrack_250_20mm_ger.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -397,6 +409,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\symbols\m1_thompson_sub_machine_gun.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Factions\coh3\symbols\mortar.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\symbols\shield.png">
@@ -448,6 +463,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\symbols\weapon_piat.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Factions\coh3\symbols\weapon_rifle_grenadier.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\symbols\weapon_wrench.png">

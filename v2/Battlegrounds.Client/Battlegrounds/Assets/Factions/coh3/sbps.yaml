@@ -1,5 +1,5 @@
 squads:
-    tommy_uk:
+    tommy_africa_uk:
         category: Infantry
         faction-association: british_africa
         is-infantry: true
@@ -10,18 +10,18 @@ squads:
                 screen-name: 11153223
                 help-text: 11265170
                 brief-text: 11266227
-                icon-name: tommy_uk
+                icon-name: tommy_africa_uk
             upgrades:
                 slots: 1
                 available:
-                    - recon_package_tommy_uk
-                    - boys_anti_tank_rifles_tommy_uk
-                    - lmg_bren_tommy_uk
+                    - recon_package_tommy_africa_uk
+                    - boys_anti_tank_rifles_tommy_africa_uk
+                    - lmg_bren_tommy_africa_uk
             loadout:
                 entities:
-                    - ebp: officer_tommy_uk
+                    - ebp: officer_tommy_africa_uk
                       count: 1
-                    - ebp: tommy_uk
+                    - ebp: tommy_africa_uk
                       count: 4
             veterancy:
                 ranks:
@@ -37,7 +37,7 @@ squads:
                     - standard_infantry
                     - infantry_anti_infantry
 
-    australian_light_infantry_uk:
+    australian_light_infantry_africa_uk:
         category: Infantry
         faction-association: british_africa
         is-infantry: true
@@ -51,7 +51,7 @@ squads:
                 icon-name: australian_light_infantry_africa_uk
             loadout:
                 entities:
-                    - ebp: australian_light_infantry_uk
+                    - ebp: australian_light_infantry_africa_uk
                       count: 6
             veterancy:
                 ranks:
@@ -67,8 +67,12 @@ squads:
                     - elite_infantry
                     - infantry_anti_infantry
                     - standard_infantry 
+            upgrades:
+                slots: 1
+                available:
+                    - scoped_rifles_australian_uk
 
-    canadian_heavy_infantry_uk:
+    canadian_heavy_infantry_africa_uk:
         category: Infantry
         faction-association: british_africa
         is-infantry: true
@@ -82,7 +86,7 @@ squads:
                 icon-name: heavy_infantry_canadian_uk
             loadout:
                 entities:
-                    - ebp: canadian_heavy_infantry_uk
+                    - ebp: canadian_heavy_infantry_africa_uk
                       count: 6
             veterancy:
                 ranks:
@@ -100,8 +104,13 @@ squads:
                     - standard_infantry 
                     - infantry_anti_infantry
                     - infantry_burst_weapon 
+            upgrades:
+                slots: 1
+                available:
+                    - piat_package_canadian_heavy_infantry_africa_uk
+                    - mortar_package_canadian_heavy_infantry_africa_uk
 
-    commando_uk:
+    commando_africa_uk:
         category: Infantry
         faction-association: british_africa
         is-infantry: true
@@ -115,7 +124,7 @@ squads:
                 icon-name: commando_uk
             loadout:
                 entities:
-                    - ebp: commando_uk
+                    - ebp: commando_africa_uk
                       count: 6
             veterancy:
                 ranks:
@@ -133,7 +142,7 @@ squads:
                     - infantry_anti_infantry 
                     - commandos 
 
-    guards_uk:
+    guards_africa_uk:
         category: Infantry
         faction-association: british_africa
         is-infantry: true
@@ -147,7 +156,7 @@ squads:
                 icon-name: guards_uk
             loadout:
                 entities:
-                    - ebp: guards_uk
+                    - ebp: guards_africa_uk
                       count: 6
             veterancy:
                 ranks:
@@ -165,7 +174,7 @@ squads:
                     - infantry_anti_infantry 
                     - infantry_anti_tank
 
-    gurkhas_uk:
+    gurkhas_africa_uk:
         category: Infantry
         faction-association: british_africa
         is-infantry: true
@@ -179,7 +188,7 @@ squads:
                 icon-name: gurkhas_uk
             loadout:
                 entities:
-                    - ebp: gurkhas_uk
+                    - ebp: gurkhas_africa_uk
                       count: 6
             veterancy:
                 ranks:
@@ -201,7 +210,7 @@ squads:
                     - infantry_long_range
                     - infantry_anti_infantry
 
-    sapper_uk:
+    sapper_africa_uk:
         category: Infantry
         faction-association: british_africa
         is-infantry: true
@@ -215,7 +224,7 @@ squads:
                 icon-name: sapper_uk
             loadout:
                 entities:
-                    - ebp: sapper_uk
+                    - ebp: sapper_africa_uk
                       count: 4
             veterancy:
                 ranks:
@@ -228,9 +237,10 @@ squads:
             upgrades:
                 slots: 1
                 available:
-                    - flamethrower_sapper_uk
-                    - utility_sapper_uk
-                    - piat_sapper_uk 
+                    - flamethrower_sapper_africa_uk
+                    - utility_sapper_africa_uk
+                    - piat_sapper_africa_uk 
+                    - demolition_package_sapper_africa_uk 
             types:
                 values:
                     - infantry
@@ -239,7 +249,7 @@ squads:
                     - infantry_support
                     - combat_engineer 
 
-    medic_uk:
+    medic_africa_uk:
         category: Support
         faction-association: british_africa
         is-infantry: true
@@ -253,7 +263,7 @@ squads:
                 icon-name: medic_uk
             loadout:
                 entities:
-                    - ebp: medic_uk
+                    - ebp: medic_africa_uk
                       count: 3
             veterancy:
                 ranks:
@@ -267,7 +277,7 @@ squads:
                 values:
                     - infantry
 
-    at_gun_2pdr_uk:
+    at_gun_2pdr_africa_uk:
         category: Support
         faction-association: british_africa
         is-team-weapon: true
@@ -280,9 +290,9 @@ squads:
                 icon-name: at_gun_2pdr_uk
             loadout:
                 entities:
-                    - ebp: tw_at_gun_2pdr_uk
+                    - ebp: tw_at_gun_2pdr_africa_uk
                       count: 1
-                    - ebp: crew_at_gun_uk
+                    - ebp: crew_at_gun_africa_uk
                       count: 4
             veterancy:
                 ranks:
@@ -297,7 +307,7 @@ squads:
                     - teamweapon
                     - anti_tank
 
-    at_gun_6pdr_uk:
+    at_gun_6pdr_africa_uk:
         category: Support
         faction-association: british_africa
         is-team-weapon: true
@@ -310,9 +320,9 @@ squads:
                 icon-name: at_gun_6pdr_uk
             loadout:
                 entities:
-                    - ebp: tw_at_gun_6pdr_uk
+                    - ebp: tw_at_gun_6pdr_africa_uk
                       count: 1
-                    - ebp: crew_at_gun_uk
+                    - ebp: crew_at_gun_africa_uk
                       count: 4
             veterancy:
                 ranks:
@@ -327,7 +337,7 @@ squads:
                     - teamweapon
                     - anti_tank
 
-    at_gun_17pdr_mobile_uk:
+    at_gun_17pdr_mobile_africa_uk:
         category: Support
         faction-association: british_africa
         is-team-weapon: true
@@ -340,9 +350,9 @@ squads:
                 icon-name: at_gun_17pdr_mobile_uk
             loadout:
                 entities:
-                    - ebp: tw_at_gun_17pdr_mobile_uk
+                    - ebp: tw_at_gun_17pdr_mobile_africa_uk
                       count: 1
-                    - ebp: crew_at_gun_uk
+                    - ebp: crew_at_gun_africa_uk
                       count: 4
             veterancy:
                 ranks:
@@ -357,7 +367,7 @@ squads:
                     - teamweapon
                     - anti_tank
 
-    hmg_vickers_uk:
+    hmg_vickers_africa_uk:
         category: Support
         faction-association: british_africa
         is-team-weapon: true
@@ -370,9 +380,9 @@ squads:
                 icon-name: hmg_vickers_uk
             loadout:
                 entities:
-                    - ebp: w_vickers_hmg_uk
+                    - ebp: w_vickers_hmg_africa_uk
                       count: 1
-                    - ebp: crew_hmg_uk
+                    - ebp: crew_hmg_africa_uk
                       count: 4
             veterancy:
                 ranks:
@@ -389,7 +399,7 @@ squads:
                     - suppression
                     - teamweapon_burst 
 
-    mortar_81mm_uk:
+    mortar_81mm_africa_uk:
         category: Support
         faction-association: british_africa
         is-team-weapon: true
@@ -404,7 +414,7 @@ squads:
                 entities:
                     - ebp: w_mortar_81mm_uk
                       count: 1
-                    - ebp: crew_mortar_indian_uk
+                    - ebp: crew_mortar_africa_uk
                       count: 4
             veterancy:
                 ranks:
@@ -420,7 +430,7 @@ squads:
                     - infantry_anti_infantry
                     - mortar 
 
-    mortar_heavy_4_2_uk:
+    mortar_heavy_4_2_africa_uk:
         category: Support
         faction-association: british_africa
         is-team-weapon: true
@@ -433,9 +443,9 @@ squads:
                 icon-name: mortar_heavy_4_2_uk
             loadout:
                 entities:
-                    - ebp: tw_4_2_heavy_mortar_uk
+                    - ebp: tw_4_2_heavy_mortar_africa_uk
                       count: 1
-                    - ebp: crew_mortar_indian_uk
+                    - ebp: crew_mortar_indian_africa_uk
                       count: 4
             veterancy:
                 ranks:
@@ -451,7 +461,7 @@ squads:
                     - infantry_anti_infantry
                     - mortar
 
-    pack_howitzer_75mm_uk:
+    pack_howitzer_75mm_africa_uk:
         category: Support
         faction-association: british_africa
         is-team-weapon: true
@@ -464,9 +474,9 @@ squads:
                 icon-name: pack_howitzer_75mm_uk
             loadout:
                 entities:
-                    - ebp: tw_pack_howitzer_75mm_uk
+                    - ebp: tw_pack_howitzer_75mm_africa_uk
                       count: 1
-                    - ebp: crew_howitzer_commando_uk
+                    - ebp: crew_howitzer_commando_africa_uk
                       count: 5
             veterancy:
                 ranks:
@@ -482,7 +492,7 @@ squads:
                     - artillery
                     - infantry_anti_infantry 
 
-    cwt_15_truck_uk:
+    cwt_15_truck_africa_uk:
         category: Support
         faction-association: british_africa
         is-infantry: false
@@ -517,7 +527,7 @@ squads:
                     - vehicle
                     - light_armor
 
-    dingo_uk:
+    dingo_africa_uk:
         category: Support
         faction-association: british_africa
         is-infantry: false
@@ -529,7 +539,7 @@ squads:
                 icon-name: dingo_uk
             loadout:
                 entities:
-                    - ebp: dingo_uk
+                    - ebp: dingo_africa_uk
                       count: 1
             veterancy:
                 ranks:
@@ -545,7 +555,7 @@ squads:
                     - ultra_light
                     - vehicle_support
 
-    humber_uk:
+    humber_africa_uk:
         category: Support
         faction-association: british_africa
         is-infantry: false
@@ -558,7 +568,7 @@ squads:
                 icon-name: humber_uk
             loadout:
                 entities:
-                    - ebp: humber_uk
+                    - ebp: humber_africa_uk
                       count: 1
             veterancy:
                 ranks:
@@ -573,7 +583,7 @@ squads:
                     - vehicle
                     - light_armor
 
-    archer_uk:
+    archer_africa_uk:
         category: Armour
         faction-association: british_africa
         is-infantry: false
@@ -586,7 +596,7 @@ squads:
                 icon-name: archer_uk
             loadout:
                 entities:
-                    - ebp: archer_uk
+                    - ebp: archer_africa_uk
                       count: 1
             veterancy:
                 ranks:
@@ -602,7 +612,7 @@ squads:
                     - heavy_armor
                     - vehicle_casemate_anti_tank 
 
-    bishop_uk:
+    bishop_africa_uk:
         category: Armour
         faction-association: british_africa
         is-infantry: false
@@ -615,7 +625,7 @@ squads:
                 icon-name: bishop_uk
             loadout:
                 entities:
-                    - ebp: bishop_uk
+                    - ebp: bishop_africa_uk
                       count: 1
             veterancy:
                 ranks:
@@ -632,7 +642,7 @@ squads:
                     - artillery 
                     - vehicle_artillery
 
-    centaur_uk:
+    centaur_africa_uk:
         category: Armour
         faction-association: british_africa
         is-infantry: false
@@ -645,7 +655,7 @@ squads:
                 icon-name: centaur_uk
             loadout:
                 entities:
-                    - ebp: centaur_uk
+                    - ebp: centaur_africa_uk
                       count: 1
             veterancy:
                 ranks:
@@ -656,7 +666,7 @@ squads:
                     - experience: 9000
                       name: Vet3
 
-    churchill_black_prince_uk:
+    churchill_black_prince_africa_uk:
         category: Armour
         faction-association: british_africa
         is-infantry: false
@@ -669,7 +679,7 @@ squads:
                 icon-name: churchill_black_prince_uk
             loadout:
                 entities:
-                    - ebp: churchill_black_prince_uk
+                    - ebp: churchill_black_prince_africa_uk
                       count: 1
             veterancy:
                 ranks:
@@ -686,7 +696,7 @@ squads:
                     - vehicle_turret
                     - apex_armor
 
-    churchill_crocodile_uk:
+    churchill_crocodile_africa_uk:
         category: Armour
         faction-association: british_africa
         is-infantry: false
@@ -699,7 +709,7 @@ squads:
                 icon-name: churchill_crocodile_uk
             loadout:
                 entities:
-                    - ebp: churchill_crocodile_uk
+                    - ebp: churchill_crocodile_africa_uk
                       count: 1
             veterancy:
                 ranks:
@@ -716,7 +726,7 @@ squads:
                     - vehicle_turret
                     - apex_armor
 
-    churchill_uk:
+    churchill_africa_uk:
         category: Armour
         faction-association: british_africa
         is-infantry: false
@@ -729,7 +739,7 @@ squads:
                 icon-name: churchill_uk
             loadout:
                 entities:
-                    - ebp: churchill_uk
+                    - ebp: churchill_africa_uk
                       count: 1
             veterancy:
                 ranks:
@@ -749,7 +759,7 @@ squads:
                 available:
                     - weapon_75mm_churchill_uk
 
-    crusader_57mm_uk:
+    crusader_57mm_africa_uk:
         category: Armour
         faction-association: british_africa
         is-infantry: false
@@ -760,7 +770,7 @@ squads:
                 fuel: 60
             ui:
                 screen-name: 11189924 # Crusader III Tank
-                icon-name: crusader_57mm_uk
+                icon-name: crusader_57mm_africa_uk
             veterancy:
                 ranks:
                     - experience: 1800
@@ -776,7 +786,7 @@ squads:
                     - vehicle_turret
                     - vehicle_casemate_anti_tank
 
-    crusader_uk:
+    crusader_africa_uk:
         category: Armour
         faction-association: british_africa
         is-infantry: false
@@ -786,7 +796,7 @@ squads:
                 fuel: 60
             ui:
                 screen-name: 11180065 # Crusader Tank
-                icon-name: crusader_uk
+                icon-name: crusader_africa_uk
             veterancy:
                 ranks:
                     - experience: 1800
@@ -796,7 +806,7 @@ squads:
                     - experience: 10800
                       name: Vet3
                       
-    crusader_aa_uk:
+    crusader_aa_africa_uk:
         category: Armour
         faction-association: british_africa
         is-infantry: false
@@ -806,7 +816,7 @@ squads:
                 fuel: 70
             ui:
                 screen-name: 11184735 # Crusader AA Tank
-                icon-name: crusader_aa_uk
+                icon-name: crusader_aa_africa_uk
             veterancy:
                 ranks:
                     - experience: 1500
@@ -821,7 +831,7 @@ squads:
                     - medium_armor
                     - anti_air
 
-    grant_uk:
+    grant_africa_uk:
         category: Armour
         faction-association: british_africa
         is-infantry: false
@@ -831,7 +841,7 @@ squads:
                 fuel: 90
             ui:
                 screen-name: 11180068 # Grant Tank
-                icon-name: grant_africa_uk
+                icon-name: grant_africa_africa_uk
             loadout:
                 entities:
                     - ebp: grant_uk
@@ -845,7 +855,7 @@ squads:
                     - experience: 10800
                       name: Vet3
 
-    matilda_uk:
+    matilda_africa_uk:
         category: Armour
         faction-association: british_africa
         is-infantry: false
@@ -856,6 +866,10 @@ squads:
             ui:
                 screen-name: 11180070 # Matilda Tank
                 icon-name: matilda_africa_uk
+            loadout:
+                entities:
+                    - ebp: matilda_africa_uk
+                      count: 1
             veterancy:
                 ranks:
                     - experience: 1800
@@ -865,7 +879,7 @@ squads:
                     - experience: 10800
                       name: Vet3
 
-    sherman_uk:
+    sherman_africa_uk:
         category: Armour
         faction-association: british_africa
         is-infantry: false
@@ -878,7 +892,7 @@ squads:
                 icon-name: sherman_uk
             loadout:
                 entities:
-                    - ebp: sherman_uk
+                    - ebp: sherman_africa_uk
                       count: 1
             veterancy:
                 ranks:
@@ -896,9 +910,9 @@ squads:
             upgrades:
                 slots: 1
                 available:
-                    - hmg_sherman_uk
+                    - hmg_sherman_us
 
-    stuart_uk:
+    stuart_africa_uk:
         category: Armour
         faction-association: british_africa
         is-infantry: false
@@ -911,7 +925,7 @@ squads:
                 icon-name: stuart_uk
             loadout:
                 entities:
-                    - ebp: stuart_uk
+                    - ebp: stuart_africa_uk
                       count: 1
             veterancy:
                 ranks:
@@ -928,11 +942,11 @@ squads:
                     - vehicle_turret
             upgrades:
                 slots: 1
-                available:
+                available: # For some reason these upgrades are using the 'british' variant instead of the 'africa' variant...
                     - utility_kit_stuart_uk
                     - commander_stuart_uk
 
-    valentine_uk:
+    valentine_uk: # Apparently no specific name for the Africa variant ?!?
         category: Armour
         faction-association: british_africa
         is-infantry: false

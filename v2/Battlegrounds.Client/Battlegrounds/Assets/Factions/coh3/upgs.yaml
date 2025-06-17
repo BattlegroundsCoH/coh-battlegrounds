@@ -20,6 +20,36 @@ upgrades:
                 icon-name: icon_upgrade_british_bren
                 symbol-icon-name: weapon_bren
 
+    scoped_rifles_australian_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 80
+            ui:
+                screen-name: $11262745 # Scoped Lee-Enfield Package
+                icon-name: scoped_lee_enfield_multi
+                symbol-icon-name: sniper
+
+    piat_package_canadian_heavy_infantry_africa_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 90
+            ui:
+                screen-name: $11265742 # PIAT Package
+                icon-name: piat_2
+                symbol-icon-name: weapon_piat
+
+    mortar_package_canadian_heavy_infantry_africa_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 75
+            ui:
+                screen-name: 11242532 # 2-Inch Mortar Package
+                icon-name: 2_inch_mortar
+                symbol-icon-name: mortar
+
     smg_thompson_gurkhas_uk:
         faction-association: british_africa
         extensions:
@@ -82,6 +112,16 @@ upgrades:
                 icon-name: piat_2
                 symbol-icon-name: weapon_piat
 
+    demolition_package_sapper_africa_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11265784
+                icon-name: democharge_icon
+                symbol-icon-name: demo_mine
+
     weapon_flak_mount_cwt_truck_uk:
         faction-association: british_africa
         extensions:
@@ -112,8 +152,8 @@ upgrades:
                 icon-name: ability_main_gun
                 symbol-icon-name: tank_kwk
 
-    hmg_sherman_uk:
-        faction-association: british_africa
+    hmg_sherman_us:
+        faction-association: american # Aslo used by british_africa
         extensions:
             cost:
                 munitions: 50
