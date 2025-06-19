@@ -13,7 +13,6 @@ public sealed class CompanyService(
     IUserService userService,
     ICompanyDeserializer companyDeserializer,
     ICompanySerializer companySerializer,
-    IBlueprintService blueprintService,
     IBattlegroundsServerAPI serverAPI,
     ILogger<CompanyService> logger,
     Configuration configuration) : ICompanyService {
@@ -21,7 +20,6 @@ public sealed class CompanyService(
     private readonly ILogger<CompanyService> _logger = logger;
     private readonly IBattlegroundsServerAPI _serverAPI = serverAPI;
     private readonly IUserService _userService = userService;
-    private readonly IBlueprintService _blueprintService = blueprintService; // Blueprint service for handling squad blueprints
     private readonly ICompanyDeserializer _companyDeserializer = companyDeserializer;
     private readonly ICompanySerializer _companySerializer = companySerializer;
     private readonly Configuration _configuration = configuration;

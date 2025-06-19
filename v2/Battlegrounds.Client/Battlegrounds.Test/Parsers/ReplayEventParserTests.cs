@@ -17,10 +17,10 @@ public class ReplayEventParserTests {
         Assert.That(replayEvent, Is.InstanceOf<SquadKilledEvent>(), "Replay event should be of type SquadKilledEvent.");
         var squadKilledEvent = replayEvent as SquadKilledEvent;
         Assert.That(squadKilledEvent, Is.Not.Null, "SquadKilledEvent should not be null.");
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(squadKilledEvent.Player, Is.EqualTo(players[0]), "Player object should match.");
             Assert.That(squadKilledEvent.SquadCompanyId, Is.EqualTo(2), "Company ID should match.");
-        });
+        }
     }
 
     [Test]
@@ -33,10 +33,10 @@ public class ReplayEventParserTests {
         Assert.That(replayEvent, Is.InstanceOf<SquadDeployedEvent>(), "Replay event should be of type SquadDeployedEvent.");
         var squadDeployedEvent = replayEvent as SquadDeployedEvent;
         Assert.That(squadDeployedEvent, Is.Not.Null, "SquadDeployedEvent should not be null.");
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(squadDeployedEvent.Player, Is.EqualTo(players[0]), "Player object should match.");
             Assert.That(squadDeployedEvent.SquadCompanyId, Is.EqualTo(2), "Company ID should match.");
-        });
+        }
     }
 
     [Test]
@@ -49,12 +49,31 @@ public class ReplayEventParserTests {
         Assert.That(replayEvent, Is.InstanceOf<SquadWeaponPickupEvent>(), "Replay event should be of type SquadWeaponPickupEvent.");
         var squadWeaponPickupEvent = replayEvent as SquadWeaponPickupEvent;
         Assert.That(squadWeaponPickupEvent, Is.Not.Null, "SquadWeaponPickupEvent should not be null.");
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(squadWeaponPickupEvent.Player, Is.EqualTo(players[0]), "Player object should match.");
             Assert.That(squadWeaponPickupEvent.SquadCompanyId, Is.EqualTo(2), "Company ID should match.");
             Assert.That(squadWeaponPickupEvent.WeaponName, Is.EqualTo("lmg_bren"), "Weapon name should match.");
             Assert.That(squadWeaponPickupEvent.IsEntityBlueprint, Is.True, "IsEntityBlueprint should be true.");
-        });
+        }
+    }
+
+    [Test]
+    public void CanParseSquadRecalledEvent() {
+        string encodedStr = "bg_match_event({<companyId=1><type=squad_recalled><player=1000><experience=473.9079284668>})";
+        var players = new[] { ReplayPlayerFixture.CODIEX };
+        var timestamp = TimeSpan.FromSeconds(10);
+        var replayEvent = ReplayEventParser.ParseEvent(encodedStr, players, timestamp);
+        Assert.That(replayEvent, Is.Not.Null, "Replay event should not be null.");
+        Assert.That(replayEvent, Is.InstanceOf<SquadRecalledEvent>(), "Replay event should be of type SquadRecalledEvent.");
+        var squadRecalledEvent = replayEvent as SquadRecalledEvent;
+        Assert.That(squadRecalledEvent, Is.Not.Null, "SquadRecalledEvent should not be null.");
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(squadRecalledEvent.Player, Is.EqualTo(players[0]), "Player object should match.");
+            Assert.That(squadRecalledEvent.SquadCompanyId, Is.EqualTo(1), "Company ID should match.");
+            Assert.That(squadRecalledEvent.Experience, Is.EqualTo(473.9079284668f).Within(0.5f), "Experience should match.");
+            Assert.That(squadRecalledEvent.InfantryKills, Is.Zero, "Infantry kills should be zero.");
+            Assert.That(squadRecalledEvent.VehicleKills, Is.Zero, "Vehicle kills should be zero.");
+        }
     }
 
     [Test]
@@ -67,7 +86,7 @@ public class ReplayEventParserTests {
         Assert.That(replayEvent, Is.InstanceOf<MatchStartReplayEvent>(), "Replay event should be of type MatchStartReplayEvent.");
         var matchStartEvent = replayEvent as MatchStartReplayEvent;
         Assert.That(matchStartEvent, Is.Not.Null, "MatchStartReplayEvent should not be null.");
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(matchStartEvent.MatchId, Is.EqualTo("0"), "Match ID should match.");
             Assert.That(matchStartEvent.ModVersion, Is.EqualTo("1.0"), "Mod version should match.");
             Assert.That(matchStartEvent.Timestamp, Is.EqualTo(timestamp), "Timestamp should match.");
@@ -78,8 +97,8 @@ public class ReplayEventParserTests {
             Assert.That(playerData.PlayerId, Is.EqualTo(1000), "Player ID should match.");
             Assert.That(playerData.Name, Is.EqualTo("CoDiEx"), "Player name should match.");
             Assert.That(playerData.CompanyId, Is.EqualTo("df6100e1-30cd-4338-ac81-8d54d60f6c29"), "Company ID should match.");
-            Assert.That(playerData.ModId, Is.EqualTo(0), "Mod ID should match.");
-        });
+            Assert.That(playerData.ModId, Is.Zero, "Mod ID should match.");
+        }
     }
 
 }

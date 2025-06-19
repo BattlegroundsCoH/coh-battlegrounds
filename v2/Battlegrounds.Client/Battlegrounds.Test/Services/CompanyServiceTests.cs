@@ -34,7 +34,6 @@ public class CompanyServiceTests {
             _users, 
             new BinaryCompanyDeserializer(bps), 
             new BinaryCompanySerializer(),
-            bps,
             _battlegroundsServerAPI, 
             Substitute.For<ILogger<CompanyService>>(), 
             _configuration);
@@ -54,7 +53,7 @@ public class CompanyServiceTests {
 
         // Assert
         Assert.That(updated, Is.Not.Null, "Updated company should not be null after applying events.");
-        Assert.That(updated.Squads.Count, Is.EqualTo(company.Squads.Count - 1), "Squad should be removed from the company after applying the event.");
+        Assert.That(updated.Squads, Has.Count.EqualTo(company.Squads.Count - 1), "Squad should be removed from the company after applying the event.");
         Assert.That(updated.Squads.Any(s => s.Id == squadToKill.Id), Is.False, "Removed squad should not be present in the updated company.");
 
     }
@@ -70,7 +69,7 @@ public class CompanyServiceTests {
         
         // Assert
         Assert.That(updated, Is.Not.Null, "Updated company should not be null after applying events.");
-        Assert.That(updated.Squads.Count, Is.EqualTo(company.Squads.Count), "Squad count should remain the same if no events are applied.");
+        Assert.That(updated.Squads, Has.Count.EqualTo(company.Squads.Count), "Squad count should remain the same if no events are applied.");
     }
 
     [Test]
@@ -104,11 +103,11 @@ public class CompanyServiceTests {
         // Assert
         Assert.That(updated, Is.Not.Null, "Updated company should not be null after applying events.");
         Assert.That(updated.Squads, Has.Count.EqualTo(company.Squads.Count-1), "Squad count should be one less after applying multiple events.");
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(updated.Squads.Any(s => s.Id == squadToKill.Id), Is.False, "Killed squad should not be present in the updated company.");
             Assert.That(updated.Squads.Any(s => s.Id == squadToDeploy.Id), Is.True, "Deployed squad should be present in the updated company.");
             Assert.That(updated.Squads.First(x => x.Id == squadToDeploy.Id).MatchCounts, Is.GreaterThan(0), "Deployed squad should have match counts greater than 0 after being deployed.");
-        });
+        }
     }
 
 }

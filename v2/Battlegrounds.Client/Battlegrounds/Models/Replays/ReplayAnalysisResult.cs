@@ -61,7 +61,7 @@ public sealed class ReplayAnalysisResult {
                         _logger.Warning("Squad {SquadCompanyId} killed without being deployed by player {PlayerId} at {Timestamp}", killedEvent.SquadCompanyId, pid, killedEvent.Timestamp);
                         badEvents.Add(new BadMatchEvent(killedEvent, $"Squad {killedEvent.SquadCompanyId} killed without being deployed"));
                     }
-                    _logger.Debug("Squad {SquadCompanyId} killed by player {PlayerId} at {Timestamp}", killedEvent.SquadCompanyId, pid, killedEvent.Timestamp);
+                    _logger.Debug("Squad {SquadCompanyId} owned by player {PlayerId} was killed at {Timestamp}", killedEvent.SquadCompanyId, pid, killedEvent.Timestamp);
                     companyChanges[pid].AddLast(killedEvent);
                     break;
                 }

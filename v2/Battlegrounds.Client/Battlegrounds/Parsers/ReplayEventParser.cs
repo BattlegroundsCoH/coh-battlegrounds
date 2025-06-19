@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.IO;
+using System.Text;
 
 using Battlegrounds.Models.Replays;
 
@@ -9,6 +11,8 @@ namespace Battlegrounds.Parsers;
 public static class ReplayEventParser {
 
     private static readonly ILogger _logger = Log.ForContext<ReplayEvent>();
+
+    private static readonly CultureInfo _culture = CultureInfo.InvariantCulture;
 
     public static readonly string BGMATCH_EVENT_PREFIX = "bg_match_event";
 
@@ -25,22 +29,22 @@ public static class ReplayEventParser {
             throw new ArgumentException("Invalid Lua encoded table format.", nameof(luaEncodedTable));
         }
 
-        ReplayPlayer? player = eventTable.TryGetValue("player", out object? playerIdStr) 
+        ReplayPlayer? player = (eventTable.TryGetValue("player", out object? playerIdStr) 
             && playerIdStr is string playerIdStrValue 
             && int.TryParse(playerIdStrValue, out int playerId) 
             ? players.FirstOrDefault(p => p.PlayerId == playerId)
-            : null;
+            : null);
 
         ReplayEvent? parsedEvent = eventTable["type"] switch {
-            "squad_killed" => new SquadKilledEvent(timestamp, player ?? throw new Exception(), ushort.Parse((string)eventTable["companyId"])),
-            "squad_deployed" => new SquadDeployedEvent(timestamp, player ?? throw new Exception(), ushort.Parse((string)eventTable["companyId"])),
-            "squad_recalled" => new SquadRecalledEvent(timestamp, player ?? throw new Exception(), ushort.Parse((string)eventTable["companyId"]),
-                float.Parse(eventTable.GetValueOrDefault("experience", "0").ToString() ?? "0"),
+            "squad_killed" => new SquadKilledEvent(timestamp, player ?? throw new InvalidDataException("Expected player but found none"), ushort.Parse((string)eventTable["companyId"])),
+            "squad_deployed" => new SquadDeployedEvent(timestamp, player ?? throw new InvalidDataException("Expected player but found none"), ushort.Parse((string)eventTable["companyId"])),
+            "squad_recalled" => new SquadRecalledEvent(timestamp, player ?? throw new InvalidDataException("Expected player but found none"), ushort.Parse((string)eventTable["companyId"]),
+                ParseFloat(eventTable.GetValueOrDefault("experience", "0").ToString() ?? "0"),
                 int.Parse(eventTable.GetValueOrDefault("infantryKills", "0").ToString() ?? "0"),
                 int.Parse(eventTable.GetValueOrDefault("vehicleKills", "0").ToString() ?? "0")),
             "item_pickup" => new SquadWeaponPickupEvent(
                 timestamp,
-                player ?? throw new Exception(),
+                player ?? throw new InvalidDataException("Expected player but found none"),
                 ushort.Parse((string)eventTable["companyId"]),
                 (eventTable.TryGetValue("ebp", out object? value) ? value.ToString() : eventTable["upg"].ToString()) ?? throw new ArgumentException("Weapon name not found in event table.", nameof(luaEncodedTable)),
                 eventTable.ContainsKey("ebp")),
@@ -131,6 +135,17 @@ public static class ReplayEventParser {
     private static UnknownReplayEvent MapToUnknownEvent(TimeSpan timestamp, string eventType, Dictionary<string, object> details) {
         _logger.Warning("Unknown event type '{EventType}' at {Timestamp} with details: {Details}", eventType, timestamp, details);
         return new UnknownReplayEvent(timestamp, eventType, details);
+    }
+
+    private static float ParseFloat(object value) {
+        if (value is string strValue) {
+            if (float.TryParse(strValue, NumberStyles.Float, _culture, out float result)) {
+                return MathF.Round(result, 2);
+            }
+        } else if (value is float floatValue) {
+            return floatValue;
+        }
+        throw new ArgumentException($"Cannot parse float from value: {value}", nameof(value));
     }
 
 }

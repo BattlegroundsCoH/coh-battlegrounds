@@ -27,14 +27,7 @@ public static class ReplayFixture {
     /// </remarks>
     public static readonly string TEMP_10_05_2025__20_55_FILE = GetReplayLocation("temp_10-05-2025__20_55.rec");
 
-    /// <summary>
-    /// Gets the location of a sample replay file for testing.
-    /// </summary>
-    /// <remarks>
-    /// Validates that the file exists at the specified path and throws an assertion error if it does not.<br/>
-    /// <br/>This replay fille has both bg_events and chat messages.
-    /// </remarks>
-    public static readonly string TEMP_25_05_2025__17_36_FILE = GetReplayLocation("temp_25-05-2025__17_36.rec");
+    public static readonly string TEMP_19_06_2025__18_31_FILE = GetReplayLocation("temp_19-06-2025__18_31.rec");
 
     private static string GetReplayLocation(string replayName) {
         var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "Playbacks", replayName);
