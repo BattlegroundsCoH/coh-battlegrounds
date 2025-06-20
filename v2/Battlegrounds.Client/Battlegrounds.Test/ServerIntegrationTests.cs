@@ -14,9 +14,10 @@ namespace Battlegrounds.Test;
 /// initialized container for server interactions.</remarks>
 public abstract class ServerIntegrationTests {
 
+#pragma warning disable NUnit1032 // An IDisposable field/property should be Disposed in a TearDown method
     private readonly TestLogger<ServerIntegrationTests> _containerlogger = new();
-
     protected IContainer _container;
+#pragma warning restore NUnit1032 // An IDisposable field/property should be Disposed in a TearDown method
 
     protected ushort IntegrationServerPort => _container.GetMappedPublicPort(8080);
 
@@ -43,6 +44,7 @@ public abstract class ServerIntegrationTests {
         _containerlogger.LogInformation("Stopping and disposing of the Battlegrounds server container.");
         _containerlogger.Dispose();
         await _container.StopAsync();
+        await _container.DisposeAsync();
     }
 
 }
