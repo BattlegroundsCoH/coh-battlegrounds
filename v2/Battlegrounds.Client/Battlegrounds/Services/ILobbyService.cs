@@ -13,4 +13,8 @@ public interface ILobbyService {
     
     Task LeaveLobbyAsync(ILobby lobby);
 
+    Task<bool> IsServerAvailableAsync();
+
+    Task<IEnumerable<BrowserLobby>> GetLobbiesAsync();
+
 }

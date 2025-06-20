@@ -150,6 +150,27 @@ public sealed class HttpBattlegroundsServerAPI(
 
     }
 
+    public async ValueTask<bool> IsServerAvailableAsync() {
+
+        string requestUri = $"{BaseUrl}/api/v1/isalive";
+        _logger.LogInformation("Checking server availability at {RequestUri}", requestUri);
+
+        HttpRequestMessage request = new(HttpMethod.Get, requestUri);
+        request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
+        return await _httpClient.SendRequestAsync(request)
+            .ContinueWith(responseTask => {
+                HttpResponseMessage response = responseTask.Result;
+                if (response.IsSuccessStatusCode) {
+                    _logger.LogInformation("Battlegrounds server is available.");
+                    return true;
+                } else {
+                    _logger.LogError("Battlegrounds server is not available. Status code: {StatusCode}, Reason: {ReasonPhrase}", response.StatusCode, response.ReasonPhrase);
+                    return false;
+                }
+            });
+
+    }
+
     private static string ToUrlEncodedString(Dictionary<string, string> parameters) {
         return string.Join("&", parameters.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value)}"));
     }

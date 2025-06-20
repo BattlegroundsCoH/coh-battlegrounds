@@ -116,7 +116,7 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
             throw new InvalidOperationException("JWT token has expired.");
         }
 
-        if (userClaim.IssuedAt >= utcNow) {
+        if (userClaim.IssuedAt > utcNow) {
             _logger.LogInformation("JWT token is not yet valid. Issued at: {IssuedAt}, Current time: {CurrentTime}", userClaim.IssuedAt, utcNow);
             if (Math.Abs(userClaim.IssuedAt - utcNow) < 10) { // Allow a small grace period for clock skew
                 _logger.LogWarning("JWT token is valid but issued very recently. Issued at: {IssuedAt}, Current time: {CurrentTime}", userClaim.IssuedAt, utcNow);

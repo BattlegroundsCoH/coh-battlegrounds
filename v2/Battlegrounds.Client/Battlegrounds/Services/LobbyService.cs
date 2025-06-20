@@ -2,10 +2,18 @@
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 
+using Microsoft.Extensions.Logging;
+
 namespace Battlegrounds.Services;
 
-public sealed class LobbyService(IUserService userService, IGameMapService mapService, ICompanyService companyService, IBattlegroundsServerAPI serverAPI) : ILobbyService {
+public sealed class LobbyService(
+    IUserService userService, 
+    IGameMapService mapService, 
+    ICompanyService companyService, 
+    IBattlegroundsServerAPI serverAPI, 
+    ILogger<LobbyService> logger) : ILobbyService {
 
+    private readonly ILogger<LobbyService> _logger = logger;
     private readonly ReaderWriterLockSlim _activeLobbyLock = new();
     private ILobby? _activeLobby;
 
@@ -87,5 +95,9 @@ public sealed class LobbyService(IUserService userService, IGameMapService mapSe
         }
         ActiveLobby = null; // Clear the active lobby
     }
+
+    public Task<IEnumerable<BrowserLobby>> GetLobbiesAsync() => Task.FromResult(Enumerable.Empty<BrowserLobby>()); // TODO: Implement this method
+
+    public async Task<bool> IsServerAvailableAsync() => await serverAPI.IsServerAvailableAsync();
 
 }

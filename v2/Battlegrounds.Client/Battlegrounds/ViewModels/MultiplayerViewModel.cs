@@ -20,6 +20,7 @@ public sealed class MultiplayerViewModel : INotifyPropertyChanged {
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    private readonly ILobbyService _lobbyService;
     private readonly IServiceProvider _serviceProvider;
 
     private readonly ObservableCollection<BrowserLobby> _lobbies = [];
@@ -80,8 +81,9 @@ public sealed class MultiplayerViewModel : INotifyPropertyChanged {
 
     public ICollectionView Lobbies => _lobbyView;
 
-    public MultiplayerViewModel(IServiceProvider serviceProvider) {
+    public MultiplayerViewModel(IServiceProvider serviceProvider, ILobbyService lobbyService) {
         _serviceProvider = serviceProvider;
+        _lobbyService = lobbyService;
         _lobbyView = CollectionViewSource.GetDefaultView(_lobbies);
         _lobbyView.Filter = item => true;
         InitialiseAsync();
@@ -102,7 +104,7 @@ public sealed class MultiplayerViewModel : INotifyPropertyChanged {
             IsLoading = true;
             StatusMessage = "Refreshing lobby list ...";
 
-            var lobbies = await _serviceProvider.GetRequiredService<ILobbyBrowserService>().GetLobbiesAsync();
+            var lobbies = await _lobbyService.GetLobbiesAsync();
             _lobbies.Clear();
             foreach (var lobby in lobbies) {
                 _lobbies.Add(lobby);
@@ -121,7 +123,7 @@ public sealed class MultiplayerViewModel : INotifyPropertyChanged {
             IsLoading = true;
             StatusMessage = "Connecting to the Battlegrounds server...";
 
-            IsConnected = await _serviceProvider.GetRequiredService<ILobbyBrowserService>().IsServerAvailableAsync();
+            IsConnected = await _lobbyService.IsServerAvailableAsync();
             if (IsConnected) {
                 StatusMessage = "Connected to the Battlegrounds server.";
             } else {

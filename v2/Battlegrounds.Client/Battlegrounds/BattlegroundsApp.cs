@@ -177,7 +177,6 @@ public sealed class BattlegroundsApp {
 
         // Register services
         services.AddSingleton<IDialogService, DialogService>();
-        services.AddSingleton<ILobbyBrowserService, LobbyBrowserService>();
         services.AddSingleton<ILobbyService, LobbyService>();
         services.AddSingleton<IPlayService, PlayService>();
         services.AddSingleton<IReplayService, ReplayService>();
