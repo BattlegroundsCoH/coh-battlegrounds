@@ -33,6 +33,9 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Pull server image
+      run: docker pull ghcr.io/battlegroundscoh/battlegrounds-backend-server:main
+
     - name: Restore dependencies
       run: cd v2\Battlegrounds.Client && dotnet restore
 
