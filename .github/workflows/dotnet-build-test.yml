@@ -26,16 +26,6 @@ jobs:
       with:
         dotnet-version: 9.0.x
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v2
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Pull server image
-      run: docker pull ghcr.io/battlegroundscoh/battlegrounds-backend-server:main
-
     - name: Restore dependencies
       run: cd v2\Battlegrounds.Client && dotnet restore
 

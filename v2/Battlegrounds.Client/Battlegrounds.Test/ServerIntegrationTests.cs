@@ -12,6 +12,7 @@ namespace Battlegrounds.Test;
 /// instance of the Battlegrounds server. It includes setup logic to initialize the container and prepare shared
 /// resources required for the tests. Derived classes should implement specific test cases and can rely on the
 /// initialized container for server interactions.</remarks>
+[Category("Integration")]
 public abstract class ServerIntegrationTests {
 
 #pragma warning disable NUnit1032 // An IDisposable field/property should be Disposed in a TearDown method
