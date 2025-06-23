@@ -1,0 +1,3 @@
+[submodule "coh-battlegrounds-proto"]
+	path = coh-battlegrounds-proto
+	url = https://github.com/BattlegroundsCoH/coh-battlegrounds-proto.git
