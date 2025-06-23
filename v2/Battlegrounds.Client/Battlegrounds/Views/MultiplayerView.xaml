@@ -13,6 +13,70 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converter:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converter:JoinableStatusConverter x:Key="JoinableStatusConverter"/>
+
+        <Style x:Key="LobbyListView" TargetType="ListView">
+            <Setter Property="Background" Value="{StaticResource BackgroundBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BackgroundLightBlueBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListView">
+                        <Border 
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="8">
+                            <ScrollViewer Focusable="False" Padding="{TemplateBinding Padding}">
+                                <ItemsPresenter/>
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LobbyListViewItem" TargetType="ListViewItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+            <Setter Property="Padding" Value="6,2"/>
+            <Setter Property="Margin" Value="0,2,0,2"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <Border x:Name="Bd"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="4"
+                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        BorderThickness="0">
+                            <ContentPresenter 
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource AccentBlueBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -40,11 +104,14 @@
                     Content="Refresh" 
                     Width="100"
                     Command="{Binding RefreshLobbies}"
+                    Style="{StaticResource ActionButton}"
                     IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
                 <Button 
                     Content="Create Lobby" 
+                    Margin="10,0,0,0"
                     Width="120" 
                     Command="{Binding CreateLobby}"
+                    Style="{StaticResource ActionButton}"
                     IsEnabled="{Binding IsConnected}"/>
             </StackPanel>
         </Grid>
@@ -53,7 +120,8 @@
         <ListView 
             Grid.Row="1" 
             ItemsSource="{Binding Lobbies}"
-            Background="{StaticResource BackgroundBlueBrush}"
+            Style="{StaticResource LobbyListView}"
+            ItemContainerStyle="{StaticResource LobbyListViewItem}"
             IsEnabled="{Binding IsConnected}"
             BorderThickness="0">
             <ListView.View>
@@ -100,6 +168,7 @@
             Background="#80000000" 
             Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
             <ProgressBar IsIndeterminate="True" 
+                         Style="{StaticResource  AnimatedProgressBar}"
                  Width="200" 
                  Height="4"/>
         </Grid>

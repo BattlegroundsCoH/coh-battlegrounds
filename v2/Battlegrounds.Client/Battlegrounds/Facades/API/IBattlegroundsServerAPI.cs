@@ -1,6 +1,7 @@
 ﻿using System.IO;
 
 using Battlegrounds.Models.Companies;
+using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Replays;
 
 namespace Battlegrounds.Facades.API;
@@ -10,6 +11,8 @@ public interface IBattlegroundsServerAPI {
     ValueTask<bool> DeleteCompanyAsync(string companyId);
     
     Task<Company?> GetCompanyAsync(string companyId, string companyUserId);
+    
+    Task<IEnumerable<BrowserLobby>> GetLobbiesAsync();
 
     ValueTask<bool> IsServerAvailableAsync();
 

@@ -210,6 +210,49 @@
         </Setter>
     </Style>
 
+    <Style x:Key="PasswordBox" TargetType="PasswordBox">
+        <Setter Property="Background" Value="{StaticResource BackgroundDarkBlueBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BackgroundLightBlueBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PasswordBox">
+                    <Border x:Name="Border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="4">
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                  Padding="{TemplateBinding Padding}"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                  BorderThickness="0"
+                                  IsTabStop="False"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource AccentBlueBrush}"/>
+                            <Setter TargetName="Border" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect ShadowDepth="0" 
+                                                  BlurRadius="4" 
+                                                  Color="{StaticResource AccentBlue}" 
+                                                  Opacity="0.3"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="SettingsComboBox" TargetType="ComboBox">
         <Setter Property="Background" Value="{StaticResource BackgroundDarkBlueBrush}"/>
         <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>

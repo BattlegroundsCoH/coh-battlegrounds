@@ -6,6 +6,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.Services;
 
+/// <summary>
+/// Provides functionality for managing game lobbies, including creating, leaving, and retrieving lobbies.
+/// </summary>
+/// <remarks>The <see cref="LobbyService"/> class is responsible for handling both singleplayer and multiplayer
+/// lobbies. It ensures thread-safe access to the active lobby and interacts with various services such as user
+/// management, game map retrieval, and server communication. Only one active lobby can exist at a time.</remarks>
+/// <param name="userService"></param>
+/// <param name="mapService"></param>
+/// <param name="companyService"></param>
+/// <param name="serverAPI"></param>
+/// <param name="logger"></param>
 public sealed class LobbyService(
     IUserService userService, 
     IGameMapService mapService, 
@@ -14,9 +25,16 @@ public sealed class LobbyService(
     ILogger<LobbyService> logger) : ILobbyService {
 
     private readonly ILogger<LobbyService> _logger = logger;
+    private readonly IUserService _userService = userService;
+    private readonly IBattlegroundsServerAPI _serverAPI = serverAPI;
     private readonly ReaderWriterLockSlim _activeLobbyLock = new();
     private ILobby? _activeLobby;
 
+    /// <summary>
+    /// Gets a value indicating whether there is an active lobby.
+    /// </summary>
+    /// <remarks>This property is thread-safe and ensures consistent access to the active lobby
+    /// state.</remarks>
     public bool HasActiveLobby {
         get {
             _activeLobbyLock.EnterReadLock();
@@ -28,6 +46,11 @@ public sealed class LobbyService(
         }
     }
 
+    /// <summary>
+    /// Gets the currently active lobby, or <see langword="null"/> if no lobby is active.
+    /// </summary>
+    /// <remarks>Access to this property is thread-safe. The value is protected by a read-write lock to ensure
+    /// consistency during concurrent access.</remarks>
     public ILobby? ActiveLobby {
         get {
             _activeLobbyLock.EnterReadLock();
@@ -47,6 +70,19 @@ public sealed class LobbyService(
         }
     }
 
+    /// <summary>
+    /// Creates a new lobby with the specified parameters.
+    /// </summary>
+    /// <remarks>This method creates either a multiplayer or single-player lobby based on the multiplayer
+    /// parameter. If a multiplayer lobby is created, the password parameter determines whether the lobby is
+    /// password-protected.</remarks>
+    /// <param name="name">The name of the lobby. This value cannot be null or empty.</param>
+    /// <param name="password">The optional password for the lobby. If null, the lobby will not be password-protected.</param>
+    /// <param name="multiplayer">A value indicating whether the lobby is for multiplayer.  true to create a multiplayer lobby; otherwise, false
+    /// to create a single-player lobby.</param>
+    /// <param name="game">The game associated with the lobby. This value cannot be null.</param>
+    /// <returns>An ILobby instance representing the newly created lobby.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if an active lobby already exists when attempting to create a new one.</exception>
     public async Task<ILobby> CreateLobbyAsync(string name, string? password, bool multiplayer, Game game) {
         if (HasActiveLobby) {
             throw new InvalidOperationException("Cannot create a new lobby while an active lobby exists.");
@@ -63,16 +99,28 @@ public sealed class LobbyService(
     }
 
     private async Task<ILobby> CreateSingleplayerLobbyAsync(string name, Game game) {
-        var localUser = await userService.GetLocalUserAsync() ?? throw new InvalidOperationException("Cannot create a singleplayer lobby without a local user.");
+        _logger.LogInformation("Creating singleplayer lobby with name: {LobbyName} for game: {GameId}", name, game.Id);
+        var localUser = await _userService.GetLocalUserAsync() ?? throw new InvalidOperationException("Cannot create a singleplayer lobby without a local user.");
         var localUserParticipant = new Participant(0, localUser.UserId, localUser.UserDisplayName, false, true);
         var latestMap = await mapService.GetLatestMapAsync(game.Id);
-        return new SingleplayerLobby(name, game, latestMap, localUserParticipant, serverAPI, companyService);
+        return new SingleplayerLobby(name, game, latestMap, localUserParticipant, _serverAPI, companyService);
     }
 
     private Task<ILobby> CreateMultiplayerLobbyAsync(string name, string? password, Game game) {
+        _logger.LogInformation("Creating multiplayer lobby with name: {LobbyName} for game: {GameId}", name, game.Id);
+        var localUser = _userService.GetLocalUserAsync().Result ?? throw new InvalidOperationException("Cannot create a multiplayer lobby without a local user.");
+        var localUserParticipant = new Participant(0, localUser.UserId, localUser.UserDisplayName, false, true);
         return Task.FromResult(new MultiplayerLobby() as ILobby);
     }
 
+    /// <summary>
+    /// Asynchronously leaves the specified lobby if it is the active lobby.
+    /// </summary>
+    /// <remarks>This method disposes of the specified lobby. The
+    /// active lobby is cleared after successfully leaving the specified lobby.</remarks>
+    /// <param name="lobby">The lobby to leave. Must be the currently active lobby.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="InvalidOperationException"/>
     public async Task LeaveLobbyAsync(ILobby lobby) {
         _activeLobbyLock.EnterReadLock();
         try {
@@ -96,8 +144,21 @@ public sealed class LobbyService(
         ActiveLobby = null; // Clear the active lobby
     }
 
-    public Task<IEnumerable<BrowserLobby>> GetLobbiesAsync() => Task.FromResult(Enumerable.Empty<BrowserLobby>()); // TODO: Implement this method
+    /// <summary>
+    /// Retrieves a collection of available lobbies from the server.
+    /// </summary>
+    /// <remarks>This method communicates with the server to fetch the list of lobbies. Ensure that the server
+    /// connection is properly configured before calling this method.</remarks>
+    /// <returns>A task that represents the asynchronous operation. The task result contains an  IEnumerable{T} of BrowserLobby
+    /// objects representing the available lobbies. If no lobbies are available, the collection will be empty.</returns>
+    public async Task<IEnumerable<BrowserLobby>> GetLobbiesAsync() => await _serverAPI.GetLobbiesAsync();
 
-    public async Task<bool> IsServerAvailableAsync() => await serverAPI.IsServerAvailableAsync();
+    /// <summary>
+    /// Asynchronously determines whether the server is available.
+    /// </summary>
+    /// <remarks>This method checks the availability of the server by delegating the call to the underlying
+    /// server API. It is useful for determining whether operations that depend on the server can proceed.</remarks>
+    /// <returns><see langword="true"/> if the server is available; otherwise, <see langword="false"/>.</returns>
+    public async Task<bool> IsServerAvailableAsync() => await _serverAPI.IsServerAvailableAsync();
 
 }

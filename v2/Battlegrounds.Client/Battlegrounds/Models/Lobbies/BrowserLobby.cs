@@ -14,6 +14,8 @@ public sealed class BrowserLobby {
 
     public required string GameMode { get; init; }
 
+    public required string Game { get; init; }
+
     public required int MaxPlayers { get; init; }
 
     public required int CurrentPlayers { get; init; }

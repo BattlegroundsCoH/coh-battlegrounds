@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 
 using Battlegrounds.Models;
 using Battlegrounds.Models.Companies;
+using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Replays;
 using Battlegrounds.Serializers;
 using Battlegrounds.Services;
@@ -168,6 +169,52 @@ public sealed class HttpBattlegroundsServerAPI(
                     return false;
                 }
             });
+
+    }
+
+    public sealed class LobbySummary {
+        public required string Id { get; init; }
+        public required string Name { get; init; }
+        public required string Host { get; init; }
+        public required List<Participant> Participants { get; init; }
+        public required bool HasPassword { get; init; }
+        public required List<Team> Teams { get; init; }
+        public required string Game { get; init; } // Specifies if CoH3 or CoH2
+        public required Dictionary<string, string> Settings { get; init; } // Contains map, game mode, etc.
+        public BrowserLobby ToBrowserLobby() {
+            int maxPlayers = Teams.Sum(t => t.Slots.Count(s => !s.Hidden && !s.Locked));
+            return new BrowserLobby {
+                Id = Id,
+                Name = Name,
+                Host = Host,
+                CurrentPlayers = Participants.Count,
+                MaxPlayers = maxPlayers,
+                Map = Settings.TryGetValue("map", out string? map) ? map : "Unknown Map",
+                GameMode = Settings.TryGetValue("gameMode", out string? gamemode) ? gamemode : "Unknown Game Mode",
+                IsPasswordProtected = HasPassword,
+                Game = Game
+            };
+        }
+    }
+
+    public async Task<IEnumerable<BrowserLobby>> GetLobbiesAsync() {
+
+        var requestUri = $"{BaseUrl}/api/v1/lobbies";
+        _logger.LogInformation("Sending GET request to {RequestUri} to retrieve lobbies", requestUri);
+
+        HttpRequestMessage request = new(HttpMethod.Get, requestUri);
+        request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
+
+        HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
+        if (!response.IsSuccessStatusCode) {
+            _logger.LogError("Failed to retrieve lobbies from {RequestUri}. Status code: {StatusCode}, Reason: {ReasonPhrase}", requestUri, response.StatusCode, response.ReasonPhrase);
+            return [];
+        }
+
+        _logger.LogInformation("Successfully retrieved lobbies from {RequestUri}", requestUri);
+
+        var lobbySummaries = await response.Content.ReadFromJsonAsync<IEnumerable<LobbySummary>>();
+        return lobbySummaries?.Select(x => x.ToBrowserLobby()) ?? [];
 
     }
 
