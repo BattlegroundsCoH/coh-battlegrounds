@@ -11,6 +11,8 @@
         Background="{StaticResource BackgroundDeepBlueBrush}"
         mc:Ignorable="d"
         Title="MainWindow" 
+        MaxHeight="{StaticResource DEFAULT_APP_HEIGHT}"
+        MaxWidth="{StaticResource DEFAULT_APP_WIDTH}"
         Height="{StaticResource DEFAULT_APP_HEIGHT}" 
         Width="{StaticResource DEFAULT_APP_WIDTH}">
     <Window.Resources>

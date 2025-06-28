@@ -124,7 +124,7 @@ public sealed class HttpBattlegroundsWebAPI(
 
         string endpoint = $"{AuthStatusEndpoint(provider)}?id={sessionId}";
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, endpoint);
-        for (int i = 0; i < MaxRetries; i++) { // TODO: Make this configurable
+        for (int i = 0; i < MaxRetries; i++) {
             try {
                 HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
                 if (response.StatusCode is HttpStatusCode.OK) {

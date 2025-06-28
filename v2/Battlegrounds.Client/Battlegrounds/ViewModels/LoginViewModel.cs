@@ -18,7 +18,8 @@ public sealed class LoginViewModel : INotifyPropertyChanged {
     private readonly ILogger<LoginViewModel> _logger;
     private readonly UserViewModel _userViewModel;
     private readonly IUserService _userService;
-    
+    private readonly IBrowserService _browserService;
+
     private string _username = string.Empty;
     private string _errorMessage = string.Empty;
     private bool _isLoggingIn;
@@ -66,11 +67,12 @@ public sealed class LoginViewModel : INotifyPropertyChanged {
     
     public IAsyncRelayCommand ContinueWithSteamCommand { get; }
 
-    public LoginViewModel(ILogger<LoginViewModel> logger, UserViewModel userViewModel, IUserService userService) {
+    public LoginViewModel(ILogger<LoginViewModel> logger, UserViewModel userViewModel, IUserService userService, IBrowserService browserService) {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _userViewModel = userViewModel ?? throw new ArgumentNullException(nameof(userViewModel));
         _userService = userService ?? throw new ArgumentNullException(nameof(userService));
-        
+        _browserService = browserService ?? throw new ArgumentNullException(nameof(browserService));
+
         LoginCommand = new RelayCommand<PasswordBox>(ExecuteLogin);
         ContinueWithDiscordCommand = new AsyncRelayCommand(ContinueWithDiscordAsync);
         ContinueWithSteamCommand = new AsyncRelayCommand(ContinueWithSteamAsync);
@@ -164,6 +166,11 @@ public sealed class LoginViewModel : INotifyPropertyChanged {
             return true;
         }
         return false;
+    }
+
+    public void RedirectRegisterNow() {
+        _logger.LogInformation("Redirecting to registration page...");
+        _browserService.OpenUrl("https://cohbattlegrounds.com/register");
     }
 
 }

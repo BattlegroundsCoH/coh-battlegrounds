@@ -190,6 +190,7 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<ICompanyService, CompanyService>();
         services.AddSingleton<IGameLocaleService, GameLocaleService>();
         services.AddSingleton<IBlueprintService, BlueprintService>();
+        services.AddSingleton<IBrowserService, BrowserService>();
         services.AddSingleton<ICompanySerializer, BinaryCompanySerializer>();
         services.AddSingleton<ICompanyDeserializer, BinaryCompanyDeserializer>();
         services.AddSingleton<IBattlegroundsServerAPI, HttpBattlegroundsServerAPI>();
