@@ -2,6 +2,7 @@
 using System.Net.Http;
 
 using Battlegrounds.Facades.API;
+using Battlegrounds.Factories;
 using Battlegrounds.Logging;
 using Battlegrounds.Models;
 using Battlegrounds.Models.Playing;
@@ -193,6 +194,7 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<ICompanyDeserializer, BinaryCompanyDeserializer>();
         services.AddSingleton<IBattlegroundsServerAPI, HttpBattlegroundsServerAPI>();
         services.AddSingleton<IBattlegroundsWebAPI, HttpBattlegroundsWebAPI>();
+        services.AddTransient<GrpcServerClientFactory>();
 
         // Add getters
         services.AddSingleton(services => services.GetRequiredService<IGameService>().GetGame<CoH3>());
@@ -229,9 +231,9 @@ public sealed class BattlegroundsApp {
         if (_isFirstRun) {
             logger.LogInformation("This is the first run of Battlegrounds. Unable to auto-login");
         } else {
-            if (!await loginViewModel.AutoLoginAsync()) {
+            /*if (!await loginViewModel.AutoLoginAsync()) {
                 logger.LogWarning("Auto-login failed. Please log in manually.");
-            }
+            }*/
         }
 
         // Trigger load of companies

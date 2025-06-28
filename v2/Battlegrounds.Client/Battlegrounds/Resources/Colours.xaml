@@ -16,6 +16,9 @@
     <Color x:Key="BackgroundLightGray">#3c4a5b</Color>
     <SolidColorBrush x:Key="BackgroundLightGrayBrush" Color="{StaticResource BackgroundLightGray}" />
 
+    <Color x:Key="BackgroundAuthDark">#18181b</Color>
+    <SolidColorBrush x:Key="BackgroundAuthDarkBrush" Color="{StaticResource BackgroundAuthDark}" />
+
     <Color x:Key="BackgroundGray">#4a5b6c</Color>
     <SolidColorBrush x:Key="BackgroundGrayBrush" Color="{StaticResource BackgroundGray}" />
 
@@ -48,6 +51,9 @@
 
     <Color x:Key="ForegroundGray">#a0a0a0</Color>
     <SolidColorBrush x:Key="ForegroundGrayBrush" Color="{StaticResource ForegroundGray}" />
+
+    <Color x:Key="AccentAuthDark">#27272a</Color>
+    <SolidColorBrush x:Key="AccentAuthDarkBrush" Color="{StaticResource AccentAuthDark}" />
 
     <Color x:Key="AccentBlue">#45a7e5</Color>
     <SolidColorBrush x:Key="AccentBlueBrush" Color="{StaticResource AccentBlue}" />

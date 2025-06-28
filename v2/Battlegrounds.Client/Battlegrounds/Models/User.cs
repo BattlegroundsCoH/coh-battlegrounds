@@ -2,8 +2,20 @@
 
 public sealed class User {
 
+    private string _email = string.Empty;
     private string _displayName = string.Empty;
     private string _userId = string.Empty;
+
+    public string Email {
+        get => _email;
+        init {
+            if (value == _email)
+                return;
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("Email cannot be null or empty.", nameof(value));
+            _email = value;
+        }
+    }
 
     public string UserId {
         get => _userId;
@@ -17,7 +29,7 @@ public sealed class User {
     }
 
     public string UserDisplayName {
-        get => _displayName;
+        get => string.IsNullOrEmpty(_displayName) ? _email : _displayName;
         init {
             if (value == _displayName)
                 return;

@@ -10,7 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\auth.jpg" />
     <None Remove="Assets\dummy_avatar.png" />
+    <None Remove="Assets\IdP_discord.png" />
+    <None Remove="Assets\IdP_steam.png" />
     <None Remove="Rendering\Effects\ColourTintShader.ps" />
   </ItemGroup>
 
@@ -23,6 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\auth.jpg" />
+    <Resource Include="Assets\IdP_discord.png" />
+    <Resource Include="Assets\IdP_steam.png" />
     <Resource Include="Rendering\Effects\ColourTintShader.ps" />
   </ItemGroup>
 
@@ -66,6 +72,12 @@
   <ItemGroup>
     <Folder Include="Assets\Factions\coh3\icons\" />
     <Folder Include="Assets\Scenarios\CoH3\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\..\..\coh-battlegrounds-proto\lobby.proto" GrpcServices="Client">
+      <Link>Protos\lobby.proto</Link>
+    </Protobuf>
   </ItemGroup>
 
   <ItemGroup>

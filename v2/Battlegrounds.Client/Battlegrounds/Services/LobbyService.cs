@@ -1,8 +1,12 @@
 ﻿using Battlegrounds.Facades.API;
+using Battlegrounds.Factories;
+using Battlegrounds.Models;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 
 using Microsoft.Extensions.Logging;
+
+using HostLobbyRequest = Battlegrounds.Proto.Lobbies.HostLobbyRequest;
 
 namespace Battlegrounds.Services;
 
@@ -22,11 +26,17 @@ public sealed class LobbyService(
     IGameMapService mapService, 
     ICompanyService companyService, 
     IBattlegroundsServerAPI serverAPI, 
+    GrpcServerClientFactory clientFactory,
+    Configuration configuration,
     ILogger<LobbyService> logger) : ILobbyService {
 
     private readonly ILogger<LobbyService> _logger = logger;
     private readonly IUserService _userService = userService;
+    private readonly IGameMapService mapService = mapService;
+    private readonly ICompanyService companyService = companyService;
     private readonly IBattlegroundsServerAPI _serverAPI = serverAPI;
+    private readonly GrpcServerClientFactory _clientFactory = clientFactory;
+    private readonly Configuration _configuration = configuration;
     private readonly ReaderWriterLockSlim _activeLobbyLock = new();
     private ILobby? _activeLobby;
 
@@ -106,11 +116,30 @@ public sealed class LobbyService(
         return new SingleplayerLobby(name, game, latestMap, localUserParticipant, _serverAPI, companyService);
     }
 
-    private Task<ILobby> CreateMultiplayerLobbyAsync(string name, string? password, Game game) {
+    private async Task<ILobby> CreateMultiplayerLobbyAsync(string name, string? password, Game game) {
         _logger.LogInformation("Creating multiplayer lobby with name: {LobbyName} for game: {GameId}", name, game.Id);
         var localUser = _userService.GetLocalUserAsync().Result ?? throw new InvalidOperationException("Cannot create a multiplayer lobby without a local user.");
-        var localUserParticipant = new Participant(0, localUser.UserId, localUser.UserDisplayName, false, true);
-        return Task.FromResult(new MultiplayerLobby() as ILobby);
+
+
+        try {
+
+            var client = _clientFactory.CreateClient(_configuration);
+            var hostRequest = new HostLobbyRequest {
+                LobbyName = name,
+                Password = password ?? string.Empty,
+                HostId = localUser.UserId,
+                GameId = game.Id,
+            };
+
+            // TODO: Set settings
+
+            return await MultiplayerLobby.ForGrpcObjects(client, localUser, hostRequest, _configuration);
+
+        } catch (Exception ex) {
+            _logger.LogError(ex, "Failed to create gRPC client for multiplayer lobby creation.");
+            throw new InvalidOperationException("Failed to create gRPC client for multiplayer lobby creation.", ex);
+        }
+
     }
 
     /// <summary>

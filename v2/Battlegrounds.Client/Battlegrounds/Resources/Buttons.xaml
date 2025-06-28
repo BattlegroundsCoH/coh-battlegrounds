@@ -84,6 +84,51 @@
         </Setter>
     </Style>
 
+    <Style x:Key="AuthButton" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource BackgroundAuthDarkBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundWhiteBrush}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="MinWidth" Value="70"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Padding" Value="12,4"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="MainBorder" 
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{DynamicResource ForegroundWhiteBrush}"
+                    BorderThickness="1"
+                    CornerRadius="1">
+                        <ContentPresenter x:Name="ContentPresenter" 
+                                HorizontalAlignment="Center" 
+                                VerticalAlignment="Center"
+                                Margin="{TemplateBinding Padding}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!-- Hover State -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="MainBorder" Property="Background" Value="{DynamicResource AccentAuthDarkBrush}"/>
+                        </Trigger>
+
+                        <!-- Pressed State -->
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="MainBorder" Property="Background" Value="{DynamicResource BackgroundLightBlueBrush}"/>
+                        </Trigger>
+
+                        <!-- Disabled State -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="MainBorder" Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="ActionButton" TargetType="Button">
         <Setter Property="Background" Value="{DynamicResource AccentBlueBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource ForegroundWhiteBrush}"/>
@@ -126,7 +171,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
 
     <Style x:Key="DangerActionButton" TargetType="Button">
         <Setter Property="Background" Value="{DynamicResource AccentRedBrush}"/>

@@ -1,12 +1,17 @@
 ﻿using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Models.Replays;
+using Battlegrounds.Proto.Lobbies;
+
+using Grpc.Core;
 
 namespace Battlegrounds.Models.Lobbies;
 
-public sealed class MultiplayerLobby : ILobby {
+public sealed class MultiplayerLobby(AsyncServerStreamingCall<LobbyStateUpdate> stateUpdater) : ILobby {
 
-    public string Name => throw new NotImplementedException();
+    private readonly AsyncServerStreamingCall<LobbyStateUpdate> _stateUpdater = stateUpdater;
+
+    public string Name { get; init; } = string.Empty;
 
     public bool IsHost => throw new NotImplementedException();
 
@@ -76,6 +81,18 @@ public sealed class MultiplayerLobby : ILobby {
 
     public Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) {
         throw new NotImplementedException();
+    }
+
+    public static async Task<MultiplayerLobby> ForGrpcObjects(LobbyService.LobbyServiceClient client, User localUser, HostLobbyRequest hostRequest, Configuration configuration) {
+
+        var listenStream = client.HostLobby(hostRequest);
+
+
+
+        return new MultiplayerLobby(listenStream) {
+            Name = hostRequest.LobbyName,
+        };
+
     }
 
 }

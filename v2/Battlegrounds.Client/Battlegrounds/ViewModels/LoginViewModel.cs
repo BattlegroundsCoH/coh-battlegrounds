@@ -61,13 +61,19 @@ public sealed class LoginViewModel : INotifyPropertyChanged {
     public bool CanLogin => !string.IsNullOrWhiteSpace(Username) && !IsLoggingIn;
     
     public IRelayCommand LoginCommand { get; }
+
+    public IAsyncRelayCommand ContinueWithDiscordCommand { get; }
     
+    public IAsyncRelayCommand ContinueWithSteamCommand { get; }
+
     public LoginViewModel(ILogger<LoginViewModel> logger, UserViewModel userViewModel, IUserService userService) {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _userViewModel = userViewModel ?? throw new ArgumentNullException(nameof(userViewModel));
         _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         
         LoginCommand = new RelayCommand<PasswordBox>(ExecuteLogin);
+        ContinueWithDiscordCommand = new AsyncRelayCommand(ContinueWithDiscordAsync);
+        ContinueWithSteamCommand = new AsyncRelayCommand(ContinueWithSteamAsync);
     }
     
     private async void ExecuteLogin(PasswordBox? passwordBox) {
@@ -100,6 +106,25 @@ public sealed class LoginViewModel : INotifyPropertyChanged {
         } finally {
             IsLoggingIn = false;
         }
+    }
+
+    private async Task ContinueWithDiscordAsync() {
+        _logger.LogInformation("Continuing login with Discord...");
+        try {
+            var user = await _userService.LoginWithDiscordAsync();
+            if (user != null) {
+                _userViewModel.UpdateUser(user);
+            } else {
+                ErrorMessage = "Discord login failed. Please try again.";
+            }
+        } catch (Exception ex) {
+            ErrorMessage = $"Discord login error: {ex.Message}";
+        }
+    }
+
+    private async Task ContinueWithSteamAsync() {
+        _logger.LogInformation("Continuing login with Steam...");
+        throw new NotImplementedException("Steam login is not implemented yet.");
     }
 
     public async Task<bool> AutoLoginAsync() {
