@@ -231,13 +231,8 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
         await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated)); // Notify the UI of setting change
     }
 
-    public async Task SendMessage(string channel, string msg) {
-        var chatChannel = channel switch {
-            "team" => ChatChannel.Team,
-            "all" => ChatChannel.All,
-            _ => throw new ArgumentException($"Invalid chat channel: {channel}")
-        };
-        var chatMessage = new ChatMessage(_localParticipant.ParticipantId, _localParticipant.ParticipantName, chatChannel, msg);
+    public async Task SendMessage(ChatChannel channel, string msg) {
+        var chatMessage = new ChatMessage(_localParticipant.ParticipantId, _localParticipant.ParticipantName, channel, msg);
         await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.ParticipantMessage, chatMessage)); // Notify the UI of message
     }
 

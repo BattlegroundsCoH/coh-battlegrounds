@@ -219,7 +219,7 @@ public class CoH3MatchDataBuilderTests {
 
         public ValueTask<bool> ReportMatchResult(ReplayAnalysisResult matchResult) => new ValueTask<bool>(true);
 
-        public Task SendMessage(string channel, string msg) {
+        public Task SendMessage(ChatChannel channel, string msg) {
             throw new NotImplementedException();
         }
 

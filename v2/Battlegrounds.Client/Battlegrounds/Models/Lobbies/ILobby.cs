@@ -38,7 +38,7 @@ public interface ILobby {
     
     ValueTask<bool> ReportMatchResult(ReplayAnalysisResult matchResult);
 
-    Task SendMessage(string channel, string msg);
+    Task SendMessage(ChatChannel channel, string msg);
 
     Task SetCompany(Team team, int slotId, string id);
     

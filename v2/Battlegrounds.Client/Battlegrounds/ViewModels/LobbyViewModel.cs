@@ -353,7 +353,11 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             msg = msg[..MAX_CHAT_MESSAGE_LENGTH]; // Limit chat message length to MAX_CHAT_MESSAGE_LENGTH characters
             SystemWarnMessageTooLong(); // Warn user that message was truncated
         }
-        await _lobby.SendMessage(SelectedChatChannel.ChannelName, msg);
+        await _lobby.SendMessage(SelectedChatChannel.ChannelName switch {
+            "all" => ChatChannel.All,
+            "team" => ChatChannel.Team,
+            _ => ChatChannel.All // Default to All if unknown channel
+        }, msg);
     }
 
     private void SystemWarnMessageTooLong() {
