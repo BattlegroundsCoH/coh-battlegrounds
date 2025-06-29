@@ -1,9 +1,12 @@
 ﻿using System.Threading.Channels;
 
+using Battlegrounds.Facades.API;
+using Battlegrounds.Factories;
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Models.Replays;
 using Battlegrounds.Proto.Lobbies;
+using Battlegrounds.Services;
 
 using Grpc.Core;
 
@@ -11,35 +14,32 @@ using Serilog;
 
 namespace Battlegrounds.Models.Lobbies;
 
-public sealed class MultiplayerLobby(string lobbyId, AsyncServerStreamingCall<LobbyStateUpdate> stateUpdater, LobbyService.LobbyServiceClient gRPCClient, Participant self) : ILobby, IDisposable {
+public sealed class MultiplayerLobby(
+    string lobbyId, 
+    AsyncServerStreamingCall<LobbyStateUpdate> stateUpdater, 
+    Proto.Lobbies.LobbyService.LobbyServiceClient gRPCClient, 
+    LobbySetup setup,
+    IBattlegroundsServerAPI serverAPI,
+    ICompanyService companyService) : ILobby, IDisposable {
 
     private readonly ILogger _logger = Log.ForContext<MultiplayerLobby>();
     private readonly string _lobbyId = lobbyId;
 
     private readonly AsyncServerStreamingCall<LobbyStateUpdate> _stateUpdater = stateUpdater;
-    private readonly LobbyService.LobbyServiceClient _gRPCClient = gRPCClient;
+    private readonly Proto.Lobbies.LobbyService.LobbyServiceClient _gRPCClient = gRPCClient;
+    private readonly IBattlegroundsServerAPI _serverAPI = serverAPI;
+    private readonly ICompanyService _companyService = companyService;
 
-    private readonly Participant _localParticipant = self;
-    private readonly HashSet<Participant> _participants = [self];
+    private readonly Participant _localParticipant = setup.Self;
+    private readonly HashSet<Participant> _participants = [setup.Self];
     private readonly Channel<LobbyEvent> _internalEvents = Channel.CreateUnbounded<LobbyEvent>();
 
-    private readonly Team _team1 = new Team(TeamType.Allies, "Allies", [
-        new Team.Slot(0, null, "british_africa", string.Empty, AIDifficulty.HUMAN, false, false),
-        new Team.Slot(1, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        new Team.Slot(2, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        new Team.Slot(3, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        ]);
-
-    private readonly Team _team2 = new Team(TeamType.Axis, "Axis", [
-        new Team.Slot(0, null, "afrika_korps", string.Empty, AIDifficulty.HARD, false, false),
-        new Team.Slot(1, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        new Team.Slot(2, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        new Team.Slot(3, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        ]);
+    private readonly Team _team1 = setup.Team1;
+    private readonly Team _team2 = setup.Team2;
 
     private bool _isActive = true;
 
-    public string Name { get; init; } = string.Empty;
+    public string Name { get; } = setup.Name;
 
     public bool IsHost { get; init; } = true; // Assuming the host is the one who created the lobby
 
@@ -97,7 +97,32 @@ public sealed class MultiplayerLobby(string lobbyId, AsyncServerStreamingCall<Lo
         if (update == null) {
             return null;
         }
-        throw new NotImplementedException("Mapping gRPC LobbyStateUpdate to LobbyEvent is not implemented yet.");
+        if (!Enum.TryParse(update.EventType, true, out LobbyEventType eventType)) {
+            _logger.Warning("Unknown gRPC lobby event type: {EventType}", update.EventType);
+            return null;
+        }
+        switch (eventType) {
+            case LobbyEventType.ParticipantJoined:
+                throw new NotImplementedException("Participant joined event is not yet implemented in the gRPC lobby handler.");
+            case LobbyEventType.ParticipantLeft:
+                throw new NotImplementedException("Participant left event is not yet implemented in the gRPC lobby handler.");
+            case LobbyEventType.TeamUpdated:
+                throw new NotImplementedException("Team updates are not yet implemented in the gRPC lobby handler.");
+            case LobbyEventType.SettingUpdated:
+                throw new NotImplementedException("Setting updates are not yet implemented in the gRPC lobby handler.");
+            case LobbyEventType.MapUpdated:
+                throw new NotImplementedException("Map updates are not yet implemented in the gRPC lobby handler.");
+            case LobbyEventType.GameStarted:
+            case LobbyEventType.GameCancelled:
+            case LobbyEventType.GameEnded:
+            case LobbyEventType.SystemMessage:
+            case LobbyEventType.SystemError:
+                throw new NotImplementedException($"Event type {eventType} is not yet implemented in the gRPC lobby handler.");
+            default:
+                _logger.Warning("Unhandled gRPC lobby event type: {EventType}", eventType);
+                break;
+        }
+        return null; // No event to return
     }
 
     public Task<LaunchGameResult> LaunchGame() {
@@ -147,26 +172,55 @@ public sealed class MultiplayerLobby(string lobbyId, AsyncServerStreamingCall<Lo
         throw new NotImplementedException();
     }
 
-    public static async Task<MultiplayerLobby> ForGrpcObjects(LobbyService.LobbyServiceClient client, User localUser, HostLobbyRequest hostRequest, Configuration configuration) {
+    public static async Task<MultiplayerLobby> ForGrpcObjects(
+        Proto.Lobbies.LobbyService.LobbyServiceClient client, 
+        AsyncServerStreamingCall<LobbyStateUpdate> stream, LobbySetup setup, IBattlegroundsServerAPI serverAPI, ICompanyService companyService) {
 
-        var listenStream = client.HostLobby(hostRequest);
-        var localParticipant = new Participant(0, localUser.UserId, localUser.UserDisplayName, false, true);
-
-        if (!await listenStream.ResponseStream.MoveNext()) {
+        if (!await stream.ResponseStream.MoveNext()) {
             throw new InvalidOperationException("Failed to start lobby. No response received from server.");
         }
 
         // Await for the first response to get the lobby ID
-        var hostResponse = listenStream.ResponseStream.Current;
+        var hostResponse = stream.ResponseStream.Current;
 
-        return new MultiplayerLobby(hostResponse.LobbyId, listenStream, client, localParticipant) {
-            Name = hostRequest.LobbyName,
+        var lobby = new MultiplayerLobby(hostResponse.LobbyId, stream, client, setup, serverAPI, companyService) {
             IsHost = true, // The host is the one who created the lobby
         };
 
+        // Tell server about the local lobby state
+        await lobby.PublishTeam(0, setup.Team1);
+        await lobby.PublishTeam(1, setup.Team2);
+
+        return lobby;
+
+    }
+
+    private async Task PublishTeam(int tid, Team team) {
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.TeamUpdated.ToString(),
+            TeamUpdate = new Proto.Lobbies.Team {
+                Id = tid,
+                Alias = team.TeamAlias,
+                Type = team.TeamType.ToString(),
+                Slots = { team.Slots.Select(slot => new Slot {
+                    Id = slot.Index,
+                    ParticipantId = slot.ParticipantId ?? string.Empty,
+                    Faction = slot.Faction,
+                    CompanyId = slot.CompanyId,
+                    AiDifficulty = slot.Difficulty.ToString(),
+                    Hidden = slot.Hidden,
+                    Locked = slot.Locked
+                }) }
+            }
+        });
     }
 
     public void Dispose() {
+        throw new NotImplementedException();
+    }
+
+    public async Task LeaveAsync() {
         throw new NotImplementedException();
     }
 

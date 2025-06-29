@@ -196,6 +196,7 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<IBattlegroundsServerAPI, HttpBattlegroundsServerAPI>();
         services.AddSingleton<IBattlegroundsWebAPI, HttpBattlegroundsWebAPI>();
         services.AddTransient<GrpcServerClientFactory>();
+        services.AddTransient<LobbySetupFromConfigFactory>();
 
         // Add getters
         services.AddSingleton(services => services.GetRequiredService<IGameService>().GetGame<CoH3>());

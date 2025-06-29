@@ -1,6 +1,7 @@
 ﻿using System.Threading.Channels;
 
 using Battlegrounds.Facades.API;
+using Battlegrounds.Factories;
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Models.Replays;
@@ -10,42 +11,25 @@ using Serilog;
 
 namespace Battlegrounds.Models.Lobbies;
 
-public sealed class SingleplayerLobby : ILobby, IDisposable {
+public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServerAPI serverAPI, ICompanyService companyService) : ILobby, IDisposable {
 
     private static readonly ILogger _logger = Log.ForContext<SingleplayerLobby>();
 
-    private readonly ICompanyService _companyService;
-    private readonly IBattlegroundsServerAPI _serverAPI;
-    private readonly Channel<LobbyEvent> _internalEvents;
-    private readonly HashSet<Participant> _participants = [];
+    private readonly ICompanyService _companyService = companyService ?? throw new ArgumentNullException(nameof(companyService), "Company service cannot be null");
+    private readonly IBattlegroundsServerAPI _serverAPI = serverAPI ?? throw new ArgumentNullException(nameof(serverAPI), "Server API cannot be null");
+    private readonly Channel<LobbyEvent> _internalEvents = Channel.CreateUnbounded<LobbyEvent>();
+    private readonly HashSet<Participant> _participants = lobbySetup.Participants;
     private readonly Dictionary<string, Company> _companies = [];
-    private readonly List<LobbySetting> _settings = [
-        new LobbySetting { Name = LobbySetting.SETTING_GAMEMODE, Type = LobbySettingType.Selection, Options = [
-            new ("Domination", "domination"),
-            new ("Victory Points", "victory_points")]
-        },
-        // TODO: More settings
-    ];
-    private readonly Participant _localParticipant;
+    private readonly List<LobbySetting> _settings = lobbySetup.Settings;
+    private readonly Participant _localParticipant = lobbySetup.Self;
+    private readonly Team _team1 = lobbySetup.Team1;
+    private readonly Team _team2 = lobbySetup.Team2;
 
-    private Map _map;
+    private Map _map = lobbySetup.Map;
     private bool _isActive = true;
     private bool disposedValue;
-    private readonly Team _team1 = new Team(TeamType.Allies, "Allies", [
-        new Team.Slot(0, null, "british_africa", string.Empty, AIDifficulty.HUMAN, false, false),
-        new Team.Slot(1, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        new Team.Slot(2, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        new Team.Slot(3, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        ]);
 
-    private readonly Team _team2 = new Team(TeamType.Axis, "Axis", [
-        new Team.Slot(0, null, "afrika_korps", string.Empty, AIDifficulty.HARD, false, false),
-        new Team.Slot(1, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        new Team.Slot(2, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        new Team.Slot(3, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        ]);
-
-    public string Name { get; }
+    public string Name { get; } = lobbySetup.Name;
 
     public bool IsHost => true;
 
@@ -59,31 +43,11 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
 
     public Team Team2 => _team2;
 
-    public Game Game { get; }
+    public Game Game { get; } = lobbySetup.Game;
 
     public IList<LobbySetting> Settings => _settings;
 
     public Map Map => _map;
-
-    public SingleplayerLobby(string name, Game game, Map map, Participant localParticipant, IBattlegroundsServerAPI serverAPI, ICompanyService companyService) {
-        Name = name;
-        Game = game;
-
-        _companyService = companyService ?? throw new ArgumentNullException(nameof(companyService), "Company service cannot be null");
-        _serverAPI = serverAPI ?? throw new ArgumentNullException(nameof(serverAPI), "Server API cannot be null");
-
-        _internalEvents = Channel.CreateUnbounded<LobbyEvent>();
-        _map = map;
-        _localParticipant = localParticipant;
-        _participants.Add(localParticipant);
-
-        Participant aiParticipant = new Participant(1, Guid.NewGuid().ToString(), "AI - Standard", true, true); // TODO: Make constructor caller handle this
-        _participants.Add(aiParticipant);
-
-        _team1.Slots[0] = _team1.Slots[0] with { ParticipantId = _localParticipant.ParticipantId };
-        _team2.Slots[0] = _team2.Slots[0] with { ParticipantId = aiParticipant.ParticipantId };
-
-    }
 
     public async ValueTask<LobbyEvent?> GetNextEvent() {
         try {
