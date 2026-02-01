@@ -34,6 +34,7 @@ public sealed class LobbySetupFromConfigFactory(Configuration configuration, IGa
             Self = self,
             Map = await _mapService.GetLatestMapAsync(game.Id) ?? throw new InvalidOperationException("No map found for the specified game."),
             Settings = GetSettings(game, configuration),
+            Participants = [self],
             Game = game,
             Team1 = GetLatestTeamSetup(1, game, configuration, self, participants),
             Team2 = GetLatestTeamSetup(2, game, configuration, self, participants)

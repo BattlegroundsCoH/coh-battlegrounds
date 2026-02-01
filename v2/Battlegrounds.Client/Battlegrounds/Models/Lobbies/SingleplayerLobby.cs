@@ -27,7 +27,7 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
 
     private Map _map = lobbySetup.Map;
     private bool _isActive = true;
-    private bool disposedValue;
+    private bool _disposedValue;
 
     public string Name { get; } = lobbySetup.Name;
 
@@ -201,12 +201,12 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
     }
 
     private void Dispose(bool disposing) {
-        if (!disposedValue) {
+        if (!_disposedValue) {
             if (disposing) {
                 _internalEvents.Writer.Complete();
             }
             _isActive = false; // Mark the lobby as inactive
-            disposedValue = true;
+            _disposedValue = true;
         }
     }
 

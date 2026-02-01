@@ -38,6 +38,7 @@ public sealed class MultiplayerLobby(
     private readonly Team _team2 = setup.Team2;
 
     private bool _isActive = true;
+    private bool _disposedValue = false;
 
     public string Name { get; } = setup.Name;
 
@@ -62,7 +63,15 @@ public sealed class MultiplayerLobby(
     public string? GetLocalPlayerId() => _localParticipant.ParticipantId;
 
     public (Team? team, int slotId) GetLocalPlayerSlot() {
-        throw new NotImplementedException();
+        var id = Array.FindIndex(_team1.Slots, x => x.ParticipantId == _localParticipant.ParticipantId);
+        if (id != -1) {
+            return (_team1, id);
+        }
+        id = Array.FindIndex(_team2.Slots, x => x.ParticipantId == _localParticipant.ParticipantId);
+        if (id != -1) {
+            return (_team2, id);
+        }
+        return (null, -1);
     }
 
     public async ValueTask<LobbyEvent?> GetNextEvent() {
@@ -107,8 +116,11 @@ public sealed class MultiplayerLobby(
             case LobbyEventType.ParticipantLeft:
                 throw new NotImplementedException("Participant left event is not yet implemented in the gRPC lobby handler.");
             case LobbyEventType.TeamUpdated:
+                
                 throw new NotImplementedException("Team updates are not yet implemented in the gRPC lobby handler.");
             case LobbyEventType.SettingUpdated:
+                // Update the internal state with the new setting
+                _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.SettingUpdated));
                 throw new NotImplementedException("Setting updates are not yet implemented in the gRPC lobby handler.");
             case LobbyEventType.MapUpdated:
                 throw new NotImplementedException("Map updates are not yet implemented in the gRPC lobby handler.");
@@ -130,10 +142,16 @@ public sealed class MultiplayerLobby(
     }
 
     public Task RemoveAI(Team team, int slotIndex) {
+        if (!IsHost) {
+            return Task.CompletedTask; // Only the host can remove AI
+        }
         throw new NotImplementedException();
     }
 
     public ValueTask<bool> ReportMatchResult(ReplayAnalysisResult matchResult) {
+        if (!IsHost) {
+            return ValueTask.FromResult(false); // Only the host can report match results
+        }
         throw new NotImplementedException();
     }
 
@@ -153,18 +171,30 @@ public sealed class MultiplayerLobby(
     }
 
     public Task<bool> SetMap(Map map) {
+        if (!IsHost) {
+            return Task.FromResult(false); // Only the host can set the map
+        }
         throw new NotImplementedException();
     }
 
     public Task SetSetting(LobbySetting newSetting) {
+        if (!IsHost) {
+            return Task.CompletedTask; // Only the host can set settings
+        }
         throw new NotImplementedException();
     }
 
     public Task SetSlotAIDifficulty(Team team, int slotIndex, AIDifficulty difficulty) {
+        if (!IsHost) {
+            return Task.CompletedTask; // Only the host can set AI difficulty
+        }
         throw new NotImplementedException();
     }
 
     public Task ToggleSlotLock(Team team, int slotIndex) {
+        if (!IsHost) {
+            return Task.CompletedTask; // Only the host can toggle slot locks
+        }
         throw new NotImplementedException();
     }
 
@@ -191,6 +221,10 @@ public sealed class MultiplayerLobby(
         await lobby.PublishTeam(0, setup.Team1);
         await lobby.PublishTeam(1, setup.Team2);
 
+        foreach (var setting in setup.Settings) {
+            await lobby.PublishSetting(setting);
+        }
+
         return lobby;
 
     }
@@ -216,12 +250,48 @@ public sealed class MultiplayerLobby(
         });
     }
 
+    private async Task PublishSlot(int tid, int slotId, Team.Slot slot) {
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SlotUpdated.ToString(),
+            SlotUpdate = new Proto.Lobbies.SlotUpdate {
+                TeamId = tid,
+                Slot = new Slot {
+                    Id = slotId,
+                    ParticipantId = slot.ParticipantId ?? string.Empty,
+                    Faction = slot.Faction,
+                    CompanyId = slot.CompanyId,
+                    AiDifficulty = slot.Difficulty.ToString(),
+                    Hidden = slot.Hidden,
+                    Locked = slot.Locked
+                }
+            },
+        });
+    }
+
+    private async Task PublishSetting(LobbySetting setting) {
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SettingUpdated.ToString(),
+            SettingsUpdate = new Proto.Lobbies.LobbySetting {
+                Key = setting.Name,
+                NewValue = setting.Value.ToString(),
+            },
+        });
+    }
+
     public void Dispose() {
-        throw new NotImplementedException();
+        if (!_disposedValue) {
+            _isActive = false;
+            _disposedValue = true;
+        }
     }
 
     public async Task LeaveAsync() {
-        throw new NotImplementedException();
+        await _gRPCClient.LeaveLobbyAsync(new LeaveLobbyRequest {
+            LobbyId = _lobbyId,
+            ParticipantId = _localParticipant.ParticipantId
+        });
     }
 
 }

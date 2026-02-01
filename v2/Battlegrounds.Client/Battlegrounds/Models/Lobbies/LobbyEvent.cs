@@ -8,6 +8,7 @@ public enum LobbyEventType {
     ParticipantUnready,
     ParticipantMessage,
     TeamUpdated,
+    SlotUpdated,
     SettingUpdated,
     MapUpdated,
     GameStarted,

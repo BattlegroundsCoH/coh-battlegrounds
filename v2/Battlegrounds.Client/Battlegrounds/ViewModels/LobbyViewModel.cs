@@ -330,8 +330,14 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
     }
 
-    private ValueTask<List<LobbySlotViewModel>> MapTeamSlotsToLobbySlots(int index, Team.Slot[] slots) 
-        => slots.ToAsyncEnumerable().SelectAwait(x => MapToLobbySlot(index, x)).ToListAsync();
+    private async Task<List<LobbySlotViewModel>> MapTeamSlotsToLobbySlots(int index, Team.Slot[] slots) {
+        List<LobbySlotViewModel> result = [];
+        foreach (var slot in slots) {
+            var task = await MapToLobbySlot(index, slot);
+            result.Add(task);
+        }
+        return result;
+    }
 
     private async Task LeaveLobby() {
         // TODO: Show confirmation dialog before leaving lobby?
@@ -461,10 +467,11 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         _lobby.Companies.Clear();
         var t1PickedCompanies = from slot in Team1Slots where !slot.Slot.Hidden && !slot.Slot.Locked select slot.SelectedCompany;
         var t2PickedCompanies = from slot in Team2Slots where !slot.Slot.Hidden && !slot.Slot.Locked select slot.SelectedCompany;
-        var t1MappedCompanies = t1PickedCompanies.ToAsyncEnumerable().SelectAwait(MapPickableCompanyToCompany);
-        var t2MappedCompanies = t2PickedCompanies.ToAsyncEnumerable().SelectAwait(MapPickableCompanyToCompany);
-        await foreach (var company in t1MappedCompanies.Concat(t2MappedCompanies).Where(x => x is not null)) {
-            _lobby.Companies.Add(company!.Id, company);
+        var t1MappedCompanies = t1PickedCompanies.ToAsyncEnumerable().Select(MapPickableCompanyToCompany);
+        var t2MappedCompanies = t2PickedCompanies.ToAsyncEnumerable().Select(MapPickableCompanyToCompany);
+        await foreach (var company in t1MappedCompanies.Concat(t2MappedCompanies)) {
+            var resolved = await company;
+            _lobby.Companies.Add(resolved!.Id, resolved);
         }
     }
 

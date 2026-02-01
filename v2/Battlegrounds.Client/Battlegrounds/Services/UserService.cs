@@ -75,6 +75,15 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
 
     public async Task<User?> LoginAsync(string userEmail, string password) {
 
+#if DEBUG
+        _logger.LogWarning("LoginAsync called in DEBUG mode. Ensure this is intended for testing purposes.");
+        return _localUser = new User {
+            UserId = "debug-user-id",
+            UserDisplayName = "DebugUser",
+            Email = userEmail
+        };
+#endif
+
         if (_localUser is not null && !IsExpired) {
             return _localUser; // Already logged in
         }
