@@ -13,10 +13,9 @@ public sealed record LoginResponse(
     [property: JsonPropertyName("user")] ApiUser User
 );
 public sealed record ApiUser(
-    [property: JsonPropertyName("id")] string Id,
+    [property: JsonPropertyName("bgId")] string Id,
     [property: JsonPropertyName("username")] string Username,
-    [property: JsonPropertyName("displayName")] string DisplayName,
-    [property: JsonPropertyName("discordId")] string? DiscordId
+    [property: JsonPropertyName("displayName")] string DisplayName
 );
 
 public sealed record RefreshRequest(
@@ -29,16 +28,16 @@ public sealed record RefreshResponse(
 );
 
 public sealed record StartAuthResponse(
-    [property: JsonPropertyName("session_id")] string SessionId,
-    [property: JsonPropertyName("auth_url")] string AuthUrl
+    [property: JsonPropertyName("loginSessionId")] string SessionId,
+    [property: JsonPropertyName("authLink")] string AuthUrl
 );
 
 public sealed record EndAuthResponse(
     [property: JsonPropertyName("token")] string Token,
     [property: JsonPropertyName("refreshToken")] string RefreshToken,
     [property: JsonPropertyName("user")] ApiUser User,
-    [property: JsonPropertyName("expires_in")] int ExpiresIn,
-    [property: JsonPropertyName("expires_at")] long ExpiresAt
+    [property: JsonPropertyName("expiresIn")] int ExpiresIn,
+    [property: JsonPropertyName("expiresAt")] DateTime ExpiresAt
 );
 
 /// <summary>

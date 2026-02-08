@@ -123,9 +123,9 @@ public sealed class HttpBattlegroundsWebAPI(
     public async Task<EndAuthResponse?> EndAuthAsync(AuthProvider provider, string sessionId) {
 
         string endpoint = $"{AuthStatusEndpoint(provider)}?id={sessionId}";
-        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, endpoint);
         for (int i = 0; i < MaxRetries; i++) {
             try {
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, endpoint);
                 HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
                 if (response.StatusCode is HttpStatusCode.OK) {
                     _logger.LogDebug("Authentication status for {Provider} with session {SessionId} is OK.", provider, sessionId);

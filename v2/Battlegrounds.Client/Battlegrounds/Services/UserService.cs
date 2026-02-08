@@ -75,14 +75,14 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
 
     public async Task<User?> LoginAsync(string userEmail, string password) {
 
-#if DEBUG
+/*#if DEBUG
         _logger.LogWarning("LoginAsync called in DEBUG mode. Ensure this is intended for testing purposes.");
         return _localUser = new User {
             UserId = "debug-user-id",
             UserDisplayName = "DebugUser",
             Email = userEmail
         };
-#endif
+#endif*/
 
         if (_localUser is not null && !IsExpired) {
             return _localUser; // Already logged in
@@ -242,9 +242,9 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
 
         _logger.LogInformation("Authentication with {Provider} completed successfully.", provider);
 
-        StoreTokenAndUser(endAuthResponse.Token, endAuthResponse.RefreshToken, new DateTime(endAuthResponse.ExpiresAt, DateTimeKind.Utc), new User {
+        StoreTokenAndUser(endAuthResponse.Token, endAuthResponse.RefreshToken, endAuthResponse.ExpiresAt, new User {
             UserId = endAuthResponse.User.Id,
-            UserDisplayName = endAuthResponse.User.Username,
+            UserDisplayName = endAuthResponse.User.DisplayName,
         });
 
         _logger.LogInformation("User {UserName} with Id {Id} logged in successfully via {Provider}.", _localUser.Email, _localUser.UserId, provider);

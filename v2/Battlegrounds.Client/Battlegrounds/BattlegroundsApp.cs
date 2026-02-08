@@ -233,9 +233,9 @@ public sealed class BattlegroundsApp {
         if (_isFirstRun) {
             logger.LogInformation("This is the first run of Battlegrounds. Unable to auto-login");
         } else {
-            /*if (!await loginViewModel.AutoLoginAsync()) {
+            if (!await loginViewModel.AutoLoginAsync()) {
                 logger.LogWarning("Auto-login failed. Please log in manually.");
-            }*/
+            }
         }
 
         // Trigger load of companies
