@@ -142,6 +142,7 @@ public sealed class LobbyService(
 
             var stream = client.HostLobby(hostRequest, headers);
             var lobby = await _multiplayerLobbyFactory.GetLobby(client, stream, lobbySetup);
+            _ = lobby.PollGrpcUpdates(); // Start polling for updates immediately after lobby creation
             await lobby.PublishInitialState();
 
             return lobby;

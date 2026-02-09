@@ -1,7 +1,6 @@
 ﻿using System.Threading.Channels;
 
 using Battlegrounds.Facades.API;
-using Battlegrounds.Factories;
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Models.Replays;
@@ -11,6 +10,8 @@ using Battlegrounds.Services;
 using Grpc.Core;
 
 using Serilog;
+
+using LobbySetup = Battlegrounds.Factories.LobbySetup;
 
 namespace Battlegrounds.Models.Lobbies;
 
@@ -34,6 +35,8 @@ public sealed class MultiplayerLobby(
 
     private readonly Participant _localParticipant = setup.Self;
     private readonly HashSet<Participant> _participants = [setup.Self];
+    private readonly List<LobbySetting> _settings = setup.Settings;
+    private readonly Dictionary<string, Company> _companies = [];
     private readonly Channel<LobbyEvent> _internalEvents = Channel.CreateUnbounded<LobbyEvent>();
 
     private readonly Team _team1 = setup.Team1;
@@ -41,6 +44,8 @@ public sealed class MultiplayerLobby(
 
     private bool _isActive = true;
     private bool _disposedValue = false;
+
+    private Map _map = setup.Map;
 
     public string Name { get; } = setup.Name;
 
@@ -54,13 +59,13 @@ public sealed class MultiplayerLobby(
 
     public Team Team2 => _team2;
 
-    public Game Game => throw new NotImplementedException();
+    public Game Game { get; } = setup.Game;
 
-    public Dictionary<string, Company> Companies => throw new NotImplementedException();
+    public Dictionary<string, Company> Companies => _companies;
 
-    public IList<LobbySetting> Settings => throw new NotImplementedException();
+    public IList<LobbySetting> Settings => _settings;
 
-    public Map Map => throw new NotImplementedException();
+    public Map Map => _map;
 
     public string? GetLocalPlayerId() => _localParticipant.ParticipantId;
 
@@ -72,6 +77,19 @@ public sealed class MultiplayerLobby(
             { "x-participant-id", _localParticipant.ParticipantId }
         };
     }
+
+    private int GetIndexOfTeam(Team? team) {
+        if (team == null) {
+            return -1;
+        }
+        if (team == _team1) {
+            return 0;
+        }
+        if (team == _team2) {
+            return 1;
+        }
+        return -1; // Team not found
+    } 
 
     public (Team? team, int slotId) GetLocalPlayerSlot() {
         var id = Array.FindIndex(_team1.Slots, x => x.ParticipantId == _localParticipant.ParticipantId);
@@ -87,29 +105,28 @@ public sealed class MultiplayerLobby(
 
     public async ValueTask<LobbyEvent?> GetNextEvent() {
         try {
-            var grpcTask = ReadNextGrpcUpdateAsync();
-            var internalTask = _internalEvents.Reader.ReadAsync().AsTask();
-            var completedTask = await Task.WhenAny(grpcTask, internalTask);
-            if (completedTask == grpcTask) {
-                var grpcUpdate = await grpcTask;
-                // TODO: Map the gRPC update to a LobbyEvent
-                return MapGrpcLobbyStateToLobbyEvent(grpcUpdate);
-            } else if (completedTask == internalTask) {
-                // Read from the internal channel
-                return await internalTask;
-            }
-            return null; // No event available
+            return await _internalEvents.Reader.ReadAsync();
         } catch (Exception ex) {
             _logger.Error(ex, "Error while getting next lobby event");
             return null;
         }
     }
 
-    private async Task<LobbyStateUpdate?> ReadNextGrpcUpdateAsync() {
-        if (await _stateUpdater.ResponseStream.MoveNext()) {
-            return _stateUpdater.ResponseStream.Current;
-        } else {
-            return null;
+    public async Task PollGrpcUpdates() {
+        // Polls the gRPC stream for lobby updates and pushes them to the internal channel as LobbyEvents for the UI to consume
+        // That avoids the issue of reading from the gRPC stream and fetching the next internal event (ie. for client-side actions) at the same time
+        while (_isActive) {
+            try {
+                if (await _stateUpdater.ResponseStream.MoveNext()) {
+                    var lobbyEvent = MapGrpcLobbyStateToLobbyEvent(_stateUpdater.ResponseStream.Current);
+                    _internalEvents.Writer.TryWrite(lobbyEvent ?? new LobbyEvent(LobbyEventType.SystemMessage, "Received an unrecognized lobby update from the server.")); // Map the gRPC update to a LobbyEvent and push it to the internal channel
+                }
+            } catch (RpcException rpcEx) when (rpcEx.StatusCode is StatusCode.Cancelled) {
+                _logger.Information("gRPC lobby updates stream was cancelled, likely due to leaving the lobby or shutting down. Stopping the update poller.");
+                break; // Exit the loop if the stream was cancelled
+            } catch (Exception ex) {
+                _logger.Error(ex, "Error while polling gRPC lobby updates");
+            }
         }
     }
 
@@ -130,9 +147,21 @@ public sealed class MultiplayerLobby(
                 
                 throw new NotImplementedException("Team updates are not yet implemented in the gRPC lobby handler.");
             case LobbyEventType.SettingUpdated:
-                // Update the internal state with the new setting
-                _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.SettingUpdated));
-                throw new NotImplementedException("Setting updates are not yet implemented in the gRPC lobby handler.");
+                var newSetting = update.SettingsUpdate;
+                int indexOfSetting = _settings.FindIndex(x => x.Name == newSetting.Key);
+                if (indexOfSetting != -1) {
+                   var currentSetting = _settings[indexOfSetting];
+                    int mappedValue = currentSetting.Type switch {
+                        LobbySettingType.Boolean => newSetting.NewValue == "true" ? 1 : 0,
+                        LobbySettingType.Integer => int.TryParse(newSetting.NewValue, out var intValue) ? intValue : currentSetting.Value,
+                        _ => currentSetting.Value
+                    };
+                    var updateSettingEvent = new LobbyEvent(LobbyEventType.SettingUpdated, new LobbySetting { Name = newSetting.Key, Type = currentSetting.Type, Value = mappedValue });
+                    return updateSettingEvent;
+                } else {
+                    _logger.Warning("Received update for unknown setting: {SettingKey}", newSetting.Key);
+                    return null; // Setting not found, ignore the update
+                }
             case LobbyEventType.MapUpdated:
                 throw new NotImplementedException("Map updates are not yet implemented in the gRPC lobby handler.");
             case LobbyEventType.GameStarted:
@@ -174,11 +203,33 @@ public sealed class MultiplayerLobby(
             Content = chatMessage.Message,
             Channel = channel.ToString().ToLowerInvariant(),
             LobbyId = _lobbyId
-        });
+        }, GetGrpcMetadata());
     }
 
-    public Task SetCompany(Team team, int slotId, string id) {
-        throw new NotImplementedException();
+    public async Task SetCompany(Team team, int slotId, string companyId) {
+        var local = GetLocalPlayerSlot();
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SlotUpdated.ToString(),
+            ParticipantId = _localParticipant.ParticipantId,
+            SlotUpdate = new SlotUpdate {
+                TeamId = GetIndexOfTeam(team),
+                Slot = new Slot {
+                    Id = slotId,
+                    ParticipantId = team.Slots[slotId].ParticipantId ?? string.Empty,
+                    Faction = team.Slots[slotId].Faction,
+                    CompanyId = companyId,
+                    AiDifficulty = team.Slots[slotId].Difficulty.ToString(),
+                    Hidden = team.Slots[slotId].Hidden,
+                    Locked = team.Slots[slotId].Locked
+                }
+            },
+        }, GetGrpcMetadata());
+        if (IsHost || (local.team == team && slotId == local.slotId)) {
+            // Push the local event too to update the UI immediately
+            team.Slots[slotId] = team.Slots[slotId] with { CompanyId = companyId };
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI
+        }
     }
 
     public Task<bool> SetMap(Map map) {
@@ -281,6 +332,8 @@ public sealed class MultiplayerLobby(
         if (!_disposedValue) {
             _isActive = false;
             _disposedValue = true;
+            // Close connection with the server (and the lobby) and dispose of the gRPC client
+            _stateUpdater.Dispose();
         }
     }
 
