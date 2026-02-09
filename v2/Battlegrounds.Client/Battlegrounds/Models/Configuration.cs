@@ -107,7 +107,7 @@ public sealed class Configuration {
     /// <summary>
     /// Gets or sets the host URL for the Battlegrounds server.
     /// </summary>
-    public string BattlegroundsServerHost { get; set; } = "https://bg.prod.service.cohbattlegrounds.com";
+    public string BattlegroundsServerHost { get; set; } = "http:/localhost";
 
     /// <summary>
     /// Gets or sets the port number used by the Battlegrounds HTTP server.

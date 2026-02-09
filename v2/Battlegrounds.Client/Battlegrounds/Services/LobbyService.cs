@@ -4,6 +4,8 @@ using Battlegrounds.Models;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 
+using Grpc.Core;
+
 using Microsoft.Extensions.Logging;
 
 using HostLobbyRequest = Battlegrounds.Proto.Lobbies.HostLobbyRequest;
@@ -124,14 +126,18 @@ public sealed class LobbyService(
             var lobbySetup = await _lobbySetupFromConfigFactory.FromConfig(name, game, localUser);
 
             var client = _clientFactory.CreateClient(_configuration);
+
             var hostRequest = new HostLobbyRequest {
                 LobbyName = name,
                 Password = password ?? string.Empty,
                 HostId = localUser.UserId,
                 GameId = game.Id,
             };
+            var headers = new Metadata {
+                { "authorization", $"Bearer {_userService.GetLocalUserToken()}" }
+            };
 
-            var stream = client.HostLobby(hostRequest);
+            var stream = client.HostLobby(hostRequest, headers);
 
             return await MultiplayerLobby.ForGrpcObjects(client, stream, lobbySetup, _serverAPI, _companyService);
 

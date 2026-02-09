@@ -75,15 +75,6 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
 
     public async Task<User?> LoginAsync(string userEmail, string password) {
 
-/*#if DEBUG
-        _logger.LogWarning("LoginAsync called in DEBUG mode. Ensure this is intended for testing purposes.");
-        return _localUser = new User {
-            UserId = "debug-user-id",
-            UserDisplayName = "DebugUser",
-            Email = userEmail
-        };
-#endif*/
-
         if (_localUser is not null && !IsExpired) {
             return _localUser; // Already logged in
         }
@@ -107,40 +98,6 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
         return _localUser;
 
     }
-
-    /*private async Task<bool> ValidateRS256Signature(string headerEncoded, string payloadEncoded, string signatureEncoded) {
-
-        // Ensure public key is available for signature validation
-        if (_publicKey is null) {
-            _logger.LogDebug("Retrieving public key for signature validation.");
-            string publicKeyPem = await _webAPI.GetPublicKeyAsync() ?? throw new InvalidOperationException("Failed to retrieve public key.");
-            _publicKey = RSAPublicKey.FromPem(publicKeyPem);
-        }
-
-        byte[] signature = Base64URLDecode(signatureEncoded);
-        byte[] signedData = Encoding.UTF8.GetBytes($"{headerEncoded}.{payloadEncoded}");
-
-        // Verify RS256 Signature (RSA + SHA256)
-        var isValidSignature = _publicKey.VerifyData(
-            signedData,
-            signature,
-            HashAlgorithmName.SHA256,
-            RSASignaturePadding.Pkcs1
-        );
-
-        return isValidSignature;
-
-    }
-
-    private static byte[] Base64URLDecode(string input) {
-        // Replace URL-safe characters and pad with '='
-        string base64 = input.Replace('-', '+').Replace('_', '/');
-        switch (base64.Length % 4) {
-            case 2: base64 += "=="; break;
-            case 3: base64 += "="; break;
-        }
-        return Convert.FromBase64String(base64);
-    }*/
 
     public Task<bool> LogOutAsync() {
         throw new NotImplementedException();
@@ -206,15 +163,20 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
     }
 
     private async ValueTask<bool> RefreshToken(string refreshToken, User? user) {
-        var response = await _webAPI.RefreshTokenAsync(new RefreshRequest(refreshToken));
-        if (response is null) {
+        try {
+            var response = await _webAPI.RefreshTokenAsync(new RefreshRequest(refreshToken));
+            if (response is null) {
+                return false; // Failed to refresh token
+            }
+            if (user is null) {
+                throw new NotImplementedException("User not found, should ask API for user data based on token");
+            }
+            StoreTokenAndUser(response.Token, response.RefreshToken, DateTime.UtcNow.AddSeconds(3600), user);
+            return true; // Successfully refreshed token
+        } catch (Exception ex) {
+            _logger.LogError(ex, "Error occurred while refreshing token.");
             return false; // Failed to refresh token
         }
-        if (user is null) {
-            throw new NotImplementedException("User not found, should ask API for user data based on token");
-        }
-        StoreTokenAndUser(response.Token, response.RefreshToken, DateTime.UtcNow.AddSeconds(3600), user);
-        return true; // Successfully refreshed token
     }
 
     public Task<User> LoginWithDiscordAsync() => LoginWithProviderAsync(AuthProvider.Discord);

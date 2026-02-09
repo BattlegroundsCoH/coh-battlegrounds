@@ -14,7 +14,7 @@ public interface IBattlegroundsServerAPI {
     
     Task<IEnumerable<BrowserLobby>> GetLobbiesAsync();
 
-    ValueTask<bool> IsServerAvailableAsync();
+    Task<bool> IsServerAvailableAsync();
 
     ValueTask<bool> ReportMatchResults(MatchResult result);
 
