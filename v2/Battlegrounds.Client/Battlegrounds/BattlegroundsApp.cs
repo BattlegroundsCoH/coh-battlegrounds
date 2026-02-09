@@ -5,6 +5,7 @@ using Battlegrounds.Facades.API;
 using Battlegrounds.Factories;
 using Battlegrounds.Logging;
 using Battlegrounds.Models;
+using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Parsers;
 using Battlegrounds.Serializers;
@@ -201,6 +202,9 @@ public sealed class BattlegroundsApp {
         // Add getters
         services.AddSingleton(services => services.GetRequiredService<IGameService>().GetGame<CoH3>());
         // TODO: Add getter for CoH2
+
+        // Add factories
+        services.AddSingleton<MultiplayerLobbyFactory>();
 
         // Register default HTTP client
         services.AddSingleton(new HttpClient());

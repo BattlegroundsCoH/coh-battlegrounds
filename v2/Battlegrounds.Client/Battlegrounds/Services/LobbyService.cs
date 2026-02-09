@@ -3,6 +3,7 @@ using Battlegrounds.Factories;
 using Battlegrounds.Models;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
+using Battlegrounds.Proto.Lobbies;
 
 using Grpc.Core;
 
@@ -29,6 +30,7 @@ public sealed class LobbyService(
     IBattlegroundsServerAPI serverAPI, 
     GrpcServerClientFactory clientFactory,
     LobbySetupFromConfigFactory lobbySetupFromConfigFactory,
+    MultiplayerLobbyFactory multiplayerLobbyFactory,
     Configuration configuration,
     ILogger<LobbyService> logger) : ILobbyService {
 
@@ -38,6 +40,7 @@ public sealed class LobbyService(
     private readonly IBattlegroundsServerAPI _serverAPI = serverAPI;
     private readonly GrpcServerClientFactory _clientFactory = clientFactory;
     private readonly LobbySetupFromConfigFactory _lobbySetupFromConfigFactory = lobbySetupFromConfigFactory;
+    private readonly MultiplayerLobbyFactory _multiplayerLobbyFactory = multiplayerLobbyFactory;
     private readonly Configuration _configuration = configuration;
     private readonly ReaderWriterLockSlim _activeLobbyLock = new();
     private ILobby? _activeLobby;
@@ -138,8 +141,10 @@ public sealed class LobbyService(
             };
 
             var stream = client.HostLobby(hostRequest, headers);
+            var lobby = await _multiplayerLobbyFactory.GetLobby(client, stream, lobbySetup);
+            await lobby.PublishInitialState();
 
-            return await MultiplayerLobby.ForGrpcObjects(client, stream, lobbySetup, _serverAPI, _companyService);
+            return lobby;
 
         } catch (Exception ex) {
             _logger.LogError(ex, "Failed to create gRPC client for multiplayer lobby creation.");

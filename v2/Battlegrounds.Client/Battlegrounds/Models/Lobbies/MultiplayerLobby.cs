@@ -20,6 +20,7 @@ public sealed class MultiplayerLobby(
     Proto.Lobbies.LobbyService.LobbyServiceClient gRPCClient, 
     LobbySetup setup,
     IBattlegroundsServerAPI serverAPI,
+    IUserService userService,
     ICompanyService companyService) : ILobby, IDisposable {
 
     private readonly ILogger _logger = Log.ForContext<MultiplayerLobby>();
@@ -29,6 +30,7 @@ public sealed class MultiplayerLobby(
     private readonly Proto.Lobbies.LobbyService.LobbyServiceClient _gRPCClient = gRPCClient;
     private readonly IBattlegroundsServerAPI _serverAPI = serverAPI;
     private readonly ICompanyService _companyService = companyService;
+    private readonly IUserService _userService = userService;
 
     private readonly Participant _localParticipant = setup.Self;
     private readonly HashSet<Participant> _participants = [setup.Self];
@@ -61,6 +63,15 @@ public sealed class MultiplayerLobby(
     public Map Map => throw new NotImplementedException();
 
     public string? GetLocalPlayerId() => _localParticipant.ParticipantId;
+
+    private Metadata GetGrpcMetadata() {
+        var token = $"Bearer {_userService.GetLocalUserToken()}";
+        return new Metadata {
+            { "authorization", token },
+            { "x-lobby-id", _lobbyId },
+            { "x-participant-id", _localParticipant.ParticipantId }
+        };
+    }
 
     public (Team? team, int slotId) GetLocalPlayerSlot() {
         var id = Array.FindIndex(_team1.Slots, x => x.ParticipantId == _localParticipant.ParticipantId);
@@ -202,36 +213,22 @@ public sealed class MultiplayerLobby(
         throw new NotImplementedException();
     }
 
-    public static async Task<MultiplayerLobby> ForGrpcObjects(
-        Proto.Lobbies.LobbyService.LobbyServiceClient client, 
-        AsyncServerStreamingCall<LobbyStateUpdate> stream, LobbySetup setup, IBattlegroundsServerAPI serverAPI, ICompanyService companyService) {
-
-        if (!await stream.ResponseStream.MoveNext()) {
-            throw new InvalidOperationException("Failed to start lobby. No response received from server.");
-        }
-
-        // Await for the first response to get the lobby ID
-        var hostResponse = stream.ResponseStream.Current;
-
-        var lobby = new MultiplayerLobby(hostResponse.LobbyId, stream, client, setup, serverAPI, companyService) {
-            IsHost = true, // The host is the one who created the lobby
-        };
+    public async Task PublishInitialState() {
 
         // Tell server about the local lobby state
-        await lobby.PublishTeam(0, setup.Team1);
-        await lobby.PublishTeam(1, setup.Team2);
+        await PublishTeam(0, setup.Team1);
+        await PublishTeam(1, setup.Team2);
 
         foreach (var setting in setup.Settings) {
-            await lobby.PublishSetting(setting);
+            await PublishSetting(setting);
         }
-
-        return lobby;
 
     }
 
     private async Task PublishTeam(int tid, Team team) {
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
             LobbyId = _lobbyId,
+            ParticipantId = _localParticipant.ParticipantId,
             EventType = LobbyEventType.TeamUpdated.ToString(),
             TeamUpdate = new Proto.Lobbies.Team {
                 Id = tid,
@@ -247,7 +244,7 @@ public sealed class MultiplayerLobby(
                     Locked = slot.Locked
                 }) }
             }
-        });
+        }, GetGrpcMetadata());
     }
 
     private async Task PublishSlot(int tid, int slotId, Team.Slot slot) {
@@ -266,7 +263,7 @@ public sealed class MultiplayerLobby(
                     Locked = slot.Locked
                 }
             },
-        });
+        }, GetGrpcMetadata());
     }
 
     private async Task PublishSetting(LobbySetting setting) {
@@ -277,7 +274,7 @@ public sealed class MultiplayerLobby(
                 Key = setting.Name,
                 NewValue = setting.Value.ToString(),
             },
-        });
+        }, GetGrpcMetadata());
     }
 
     public void Dispose() {
@@ -291,7 +288,7 @@ public sealed class MultiplayerLobby(
         await _gRPCClient.LeaveLobbyAsync(new LeaveLobbyRequest {
             LobbyId = _lobbyId,
             ParticipantId = _localParticipant.ParticipantId
-        });
+        }, GetGrpcMetadata());
     }
 
 }
