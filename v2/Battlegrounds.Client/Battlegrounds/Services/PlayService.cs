@@ -43,7 +43,7 @@ public sealed class PlayService(CoH3ArchiverService coh3Archiver, Configuration 
         return new BuildGamemodeResult() {
             Failed = false,
             ErrorMessage = string.Empty,
-            GamemodeSgaFileLocation = "dummy",
+            GamemodeSgaFileLocation = coh3Archiver.ArchiveDestination,
             MatchId = matchDataBuilder.MatchId,
         };
 

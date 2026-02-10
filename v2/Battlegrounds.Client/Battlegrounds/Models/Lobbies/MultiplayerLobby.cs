@@ -56,7 +56,7 @@ public sealed class MultiplayerLobby(
     private readonly IGameMapService _mapService = mapService;
 
     private readonly Participant _localParticipant = setup.Self;
-    private readonly HashSet<Participant> _participants = [setup.Self];
+    private readonly HashSet<Participant> _participants = setup.Participants;
     private readonly List<LobbySetting> _settings = setup.Settings;
     private readonly Dictionary<string, Company> _companies = [];
     private readonly Channel<LobbyEvent> _internalEvents = Channel.CreateUnbounded<LobbyEvent>();
@@ -150,11 +150,11 @@ public sealed class MultiplayerLobby(
         while (_isActive) {
             try {
                 if (await _stateUpdater.ResponseStream.MoveNext()) {
-                    var lobbyEvent = MapGrpcLobbyStateToLobbyEvent(_stateUpdater.ResponseStream.Current);
+                    var lobbyEvent = MapAndApplyGrpcEvent(_stateUpdater.ResponseStream.Current);
                     _internalEvents.Writer.TryWrite(lobbyEvent ?? new LobbyEvent(LobbyEventType.SystemMessage, "Received an unrecognized lobby update from the server.")); // Map the gRPC update to a LobbyEvent and push it to the internal channel
                 }
-            } catch (RpcException rpcEx) when (rpcEx.StatusCode is StatusCode.Cancelled) {
-                _logger.Information("gRPC lobby updates stream was cancelled, likely due to leaving the lobby or shutting down. Stopping the update poller.");
+            } catch (RpcException rpcEx) when (rpcEx.StatusCode is StatusCode.Cancelled or StatusCode.Unavailable) {
+                _logger.Information("gRPC lobby updates stream was cancelled or is unavailable, likely due to leaving the lobby or shutting down. Stopping the update poller.");
                 break; // Exit the loop if the stream was cancelled
             } catch (Exception ex) {
                 _logger.Error(ex, "Error while polling gRPC lobby updates");
@@ -162,7 +162,9 @@ public sealed class MultiplayerLobby(
         }
     }
 
-    private LobbyEvent? MapGrpcLobbyStateToLobbyEvent(LobbyStateUpdate? update) { 
+    // Maps a gRPC lobby state update to a LobbyEvent and applies the necessary changes to the local lobby state. If the update type is unrecognized, returns null.
+    // The returned type is for triggering UI updates based on the event, as some events may not require a UI update.
+    private LobbyEvent? MapAndApplyGrpcEvent(LobbyStateUpdate? update) { 
         if (update == null) {
             return null;
         }
@@ -211,11 +213,14 @@ public sealed class MultiplayerLobby(
                 _map = newMap;
                 return new LobbyEvent(LobbyEventType.MapUpdated, newMap);
             case LobbyEventType.GameStarted:
+                throw new NotImplementedException($"Event type {eventType} is not yet implemented in the gRPC lobby handler.");
             case LobbyEventType.GameCancelled:
+                throw new NotImplementedException($"Event type {eventType} is not yet implemented in the gRPC lobby handler.");
             case LobbyEventType.GameEnded:
+                throw new NotImplementedException($"Event type {eventType} is not yet implemented in the gRPC lobby handler.");
             case LobbyEventType.SystemMessage:
             case LobbyEventType.SystemError:
-                throw new NotImplementedException($"Event type {eventType} is not yet implemented in the gRPC lobby handler.");
+                return new LobbyEvent(eventType, update.SystemMessage.Content);
             default:
                 _logger.Warning("Unhandled gRPC lobby event type: {EventType}", eventType);
                 break;
@@ -295,6 +300,7 @@ public sealed class MultiplayerLobby(
                 1 => "The specified map was not found on the server.",
                 2 => "The map is invalid or corrupted.",
                 3 => "Failed to load the map due to a server error.",
+                4 => "Map max player count cannot be less than current number of participants",
                 _ => "An unknown error occurred while updating the map."
             };
             await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, "Failed to update the map. "+ errorReason)); // Notify the UI about the failure and reason
@@ -312,11 +318,30 @@ public sealed class MultiplayerLobby(
         throw new NotImplementedException();
     }
 
-    public Task SetSlotAIDifficulty(Team team, int slotIndex, AIDifficulty difficulty) {
+    public async Task SetSlotAIDifficulty(Team team, int slotIndex, AIDifficulty difficulty) {
         if (!IsHost) {
-            return Task.CompletedTask; // Only the host can set AI difficulty
+            return; // Only the host can set AI difficulty
         }
-        throw new NotImplementedException();
+        int teamId = GetIndexOfTeam(team);
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SlotUpdated.ToString(),
+            ParticipantId = _localParticipant.ParticipantId,
+            SlotUpdate = new SlotUpdate {
+                TeamId = teamId,
+                Slot = new Slot {
+                    Id = slotIndex,
+                    ParticipantId = team.Slots[slotIndex].ParticipantId ?? string.Empty,
+                    Faction = team.Slots[slotIndex].Faction,
+                    CompanyId = team.Slots[slotIndex].CompanyId,
+                    AiDifficulty = difficulty.Name,
+                    Hidden = team.Slots[slotIndex].Hidden,
+                    Locked = team.Slots[slotIndex].Locked
+                }
+            },
+        }, GetGrpcMetadata());
+        team.Slots[slotIndex] = team.Slots[slotIndex] with { Difficulty = difficulty }; // Update local state
+        _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TeamUpdated, teamId)); // Notify the UI of the change
     }
 
     public Task ToggleSlotLock(Team team, int slotIndex) {
@@ -326,7 +351,16 @@ public sealed class MultiplayerLobby(
         throw new NotImplementedException();
     }
 
-    public Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) {
+    public async ValueTask<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) {
+        var result = await _serverAPI.UploadGamemodeAsync(_lobbyId, gamemodeLocation);
+        if (!result) {
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, "Failed to upload gamemode. Please report this issue.")); // Notify the UI about the failure
+            return new UploadGamemodeResult() { Failed = true };
+        }
+        return new UploadGamemodeResult() { Failed = false };
+    }
+
+    public ValueTask<bool> WaitForAllPlayersHaveGamemode() {
         throw new NotImplementedException();
     }
 
@@ -392,14 +426,16 @@ public sealed class MultiplayerLobby(
     }
 
     private async Task PublishSetting(LobbySetting setting) {
+        var metadata = GetGrpcMetadata();
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
             LobbyId = _lobbyId,
             EventType = LobbyEventType.SettingUpdated.ToString(),
+            ParticipantId = _localParticipant.ParticipantId,
             SettingsUpdate = new Proto.Lobbies.LobbySetting {
                 Key = setting.Name,
                 NewValue = setting.Value.ToString(),
             },
-        }, GetGrpcMetadata());
+        }, metadata);
     }
 
     public void Dispose() {

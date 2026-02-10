@@ -401,6 +401,14 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                 return;
             }
 
+            LobbyState = "Waiting for all players to download the gamemode...";
+            var allDownloaded = await _lobby.WaitForAllPlayersHaveGamemode();
+            if (!allDownloaded) { 
+                LobbyState = "Failed while waiting for players to download gamemode, please check logs for details.";
+                await Task.Delay(5000); // Wait for 5 seconds before resetting state
+                return;
+            }
+
             LobbyState = "Launching game...";
             var launchResult = await _lobby.LaunchGame(); // for multiplayer this means tell other players to launch (NOP in singleplayer)
             if (launchResult.Failed) {

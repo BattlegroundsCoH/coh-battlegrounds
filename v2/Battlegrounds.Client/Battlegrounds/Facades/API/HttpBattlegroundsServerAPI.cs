@@ -30,6 +30,8 @@ public sealed class HttpBattlegroundsServerAPI(
     public static readonly string UploadCompanyEndpoint = "/api/v1/companies/upload"; // Requires authentication
     public static readonly string DeleteCompanyEndpoint = "/api/v1/companies/delete"; // Requires authentication
     public static readonly string DownloadCompanyEndpoint = "/api/v1/companies/download"; // No authentication required
+    public static readonly string UploadGamemodeEndpoint = "/api/v1/gamemodes/upload"; // Requires authentication
+    public static readonly string DownloadGamemodeEndpoint = "/api/v1/gamemodes/download"; // No authentication required
 
     public static readonly string ReportMatchResultsEndpoint = "/api/v1/match/report"; // Requires authentication
 
@@ -230,6 +232,35 @@ public sealed class HttpBattlegroundsServerAPI(
         HttpRequestMessage request = new(method, requestUri);
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         return request;
+    }
+
+    public async Task<bool> UploadGamemodeAsync(string lobbyId, string gamemodeLocation) {
+        
+        string endpoint = $"{BaseUrl}{UploadGamemodeEndpoint}";
+        var parameters = new Dictionary<string, string> {
+            { "lobbyId", lobbyId },
+            { "userId", (await _userService.GetLocalUserAsync())!.UserId } // Temp for testing, should rely on user claim in the future
+        };
+
+        string requestUri = $"{endpoint}?{ToUrlEncodedString(parameters)}";
+        using var gamemodeStream = File.OpenRead(gamemodeLocation);
+
+        _logger.LogInformation("Sending POST request to {RequestUri}", requestUri);
+        HttpRequestMessage request = await GetHttpRequestWithAuthHeaders(HttpMethod.Post, requestUri);
+        request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
+        request.Content = new StreamContent(gamemodeStream);
+        request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+        request.Content.Headers.ContentLength = gamemodeStream.Length; // Set content length for the stream
+
+        HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
+        if (response.IsSuccessStatusCode) {
+            _logger.LogInformation("Gamemode for lobby {LobbyId} uploaded successfully.", lobbyId);
+            return true;
+        } else {
+            _logger.LogError("Failed to upload gamemode for lobby {LobbyId}. Status code: {StatusCode}, Reason: {ReasonPhrase}", lobbyId, response.StatusCode, response.ReasonPhrase);
+            return false;
+        }
+
     }
 
 }

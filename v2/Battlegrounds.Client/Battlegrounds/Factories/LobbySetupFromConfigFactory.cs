@@ -29,15 +29,17 @@ public sealed class LobbySetupFromConfigFactory(Configuration configuration, IGa
     public async ValueTask<LobbySetup> FromConfig(string name, Game game, User host, Configuration configuration) {
         Participant self = new Participant(0, host.UserId, host.UserDisplayName, false, true);
         HashSet<Participant> participants = [self];
+        var team1 = GetLatestTeamSetup(1, game, configuration, self, participants);
+        var team2 = GetLatestTeamSetup(2, game, configuration, self, participants);
         var lobbySetup = new LobbySetup {
             Name = name,
             Self = self,
             Map = await _mapService.GetLatestMapAsync(game.Id) ?? throw new InvalidOperationException("No map found for the specified game."),
             Settings = GetSettings(game, configuration),
-            Participants = [self],
+            Participants = participants,
             Game = game,
-            Team1 = GetLatestTeamSetup(1, game, configuration, self, participants),
-            Team2 = GetLatestTeamSetup(2, game, configuration, self, participants)
+            Team1 = team1,
+            Team2 = team2
         };
         _logger.LogInformation("Created lobby setup from config: {@LobbySetup}", lobbySetup);
         return lobbySetup;

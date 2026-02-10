@@ -108,7 +108,7 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
 
     }
 
-    public Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) => Task.FromResult(new UploadGamemodeResult()); // NOP operation in singleplayer mode
+    public ValueTask<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) => ValueTask.FromResult(new UploadGamemodeResult() { Failed = false }); // NOP operation in singleplayer mode
 
     public (Team? team, int slotId) GetLocalPlayerSlot() {
         var id = Array.FindIndex(_team1.Slots, x => x.ParticipantId == _localParticipant.ParticipantId);
@@ -215,5 +215,7 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
+
+    public ValueTask<bool> WaitForAllPlayersHaveGamemode() => ValueTask.FromResult(true); // NOP operation in singleplayer mode, always returns true since there's only one player
 
 }
