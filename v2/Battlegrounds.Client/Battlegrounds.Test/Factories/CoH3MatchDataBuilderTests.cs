@@ -245,6 +245,14 @@ public class CoH3MatchDataBuilderTests {
 
         public Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) =>
             Task.FromResult(new UploadGamemodeResult());
+
+        public ValueTask<bool> WaitForAllPlayersHaveGamemode() {
+            throw new NotImplementedException();
+        }
+
+        ValueTask<UploadGamemodeResult> ILobby.UploadGamemode(string gamemodeLocation) {
+            throw new NotImplementedException();
+        }
     }
 
     #endregion
