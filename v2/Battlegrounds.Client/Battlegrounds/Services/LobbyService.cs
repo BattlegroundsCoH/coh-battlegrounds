@@ -3,7 +3,6 @@ using Battlegrounds.Factories;
 using Battlegrounds.Models;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
-using Battlegrounds.Proto.Lobbies;
 
 using Grpc.Core;
 

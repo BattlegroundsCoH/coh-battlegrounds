@@ -15,6 +15,26 @@ using LobbySetup = Battlegrounds.Factories.LobbySetup;
 
 namespace Battlegrounds.Models.Lobbies;
 
+/// <summary>
+/// Represents a multiplayer lobby that manages participants, teams, game settings, and real-time state synchronization
+/// for a battlegrounds session.
+/// </summary>
+/// <remarks>The MultiplayerLobby class is designed for real-time multiplayer scenarios where lobby state must be
+/// kept consistent across multiple clients. It supports participant management, team assignments, chat messaging, and
+/// game configuration. Only the host can perform certain actions, such as changing settings or starting the game. The
+/// class implements IDisposable to ensure proper cleanup of resources, including the gRPC streaming
+/// connection.</remarks>
+/// <param name="lobbyId">The unique identifier for the lobby, used to reference and manage the lobby in server communications.</param>
+/// <param name="stateUpdater">An asynchronous server streaming call that provides real-time updates to the lobby state, enabling synchronization
+/// of lobby events between the client and server.</param>
+/// <param name="gRPCClient">The gRPC client used to communicate with the lobby service for operations such as sending messages, updating state,
+/// and managing lobby membership.</param>
+/// <param name="setup">An object containing the initial configuration for the lobby, including the local participant, teams, game settings,
+/// and map.</param>
+/// <param name="serverAPI">An interface for interacting with the battlegrounds server API, providing methods for server-side operations related
+/// to the lobby.</param>
+/// <param name="userService">A service for managing user-related operations, such as retrieving the local user's token and information.</param>
+/// <param name="companyService">A service for managing company-related operations, such as retrieving and updating company data for participants.</param>
 public sealed class MultiplayerLobby(
     string lobbyId, 
     AsyncServerStreamingCall<LobbyStateUpdate> stateUpdater, 
@@ -22,7 +42,8 @@ public sealed class MultiplayerLobby(
     LobbySetup setup,
     IBattlegroundsServerAPI serverAPI,
     IUserService userService,
-    ICompanyService companyService) : ILobby, IDisposable {
+    ICompanyService companyService,
+    IGameMapService mapService) : ILobby, IDisposable {
 
     private readonly ILogger _logger = Log.ForContext<MultiplayerLobby>();
     private readonly string _lobbyId = lobbyId;
@@ -32,6 +53,7 @@ public sealed class MultiplayerLobby(
     private readonly IBattlegroundsServerAPI _serverAPI = serverAPI;
     private readonly ICompanyService _companyService = companyService;
     private readonly IUserService _userService = userService;
+    private readonly IGameMapService _mapService = mapService;
 
     private readonly Participant _localParticipant = setup.Self;
     private readonly HashSet<Participant> _participants = [setup.Self];
@@ -41,6 +63,7 @@ public sealed class MultiplayerLobby(
 
     private readonly Team _team1 = setup.Team1;
     private readonly Team _team2 = setup.Team2;
+    private readonly Team[] _teams = [setup.Team1, setup.Team2];
 
     private bool _isActive = true;
     private bool _disposedValue = false;
@@ -112,6 +135,15 @@ public sealed class MultiplayerLobby(
         }
     }
 
+    /// <summary>
+    /// Continuously polls the gRPC stream for lobby updates and forwards them as lobby events to the internal event
+    /// channel for UI consumption.
+    /// </summary>
+    /// <remarks>This method runs as long as the instance remains active, handling lobby updates received from
+    /// the gRPC stream. If the stream is cancelled, such as when leaving the lobby or shutting down, polling stops
+    /// gracefully. Any unrecognized lobby updates are converted to a default system message event. Errors encountered
+    /// during polling are logged for diagnostic purposes.</remarks>
+    /// <returns>A task that represents the asynchronous polling operation.</returns>
     public async Task PollGrpcUpdates() {
         // Polls the gRPC stream for lobby updates and pushes them to the internal channel as LobbyEvents for the UI to consume
         // That avoids the issue of reading from the gRPC stream and fetching the next internal event (ie. for client-side actions) at the same time
@@ -143,9 +175,21 @@ public sealed class MultiplayerLobby(
                 throw new NotImplementedException("Participant joined event is not yet implemented in the gRPC lobby handler.");
             case LobbyEventType.ParticipantLeft:
                 throw new NotImplementedException("Participant left event is not yet implemented in the gRPC lobby handler.");
+            case LobbyEventType.ParticipantMessage:
+                var senderName = _participants.FirstOrDefault(p => p.ParticipantId == update.ChatMessage.SenderId)?.ParticipantName ?? "Unknown";
+                var channel = Enum.TryParse(update.ChatMessage.Channel, true, out ChatChannel parsedChannel) ? parsedChannel : ChatChannel.All;
+                return new LobbyEvent(LobbyEventType.ParticipantMessage,
+                    new ChatMessage(update.ChatMessage.SenderId, senderName, channel, update.ChatMessage.Content));
             case LobbyEventType.TeamUpdated:
-                
-                throw new NotImplementedException("Team updates are not yet implemented in the gRPC lobby handler.");
+                for (int i = 0; i < update.TeamUpdate.Slots.Count; i++) {
+                    var slot = update.TeamUpdate.Slots[i];
+                    _teams[update.TeamUpdate.Id].Slots[i] = new Team.Slot(i, slot.ParticipantId, slot.Faction, slot.CompanyId, AIDifficulty.FromName(slot.AiDifficulty), slot.Hidden, slot.Locked);
+                }
+                return new LobbyEvent(LobbyEventType.TeamUpdated, update.TeamUpdate.Id);
+            case LobbyEventType.SlotUpdated:
+                var updatedSlot = update.SlotUpdate.Slot;
+                _teams[update.SlotUpdate.TeamId].Slots[updatedSlot.Id] = new(updatedSlot.Id, updatedSlot.ParticipantId, updatedSlot.Faction, updatedSlot.CompanyId, AIDifficulty.FromName(updatedSlot.AiDifficulty), updatedSlot.Hidden, updatedSlot.Locked);
+                return new LobbyEvent(LobbyEventType.TeamUpdated, update.SlotUpdate.TeamId); // Make UI simply update the whole team when a slot is updated for simplicity, as that's what the UI currently supports
             case LobbyEventType.SettingUpdated:
                 var newSetting = update.SettingsUpdate;
                 int indexOfSetting = _settings.FindIndex(x => x.Name == newSetting.Key);
@@ -156,14 +200,16 @@ public sealed class MultiplayerLobby(
                         LobbySettingType.Integer => int.TryParse(newSetting.NewValue, out var intValue) ? intValue : currentSetting.Value,
                         _ => currentSetting.Value
                     };
-                    var updateSettingEvent = new LobbyEvent(LobbyEventType.SettingUpdated, new LobbySetting { Name = newSetting.Key, Type = currentSetting.Type, Value = mappedValue });
-                    return updateSettingEvent;
+                    _settings[indexOfSetting].Value = mappedValue;
+                    return new LobbyEvent(LobbyEventType.SettingUpdated, _settings[indexOfSetting]);
                 } else {
                     _logger.Warning("Received update for unknown setting: {SettingKey}", newSetting.Key);
                     return null; // Setting not found, ignore the update
                 }
             case LobbyEventType.MapUpdated:
-                throw new NotImplementedException("Map updates are not yet implemented in the gRPC lobby handler.");
+                var newMap = _mapService.GetMapByScenarioName(Game, update.SettingsUpdate.NewValue); // Re-use the SettingsUpdate message to get the new map name, as the server doesn't send a separate message for map updates currently
+                _map = newMap;
+                return new LobbyEvent(LobbyEventType.MapUpdated, newMap);
             case LobbyEventType.GameStarted:
             case LobbyEventType.GameCancelled:
             case LobbyEventType.GameEnded:
@@ -232,11 +278,31 @@ public sealed class MultiplayerLobby(
         }
     }
 
-    public Task<bool> SetMap(Map map) {
+    public async Task<bool> SetMap(Map map) {
         if (!IsHost) {
-            return Task.FromResult(false); // Only the host can set the map
+            return false; // Only the host can set the map
         }
-        throw new NotImplementedException();
+        var updateMap = await _gRPCClient.ChangeMapAsync(new() {
+            LobbyId = _lobbyId,
+            ParticipantId = _localParticipant.ParticipantId,
+            NewMap = new() {
+                MaxPlayers = map.MaxPlayers,
+                MapId = map.ScenarioName
+            }
+        }, GetGrpcMetadata());
+        if (updateMap is null || !updateMap.Success) {
+            var errorReason = updateMap?.ErrorReason switch {
+                1 => "The specified map was not found on the server.",
+                2 => "The map is invalid or corrupted.",
+                3 => "Failed to load the map due to a server error.",
+                _ => "An unknown error occurred while updating the map."
+            };
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, "Failed to update the map. "+ errorReason)); // Notify the UI about the failure and reason
+            return false;
+        }
+        _map = map;
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.MapUpdated, map)); // Notify the UI of map change
+        return true;
     }
 
     public Task SetSetting(LobbySetting newSetting) {
@@ -264,6 +330,14 @@ public sealed class MultiplayerLobby(
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Publishes the initial state of the local multiplayer lobby to the server, including team configurations and
+    /// lobby settings.
+    /// </summary>
+    /// <remarks>Call this method during lobby initialization to ensure the server receives the current team
+    /// assignments and all lobby settings. This is typically required before players can join or interact with the
+    /// lobby.</remarks>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task PublishInitialState() {
 
         // Tell server about the local lobby state
