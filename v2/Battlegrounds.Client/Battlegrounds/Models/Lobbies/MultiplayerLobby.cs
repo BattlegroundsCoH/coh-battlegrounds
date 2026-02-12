@@ -360,8 +360,38 @@ public sealed class MultiplayerLobby(
         return new UploadGamemodeResult() { Failed = false };
     }
 
-    public ValueTask<bool> WaitForAllPlayersHaveGamemode() {
-        throw new NotImplementedException();
+    public async ValueTask<bool> WaitForAllPlayersHaveGamemode() {
+        if (!IsHost) {
+            return false;
+        }
+
+        var initiateDownloadRequest = new InitiateDownloadRequest() {
+            ResourceId = "gamemode",
+            LobbyId = _lobbyId,
+            ParticipantId = _localParticipant.ParticipantId
+        };
+
+        var metadata = GetGrpcMetadata();
+
+        using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3)); // Set a timeout for waiting, in case something goes wrong with the download process
+        var token = cts.Token;
+
+        bool allDownloaded = false;
+        var responseStream = _gRPCClient.InitiateDownload(initiateDownloadRequest, metadata);
+        while (await responseStream.ResponseStream.MoveNext(token)) {
+            var update = responseStream.ResponseStream.Current;
+            if (update.AllCompleted) {
+                allDownloaded = true;
+                break;
+            }
+            // TODO: Else, report progress to the UI about which participants have downloaded the gamemode so far
+        }
+
+        if (!allDownloaded) {
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, "Timed out while waiting for all players to download the gamemode. Please report this issue.")); // Notify the UI about the timeout
+        }
+
+        return allDownloaded;
     }
 
     /// <summary>
