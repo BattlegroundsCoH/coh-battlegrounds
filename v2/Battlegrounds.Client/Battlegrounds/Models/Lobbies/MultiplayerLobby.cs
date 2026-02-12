@@ -221,6 +221,9 @@ public sealed class MultiplayerLobby(
             case LobbyEventType.SystemMessage:
             case LobbyEventType.SystemError:
                 return new LobbyEvent(eventType, update.SystemMessage.Content);
+            case LobbyEventType.DownloadInitiated:
+                _ = BeginDownloadResource(update.DownloadState.ResourceId); // Start the download but don't await it, as we don't want to block the processing of further lobby updates while waiting for the download to complete
+                return new LobbyEvent(LobbyEventType.DownloadInitiated, update.DownloadState.ResourceId); // Ignored by the UI for now, but could be used to trigger a download progress UI in the future
             default:
                 _logger.Warning("Unhandled gRPC lobby event type: {EventType}", eventType);
                 break;
@@ -482,6 +485,54 @@ public sealed class MultiplayerLobby(
             LobbyId = _lobbyId,
             ParticipantId = _localParticipant.ParticipantId
         }, GetGrpcMetadata());
+    }
+
+    private Task BeginDownloadResource(string resourceId) => resourceId switch {
+        "gamemode" => DownloadGamemode(),
+        _ => UnknownResource(resourceId)
+    };
+
+    private Task UnknownResource(string resourceId) {
+        _logger.Warning("Received download initiation for unknown resource ID: {ResourceId}", resourceId);
+        return Task.CompletedTask;
+    }
+
+    private async Task DownloadGamemode() {
+
+        string destination = Game switch {
+            CoH3 => CoH3ArchiverService.ArchiveDestination,
+            _ => throw new NotSupportedException($"Game {Game.GameName} is not supported for gamemode downloads.")
+        };
+
+        var downloadResult = await _serverAPI.DownloadGamemodeAsync(_lobbyId, destination, async (downloaded, total) => {
+            var totalSafe = total ?? 0;
+            float progress = totalSafe > 0 ? (float)downloaded / totalSafe : 0;
+            _logger.Information("Gamemode download progress: {Progress:P2}", progress);
+            _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.SystemMessage, $"Downloading gamemode... {progress:P2} complete")); // Notify the UI about the download progress
+            await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
+                LobbyId = _lobbyId,
+                ParticipantId = _localParticipant.ParticipantId,
+                Progress = progress
+            }, GetGrpcMetadata()); // Report the download progress to the server so it can update the lobby state and notify other participants
+        });
+
+        if (downloadResult) {
+            _logger.Information("Gamemode download completed successfully.");
+            _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.SystemMessage, "Gamemode download completed!")); // Notify the UI about the successful download
+
+            // Notify server that the download is complete, so it can update the lobby state and notify other participants
+            await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
+                LobbyId = _lobbyId,
+                ParticipantId = _localParticipant.ParticipantId,
+                Progress = 1.0f,
+                Completed = true
+            }, GetGrpcMetadata());
+
+        } else {
+            _logger.Error("Gamemode download failed.");
+            _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.SystemError, "Failed to download gamemode. Please report this issue.")); // Notify the UI about the failure
+        }
+
     }
 
 }

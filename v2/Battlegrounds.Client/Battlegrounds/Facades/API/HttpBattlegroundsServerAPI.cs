@@ -263,4 +263,42 @@ public sealed class HttpBattlegroundsServerAPI(
 
     }
 
+    public async Task<bool> DownloadGamemodeAsync(string lobbyId, string destinationPath, DownloadProgressUpdateDelegate? progressUpdate = null) {
+        string endpoint = $"{BaseUrl}{DownloadGamemodeEndpoint}";
+        var parameters = new Dictionary<string, string> {
+            { "lobbyId", lobbyId }
+        };
+        string requestUri = $"{endpoint}?{ToUrlEncodedString(parameters)}";
+        _logger.LogInformation("Sending GET request to {RequestUri} to download gamemode for lobby {LobbyId}", requestUri, lobbyId);
+        
+        HttpRequestMessage request = new(HttpMethod.Get, requestUri);
+        request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
+        
+        HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
+        if (response.IsSuccessStatusCode) {
+            _logger.LogInformation("Gamemode for lobby {LobbyId} retrieved successfully. Saving to {DestinationPath}", lobbyId, destinationPath);
+            
+            long? totalBytes = response.Content.Headers.ContentLength;
+            long bytesDownloaded = 0;
+            
+            using Stream contentStream = await response.Content.ReadAsStreamAsync();
+            using FileStream fileStream = new(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
+            
+            byte[] buffer = new byte[8192]; // 8KB chunks
+            int bytesRead;
+            
+            while ((bytesRead = await contentStream.ReadAsync(buffer)) > 0) {
+                await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+                bytesDownloaded += bytesRead;
+                progressUpdate?.Invoke(bytesDownloaded, totalBytes);
+            }
+            
+            _logger.LogInformation("Gamemode for lobby {LobbyId} downloaded successfully. Total bytes: {BytesDownloaded}", lobbyId, bytesDownloaded);
+            return true;
+        } else {
+            _logger.LogError("Failed to retrieve gamemode for lobby {LobbyId}. Status code: {StatusCode}, Reason: {ReasonPhrase}", lobbyId, response.StatusCode, response.ReasonPhrase);
+            return false;
+        }
+    }
+
 }

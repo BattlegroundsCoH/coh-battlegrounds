@@ -38,4 +38,18 @@ public interface IBattlegroundsServerAPI {
     /// succeeds; otherwise, <see langword="false"/>.</returns>
     Task<bool> UploadGamemodeAsync(string lobbyId, string gamemodeLocation);
 
+    /// <summary>
+    /// Downloads the game mode associated with the specified lobby asynchronously and saves it to the given destination
+    /// path.
+    /// </summary>
+    /// <remarks>This method performs the download asynchronously. Exceptions may be thrown if the download
+    /// fails due to network issues or invalid parameters.</remarks>
+    /// <param name="lobbyId">The unique identifier of the lobby from which the game mode will be downloaded. Cannot be null or empty.</param>
+    /// <param name="destinationPath">The file system path where the downloaded game mode will be saved. Must be a valid, writable path.</param>
+    /// <param name="progressUpdate">An optional delegate that receives periodic updates on the download progress as a percentage. If provided, it
+    /// will be invoked during the download operation.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the download is
+    /// successful; otherwise, <see langword="false"/>.</returns>
+    Task<bool> DownloadGamemodeAsync(string lobbyId, string destinationPath, DownloadProgressUpdateDelegate? progressUpdate = null);
+
 }

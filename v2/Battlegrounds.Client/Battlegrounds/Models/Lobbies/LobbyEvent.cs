@@ -17,6 +17,9 @@ public enum LobbyEventType {
     SystemMessage,
     SystemError,
     UpdatedCompany,
+    DownloadInitiated,
+    DownloadProgress,
+    DownloadCompleted
 }
 
 public sealed record LobbyEvent(LobbyEventType EventType, object? Arg = null);

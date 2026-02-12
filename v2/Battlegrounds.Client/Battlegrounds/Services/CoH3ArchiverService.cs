@@ -21,7 +21,7 @@ public sealed class CoH3ArchiverService(CoH3 game, Configuration configuration, 
     /// <remarks>The path is constructed using the user's My Documents folder and points to the specific
     /// location for storing mod files related to the 'bg_wincondition' extension. This property is intended for use
     /// when saving or accessing mod archives for the game.</remarks>
-    public string ArchiveDestination => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "Company of Heroes 3", "mods", "extension", "local", "bg_wincondition", "bg_wincondition.sga");
+    public static string ArchiveDestination => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "Company of Heroes 3", "mods", "extension", "local", "bg_wincondition", "bg_wincondition.sga");
 
     public sealed class EssenceEditor(ILogger<EssenceEditor> logger) {
         private Process? _eeProcess;
