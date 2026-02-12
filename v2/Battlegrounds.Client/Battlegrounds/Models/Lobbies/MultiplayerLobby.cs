@@ -213,7 +213,7 @@ public sealed class MultiplayerLobby(
                 _map = newMap;
                 return new LobbyEvent(LobbyEventType.MapUpdated, newMap);
             case LobbyEventType.GameStarted:
-                throw new NotImplementedException($"Event type {eventType} is not yet implemented in the gRPC lobby handler.");
+                return new LobbyEvent(LobbyEventType.GameStarted); // Instructs the LobbyViewModel to start the game.
             case LobbyEventType.GameCancelled:
                 throw new NotImplementedException($"Event type {eventType} is not yet implemented in the gRPC lobby handler.");
             case LobbyEventType.GameEnded:
@@ -224,6 +224,10 @@ public sealed class MultiplayerLobby(
             case LobbyEventType.DownloadInitiated:
                 _ = BeginDownloadResource(update.DownloadState.ResourceId); // Start the download but don't await it, as we don't want to block the processing of further lobby updates while waiting for the download to complete
                 return new LobbyEvent(LobbyEventType.DownloadInitiated, update.DownloadState.ResourceId); // Ignored by the UI for now, but could be used to trigger a download progress UI in the future
+            case LobbyEventType.DownloadProgress:
+                return new LobbyEvent(LobbyEventType.DownloadProgress); // NOP for now
+            case LobbyEventType.DownloadCompleted:
+                return new LobbyEvent(LobbyEventType.DownloadCompleted); // NOP for now
             default:
                 _logger.Warning("Unhandled gRPC lobby event type: {EventType}", eventType);
                 break;
@@ -231,8 +235,19 @@ public sealed class MultiplayerLobby(
         return null; // No event to return
     }
 
-    public Task<LaunchGameResult> LaunchGame() {
-        throw new NotImplementedException();
+    public async Task<LaunchGameResult> LaunchGame() {
+
+        if (!IsHost) {
+            _logger.Warning("Non-host participant attempted to launch the game. This action is only allowed for the host.");
+            return new LaunchGameResult() {}; // Only the host can launch the game
+        }
+
+        await _gRPCClient.LaunchGameAsync(new LaunchGameRequest {
+            LobbyId = _lobbyId,
+            ParticipantId = _localParticipant.ParticipantId
+        }, GetGrpcMetadata());
+
+        return new LaunchGameResult() {}; // TODO: Return actual result from gRPC call
     }
 
     public Task RemoveAI(Team team, int slotIndex) {

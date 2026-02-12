@@ -322,6 +322,12 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                 case LobbyEventType.SettingUpdated:
                     PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
                     break;
+                case LobbyEventType.GameStarted:
+                    var launched = await _playService.LaunchGameApp(_lobby.Game); // Will never happen in singleplayer, but will happen for non-host participants in multiplayer when host starts the game
+                    if (launched.Failed) {
+                        // TODO: Inform the lobby that the local player failed to launch the game, so host can handle it (probably by cancelling the game start and returning to lobby)
+                    }
+                    break;
                 default:
                     break;
             }
