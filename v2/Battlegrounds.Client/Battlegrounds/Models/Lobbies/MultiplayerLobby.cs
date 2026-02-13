@@ -257,11 +257,45 @@ public sealed class MultiplayerLobby(
         throw new NotImplementedException();
     }
 
-    public ValueTask<bool> ReportMatchResult(ReplayAnalysisResult matchResult) {
+    public async ValueTask<bool> ReportMatchResult(ReplayAnalysisResult matchResult) {
         if (!IsHost) {
-            return ValueTask.FromResult(false); // Only the host can report match results
+            return false; // Only the host can report match results
         }
-        throw new NotImplementedException();
+
+        if (matchResult.Failed || matchResult.Replay is null) {
+            _logger.Error("Match result for game {GameId} failed or replay is null", matchResult.GameId);
+            return false; // Cannot report match result if it failed or replay is null
+        }
+
+        var result = matchResult.GetMatchResult(this);
+        if (result == MatchResult.Unknown) {
+            _logger.Error("Match result for game {GameId} could not be determined", matchResult.GameId);
+            return false; // Cannot determine match result
+        }
+
+        if (!result.IsValid) {
+            _logger.Error("Match result for game {GameId} is invalid", matchResult.GameId);
+            return false;
+        }
+
+        result.LobbyId = _lobbyId; // Ensure the lobby ID is set on the match result
+
+        var reported = await _serverAPI.ReportMatchResults(result); // Report the match result to the server
+        if (!reported) {
+            _logger.Error("Failed to report match result for game {GameId} to the server", matchResult.GameId);
+            return false;
+        } else {
+            await _gRPCClient.InitiateDownloadAsync(new InitiateDownloadRequest {
+                LobbyId = _lobbyId,
+                ParticipantId = _localParticipant.ParticipantId,
+                ResourceId = "company_update" // After reporting the match result, initiate a download to update company data for all participants, as the match result may have caused changes to company stats, levels, etc.
+            }, GetGrpcMetadata());
+            // Download the host company changes (other participants have been told to download their company).
+            await DownloadCompany(false);
+        }
+
+        return true;
+
     }
 
     public async Task SendMessage(ChatChannel channel, string msg) {
@@ -329,11 +363,22 @@ public sealed class MultiplayerLobby(
         return true;
     }
 
-    public Task SetSetting(LobbySetting newSetting) {
+    public async Task SetSetting(LobbySetting newSetting) {
         if (!IsHost) {
-            return Task.CompletedTask; // Only the host can set settings
+            return; // Only the host can set settings
         }
-        throw new NotImplementedException();
+        int indexOfSetting = _settings.FindIndex(x => x.Name == newSetting.Name);
+        if (newSetting.Name == LobbySetting.SETTING_GAMEMODE) {
+            // TODO: Handle gamemode change
+            // ie. if gamemode == victory_points add a new setting for specifying amount of victory points (250, 500, etc)
+        }
+        if (indexOfSetting != -1) { // Swapping existing setting
+            _settings[indexOfSetting] = newSetting;
+        } else {
+            _settings.Add(newSetting);
+        }
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated)); // Notify the UI of setting change
+        await PublishSetting(newSetting); // Publish the setting change to the server
     }
 
     public async Task SetSlotAIDifficulty(Team team, int slotIndex, AIDifficulty difficulty) {
@@ -395,7 +440,7 @@ public sealed class MultiplayerLobby(
         var token = cts.Token;
 
         bool allDownloaded = false;
-        var responseStream = _gRPCClient.InitiateDownload(initiateDownloadRequest, metadata);
+        var responseStream = _gRPCClient.BeginInitiateDownload(initiateDownloadRequest, metadata);
         while (await responseStream.ResponseStream.MoveNext(token)) {
             var update = responseStream.ResponseStream.Current;
             if (update.AllCompleted) {
@@ -504,6 +549,7 @@ public sealed class MultiplayerLobby(
 
     private Task BeginDownloadResource(string resourceId) => resourceId switch {
         "gamemode" => DownloadGamemode(),
+        "company_update" => DownloadCompany(reportProgress: true), // When downloading company updates after a match, we want to report progress to the UI as it can sometimes take a while if there are many participants in the lobby
         _ => UnknownResource(resourceId)
     };
 
@@ -547,6 +593,28 @@ public sealed class MultiplayerLobby(
             _logger.Error("Gamemode download failed.");
             _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.SystemError, "Failed to download gamemode. Please report this issue.")); // Notify the UI about the failure
         }
+
+    }
+
+    private async Task DownloadCompany(bool reportProgress) {
+
+        var selfSlot = GetLocalPlayerSlot();
+        if (selfSlot.team == null || selfSlot.slotId == -1) {
+            _logger.Error("Local participant is not assigned to any slot in the lobby, cannot download company data.");
+            return; // Local participant is not assigned to any slot, cannot determine which company to download
+        }
+
+        var selfCompany = selfSlot.team.Slots[selfSlot.slotId].CompanyId;
+        var updatedCompany = await _serverAPI.GetCompanyAsync(selfCompany, GetLocalPlayerId() ?? throw new InvalidOperationException("Could not get local participant ID while attempting to download company data."));
+        if (updatedCompany is null) {
+            _logger.Error("Failed to download company data for company ID {CompanyId}", selfCompany);
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, "Failed to download company data. Please report this issue.")); // Notify the UI about the failure
+            return;
+        }
+
+        await _companyService.SaveCompany(updatedCompany, syncWithRemote: false);
+
+        // TODO: Handle reportProgress flag.
 
     }
 
