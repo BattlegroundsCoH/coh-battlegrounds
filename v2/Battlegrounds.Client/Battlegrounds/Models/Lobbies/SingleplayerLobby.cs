@@ -218,4 +218,14 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
 
     public ValueTask<bool> WaitForAllPlayersHaveGamemode() => ValueTask.FromResult(true); // NOP operation in singleplayer mode, always returns true since there's only one player
 
+    public Participant? GetParticipant(string participantId) => _participants.FirstOrDefault(p => p.ParticipantId == participantId);
+
+    public int GetRealPlayersCount() => 1; // Always 1 real player in singleplayer mode
+
+    public Task BeginMatch() => Task.CompletedTask; // NOP operation in singleplayer mode, match begins immediately when game is launched
+
+    public Task EndMatch() => Task.CompletedTask; // NOP operation in singleplayer mode, match ends immediately when game is ended
+
+    public ValueTask PublishSystemMessage(string message) => ValueTask.CompletedTask; // NOP operation in singleplayer mode, system messages are not needed
+
 }

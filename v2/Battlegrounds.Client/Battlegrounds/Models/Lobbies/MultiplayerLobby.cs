@@ -618,4 +618,27 @@ public sealed class MultiplayerLobby(
 
     }
 
+    public Participant? GetParticipant(string participantId) => _participants.FirstOrDefault(p => p.ParticipantId == participantId);
+
+    public int GetRealPlayersCount() => _participants.Count(x => x.IsAIParticipant);
+
+    public async Task BeginMatch() {
+        await _gRPCClient.BeginMatchAsync(new Empty(), GetGrpcMetadata());
+    }
+
+    public async Task EndMatch() {
+        await _gRPCClient.EndMatchAsync(new Empty(), GetGrpcMetadata());
+    }
+
+    public async ValueTask PublishSystemMessage(string message) {
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SystemMessage.ToString(),
+            SystemMessage = new SystemMessage {
+                MessageType = "info",
+                Content = message
+            }
+        }, GetGrpcMetadata());
+    }
+
 }

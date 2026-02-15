@@ -388,8 +388,41 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             IsMatchStarting = true;
             LobbyState = "Starting match...";
 
+            // Notify server we're starting
+            // Will freeze lobby state for all other participants and prevent any further changes to the lobby (e.g. changing companies, maps, settings, etc.) and will also prevent new participants from joining
+            // (NOP in singleplayer)
+            await _lobby.BeginMatch();
+
             // Sync corrent lobby view status with backing model based on selected PickableCompany (based on host client view!)
-            await SyncLobbyCompanies();
+            var synced = SyncLobbyCompanies(); // Start syncing companies (but do not await yet, as we can do this in parallel count down)
+
+            // Check all players have marked themselves ready
+            int realPlayerCount = _lobby.GetRealPlayersCount();
+            int markedReadyCount = 0;
+            foreach (var slot in _lobby.Team1.Slots.Concat(_lobby.Team2.Slots)) {
+                if (string.IsNullOrEmpty(slot.ParticipantId)) {
+                    continue; // Slot not occupied
+                }
+                var particpant = _lobby.GetParticipant(slot.ParticipantId);
+                if (particpant is not null && particpant.IsReady) {
+                    markedReadyCount++;
+                }
+            }
+
+            // Wait a few seconds to allow players to mark themselves ready (if they haven't already), but do not wait too long as host has already decided to start the match
+            // If there is only 1 player, do not wait at all. If all players are marked ready, wait 3 seconds. Otherwise, wait 10 seconds to give players a chance to mark themselves ready
+            int waitSeconds = realPlayerCount switch {
+                1 => 0,
+                _ when realPlayerCount == markedReadyCount => 3,
+                _ => 10
+            };
+            for (int i = waitSeconds; i > 0; i--) {
+                LobbyState = $"Starting match in {i} second{(i > 1 ? "s" : string.Empty)}...";
+                await _lobby.PublishSystemMessage($"Match starting in {i} second{(i > 1 ? "s" : string.Empty)}...");
+                await Task.Delay(1000);
+            }
+
+            await synced; // Ensure companies are synced before building gamemode
 
             LobbyState = "Building gamemode...";
             var buildResult = await _playService.BuildGamemode(_lobby);
@@ -474,6 +507,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             IsPlaying = false;
             SyncState(); // Resync state after match is over (or an error occurred)
         }
+
+        await _lobby.EndMatch(); // End the match and return to lobby state (NOP in singleplayer)
 
     }
 
