@@ -70,7 +70,6 @@
 
   <ItemGroup>
     <Folder Include="Assets\Factions\coh3\icons\" />
-    <Folder Include="Assets\Scenarios\CoH3\" />
     <Folder Include="Controllers\" />
   </ItemGroup>
 
@@ -517,6 +516,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Scenarios\CoH3\pachino_2p_mm_handmade.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Scenarios\CoH3\rural_town_4p_mm_handmade.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Scenarios\CoH3\semois_4p_mm_handmade.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Scenarios\CoH3\semois_2p_mm_handmade.png">
