@@ -199,6 +199,14 @@ public class CoH3MatchDataBuilderTests {
 
         public Map Map => throw new NotImplementedException();
 
+        public Task BeginMatch() {
+            throw new NotImplementedException();
+        }
+
+        public Task EndMatch() {
+            throw new NotImplementedException();
+        }
+
         public string? GetLocalPlayerId() {
             throw new NotImplementedException();
         }
@@ -210,8 +218,20 @@ public class CoH3MatchDataBuilderTests {
         public ValueTask<LobbyEvent?> GetNextEvent() =>
             ValueTask.FromResult<LobbyEvent?>(null);
 
+        public Participant? GetParticipant(string participantId) {
+            throw new NotImplementedException();
+        }
+
+        public int GetRealPlayersCount() {
+            throw new NotImplementedException();
+        }
+
         public Task<LaunchGameResult> LaunchGame() =>
             Task.FromResult(new LaunchGameResult());
+
+        public ValueTask PublishSystemMessage(string message) {
+            throw new NotImplementedException();
+        }
 
         public Task RemoveAI(Team team, int slotIndex) {
             throw new NotImplementedException();
