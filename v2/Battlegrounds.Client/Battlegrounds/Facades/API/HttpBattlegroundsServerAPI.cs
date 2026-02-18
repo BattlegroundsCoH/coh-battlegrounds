@@ -155,7 +155,7 @@ public sealed class HttpBattlegroundsServerAPI(
 
     public async Task<bool> IsServerAvailableAsync() {
 
-        string requestUri = $"{BaseUrl}/api/v1/isalive";
+        string requestUri = $"{BaseUrl}/api/v1/up";
         _logger.LogInformation("Checking server availability at {RequestUri}", requestUri);
 
         HttpRequestMessage request = new(HttpMethod.Get, requestUri);

@@ -107,19 +107,19 @@ public sealed class Configuration {
     /// <summary>
     /// Gets or sets the host URL for the Battlegrounds server.
     /// </summary>
-    public string BattlegroundsServerHost { get; set; } = "http:/localhost";
+    public string BattlegroundsServerHost { get; set; } = "bg.test.service.cohbattlegrounds.com";
 
     /// <summary>
     /// Gets or sets the port number used by the Battlegrounds HTTP server.
     /// </summary>
     /// <remarks>Ensure that the specified port is not already in use by another application and is 
     /// accessible through the network firewall, if applicable.</remarks>
-    public int BattlegroundsHttpServerPort { get; set; } = 11443;
+    public int BattlegroundsHttpServerPort { get; set; } = 443;
 
     /// <summary>
     /// Gets or sets the port number used by the Battlegrounds gRPC server.
     /// </summary>
-    public int BattlegroundsGrpcServerPort { get; set; } = 11007;
+    public int BattlegroundsGrpcServerPort { get; set; } = 8082;
 
     /// <summary>
     /// Gets or sets a value indicating whether movies should be skipped in the game.

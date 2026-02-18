@@ -116,9 +116,9 @@ public sealed class HttpBattlegroundsWebAPI(
         }
     }
 
-    const int MaxRetries = 240; // Maximum number of retries for checking auth status
-    const int RetryDelayMilliseconds = 250; // Delay between retries in milliseconds
-    // 240 retries with 250ms delay = 60 seconds total wait time (Not accounting for network latency)
+    const int MaxRetries = 60; // Maximum number of retries for checking auth status
+    const int RetryDelayMilliseconds = 1000; // Delay between retries in milliseconds
+    // 60 retries with 1000ms delay = 60 seconds total wait time (Not accounting for network latency)
 
     public async Task<EndAuthResponse?> EndAuthAsync(AuthProvider provider, string sessionId) {
 
