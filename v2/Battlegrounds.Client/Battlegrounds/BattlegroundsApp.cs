@@ -230,7 +230,20 @@ public sealed class BattlegroundsApp {
 
         // Trigger async loading of blueprints
         var blueprintService = ServiceProvider.GetRequiredService<IBlueprintService>();
-        blueprintService.LoadBlueprints();
+        _ = blueprintService.LoadBlueprints().ContinueWith(async task => {
+            if (task.IsFaulted) {
+                logger.LogError(task.Exception, "Failed to load game blueprints. The application may not function correctly.");
+                return;
+            } else {
+                logger.LogInformation("Game blueprints loaded successfully.");
+
+                // Trigger load of companies
+                var companyService = ServiceProvider.GetRequiredService<ICompanyService>();
+                int companyCount = await companyService.LoadPlayerCompaniesAsync();
+                logger.LogInformation("Loaded {Count} companies from local store", companyCount);
+
+            }
+        });
 
         // Trigger auto login
         var loginViewModel = ServiceProvider.GetRequiredService<LoginViewModel>();
@@ -241,10 +254,6 @@ public sealed class BattlegroundsApp {
                 logger.LogWarning("Auto-login failed. Please log in manually.");
             }
         }
-
-        // Trigger load of companies
-        var companyService = ServiceProvider.GetRequiredService<ICompanyService>();
-        logger.LogInformation("Loaded {Count} companies from local store", await companyService.LoadPlayerCompaniesAsync());
 
     }
 

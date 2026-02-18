@@ -50,7 +50,7 @@ public sealed class BlueprintFixtureService : IBlueprintService { // Test fixtur
         throw new NotImplementedException($"Blueprints of type {typeof(T).Name} are not supported in this fixture service.");
     }
 
-    public void LoadBlueprints() { }
+    public Task LoadBlueprints() => Task.CompletedTask; // No loading needed for fixture
 
     public bool TryGetBlueprint<T>(string gameId, string blueprintId, [NotNullWhen(true)] out T? blueprint) where T : Blueprint {
         try {             

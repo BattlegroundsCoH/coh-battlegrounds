@@ -322,7 +322,7 @@ public sealed class MultiplayerLobby(
                     ParticipantId = team.Slots[slotId].ParticipantId ?? string.Empty,
                     Faction = team.Slots[slotId].Faction,
                     CompanyId = companyId,
-                    AiDifficulty = team.Slots[slotId].Difficulty.ToString(),
+                    AiDifficulty = team.Slots[slotId].Difficulty.Name,
                     Hidden = team.Slots[slotId].Hidden,
                     Locked = team.Slots[slotId].Locked
                 }
@@ -491,7 +491,7 @@ public sealed class MultiplayerLobby(
                     ParticipantId = slot.ParticipantId ?? string.Empty,
                     Faction = slot.Faction,
                     CompanyId = slot.CompanyId,
-                    AiDifficulty = slot.Difficulty.ToString(),
+                    AiDifficulty = slot.Difficulty.Name,
                     Hidden = slot.Hidden,
                     Locked = slot.Locked
                 }) }
@@ -510,7 +510,7 @@ public sealed class MultiplayerLobby(
                     ParticipantId = slot.ParticipantId ?? string.Empty,
                     Faction = slot.Faction,
                     CompanyId = slot.CompanyId,
-                    AiDifficulty = slot.Difficulty.ToString(),
+                    AiDifficulty = slot.Difficulty.Name,
                     Hidden = slot.Hidden,
                     Locked = slot.Locked
                 }

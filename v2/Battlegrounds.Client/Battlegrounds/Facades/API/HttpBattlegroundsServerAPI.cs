@@ -139,6 +139,7 @@ public sealed class HttpBattlegroundsServerAPI(
         _logger.LogInformation("Sending POST request to {RequestUri}", requestUri);
 
         HttpRequestMessage request = await GetHttpRequestWithAuthHeaders(HttpMethod.Post, requestUri);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await _userService.GetLocalUserTokenAsync()); // Ensure we have the latest token
         request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
         request.Content = JsonContent.Create(result);
 
@@ -238,8 +239,7 @@ public sealed class HttpBattlegroundsServerAPI(
         
         string endpoint = $"{BaseUrl}{UploadGamemodeEndpoint}";
         var parameters = new Dictionary<string, string> {
-            { "lobbyId", lobbyId },
-            { "userId", (await _userService.GetLocalUserAsync())!.UserId } // Temp for testing, should rely on user claim in the future
+            { "guid", lobbyId }
         };
 
         string requestUri = $"{endpoint}?{ToUrlEncodedString(parameters)}";
@@ -248,6 +248,7 @@ public sealed class HttpBattlegroundsServerAPI(
         _logger.LogInformation("Sending POST request to {RequestUri}", requestUri);
         HttpRequestMessage request = await GetHttpRequestWithAuthHeaders(HttpMethod.Post, requestUri);
         request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await _userService.GetLocalUserTokenAsync()); // Ensure we have the latest token
         request.Content = new StreamContent(gamemodeStream);
         request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
         request.Content.Headers.ContentLength = gamemodeStream.Length; // Set content length for the stream

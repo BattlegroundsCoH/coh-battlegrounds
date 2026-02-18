@@ -6,6 +6,13 @@ using Battlegrounds.Models.Playing;
 
 namespace Battlegrounds.Services;
 
+/// <summary>
+/// Provides services for building and launching game modes and applications for supported games.
+/// </summary>
+/// <remarks>This service currently supports operations for Company of Heroes 3. Attempting to use unsupported
+/// games will result in a failure. The service is not thread-safe.</remarks>
+/// <param name="coh3Archiver">The archiver service used to create and manage mod archives for Company of Heroes 3.</param>
+/// <param name="configuration">The configuration settings that control game launch options and behavior.</param>
 public sealed class PlayService(CoH3ArchiverService coh3Archiver, Configuration configuration) : IPlayService {
 
     public Task<BuildGamemodeResult> BuildGamemode(ILobby lobby) {
@@ -49,10 +56,10 @@ public sealed class PlayService(CoH3ArchiverService coh3Archiver, Configuration 
 
     }
 
-    public Task<LaunchGameAppResult> LaunchGameApp(Game game)
+    public async Task<LaunchGameAppResult> LaunchGameApp(Game game)
         => game switch {
-            CoH3 coh3 => LaunchCoH3GameApp(coh3),
-            _ => Task.FromResult(new LaunchGameAppResult() {
+            CoH3 coh3 => await LaunchCoH3GameApp(coh3),
+            _ => (new LaunchGameAppResult() {
                 Failed = true,
                 ErrorMessage = "Game not supported."
             })

@@ -506,9 +506,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             IsWaitingForMatchOver = false;
             IsPlaying = false;
             SyncState(); // Resync state after match is over (or an error occurred)
+            await _lobby.EndMatch(); // End the match and return to lobby state (NOP in singleplayer)
         }
-
-        await _lobby.EndMatch(); // End the match and return to lobby state (NOP in singleplayer)
 
     }
 

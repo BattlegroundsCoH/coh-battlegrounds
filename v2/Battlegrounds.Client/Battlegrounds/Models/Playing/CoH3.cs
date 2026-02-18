@@ -2,7 +2,7 @@
 
 namespace Battlegrounds.Models.Playing;
 
-public sealed class CoH3(Configuration configuration) : Game, ICoH3Game {
+public sealed class CoH3(Configuration configuration) : Game, ICoH3Game { // Steam Game Id = 1677280
 
     public static readonly string[] Factions = ["british_africa", "afrika_korps", "german", "american"];
 
@@ -21,6 +21,8 @@ public sealed class CoH3(Configuration configuration) : Game, ICoH3Game {
     public override string ArchiverExecutable => Path.Combine(configuration.CoH3.InstallPath, "EssenceEditor.exe"); // AKA Essence Editor
 
     public override string[] FactionIds => Factions;
+
+    public override int SteamAppId => 1677280;
 
     public override FactionAlliance GetFactionAlliance(string factionId) {
         if (factionId is "british_africa" or "american") {
