@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 using Battlegrounds.Models;
 using Battlegrounds.Models.Companies;
@@ -20,6 +21,8 @@ public sealed class HttpBattlegroundsServerAPI(
     IUserService userService, 
     ICompanyDeserializer companyDeserializer, 
     Configuration configuration) : IBattlegroundsServerAPI {
+
+    private static readonly JsonSerializerOptions serializerOptions = new(JsonSerializerDefaults.Web);
 
     private readonly ILogger<HttpBattlegroundsServerAPI> _logger = logger;
     private readonly IAsyncHttpClient _httpClient = asyncHttpClient;
@@ -42,7 +45,6 @@ public sealed class HttpBattlegroundsServerAPI(
         string endpoint = $"{BaseUrl}{DeleteCompanyEndpoint}";
         var parameters = new Dictionary<string, string> {
             { "guid", companyId },
-            { "userId", (await _userService.GetLocalUserAsync())!.UserId } // Temp for testing, should rely on user claim in the future
         };
 
         string requestUri = $"{endpoint}?{ToUrlEncodedString(parameters)}";
@@ -51,6 +53,7 @@ public sealed class HttpBattlegroundsServerAPI(
 
         HttpRequestMessage request = await GetHttpRequestWithAuthHeaders(HttpMethod.Delete, requestUri);
         request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await _userService.GetLocalUserTokenAsync()); // Ensure we have the latest token
 
         HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
         if (response.IsSuccessStatusCode) {
@@ -63,7 +66,7 @@ public sealed class HttpBattlegroundsServerAPI(
 
     }
 
-    public async Task<Company?> GetCompanyAsync(string companyId, string companyUserId) {
+    public async Task<Company?> GetCompanyAsync(string companyId, string companyUserId, DownloadProgressUpdateDelegate? progressUpdate = null) {
 
         string endpoint = $"{BaseUrl}{DownloadCompanyEndpoint}";
         var parameters = new Dictionary<string, string> {
@@ -88,13 +91,12 @@ public sealed class HttpBattlegroundsServerAPI(
 
     }
 
-    public async ValueTask<bool> UploadCompanyAsync(string companyId, string faction, Stream serializedCompanyStream) {
+    public async ValueTask<bool> UploadCompanyAsync(string companyId, string faction, Stream serializedCompanyStream, UploadProgressUpdateDelegate? progressUpdate = null) {
 
         string endpoint = $"{BaseUrl}{UploadCompanyEndpoint}";
         var parameters = new Dictionary<string, string> {
             { "guid", companyId },
-            { "faction", faction },
-            { "userId", (await _userService.GetLocalUserAsync())!.UserId } // Temp for testing, should rely on user claim in the future
+            { "faction", faction }
         };
 
         string requestUri = $"{endpoint}?{ToUrlEncodedString(parameters)}";
@@ -102,7 +104,8 @@ public sealed class HttpBattlegroundsServerAPI(
         _logger.LogInformation("Sending POST request to {RequestUri}", requestUri);
         HttpRequestMessage request = await GetHttpRequestWithAuthHeaders(HttpMethod.Post, requestUri);
         request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
-        request.Content = new StreamContent(serializedCompanyStream);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await _userService.GetLocalUserTokenAsync()); // Ensure we have the latest token
+        request.Content = new StreamContent(new ProgressStream(serializedCompanyStream, serializedCompanyStream.Length, progressUpdate));
         request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
         request.Content.Headers.ContentLength = serializedCompanyStream.Length; // Set content length for the stream
 
@@ -117,7 +120,7 @@ public sealed class HttpBattlegroundsServerAPI(
 
     }
 
-    public async ValueTask<bool> ReportMatchResults(MatchResult result) {
+    public async ValueTask<bool> ReportMatchResults(MatchResult result, UploadProgressUpdateDelegate? progressUpdate = null) {
 
         if (result is null) {
             _logger.LogError("Match result is null. Cannot report match results.");
@@ -131,8 +134,7 @@ public sealed class HttpBattlegroundsServerAPI(
 
         string endpoint = $"{BaseUrl}{ReportMatchResultsEndpoint}";
         var parameters = new Dictionary<string, string> {
-            { "guid", result.LobbyId },
-            { "userId", (await _userService.GetLocalUserAsync())!.UserId }, // Temp for testing, should rely on user claim in the future
+            { "guid", result.LobbyId }
         };
 
         string requestUri = $"{endpoint}?{ToUrlEncodedString(parameters)}";
@@ -141,7 +143,15 @@ public sealed class HttpBattlegroundsServerAPI(
         HttpRequestMessage request = await GetHttpRequestWithAuthHeaders(HttpMethod.Post, requestUri);
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await _userService.GetLocalUserTokenAsync()); // Ensure we have the latest token
         request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
-        request.Content = JsonContent.Create(result);
+
+        // Serialize JSON to byte stream and create a ProgressStream to track upload progress
+        using var memoryStream = new MemoryStream();
+        await JsonSerializer.SerializeAsync(memoryStream, result, serializerOptions);
+
+        memoryStream.Position = 0;
+        request.Content = new StreamContent(new ProgressStream(memoryStream, memoryStream.Length, progressUpdate));
+        request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        request.Content.Headers.ContentLength = memoryStream.Length;
 
         HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
         if (response.IsSuccessStatusCode) {
@@ -235,7 +245,7 @@ public sealed class HttpBattlegroundsServerAPI(
         return request;
     }
 
-    public async Task<bool> UploadGamemodeAsync(string lobbyId, string gamemodeLocation) {
+    public async Task<bool> UploadGamemodeAsync(string lobbyId, string gamemodeLocation, UploadProgressUpdateDelegate? progressUpdate = null) {
         
         string endpoint = $"{BaseUrl}{UploadGamemodeEndpoint}";
         var parameters = new Dictionary<string, string> {
@@ -249,7 +259,7 @@ public sealed class HttpBattlegroundsServerAPI(
         HttpRequestMessage request = await GetHttpRequestWithAuthHeaders(HttpMethod.Post, requestUri);
         request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await _userService.GetLocalUserTokenAsync()); // Ensure we have the latest token
-        request.Content = new StreamContent(gamemodeStream);
+        request.Content = new StreamContent(new ProgressStream(gamemodeStream, gamemodeStream.Length, progressUpdate));
         request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
         request.Content.Headers.ContentLength = gamemodeStream.Length; // Set content length for the stream
 

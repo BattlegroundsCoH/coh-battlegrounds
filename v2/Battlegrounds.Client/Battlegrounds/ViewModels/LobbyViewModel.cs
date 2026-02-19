@@ -185,6 +185,16 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
     }
 
+    public string TrayMessage {
+        get => field;
+        set {
+            if (value == field) return;
+            field = value;
+            _logger.LogInformation("Tray message changed to: {Message}", field);
+            PropertyChanged?.Invoke(this, new(nameof(TrayMessage)));
+        }
+    } = string.Empty;
+
     public PickableChatChannel[] AvailableChatChannels => [new PickableChatChannel("all"), new PickableChatChannel("team")];
 
     public PickableChatChannel SelectedChatChannel {
@@ -327,6 +337,16 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                     if (launched.Failed) {
                         // TODO: Inform the lobby that the local player failed to launch the game, so host can handle it (probably by cancelling the game start and returning to lobby)
                     }
+                    break;
+                case LobbyEventType.TrayMessage:
+                    if (lobbyEvent.Arg is not string trayMessage) {
+                        _logger.LogWarning("Received TrayMessage lobby event with invalid argument: {Arg}", lobbyEvent.Arg);
+                        break;
+                    }
+                    TrayMessage = trayMessage;
+                    break;
+                case LobbyEventType.TrayMessageHide:
+                    TrayMessage = string.Empty;
                     break;
                 default:
                     break;

@@ -280,7 +280,13 @@ public sealed class MultiplayerLobby(
 
         result.LobbyId = _lobbyId; // Ensure the lobby ID is set on the match result
 
-        var reported = await _serverAPI.ReportMatchResults(result); // Report the match result to the server
+        var reported = await _serverAPI.ReportMatchResults(result, async (progress, done, totalBytes) => { 
+            if (done) {
+                await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TrayMessageHide)); // Notify the UI about the completed upload
+            } else {
+                await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TrayMessage, $"Uploading match result... {progress:P2} complete")); // Notify the UI about the upload progress
+            }
+        });
         if (!reported) {
             _logger.Error("Failed to report match result for game {GameId} to the server", matchResult.GameId);
             return false;
@@ -415,7 +421,13 @@ public sealed class MultiplayerLobby(
     }
 
     public async ValueTask<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) {
-        var result = await _serverAPI.UploadGamemodeAsync(_lobbyId, gamemodeLocation);
+        var result = await _serverAPI.UploadGamemodeAsync(_lobbyId, gamemodeLocation, async (progress, done, totalBytes) => {
+            if (done) {
+                await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TrayMessageHide)); // Notify the UI about the completed upload
+            } else {
+                await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TrayMessage, $"Uploading gamemode... {progress:P2} complete")); // Notify the UI about the upload progress
+            }
+        });
         if (!result) {
             await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, "Failed to upload gamemode. Please report this issue.")); // Notify the UI about the failure
             return new UploadGamemodeResult() { Failed = true };
@@ -569,7 +581,7 @@ public sealed class MultiplayerLobby(
             var totalSafe = total ?? 0;
             float progress = totalSafe > 0 ? (float)downloaded / totalSafe : 0;
             _logger.Information("Gamemode download progress: {Progress:P2}", progress);
-            _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.SystemMessage, $"Downloading gamemode... {progress:P2} complete")); // Notify the UI about the download progress
+            _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TrayMessage, $"Downloading gamemode... {progress:P2} complete")); // Notify the UI about the download progress
             await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
                 LobbyId = _lobbyId,
                 ParticipantId = _localParticipant.ParticipantId,
@@ -579,7 +591,7 @@ public sealed class MultiplayerLobby(
 
         if (downloadResult) {
             _logger.Information("Gamemode download completed successfully.");
-            _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.SystemMessage, "Gamemode download completed!")); // Notify the UI about the successful download
+            _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TrayMessageHide)); // Notify the UI about the successful download
 
             // Notify server that the download is complete, so it can update the lobby state and notify other participants
             await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
@@ -605,7 +617,9 @@ public sealed class MultiplayerLobby(
         }
 
         var selfCompany = selfSlot.team.Slots[selfSlot.slotId].CompanyId;
-        var updatedCompany = await _serverAPI.GetCompanyAsync(selfCompany, GetLocalPlayerId() ?? throw new InvalidOperationException("Could not get local participant ID while attempting to download company data."));
+        var updatedCompany = await _serverAPI.GetCompanyAsync(selfCompany, GetLocalPlayerId() ?? throw new InvalidOperationException("Could not get local participant ID while attempting to download company data."), async (downloaded, total) => {
+            _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TrayMessage, $"Downloading updated company data... {downloaded} / {total} bytes")); // Notify the UI about the download progress
+        });
         if (updatedCompany is null) {
             _logger.Error("Failed to download company data for company ID {CompanyId}", selfCompany);
             await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, "Failed to download company data. Please report this issue.")); // Notify the UI about the failure
@@ -614,7 +628,16 @@ public sealed class MultiplayerLobby(
 
         await _companyService.SaveCompany(updatedCompany, syncWithRemote: false);
 
-        // TODO: Handle reportProgress flag.
+        if (reportProgress) { 
+            await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
+                LobbyId = _lobbyId,
+                ParticipantId = GetLocalPlayerId() ?? string.Empty,
+                Progress = 1.0f,
+                Completed = true
+            }, GetGrpcMetadata()); // Report to the server that the company download is complete, so it can update the lobby state and notify other participants
+        }
+
+        _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TrayMessageHide)); // Notify the UI to hide the tray message about downloading company data
 
     }
 
