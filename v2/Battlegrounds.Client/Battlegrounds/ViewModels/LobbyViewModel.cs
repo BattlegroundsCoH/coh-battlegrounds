@@ -328,6 +328,10 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                         break;
                     }
                     _selectedMap = updatedMap; // NOP if already selected (so NOP for host)
+
+                    // Update team slots as well, since some slots may become hidden/unhidden based on map selection
+                    Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
+                    Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
                     break;
                 case LobbyEventType.SettingUpdated:
                     PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
