@@ -197,7 +197,16 @@ public interface ILobby {
     /// <param name="difficulty">The AI difficulty level to assign to the specified slot.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task SetSlotAIDifficulty(Team team, int slotIndex, AIDifficulty difficulty);
-    
+
+    /// <summary>
+    /// Sets the faction for the specified slot on the given team.
+    /// </summary>
+    /// <param name="team">The team whose slot faction is to be set.</param>
+    /// <param name="slotIndex">The zero-based index of the slot to update. Must be within the valid range of slot indices for the team.</param>
+    /// <param name="faction">The name of the faction to assign to the slot, or null to clear the faction assignment.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task SetSlotFaction(Team team, int slotIndex, string? faction);
+
     /// <summary>
     /// Toggles the lock state of a slot within the specified team asynchronously.
     /// </summary>

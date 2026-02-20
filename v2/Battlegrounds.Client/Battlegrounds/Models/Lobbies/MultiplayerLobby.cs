@@ -250,11 +250,31 @@ public sealed class MultiplayerLobby(
         return new LaunchGameResult() {}; // TODO: Return actual result from gRPC call
     }
 
-    public Task RemoveAI(Team team, int slotIndex) {
+    public async Task RemoveAI(Team team, int slotIndex) {
         if (!IsHost) {
-            return Task.CompletedTask; // Only the host can remove AI
+            return; // Only the host can remove AI
         }
-        throw new NotImplementedException();
+        int teamId = GetIndexOfTeam(team);
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SlotUpdated.ToString(),
+            ParticipantId = _localParticipant.ParticipantId,
+            SlotUpdate = new SlotUpdate {
+                TeamId = teamId,
+                Slot = new Slot {
+                    Id = slotIndex,
+                    ParticipantId = string.Empty,
+                    Faction = string.Empty,
+                    CompanyId = string.Empty,
+                    AiDifficulty = AIDifficulty.HUMAN.Name,
+                    Hidden = team.Slots[slotIndex].Hidden,
+                    Locked = team.Slots[slotIndex].Locked
+                }
+            },
+        }, GetGrpcMetadata());
+        _participants.RemoveWhere(p => p.ParticipantId == team.Slots[slotIndex].ParticipantId); // Remove the participant from the lobby if it was an AI (ie. it won't be in the participants list if it was a human player)
+        team.Slots[slotIndex] = team.Slots[slotIndex] with { ParticipantId = string.Empty, Faction = string.Empty, CompanyId = string.Empty, Difficulty = AIDifficulty.HUMAN }; // Update local state
+        _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TeamUpdated, teamId)); // Notify the UI of the change
     }
 
     public async ValueTask<bool> ReportMatchResult(ReplayAnalysisResult matchResult) {
@@ -410,6 +430,32 @@ public sealed class MultiplayerLobby(
             },
         }, GetGrpcMetadata());
         team.Slots[slotIndex] = team.Slots[slotIndex] with { Difficulty = difficulty }; // Update local state
+        _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TeamUpdated, teamId)); // Notify the UI of the change
+    }
+
+    public async Task SetSlotFaction(Team team, int slotIndex, string? faction) {
+        if (!IsHost) {
+            return; // Only the host can set slot faction
+        }
+        int teamId = GetIndexOfTeam(team);
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SlotUpdated.ToString(),
+            ParticipantId = _localParticipant.ParticipantId,
+            SlotUpdate = new SlotUpdate {
+                TeamId = teamId,
+                Slot = new Slot {
+                    Id = slotIndex,
+                    ParticipantId = team.Slots[slotIndex].ParticipantId ?? string.Empty,
+                    Faction = faction ?? string.Empty,
+                    CompanyId = team.Slots[slotIndex].CompanyId,
+                    AiDifficulty = team.Slots[slotIndex].Difficulty.Name,
+                    Hidden = team.Slots[slotIndex].Hidden,
+                    Locked = team.Slots[slotIndex].Locked
+                }
+            },
+        }, GetGrpcMetadata());
+        team.Slots[slotIndex] = team.Slots[slotIndex] with { Faction = faction ?? string.Empty }; // Update local state
         _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TeamUpdated, teamId)); // Notify the UI of the change
     }
 

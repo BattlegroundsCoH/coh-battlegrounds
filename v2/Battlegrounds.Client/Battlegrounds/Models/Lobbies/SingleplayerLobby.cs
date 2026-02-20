@@ -228,4 +228,6 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
 
     public ValueTask PublishSystemMessage(string message) => ValueTask.CompletedTask; // NOP operation in singleplayer mode, system messages are not needed
 
+    public Task SetSlotFaction(Team team, int slotIndex, string? faction) => Task.CompletedTask; // NOP operation in singleplayer mode, faction changes are not needed
+
 }

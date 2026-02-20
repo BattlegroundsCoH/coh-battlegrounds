@@ -581,8 +581,15 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     private async Task AddAIToSlot(int teamIndex, int slotIndex, AIDifficulty difficulty) {
         if (difficulty == AIDifficulty.HUMAN) {
             await _lobby.RemoveAI(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, slotIndex);
+            return;
         }
         await _lobby.SetSlotAIDifficulty(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, slotIndex, difficulty);
+        var slot = teamIndex == 0 ? _lobby.Team1.Slots[slotIndex] : _lobby.Team2.Slots[slotIndex];
+        if (string.IsNullOrEmpty(slot.Faction)) {
+            var alliance = teamIndex == 0 ? FactionAlliance.Allies : FactionAlliance.Axis;
+            var faction = _lobby.Game.FactionIds.FirstOrDefault(f => _lobby.Game.GetFactionAlliance(f) == alliance);
+            await _lobby.SetSlotFaction(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, slotIndex, faction);
+        }
     }
 
     private async Task LockOrUnlockSlot(int teamIndex, int slotIndex) {

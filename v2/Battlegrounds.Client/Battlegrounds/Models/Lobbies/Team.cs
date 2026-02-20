@@ -11,6 +11,8 @@ public sealed record Team(TeamType TeamType, string TeamAlias, Team.Slot[] Slots
     
     public sealed record Slot(int Index, string? ParticipantId, string Faction, string CompanyId, AIDifficulty Difficulty, bool Hidden, bool Locked);
 
-    public HashSet<string> Participants => [.. Slots.Where(x => !string.IsNullOrEmpty(x.ParticipantId)).Select(x => x.ParticipantId)];
+    public HashSet<string> Participants => [.. (from slot in Slots
+                                         where !string.IsNullOrEmpty(slot.ParticipantId)
+                                         select slot.ParticipantId)];
 
 }

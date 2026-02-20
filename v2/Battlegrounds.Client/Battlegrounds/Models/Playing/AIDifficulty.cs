@@ -73,7 +73,7 @@ public static class AIDifficultyExtensions {
         /// <returns>The <see cref="AIDifficulty"/> value that corresponds to the specified difficulty level name.</returns>
         /// <exception cref="ArgumentException">Thrown if <paramref name="name"/> does not match any valid AI difficulty level.</exception>
         public static AIDifficulty FromName(string name) => name.ToLowerInvariant() switch {
-            "human" => AIDifficulty.HUMAN,
+            "human" or "" => AIDifficulty.HUMAN,
             "easy" => AIDifficulty.EASY,
             "normal" => AIDifficulty.NORMAL,
             "hard" => AIDifficulty.HARD,
