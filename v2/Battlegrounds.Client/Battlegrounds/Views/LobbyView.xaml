@@ -72,7 +72,13 @@
                                     </Grid.ColumnDefinitions>
 
                                     <!-- Player Icon/Avatar -->
-                                    <Ellipse Width="40" Height="40" Margin="10,0,0,0" Grid.Column="0" VerticalAlignment="Center">
+                                    <Ellipse 
+                                        Width="40" 
+                                        Height="40" 
+                                        Margin="10,0,0,0" 
+                                        Grid.Column="0" 
+                                        VerticalAlignment="Center"
+                                        Visibility="{Binding HasOccupant, Converter={StaticResource BoolToVisibilityConverter}}">
                                         <Ellipse.Fill>
                                             <ImageBrush 
                                                 ImageSource="pack://application:,,,/Battlegrounds;component/Assets/dummy_avatar.png"/>
@@ -154,6 +160,7 @@
                                         <!-- Lock/Unlock Button (shown only if slot is unoccupied) -->
                                         <Button Width="30" Height="42" 
                                             Margin="5,0"
+                                                Style="{StaticResource TransparentButton}"
                                             ToolTip="{Binding Slot.Locked, Converter={StaticResource LockStateConverter}}"
                                             Command="{Binding LockUnlockCommand}"
                                             CommandParameter="{Binding Slot.Index}"
@@ -173,6 +180,7 @@
                                         Margin="0,0,8,0"
                                         Visibility="{Binding CanKickOccupant, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                         -->
+                                    
                                 </Grid>
                             </Border>
                         </ControlTemplate>

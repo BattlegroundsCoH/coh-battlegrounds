@@ -274,7 +274,7 @@ public sealed class MultiplayerLobby(
         }, GetGrpcMetadata());
         _participants.RemoveWhere(p => p.ParticipantId == team.Slots[slotIndex].ParticipantId); // Remove the participant from the lobby if it was an AI (ie. it won't be in the participants list if it was a human player)
         team.Slots[slotIndex] = team.Slots[slotIndex] with { ParticipantId = string.Empty, Faction = string.Empty, CompanyId = string.Empty, Difficulty = AIDifficulty.HUMAN }; // Update local state
-        _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TeamUpdated, teamId)); // Notify the UI of the change
+        _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI of the change
     }
 
     public async ValueTask<bool> ReportMatchResult(ReplayAnalysisResult matchResult) {
@@ -429,8 +429,17 @@ public sealed class MultiplayerLobby(
                 }
             },
         }, GetGrpcMetadata());
-        team.Slots[slotIndex] = team.Slots[slotIndex] with { Difficulty = difficulty }; // Update local state
-        _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TeamUpdated, teamId)); // Notify the UI of the change
+
+        // Add participant to the lobby if not already added
+        int participantId = teamId * 4 + slotIndex; // Generate a unique participant ID for the AI based on its team and slot index
+        string participantIdStr = participantId.ToString();
+        if (!_participants.Any(x => x.ParticipantId == participantIdStr)) {
+            Participant aiParticipant = new Participant(participantId, participantIdStr, $"AI Player {participantId}", true, true);
+            _participants.Add(aiParticipant);
+        }
+
+        team.Slots[slotIndex] = team.Slots[slotIndex] with { Difficulty = difficulty, ParticipantId = participantIdStr }; // Update local state
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI of the change
     }
 
     public async Task SetSlotFaction(Team team, int slotIndex, string? faction) {
@@ -456,7 +465,7 @@ public sealed class MultiplayerLobby(
             },
         }, GetGrpcMetadata());
         team.Slots[slotIndex] = team.Slots[slotIndex] with { Faction = faction ?? string.Empty }; // Update local state
-        _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TeamUpdated, teamId)); // Notify the UI of the change
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, teamId)); // Notify the UI of the change
     }
 
     public Task ToggleSlotLock(Team team, int slotIndex) {
