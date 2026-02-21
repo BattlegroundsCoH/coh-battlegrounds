@@ -468,11 +468,32 @@ public sealed class MultiplayerLobby(
         await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, teamId)); // Notify the UI of the change
     }
 
-    public Task ToggleSlotLock(Team team, int slotIndex) {
+    public async Task ToggleSlotLock(Team team, int slotIndex) {
         if (!IsHost) {
-            return Task.CompletedTask; // Only the host can toggle slot locks
+            return; // Only the host can toggle slot locks
         }
-        throw new NotImplementedException();
+        var slot = team.Slots[slotIndex];
+        var newLockState = !slot.Locked;
+        int teamId = GetIndexOfTeam(team);
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SlotUpdated.ToString(),
+            ParticipantId = _localParticipant.ParticipantId,
+            SlotUpdate = new SlotUpdate {
+                TeamId = teamId,
+                Slot = new Slot {
+                    Id = slotIndex,
+                    ParticipantId = team.Slots[slotIndex].ParticipantId ?? string.Empty,
+                    Faction = team.Slots[slotIndex].Faction ?? string.Empty,
+                    CompanyId = team.Slots[slotIndex].CompanyId,
+                    AiDifficulty = team.Slots[slotIndex].Difficulty.Name,
+                    Hidden = team.Slots[slotIndex].Hidden,
+                    Locked = newLockState
+                }
+            },
+        }, GetGrpcMetadata());
+        team.Slots[slotIndex] = team.Slots[slotIndex] with { Locked = newLockState }; // Update local state
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI of the change
     }
 
     public async ValueTask<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) {
