@@ -231,6 +231,20 @@ public sealed class MultiplayerLobby(
                 return new LobbyEvent(LobbyEventType.DownloadProgress); // NOP for now
             case LobbyEventType.DownloadCompleted:
                 return new LobbyEvent(LobbyEventType.DownloadCompleted); // NOP for now
+            case LobbyEventType.ParticipantReady:
+                var participant = _participants.FirstOrDefault(p => p.ParticipantId == update.ParticipantId);
+                if (participant is not null) {
+                    _participants.Remove(participant);
+                    _participants.Add(participant with { IsReady = true });
+                }
+                return new LobbyEvent(LobbyEventType.ParticipantReady, update.ParticipantId);
+            case LobbyEventType.ParticipantUnready:
+                var participantUnready = _participants.FirstOrDefault(p => p.ParticipantId == update.ParticipantId);
+                if (participantUnready is not null) {
+                    _participants.Remove(participantUnready);
+                    _participants.Add(participantUnready with { IsReady = false });
+                }
+                return new LobbyEvent(LobbyEventType.ParticipantUnready, update.ParticipantId);
             default:
                 _logger.Warning("Unhandled gRPC lobby event type: {EventType}", eventType);
                 break;
@@ -745,18 +759,13 @@ public sealed class MultiplayerLobby(
 
     public async Task MarkReady(bool isReady) {
         _isReady = isReady;
+        var eventType = isReady ? LobbyEventType.ParticipantReady : LobbyEventType.ParticipantUnready;
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
             LobbyId = _lobbyId,
-            EventType = LobbyEventType.ParticipantReady.ToString(),
+            EventType = eventType.ToString(),
             ParticipantId = _localParticipant.ParticipantId,
-            ParticipantUpdate = new Proto.Lobbies.Participant {
-                Name = _localParticipant.ParticipantName,
-                ParticipantId = _localParticipant.ParticipantId,
-                IsAi = false,
-                Ready = isReady,
-            }
         }, GetGrpcMetadata());
-        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.ParticipantReady, isReady)); // Notify the UI about the ready state change
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(eventType, isReady)); // Notify the UI about the ready state change
     }
 
     public Task KickPlayer(Team team, int slotIndex) {
