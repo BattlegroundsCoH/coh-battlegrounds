@@ -19,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Serilog;
+using Serilog.Core;
 
 namespace Battlegrounds;
 
@@ -229,21 +230,7 @@ public sealed class BattlegroundsApp {
         }
 
         // Trigger async loading of blueprints
-        var blueprintService = ServiceProvider.GetRequiredService<IBlueprintService>();
-        _ = blueprintService.LoadBlueprints().ContinueWith(async task => {
-            if (task.IsFaulted) {
-                logger.LogError(task.Exception, "Failed to load game blueprints. The application may not function correctly.");
-                return;
-            } else {
-                logger.LogInformation("Game blueprints loaded successfully.");
-
-                // Trigger load of companies
-                var companyService = ServiceProvider.GetRequiredService<ICompanyService>();
-                int companyCount = await companyService.LoadPlayerCompaniesAsync();
-                logger.LogInformation("Loaded {Count} companies from local store", companyCount);
-
-            }
-        });
+        LoadData(ServiceProvider);
 
         // Trigger auto login
         var loginViewModel = ServiceProvider.GetRequiredService<LoginViewModel>();
@@ -254,6 +241,18 @@ public sealed class BattlegroundsApp {
                 logger.LogWarning("Auto-login failed. Please log in manually.");
             }
         }
+
+    }
+
+    private static async void LoadData(IServiceProvider serviceProvider) {
+
+        var logger = serviceProvider.GetRequiredService<ILogger<BattlegroundsApp>>();
+        var blueprintService = serviceProvider.GetRequiredService<IBlueprintService>();
+        await blueprintService.LoadBlueprints();
+
+        var companyService = serviceProvider.GetRequiredService<ICompanyService>();
+        int companyCount = await companyService.LoadPlayerCompaniesAsync();
+        logger.LogInformation("Loaded {Count} companies from local store", companyCount);
 
     }
 

@@ -147,7 +147,7 @@ public sealed class HttpBattlegroundsWebAPI(
             }
         }
 
-        _logger.LogError("Authentication status check for {Provider} with session {SessionId} timed out after 1000 attempts.", provider, sessionId);
+        _logger.LogError("Authentication status check for {Provider} with session {SessionId} timed out after {MaxRetries} attempts.", provider, sessionId, MaxRetries);
         return null;
 
     }
