@@ -234,8 +234,11 @@ public sealed class CompanyService(
             Faction = company.Faction,
             GameId = company.GameId,
             CreatedAt = company.CreatedAt,
+            CreatedBy = company.CreatedBy,
             UpdatedAt = DateTime.Now, // Update the timestamp to now
+            UpdatedBy = "ReplayEventProcessor", // Indicate that the update was made by the replay event processor
             Squads = squads,
+            Version = company.Version + 1 // Increment the version number
         };
 
         if (commitLocally) {

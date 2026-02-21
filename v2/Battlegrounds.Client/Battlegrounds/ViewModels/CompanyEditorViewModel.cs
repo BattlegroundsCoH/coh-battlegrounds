@@ -30,6 +30,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
     private readonly ICompanyService _companyService;
     private readonly IBlueprintService _blueprintService;
+    private readonly IUserService _userService;
     private readonly MainWindowViewModel _mainWindowViewModel;
     private readonly ILogger<CompanyEditorViewModel> _logger;
     private readonly string _faction = string.Empty;
@@ -153,6 +154,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         CompanyEditorViewModelContext context, 
         ICompanyService companyService, 
         IBlueprintService blueprintService, 
+        IUserService userService,
         IGameService gameService, 
         MainWindowViewModel mainWindowViewModel,
         ILogger<CompanyEditorViewModel> logger) {
@@ -162,6 +164,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         _logger = logger;
         _companyService = companyService;
         _blueprintService = blueprintService;
+        _userService = userService;
         _mainWindowViewModel = mainWindowViewModel;
 
         LeaveCommand = new AsyncRelayCommand(ExitEditor);
@@ -228,14 +231,21 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
         try {
 
+            string user = (await _userService.GetLocalUserAsync())?.UserId ?? "Unknown";
+
             DateTime createdAt;
-            string companyId;
+            string companyId, createdBy;
+            int version;
             if (_context.IsNewCompany) {
                 companyId = Guid.CreateVersion7().ToString(); // Generate a new ID for the company
                 createdAt = DateTime.UtcNow; // Set the creation time for a new company
+                createdBy = user; // Set the creator for a new company
+                version = 1; // Start version at 1 for a new company
             } else {
                 companyId = _context.Company.Id; // Use the existing company's ID
                 createdAt = _context.Company.CreatedAt; // Keep the original creation time
+                createdBy = _context.Company.CreatedBy; // Keep the original creator
+                version = _context.Company.Version + 1; // Increment version for an existing company
             }
 
             Company company = new Company {
@@ -245,6 +255,9 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
                 Faction = _faction,
                 UpdatedAt = DateTime.UtcNow,
                 CreatedAt = createdAt,
+                CreatedBy = createdBy,
+                UpdatedBy = user,
+                Version = version,
                 Squads = [.. _startingUnits, .. _skirmishPhaseUnits, .. _battlePhaseUnits, .. _reservesPhaseUnits]
             };
 
