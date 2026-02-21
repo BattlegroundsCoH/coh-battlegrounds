@@ -62,6 +62,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
     public bool IsHost => _lobby.IsHost;
 
+    public bool IsReady => _lobby.IsReady;
+
     public IReadOnlyDictionary<FactionAlliance, List<Company>> CompaniesByAlliance => _localPlayerCompaniesByAlliance;
 
     public IReadOnlyDictionary<string, Company> LobbyCompanies => _lobbyCompanies;

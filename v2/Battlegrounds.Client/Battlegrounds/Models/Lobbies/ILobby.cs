@@ -30,6 +30,12 @@ public interface ILobby {
     bool IsActive { get; }
 
     /// <summary>
+    /// Gets a value indicating whether the user is marked as ready in the lobby. 
+    /// This indicates that the user has completed their setup and is prepared to start the match.
+    /// </summary>
+    bool IsReady { get; }
+
+    /// <summary>
     /// Gets the current game instance associated with this context.
     /// </summary>
     Game Game { get; }
@@ -234,5 +240,21 @@ public interface ILobby {
     /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if all players have
     /// the required game mode; otherwise, <see langword="false"/>.</returns>
     ValueTask<bool> WaitForAllPlayersHaveGamemode();
+
+    /// <summary>
+    /// Marks the current instance as ready or not ready for operation.
+    /// </summary>
+    /// <param name="isReady">A value indicating whether the instance should be marked as ready (<see langword="true"/>) or not ready (<see
+    /// langword="false"/>).</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task MarkReady(bool isReady);
+
+    /// <summary>
+    /// Removes a player from the specified team at the given slot index.
+    /// </summary>
+    /// <param name="team">The team from which the player will be removed. Cannot be null.</param>
+    /// <param name="slotIndex">The zero-based index of the player slot to remove. Must be within the valid range of player slots for the team.</param>
+    /// <returns>A task that represents the asynchronous operation of removing the player.</returns>
+    Task KickPlayer(Team team, int slotIndex);
 
 }

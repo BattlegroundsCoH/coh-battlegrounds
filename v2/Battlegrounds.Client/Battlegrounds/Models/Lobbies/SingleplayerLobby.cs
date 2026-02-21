@@ -49,6 +49,8 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
 
     public Map Map => _map;
 
+    public bool IsReady => true; // Always ready in singleplayer mode
+
     public async ValueTask<LobbyEvent?> GetNextEvent() {
         try {
             return await _internalEvents.Reader.ReadAsync();
@@ -229,5 +231,9 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
     public ValueTask PublishSystemMessage(string message) => ValueTask.CompletedTask; // NOP operation in singleplayer mode, system messages are not needed
 
     public Task SetSlotFaction(Team team, int slotIndex, string? faction) => Task.CompletedTask; // NOP operation in singleplayer mode, faction changes are not needed
+
+    public Task MarkReady(bool isReady) => Task.CompletedTask; // NOP operation in singleplayer mode, player is always ready
+
+    public Task KickPlayer(Team team, int slotIndex) => Task.CompletedTask; // NOP operation in singleplayer mode, cannot kick players
 
 }

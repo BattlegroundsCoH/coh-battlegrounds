@@ -66,6 +66,7 @@ public sealed class MultiplayerLobby(
     private readonly Team[] _teams = [setup.Team1, setup.Team2];
 
     private bool _isActive = true;
+    private bool _isReady = false;
     private bool _disposedValue = false;
 
     private Map _map = setup.Map;
@@ -89,6 +90,8 @@ public sealed class MultiplayerLobby(
     public IList<LobbySetting> Settings => _settings;
 
     public Map Map => _map;
+
+    public bool IsReady => _isReady;
 
     public string? GetLocalPlayerId() => _localParticipant.ParticipantId;
 
@@ -738,6 +741,26 @@ public sealed class MultiplayerLobby(
                 Content = message
             }
         }, GetGrpcMetadata());
+    }
+
+    public async Task MarkReady(bool isReady) {
+        _isReady = isReady;
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.ParticipantReady.ToString(),
+            ParticipantId = _localParticipant.ParticipantId,
+            ParticipantUpdate = new Proto.Lobbies.Participant {
+                Name = _localParticipant.ParticipantName,
+                ParticipantId = _localParticipant.ParticipantId,
+                IsAi = false,
+                Ready = isReady,
+            }
+        }, GetGrpcMetadata());
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.ParticipantReady, isReady)); // Notify the UI about the ready state change
+    }
+
+    public Task KickPlayer(Team team, int slotIndex) {
+        throw new NotImplementedException();
     }
 
 }
