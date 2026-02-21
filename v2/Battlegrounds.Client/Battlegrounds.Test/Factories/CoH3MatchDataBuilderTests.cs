@@ -137,6 +137,7 @@ public class CoH3MatchDataBuilderTests {
         public string Name { get; } = "Test Lobby";
         public bool IsHost { get; } = true;
         public bool IsActive { get; } = true;
+        public bool IsReady { get; } = false;
         public Game Game { get; } = null!;  // Not used in tests
 
         public ISet<Participant> Participants { get; } = new HashSet<Participant> {
@@ -271,6 +272,14 @@ public class CoH3MatchDataBuilderTests {
             Task.FromResult(new UploadGamemodeResult());
 
         public ValueTask<bool> WaitForAllPlayersHaveGamemode() {
+            throw new NotImplementedException();
+        }
+
+        public Task MarkReady(bool isReady) {
+            throw new NotImplementedException();
+        }
+
+        public Task KickPlayer(Team team, int slotIndex) {
             throw new NotImplementedException();
         }
 

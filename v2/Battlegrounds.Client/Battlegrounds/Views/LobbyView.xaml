@@ -20,6 +20,7 @@
         <converters:EmptyStringToVisibilityConverter x:Key="EmptyStringToVisibilityConverter"/>
         <converters:MatchButtonStateConverter x:Key="MatchButtonStateConverter"/>
         <converters:ButtonStateToContentConverter x:Key="ButtonStateToContentConverter"/>
+        <converters:ReadyStateConverter x:Key="ReadyStateConverter"/>
         <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
 
         <DataTemplate x:Key="CompanyComboBoxItemTemplate">
@@ -326,6 +327,7 @@
                                 <Setter Property="Background" TargetName="MainBorder" Value="#4CAF50"/>
                                 <Setter Property="BorderBrush" TargetName="MainBorder" Value="#66BB6A"/>
                                 <Setter Property="IsEnabled" Value="True"/>
+                                <Setter TargetName="PulseBorder" Property="Opacity" Value="0"/>
                             </Trigger>
 
                             <!-- CannotStart state -->
@@ -333,6 +335,7 @@
                                 <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource BackgroundDarkBlueBrush}"/>
                                 <Setter Property="Opacity" Value="0.7"/>
                                 <Setter Property="IsEnabled" Value="False"/>
+                                <Setter TargetName="PulseBorder" Property="Opacity" Value="0"/>
                             </Trigger>
 
                             <!-- Starting state with pulse animation -->
@@ -396,6 +399,22 @@
                                 </Trigger.EnterActions>
                             </Trigger>
 
+                            <!-- Ready state - Green color (player is ready) -->
+                            <Trigger Property="Tag" Value="Ready">
+                                <Setter Property="Background" TargetName="MainBorder" Value="#4CAF50"/>
+                                <Setter Property="BorderBrush" TargetName="MainBorder" Value="#66BB6A"/>
+                                <Setter Property="IsEnabled" Value="True"/>
+                                <Setter TargetName="PulseBorder" Property="Opacity" Value="0"/>
+                            </Trigger>
+
+                            <!-- Unready state - Orange/Yellow color (player is not ready) -->
+                            <Trigger Property="Tag" Value="Unready">
+                                <Setter Property="Background" TargetName="MainBorder" Value="#FF9800"/>
+                                <Setter Property="BorderBrush" TargetName="MainBorder" Value="#FFB74D"/>
+                                <Setter Property="IsEnabled" Value="True"/>
+                                <Setter TargetName="PulseBorder" Property="Opacity" Value="0"/>
+                            </Trigger>
+
                             <!-- Hover state for CanStart -->
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
@@ -412,6 +431,42 @@
                                     <Condition Property="Tag" Value="CanStart"/>
                                 </MultiTrigger.Conditions>
                                 <Setter Property="Background" TargetName="MainBorder" Value="#43A047"/>
+                            </MultiTrigger>
+
+                            <!-- Hover state for Ready -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="Tag" Value="Ready"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="MainBorder" Value="#66BB6A"/>
+                            </MultiTrigger>
+
+                            <!-- Pressed state for Ready -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsPressed" Value="True"/>
+                                    <Condition Property="Tag" Value="Ready"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="MainBorder" Value="#43A047"/>
+                            </MultiTrigger>
+
+                            <!-- Hover state for Unready -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="Tag" Value="Unready"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="MainBorder" Value="#FFB74D"/>
+                            </MultiTrigger>
+
+                            <!-- Pressed state for Unready -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsPressed" Value="True"/>
+                                    <Condition Property="Tag" Value="Unready"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="MainBorder" Value="#F57C00"/>
                             </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -676,10 +731,12 @@
                        Foreground="{StaticResource ForegroundDarkGrayBrush}"
                        VerticalAlignment="Center"/>
             </StackPanel>
-            
+
+            <!-- Host Button: Start Match -->
             <Button Command="{Binding StartMatchCommand}"
                     HorizontalAlignment="Right"
-                    Style="{DynamicResource StartMatchButton}">
+                    Style="{DynamicResource StartMatchButton}"
+                    Visibility="{Binding IsHost, Converter={StaticResource BoolToVisibilityConverter}}">
 
                 <!-- Tag binding to control visual state through converter -->
                 <Button.Tag>
@@ -687,10 +744,29 @@
                         <Binding Path="IsMatchStarting" />
                         <Binding Path="IsWaitingForMatchOver" />
                         <Binding Path="CanStartMatch" />
+                        <Binding Path="IsHost" />
                     </MultiBinding>
                 </Button.Tag>
-                
+
                 <!-- Dynamic content based on state -->
+                <Button.Content>
+                    <TextBlock 
+                        Text="{Binding Tag, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}}, Converter={StaticResource ButtonStateToContentConverter}}"/>
+                </Button.Content>
+            </Button>
+
+            <!-- Non-Host Button: Ready/Unready Toggle -->
+            <Button Command="{Binding ToggleReadyCommand}"
+                    HorizontalAlignment="Right"
+                    Style="{DynamicResource StartMatchButton}"
+                    Visibility="{Binding IsHost, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+
+                <!-- Tag binding to control visual state -->
+                <Button.Tag>
+                    <Binding Path="IsReady" Converter="{StaticResource ReadyStateConverter}"/>
+                </Button.Tag>
+
+                <!-- Dynamic content based on ready state -->
                 <Button.Content>
                     <TextBlock 
                         Text="{Binding Tag, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}}, Converter={StaticResource ButtonStateToContentConverter}}"/>

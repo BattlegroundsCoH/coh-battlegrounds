@@ -58,6 +58,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
     public IAsyncRelayCommand StartMatchCommand { get; }
 
+    public IAsyncRelayCommand ToggleReadyCommand { get; }
+
     public IAsyncRelayCommand<Map> SetMapCommand { get; }
 
     public bool IsHost => _lobby.IsHost;
@@ -224,6 +226,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         LeaveCommand = new AsyncRelayCommand(LeaveLobby);
         SendMessageCommand = new AsyncRelayCommand(SendChatMessage);
         StartMatchCommand = new AsyncRelayCommand(StartGame);
+        ToggleReadyCommand = new AsyncRelayCommand(ToggleReady);
         SetMapCommand = new AsyncRelayCommand<Map>(SetMap);
 
         // Sync view with lobby state
@@ -625,6 +628,11 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             return;
         }
         await _lobby.SetSetting(newSetting);
+    }
+
+    private async Task ToggleReady() {
+        await _lobby.MarkReady(!_lobby.IsReady);
+        PropertyChanged?.Invoke(this, new(nameof(IsReady)));
     }
 
 }
