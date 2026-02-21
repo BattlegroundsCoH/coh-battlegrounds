@@ -137,6 +137,7 @@ public class CoH3MatchDataBuilderTests {
         public string Name { get; } = "Test Lobby";
         public bool IsHost { get; } = true;
         public bool IsActive { get; } = true;
+        public bool IsReady { get; } = false;
         public Game Game { get; } = null!;  // Not used in tests
 
         public ISet<Participant> Participants { get; } = new HashSet<Participant> {
@@ -199,6 +200,14 @@ public class CoH3MatchDataBuilderTests {
 
         public Map Map => throw new NotImplementedException();
 
+        public Task BeginMatch() {
+            throw new NotImplementedException();
+        }
+
+        public Task EndMatch() {
+            throw new NotImplementedException();
+        }
+
         public string? GetLocalPlayerId() {
             throw new NotImplementedException();
         }
@@ -210,8 +219,20 @@ public class CoH3MatchDataBuilderTests {
         public ValueTask<LobbyEvent?> GetNextEvent() =>
             ValueTask.FromResult<LobbyEvent?>(null);
 
+        public Participant? GetParticipant(string participantId) {
+            throw new NotImplementedException();
+        }
+
+        public int GetRealPlayersCount() {
+            throw new NotImplementedException();
+        }
+
         public Task<LaunchGameResult> LaunchGame() =>
             Task.FromResult(new LaunchGameResult());
+
+        public ValueTask PublishSystemMessage(string message) {
+            throw new NotImplementedException();
+        }
 
         public Task RemoveAI(Team team, int slotIndex) {
             throw new NotImplementedException();
@@ -219,7 +240,7 @@ public class CoH3MatchDataBuilderTests {
 
         public ValueTask<bool> ReportMatchResult(ReplayAnalysisResult matchResult) => new ValueTask<bool>(true);
 
-        public Task SendMessage(string channel, string msg) {
+        public Task SendMessage(ChatChannel channel, string msg) {
             throw new NotImplementedException();
         }
 
@@ -239,12 +260,32 @@ public class CoH3MatchDataBuilderTests {
             throw new NotImplementedException();
         }
 
+        public Task SetSlotFaction(Team team, int slotIndex, string? faction) {
+            throw new NotImplementedException();
+        }
+
         public Task ToggleSlotLock(Team team, int slotIndex) {
             throw new NotImplementedException();
         }
 
         public Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) =>
             Task.FromResult(new UploadGamemodeResult());
+
+        public ValueTask<bool> WaitForAllPlayersHaveGamemode() {
+            throw new NotImplementedException();
+        }
+
+        public Task MarkReady(bool isReady) {
+            throw new NotImplementedException();
+        }
+
+        public Task KickPlayer(Team team, int slotIndex) {
+            throw new NotImplementedException();
+        }
+
+        ValueTask<UploadGamemodeResult> ILobby.UploadGamemode(string gamemodeLocation) {
+            throw new NotImplementedException();
+        }
     }
 
     #endregion

@@ -1,16 +1,17 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Windows.Data;
 
 namespace Battlegrounds.Converters;
 
-public sealed class LockImageConverter : IValueConverter {
-
+public sealed class ReadyStateConverter : IValueConverter {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-        return (bool)value ? "pack://siteoforigin:,,,/Assets/Misc/unlocked.png" : "pack://siteoforigin:,,,/Assets/Misc/locked.png";
+        if (value is bool isReady) {
+            return isReady ? "Ready" : "Unready";
+        }
+        return "Unready";
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
         throw new NotImplementedException();
     }
-
 }

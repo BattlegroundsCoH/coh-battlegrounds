@@ -21,7 +21,7 @@ public interface IBlueprintService {
         where T1 : Game 
         where T2 : Blueprint;
 
-    void LoadBlueprints();
+    Task LoadBlueprints();
     
     ICollection<Blueprint> GetBlueprintsForGame(string gameId);
 

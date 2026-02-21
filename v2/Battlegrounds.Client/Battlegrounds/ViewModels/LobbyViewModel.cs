@@ -58,9 +58,13 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
     public IAsyncRelayCommand StartMatchCommand { get; }
 
+    public IAsyncRelayCommand ToggleReadyCommand { get; }
+
     public IAsyncRelayCommand<Map> SetMapCommand { get; }
 
     public bool IsHost => _lobby.IsHost;
+
+    public bool IsReady => _lobby.IsReady;
 
     public IReadOnlyDictionary<FactionAlliance, List<Company>> CompaniesByAlliance => _localPlayerCompaniesByAlliance;
 
@@ -185,6 +189,16 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
     }
 
+    public string TrayMessage {
+        get => field;
+        set {
+            if (value == field) return;
+            field = value;
+            _logger.LogInformation("Tray message changed to: {Message}", field);
+            PropertyChanged?.Invoke(this, new(nameof(TrayMessage)));
+        }
+    } = string.Empty;
+
     public PickableChatChannel[] AvailableChatChannels => [new PickableChatChannel("all"), new PickableChatChannel("team")];
 
     public PickableChatChannel SelectedChatChannel {
@@ -212,6 +226,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         LeaveCommand = new AsyncRelayCommand(LeaveLobby);
         SendMessageCommand = new AsyncRelayCommand(SendChatMessage);
         StartMatchCommand = new AsyncRelayCommand(StartGame);
+        ToggleReadyCommand = new AsyncRelayCommand(ToggleReady);
         SetMapCommand = new AsyncRelayCommand<Map>(SetMap);
 
         // Sync view with lobby state
@@ -318,9 +333,29 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                         break;
                     }
                     _selectedMap = updatedMap; // NOP if already selected (so NOP for host)
+
+                    // Update team slots as well, since some slots may become hidden/unhidden based on map selection
+                    Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
+                    Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
                     break;
                 case LobbyEventType.SettingUpdated:
                     PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
+                    break;
+                case LobbyEventType.GameStarted:
+                    var launched = await _playService.LaunchGameApp(_lobby.Game); // Will never happen in singleplayer, but will happen for non-host participants in multiplayer when host starts the game
+                    if (launched.Failed) {
+                        // TODO: Inform the lobby that the local player failed to launch the game, so host can handle it (probably by cancelling the game start and returning to lobby)
+                    }
+                    break;
+                case LobbyEventType.TrayMessage:
+                    if (lobbyEvent.Arg is not string trayMessage) {
+                        _logger.LogWarning("Received TrayMessage lobby event with invalid argument: {Arg}", lobbyEvent.Arg);
+                        break;
+                    }
+                    TrayMessage = trayMessage;
+                    break;
+                case LobbyEventType.TrayMessageHide:
+                    TrayMessage = string.Empty;
                     break;
                 default:
                     break;
@@ -330,8 +365,14 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
     }
 
-    private ValueTask<List<LobbySlotViewModel>> MapTeamSlotsToLobbySlots(int index, Team.Slot[] slots) 
-        => slots.ToAsyncEnumerable().SelectAwait(x => MapToLobbySlot(index, x)).ToListAsync();
+    private async Task<List<LobbySlotViewModel>> MapTeamSlotsToLobbySlots(int index, Team.Slot[] slots) {
+        List<LobbySlotViewModel> result = [];
+        foreach (var slot in slots) {
+            var task = await MapToLobbySlot(index, slot);
+            result.Add(task);
+        }
+        return result;
+    }
 
     private async Task LeaveLobby() {
         // TODO: Show confirmation dialog before leaving lobby?
@@ -353,7 +394,11 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             msg = msg[..MAX_CHAT_MESSAGE_LENGTH]; // Limit chat message length to MAX_CHAT_MESSAGE_LENGTH characters
             SystemWarnMessageTooLong(); // Warn user that message was truncated
         }
-        await _lobby.SendMessage(SelectedChatChannel.ChannelName, msg);
+        await _lobby.SendMessage(SelectedChatChannel.ChannelName switch {
+            "all" => ChatChannel.All,
+            "team" => ChatChannel.Team,
+            _ => ChatChannel.All // Default to All if unknown channel
+        }, msg);
     }
 
     private void SystemWarnMessageTooLong() {
@@ -372,8 +417,41 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             IsMatchStarting = true;
             LobbyState = "Starting match...";
 
+            // Notify server we're starting
+            // Will freeze lobby state for all other participants and prevent any further changes to the lobby (e.g. changing companies, maps, settings, etc.) and will also prevent new participants from joining
+            // (NOP in singleplayer)
+            await _lobby.BeginMatch();
+
             // Sync corrent lobby view status with backing model based on selected PickableCompany (based on host client view!)
-            await SyncLobbyCompanies();
+            var synced = SyncLobbyCompanies(); // Start syncing companies (but do not await yet, as we can do this in parallel count down)
+
+            // Check all players have marked themselves ready
+            int realPlayerCount = _lobby.GetRealPlayersCount();
+            int markedReadyCount = 0;
+            foreach (var slot in _lobby.Team1.Slots.Concat(_lobby.Team2.Slots)) {
+                if (string.IsNullOrEmpty(slot.ParticipantId)) {
+                    continue; // Slot not occupied
+                }
+                var particpant = _lobby.GetParticipant(slot.ParticipantId);
+                if (particpant is not null && particpant.IsReady) {
+                    markedReadyCount++;
+                }
+            }
+
+            // Wait a few seconds to allow players to mark themselves ready (if they haven't already), but do not wait too long as host has already decided to start the match
+            // If there is only 1 player, do not wait at all. If all players are marked ready, wait 3 seconds. Otherwise, wait 10 seconds to give players a chance to mark themselves ready
+            int waitSeconds = realPlayerCount switch {
+                1 => 0,
+                _ when realPlayerCount == markedReadyCount => 3,
+                _ => 10
+            };
+            for (int i = waitSeconds; i > 0; i--) {
+                LobbyState = $"Starting match in {i} second{(i > 1 ? "s" : string.Empty)}...";
+                await _lobby.PublishSystemMessage($"Match starting in {i} second{(i > 1 ? "s" : string.Empty)}...");
+                await Task.Delay(1000);
+            }
+
+            await synced; // Ensure companies are synced before building gamemode
 
             LobbyState = "Building gamemode...";
             var buildResult = await _playService.BuildGamemode(_lobby);
@@ -387,6 +465,14 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             var uploadResult = await _lobby.UploadGamemode(buildResult.GamemodeSgaFileLocation); // NOP operation in singleplayer mode
             if (uploadResult.Failed) {
                 LobbyState = "Failed to upload gamemode, please check logs for details.";
+                await Task.Delay(5000); // Wait for 5 seconds before resetting state
+                return;
+            }
+
+            LobbyState = "Waiting for all players to download the gamemode...";
+            var allDownloaded = await _lobby.WaitForAllPlayersHaveGamemode();
+            if (!allDownloaded) { 
+                LobbyState = "Failed while waiting for players to download gamemode, please check logs for details.";
                 await Task.Delay(5000); // Wait for 5 seconds before resetting state
                 return;
             }
@@ -449,6 +535,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             IsWaitingForMatchOver = false;
             IsPlaying = false;
             SyncState(); // Resync state after match is over (or an error occurred)
+            await _lobby.EndMatch(); // End the match and return to lobby state (NOP in singleplayer)
         }
 
     }
@@ -457,10 +544,11 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         _lobby.Companies.Clear();
         var t1PickedCompanies = from slot in Team1Slots where !slot.Slot.Hidden && !slot.Slot.Locked select slot.SelectedCompany;
         var t2PickedCompanies = from slot in Team2Slots where !slot.Slot.Hidden && !slot.Slot.Locked select slot.SelectedCompany;
-        var t1MappedCompanies = t1PickedCompanies.ToAsyncEnumerable().SelectAwait(MapPickableCompanyToCompany);
-        var t2MappedCompanies = t2PickedCompanies.ToAsyncEnumerable().SelectAwait(MapPickableCompanyToCompany);
-        await foreach (var company in t1MappedCompanies.Concat(t2MappedCompanies).Where(x => x is not null)) {
-            _lobby.Companies.Add(company!.Id, company);
+        var t1MappedCompanies = t1PickedCompanies.ToAsyncEnumerable().Select(MapPickableCompanyToCompany);
+        var t2MappedCompanies = t2PickedCompanies.ToAsyncEnumerable().Select(MapPickableCompanyToCompany);
+        await foreach (var company in t1MappedCompanies.Concat(t2MappedCompanies)) {
+            var resolved = await company;
+            _lobby.Companies.Add(resolved!.Id, resolved);
         }
     }
 
@@ -498,8 +586,15 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     private async Task AddAIToSlot(int teamIndex, int slotIndex, AIDifficulty difficulty) {
         if (difficulty == AIDifficulty.HUMAN) {
             await _lobby.RemoveAI(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, slotIndex);
+            return;
         }
         await _lobby.SetSlotAIDifficulty(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, slotIndex, difficulty);
+        var slot = teamIndex == 0 ? _lobby.Team1.Slots[slotIndex] : _lobby.Team2.Slots[slotIndex];
+        if (string.IsNullOrEmpty(slot.Faction)) {
+            var alliance = teamIndex == 0 ? FactionAlliance.Allies : FactionAlliance.Axis;
+            var faction = _lobby.Game.FactionIds.FirstOrDefault(f => _lobby.Game.GetFactionAlliance(f) == alliance);
+            await _lobby.SetSlotFaction(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, slotIndex, faction);
+        }
     }
 
     private async Task LockOrUnlockSlot(int teamIndex, int slotIndex) {
@@ -533,6 +628,11 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             return;
         }
         await _lobby.SetSetting(newSetting);
+    }
+
+    private async Task ToggleReady() {
+        await _lobby.MarkReady(!_lobby.IsReady);
+        PropertyChanged?.Invoke(this, new(nameof(IsReady)));
     }
 
 }

@@ -62,6 +62,22 @@ The mod has an [official website](https://cohbattlegrounds.com/), and you can jo
 
 This section is directed at developers of Battlegrounds
 
+## Building
+
+The launcher requires the proto submodule. When first cloning this repository, make sure to run
+
+```bash
+git submodule update --init --recursive
+```
+
+That will fetch the remote submodule
+
+To get latest version from Github run
+
+```bash
+git submodule update --remote
+```
+
 ## Testing
 
 We've started re-introducing automated testing to catch bugs and make server testing easier. The tests are integrated in the development cycle and PRs with failing tests will be rejected.

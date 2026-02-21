@@ -81,6 +81,8 @@ public sealed record LobbySlotViewModel(
         }
     }
 
+    public bool HasOccupant => !string.IsNullOrEmpty(Slot.ParticipantId);
+
     public bool CanSetCompany => (ParentContext.IsHost && Slot.Difficulty != AIDifficulty.HUMAN && !Slot.Locked) || (Slot.ParticipantId == ParentContext.Model.GetLocalPlayerId());
 
     public bool CanKickOccupant => ParentContext.IsHost && Slot.Difficulty == AIDifficulty.HUMAN && !string.IsNullOrEmpty(Slot.ParticipantId) && Slot.ParticipantId != ParentContext.Model.GetLocalPlayerId();

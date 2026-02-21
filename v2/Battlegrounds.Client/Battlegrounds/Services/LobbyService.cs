@@ -1,8 +1,14 @@
 ﻿using Battlegrounds.Facades.API;
+using Battlegrounds.Factories;
+using Battlegrounds.Models;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 
+using Grpc.Core;
+
 using Microsoft.Extensions.Logging;
+
+using HostLobbyRequest = Battlegrounds.Proto.Lobbies.HostLobbyRequest;
 
 namespace Battlegrounds.Services;
 
@@ -18,15 +24,23 @@ namespace Battlegrounds.Services;
 /// <param name="serverAPI"></param>
 /// <param name="logger"></param>
 public sealed class LobbyService(
-    IUserService userService, 
-    IGameMapService mapService, 
+    IUserService userService,
     ICompanyService companyService, 
     IBattlegroundsServerAPI serverAPI, 
+    GrpcServerClientFactory clientFactory,
+    LobbySetupFromConfigFactory lobbySetupFromConfigFactory,
+    MultiplayerLobbyFactory multiplayerLobbyFactory,
+    Configuration configuration,
     ILogger<LobbyService> logger) : ILobbyService {
 
     private readonly ILogger<LobbyService> _logger = logger;
     private readonly IUserService _userService = userService;
+    private readonly ICompanyService _companyService = companyService;
     private readonly IBattlegroundsServerAPI _serverAPI = serverAPI;
+    private readonly GrpcServerClientFactory _clientFactory = clientFactory;
+    private readonly LobbySetupFromConfigFactory _lobbySetupFromConfigFactory = lobbySetupFromConfigFactory;
+    private readonly MultiplayerLobbyFactory _multiplayerLobbyFactory = multiplayerLobbyFactory;
+    private readonly Configuration _configuration = configuration;
     private readonly ReaderWriterLockSlim _activeLobbyLock = new();
     private ILobby? _activeLobby;
 
@@ -101,16 +115,42 @@ public sealed class LobbyService(
     private async Task<ILobby> CreateSingleplayerLobbyAsync(string name, Game game) {
         _logger.LogInformation("Creating singleplayer lobby with name: {LobbyName} for game: {GameId}", name, game.Id);
         var localUser = await _userService.GetLocalUserAsync() ?? throw new InvalidOperationException("Cannot create a singleplayer lobby without a local user.");
-        var localUserParticipant = new Participant(0, localUser.UserId, localUser.UserDisplayName, false, true);
-        var latestMap = await mapService.GetLatestMapAsync(game.Id);
-        return new SingleplayerLobby(name, game, latestMap, localUserParticipant, _serverAPI, companyService);
+        var lobbySetup = await _lobbySetupFromConfigFactory.FromConfig(name, game, localUser);
+        return new SingleplayerLobby(lobbySetup, _serverAPI, _companyService);
     }
 
-    private Task<ILobby> CreateMultiplayerLobbyAsync(string name, string? password, Game game) {
+    private async Task<ILobby> CreateMultiplayerLobbyAsync(string name, string? password, Game game) {
         _logger.LogInformation("Creating multiplayer lobby with name: {LobbyName} for game: {GameId}", name, game.Id);
         var localUser = _userService.GetLocalUserAsync().Result ?? throw new InvalidOperationException("Cannot create a multiplayer lobby without a local user.");
-        var localUserParticipant = new Participant(0, localUser.UserId, localUser.UserDisplayName, false, true);
-        return Task.FromResult(new MultiplayerLobby() as ILobby);
+
+        try {
+
+            var lobbySetup = await _lobbySetupFromConfigFactory.FromConfig(name, game, localUser);
+
+            var client = _clientFactory.CreateClient(_configuration);
+
+            var hostRequest = new HostLobbyRequest {
+                LobbyName = name,
+                Password = password ?? string.Empty,
+                HostId = localUser.UserId,
+                GameId = game.Id,
+            };
+            var headers = new Metadata {
+                { "authorization", $"Bearer {_userService.GetLocalUserToken()}" }
+            };
+
+            var stream = client.HostLobby(hostRequest, headers);
+            var lobby = await _multiplayerLobbyFactory.GetLobby(client, stream, lobbySetup);
+            _ = lobby.PollGrpcUpdates(); // Start polling for updates immediately after lobby creation
+            await lobby.PublishInitialState();
+
+            return lobby;
+
+        } catch (Exception ex) {
+            _logger.LogError(ex, "Failed to create gRPC client for multiplayer lobby creation.");
+            throw new InvalidOperationException("Failed to create gRPC client for multiplayer lobby creation.", ex);
+        }
+
     }
 
     /// <summary>
@@ -136,8 +176,9 @@ public sealed class LobbyService(
                 await Task.CompletedTask; // No action needed for singleplayer lobby
                 break;
             case MultiplayerLobby multiplayerLobby:
-                throw new NotImplementedException("Leaving multiplayer lobbies is not implemented yet.");
-            // TODO: Then also invoke Dispose on multiplayerLobby
+                await multiplayerLobby.LeaveAsync(); // Leave the multiplayer lobby
+                multiplayerLobby.Dispose(); // Dispose the multiplayer lobby
+                break;
             default:
                 throw new InvalidOperationException("Unknown lobby type.");
         }

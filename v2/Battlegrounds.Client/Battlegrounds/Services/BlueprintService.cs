@@ -138,7 +138,7 @@ public sealed class BlueprintService(IGameLocaleService localeService, ILogger<B
     /// exits.  The method performs asynchronous operations to load and parse blueprints, and waits for all tasks to
     /// complete before updating the repositories. If an error occurs during the loading process, the exception is
     /// logged and rethrown.</remarks>
-    public async void LoadBlueprints() {
+    public async Task LoadBlueprints() {
 
         if (_isLoaded) {
             _logger.LogInformation("Blueprints are already loaded.");

@@ -15,6 +15,14 @@ public sealed class CoH3ArchiverService(CoH3 game, Configuration configuration, 
     private readonly CoH3 _game = game ?? throw new ArgumentNullException(nameof(game));
     private readonly Configuration _configuration = configuration;
 
+    /// <summary>
+    /// Gets the full file path to the archive destination for the archive .sga file.
+    /// </summary>
+    /// <remarks>The path is constructed using the user's My Documents folder and points to the specific
+    /// location for storing mod files related to the 'bg_wincondition' extension. This property is intended for use
+    /// when saving or accessing mod archives for the game.</remarks>
+    public static string ArchiveDestination => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "Company of Heroes 3", "mods", "extension", "local", "bg_wincondition", "bg_wincondition.sga");
+
     public sealed class EssenceEditor(ILogger<EssenceEditor> logger) {
         private Process? _eeProcess;
         private bool _failedToStart = false;
@@ -87,8 +95,8 @@ public sealed class CoH3ArchiverService(CoH3 game, Configuration configuration, 
         _logger.LogInformation("Mod archive found at {ArchivePath}", archivePath);
 
         // Maybe use "subscriptions" instead of "local" in the final path?
-        string finalArchiveDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "Company of Heroes 3", "mods", "extension", "local", "bg_wincondition");
-        string finalArchivePath = Path.Combine(finalArchiveDirectory, "bg_wincondition.sga");
+        string finalArchivePath = ArchiveDestination;
+        string finalArchiveDirectory = Path.GetDirectoryName(finalArchivePath) ?? throw new InvalidOperationException("Unable to determine final archive directory.");
         try {
             if (!Directory.Exists(finalArchiveDirectory)) {
                 Directory.CreateDirectory(finalArchiveDirectory); // Ensure the directory exists

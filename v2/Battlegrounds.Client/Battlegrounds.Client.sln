@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+# Visual Studio Version 18
+VisualStudioVersion = 18.4.11506.43 insiders
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battlegrounds", "Battlegrounds\Battlegrounds.csproj", "{6D2D6EDD-0B31-4B6B-91B0-F63B57914AD4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battlegrounds.Test", "Battlegrounds.Test\Battlegrounds.Test.csproj", "{BE2870C3-0206-4E8A-A398-83EF6A435984}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7C1DA5E4-6506-46EF-9AFF-FA1E14F531C8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

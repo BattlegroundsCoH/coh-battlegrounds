@@ -1,80 +1,774 @@
-﻿using Battlegrounds.Models.Companies;
+﻿using System.Threading.Channels;
+
+using Battlegrounds.Facades.API;
+using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Models.Replays;
+using Battlegrounds.Proto.Lobbies;
+using Battlegrounds.Services;
+
+using Grpc.Core;
+
+using Serilog;
+
+using LobbySetup = Battlegrounds.Factories.LobbySetup;
 
 namespace Battlegrounds.Models.Lobbies;
 
-public sealed class MultiplayerLobby : ILobby {
+/// <summary>
+/// Represents a multiplayer lobby that manages participants, teams, game settings, and real-time state synchronization
+/// for a battlegrounds session.
+/// </summary>
+/// <remarks>The MultiplayerLobby class is designed for real-time multiplayer scenarios where lobby state must be
+/// kept consistent across multiple clients. It supports participant management, team assignments, chat messaging, and
+/// game configuration. Only the host can perform certain actions, such as changing settings or starting the game. The
+/// class implements IDisposable to ensure proper cleanup of resources, including the gRPC streaming
+/// connection.</remarks>
+/// <param name="lobbyId">The unique identifier for the lobby, used to reference and manage the lobby in server communications.</param>
+/// <param name="stateUpdater">An asynchronous server streaming call that provides real-time updates to the lobby state, enabling synchronization
+/// of lobby events between the client and server.</param>
+/// <param name="gRPCClient">The gRPC client used to communicate with the lobby service for operations such as sending messages, updating state,
+/// and managing lobby membership.</param>
+/// <param name="setup">An object containing the initial configuration for the lobby, including the local participant, teams, game settings,
+/// and map.</param>
+/// <param name="serverAPI">An interface for interacting with the battlegrounds server API, providing methods for server-side operations related
+/// to the lobby.</param>
+/// <param name="userService">A service for managing user-related operations, such as retrieving the local user's token and information.</param>
+/// <param name="companyService">A service for managing company-related operations, such as retrieving and updating company data for participants.</param>
+public sealed class MultiplayerLobby(
+    string lobbyId, 
+    AsyncServerStreamingCall<LobbyStateUpdate> stateUpdater, 
+    Proto.Lobbies.LobbyService.LobbyServiceClient gRPCClient, 
+    LobbySetup setup,
+    IBattlegroundsServerAPI serverAPI,
+    IUserService userService,
+    ICompanyService companyService,
+    IGameMapService mapService) : ILobby, IDisposable {
 
-    public string Name => throw new NotImplementedException();
+    private readonly ILogger _logger = Log.ForContext<MultiplayerLobby>();
+    private readonly string _lobbyId = lobbyId;
 
-    public bool IsHost => throw new NotImplementedException();
+    private readonly AsyncServerStreamingCall<LobbyStateUpdate> _stateUpdater = stateUpdater;
+    private readonly Proto.Lobbies.LobbyService.LobbyServiceClient _gRPCClient = gRPCClient;
+    private readonly IBattlegroundsServerAPI _serverAPI = serverAPI;
+    private readonly ICompanyService _companyService = companyService;
+    private readonly IUserService _userService = userService;
+    private readonly IGameMapService _mapService = mapService;
 
-    public bool IsActive => throw new NotImplementedException();
+    private readonly Participant _localParticipant = setup.Self;
+    private readonly HashSet<Participant> _participants = setup.Participants;
+    private readonly List<LobbySetting> _settings = setup.Settings;
+    private readonly Dictionary<string, Company> _companies = [];
+    private readonly Channel<LobbyEvent> _internalEvents = Channel.CreateUnbounded<LobbyEvent>();
 
-    public ISet<Participant> Participants => throw new NotImplementedException();
+    private readonly Team _team1 = setup.Team1;
+    private readonly Team _team2 = setup.Team2;
+    private readonly Team[] _teams = [setup.Team1, setup.Team2];
 
-    public Team Team1 => throw new NotImplementedException();
+    private bool _isActive = true;
+    private bool _isReady = false;
+    private bool _disposedValue = false;
 
-    public Team Team2 => throw new NotImplementedException();
+    private Map _map = setup.Map;
 
-    public Game Game => throw new NotImplementedException();
+    public string Name { get; } = setup.Name;
 
-    public Dictionary<string, Company> Companies => throw new NotImplementedException();
+    public bool IsHost { get; init; } = true; // Assuming the host is the one who created the lobby
 
-    public IList<LobbySetting> Settings => throw new NotImplementedException();
+    public bool IsActive => _isActive;
 
-    public Map Map => throw new NotImplementedException();
+    public ISet<Participant> Participants => _participants;
 
-    public string? GetLocalPlayerId() {
-        throw new NotImplementedException();
+    public Team Team1 => _team1;
+
+    public Team Team2 => _team2;
+
+    public Game Game { get; } = setup.Game;
+
+    public Dictionary<string, Company> Companies => _companies;
+
+    public IList<LobbySetting> Settings => _settings;
+
+    public Map Map => _map;
+
+    public bool IsReady => _isReady;
+
+    public string? GetLocalPlayerId() => _localParticipant.ParticipantId;
+
+    private Metadata GetGrpcMetadata() {
+        var token = $"Bearer {_userService.GetLocalUserToken()}";
+        return new Metadata {
+            { "authorization", token },
+            { "x-lobby-id", _lobbyId },
+            { "x-participant-id", _localParticipant.ParticipantId }
+        };
     }
+
+    private int GetIndexOfTeam(Team? team) {
+        if (team == null) {
+            return -1;
+        }
+        if (team == _team1) {
+            return 0;
+        }
+        if (team == _team2) {
+            return 1;
+        }
+        return -1; // Team not found
+    } 
 
     public (Team? team, int slotId) GetLocalPlayerSlot() {
-        throw new NotImplementedException();
+        var id = Array.FindIndex(_team1.Slots, x => x.ParticipantId == _localParticipant.ParticipantId);
+        if (id != -1) {
+            return (_team1, id);
+        }
+        id = Array.FindIndex(_team2.Slots, x => x.ParticipantId == _localParticipant.ParticipantId);
+        if (id != -1) {
+            return (_team2, id);
+        }
+        return (null, -1);
     }
 
-    public ValueTask<LobbyEvent?> GetNextEvent() {
-        throw new NotImplementedException();
+    public async ValueTask<LobbyEvent?> GetNextEvent() {
+        try {
+            return await _internalEvents.Reader.ReadAsync();
+        } catch (Exception ex) {
+            _logger.Error(ex, "Error while getting next lobby event");
+            return null;
+        }
     }
 
-    public Task<LaunchGameResult> LaunchGame() {
-        throw new NotImplementedException();
+    /// <summary>
+    /// Continuously polls the gRPC stream for lobby updates and forwards them as lobby events to the internal event
+    /// channel for UI consumption.
+    /// </summary>
+    /// <remarks>This method runs as long as the instance remains active, handling lobby updates received from
+    /// the gRPC stream. If the stream is cancelled, such as when leaving the lobby or shutting down, polling stops
+    /// gracefully. Any unrecognized lobby updates are converted to a default system message event. Errors encountered
+    /// during polling are logged for diagnostic purposes.</remarks>
+    /// <returns>A task that represents the asynchronous polling operation.</returns>
+    public async Task PollGrpcUpdates() {
+        // Polls the gRPC stream for lobby updates and pushes them to the internal channel as LobbyEvents for the UI to consume
+        // That avoids the issue of reading from the gRPC stream and fetching the next internal event (ie. for client-side actions) at the same time
+        while (_isActive) {
+            try {
+                if (await _stateUpdater.ResponseStream.MoveNext()) {
+                    var lobbyEvent = MapAndApplyGrpcEvent(_stateUpdater.ResponseStream.Current);
+                    _internalEvents.Writer.TryWrite(lobbyEvent ?? new LobbyEvent(LobbyEventType.SystemMessage, "Received an unrecognized lobby update from the server.")); // Map the gRPC update to a LobbyEvent and push it to the internal channel
+                }
+            } catch (RpcException rpcEx) when (rpcEx.StatusCode is StatusCode.Cancelled or StatusCode.Unavailable) {
+                _logger.Information("gRPC lobby updates stream was cancelled or is unavailable, likely due to leaving the lobby or shutting down. Stopping the update poller.");
+                break; // Exit the loop if the stream was cancelled
+            } catch (Exception ex) {
+                _logger.Error(ex, "Error while polling gRPC lobby updates");
+            }
+        }
     }
 
-    public Task RemoveAI(Team team, int slotIndex) {
-        throw new NotImplementedException();
+    // Maps a gRPC lobby state update to a LobbyEvent and applies the necessary changes to the local lobby state. If the update type is unrecognized, returns null.
+    // The returned type is for triggering UI updates based on the event, as some events may not require a UI update.
+    private LobbyEvent? MapAndApplyGrpcEvent(LobbyStateUpdate? update) { 
+        if (update == null) {
+            return null;
+        }
+        if (!Enum.TryParse(update.EventType, true, out LobbyEventType eventType)) {
+            _logger.Warning("Unknown gRPC lobby event type: {EventType}", update.EventType);
+            return null;
+        }
+        switch (eventType) {
+            case LobbyEventType.ParticipantJoined:
+                throw new NotImplementedException("Participant joined event is not yet implemented in the gRPC lobby handler.");
+            case LobbyEventType.ParticipantLeft:
+                throw new NotImplementedException("Participant left event is not yet implemented in the gRPC lobby handler.");
+            case LobbyEventType.ParticipantMessage:
+                var senderName = _participants.FirstOrDefault(p => p.ParticipantId == update.ChatMessage.SenderId)?.ParticipantName ?? "Unknown";
+                var channel = Enum.TryParse(update.ChatMessage.Channel, true, out ChatChannel parsedChannel) ? parsedChannel : ChatChannel.All;
+                return new LobbyEvent(LobbyEventType.ParticipantMessage,
+                    new ChatMessage(update.ChatMessage.SenderId, senderName, channel, update.ChatMessage.Content));
+            case LobbyEventType.TeamUpdated:
+                for (int i = 0; i < update.TeamUpdate.Slots.Count; i++) {
+                    var slot = update.TeamUpdate.Slots[i];
+                    _teams[update.TeamUpdate.Id].Slots[i] = new Team.Slot(i, slot.ParticipantId, slot.Faction, slot.CompanyId, AIDifficulty.FromName(slot.AiDifficulty), slot.Hidden, slot.Locked);
+                }
+                return new LobbyEvent(LobbyEventType.TeamUpdated, update.TeamUpdate.Id);
+            case LobbyEventType.SlotUpdated:
+                var updatedSlot = update.SlotUpdate.Slot;
+                _teams[update.SlotUpdate.TeamId].Slots[updatedSlot.Id] = new(updatedSlot.Id, updatedSlot.ParticipantId, updatedSlot.Faction, updatedSlot.CompanyId, AIDifficulty.FromName(updatedSlot.AiDifficulty), updatedSlot.Hidden, updatedSlot.Locked);
+                return new LobbyEvent(LobbyEventType.TeamUpdated, update.SlotUpdate.TeamId); // Make UI simply update the whole team when a slot is updated for simplicity, as that's what the UI currently supports
+            case LobbyEventType.SettingUpdated:
+                var newSetting = update.SettingsUpdate;
+                int indexOfSetting = _settings.FindIndex(x => x.Name == newSetting.Key);
+                if (indexOfSetting != -1) {
+                   var currentSetting = _settings[indexOfSetting];
+                    int mappedValue = currentSetting.Type switch {
+                        LobbySettingType.Boolean => newSetting.NewValue == "true" ? 1 : 0,
+                        LobbySettingType.Integer => int.TryParse(newSetting.NewValue, out var intValue) ? intValue : currentSetting.Value,
+                        _ => currentSetting.Value
+                    };
+                    _settings[indexOfSetting].Value = mappedValue;
+                    return new LobbyEvent(LobbyEventType.SettingUpdated, _settings[indexOfSetting]);
+                } else {
+                    _logger.Warning("Received update for unknown setting: {SettingKey}", newSetting.Key);
+                    return null; // Setting not found, ignore the update
+                }
+            case LobbyEventType.MapUpdated:
+                var newMap = _mapService.GetMapByScenarioName(Game, update.SettingsUpdate.NewValue); // Re-use the SettingsUpdate message to get the new map name, as the server doesn't send a separate message for map updates currently
+                _map = newMap;
+                return new LobbyEvent(LobbyEventType.MapUpdated, newMap);
+            case LobbyEventType.GameStarted:
+                return new LobbyEvent(LobbyEventType.GameStarted); // Instructs the LobbyViewModel to start the game.
+            case LobbyEventType.GameCancelled:
+                throw new NotImplementedException($"Event type {eventType} is not yet implemented in the gRPC lobby handler.");
+            case LobbyEventType.GameEnded:
+                throw new NotImplementedException($"Event type {eventType} is not yet implemented in the gRPC lobby handler.");
+            case LobbyEventType.SystemMessage:
+            case LobbyEventType.SystemError:
+                return new LobbyEvent(eventType, update.SystemMessage.Content);
+            case LobbyEventType.DownloadInitiated:
+                _ = BeginDownloadResource(update.DownloadState.ResourceId); // Start the download but don't await it, as we don't want to block the processing of further lobby updates while waiting for the download to complete
+                return new LobbyEvent(LobbyEventType.DownloadInitiated, update.DownloadState.ResourceId); // Ignored by the UI for now, but could be used to trigger a download progress UI in the future
+            case LobbyEventType.DownloadProgress:
+                return new LobbyEvent(LobbyEventType.DownloadProgress); // NOP for now
+            case LobbyEventType.DownloadCompleted:
+                return new LobbyEvent(LobbyEventType.DownloadCompleted); // NOP for now
+            case LobbyEventType.ParticipantReady:
+                var participant = _participants.FirstOrDefault(p => p.ParticipantId == update.ParticipantId);
+                if (participant is not null) {
+                    _participants.Remove(participant);
+                    _participants.Add(participant with { IsReady = true });
+                }
+                return new LobbyEvent(LobbyEventType.ParticipantReady, update.ParticipantId);
+            case LobbyEventType.ParticipantUnready:
+                var participantUnready = _participants.FirstOrDefault(p => p.ParticipantId == update.ParticipantId);
+                if (participantUnready is not null) {
+                    _participants.Remove(participantUnready);
+                    _participants.Add(participantUnready with { IsReady = false });
+                }
+                return new LobbyEvent(LobbyEventType.ParticipantUnready, update.ParticipantId);
+            default:
+                _logger.Warning("Unhandled gRPC lobby event type: {EventType}", eventType);
+                break;
+        }
+        return null; // No event to return
     }
 
-    public ValueTask<bool> ReportMatchResult(ReplayAnalysisResult matchResult) {
-        throw new NotImplementedException();
+    public async Task<LaunchGameResult> LaunchGame() {
+
+        if (!IsHost) {
+            _logger.Warning("Non-host participant attempted to launch the game. This action is only allowed for the host.");
+            return new LaunchGameResult() {}; // Only the host can launch the game
+        }
+
+        await _gRPCClient.LaunchGameAsync(new LaunchGameRequest {
+            LobbyId = _lobbyId,
+            ParticipantId = _localParticipant.ParticipantId
+        }, GetGrpcMetadata());
+
+        return new LaunchGameResult() {}; // TODO: Return actual result from gRPC call
     }
 
-    public Task SendMessage(string channel, string msg) {
-        throw new NotImplementedException();
+    public async Task RemoveAI(Team team, int slotIndex) {
+        if (!IsHost) {
+            return; // Only the host can remove AI
+        }
+        int teamId = GetIndexOfTeam(team);
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SlotUpdated.ToString(),
+            ParticipantId = _localParticipant.ParticipantId,
+            SlotUpdate = new SlotUpdate {
+                TeamId = teamId,
+                Slot = new Slot {
+                    Id = slotIndex,
+                    ParticipantId = string.Empty,
+                    Faction = string.Empty,
+                    CompanyId = string.Empty,
+                    AiDifficulty = AIDifficulty.HUMAN.Name,
+                    Hidden = team.Slots[slotIndex].Hidden,
+                    Locked = team.Slots[slotIndex].Locked
+                }
+            },
+        }, GetGrpcMetadata());
+        _participants.RemoveWhere(p => p.ParticipantId == team.Slots[slotIndex].ParticipantId); // Remove the participant from the lobby if it was an AI (ie. it won't be in the participants list if it was a human player)
+        team.Slots[slotIndex] = team.Slots[slotIndex] with { ParticipantId = string.Empty, Faction = string.Empty, CompanyId = string.Empty, Difficulty = AIDifficulty.HUMAN }; // Update local state
+        _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI of the change
     }
 
-    public Task SetCompany(Team team, int slotId, string id) {
-        throw new NotImplementedException();
+    public async ValueTask<bool> ReportMatchResult(ReplayAnalysisResult matchResult) {
+        if (!IsHost) {
+            return false; // Only the host can report match results
+        }
+
+        if (matchResult.Failed || matchResult.Replay is null) {
+            _logger.Error("Match result for game {GameId} failed or replay is null", matchResult.GameId);
+            return false; // Cannot report match result if it failed or replay is null
+        }
+
+        var result = matchResult.GetMatchResult(this);
+        if (result == MatchResult.Unknown) {
+            _logger.Error("Match result for game {GameId} could not be determined", matchResult.GameId);
+            return false; // Cannot determine match result
+        }
+
+        if (!result.IsValid) {
+            _logger.Error("Match result for game {GameId} is invalid", matchResult.GameId);
+            return false;
+        }
+
+        result.LobbyId = _lobbyId; // Ensure the lobby ID is set on the match result
+
+        var reported = await _serverAPI.ReportMatchResults(result, async (progress, done, totalBytes) => { 
+            if (done) {
+                await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TrayMessageHide)); // Notify the UI about the completed upload
+            } else {
+                await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TrayMessage, $"Uploading match result... {progress:P2} complete")); // Notify the UI about the upload progress
+            }
+        });
+        if (!reported) {
+            _logger.Error("Failed to report match result for game {GameId} to the server", matchResult.GameId);
+            return false;
+        } else {
+            await _gRPCClient.InitiateDownloadAsync(new InitiateDownloadRequest {
+                LobbyId = _lobbyId,
+                ParticipantId = _localParticipant.ParticipantId,
+                ResourceId = "company_update" // After reporting the match result, initiate a download to update company data for all participants, as the match result may have caused changes to company stats, levels, etc.
+            }, GetGrpcMetadata());
+            // Download the host company changes (other participants have been told to download their company).
+            await DownloadCompany(false);
+        }
+
+        return true;
+
     }
 
-    public Task<bool> SetMap(Map map) {
-        throw new NotImplementedException();
+    public async Task SendMessage(ChatChannel channel, string msg) {
+        var chatMessage = new ChatMessage(_localParticipant.ParticipantId, _localParticipant.ParticipantName, channel, msg);
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.ParticipantMessage, chatMessage));
+        await _gRPCClient.SendChatMessageAsync(new Proto.Lobbies.ChatMessage {
+            SenderId = chatMessage.SenderId,
+            Content = chatMessage.Message,
+            Channel = channel.ToString().ToLowerInvariant(),
+            LobbyId = _lobbyId
+        }, GetGrpcMetadata());
     }
 
-    public Task SetSetting(LobbySetting newSetting) {
-        throw new NotImplementedException();
+    public async Task SetCompany(Team team, int slotId, string companyId) {
+        var local = GetLocalPlayerSlot();
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SlotUpdated.ToString(),
+            ParticipantId = _localParticipant.ParticipantId,
+            SlotUpdate = new SlotUpdate {
+                TeamId = GetIndexOfTeam(team),
+                Slot = new Slot {
+                    Id = slotId,
+                    ParticipantId = team.Slots[slotId].ParticipantId ?? string.Empty,
+                    Faction = team.Slots[slotId].Faction,
+                    CompanyId = companyId,
+                    AiDifficulty = team.Slots[slotId].Difficulty.Name,
+                    Hidden = team.Slots[slotId].Hidden,
+                    Locked = team.Slots[slotId].Locked
+                }
+            },
+        }, GetGrpcMetadata());
+        if (IsHost || (local.team == team && slotId == local.slotId)) {
+            // Push the local event too to update the UI immediately
+            team.Slots[slotId] = team.Slots[slotId] with { CompanyId = companyId };
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI
+        }
     }
 
-    public Task SetSlotAIDifficulty(Team team, int slotIndex, AIDifficulty difficulty) {
-        throw new NotImplementedException();
+    public async Task<bool> SetMap(Map map) {
+        if (!IsHost) {
+            return false; // Only the host can set the map
+        }
+        var updateMap = await _gRPCClient.ChangeMapAsync(new() {
+            LobbyId = _lobbyId,
+            ParticipantId = _localParticipant.ParticipantId,
+            NewMap = new() {
+                MaxPlayers = map.MaxPlayers,
+                MapId = map.ScenarioName
+            }
+        }, GetGrpcMetadata());
+        if (updateMap is null || !updateMap.Success) {
+            var errorReason = updateMap?.ErrorReason switch {
+                1 => "The specified map was not found on the server.",
+                2 => "The map is invalid or corrupted.",
+                3 => "Failed to load the map due to a server error.",
+                4 => "Map max player count cannot be less than current number of participants",
+                _ => "An unknown error occurred while updating the map."
+            };
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, "Failed to update the map. "+ errorReason)); // Notify the UI about the failure and reason
+            return false;
+        }
+        _map = map;
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.MapUpdated, map)); // Notify the UI of map change
+        return true;
     }
 
-    public Task ToggleSlotLock(Team team, int slotIndex) {
-        throw new NotImplementedException();
+    public async Task SetSetting(LobbySetting newSetting) {
+        if (!IsHost) {
+            return; // Only the host can set settings
+        }
+        int indexOfSetting = _settings.FindIndex(x => x.Name == newSetting.Name);
+        if (newSetting.Name == LobbySetting.SETTING_GAMEMODE) {
+            // TODO: Handle gamemode change
+            // ie. if gamemode == victory_points add a new setting for specifying amount of victory points (250, 500, etc)
+        }
+        if (indexOfSetting != -1) { // Swapping existing setting
+            _settings[indexOfSetting] = newSetting;
+        } else {
+            _settings.Add(newSetting);
+        }
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated)); // Notify the UI of setting change
+        await PublishSetting(newSetting); // Publish the setting change to the server
     }
 
-    public Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) {
+    public async Task SetSlotAIDifficulty(Team team, int slotIndex, AIDifficulty difficulty) {
+        if (!IsHost) {
+            return; // Only the host can set AI difficulty
+        }
+        int teamId = GetIndexOfTeam(team);
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SlotUpdated.ToString(),
+            ParticipantId = _localParticipant.ParticipantId,
+            SlotUpdate = new SlotUpdate {
+                TeamId = teamId,
+                Slot = new Slot {
+                    Id = slotIndex,
+                    ParticipantId = team.Slots[slotIndex].ParticipantId ?? string.Empty,
+                    Faction = team.Slots[slotIndex].Faction,
+                    CompanyId = team.Slots[slotIndex].CompanyId,
+                    AiDifficulty = difficulty.Name,
+                    Hidden = team.Slots[slotIndex].Hidden,
+                    Locked = team.Slots[slotIndex].Locked
+                }
+            },
+        }, GetGrpcMetadata());
+
+        // Add participant to the lobby if not already added
+        int participantId = teamId * 4 + slotIndex; // Generate a unique participant ID for the AI based on its team and slot index
+        string participantIdStr = participantId.ToString();
+        if (!_participants.Any(x => x.ParticipantId == participantIdStr)) {
+            Participant aiParticipant = new Participant(participantId, participantIdStr, $"AI Player {participantId}", true, true);
+            _participants.Add(aiParticipant);
+        }
+
+        team.Slots[slotIndex] = team.Slots[slotIndex] with { Difficulty = difficulty, ParticipantId = participantIdStr }; // Update local state
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI of the change
+    }
+
+    public async Task SetSlotFaction(Team team, int slotIndex, string? faction) {
+        if (!IsHost) {
+            return; // Only the host can set slot faction
+        }
+        int teamId = GetIndexOfTeam(team);
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SlotUpdated.ToString(),
+            ParticipantId = _localParticipant.ParticipantId,
+            SlotUpdate = new SlotUpdate {
+                TeamId = teamId,
+                Slot = new Slot {
+                    Id = slotIndex,
+                    ParticipantId = team.Slots[slotIndex].ParticipantId ?? string.Empty,
+                    Faction = faction ?? string.Empty,
+                    CompanyId = team.Slots[slotIndex].CompanyId,
+                    AiDifficulty = team.Slots[slotIndex].Difficulty.Name,
+                    Hidden = team.Slots[slotIndex].Hidden,
+                    Locked = team.Slots[slotIndex].Locked
+                }
+            },
+        }, GetGrpcMetadata());
+        team.Slots[slotIndex] = team.Slots[slotIndex] with { Faction = faction ?? string.Empty }; // Update local state
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, teamId)); // Notify the UI of the change
+    }
+
+    public async Task ToggleSlotLock(Team team, int slotIndex) {
+        if (!IsHost) {
+            return; // Only the host can toggle slot locks
+        }
+        var slot = team.Slots[slotIndex];
+        var newLockState = !slot.Locked;
+        int teamId = GetIndexOfTeam(team);
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SlotUpdated.ToString(),
+            ParticipantId = _localParticipant.ParticipantId,
+            SlotUpdate = new SlotUpdate {
+                TeamId = teamId,
+                Slot = new Slot {
+                    Id = slotIndex,
+                    ParticipantId = team.Slots[slotIndex].ParticipantId ?? string.Empty,
+                    Faction = team.Slots[slotIndex].Faction ?? string.Empty,
+                    CompanyId = team.Slots[slotIndex].CompanyId,
+                    AiDifficulty = team.Slots[slotIndex].Difficulty.Name,
+                    Hidden = team.Slots[slotIndex].Hidden,
+                    Locked = newLockState
+                }
+            },
+        }, GetGrpcMetadata());
+        team.Slots[slotIndex] = team.Slots[slotIndex] with { Locked = newLockState }; // Update local state
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI of the change
+    }
+
+    public async ValueTask<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) {
+        var result = await _serverAPI.UploadGamemodeAsync(_lobbyId, gamemodeLocation, async (progress, done, totalBytes) => {
+            if (done) {
+                await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TrayMessageHide)); // Notify the UI about the completed upload
+            } else {
+                await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TrayMessage, $"Uploading gamemode... {progress:P2} complete")); // Notify the UI about the upload progress
+            }
+        });
+        if (!result) {
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, "Failed to upload gamemode. Please report this issue.")); // Notify the UI about the failure
+            return new UploadGamemodeResult() { Failed = true };
+        }
+        return new UploadGamemodeResult() { Failed = false };
+    }
+
+    public async ValueTask<bool> WaitForAllPlayersHaveGamemode() {
+        if (!IsHost) {
+            return false;
+        }
+
+        var initiateDownloadRequest = new InitiateDownloadRequest() {
+            ResourceId = "gamemode",
+            LobbyId = _lobbyId,
+            ParticipantId = _localParticipant.ParticipantId
+        };
+
+        var metadata = GetGrpcMetadata();
+
+        using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3)); // Set a timeout for waiting, in case something goes wrong with the download process
+        var token = cts.Token;
+
+        bool allDownloaded = false;
+        var responseStream = _gRPCClient.BeginInitiateDownload(initiateDownloadRequest, metadata);
+        while (await responseStream.ResponseStream.MoveNext(token)) {
+            var update = responseStream.ResponseStream.Current;
+            if (update.AllCompleted) {
+                allDownloaded = true;
+                break;
+            }
+            // TODO: Else, report progress to the UI about which participants have downloaded the gamemode so far
+        }
+
+        if (!allDownloaded) {
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, "Timed out while waiting for all players to download the gamemode. Please report this issue.")); // Notify the UI about the timeout
+        }
+
+        return allDownloaded;
+    }
+
+    /// <summary>
+    /// Publishes the initial state of the local multiplayer lobby to the server, including team configurations and
+    /// lobby settings.
+    /// </summary>
+    /// <remarks>Call this method during lobby initialization to ensure the server receives the current team
+    /// assignments and all lobby settings. This is typically required before players can join or interact with the
+    /// lobby.</remarks>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public async Task PublishInitialState() {
+
+        // Tell server about the local lobby state
+        await PublishTeam(0, setup.Team1);
+        await PublishTeam(1, setup.Team2);
+
+        foreach (var setting in setup.Settings) {
+            await PublishSetting(setting);
+        }
+
+    }
+
+    private async Task PublishTeam(int tid, Team team) {
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            ParticipantId = _localParticipant.ParticipantId,
+            EventType = LobbyEventType.TeamUpdated.ToString(),
+            TeamUpdate = new Proto.Lobbies.Team {
+                Id = tid,
+                Alias = team.TeamAlias,
+                Type = team.TeamType.ToString(),
+                Slots = { team.Slots.Select(slot => new Slot {
+                    Id = slot.Index,
+                    ParticipantId = slot.ParticipantId ?? string.Empty,
+                    Faction = slot.Faction,
+                    CompanyId = slot.CompanyId,
+                    AiDifficulty = slot.Difficulty.Name,
+                    Hidden = slot.Hidden,
+                    Locked = slot.Locked
+                }) }
+            }
+        }, GetGrpcMetadata());
+    }
+
+    private async Task PublishSlot(int tid, int slotId, Team.Slot slot) {
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SlotUpdated.ToString(),
+            SlotUpdate = new Proto.Lobbies.SlotUpdate {
+                TeamId = tid,
+                Slot = new Slot {
+                    Id = slotId,
+                    ParticipantId = slot.ParticipantId ?? string.Empty,
+                    Faction = slot.Faction,
+                    CompanyId = slot.CompanyId,
+                    AiDifficulty = slot.Difficulty.Name,
+                    Hidden = slot.Hidden,
+                    Locked = slot.Locked
+                }
+            },
+        }, GetGrpcMetadata());
+    }
+
+    private async Task PublishSetting(LobbySetting setting) {
+        var metadata = GetGrpcMetadata();
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SettingUpdated.ToString(),
+            ParticipantId = _localParticipant.ParticipantId,
+            SettingsUpdate = new Proto.Lobbies.LobbySetting {
+                Key = setting.Name,
+                NewValue = setting.Value.ToString(),
+            },
+        }, metadata);
+    }
+
+    public void Dispose() {
+        if (!_disposedValue) {
+            _isActive = false;
+            _disposedValue = true;
+            // Close connection with the server (and the lobby) and dispose of the gRPC client
+            _stateUpdater.Dispose();
+        }
+    }
+
+    public async Task LeaveAsync() {
+        await _gRPCClient.LeaveLobbyAsync(new LeaveLobbyRequest {
+            LobbyId = _lobbyId,
+            ParticipantId = _localParticipant.ParticipantId
+        }, GetGrpcMetadata());
+    }
+
+    private Task BeginDownloadResource(string resourceId) => resourceId switch {
+        "gamemode" => DownloadGamemode(),
+        "company_update" => DownloadCompany(reportProgress: true), // When downloading company updates after a match, we want to report progress to the UI as it can sometimes take a while if there are many participants in the lobby
+        _ => UnknownResource(resourceId)
+    };
+
+    private Task UnknownResource(string resourceId) {
+        _logger.Warning("Received download initiation for unknown resource ID: {ResourceId}", resourceId);
+        return Task.CompletedTask;
+    }
+
+    private async Task DownloadGamemode() {
+
+        string destination = Game switch {
+            CoH3 => CoH3ArchiverService.ArchiveDestination,
+            _ => throw new NotSupportedException($"Game {Game.GameName} is not supported for gamemode downloads.")
+        };
+
+        var downloadResult = await _serverAPI.DownloadGamemodeAsync(_lobbyId, destination, async (downloaded, total) => {
+            var totalSafe = total ?? 0;
+            float progress = totalSafe > 0 ? (float)downloaded / totalSafe : 0;
+            _logger.Information("Gamemode download progress: {Progress:P2}", progress);
+            _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TrayMessage, $"Downloading gamemode... {progress:P2} complete")); // Notify the UI about the download progress
+            await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
+                LobbyId = _lobbyId,
+                ParticipantId = _localParticipant.ParticipantId,
+                Progress = progress
+            }, GetGrpcMetadata()); // Report the download progress to the server so it can update the lobby state and notify other participants
+        });
+
+        if (downloadResult) {
+            _logger.Information("Gamemode download completed successfully.");
+            _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TrayMessageHide)); // Notify the UI about the successful download
+
+            // Notify server that the download is complete, so it can update the lobby state and notify other participants
+            await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
+                LobbyId = _lobbyId,
+                ParticipantId = _localParticipant.ParticipantId,
+                Progress = 1.0f,
+                Completed = true
+            }, GetGrpcMetadata());
+
+        } else {
+            _logger.Error("Gamemode download failed.");
+            _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.SystemError, "Failed to download gamemode. Please report this issue.")); // Notify the UI about the failure
+        }
+
+    }
+
+    private async Task DownloadCompany(bool reportProgress) {
+
+        var selfSlot = GetLocalPlayerSlot();
+        if (selfSlot.team == null || selfSlot.slotId == -1) {
+            _logger.Error("Local participant is not assigned to any slot in the lobby, cannot download company data.");
+            return; // Local participant is not assigned to any slot, cannot determine which company to download
+        }
+
+        var selfCompany = selfSlot.team.Slots[selfSlot.slotId].CompanyId;
+        var updatedCompany = await _serverAPI.GetCompanyAsync(selfCompany, GetLocalPlayerId() ?? throw new InvalidOperationException("Could not get local participant ID while attempting to download company data."), async (downloaded, total) => {
+            _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TrayMessage, $"Downloading updated company data... {downloaded} / {total} bytes")); // Notify the UI about the download progress
+        });
+        if (updatedCompany is null) {
+            _logger.Error("Failed to download company data for company ID {CompanyId}", selfCompany);
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, "Failed to download company data. Please report this issue.")); // Notify the UI about the failure
+            return;
+        }
+
+        await _companyService.SaveCompany(updatedCompany, syncWithRemote: false);
+
+        if (reportProgress) { 
+            await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
+                LobbyId = _lobbyId,
+                ParticipantId = GetLocalPlayerId() ?? string.Empty,
+                Progress = 1.0f,
+                Completed = true
+            }, GetGrpcMetadata()); // Report to the server that the company download is complete, so it can update the lobby state and notify other participants
+        }
+
+        _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TrayMessageHide)); // Notify the UI to hide the tray message about downloading company data
+
+    }
+
+    public Participant? GetParticipant(string participantId) => _participants.FirstOrDefault(p => p.ParticipantId == participantId);
+
+    public int GetRealPlayersCount() => _participants.Count(x => x.IsAIParticipant);
+
+    public async Task BeginMatch() {
+        await _gRPCClient.BeginMatchAsync(new Empty(), GetGrpcMetadata());
+    }
+
+    public async Task EndMatch() {
+        await _gRPCClient.EndMatchAsync(new Empty(), GetGrpcMetadata());
+    }
+
+    public async ValueTask PublishSystemMessage(string message) {
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SystemMessage.ToString(),
+            SystemMessage = new SystemMessage {
+                MessageType = "info",
+                Content = message
+            }
+        }, GetGrpcMetadata());
+    }
+
+    public async Task MarkReady(bool isReady) {
+        _isReady = isReady;
+        var eventType = isReady ? LobbyEventType.ParticipantReady : LobbyEventType.ParticipantUnready;
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = eventType.ToString(),
+            ParticipantId = _localParticipant.ParticipantId,
+        }, GetGrpcMetadata());
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(eventType, isReady)); // Notify the UI about the ready state change
+    }
+
+    public Task KickPlayer(Team team, int slotIndex) {
         throw new NotImplementedException();
     }
 

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -6,39 +7,52 @@ using System.Text.Json.Serialization;
 
 using Battlegrounds.Facades.API;
 using Battlegrounds.Models;
-using Battlegrounds.Security;
 
 using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.Services;
 
-public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAPI webAPI) : IUserService {
+/// <summary>
+/// Provides user authentication and management services, including login, token handling, and user retrieval.
+/// </summary>
+/// <remarks>This service handles user authentication through various providers, token management (including
+/// refreshing expired tokens), and retrieval of user information. It integrates with the <see
+/// cref="IBattlegroundsWebAPI"/> for API communication and <see cref="IBrowserService"/> for browser-based
+/// authentication flows.  The service maintains a local cache of the authenticated user and their tokens, and supports
+/// automatic login using locally stored encrypted token data. It also provides methods to check token expiration and
+/// refresh tokens as needed.</remarks>
+/// <param name="logger"></param>
+/// <param name="webAPI"></param>
+/// <param name="browserService"></param>
+public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAPI webAPI, IBrowserService browserService) : IUserService {
         
     private sealed record JWTHeader(
         [property: JsonPropertyName("alg")] string Algorithm,
-        [property: JsonPropertyName("typ")] string Type = "JWT"
+        [property: JsonPropertyName("typ")] string Type = "JWT",
+        [property: JsonPropertyName("kid")] string? KeyId = null
     );
     private sealed record StoredTokenData(
         [property: JsonPropertyName("token")] string Token,
         [property: JsonPropertyName("refresh_token")] string RefreshToken,
         [property: JsonPropertyName("issued_at")] DateTime IssuedAt,
-        [property: JsonPropertyName("expiration")] DateTime Expiration
+        [property: JsonPropertyName("expiration")] DateTime Expiration,
+        [property: JsonPropertyName("accessed_at")] DateTime AccessedAt,
+        [property: JsonPropertyName("user")] User? User = null
     );
 
-    private static readonly JsonSerializerOptions _jsonOptions = new() {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-    };
     private static readonly string _userTokenStore = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CoHBattlegrounds", "local_user.dat");
 
     private readonly ILogger<UserService> _logger = logger;
     private readonly IBattlegroundsWebAPI _webAPI = webAPI;
+    private readonly IBrowserService _browserService = browserService;
 
     private User? _localUser;
     private string _token = string.Empty;
     private DateTime _tokenExpiration = DateTime.MinValue;
     private string _refreshToken = string.Empty;
-    private RSA? _publicKey = null;
+    //private RSA? _publicKey = null;
+
+    public bool IsExpired => DateTime.UtcNow >= _tokenExpiration; // Check if the token is expired
 
     public async Task<User?> GetLocalUserAsync() {
         if (_localUser is not null) {
@@ -59,112 +73,30 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
 
     public Task<User> GetUserAsync(string userId) => GetLocalUserAsync()!; // TODO: Implement this method to fetch user data from Battlegrounds API
 
-    public async Task<User?> LoginAsync(string userName, string password) {
+    public async Task<User?> LoginAsync(string userEmail, string password) {
 
-        if (_localUser is not null) {
+        if (_localUser is not null && !IsExpired) {
             return _localUser; // Already logged in
         }
 
-        if (string.IsNullOrWhiteSpace(userName)) {
-            throw new ArgumentException("Username cannot be null or empty.", nameof(userName));
+        if (string.IsNullOrWhiteSpace(userEmail)) {
+            throw new ArgumentException("Username cannot be null or empty.", nameof(userEmail));
         }
 
         if (string.IsNullOrWhiteSpace(password)) {
             throw new ArgumentException("Password cannot be null or empty.", nameof(password));
         }
 
-        LoginResponse loginResponse = await _webAPI.LoginAsync(new LoginRequest(userName, password)) ?? throw new InvalidOperationException("Login response is null.");
-        StoreToken(loginResponse.Token, loginResponse.RefreshToken);
-        _localUser = await GetUserFromToken(loginResponse.Token);
+        _logger.LogInformation("Logging in user {UserName}...", userEmail);
+
+        LoginResponse loginResponse = await _webAPI.LoginAsync(new LoginRequest(userEmail, password)) ?? throw new InvalidOperationException("Login response is null.");
+        StoreTokenAndUser(loginResponse.Token, loginResponse.RefreshToken, new DateTime(loginResponse.ExpiresAt, DateTimeKind.Utc), new User {
+            UserId = loginResponse.User.Id,
+            UserDisplayName = loginResponse.User.Username,
+        });
+        _logger.LogInformation("User {UserName} with Id {Id} logged in successfully.", userEmail, _localUser.UserId);
         return _localUser;
 
-    }
-
-    private async Task<User> GetUserFromToken(string token) {
-        _logger.LogDebug("Extracting user from JWT token.");
-
-        if (string.IsNullOrWhiteSpace(token)) {
-            throw new ArgumentException("Token cannot be null or empty.", nameof(token));
-        }
-        string[] parts = token.Split('.');
-        if (parts.Length != 3) {
-            throw new ArgumentException("Invalid JWT token format.", nameof(token));
-        }
-        string headerEncoded = parts[0];
-        byte[] headerBytes = Base64URLDecode(headerEncoded);
-        JWTHeader? header = JsonSerializer.Deserialize<JWTHeader>(headerBytes, _jsonOptions) ?? throw new InvalidOperationException("Failed to deserialize JWT header.");
-        if (header.Algorithm != "RS256") {
-            throw new NotSupportedException($"Unsupported JWT algorithm: {header.Algorithm}");
-        }
-
-        string payloadEncoded = parts[1];
-        byte[] payloadBytes = Base64URLDecode(payloadEncoded);
-        UserClaim? userClaim = JsonSerializer.Deserialize<UserClaim>(payloadBytes, _jsonOptions) ?? throw new InvalidOperationException("Failed to deserialize JWT payload.");
-        if (string.IsNullOrWhiteSpace(userClaim.Subject) || string.IsNullOrWhiteSpace(userClaim.UserName)) {
-            throw new InvalidOperationException("Invalid user claim in JWT payload.");
-        }
-
-        if (!await ValidateSignature(headerEncoded, payloadEncoded, parts[2])) {
-            throw new InvalidOperationException("JWT token signature validation failed.");
-        }
-
-        _logger.LogDebug("JWT token signature validated successfully.");
-
-        var utcNow = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        if (userClaim.ExpiresAt <= utcNow) {
-            _logger.LogInformation("JWT token has expired. Expires at: {ExpiresAt}, Current time: {CurrentTime}", userClaim.ExpiresAt, utcNow);
-            throw new InvalidOperationException("JWT token has expired.");
-        }
-
-        if (userClaim.IssuedAt > utcNow) {
-            _logger.LogInformation("JWT token is not yet valid. Issued at: {IssuedAt}, Current time: {CurrentTime}", userClaim.IssuedAt, utcNow);
-            if (Math.Abs(userClaim.IssuedAt - utcNow) < 10) { // Allow a small grace period for clock skew
-                _logger.LogWarning("JWT token is valid but issued very recently. Issued at: {IssuedAt}, Current time: {CurrentTime}", userClaim.IssuedAt, utcNow);
-            } else {
-                throw new InvalidOperationException("JWT token is not yet valid.");
-            }
-        }
-
-        _logger.LogDebug("JWT token is valid and not expired.");
-
-        return new User {
-            UserId = userClaim.Subject,
-            UserDisplayName = userClaim.UserName
-        };
-    }
-
-    private async Task<bool> ValidateSignature(string headerEncoded, string payloadEncoded, string signatureEncoded) {
-
-        // Ensure public key is available for signature validation
-        if (_publicKey is null) {
-            _logger.LogDebug("Retrieving public key for signature validation.");
-            string publicKeyPem = await _webAPI.GetPublicKeyAsync() ?? throw new InvalidOperationException("Failed to retrieve public key.");
-            _publicKey = RSAPublicKey.FromPem(publicKeyPem);
-        }
-
-        byte[] signature = Base64URLDecode(signatureEncoded);
-        byte[] signedData = Encoding.UTF8.GetBytes($"{headerEncoded}.{payloadEncoded}");
-
-        // Verify RS256 Signature (RSA + SHA256)
-        var isValidSignature = _publicKey.VerifyData(
-            signedData,
-            signature,
-            HashAlgorithmName.SHA256,
-            RSASignaturePadding.Pkcs1
-        );
-
-        return isValidSignature;
-
-    }
-
-    private static byte[] Base64URLDecode(string input) {
-        // Replace URL-safe characters and pad with '='
-        string base64 = input.Replace('-', '+').Replace('_', '/');
-        switch (base64.Length % 4) {
-            case 2: base64 += "=="; break;
-            case 3: base64 += "="; break;
-        }
-        return Convert.FromBase64String(base64);
     }
 
     public Task<bool> LogOutAsync() {
@@ -175,23 +107,28 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
         if (DateTime.UtcNow >= _tokenExpiration) {
             // Token expired, refresh it
             if (string.IsNullOrWhiteSpace(_refreshToken)) {
-                throw new InvalidOperationException("Refresh token is not available. Please log in again.");
+                _logger.LogWarning("Refresh token is not available. User needs to log in again.");
+                return string.Empty; // If refresh fails, return empty token
             }
-            RefreshResponse? refreshResponse = await _webAPI.RefreshTokenAsync(new RefreshRequest(_refreshToken));
-            StoreToken(refreshResponse.Token, refreshResponse.RefreshToken);
+            if (await RefreshToken(_refreshToken, _localUser) is false) {
+                _logger.LogWarning("Failed to refresh token for user {UserName}. User needs to log in again.", _localUser?.UserDisplayName);
+                return string.Empty; // If refresh fails, return empty token
+            }
             return _token;
         }
         return _token; // Return the existing token if it's still valid
     }
 
-    private void StoreToken(string token, string refreshToken) {
+    [MemberNotNull(nameof(_localUser), nameof(_token), nameof(_refreshToken), nameof(_tokenExpiration))]
+    private void StoreTokenAndUser(string token, string refreshToken, DateTime tokenExpiration, User user) {
         if (string.IsNullOrWhiteSpace(token)) {
             throw new ArgumentException("Token cannot be null or empty.", nameof(token));
         }
+        _localUser = user;
         _token = token;
         _refreshToken = refreshToken;
-        _tokenExpiration = DateTime.UtcNow.AddMinutes(30); // Assuming token is valid for 30 minutes, adjust as necessary (TODO: Extract from JWT)
-        StoreTokenInEncryptedFile(_token, _refreshToken, _tokenExpiration, DateTime.UtcNow);
+        _tokenExpiration = tokenExpiration;
+        StoreTokenInEncryptedFile(_token, _refreshToken, _tokenExpiration, DateTime.UtcNow, user);
         _webAPI.SetAuthenticationToken(_token); // Set the authentication token for the web API
     }
 
@@ -213,15 +150,68 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
         }
 
         if (DateTime.UtcNow >= tokenData.Expiration) {
-            return false; // Token is expired (TODO: Implement refresh logic if needed)
+            return await RefreshToken(tokenData.RefreshToken, tokenData.User); // Token is expired, attempt to refresh it
         }
 
         _token = tokenData.Token;
         _refreshToken = tokenData.RefreshToken;
         _tokenExpiration = tokenData.Expiration;
-        _localUser = await GetUserFromToken(_token);
+        _localUser = tokenData.User;
 
-        return true; // Successfully auto-logged in with the stored token
+        return tokenData.User is not null && _tokenExpiration > DateTime.UtcNow;
+
+    }
+
+    private async ValueTask<bool> RefreshToken(string refreshToken, User? user) {
+        try {
+            var response = await _webAPI.RefreshTokenAsync(new RefreshRequest(refreshToken));
+            if (response is null) {
+                return false; // Failed to refresh token
+            }
+            if (user is null) {
+                throw new NotImplementedException("User not found, should ask API for user data based on token");
+            }
+            StoreTokenAndUser(response.Token, response.RefreshToken, DateTime.UtcNow.AddSeconds(3600), user);
+            return true; // Successfully refreshed token
+        } catch (Exception ex) {
+            _logger.LogError(ex, "Error occurred while refreshing token.");
+            return false; // Failed to refresh token
+        }
+    }
+
+    public Task<User> LoginWithDiscordAsync() => LoginWithProviderAsync(AuthProvider.Discord);
+
+    private async Task<User> LoginWithProviderAsync(AuthProvider provider) {
+
+        StartAuthResponse? startAuthResponse = await _webAPI.StartAuthAsync(provider) ?? throw new InvalidOperationException("Failed to start authentication with provider.");
+        if (startAuthResponse is null) {
+            _logger.LogWarning("Authentication session could not be started for provider {Provider}.", provider);
+            throw new InvalidOperationException("Authentication session could not be started.");
+        }
+
+        _logger.LogInformation("Starting authentication with {Provider}", provider);
+
+        // Open url in default browser
+        _browserService.OpenUrl(startAuthResponse.AuthUrl);
+
+        _logger.LogInformation("Waiting for authentication to complete...");
+
+        EndAuthResponse? endAuthResponse = await _webAPI.EndAuthAsync(provider, startAuthResponse.SessionId);
+        if (endAuthResponse is null) {
+            _logger.LogWarning("Authentication session ended without response for provider {Provider}.", provider);
+            throw new InvalidOperationException("Authentication session ended without response.");
+        }
+
+        _logger.LogInformation("Authentication with {Provider} completed successfully.", provider);
+
+        StoreTokenAndUser(endAuthResponse.Token, endAuthResponse.RefreshToken, endAuthResponse.ExpiresAt, new User {
+            UserId = endAuthResponse.User.Id,
+            UserDisplayName = endAuthResponse.User.DisplayName,
+        });
+
+        _logger.LogInformation("User {UserName} with Id {Id} logged in successfully via {Provider}.", _localUser.Email, _localUser.UserId, provider);
+
+        return _localUser;
 
     }
 
@@ -234,11 +224,11 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
         return JsonSerializer.Deserialize<StoredTokenData>(Encoding.UTF8.GetString(plainText));
     }
 
-    private static async void StoreTokenInEncryptedFile(string token, string refreshToken, DateTime expiration, DateTime issuedAt) {
+    private static async void StoreTokenInEncryptedFile(string token, string refreshToken, DateTime expiration, DateTime issuedAt, User? user) {
         if (string.IsNullOrWhiteSpace(token)) {
             throw new ArgumentException("Token cannot be null or empty.", nameof(token));
         }
-        var tokenData = new StoredTokenData(token, refreshToken, issuedAt, expiration);
+        var tokenData = new StoredTokenData(token, refreshToken, issuedAt, expiration, DateTime.UtcNow, user);
         byte[] plainText = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(tokenData));
         byte[] cipherText = ProtectedData.Protect(plainText, null, DataProtectionScope.CurrentUser);
         await File.WriteAllBytesAsync(_userTokenStore, cipherText);

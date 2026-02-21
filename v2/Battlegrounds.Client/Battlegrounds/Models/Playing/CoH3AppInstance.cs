@@ -21,35 +21,9 @@ public sealed class CoH3AppInstance(Game game) : GameAppInstance {
             return false;
         }
 
-        _logger.Information("Launching game: {GameName} with args: {Args}", game.GameName, string.Join(" ", args));
-
-        string executablePath = game.AppExecutableFullPath;
-        string arguments = string.Join(" ", args);
-        string workingDirectory = Path.GetDirectoryName(executablePath) ?? string.Empty;
-        if (string.IsNullOrEmpty(workingDirectory)) {
-            _logger.Error("Working directory is empty, cannot launch game.");
-            return false;
-        }
-
-        ProcessStartInfo startInfo = new() {
-            FileName = executablePath,
-            Arguments = arguments,
-            WorkingDirectory = workingDirectory,
-            UseShellExecute = false,
-            CreateNoWindow = false
-        };
-
-        _process = Process.Start(startInfo);
+        _process = await LaunchViaSteam(Game.SteamAppId.ToString());
         if (_process is null) {
-            _logger.Error("Failed to start game process. Executable: {Executable}, Arguments: {Arguments}", executablePath, arguments);
-            return false;
-        }
-
-        bool launched = await Task.Run(() => _process.Start());
-        if (!launched) {
-            _process.Dispose();
-            _process = null;
-            _logger.Error("Failed to launch game process. Executable: {Executable}, Arguments: {Arguments}", executablePath, arguments);
+            _logger.Error("Failed to launch game via Steam. Steam App ID: {SteamAppId}", Game.SteamAppId);
             return false;
         }
 
@@ -58,13 +32,46 @@ public sealed class CoH3AppInstance(Game game) : GameAppInstance {
         }
 
         if (_process.HasExited) {
-            _logger.Warning("Game process exited before the main window was created. Executable: {Executable}, Arguments: {Arguments}", executablePath, arguments);
+            _logger.Warning("Game process exited before main window was created. Attempting to find replacement process...");
             _process = null;
             return await TryWaitForReplacementProcess();
         }
 
         return true;
         
+    }
+
+    private async Task<Process?> LaunchViaSteam(string gameId) {
+        ProcessStartInfo startInfo = new() {
+            FileName = $"steam://rungameid/{gameId}",
+            UseShellExecute = true
+        };
+
+        Process.Start(startInfo);
+        return await FindGameProcess();
+    }
+
+    private async Task<Process?> FindGameProcess() {
+        _logger.Information("Waiting for game process to start...");
+
+        int waitTime = 15000; // 15 seconds (Steam needs time to start the game)
+        int elapsedTime = 0;
+
+        while (elapsedTime < waitTime) {
+            await Task.Delay(500);
+            elapsedTime += 500;
+
+            Process[] processes = Process.GetProcessesByName("RelicCoH3");
+            if (processes.Length > 0) {
+                _process = processes[0];
+                _logger.Information("Found game process: {ProcessId} after {Seconds}s",
+                    _process.Id, elapsedTime / 1000.0);
+                return _process;
+            }
+        }
+
+        _logger.Warning("Game process not found after {Seconds}s", waitTime / 1000.0);
+        return null;
     }
 
     private async Task<bool> TryWaitForReplacementProcess() {

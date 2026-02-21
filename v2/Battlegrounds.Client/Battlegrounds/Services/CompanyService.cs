@@ -151,7 +151,7 @@ public sealed class CompanyService(
     }
 
     private ValueTask<bool> SyncCompanyWithRemoteInternal(Company company, Stream serializedCompanyStream) {
-        return _serverAPI.UploadCompanyAsync(company.Id, $"{company.GameId}_{company.Faction}", serializedCompanyStream); // Upload the serialized company to the remote store
+        return _serverAPI.UploadCompanyAsync(company.Id, $"{company.GameId}_{company.Faction}", company.Version, serializedCompanyStream); // Upload the serialized company to the remote store
     }
 
     private async ValueTask<string> ResolveUserId(string? userId) {
@@ -234,8 +234,11 @@ public sealed class CompanyService(
             Faction = company.Faction,
             GameId = company.GameId,
             CreatedAt = company.CreatedAt,
+            CreatedBy = company.CreatedBy,
             UpdatedAt = DateTime.Now, // Update the timestamp to now
+            UpdatedBy = "ReplayEventProcessor", // Indicate that the update was made by the replay event processor
             Squads = squads,
+            Version = company.Version + 1 // Increment the version number
         };
 
         if (commitLocally) {

@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Net.Http.Json;
 
 using Battlegrounds.Facades.API;
 using Battlegrounds.Models;
@@ -97,9 +96,7 @@ public class HttpBattlegroundsServerAPITests {
         string companyId = "test-company";
         string faction = "british_africa";
         var stream = new MemoryStream();
-        var mockUser = new User { UserId = "test-user" };
 
-        _userService.GetLocalUserAsync().Returns(mockUser);
         _userService.GetLocalUserTokenAsync().Returns("test-token");
 
         var httpResponse = new HttpResponseMessage(HttpStatusCode.OK);
@@ -107,11 +104,11 @@ public class HttpBattlegroundsServerAPITests {
             .Returns(httpResponse);
 
         // Act
-        var result = await _api.UploadCompanyAsync(companyId, faction, stream);
+        var result = await _api.UploadCompanyAsync(companyId, faction, 1, stream);
 
         // Assert
         Assert.That(result, Is.True, "Upload should return true on success");
-        await _userService.Received(1).GetLocalUserAsync();
+        await _userService.Received().GetLocalUserTokenAsync();
         await _httpClient.Received(1).SendRequestAsync(Arg.Is<HttpRequestMessage>(
             req => req.Method == HttpMethod.Post &&
                    req.Content is StreamContent &&
@@ -128,9 +125,7 @@ public class HttpBattlegroundsServerAPITests {
         string companyId = "test-company";
         string faction = "british_africa";
         var stream = new MemoryStream();
-        var mockUser = new User { UserId = "test-user" };
 
-        _userService.GetLocalUserAsync().Returns(mockUser);
         _userService.GetLocalUserTokenAsync().Returns("test-token");
 
         var httpResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
@@ -138,7 +133,7 @@ public class HttpBattlegroundsServerAPITests {
             .Returns(httpResponse);
 
         // Act
-        var result = await _api.UploadCompanyAsync(companyId, faction, stream);
+        var result = await _api.UploadCompanyAsync(companyId, faction, 1, stream);
 
         // Assert
         Assert.That(result, Is.False, "Upload should return false on server error");
@@ -146,12 +141,10 @@ public class HttpBattlegroundsServerAPITests {
 
     [Test]
     public async Task DeleteCompanyAsync_WhenSuccessful_ReturnsTrue() {
-        
+
         // Arrange
         string companyId = "test-company";
-        var mockUser = new User { UserId = "test-user" };
-        
-        _userService.GetLocalUserAsync().Returns(mockUser);
+
         _userService.GetLocalUserTokenAsync().Returns("test-token");
 
         var httpResponse = new HttpResponseMessage(HttpStatusCode.OK);
@@ -165,20 +158,17 @@ public class HttpBattlegroundsServerAPITests {
         Assert.That(result, Is.True, "Delete should return true on success");
         await _httpClient.Received(1).SendRequestAsync(Arg.Is<HttpRequestMessage>(
             req => req.Method == HttpMethod.Delete &&
-                   req.RequestUri!.ToString().Contains($"guid={companyId}") &&
-                   req.RequestUri.ToString().Contains($"userId={mockUser.UserId}")
+                   req.RequestUri!.ToString().Contains($"guid={companyId}")
         ));
 
     }
 
     [Test]
     public async Task DeleteCompanyAsync_WhenServerError_ReturnsFalse() {
-        
+
         // Arrange
         string companyId = "test-company";
-        var mockUser = new User { UserId = "test-user" };
-        
-        _userService.GetLocalUserAsync().Returns(mockUser);
+
         _userService.GetLocalUserTokenAsync().Returns("test-token");
 
         var httpResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
@@ -227,7 +217,9 @@ public class HttpBattlegroundsServerAPITests {
         Assert.That(result, Is.True, "Report should return true on success");
         await _httpClient.Received(1).SendRequestAsync(Arg.Is<HttpRequestMessage>(
             req => req.Method == HttpMethod.Post &&
-                   req.Content is JsonContent &&
+                   req.Content is StreamContent &&
+                   req.Content.Headers.ContentType != null &&
+                   req.Content.Headers.ContentType.MediaType == "application/json" &&
                    req.Headers.Any(kvp => kvp.Key == "Authorization" &&
                                           kvp.Value.First() == "Bearer test-token") &&
                    req.RequestUri!.ToString().Contains("/api/v1/match/report")

@@ -2,7 +2,7 @@
 
 namespace Battlegrounds.Security;
 
-public static class RSAPublicKey {
+public record RSAPublicKey(RSA Key, string KeyId)  {
 
     public static RSA FromPem(string pem) {
 
@@ -16,5 +16,19 @@ public static class RSAPublicKey {
         return rsa;
 
     }
+
+    public static RSAPublicKey FromElements(string n, string e, string kid) {
+
+        var rsaParameters = new RSAParameters {
+            Modulus = Convert.FromBase64String(n),
+            Exponent = Convert.FromBase64String(e)
+        };
+
+        RSA rsa = RSA.Create();
+        rsa.ImportParameters(rsaParameters);
+
+        return new RSAPublicKey(rsa, kid);
+
+    } 
 
 }

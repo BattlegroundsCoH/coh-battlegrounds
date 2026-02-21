@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CA1873: Avoid potentially expensive logging
+dotnet_diagnostic.CA1873.severity = none

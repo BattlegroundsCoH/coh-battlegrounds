@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -30,6 +31,19 @@ public sealed class HttpBattlegroundsWebAPI(
     public string RefreshEndpoint => $"{_configuration.API.LoginUrlOverride}{_configuration.API.RefreshEndpoint}";
     public string PublicKeyEndpoint => $"{_configuration.API.LoginUrlOverride}{_configuration.API.PublicKeyEndpoint}";
 
+    public string AuthStartEndpoint(AuthProvider authProvider) => $"{_configuration.API.BaseUrl}{_configuration.API.AuthStartEndpoint.Replace("<IdP>", authProvider switch {
+        AuthProvider.Battlegrounds => "battlegrounds",
+        AuthProvider.Steam => "steam",
+        AuthProvider.Discord => "discord",
+        _ => throw new ArgumentOutOfRangeException(nameof(authProvider), $"Unsupported authentication provider: {authProvider}")
+    })}";
+
+    public string AuthStatusEndpoint(AuthProvider authProvider) => $"{_configuration.API.BaseUrl}{_configuration.API.AuthStatusEndpoint.Replace("<IdP>", authProvider switch {
+        AuthProvider.Battlegrounds => "battlegrounds",
+        AuthProvider.Steam => "steam",
+        AuthProvider.Discord => "discord",
+        _ => throw new ArgumentOutOfRangeException(nameof(authProvider), $"Unsupported authentication provider: {authProvider}")
+    })}";
 
     public async Task<LoginResponse> LoginAsync(LoginRequest request) {
         _logger.LogDebug("Logging in using {Endpoint}", LoginEndpoint);
@@ -38,7 +52,7 @@ public sealed class HttpBattlegroundsWebAPI(
         };
         HttpResponseMessage response = await _httpClient.SendRequestAsync(requestMessage);
         if (!response.IsSuccessStatusCode) {
-            //string errorContent = await response.Content.ReadAsStringAsync() ?? string.Empty; // TODO: Log this...
+            _logger.LogError("Login failed with status code {StatusCode}. Error: {ErrorMessage}", response.StatusCode, await response.Content.ReadAsStringAsync());
             throw new HttpRequestException($"Login failed with status code {response.StatusCode}.");
         }
 
@@ -77,6 +91,65 @@ public sealed class HttpBattlegroundsWebAPI(
         }
         _logger.LogDebug("Public key retrieved successfully.");
         return await response.Content.ReadAsStringAsync();
+    }
+
+    public async Task<StartAuthResponse?> StartAuthAsync(AuthProvider provider) {
+
+        string endpoint = AuthStartEndpoint(provider);
+        _logger.LogDebug("Starting authentication with {Provider} at {Endpoint}", provider, endpoint);
+
+        HttpRequestMessage request = new(HttpMethod.Get, endpoint);
+        try {
+            HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
+            if (!response.IsSuccessStatusCode) {
+                _logger.LogError("Failed to start authentication with {Provider}. Status code: {StatusCode}. Error: {ErrorMessage}", provider, response.StatusCode, await response.Content.ReadAsStringAsync());
+                return null;
+            }
+            return await response.Content.ReadFromJsonAsync<StartAuthResponse>(_jsonOptions) 
+                   ?? throw new InvalidOperationException("Failed to deserialize start auth response.");
+        } catch (HttpRequestException ex) {
+            _logger.LogError(ex, "Error starting authentication with {Provider}.", provider);
+            return null;
+        } catch (Exception ex) {
+            _logger.LogError(ex, "Unexpected error starting authentication with {Provider}.", provider);
+            return null;
+        }
+    }
+
+    const int MaxRetries = 60; // Maximum number of retries for checking auth status
+    const int RetryDelayMilliseconds = 1000; // Delay between retries in milliseconds
+    // 60 retries with 1000ms delay = 60 seconds total wait time (Not accounting for network latency)
+
+    public async Task<EndAuthResponse?> EndAuthAsync(AuthProvider provider, string sessionId) {
+
+        string endpoint = $"{AuthStatusEndpoint(provider)}?id={sessionId}";
+        for (int i = 0; i < MaxRetries; i++) {
+            try {
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+                HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
+                if (response.StatusCode is HttpStatusCode.OK) {
+                    _logger.LogDebug("Authentication status for {Provider} with session {SessionId} is OK.", provider, sessionId);
+                    Stream contentStream = await response.Content.ReadAsStreamAsync() ?? throw new InvalidOperationException("Response content is null.");
+                    return await FromJson<EndAuthResponse>(contentStream) ?? throw new InvalidOperationException("Failed to deserialize end auth response.");
+                } else if (response.StatusCode is HttpStatusCode.NotFound) {
+                    _logger.LogDebug("Authentication status for {Provider} with session {SessionId} not found. Retrying...", provider, sessionId);
+                    await Task.Delay(RetryDelayMilliseconds); // Wait before retrying
+                } else {
+                    _logger.LogError("Authentication status check failed with status code {StatusCode}. Error: {ErrorMessage}", response.StatusCode, await response.Content.ReadAsStringAsync());
+                    await Task.Delay(RetryDelayMilliseconds); // Wait before retrying
+                }
+            } catch (HttpRequestException ex) {
+                _logger.LogError(ex, "Error checking authentication status for {Provider} with session {SessionId}. Retrying...", provider, sessionId);
+                await Task.Delay(RetryDelayMilliseconds); // Wait before retrying
+            } catch (Exception ex) {
+                _logger.LogError(ex, "Unexpected error checking authentication status for {Provider} with session {SessionId}. Retrying...", provider, sessionId);
+                await Task.Delay(RetryDelayMilliseconds); // Wait before retrying
+            }
+        }
+
+        _logger.LogError("Authentication status check for {Provider} with session {SessionId} timed out after {MaxRetries} attempts.", provider, sessionId, MaxRetries);
+        return null;
+
     }
 
 }

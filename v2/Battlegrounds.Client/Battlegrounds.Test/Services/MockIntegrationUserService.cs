@@ -19,7 +19,8 @@ public sealed class MockIntegrationUserService(string user) : IUserService {
 
     private static readonly Configuration Configuration = new() {
         API = new Configuration.APIConfiguration {
-            LoginUrlOverride = "http://bg.test.service.cohbattlegrounds.com:8087"
+            LoginUrlOverride = "http://bg.test.service.cohbattlegrounds.com:8087",
+            LoginEndpoint = "/api/v1/login",
         }
     };
 
@@ -69,7 +70,7 @@ public sealed class MockIntegrationUserService(string user) : IUserService {
     }
 
     public async Task<User?> LoginAsync(string userName, string password) {
-        _logger.LogDebug("Logging in using {Endpoint}", LoginEndpoint);
+        /*_logger.LogDebug("Logging in using {Endpoint}", LoginEndpoint);
         HttpRequestMessage requestMessage = new(HttpMethod.Post, LoginEndpoint) {
             Content = JsonContent.Create(new LoginRequest(user, _userCredentials[user]), options: _jsonOptions)
         };
@@ -82,11 +83,18 @@ public sealed class MockIntegrationUserService(string user) : IUserService {
         Stream contentStream = await response.Content.ReadAsStreamAsync() ?? throw new InvalidOperationException("Response content is null.");
 
         var loginResponse = await JsonSerializer.DeserializeAsync<LoginResponse>(contentStream, _jsonOptions) ?? throw new InvalidOperationException("Failed to deserialize login response.");
-        _token = loginResponse.Token;
-        return loginResponse.User;
+        _token = loginResponse.Token;*/
+        return new User {
+            UserId = userName,
+            UserDisplayName = userName,
+        };
     }
 
     public Task<bool> LogOutAsync() {
+        throw new NotImplementedException();
+    }
+
+    public Task<User> LoginWithDiscordAsync() {
         throw new NotImplementedException();
     }
 }

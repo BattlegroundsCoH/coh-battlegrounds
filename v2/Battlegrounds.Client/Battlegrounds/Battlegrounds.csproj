@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
@@ -10,7 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\auth.jpg" />
     <None Remove="Assets\dummy_avatar.png" />
+    <None Remove="Assets\IdP_discord.png" />
+    <None Remove="Assets\IdP_steam.png" />
     <None Remove="Rendering\Effects\ColourTintShader.ps" />
   </ItemGroup>
 
@@ -23,24 +26,26 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\auth.jpg" />
+    <Resource Include="Assets\IdP_discord.png" />
+    <Resource Include="Assets\IdP_steam.png" />
     <Resource Include="Rendering\Effects\ColourTintShader.ps" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.21.5" />
-    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.49.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.49.0">
+    <PackageReference Include="Google.Protobuf" Version="3.33.1" />
+    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.71.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.76.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.0" />
     <PackageReference Include="Serilog" Version="4.3.0" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
-    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
 
@@ -65,7 +70,13 @@
 
   <ItemGroup>
     <Folder Include="Assets\Factions\coh3\icons\" />
-    <Folder Include="Assets\Scenarios\CoH3\" />
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\..\..\coh-battlegrounds-proto\lobby.proto" GrpcServices="Client">
+      <Link>Protos\lobby.proto</Link>
+    </Protobuf>
   </ItemGroup>
 
   <ItemGroup>
@@ -504,7 +515,19 @@
     <None Update="Assets\Resources\coh3_munitions_small.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Misc\locked.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Misc\unlocked.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Scenarios\CoH3\pachino_2p_mm_handmade.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Scenarios\CoH3\rural_town_4p_mm_handmade.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Scenarios\CoH3\semois_4p_mm_handmade.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Scenarios\CoH3\semois_2p_mm_handmade.png">

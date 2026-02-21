@@ -1,6 +1,7 @@
 ﻿using System.Threading.Channels;
 
 using Battlegrounds.Facades.API;
+using Battlegrounds.Factories;
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Models.Replays;
@@ -10,42 +11,25 @@ using Serilog;
 
 namespace Battlegrounds.Models.Lobbies;
 
-public sealed class SingleplayerLobby : ILobby, IDisposable {
+public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServerAPI serverAPI, ICompanyService companyService) : ILobby, IDisposable {
 
     private static readonly ILogger _logger = Log.ForContext<SingleplayerLobby>();
 
-    private readonly ICompanyService _companyService;
-    private readonly IBattlegroundsServerAPI _serverAPI;
-    private readonly Channel<LobbyEvent> _internalEvents;
-    private readonly HashSet<Participant> _participants = [];
+    private readonly ICompanyService _companyService = companyService ?? throw new ArgumentNullException(nameof(companyService), "Company service cannot be null");
+    private readonly IBattlegroundsServerAPI _serverAPI = serverAPI ?? throw new ArgumentNullException(nameof(serverAPI), "Server API cannot be null");
+    private readonly Channel<LobbyEvent> _internalEvents = Channel.CreateUnbounded<LobbyEvent>();
+    private readonly HashSet<Participant> _participants = lobbySetup.Participants;
     private readonly Dictionary<string, Company> _companies = [];
-    private readonly List<LobbySetting> _settings = [
-        new LobbySetting { Name = LobbySetting.SETTING_GAMEMODE, Type = LobbySettingType.Selection, Options = [
-            new ("Domination", "domination"),
-            new ("Victory Points", "victory_points")]
-        },
-        // TODO: More settings
-    ];
-    private readonly Participant _localParticipant;
+    private readonly List<LobbySetting> _settings = lobbySetup.Settings;
+    private readonly Participant _localParticipant = lobbySetup.Self;
+    private readonly Team _team1 = lobbySetup.Team1;
+    private readonly Team _team2 = lobbySetup.Team2;
 
-    private Map _map;
+    private Map _map = lobbySetup.Map;
     private bool _isActive = true;
-    private bool disposedValue;
-    private readonly Team _team1 = new Team(TeamType.Allies, "Allies", [
-        new Team.Slot(0, null, "british_africa", string.Empty, AIDifficulty.HUMAN, false, false),
-        new Team.Slot(1, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        new Team.Slot(2, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        new Team.Slot(3, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        ]);
+    private bool _disposedValue;
 
-    private readonly Team _team2 = new Team(TeamType.Axis, "Axis", [
-        new Team.Slot(0, null, "afrika_korps", string.Empty, AIDifficulty.HARD, false, false),
-        new Team.Slot(1, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        new Team.Slot(2, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        new Team.Slot(3, null, string.Empty, string.Empty, AIDifficulty.HUMAN, true, false),
-        ]);
-
-    public string Name { get; }
+    public string Name { get; } = lobbySetup.Name;
 
     public bool IsHost => true;
 
@@ -59,31 +43,13 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
 
     public Team Team2 => _team2;
 
-    public Game Game { get; }
+    public Game Game { get; } = lobbySetup.Game;
 
     public IList<LobbySetting> Settings => _settings;
 
     public Map Map => _map;
 
-    public SingleplayerLobby(string name, Game game, Map map, Participant localParticipant, IBattlegroundsServerAPI serverAPI, ICompanyService companyService) {
-        Name = name;
-        Game = game;
-
-        _companyService = companyService ?? throw new ArgumentNullException(nameof(companyService), "Company service cannot be null");
-        _serverAPI = serverAPI ?? throw new ArgumentNullException(nameof(serverAPI), "Server API cannot be null");
-
-        _internalEvents = Channel.CreateUnbounded<LobbyEvent>();
-        _map = map;
-        _localParticipant = localParticipant;
-        _participants.Add(localParticipant);
-
-        Participant aiParticipant = new Participant(1, Guid.NewGuid().ToString(), "AI - Standard", true, true); // TODO: Make constructor caller handle this
-        _participants.Add(aiParticipant);
-
-        _team1.Slots[0] = _team1.Slots[0] with { ParticipantId = _localParticipant.ParticipantId };
-        _team2.Slots[0] = _team2.Slots[0] with { ParticipantId = aiParticipant.ParticipantId };
-
-    }
+    public bool IsReady => true; // Always ready in singleplayer mode
 
     public async ValueTask<LobbyEvent?> GetNextEvent() {
         try {
@@ -144,7 +110,7 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
 
     }
 
-    public Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) => Task.FromResult(new UploadGamemodeResult()); // NOP operation in singleplayer mode
+    public ValueTask<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) => ValueTask.FromResult(new UploadGamemodeResult() { Failed = false }); // NOP operation in singleplayer mode
 
     public (Team? team, int slotId) GetLocalPlayerSlot() {
         var id = Array.FindIndex(_team1.Slots, x => x.ParticipantId == _localParticipant.ParticipantId);
@@ -231,23 +197,18 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
         await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated)); // Notify the UI of setting change
     }
 
-    public async Task SendMessage(string channel, string msg) {
-        var chatChannel = channel switch {
-            "team" => ChatChannel.Team,
-            "all" => ChatChannel.All,
-            _ => throw new ArgumentException($"Invalid chat channel: {channel}")
-        };
-        var chatMessage = new ChatMessage(_localParticipant.ParticipantId, _localParticipant.ParticipantName, chatChannel, msg);
+    public async Task SendMessage(ChatChannel channel, string msg) {
+        var chatMessage = new ChatMessage(_localParticipant.ParticipantId, _localParticipant.ParticipantName, channel, msg);
         await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.ParticipantMessage, chatMessage)); // Notify the UI of message
     }
 
     private void Dispose(bool disposing) {
-        if (!disposedValue) {
+        if (!_disposedValue) {
             if (disposing) {
                 _internalEvents.Writer.Complete();
             }
             _isActive = false; // Mark the lobby as inactive
-            disposedValue = true;
+            _disposedValue = true;
         }
     }
 
@@ -256,5 +217,23 @@ public sealed class SingleplayerLobby : ILobby, IDisposable {
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
+
+    public ValueTask<bool> WaitForAllPlayersHaveGamemode() => ValueTask.FromResult(true); // NOP operation in singleplayer mode, always returns true since there's only one player
+
+    public Participant? GetParticipant(string participantId) => _participants.FirstOrDefault(p => p.ParticipantId == participantId);
+
+    public int GetRealPlayersCount() => 1; // Always 1 real player in singleplayer mode
+
+    public Task BeginMatch() => Task.CompletedTask; // NOP operation in singleplayer mode, match begins immediately when game is launched
+
+    public Task EndMatch() => Task.CompletedTask; // NOP operation in singleplayer mode, match ends immediately when game is ended
+
+    public ValueTask PublishSystemMessage(string message) => ValueTask.CompletedTask; // NOP operation in singleplayer mode, system messages are not needed
+
+    public Task SetSlotFaction(Team team, int slotIndex, string? faction) => Task.CompletedTask; // NOP operation in singleplayer mode, faction changes are not needed
+
+    public Task MarkReady(bool isReady) => Task.CompletedTask; // NOP operation in singleplayer mode, player is always ready
+
+    public Task KickPlayer(Team team, int slotIndex) => Task.CompletedTask; // NOP operation in singleplayer mode, cannot kick players
 
 }

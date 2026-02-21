@@ -2,8 +2,10 @@
 using System.Net.Http;
 
 using Battlegrounds.Facades.API;
+using Battlegrounds.Factories;
 using Battlegrounds.Logging;
 using Battlegrounds.Models;
+using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Parsers;
 using Battlegrounds.Serializers;
@@ -17,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Serilog;
+using Serilog.Core;
 
 namespace Battlegrounds;
 
@@ -189,14 +192,20 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<ICompanyService, CompanyService>();
         services.AddSingleton<IGameLocaleService, GameLocaleService>();
         services.AddSingleton<IBlueprintService, BlueprintService>();
+        services.AddSingleton<IBrowserService, BrowserService>();
         services.AddSingleton<ICompanySerializer, BinaryCompanySerializer>();
         services.AddSingleton<ICompanyDeserializer, BinaryCompanyDeserializer>();
         services.AddSingleton<IBattlegroundsServerAPI, HttpBattlegroundsServerAPI>();
         services.AddSingleton<IBattlegroundsWebAPI, HttpBattlegroundsWebAPI>();
+        services.AddTransient<GrpcServerClientFactory>();
+        services.AddTransient<LobbySetupFromConfigFactory>();
 
         // Add getters
         services.AddSingleton(services => services.GetRequiredService<IGameService>().GetGame<CoH3>());
         // TODO: Add getter for CoH2
+
+        // Add factories
+        services.AddSingleton<MultiplayerLobbyFactory>();
 
         // Register default HTTP client
         services.AddSingleton(new HttpClient());
@@ -221,8 +230,7 @@ public sealed class BattlegroundsApp {
         }
 
         // Trigger async loading of blueprints
-        var blueprintService = ServiceProvider.GetRequiredService<IBlueprintService>();
-        blueprintService.LoadBlueprints();
+        LoadData(ServiceProvider);
 
         // Trigger auto login
         var loginViewModel = ServiceProvider.GetRequiredService<LoginViewModel>();
@@ -234,9 +242,17 @@ public sealed class BattlegroundsApp {
             }
         }
 
-        // Trigger load of companies
-        var companyService = ServiceProvider.GetRequiredService<ICompanyService>();
-        logger.LogInformation("Loaded {Count} companies from local store", await companyService.LoadPlayerCompaniesAsync());
+    }
+
+    private static async void LoadData(IServiceProvider serviceProvider) {
+
+        var logger = serviceProvider.GetRequiredService<ILogger<BattlegroundsApp>>();
+        var blueprintService = serviceProvider.GetRequiredService<IBlueprintService>();
+        await blueprintService.LoadBlueprints();
+
+        var companyService = serviceProvider.GetRequiredService<ICompanyService>();
+        int companyCount = await companyService.LoadPlayerCompaniesAsync();
+        logger.LogInformation("Loaded {Count} companies from local store", companyCount);
 
     }
 
