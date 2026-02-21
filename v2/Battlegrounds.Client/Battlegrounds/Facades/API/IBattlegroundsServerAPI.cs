@@ -67,13 +67,14 @@ public interface IBattlegroundsServerAPI {
     /// reported if a delegate is provided.</remarks>
     /// <param name="companyId">The unique identifier of the company to upload. Cannot be null or empty.</param>
     /// <param name="faction">The faction to which the company belongs. Cannot be null or empty.</param>
+    /// <param name="version">The version number of the company data being uploaded. This should be incremented with each update to ensure proper versioning and concurrency control.</param>
     /// <param name="serializedCompanyStream">A stream containing the serialized company data to upload. The stream must be readable and positioned at the
     /// start of the data.</param>
     /// <param name="progressUpdate">An optional delegate that receives progress updates during the upload operation. If null, progress updates are
     /// not reported.</param>
     /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the upload
     /// succeeds; otherwise, <see langword="false"/>.</returns>
-    ValueTask<bool> UploadCompanyAsync(string companyId, string faction, Stream serializedCompanyStream, UploadProgressUpdateDelegate? progressUpdate = null);
+    ValueTask<bool> UploadCompanyAsync(string companyId, string faction, int version, Stream serializedCompanyStream, UploadProgressUpdateDelegate? progressUpdate = null);
     
     /// <summary>
     /// Uploads a game mode from the specified location to the server asynchronously.

@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Net.Http.Json;
 
 using Battlegrounds.Facades.API;
 using Battlegrounds.Models;
@@ -105,7 +104,7 @@ public class HttpBattlegroundsServerAPITests {
             .Returns(httpResponse);
 
         // Act
-        var result = await _api.UploadCompanyAsync(companyId, faction, stream);
+        var result = await _api.UploadCompanyAsync(companyId, faction, 1, stream);
 
         // Assert
         Assert.That(result, Is.True, "Upload should return true on success");
@@ -134,7 +133,7 @@ public class HttpBattlegroundsServerAPITests {
             .Returns(httpResponse);
 
         // Act
-        var result = await _api.UploadCompanyAsync(companyId, faction, stream);
+        var result = await _api.UploadCompanyAsync(companyId, faction, 1, stream);
 
         // Assert
         Assert.That(result, Is.False, "Upload should return false on server error");

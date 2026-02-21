@@ -259,6 +259,10 @@ public class CoH3MatchDataBuilderTests {
             throw new NotImplementedException();
         }
 
+        public Task SetSlotFaction(Team team, int slotIndex, string? faction) {
+            throw new NotImplementedException();
+        }
+
         public Task ToggleSlotLock(Team team, int slotIndex) {
             throw new NotImplementedException();
         }

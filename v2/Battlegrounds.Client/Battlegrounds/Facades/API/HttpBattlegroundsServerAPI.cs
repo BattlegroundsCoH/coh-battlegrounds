@@ -91,12 +91,13 @@ public sealed class HttpBattlegroundsServerAPI(
 
     }
 
-    public async ValueTask<bool> UploadCompanyAsync(string companyId, string faction, Stream serializedCompanyStream, UploadProgressUpdateDelegate? progressUpdate = null) {
+    public async ValueTask<bool> UploadCompanyAsync(string companyId, string faction, int version, Stream serializedCompanyStream, UploadProgressUpdateDelegate? progressUpdate = null) {
 
         string endpoint = $"{BaseUrl}{UploadCompanyEndpoint}";
         var parameters = new Dictionary<string, string> {
             { "guid", companyId },
-            { "faction", faction }
+            { "faction", faction },
+            { "version", version.ToString() }
         };
 
         string requestUri = $"{endpoint}?{ToUrlEncodedString(parameters)}";
