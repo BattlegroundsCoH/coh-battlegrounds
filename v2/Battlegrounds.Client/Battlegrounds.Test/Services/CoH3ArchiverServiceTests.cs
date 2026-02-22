@@ -1,6 +1,6 @@
 ﻿using Battlegrounds.Models;
 using Battlegrounds.Models.Playing;
-using Battlegrounds.Services;
+using Battlegrounds.Services.Infrastructure;
 
 namespace Battlegrounds.Test.Services;
 

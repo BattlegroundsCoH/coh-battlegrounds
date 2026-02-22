@@ -6,7 +6,7 @@ using Battlegrounds.Models.Playing;
 
 using Microsoft.Extensions.Logging;
 
-namespace Battlegrounds.Services;
+namespace Battlegrounds.Services.Infrastructure;
 
 public sealed class CoH3ArchiverService(CoH3 game, Configuration configuration, ILogger<CoH3ArchiverService> logger, ILogger<CoH3ArchiverService.EssenceEditor> eeLogger) : IArchiverService {
 

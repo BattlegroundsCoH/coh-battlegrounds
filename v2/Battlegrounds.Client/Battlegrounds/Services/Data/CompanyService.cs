@@ -7,7 +7,7 @@ using Battlegrounds.Serializers;
 
 using Microsoft.Extensions.Logging;
 
-namespace Battlegrounds.Services;
+namespace Battlegrounds.Services.Data;
 
 public sealed class CompanyService(
     IUserService userService,

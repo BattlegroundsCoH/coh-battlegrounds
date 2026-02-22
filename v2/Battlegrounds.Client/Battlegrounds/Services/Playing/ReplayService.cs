@@ -4,7 +4,7 @@ using Battlegrounds.Parsers;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Battlegrounds.Services;
+namespace Battlegrounds.Services.Playing;
 
 public sealed class ReplayService(IServiceProvider serviceProvider) : IReplayService {
 

@@ -10,7 +10,7 @@ using Battlegrounds.Models;
 
 using Microsoft.Extensions.Logging;
 
-namespace Battlegrounds.Services;
+namespace Battlegrounds.Services.Infrastructure;
 
 /// <summary>
 /// Provides user authentication and management services, including login, token handling, and user retrieval.

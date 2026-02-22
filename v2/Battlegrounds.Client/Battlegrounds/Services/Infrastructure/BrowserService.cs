@@ -2,7 +2,7 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace Battlegrounds.Services;
+namespace Battlegrounds.Services.Infrastructure;
 
 /// <summary>
 /// Provides functionality to open URLs in the default web browser.

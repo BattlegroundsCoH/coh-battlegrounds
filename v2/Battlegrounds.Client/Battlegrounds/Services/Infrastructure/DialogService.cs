@@ -1,6 +1,6 @@
 ﻿using Battlegrounds.Helpers;
 
-namespace Battlegrounds.Services;
+namespace Battlegrounds.Services.Infrastructure;
 
 public sealed class DialogService : IDialogService {
 

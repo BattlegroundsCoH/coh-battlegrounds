@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 using Serilog;
 
-namespace Battlegrounds.Services;
+namespace Battlegrounds.Services.Data;
 
 /// <summary>
 /// Provides functionality for managing and retrieving blueprints associated with different games.

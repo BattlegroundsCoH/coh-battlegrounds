@@ -3,8 +3,9 @@ using Battlegrounds.Models;
 using Battlegrounds.Models.Gamemodes;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
+using Battlegrounds.Services.Infrastructure;
 
-namespace Battlegrounds.Services;
+namespace Battlegrounds.Services.Playing;
 
 /// <summary>
 /// Provides services for building and launching game modes and applications for supported games.

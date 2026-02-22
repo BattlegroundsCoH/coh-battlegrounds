@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 using HostLobbyRequest = Battlegrounds.Proto.Lobbies.HostLobbyRequest;
 
-namespace Battlegrounds.Services;
+namespace Battlegrounds.Services.Playing;
 
 /// <summary>
 /// Provides functionality for managing game lobbies, including creating, leaving, and retrieving lobbies.

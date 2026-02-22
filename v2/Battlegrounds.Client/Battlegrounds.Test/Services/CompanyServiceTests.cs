@@ -3,6 +3,7 @@ using Battlegrounds.Models;
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Serializers;
 using Battlegrounds.Services;
+using Battlegrounds.Services.Data;
 using Battlegrounds.Test.Models.Companies;
 
 using Microsoft.Extensions.Logging;

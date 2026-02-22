@@ -6,6 +6,7 @@ using Battlegrounds.Models.Playing;
 using Battlegrounds.Models.Replays;
 using Battlegrounds.Proto.Lobbies;
 using Battlegrounds.Services;
+using Battlegrounds.Services.Infrastructure;
 
 using Grpc.Core;
 

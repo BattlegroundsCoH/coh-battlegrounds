@@ -1,7 +1,7 @@
 ﻿using Battlegrounds.Models;
 using Battlegrounds.Models.Playing;
 
-namespace Battlegrounds.Services;
+namespace Battlegrounds.Services.Infrastructure;
 
 public sealed class GameService(Configuration configuration) : IGameService {
     

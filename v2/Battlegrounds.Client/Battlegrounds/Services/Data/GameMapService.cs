@@ -1,7 +1,7 @@
 ﻿using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 
-namespace Battlegrounds.Services;
+namespace Battlegrounds.Services.Data;
 
 public sealed class GameMapService : IGameMapService {
 
