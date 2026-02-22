@@ -91,7 +91,7 @@ public sealed class HttpBattlegroundsServerAPI(
 
     }
 
-    public async ValueTask<bool> UploadCompanyAsync(string companyId, string faction, int version, Stream serializedCompanyStream, UploadProgressUpdateDelegate? progressUpdate = null) {
+    public async ValueTask<bool> UploadCompanyAsync(string companyId, string faction, uint version, Stream serializedCompanyStream, UploadProgressUpdateDelegate? progressUpdate = null) {
 
         string endpoint = $"{BaseUrl}{UploadCompanyEndpoint}";
         var parameters = new Dictionary<string, string> {

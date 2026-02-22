@@ -36,7 +36,7 @@ public sealed class MatchPlayed {
     /// <summary>
     /// Gets the version number assigned to the company record.
     /// </summary>
-    public required int CompanyVersion { get; init; }
+    public required uint CompanyVersion { get; init; }
 
     /// <summary>
     /// Gets the faction name associated with the player.

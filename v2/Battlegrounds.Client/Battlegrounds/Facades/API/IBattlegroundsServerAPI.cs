@@ -74,7 +74,7 @@ public interface IBattlegroundsServerAPI {
     /// not reported.</param>
     /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the upload
     /// succeeds; otherwise, <see langword="false"/>.</returns>
-    ValueTask<bool> UploadCompanyAsync(string companyId, string faction, int version, Stream serializedCompanyStream, UploadProgressUpdateDelegate? progressUpdate = null);
+    ValueTask<bool> UploadCompanyAsync(string companyId, string faction, uint version, Stream serializedCompanyStream, UploadProgressUpdateDelegate? progressUpdate = null);
     
     /// <summary>
     /// Uploads a game mode from the specified location to the server asynchronously.

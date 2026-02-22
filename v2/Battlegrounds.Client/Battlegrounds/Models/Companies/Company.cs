@@ -59,7 +59,7 @@ public sealed class Company {
     /// This is used for concurrency control and tracking changes to the company data. Each time the company is updated, this version number should be incremented to reflect the new state of the company.
     /// It helps in ensuring that updates are applied correctly and can be used to detect conflicts when multiple updates occur simultaneously.
     /// </summary>
-    public int Version { get; init; } = 1;
+    public uint Version { get; init; } = 1;
 
     /// <summary>
     /// Gets the collection of squads associated with this instance.
