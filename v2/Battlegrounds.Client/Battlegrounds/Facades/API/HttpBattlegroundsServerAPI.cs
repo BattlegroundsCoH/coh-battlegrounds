@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.ComponentModel.Design;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -32,6 +33,8 @@ public sealed class HttpBattlegroundsServerAPI(
 
     public static readonly string UploadCompanyEndpoint = "/api/v1/companies/upload"; // Requires authentication
     public static readonly string DeleteCompanyEndpoint = "/api/v1/companies/delete"; // Requires authentication
+    public static readonly string GetCompanyInfoEndpoint = "/api/v1/companies/info"; // No authentication required
+    public static readonly string GetUserCompanyInfoEndpoint = "/api/v1/companies/user-info"; // No authentication required
     public static readonly string DownloadCompanyEndpoint = "/api/v1/companies/download"; // No authentication required
     public static readonly string UploadGamemodeEndpoint = "/api/v1/gamemodes/upload"; // Requires authentication
     public static readonly string DownloadGamemodeEndpoint = "/api/v1/gamemodes/download"; // No authentication required
@@ -86,6 +89,53 @@ public sealed class HttpBattlegroundsServerAPI(
             return _companyDeserializer.DeserializeCompany(contentStream);
         } else {
             _logger.LogError("Failed to retrieve company {CompanyId}. Status code: {StatusCode}, Reason: {ReasonPhrase}", companyId, response.StatusCode, response.ReasonPhrase);
+            return null;
+        }
+
+    }
+
+    public async Task<CompanyInfo?> GetCompanyInfoAsync(string companyId, string companyUserId) {
+
+        string endpoint = $"{BaseUrl}{GetCompanyInfoEndpoint}";
+        var parameters = new Dictionary<string, string> {
+            { "guid", companyId },
+            { "userId", companyUserId }
+        };
+        string requestUri = $"{endpoint}?{ToUrlEncodedString(parameters)}";
+
+        _logger.LogDebug("Sending GET request to {RequestUri}", requestUri);
+        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri); // No authentication required for this endpoint
+        request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
+
+        HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
+        if (response.IsSuccessStatusCode) {
+            Stream contentStream = await response.Content.ReadAsStreamAsync();
+            return await JsonSerializer.DeserializeAsync<CompanyInfo?>(contentStream);
+        } else {
+            _logger.LogError("Failed to retrieve company info for {CompanyId}. Status code: {StatusCode}, Reason: {ReasonPhrase}", companyId, response.StatusCode, response.ReasonPhrase);
+            return null;
+        }
+
+    }
+
+    public async Task<UserCompanyInfo?> GetUserCompanyInfoAsync(string userId) {
+
+        string endpoint = $"{BaseUrl}{GetUserCompanyInfoEndpoint}";
+        var parameters = new Dictionary<string, string> {
+            { "userId", userId }
+        };
+        string requestUri = $"{endpoint}?{ToUrlEncodedString(parameters)}";
+
+        _logger.LogDebug("Sending GET request to {RequestUri}", requestUri);
+        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri); // No authentication required for this endpoint
+        request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
+
+        HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
+        if (response.IsSuccessStatusCode) {
+            var contentStream = await response.Content.ReadAsStreamAsync();
+            return await JsonSerializer.DeserializeAsync<UserCompanyInfo?>(contentStream);
+        } else {
+            _logger.LogError("Failed to retrieve user company info for user {UserId}. Status code: {StatusCode}, Reason: {ReasonPhrase}", userId, response.StatusCode, response.ReasonPhrase);
             return null;
         }
 

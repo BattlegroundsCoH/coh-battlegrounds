@@ -275,6 +275,9 @@ public sealed class BattlegroundsApp {
         var homeViewModel = serviceProvider.GetRequiredService<HomeViewModel>();
         homeViewModel.OnDataLoaded();
 
+        // Sync with server to get any updates to companies
+        await companyService.SyncWithServerAsync();
+
     }
 
     private static async void LoadStats(IServiceProvider serviceProvider) {

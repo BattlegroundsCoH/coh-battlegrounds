@@ -9,7 +9,7 @@ namespace Battlegrounds.Serializers;
 
 public sealed class BinaryCompanySerializer : ICompanySerializer {
 
-    public static readonly uint BINARY_COMPANY_VERSION_1 = 2;
+    public static readonly uint BINARY_COMPANY_VERSION_1 = 1;
     public static readonly uint BINARY_COMPANY_VERSION_2 = 2;
     public static readonly uint BINARY_COMPANY_VERSION_LATEST = BINARY_COMPANY_VERSION_2;
     public static readonly byte[] BINARY_COMPANY_HEADER = [0x42, 0x47, 0x43, 0x0]; // "BGC" in ASCII

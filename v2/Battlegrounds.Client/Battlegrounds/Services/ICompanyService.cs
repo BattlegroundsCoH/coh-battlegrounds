@@ -136,5 +136,11 @@ public interface ICompanyService {
     /// <param name="commitLocally">Value indicating if the changes should be saved to the locally stored company file</param>
     /// <returns>If events were applied successfully, <see langword="true"/>; otherwise <see langword="false"/>.</returns>
     ValueTask<Company?> ApplyEvents(LinkedList<CompanyEventModifier>? events, Company company, bool commitLocally = false);
+    
+    /// <summary>
+    /// Synchronizes the local data with the server asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous synchronization operation.</returns>
+    Task SyncWithServerAsync();
 
 }
