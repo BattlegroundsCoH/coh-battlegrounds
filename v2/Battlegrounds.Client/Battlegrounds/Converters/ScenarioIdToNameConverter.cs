@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
+using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Services;
 
@@ -9,22 +10,24 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Battlegrounds.Converters;
 
-public sealed class FactionIdToNameConverter : AbstractAppDependable, IMultiValueConverter {
+public sealed class ScenarioIdToNameConverter : AbstractAppDependable, IMultiValueConverter {
 
     private IGameService GameService => ServiceProvider.GetRequiredService<IGameService>();
 
+    private IGameMapService GameMapService => ServiceProvider.GetRequiredService<IGameMapService>();
+
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
-        if (values is [string factionId, string gameId]) {
+        if (values is [string scenarioId, string gameId]) {
             Game game = GameService.GetGame(gameId);
-            if (game.TryGetFactionName(factionId, out string? factionName)) {
-                return factionName;
+            if (GameMapService.TryGetMapByScenarioName(game, scenarioId, out Map? map)) {
+                return map.Name;
             }
-            return factionId;
-        } else if (values is [string factionId2, Game game2]) {
-            if (game2.TryGetFactionName(factionId2, out string? factionName2)) {
-                return factionName2;
+            return scenarioId;
+        } else if (values is [string scenarioId2, Game game2]) {
+            if (GameMapService.TryGetMapByScenarioName(game2, scenarioId2, out Map? map)) {
+                return map.Name;
             }
-            return factionId2;
+            return scenarioId2;
         }
         return DependencyProperty.UnsetValue;
     }

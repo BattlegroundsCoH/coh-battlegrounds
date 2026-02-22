@@ -1,4 +1,6 @@
-﻿namespace Battlegrounds.Models.Playing;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Battlegrounds.Models.Playing;
 
 /// <summary>
 /// Represents an abstract base class for a game, providing core properties and methods for identifying and interacting
@@ -53,5 +55,14 @@ public abstract class Game {
     /// <param name="factionId">The unique identifier of the faction whose display name is to be retrieved. Cannot be null or empty.</param>
     /// <returns>The display name of the faction corresponding to the specified identifier.</returns>
     public abstract string GetFactionName(string factionId);
+
+    /// <summary>
+    /// Attempts to retrieve the display name of a faction based on its unique identifier.
+    /// </summary>
+    /// <param name="factionId">The unique identifier of the faction whose name is to be retrieved. Cannot be null.</param>
+    /// <param name="factionName">When this method returns, contains the display name of the faction if found; otherwise, null. This parameter is
+    /// passed uninitialized.</param>
+    /// <returns>true if the faction name was found and assigned to factionName; otherwise, false.</returns>
+    public abstract bool TryGetFactionName(string factionId, [NotNullWhen(true)] out string? factionName);
 
 }

@@ -1,4 +1,6 @@
-﻿using Battlegrounds.Models.Lobbies;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 
 namespace Battlegrounds.Services.Data;
@@ -22,4 +24,7 @@ public sealed class GameMapService : IGameMapService {
 
     public Task<List<Map>> GetMapsForGame<T>() where T : Game => GetMapsForGame(typeof(T).Name);
 
+    public bool TryGetMapByScenarioName(Game game, string mapId, [NotNullWhen(true)] out Map? map) {
+        return _mapsByGame[game.Id].TryGetValue(mapId, out map);
+    }
 }

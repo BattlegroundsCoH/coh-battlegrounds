@@ -3,6 +3,7 @@ using System.ComponentModel;
 
 using Battlegrounds.Models;
 using Battlegrounds.Models.Companies;
+using Battlegrounds.Models.Playing;
 using Battlegrounds.Models.Statistics;
 using Battlegrounds.Services;
 
@@ -30,7 +31,10 @@ public sealed class HomeViewModel : INotifyPropertyChanged {
     public int TotalVictories { get; private set; } = 0;
     public int WinRate => TotalMatches > 0 ? (int)((double)TotalVictories / TotalMatches * 100) : 0;
     public string MostPlayedFaction { get; private set; } = "N/A";
+    public string MostPlayedFactionGameId { get; private set; } = CoH3.GameId; // Default to CoH3 for the faction icon, will be updated to the correct game once the data is loaded
     public string MostPlayedScenario { get; private set; } = "N/A";
+    public string MostPlayedScenarioGameId { get; private set; } = CoH3.GameId; // Default to CoH3 for the scenario icon, will be updated to the correct game once the data is loaded
+
     public string TotalPlayTime { get; private set; } = "0h 0m";
     public string Rank { get; private set; } = "Recruit";
     public int CompaniesOwned { get; private set; } = 0;

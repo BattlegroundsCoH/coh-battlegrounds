@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace Battlegrounds.Models.Playing;
 
@@ -42,5 +43,14 @@ public sealed class CoH3(Configuration configuration) : Game, ICoH3Game { // Ste
         "american" => "American",
         _ => throw new ArgumentException($"Unknown faction ID: {factionId}")
     };
+
+    public override bool TryGetFactionName(string factionId, [NotNullWhen(true)] out string? factionName) {
+        if (Factions.Contains(factionId)) {
+            factionName = GetFactionName(factionId);
+            return true;
+        }
+        factionName = null;
+        return false;
+    }
 
 }

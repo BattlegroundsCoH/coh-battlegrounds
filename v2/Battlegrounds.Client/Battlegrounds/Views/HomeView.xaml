@@ -13,6 +13,7 @@
 
         <converters:FactionIdToNameConverter x:Key="FactionIdToNameConverter"/>
         <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
+        <converters:ScenarioIdToNameConverter x:Key="ScenarioIdToNameConverter"/>
         <converters:RelativeTimeConverter x:Key="RelativeTimeConverter"/>
         <converters:DurationConverter x:Key="DurationConverter"/>
 
@@ -201,7 +202,14 @@
                                                         </Run.Text>
                                                     </Run>
                                                     <Run Text=" • "/>
-                                                    <Run Text="{Binding Map, Mode=OneWay}"/>
+                                                    <Run>
+                                                        <Run.Text>
+                                                            <MultiBinding Converter="{StaticResource ScenarioIdToNameConverter}">
+                                                                <Binding Path="Map"/>
+                                                                <Binding Path="GameId"/>
+                                                            </MultiBinding>
+                                                        </Run.Text>
+                                                    </Run>
                                                 </TextBlock>
                                                 <TextBlock Style="{StaticResource CardContent}" FontSize="10" Opacity="0.6">
                                                     <Run Text="{Binding Duration, Converter={StaticResource DurationConverter}, Mode=OneWay}"/>
@@ -396,22 +404,34 @@
                                        Style="{StaticResource CardContent}" 
                                        Margin="0,5"/>
                             <TextBlock Grid.Column="1" Grid.Row="0" 
-                                       Text="{Binding MostPlayedFaction}" 
                                        Style="{StaticResource CardContent}" 
                                        FontWeight="Bold" 
                                        HorizontalAlignment="Right" 
-                                       Margin="0,5"/>
+                                       Margin="0,5">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource FactionIdToNameConverter}">
+                                        <Binding Path="MostPlayedFaction"/>
+                                        <Binding Path="MostPlayedFactionGameId"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
 
                             <TextBlock Grid.Column="0" Grid.Row="1" 
                                        Text="Favorite Map:" 
                                        Style="{StaticResource CardContent}" 
                                        Margin="0,5"/>
-                                                        <TextBlock Grid.Column="1" Grid.Row="1" 
-                                       Text="{Binding MostPlayedScenario}" 
+                            <TextBlock Grid.Column="1" Grid.Row="1"
                                        Style="{StaticResource CardContent}" 
                                        FontWeight="Bold" 
                                        HorizontalAlignment="Right" 
-                                       Margin="0,5"/>
+                                       Margin="0,5">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource ScenarioIdToNameConverter}">
+                                        <Binding Path="MostPlayedScenario"/>
+                                        <Binding Path="MostPlayedScenarioGameId"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
 
                             <TextBlock Grid.Column="0" Grid.Row="2" 
                                        Text="Total Playtime:" 

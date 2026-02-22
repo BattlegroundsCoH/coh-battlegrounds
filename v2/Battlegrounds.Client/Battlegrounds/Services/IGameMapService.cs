@@ -1,4 +1,6 @@
-﻿using Battlegrounds.Models.Lobbies;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 
 namespace Battlegrounds.Services;
@@ -21,16 +23,26 @@ public interface IGameMapService {
     /// <returns>A task that represents the asynchronous operation. The task result contains the latest map for the specified
     /// game.</returns>
     Task<Map> GetLatestMapAsync(string gameId);
-    
+
     /// <summary>
     /// Retrieves the map associated with the specified scenario name for the given game instance.
     /// </summary>
     /// <remarks>Ensure that the scenario name provided is valid and corresponds to an existing map within the
     /// game instance.</remarks>
     /// <param name="game">The game instance for which the scenario map is to be retrieved. This parameter must not be null.</param>
-    /// <param name="newValue">The name of the scenario whose map is requested. This parameter must not be empty.</param>
+    /// <param name="mapId">The name of the scenario whose map is requested. This parameter must not be empty.</param>
     /// <returns>A Map object representing the scenario's map. Returns null if no map is found for the specified scenario name.</returns>
-    Map GetMapByScenarioName(Game game, string newValue);
+    Map GetMapByScenarioName(Game game, string mapId);
+
+    /// <summary>
+    /// Attempts to retrieve a map associated with the specified scenario name from the given game.
+    /// </summary>
+    /// <param name="game">The game instance from which to search for the map. Cannot be null.</param>
+    /// <param name="mapId">The identifier of the scenario whose map is to be retrieved. Cannot be null or empty.</param>
+    /// <param name="map">When this method returns <see langword="true"/>, contains the map associated with the specified scenario name;
+    /// otherwise, contains <see langword="null"/>.</param>
+    /// <returns><see langword="true"/> if a map with the specified scenario name is found; otherwise, <see langword="false"/>.</returns>
+    bool TryGetMapByScenarioName(Game game, string mapId, [NotNullWhen(true)] out Map? map);
 
     /// <summary>
     /// Retrieves a collection of maps associated with the specified game identifier.
