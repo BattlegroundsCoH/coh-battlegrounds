@@ -148,6 +148,10 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<UserViewModel>();
 
+        // Register Home view
+        services.AddTransient<HomeView>();
+        services.AddSingleton<HomeViewModel>();
+
         // Register Multiplayer view
         services.AddTransient<MultiplayerView>();
         services.AddSingleton<MultiplayerViewModel>();

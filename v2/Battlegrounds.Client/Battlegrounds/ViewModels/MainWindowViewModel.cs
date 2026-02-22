@@ -22,6 +22,8 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    public HomeView HomeView => _serviceProvider.GetRequiredService<HomeView>();
+
     public MultiplayerView MultiplayerView => _serviceProvider.GetRequiredService<MultiplayerView>();
 
     public CompanyBrowserView CompanyBrowserView => _serviceProvider.GetRequiredService<CompanyBrowserView>();

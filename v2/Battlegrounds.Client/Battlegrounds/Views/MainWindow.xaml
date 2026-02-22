@@ -88,8 +88,8 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Navigation Menu -->
-                <StackPanel>
-                    <RadioButton Style="{StaticResource NavigationButton}" Content="Home" Margin="0,0,0,10"/>
+                <StackPanel Margin="0,16,0,0">
+                    <RadioButton x:Name="HomeButton" Style="{StaticResource NavigationButton}" Content="Home" Margin="0,0,0,10" IsChecked="True"/>
                     <RadioButton x:Name="CompaniesButton" Style="{StaticResource NavigationButton}" Content="Companies" Margin="0,0,0,10"/>
                     <RadioButton x:Name="MultiplayerButton" Style="{StaticResource NavigationButton}" Content="Multiplayer" Margin="0,0,0,10"/>
                     <RadioButton Style="{StaticResource NavigationButton}" Content="Single Player" Margin="0,0,0,10" Command="{Binding SingleplayerCommand}" />
@@ -100,6 +100,9 @@
                     <ContentPresenter.Style>
                         <Style TargetType="ContentPresenter">
                             <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=HomeButton, Path=IsChecked}" Value="True">
+                                    <Setter Property="Content" Value="{Binding HomeView}"/>
+                                </DataTrigger>
                                 <DataTrigger Binding="{Binding ElementName=MultiplayerButton, Path=IsChecked}" Value="True">
                                     <Setter Property="Content" Value="{Binding MultiplayerView}"/>
                                 </DataTrigger>

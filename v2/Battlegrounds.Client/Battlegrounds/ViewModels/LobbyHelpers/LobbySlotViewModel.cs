@@ -16,7 +16,6 @@ public sealed record LobbySlotViewModel(
         IAsyncRelayCommand<PickableCompany> SetCompanyCommand,
         LobbyViewModel ParentContext) {
 
-
     private PickableCompany? _selectedCompany = null;
     private PickableAIDifficulty _selectedAIDifficulty = new PickableAIDifficulty(Slot.Difficulty);
     private string _companyId = Slot.CompanyId;
