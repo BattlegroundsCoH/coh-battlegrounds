@@ -39,6 +39,13 @@ public sealed class BattlegroundsApp {
 
     private Configuration _configuration = new Configuration();
 
+    /// <summary>
+    /// Gets the version string of the application assembly.
+    /// </summary>
+    /// <remarks>The version is retrieved from the assembly metadata. If the version information is
+    /// unavailable, the property returns "v0.0.0".</remarks>
+    public static string Version => typeof(BattlegroundsApp).Assembly.GetName().Version?.ToString() ?? "v0.0.0";
+
     public IServiceProvider? ServiceProvider {
         get => _serviceProvider;
         set {

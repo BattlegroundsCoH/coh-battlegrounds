@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using System.Text.Json;
 
 using Battlegrounds.Models;
@@ -17,7 +14,7 @@ public sealed class StatisticsService(Configuration configuration, ILogger<Stati
     private readonly ILogger<StatisticsService> _logger = logger;
 
     private readonly TaskCompletionSource _loadCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
-    private readonly RecordStore<MatchPlayed> _matchesPlayedStore = new("matches_played");
+    private readonly RecordStore<MatchPlayed> _matchesPlayedStore = new("matches_played", logger);
 
     public Task IsLoaded => _loadCompletionSource.Task;
 
@@ -36,21 +33,31 @@ public sealed class StatisticsService(Configuration configuration, ILogger<Stati
 
     }
 
-    public Task RegisterPlayedMatchAsync(MatchPlayed match) {
-        throw new NotImplementedException();
+    public async Task RegisterPlayedMatchAsync(MatchPlayed match) {
+        _matchesPlayedStore.AddRecord(match);
+        await _matchesPlayedStore.SaveStore(_configuration.StatisticsPath); // Immediately save after adding a new record to ensure data is not lost in case of a crash.
     }
 
-    private class RecordStore<T>(string id, Predicate<T>? retentionPredicate = null) {
+    private class RecordStore<T>(string id, ILogger<StatisticsService> logger, Predicate<T>? retentionPredicate = null) {
 
-        private IList<T> _records = [];
+        private readonly ILogger<StatisticsService> _log = logger;
+        private readonly IList<T> _records = [];
 
         public async Task LoadStore(string storePath) {
             string filePath = Path.Combine(storePath, $"{id}.json");
             if (!File.Exists(filePath)) {
                 return;
             }
-            using var stream = File.OpenRead(filePath);
-            _records = await JsonSerializer.DeserializeAsync<List<T>>(stream, Configuration.JsonSerializerOptions) ?? throw new InvalidDataException($"Failed to deserialize data from {filePath}");
+            try {
+                using var stream = File.OpenRead(filePath);
+                var data = await JsonSerializer.DeserializeAsync<List<T>>(stream, Configuration.JsonSerializerOptions) ?? throw new InvalidDataException($"Failed to deserialize data from {filePath}");
+                _records.Clear();
+                foreach (var record in data) {
+                    _records.Add(record);
+                }
+            } catch (Exception ex) { 
+                _log.LogError(ex, "Failed to load data for store {StoreId} from file {FilePath}", id, filePath);
+            }
         }
 
         public async Task SaveStore(string storePath) {
@@ -64,6 +71,10 @@ public sealed class StatisticsService(Configuration configuration, ILogger<Stati
         }
 
         public IReadOnlyList<T> GetRecords() => _records.AsReadOnly();
+
+        public void AddRecord(T record) {
+            _records.Add(record);
+        }
 
     }
 

@@ -18,7 +18,7 @@ public sealed class Configuration {
 
     public static readonly JsonSerializerOptions JsonSerializerOptions = new() {
         WriteIndented = true,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
 
     public sealed class APIConfiguration {

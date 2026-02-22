@@ -8,7 +8,7 @@ using Battlegrounds.Services;
 
 namespace Battlegrounds.ViewModels;
 
-public record RecentMatchViewModel(string CompanyFaction, string CompanyName, string Map, bool Victory, DateTime Timestamp, TimeSpan Duration);
+public record RecentMatchViewModel(string GameId, string CompanyFaction, string CompanyName, string Map, bool Victory, DateTime Timestamp, TimeSpan Duration);
 
 public record FeaturedCompanyViewModel(string CompanyFaction, string CompanyName, string GameId, int PlayCount, int VeteranUnits);
 
@@ -30,6 +30,7 @@ public sealed class HomeViewModel : INotifyPropertyChanged {
     public int TotalVictories { get; private set; } = 0;
     public int WinRate => TotalMatches > 0 ? (int)((double)TotalVictories / TotalMatches * 100) : 0;
     public string MostPlayedFaction { get; private set; } = "N/A";
+    public string MostPlayedScenario { get; private set; } = "N/A";
     public string TotalPlayTime { get; private set; } = "0h 0m";
     public string Rank { get; private set; } = "Recruit";
     public int CompaniesOwned { get; private set; } = 0;
@@ -80,6 +81,7 @@ public sealed class HomeViewModel : INotifyPropertyChanged {
         var matchesByFaction = playedMatches.GroupBy(m => m.PlayerFaction).ToDictionary(g => g.Key, g => g.ToList());
 
         MostPlayedFaction = matchesByFaction.OrderByDescending(g => g.Value.Count).FirstOrDefault().Key ?? "N/A";
+        MostPlayedScenario = playedMatches.GroupBy(m => m.PlayedMap).OrderByDescending(g => g.Count()).FirstOrDefault()?.Key ?? "N/A";
         TotalPlayTime = FormatPlayTime(TimeSpan.FromSeconds(playedMatches.Sum(m => m.Duration.TotalSeconds)));
 
         // Grab the last three matches and create RecentMatchViewModel instances for each of them, then add them to the RecentMatches collection
@@ -113,12 +115,14 @@ public sealed class HomeViewModel : INotifyPropertyChanged {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalPlayTime)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Rank)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MostPlayedFaction)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MostPlayedScenario)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CompaniesOwned)));
 
     }
 
     private static RecentMatchViewModel MapToRecentMatchViewModel(MatchPlayed match, Dictionary<string, Company> companies) {
         return new RecentMatchViewModel(
+            GameId: match.GameId,
             CompanyFaction: match.PlayerFaction,
             CompanyName: companies.TryGetValue(match.PlayerCompanyId, out var company) ? company.Name : "Unknown Company",
             Map: match.PlayedMap,
@@ -135,14 +139,13 @@ public sealed class HomeViewModel : INotifyPropertyChanged {
 
     private static string FormatPlayTime(TimeSpan totalPlayTime) {
         int hours = (int)totalPlayTime.TotalHours;
-        int minutes = totalPlayTime.Minutes;
         if (hours > 2) {
             if (hours > 10) {
                 return $"{hours} hours"; // Drop minutes if playtime exceeds 10 hours for a cleaner display
             }
-            return $"{hours} hours {minutes} minutes";
+            return $"{hours} hours {totalPlayTime.Minutes} minutes";
         }
-        return $"{minutes} minutes";
+        return $"{(int)totalPlayTime.TotalMinutes} minutes";
     }
 
 }

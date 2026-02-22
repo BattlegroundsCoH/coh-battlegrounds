@@ -4,6 +4,8 @@ using System.ComponentModel;
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
+using Battlegrounds.Models.Replays;
+using Battlegrounds.Models.Statistics;
 using Battlegrounds.Services;
 using Battlegrounds.ViewModels.LobbyHelpers;
 
@@ -26,6 +28,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     private readonly IReplayService _replayService;
     private readonly ICompanyService _companyService;
     private readonly IGameMapService _gameMapService;
+    private readonly IStatisticsService _statisticsService;
     private readonly ObservableCollection<ChatMessageViewModel> _chatMessages = [];
     private readonly Dictionary<FactionAlliance, List<Company>> _localPlayerCompaniesByAlliance = [];
     private readonly Dictionary<string, Company> _lobbyCompanies = [];
@@ -220,6 +223,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         _replayService = serviceProvider.GetRequiredService<IReplayService>();
         _companyService = serviceProvider.GetRequiredService<ICompanyService>();
         _gameMapService = serviceProvider.GetRequiredService<IGameMapService>();
+        _statisticsService = serviceProvider.GetRequiredService<IStatisticsService>();
         _mainWindowVm = serviceProvider.GetRequiredService<MainWindowViewModel>();
         _selectedMap = lobby.Map;
 
@@ -521,6 +525,10 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                 return;
             }
 
+            // Register match result in statistics service (for both singleplayer and multiplayer, as we want to track statistics for both)
+            // This is for local statistics only, as we do not want to rely on the server to track statistics for singleplayer matches (and also for multiplayer matches in case of server issues or if the player wants to keep their statistics private)
+            await _statisticsService.RegisterPlayedMatchAsync(MapToPlayedMatch(replayAnalysis));
+
             LobbyState = "Match over, reporting results to server...";
             if (!await _lobby.ReportMatchResult(replayAnalysis)) {
                 LobbyState = "Failed to report match results to server...";
@@ -538,6 +546,26 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             await _lobby.EndMatch(); // End the match and return to lobby state (NOP in singleplayer)
         }
 
+    }
+
+    private MatchPlayed MapToPlayedMatch(ReplayAnalysisResult replayAnalysis) {
+        var result = replayAnalysis.GetMatchResult(_lobby);
+        var localCompany = _lobby.Companies.TryGetValue(_lobby.GetLocalPlayerSlot().team?.Slots[_lobby.GetLocalPlayerSlot().slotId].CompanyId ?? string.Empty, out var company) ? company : null;
+        return new MatchPlayed {
+            ClientVersion = BattlegroundsApp.Version,
+            DatePlayed = DateTime.Now.Subtract(replayAnalysis.Replay?.Duration ?? TimeSpan.Zero),
+            Duration = replayAnalysis.Replay?.Duration ?? TimeSpan.Zero,
+            IsSinglePlayer = _lobby is SingleplayerLobby,
+            IsVictory = result.Winners.Contains(_lobby.GetLocalPlayerId() ?? string.Empty),
+            GameId = _lobby.Game.Id,
+            CompanyVersion = localCompany?.Version ?? 0,
+            PlayerCompanyId = localCompany?.Id ?? string.Empty,
+            PlayedMap = result.Scenario,
+            PlayerFaction = localCompany?.Faction ?? string.Empty,
+            MatchId = result.MatchId,
+            TotalKills = 0,
+            TotalLosses = 0
+        };
     }
 
     private async Task SyncLobbyCompanies() {
