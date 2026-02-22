@@ -101,7 +101,7 @@ public sealed class BattlegroundsApp {
     }
 
     private static Configuration DefaultConfig() {
-        return new Configuration { 
+        return new Configuration {
             CompaniesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "CoHBattlegrounds", "companies"), // May override the one in configuration or elsewhere
         };
     }
@@ -121,7 +121,7 @@ public sealed class BattlegroundsApp {
                 _ => Serilog.Events.LogEventLevel.Information
             })
             .Enrich.FromLogContext() // Enrich with source context (class name)
-            .Enrich.With< ClassSourceEnricher>()
+            .Enrich.With<ClassSourceEnricher>()
             .WriteTo.Console(
                 outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({ClassName}) {Message}{NewLine}{Exception}"
             )  // Custom format with full log level and class name
@@ -198,6 +198,7 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<ICompanyService, CompanyService>();
         services.AddSingleton<IGameLocaleService, GameLocaleService>();
         services.AddSingleton<IBlueprintService, BlueprintService>();
+        services.AddSingleton<IStatisticsService, StatisticsService>();
         services.AddSingleton<IBrowserService, BrowserService>();
         services.AddSingleton<ICompanySerializer, BinaryCompanySerializer>();
         services.AddSingleton<ICompanyDeserializer, BinaryCompanyDeserializer>();
@@ -238,6 +239,9 @@ public sealed class BattlegroundsApp {
         // Trigger async loading of blueprints
         LoadData(ServiceProvider);
 
+        // Trigger async loading of statistics
+        LoadStats(ServiceProvider);
+
         // Trigger auto login
         var loginViewModel = ServiceProvider.GetRequiredService<LoginViewModel>();
         if (_isFirstRun) {
@@ -260,6 +264,17 @@ public sealed class BattlegroundsApp {
         int companyCount = await companyService.LoadPlayerCompaniesAsync();
         logger.LogInformation("Loaded {Count} companies from local store", companyCount);
 
+        // Notify relevant view models that data has been loaded
+        var homeViewModel = serviceProvider.GetRequiredService<HomeViewModel>();
+        homeViewModel.OnDataLoaded();
+
+    }
+
+    private static async void LoadStats(IServiceProvider serviceProvider) {
+        var logger = serviceProvider.GetRequiredService<ILogger<BattlegroundsApp>>();
+        var statisticsService = serviceProvider.GetRequiredService<IStatisticsService>();
+        await statisticsService.LoadStatisticsAsync();
+        logger.LogInformation("Loaded player statistics from local store");
     }
 
 }

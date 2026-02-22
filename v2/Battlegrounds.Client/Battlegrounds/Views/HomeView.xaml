@@ -4,10 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels"
+             xmlns:converters="clr-namespace:Battlegrounds.Converters"
              d:DataContext="{d:DesignInstance Type=viewmodels:HomeViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="900">
     <UserControl.Resources>
+
+
+        <converters:FactionIdToNameConverter x:Key="FactionIdToNameConverter"/>
+        <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
+
         <Style x:Key="DashboardCard" TargetType="Border">
             <Setter Property="Background" Value="{StaticResource BackgroundBlueBrush}"/>
             <Setter Property="CornerRadius" Value="12"/>
@@ -48,8 +54,10 @@
         </Style>
     </UserControl.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="20,0,20,20">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                  HorizontalScrollBarVisibility="Disabled"
+                  Style="{StaticResource ChatScrollViewer}">
+        <StackPanel>
             
             <!-- Hero Section -->
             <Border Style="{StaticResource DashboardCard}" Padding="30" Margin="10,10,10,20">
@@ -149,52 +157,88 @@
                 </Grid.RowDefinitions>
 
                 <!-- Recent Matches Card -->
-                <Border Grid.Column="0" Grid.Row="0" Style="{StaticResource DashboardCard}" Height="200">
+                <Border Grid.Column="0" Grid.Row="0" Style="{StaticResource DashboardCard}" Height="260">
                     <StackPanel>
                         <TextBlock Text="Recent Matches" Style="{StaticResource CardTitle}"/>
-                        <StackPanel Margin="0,10,0,5">
-                            <Grid Margin="0,5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="vs. Axis Forces" Style="{StaticResource CardContent}"/>
-                                <TextBlock Grid.Column="1" Text="VICTORY" 
-                                           Foreground="#FF4CAF50" 
-                                           FontWeight="Bold" 
-                                           FontSize="12"/>
-                            </Grid>
-                            <Grid Margin="0,5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="vs. Allied Command" Style="{StaticResource CardContent}"/>
-                                <TextBlock Grid.Column="1" Text="DEFEAT" 
-                                           Foreground="#FFF44336" 
-                                           FontWeight="Bold" 
-                                           FontSize="12"/>
-                            </Grid>
-                            <Grid Margin="0,5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="vs. Soviet Union" Style="{StaticResource CardContent}"/>
-                                <TextBlock Grid.Column="1" Text="VICTORY" 
-                                           Foreground="#FF4CAF50" 
-                                           FontWeight="Bold" 
-                                           FontSize="12"/>
-                            </Grid>
-                        </StackPanel>
+                        <ItemsControl x:Name="RecentMatchesControl" ItemsSource="{Binding RecentMatches}" Margin="0,10,0,5">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Style="{StaticResource CardContent}">
+                                                <Run Text="{Binding CompanyName, Mode=OneWay}"/>
+                                                <Run Text=" on " Foreground="#99FFFFFF"/>
+                                                <Run Text="{Binding Map, Mode=OneWay}" Foreground="#99FFFFFF"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="1" 
+                                                   FontWeight="Bold" 
+                                                   FontSize="12"
+                                                   VerticalAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Text" Value="DEFEAT"/>
+                                                    <Setter Property="Foreground" Value="#FFF44336"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Victory}" Value="True">
+                                                            <Setter Property="Text" Value="VICTORY"/>
+                                                            <Setter Property="Foreground" Value="#FF4CAF50"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Margin="0,20,0,0">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource CardContent}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="FontStyle" Value="Italic"/>
+                                    <Setter Property="Opacity" Value="0.6"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=RecentMatchesControl, Path=Items.Count}" Value="0">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Setter Property="Text" Value="No matches played yet. Start your first battle!"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                     </StackPanel>
                 </Border>
 
                 <!-- News & Updates Card -->
-                <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource DashboardCard}" Height="200">
+                <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource DashboardCard}" Height="260">
                     <StackPanel>
                         <TextBlock Text="News &amp; Updates" Style="{StaticResource CardTitle}"/>
+
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Margin="0,30,0,0">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource CardContent}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="FontStyle" Value="Italic"/>
+                                    <Setter Property="Opacity" Value="0.6"/>
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Setter Property="Text" Value="There are currently no new updates."/>
+                                    <!-- TODO: Only display if there are no updates -->
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <StackPanel>
+                            <!--
                             <TextBlock Style="{StaticResource CardContent}" Margin="0,5">
                                 <Run Text="•" FontWeight="Bold"/> 
                                 <Run Text="New faction commanders available"/>
@@ -206,50 +250,82 @@
                             <TextBlock Style="{StaticResource CardContent}" Margin="0,5">
                                 <Run Text="•" FontWeight="Bold"/> 
                                 <Run Text="Weekend tournament starting Friday"/>
-                            </TextBlock>
+                            </TextBlock>-->
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
                 <!-- Featured Companies Card -->
-                <Border Grid.Column="0" Grid.Row="1" Style="{StaticResource DashboardCard}" Height="200">
+                <Border Grid.Column="0" Grid.Row="1" Style="{StaticResource DashboardCard}" Height="220">
                     <StackPanel>
                         <TextBlock Text="Featured Companies" Style="{StaticResource CardTitle}"/>
-                        <StackPanel>
-                            <Border Background="{StaticResource BackgroundLightBlueBrush}" 
-                                    CornerRadius="6" 
-                                    Padding="10" 
-                                    Margin="0,5">
-                                <StackPanel>
-                                    <TextBlock Text="Panzer Elite Battalion" 
-                                               Style="{StaticResource CardContent}" 
-                                               FontWeight="Bold"/>
-                                    <TextBlock Text="Wehrmacht • Level 15" 
-                                               Style="{StaticResource CardContent}" 
-                                               FontSize="12" 
-                                               Opacity="0.7"/>
-                                </StackPanel>
-                            </Border>
-                            <Border Background="{StaticResource BackgroundLightBlueBrush}" 
-                                    CornerRadius="6" 
-                                    Padding="10" 
-                                    Margin="0,5">
-                                <StackPanel>
-                                    <TextBlock Text="Red Army Guards" 
-                                               Style="{StaticResource CardContent}" 
-                                               FontWeight="Bold"/>
-                                    <TextBlock Text="Soviet Union • Level 12" 
-                                               Style="{StaticResource CardContent}" 
-                                               FontSize="12" 
-                                               Opacity="0.7"/>
-                                </StackPanel>
-                            </Border>
-                        </StackPanel>
+                        <ItemsControl x:Name="FeaturedCompaniesControl" ItemsSource="{Binding FeaturedCompanies}" Margin="0,10,0,5">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{StaticResource BackgroundLightBlueBrush}" 
+                                            CornerRadius="6" 
+                                            Padding="10" 
+                                            Margin="0,5">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Width="40" Height="40" Margin="0,0,10,0">
+                                                <Image.Source>
+                                                    <MultiBinding Converter="{StaticResource FactionIconConverter}">
+                                                        <Binding Path="CompanyFaction"/>
+                                                        <Binding Path="GameId"/>
+                                                    </MultiBinding>
+                                                </Image.Source>
+                                            </Image>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding CompanyName}" 
+                                                       Style="{StaticResource CardContent}" 
+                                                       FontWeight="Bold"/>
+                                                <TextBlock Style="{StaticResource CardContent}" 
+                                                       FontSize="12" 
+                                                       Opacity="0.7">
+                                                <Run>
+                                                    <Run.Text>
+                                                        <MultiBinding Converter="{StaticResource FactionIdToNameConverter}">
+                                                            <Binding Path="CompanyFaction"/>
+                                                            <Binding Path="GameId"/>
+                                                        </MultiBinding>
+                                                    </Run.Text>
+                                                </Run>
+                                                    <Run Text=" • " />
+                                                    <Run Text="{Binding VeteranUnits, Mode=OneWay}"/>
+                                                    <Run Text=" veteran units"/>
+                                                <Run Text=" • " />
+                                                <Run Text="{Binding PlayCount, Mode=OneWay}"/>
+                                                <Run Text=" matches"/>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Margin="0,20,0,0">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource CardContent}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="FontStyle" Value="Italic"/>
+                                    <Setter Property="Opacity" Value="0.6"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=FeaturedCompaniesControl, Path=Items.Count}" Value="0">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Setter Property="Text" Value="No companies available. Create your first company!"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                     </StackPanel>
                 </Border>
 
                 <!-- Quick Stats Card -->
-                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource DashboardCard}" Height="200">
+                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource DashboardCard}" Height="220">
                     <StackPanel>
                         <TextBlock Text="Quick Stats" Style="{StaticResource CardTitle}"/>
                         <Grid>
@@ -268,7 +344,7 @@
                                        Style="{StaticResource CardContent}" 
                                        Margin="0,5"/>
                             <TextBlock Grid.Column="1" Grid.Row="0" 
-                                       Text="Wehrmacht" 
+                                       Text="{Binding MostPlayedFaction}" 
                                        Style="{StaticResource CardContent}" 
                                        FontWeight="Bold" 
                                        HorizontalAlignment="Right" 
@@ -279,7 +355,7 @@
                                        Style="{StaticResource CardContent}" 
                                        Margin="0,5"/>
                             <TextBlock Grid.Column="1" Grid.Row="1" 
-                                       Text="127 hours" 
+                                       Text="{Binding TotalPlayTime}" 
                                        Style="{StaticResource CardContent}" 
                                        FontWeight="Bold" 
                                        HorizontalAlignment="Right" 
@@ -290,7 +366,7 @@
                                        Style="{StaticResource CardContent}" 
                                        Margin="0,5"/>
                             <TextBlock Grid.Column="1" Grid.Row="2" 
-                                       Text="6" 
+                                       Text="{Binding CompaniesOwned}" 
                                        Style="{StaticResource CardContent}" 
                                        FontWeight="Bold" 
                                        HorizontalAlignment="Right" 

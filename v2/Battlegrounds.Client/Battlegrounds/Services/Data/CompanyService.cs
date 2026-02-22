@@ -27,6 +27,8 @@ public sealed class CompanyService(
     private readonly HashSet<Company> _localCompanyCache = []; // This is the local cache of companies, which is used to avoid unnecessary remote calls.
     private readonly HashSet<Company> _localCompanies = []; // This is the list of companies that are loaded from the local file system.
 
+    public int CompanyCount { get; private set;  }
+
     public async ValueTask<bool> DeleteCompany(string companyId, bool syncWithRemote = true) {
         if (string.IsNullOrEmpty(companyId)) {
             throw new ArgumentException("Company ID cannot be null or empty.", nameof(companyId));
@@ -92,6 +94,7 @@ public sealed class CompanyService(
                 _logger.LogError(ex, "Error loading company from file {CompanyFile}: {ExMessage}", companyFile, ex.Message);
             }
         }
+        CompanyCount = loaded; // Update the company count after loading
         return ValueTask.FromResult(loaded); // Return the number of loaded companies
     }
 

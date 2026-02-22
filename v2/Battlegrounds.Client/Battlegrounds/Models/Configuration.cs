@@ -95,6 +95,30 @@ public sealed class Configuration {
     public string CompaniesPath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "CoHBattlegrounds", "companies");
 
     /// <summary>
+    /// Gets or sets the file system path to the application's documents directory.
+    /// </summary>
+    /// <remarks>The default value points to a subdirectory within the user's My Documents folder. This path
+    /// is typically used to store user-generated files or application data that should persist between
+    /// sessions.</remarks>
+    public string DocumentsPath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "CoHBattlegrounds");
+
+    /// <summary>
+    /// Gets or sets the file system path where game statistics are stored.
+    /// </summary>
+    /// <remarks>The default path is set to the user's Documents folder under "my
+    /// games\CoHBattlegrounds\statistics". Ensure the application has appropriate permissions to read from and write to
+    /// this location.</remarks>
+    public string StatisticsPath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "CoHBattlegrounds", "statistics");
+
+    /// <summary>
+    /// Gets or sets the file system path where log files are stored.
+    /// </summary>
+    /// <remarks>The default value is a directory named "logs" located under "my games\CoHBattlegrounds" in
+    /// the user's Documents folder. Ensure the application has write permissions to this location when setting a custom
+    /// path.</remarks>
+    public string LogsPath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "CoHBattlegrounds", "logs");
+
+    /// <summary>
     /// Gets or sets the configuration settings for Company of Heroes 2.
     /// </summary>
     public CoH2Configuration CoH2 { get; set; } = new CoH2Configuration(); // Configuration for Company of Heroes 2

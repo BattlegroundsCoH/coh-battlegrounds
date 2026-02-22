@@ -46,6 +46,11 @@ public enum SaveCompanyResult {
 public interface ICompanyService {
 
     /// <summary>
+    /// Gets the total number of companies currently available.
+    /// </summary>
+    int CompanyCount { get; }
+
+    /// <summary>
     /// Loads all companies from the local file system into the local cache.
     /// </summary>
     /// <returns>The amount of companies that were loaded</returns>
