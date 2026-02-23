@@ -10,16 +10,6 @@ namespace Battlegrounds.Models.Companies;
 /// properties are immutable and must be provided during initialization.</remarks>
 public sealed class CompanyInfo { // DTO from remote
 
-	/*
-     GUID     string  `json:"guid"`
-	UserID   string  `json:"userId"`
-	Faction  Faction `json:"faction"`
-	Modified string  `json:"modified"`
-	Size     int64   `json:"size"`     // Size of company file
-	Checksum string  `json:"checksum"` // SHA-256 of company file
-	Version  int     `json:"version"`  // Version of the company
-     */
-
 	/// <summary>
 	/// Gets the unique identifier for the company.
 	/// </summary>

@@ -152,7 +152,7 @@ public sealed class CompanyService(
         if (info is not null) {
             if (company.Version == info.Version) {
                 _logger.LogInformation("Company {CompanyId} is already up to date with the server. Server version is {ServerVersion} and local version is {LocalVersion}", company.Id, info.Version, company.Version);
-                return true; // Latest version on server is already up-to-date 
+                return true; // Local and server versions match (already synchronized)
             } else if (company.Version < info.Version) {
                 _logger.LogWarning("Company {CompanyId} has a newer version on the remote server. Server version is {ServerVersion} and local version is {LocalVersion}", company.Id, info.Version, company.Version);
                 return true; // TODO: Mark company as potentially in conflict
@@ -277,7 +277,7 @@ public sealed class CompanyService(
             return; // Exit early if the server is not available
         }
 
-        foreach (var company in _localCompanyCache) {
+        foreach (var company in _localCompanyCache.ToList()) {
             bool success = await SyncCompanyWithRemote(company);
             if (success) {
                 _logger.LogInformation("Successfully synchronized company {CompanyId} with remote server.", company.Id);
@@ -285,7 +285,7 @@ public sealed class CompanyService(
                 _logger.LogError("Failed to synchronize company {CompanyId} with remote server.", company.Id);
             }
         }
-         _logger.LogInformation("Completed synchronization of local companies with remote server.");
+        _logger.LogInformation("Completed synchronization of local companies with remote server.");
 
         _logger.LogInformation("Checking if server has unsynchronized companies");
 
@@ -298,7 +298,7 @@ public sealed class CompanyService(
 
                     if (!_localCompanies.Any(x => x.Id == company.Id)) {
                         _logger.LogInformation("Detected a company on remote server that is not available locally... fetching company {CompanyId}", company.Id);
-                        var remoteCompany = await DownloadRemoteCompanyAsync(company.Id, userCompanyInfo.UserId, true);
+                        var remoteCompany = await DownloadRemoteCompanyAsync(company.Id, user, true);
                         if (remoteCompany is not null) {
                             _localCompanies.Add(remoteCompany);
                             _localCompanyCache.Add(remoteCompany);
