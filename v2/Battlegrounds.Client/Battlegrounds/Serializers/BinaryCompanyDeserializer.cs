@@ -12,7 +12,7 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
     
     private readonly IBlueprintService _blueprintService = blueprintService;
 
-    private static readonly uint[] SUPPORTED_VERSIONS = [BinaryCompanySerializer.BINARY_COMPANY_VERSION];
+    private static readonly uint[] SUPPORTED_VERSIONS = [BinaryCompanySerializer.BINARY_COMPANY_VERSION_1, BinaryCompanySerializer.BINARY_COMPANY_VERSION_2];
 
     public bool IgnoreUnknownSquads { get; set; } = true; // Ignore squads that are not recognized by the serializer instead of throwing an exception.
 
@@ -31,9 +31,23 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
             throw new InvalidDataException($"Unsupported company file version: {version}"); // Current impl, only supports version 1. Add support for more versions in the future.
         }
 
+        string createdBy, updatedBy;
         var timestamp = new DateTime(reader.ReadInt64(), DateTimeKind.Utc); // Timestamp for serialization
         var createdAt = new DateTime(reader.ReadInt64(), DateTimeKind.Utc); // Created at timestamp
+        if (version >= BinaryCompanySerializer.BINARY_COMPANY_VERSION_2) {
+            createdBy = ReadUtf8String(reader); // Created by can be UTF-8 in version 2
+        } else {
+            createdBy = "Unspecified"; // Default value for created by in version 1
+        }
+
         var updatedAt = new DateTime(reader.ReadInt64(), DateTimeKind.Utc); // Updated at timestamp
+        if (version >= BinaryCompanySerializer.BINARY_COMPANY_VERSION_2) {
+            updatedBy = ReadUtf8String(reader); // Updated by can be UTF-8 in version 2
+        } else {
+            updatedBy = "Unspecified"; // Default value for updated by in version 1
+        }
+
+        uint companyVersion = version >= BinaryCompanySerializer.BINARY_COMPANY_VERSION_2 ? reader.ReadUInt32() : 1; // Company version, added in version 2. Default to 1 for version 1 files.
 
         string id = ReadASCIIString(reader); // Company ID will always be ASCII
         string name = ReadUtf8String(reader); // Company name can be UTF-8
@@ -66,8 +80,11 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
             GameId = gameId,
             Faction = faction,
             CreatedAt = createdAt,
+            CreatedBy = createdBy,
             UpdatedAt = updatedAt,
-            Squads = squads
+            UpdatedBy = updatedBy,
+            Squads = squads,
+            Version = companyVersion
         };
 
     }

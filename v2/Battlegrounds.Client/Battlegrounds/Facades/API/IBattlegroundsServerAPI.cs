@@ -35,6 +35,24 @@ public interface IBattlegroundsServerAPI {
     Task<Company?> GetCompanyAsync(string companyId, string companyUserId, DownloadProgressUpdateDelegate? progressUpdate = null);
     
     /// <summary>
+    /// Asynchronously retrieves company information for the specified company and user.
+    /// </summary>
+    /// <param name="companyId">The unique identifier of the company whose information is to be retrieved. Cannot be null or empty.</param>
+    /// <param name="companyUserId">The unique identifier of the user associated with the company. Cannot be null or empty.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="CompanyInfo"/> object
+    /// with the company details if found; otherwise, <see langword="null"/>.</returns>
+    Task<CompanyInfo?> GetCompanyInfoAsync(string companyId, string companyUserId);
+
+    /// <summary>
+    /// Retrieves the company information associated with the specified user asynchronously.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user whose company information is to be retrieved. Cannot be null or empty.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="UserCompanyInfo"/>
+    /// object with the user's company information, or <see langword="null"/> if no company information is found for the
+    /// specified user.</returns>
+    Task<UserCompanyInfo?> GetUserCompanyInfoAsync(string userId);
+
+    /// <summary>
     /// Asynchronously retrieves a collection of available browser lobbies. 
     /// </summary>
     /// <returns>A task that represents the asynchronous operation. The task result contains an enumerable collection of <see
@@ -74,7 +92,7 @@ public interface IBattlegroundsServerAPI {
     /// not reported.</param>
     /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the upload
     /// succeeds; otherwise, <see langword="false"/>.</returns>
-    ValueTask<bool> UploadCompanyAsync(string companyId, string faction, int version, Stream serializedCompanyStream, UploadProgressUpdateDelegate? progressUpdate = null);
+    ValueTask<bool> UploadCompanyAsync(string companyId, string faction, uint version, Stream serializedCompanyStream, UploadProgressUpdateDelegate? progressUpdate = null);
     
     /// <summary>
     /// Uploads a game mode from the specified location to the server asynchronously.

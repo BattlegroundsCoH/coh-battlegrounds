@@ -147,6 +147,18 @@ public sealed class CompanyService(
         if (company is null) {
             throw new ArgumentNullException(nameof(company), "Company cannot be null.");
         }
+
+        var info = await _serverAPI.GetCompanyInfoAsync(company.Id, await ResolveUserId(null));
+        if (info is not null) {
+            if (company.Version == info.Version) {
+                _logger.LogInformation("Company {CompanyId} is already up to date with the server. Server version is {ServerVersion} and local version is {LocalVersion}", company.Id, info.Version, company.Version);
+                return true; // Local and server versions match (already synchronized)
+            } else if (company.Version < info.Version) {
+                _logger.LogWarning("Company {CompanyId} has a newer version on the remote server. Server version is {ServerVersion} and local version is {LocalVersion}", company.Id, info.Version, company.Version);
+                return true; // TODO: Mark company as potentially in conflict
+            }
+        }
+
         using var serializedCompanyStream = new MemoryStream();
         _companySerializer.SerializeCompany(serializedCompanyStream, company);
         serializedCompanyStream.Seek(0, SeekOrigin.Begin); // Reset the stream position to the beginning
@@ -253,6 +265,52 @@ public sealed class CompanyService(
 
         _logger.LogInformation("Applied {EventCount} replay events to company {CompanyId}.", localEvents?.Count ?? 0, company.Id);
         return updatedCompany; // Return true if events were successfully applied and company was updated
+
+    }
+
+    public async Task SyncWithServerAsync() {
+
+        _logger.LogInformation("Starting synchronization of local companies with remote server. Local company count: {LocalCompanyCount}", _localCompanyCache.Count);
+
+        if (! await _serverAPI.IsServerAvailableAsync()) {
+            _logger.LogWarning("Remote server is not available. Skipping synchronization.");
+            return; // Exit early if the server is not available
+        }
+
+        foreach (var company in _localCompanyCache.ToList()) {
+            bool success = await SyncCompanyWithRemote(company);
+            if (success) {
+                _logger.LogInformation("Successfully synchronized company {CompanyId} with remote server.", company.Id);
+            } else {
+                _logger.LogError("Failed to synchronize company {CompanyId} with remote server.", company.Id);
+            }
+        }
+        _logger.LogInformation("Completed synchronization of local companies with remote server.");
+
+        _logger.LogInformation("Checking if server has unsynchronized companies");
+
+        var user = await ResolveUserId(null);
+        var userCompanyInfo = await _serverAPI.GetUserCompanyInfoAsync(user);
+        if (userCompanyInfo is not null) {
+
+            foreach (var faction in userCompanyInfo.Companies) {
+                foreach (var company in faction.Value) {
+
+                    if (!_localCompanies.Any(x => x.Id == company.Id)) {
+                        _logger.LogInformation("Detected a company on remote server that is not available locally... fetching company {CompanyId}", company.Id);
+                        var remoteCompany = await DownloadRemoteCompanyAsync(company.Id, user, true);
+                        if (remoteCompany is not null) {
+                            _localCompanies.Add(remoteCompany);
+                            _localCompanyCache.Add(remoteCompany);
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+        _logger.LogInformation("Finished syncing companies with server");
 
     }
 

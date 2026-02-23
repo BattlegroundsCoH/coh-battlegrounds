@@ -9,18 +9,24 @@ namespace Battlegrounds.Serializers;
 
 public sealed class BinaryCompanySerializer : ICompanySerializer {
 
-    public static readonly uint BINARY_COMPANY_VERSION = 1;
+    public static readonly uint BINARY_COMPANY_VERSION_1 = 1;
+    public static readonly uint BINARY_COMPANY_VERSION_2 = 2;
+    public static readonly uint BINARY_COMPANY_VERSION_LATEST = BINARY_COMPANY_VERSION_2;
     public static readonly byte[] BINARY_COMPANY_HEADER = [0x42, 0x47, 0x43, 0x0]; // "BGC" in ASCII
 
     public void SerializeCompany(Stream destination, Company company) {
         using var writer = new BinaryWriter(destination, Consts.UTF8, true);
 
         writer.Write(BINARY_COMPANY_HEADER);
-        writer.Write(BINARY_COMPANY_VERSION);
+        writer.Write(BINARY_COMPANY_VERSION_LATEST);
 
         writer.Write(DateTime.Now.Ticks); // Timestamp for serialization
         writer.Write(company.CreatedAt.Ticks); // Created at timestamp
+        WriteUtf8String(writer, company.CreatedBy); // Created by can be UTF-8
         writer.Write(company.UpdatedAt.Ticks); // Updated at timestamp
+        WriteUtf8String(writer, company.UpdatedBy); // Updated by can be UTF-8
+
+        writer.Write(company.Version); // Company version as integer
 
         WriteASCIIString(writer, company.Id); // Company ID will always be ASCII (And preferably of fixed length, but may change in the future)
         WriteUtf8String(writer, company.Name);

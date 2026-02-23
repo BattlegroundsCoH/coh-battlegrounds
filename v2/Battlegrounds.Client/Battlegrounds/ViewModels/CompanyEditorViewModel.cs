@@ -235,7 +235,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
             DateTime createdAt;
             string companyId, createdBy;
-            int version;
+            uint version;
             if (_context.IsNewCompany) {
                 companyId = Guid.CreateVersion7().ToString(); // Generate a new ID for the company
                 createdAt = DateTime.UtcNow; // Set the creation time for a new company
