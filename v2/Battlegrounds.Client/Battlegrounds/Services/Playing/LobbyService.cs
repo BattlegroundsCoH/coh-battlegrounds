@@ -132,11 +132,10 @@ public sealed class LobbyService(
             var hostRequest = new HostLobbyRequest {
                 LobbyName = name,
                 Password = password ?? string.Empty,
-                HostId = localUser.UserId,
                 GameId = game.Id,
             };
             var headers = new Metadata {
-                { "authorization", $"Bearer {_userService.GetLocalUserToken()}" }
+                { "authorization", $"Bearer {_userService.GetLocalUserToken()}" },
             };
 
             var stream = client.HostLobby(hostRequest, headers);

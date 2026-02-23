@@ -260,10 +260,7 @@ public sealed class MultiplayerLobby(
             return new LaunchGameResult() {}; // Only the host can launch the game
         }
 
-        await _gRPCClient.LaunchGameAsync(new LaunchGameRequest {
-            LobbyId = _lobbyId,
-            ParticipantId = _localParticipant.ParticipantId
-        }, GetGrpcMetadata());
+        await _gRPCClient.LaunchGameAsync(new(), GetGrpcMetadata());
 
         return new LaunchGameResult() {}; // TODO: Return actual result from gRPC call
     }
@@ -276,7 +273,6 @@ public sealed class MultiplayerLobby(
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
             LobbyId = _lobbyId,
             EventType = LobbyEventType.SlotUpdated.ToString(),
-            ParticipantId = _localParticipant.ParticipantId,
             SlotUpdate = new SlotUpdate {
                 TeamId = teamId,
                 Slot = new Slot {
@@ -330,8 +326,6 @@ public sealed class MultiplayerLobby(
             return false;
         } else {
             await _gRPCClient.InitiateDownloadAsync(new InitiateDownloadRequest {
-                LobbyId = _lobbyId,
-                ParticipantId = _localParticipant.ParticipantId,
                 ResourceId = "company_update" // After reporting the match result, initiate a download to update company data for all participants, as the match result may have caused changes to company stats, levels, etc.
             }, GetGrpcMetadata());
             // Download the host company changes (other participants have been told to download their company).
@@ -346,10 +340,8 @@ public sealed class MultiplayerLobby(
         var chatMessage = new ChatMessage(_localParticipant.ParticipantId, _localParticipant.ParticipantName, channel, msg);
         await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.ParticipantMessage, chatMessage));
         await _gRPCClient.SendChatMessageAsync(new Proto.Lobbies.ChatMessage {
-            SenderId = chatMessage.SenderId,
             Content = chatMessage.Message,
             Channel = channel.ToString().ToLowerInvariant(),
-            LobbyId = _lobbyId
         }, GetGrpcMetadata());
     }
 
@@ -358,7 +350,6 @@ public sealed class MultiplayerLobby(
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
             LobbyId = _lobbyId,
             EventType = LobbyEventType.SlotUpdated.ToString(),
-            ParticipantId = _localParticipant.ParticipantId,
             SlotUpdate = new SlotUpdate {
                 TeamId = GetIndexOfTeam(team),
                 Slot = new Slot {
@@ -384,8 +375,6 @@ public sealed class MultiplayerLobby(
             return false; // Only the host can set the map
         }
         var updateMap = await _gRPCClient.ChangeMapAsync(new() {
-            LobbyId = _lobbyId,
-            ParticipantId = _localParticipant.ParticipantId,
             NewMap = new() {
                 MaxPlayers = map.MaxPlayers,
                 MapId = map.ScenarioName
@@ -433,7 +422,6 @@ public sealed class MultiplayerLobby(
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
             LobbyId = _lobbyId,
             EventType = LobbyEventType.SlotUpdated.ToString(),
-            ParticipantId = _localParticipant.ParticipantId,
             SlotUpdate = new SlotUpdate {
                 TeamId = teamId,
                 Slot = new Slot {
@@ -468,7 +456,6 @@ public sealed class MultiplayerLobby(
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
             LobbyId = _lobbyId,
             EventType = LobbyEventType.SlotUpdated.ToString(),
-            ParticipantId = _localParticipant.ParticipantId,
             SlotUpdate = new SlotUpdate {
                 TeamId = teamId,
                 Slot = new Slot {
@@ -496,7 +483,6 @@ public sealed class MultiplayerLobby(
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
             LobbyId = _lobbyId,
             EventType = LobbyEventType.SlotUpdated.ToString(),
-            ParticipantId = _localParticipant.ParticipantId,
             SlotUpdate = new SlotUpdate {
                 TeamId = teamId,
                 Slot = new Slot {
@@ -535,9 +521,7 @@ public sealed class MultiplayerLobby(
         }
 
         var initiateDownloadRequest = new InitiateDownloadRequest() {
-            ResourceId = "gamemode",
-            LobbyId = _lobbyId,
-            ParticipantId = _localParticipant.ParticipantId
+            ResourceId = "gamemode"
         };
 
         var metadata = GetGrpcMetadata();
@@ -586,7 +570,6 @@ public sealed class MultiplayerLobby(
     private async Task PublishTeam(int tid, Team team) {
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
             LobbyId = _lobbyId,
-            ParticipantId = _localParticipant.ParticipantId,
             EventType = LobbyEventType.TeamUpdated.ToString(),
             TeamUpdate = new Proto.Lobbies.Team {
                 Id = tid,
@@ -629,7 +612,6 @@ public sealed class MultiplayerLobby(
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
             LobbyId = _lobbyId,
             EventType = LobbyEventType.SettingUpdated.ToString(),
-            ParticipantId = _localParticipant.ParticipantId,
             SettingsUpdate = new Proto.Lobbies.LobbySetting {
                 Key = setting.Name,
                 NewValue = setting.Value.ToString(),
@@ -647,10 +629,7 @@ public sealed class MultiplayerLobby(
     }
 
     public async Task LeaveAsync() {
-        await _gRPCClient.LeaveLobbyAsync(new LeaveLobbyRequest {
-            LobbyId = _lobbyId,
-            ParticipantId = _localParticipant.ParticipantId
-        }, GetGrpcMetadata());
+        await _gRPCClient.LeaveLobbyAsync(new(), GetGrpcMetadata());
     }
 
     private Task BeginDownloadResource(string resourceId) => resourceId switch {
@@ -677,8 +656,6 @@ public sealed class MultiplayerLobby(
             _logger.Information("Gamemode download progress: {Progress:P2}", progress);
             _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TrayMessage, $"Downloading gamemode... {progress:P2} complete")); // Notify the UI about the download progress
             await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
-                LobbyId = _lobbyId,
-                ParticipantId = _localParticipant.ParticipantId,
                 Progress = progress
             }, GetGrpcMetadata()); // Report the download progress to the server so it can update the lobby state and notify other participants
         });
@@ -689,8 +666,6 @@ public sealed class MultiplayerLobby(
 
             // Notify server that the download is complete, so it can update the lobby state and notify other participants
             await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
-                LobbyId = _lobbyId,
-                ParticipantId = _localParticipant.ParticipantId,
                 Progress = 1.0f,
                 Completed = true
             }, GetGrpcMetadata());
@@ -724,8 +699,6 @@ public sealed class MultiplayerLobby(
 
         if (reportProgress) { 
             await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
-                LobbyId = _lobbyId,
-                ParticipantId = GetLocalPlayerId() ?? string.Empty,
                 Progress = 1.0f,
                 Completed = true
             }, GetGrpcMetadata()); // Report to the server that the company download is complete, so it can update the lobby state and notify other participants
@@ -764,7 +737,6 @@ public sealed class MultiplayerLobby(
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
             LobbyId = _lobbyId,
             EventType = eventType.ToString(),
-            ParticipantId = _localParticipant.ParticipantId,
         }, GetGrpcMetadata());
         await _internalEvents.Writer.WriteAsync(new LobbyEvent(eventType, isReady)); // Notify the UI about the ready state change
     }
