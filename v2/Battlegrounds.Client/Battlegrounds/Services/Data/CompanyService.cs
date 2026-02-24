@@ -270,6 +270,11 @@ public sealed class CompanyService(
 
     public async Task SyncWithServerAsync() {
 
+        if (!await _userService.IsUserLoggedIn) {
+            _logger.LogWarning("No user is currently logged in. Skipping synchronization with remote server.");
+            return;
+        }
+
         _logger.LogInformation("Starting synchronization of local companies with remote server. Local company count: {LocalCompanyCount}", _localCompanyCache.Count);
 
         if (! await _serverAPI.IsServerAvailableAsync()) {

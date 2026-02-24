@@ -10,6 +10,11 @@ namespace Battlegrounds.Services;
 public interface IUserService {
 
     /// <summary>
+    /// Gets a task that represents the asynchronous operation to determine whether the current user is logged in.
+    /// </summary>
+    Task<bool> IsUserLoggedIn { get; }
+
+    /// <summary>
     /// Asynchronously retrieves the local user associated with the current context.
     /// </summary>
     /// <remarks>This method is typically used to obtain information about the user currently associated with

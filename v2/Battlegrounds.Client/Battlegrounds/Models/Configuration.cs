@@ -25,7 +25,7 @@ public sealed class Configuration {
         private string _loginUrlOverride = string.Empty; // Allows overriding the login URL for testing or custom servers
         public string BaseUrl { get; set; } = "https://api.test.cohbattlegrounds.com";
         public string LoginEndpoint { get; set; } = "https://bjcgardajdviqkwgryin.supabase.co/auth/v1/token?grant_type=password";
-        public string RefreshEndpoint { get; set; } = "/refresh";
+        public string RefreshEndpoint { get; set; } = "/auth/refresh";
         public string PublicKeyEndpoint { get; set; } = "/publickey";
         public string AuthStatusEndpoint { get; set; } = "/auth/<IdP>/status"; // Endpoint to check authentication status
         public string AuthStartEndpoint { get; set; } = "/auth/<IdP>/start"; // Endpoint to start authentication with a provider
@@ -34,7 +34,6 @@ public sealed class Configuration {
             set => _loginUrlOverride = value;
         }
         public TimeSpan RequestTimeout { get; set; } = TimeSpan.FromSeconds(15); // Default timeout for API requests
-        public bool IsHS256 { get; set; } = true; // Use HS256 for JWT tokens
     }
 
     public sealed class CoH3Configuration {

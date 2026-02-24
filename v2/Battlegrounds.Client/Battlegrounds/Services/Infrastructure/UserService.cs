@@ -46,6 +46,8 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
     private readonly IBattlegroundsWebAPI _webAPI = webAPI;
     private readonly IBrowserService _browserService = browserService;
 
+    private readonly TaskCompletionSource<bool> _hasLoggedInUser = new TaskCompletionSource<bool>();
+
     private User? _localUser;
     private string _token = string.Empty;
     private DateTime _tokenExpiration = DateTime.MinValue;
@@ -53,6 +55,8 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
     //private RSA? _publicKey = null;
 
     public bool IsExpired => DateTime.UtcNow >= _tokenExpiration; // Check if the token is expired
+
+    public Task<bool> IsUserLoggedIn => _hasLoggedInUser.Task;
 
     public async Task<User?> GetLocalUserAsync() {
         if (_localUser is not null) {
@@ -128,6 +132,7 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
         _token = token;
         _refreshToken = refreshToken;
         _tokenExpiration = tokenExpiration;
+        _hasLoggedInUser.SetResult(true);
         StoreTokenInEncryptedFile(_token, _refreshToken, _tokenExpiration, DateTime.UtcNow, user);
         _webAPI.SetAuthenticationToken(_token); // Set the authentication token for the web API
     }
@@ -157,6 +162,7 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
         _refreshToken = tokenData.RefreshToken;
         _tokenExpiration = tokenData.Expiration;
         _localUser = tokenData.User;
+        _hasLoggedInUser.SetResult(true);
 
         return tokenData.User is not null && _tokenExpiration > DateTime.UtcNow;
 

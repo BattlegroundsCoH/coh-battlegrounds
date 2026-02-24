@@ -134,6 +134,11 @@ public sealed class HttpBattlegroundsWebAPI(
                 } else if (response.StatusCode is HttpStatusCode.NotFound) {
                     _logger.LogDebug("Authentication status for {Provider} with session {SessionId} not found. Retrying...", provider, sessionId);
                     await Task.Delay(RetryDelayMilliseconds); // Wait before retrying
+                } else if (response.StatusCode is HttpStatusCode.Accepted) { 
+                    if (i % 5 == 0) { // Log every 5 attempts to avoid spamming logs
+                        _logger.LogDebug("Authentication for {Provider} with session {SessionId} is still pending. Retrying...", provider, sessionId);
+                    }
+                    await Task.Delay(RetryDelayMilliseconds); // Authentication is still pending, wait before retrying
                 } else {
                     _logger.LogError("Authentication status check failed with status code {StatusCode}. Error: {ErrorMessage}", response.StatusCode, await response.Content.ReadAsStringAsync());
                     await Task.Delay(RetryDelayMilliseconds); // Wait before retrying
