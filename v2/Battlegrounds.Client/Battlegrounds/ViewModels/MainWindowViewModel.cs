@@ -60,10 +60,16 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
 
     public IAsyncRelayCommand SingleplayerCommand { get; }
 
+    public IRelayCommand SettingsCommand { get; }
+
+    public IAsyncRelayCommand LogoutCommand { get; }
+
     public MainWindowViewModel(IServiceProvider serviceProvider, LoginViewModel loginViewModel) {
         _serviceProvider = serviceProvider;
         _serviceProvider.GetRequiredService<IDialogService>().RegisterHost(this);
         SingleplayerCommand = new AsyncRelayCommand(StartSingleplayerLobby);
+        SettingsCommand = new RelayCommand(OpenSettings);
+        LogoutCommand = new AsyncRelayCommand(LogoutAsync);
         LoginViewModel = loginViewModel ?? throw new ArgumentNullException(nameof(loginViewModel));
     }
 
@@ -83,6 +89,16 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
         // This method is intended to navigate back to the previous content
         // In this case, it will set the content to the CompanyBrowserView
         SetContent(null); // Currently, we don't have a back stack, so we just clear the content
+    }
+
+    private void OpenSettings() {
+        // TODO: Navigate to a settings view when available
+        // SetContent(_serviceProvider.GetRequiredService<SettingsView>());
+    }
+
+    private async Task LogoutAsync() {
+        SetContent(null);
+        await UserViewModel.LogoutAsync();
     }
 
     private async Task StartSingleplayerLobby() {

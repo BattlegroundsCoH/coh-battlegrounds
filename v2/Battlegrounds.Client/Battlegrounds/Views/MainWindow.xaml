@@ -50,34 +50,103 @@
                    FontWeight="Bold"/>
 
                 <!-- User Profile Section -->
-                <StackPanel Grid.Column="2" 
-                    Orientation="Horizontal" 
-                    HorizontalAlignment="Right"
-                    Margin="0,0,10,0">
-                    <Ellipse Width="40" Height="40" Margin="0,0,10,0">
-                        <Ellipse.Fill>
-                            <ImageBrush 
-                            x:Name="UserAvatar"
-                            ImageSource="pack://application:,,,/Battlegrounds;component/Assets/dummy_avatar.png"/>
-                            <!-- ImageSource="/Assets/default-avatar.png"-->
-                        </Ellipse.Fill>
-                    </Ellipse>
-                    <TextBlock x:Name="UserNameText" 
-                       Text="{Binding UserViewModel.LocalUser.UserDisplayName}" 
-                       VerticalAlignment="Center"
-                           Foreground="{StaticResource ForegroundWhiteBrush}"
-                       Margin="0,0,10,0"/>
-                    <!--
-                <Button Style="{StaticResource TransparentButton}">
-                    <Button.Content>
-                        <Path Data="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"
-                          Fill="White"
-                          Width="24"
-                          Height="24"
-                          Stretch="Uniform"/>
-                    </Button.Content>
-                </Button> -->
-                </StackPanel>
+                <ToggleButton x:Name="ProfileToggle"
+                              Grid.Column="2"
+                              HorizontalAlignment="Right"
+                              Margin="0,0,10,0"
+                              Cursor="Hand"
+                              FocusVisualStyle="{x:Null}"
+                              Background="Transparent"
+                              BorderThickness="0">
+                    <ToggleButton.Template>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <Border x:Name="ProfileBorder"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="6"
+                                    Padding="10,6">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Ellipse Width="36" Height="36" Margin="0,0,10,0">
+                                        <Ellipse.Fill>
+                                            <ImageBrush ImageSource="pack://application:,,,/Battlegrounds;component/Assets/dummy_avatar.png"/>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <TextBlock Text="{Binding UserViewModel.LocalUser.UserDisplayName}"
+                                               VerticalAlignment="Center"
+                                               Foreground="{StaticResource ForegroundWhiteBrush}"
+                                               Margin="0,0,8,0"/>
+                                    <Path x:Name="Chevron"
+                                          Data="M0,0 L4,4 L8,0"
+                                          Stroke="{StaticResource ForegroundLightGrayBrush}"
+                                          StrokeThickness="1.5"
+                                          VerticalAlignment="Center"
+                                          Margin="0,2,0,0"
+                                          RenderTransformOrigin="0.5,0.5">
+                                        <Path.RenderTransform>
+                                            <RotateTransform Angle="0"/>
+                                        </Path.RenderTransform>
+                                    </Path>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="ProfileBorder" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="ProfileBorder" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                                    <Setter TargetName="Chevron" Property="RenderTransform">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="180"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+                </ToggleButton>
+
+                <!-- Profile Dropdown Popup -->
+                <Popup x:Name="ProfilePopup"
+                       Grid.Column="2"
+                       IsOpen="{Binding IsChecked, ElementName=ProfileToggle}"
+                       PlacementTarget="{Binding ElementName=ProfileToggle}"
+                       Placement="Custom"
+                       StaysOpen="False"
+                       AllowsTransparency="True"
+                       PopupAnimation="Fade">
+                    <Border Background="{StaticResource BackgroundDarkBlueBrush}"
+                            BorderBrush="{StaticResource BackgroundLightGrayBrush}"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            MinWidth="200"
+                            Margin="8,0,8,8"
+                            Padding="0,6">
+                        <Border.Effect>
+                            <DropShadowEffect Color="Black" BlurRadius="16" ShadowDepth="4" Opacity="0.5"/>
+                        </Border.Effect>
+                        <StackPanel>
+                            <!-- Profile header -->
+                            <StackPanel Margin="14,8,14,10">
+                                <TextBlock Text="{Binding UserViewModel.LocalUser.UserDisplayName}"
+                                           Foreground="{StaticResource ForegroundWhiteBrush}"
+                                           FontWeight="SemiBold"
+                                           FontSize="14"/>
+                            </StackPanel>
+                            <Separator Background="{StaticResource BackgroundLightGrayBrush}" Margin="10,0,10,4"/>
+
+                            <Button Style="{StaticResource ProfileMenuItemButton}"
+                                    Content="⚙  Settings"
+                                    Command="{Binding SettingsCommand}"/>
+                            <Button Style="{StaticResource ProfileMenuItemButton}"
+                                    Content="👤  Profile"
+                                    IsEnabled="False"/>
+                            <Separator Background="{StaticResource BackgroundLightGrayBrush}" Margin="10,4"/>
+                            <Button Style="{StaticResource ProfileMenuItemButton}"
+                                    Content="🚪  Log Out"
+                                    Command="{Binding LogoutCommand}"
+                                    Foreground="{StaticResource ForegroundLightRedBrush}"/>
+                        </StackPanel>
+                    </Border>
+                </Popup>
             </Grid>
 
             <!-- Main Content Area -->
