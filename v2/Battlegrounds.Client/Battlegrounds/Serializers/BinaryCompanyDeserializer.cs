@@ -28,7 +28,7 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
 
         var version = reader.ReadUInt32();
         if (!IsSupportedVersion(version)) {
-            throw new InvalidDataException($"Unsupported company file version: {version}"); // Current impl, only supports version 1. Add support for more versions in the future.
+            throw new InvalidDataException($"Unsupported company file version: {version}"); // Current impl, only supports version 1 and 2. Add support for more versions in the future.
         }
 
         string createdBy, updatedBy;

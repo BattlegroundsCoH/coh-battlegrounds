@@ -1,12 +1,9 @@
-﻿using System.Net.Http.Json;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using Battlegrounds.Facades.API;
 using Battlegrounds.Models;
 using Battlegrounds.Services;
-
-using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.Test.Services;
 
@@ -39,6 +36,8 @@ public sealed class MockIntegrationUserService(string user) : IUserService {
 
     public IAsyncHttpClient HttpClient => _httpClient;
 
+    public Task<bool> IsUserLoggedIn => Task.FromResult(true);
+
     public ValueTask<bool> AutoLoginAsync() {
         throw new NotImplementedException();
     }
@@ -70,20 +69,6 @@ public sealed class MockIntegrationUserService(string user) : IUserService {
     }
 
     public async Task<User?> LoginAsync(string userName, string password) {
-        /*_logger.LogDebug("Logging in using {Endpoint}", LoginEndpoint);
-        HttpRequestMessage requestMessage = new(HttpMethod.Post, LoginEndpoint) {
-            Content = JsonContent.Create(new LoginRequest(user, _userCredentials[user]), options: _jsonOptions)
-        };
-        HttpResponseMessage response = await _httpClient.SendRequestAsync(requestMessage);
-        if (!response.IsSuccessStatusCode) {
-            _logger.LogError("Login failed with status code {StatusCode} and error description: {ErrorDesc}", response.StatusCode, await response.Content.ReadAsStringAsync());
-            throw new HttpRequestException($"Login failed with status code {response.StatusCode}.");
-        }
-
-        Stream contentStream = await response.Content.ReadAsStreamAsync() ?? throw new InvalidOperationException("Response content is null.");
-
-        var loginResponse = await JsonSerializer.DeserializeAsync<LoginResponse>(contentStream, _jsonOptions) ?? throw new InvalidOperationException("Failed to deserialize login response.");
-        _token = loginResponse.Token;*/
         return new User {
             UserId = userName,
             UserDisplayName = userName,

@@ -464,6 +464,7 @@ public class CompanyServiceTests
         var companySerializer = Substitute.For<ICompanySerializer>();
         var companyDeserializer = Substitute.For<ICompanyDeserializer>();
 
+        userService.IsUserLoggedIn.Returns(true);
         serverAPI.IsServerAvailableAsync().Returns(false);
 
         var service = new CompanyService(
