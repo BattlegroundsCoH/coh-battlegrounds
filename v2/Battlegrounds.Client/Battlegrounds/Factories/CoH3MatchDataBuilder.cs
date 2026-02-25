@@ -68,7 +68,7 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
         table.AddFieldValue("name", company.Name);
         table.AddNestedFieldTable("units", squadsTable => {
             foreach (var squad in company.Squads) {
-                squadsTable.AddNestedTable(x => BuildCompanySquadData(x, squad));
+                squadsTable.AddNestedTable(squad.Id, x => BuildCompanySquadData(x, squad));
             }
         });
     }
