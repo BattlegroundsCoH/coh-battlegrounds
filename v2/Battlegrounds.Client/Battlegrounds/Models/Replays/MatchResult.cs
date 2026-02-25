@@ -88,6 +88,14 @@ public sealed class MatchResult {
     public IReadOnlySet<string> Losers { get; init; } = new HashSet<string>(); // Set of player IDs who lost the match
 
     /// <summary>
+    /// Gets the set of player IDs participating in the game.
+    /// </summary>
+    /// <remarks>
+    /// This ignores AI players, as they are not relevant for determining the outcome of the match. The set includes only human players who actively participated in the game.
+    /// </remarks>
+    public IReadOnlySet<string> Players { get; init;  } = new HashSet<string>();
+
+    /// <summary>
     /// Gets a value indicating whether the match has concluded.
     /// </summary>
     public bool Concluded { get; init; } = false; // Indicates if the match has concluded (e.g., victory or defeat)

@@ -152,6 +152,7 @@ public sealed class ReplayAnalysisResult {
             Concluded = registeredOverEvent is not null,
             Winners = winners,
             Losers = losers,
+            Players =lobby.Participants.Where(x => !x.IsAIParticipant).Select(x => x.ParticipantId).ToHashSet(),
             IsValid = badEvents.Count == 0 && !string.IsNullOrEmpty(registeredStartEvent.MatchId) && !string.IsNullOrEmpty(registeredStartEvent.ModVersion),
         };
 
