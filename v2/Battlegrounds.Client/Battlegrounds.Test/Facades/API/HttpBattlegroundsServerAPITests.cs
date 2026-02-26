@@ -1,7 +1,9 @@
 ﻿using System.Net;
+using System.Text;
 
 using Battlegrounds.Facades.API;
 using Battlegrounds.Models;
+using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Replays;
 using Battlegrounds.Serializers;
 using Battlegrounds.Services;
@@ -234,20 +236,85 @@ public class HttpBattlegroundsServerAPITests {
             MatchDuration = TimeSpan.FromMinutes(30)
         };
         var mockUser = new User { UserId = "test-user" };
-        
+
         _userService.GetLocalUserAsync().Returns(mockUser);
         _userService.GetLocalUserTokenAsync().Returns("test-token");
 
         var httpResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
         _httpClient.SendRequestAsync(Arg.Any<HttpRequestMessage>())
             .Returns(httpResponse);
-        
+
         // Act
         var result = await _api.ReportMatchResults(matchResults);
-        
+
         // Assert
         Assert.That(result, Is.False, "Report should return false on server error");
-    
+
+    }
+
+    [Test]
+    public async Task GetLatestMatchResult_WhenSuccessful_ReturnsDeserializedMatchResult() {
+        // Arrange
+        const string json = """
+            {
+                "isValid": true,
+                "lobbyId": "test-lobby",
+                "gameId": "",
+                "matchId": "test-match",
+                "modVersion": "1.0",
+                "scenario": "test-scenario",
+                "matchDuration": "00:30:00",
+                "companyModifiers": {
+                    "player-1": [{ "squadId": 1, "eventType": "kill_squad" }]
+                },
+                "playerCompanies": { "player-1": "company-a" },
+                "winners": ["player-1"],
+                "losers": [],
+                "players": ["player-1"],
+                "concluded": true
+            }
+            """;
+
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        _httpClient.SendRequestAsync(Arg.Any<HttpRequestMessage>())
+            .Returns(new HttpResponseMessage(HttpStatusCode.OK) { Content = content });
+
+        // Act
+        var result = await _api.GetLatestMatchResult("test-lobby");
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() => {
+            Assert.That(result.LobbyId, Is.EqualTo("test-lobby"));
+            Assert.That(result.MatchId, Is.EqualTo("test-match"));
+            Assert.That(result.Scenario, Is.EqualTo("test-scenario"));
+            Assert.That(result.MatchDuration, Is.EqualTo(TimeSpan.FromMinutes(30)));
+            Assert.That(result.Concluded, Is.True);
+            Assert.That(result.Winners, Is.EquivalentTo(new[] { "player-1" }));
+            Assert.That(result.Losers, Is.Empty);
+            Assert.That(result.Players, Is.EquivalentTo(new[] { "player-1" }));
+            Assert.That(result.PlayerCompanies["player-1"], Is.EqualTo("company-a"));
+            Assert.That(result.CompanyModifiers["player-1"].First!.Value.SquadId, Is.EqualTo(1));
+            Assert.That(result.CompanyModifiers["player-1"].First!.Value.EventType, Is.EqualTo(CompanyEventModifier.EVENT_TYPE_KILL_SQUAD));
+        });
+        await _httpClient.Received(1).SendRequestAsync(Arg.Is<HttpRequestMessage>(
+            req => req.Method == HttpMethod.Get &&
+                   req.RequestUri!.ToString().Contains(HttpBattlegroundsServerAPI.GetLobbyResultEndpoint) &&
+                   req.RequestUri.ToString().Contains("lobbyId=test-lobby")
+        ));
+    }
+
+    [Test]
+    public async Task GetLatestMatchResult_WhenServerError_ReturnsNull() {
+        // Arrange
+        _httpClient.SendRequestAsync(Arg.Any<HttpRequestMessage>())
+            .Returns(new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        // Act
+        var result = await _api.GetLatestMatchResult("missing-lobby");
+
+        // Assert
+        Assert.That(result, Is.Null);
     }
 
 }

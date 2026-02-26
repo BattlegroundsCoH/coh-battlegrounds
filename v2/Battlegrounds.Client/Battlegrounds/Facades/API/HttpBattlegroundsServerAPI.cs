@@ -22,7 +22,9 @@ public sealed class HttpBattlegroundsServerAPI(
     ICompanyDeserializer companyDeserializer, 
     Configuration configuration) : IBattlegroundsServerAPI {
 
-    private static readonly JsonSerializerOptions serializerOptions = new(JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions serializerOptions = new(JsonSerializerDefaults.Web) {
+        Converters = { new ReadOnlySetConverterFactory(), new LinkedListConverterFactory() }
+    };
 
     private readonly ILogger<HttpBattlegroundsServerAPI> _logger = logger;
     private readonly IAsyncHttpClient _httpClient = asyncHttpClient;
