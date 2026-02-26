@@ -1,0 +1,192 @@
+<UserControl x:Class="Battlegrounds.Views.MatchOverView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:Battlegrounds.Converters"
+             xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodels:MatchOverViewModel}"
+             mc:Ignorable="d"
+             d:DesignHeight="560" d:DesignWidth="720">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:InvertedBooleanToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+        <converters:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
+        <converters:DurationConverter x:Key="DurationConverter"/>
+    </UserControl.Resources>
+
+    <Border Width="720"
+            MaxHeight="580"
+            Background="{StaticResource BackgroundDarkBlueBrush}"
+            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+        <Grid Margin="30,24,30,24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- Outcome banner -->
+                <RowDefinition Height="Auto"/> <!-- Metadata row -->
+                <RowDefinition Height="Auto"/> <!-- Bad events warning -->
+                <RowDefinition Height="Auto"/> <!-- Table header -->
+                <RowDefinition Height="*"/>    <!-- Squad rows -->
+                <RowDefinition Height="Auto"/> <!-- Close button -->
+            </Grid.RowDefinitions>
+
+            <!-- Outcome Banner -->
+            <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,16">
+                <TextBlock Text="VICTORY"
+                           FontSize="36" FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Foreground="{StaticResource AccentGreenBrush}"
+                           Visibility="{Binding IsVictory, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <TextBlock Text="DEFEAT"
+                           FontSize="36" FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Foreground="{StaticResource AccentRedBrush}"
+                           Visibility="{Binding IsVictory, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+                <TextBlock Text="{Binding Scenario}"
+                           FontSize="15"
+                           HorizontalAlignment="Center"
+                           Foreground="{StaticResource ForegroundGrayBrush}"
+                           Margin="0,4,0,0"/>
+            </StackPanel>
+
+            <!-- Match Metadata -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,16">
+                <StackPanel Orientation="Horizontal" Margin="0,0,28,0">
+                    <TextBlock Text="Duration: " Foreground="{StaticResource ForegroundGrayBrush}"/>
+                    <TextBlock Text="{Binding MatchDuration, Converter={StaticResource DurationConverter}}"
+                               Foreground="{StaticResource ForegroundWhiteBrush}"
+                               FontWeight="SemiBold"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Status: " Foreground="{StaticResource ForegroundGrayBrush}"/>
+                    <TextBlock Text="Concluded"
+                               Foreground="{StaticResource AccentGreenBrush}"
+                               FontWeight="SemiBold"
+                               Visibility="{Binding Concluded, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    <TextBlock Text="Abandoned"
+                               Foreground="{StaticResource AccentRedBrush}"
+                               FontWeight="SemiBold"
+                               Visibility="{Binding Concluded, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Bad Events Warning -->
+            <Border Grid.Row="2"
+                    Background="{StaticResource BackgroundLighRedBrush}"
+                    BorderBrush="{StaticResource AccentRedBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="12,6"
+                    Margin="0,0,0,14"
+                    Visibility="{Binding HasBadEvents, Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBlock Text="⚠  Match data may be incomplete due to replay inconsistencies."
+                           Foreground="{StaticResource ForegroundLightRedBrush}"/>
+            </Border>
+
+            <!-- Squad Table Header -->
+            <Grid Grid.Row="3" Margin="0,0,0,6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="64"/>
+                    <ColumnDefinition Width="110"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Squad"    Grid.Column="0" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold" Margin="8,0,0,0"/>
+                <TextBlock Text="Kills"    Grid.Column="1" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
+                <TextBlock Text="Vehicles" Grid.Column="2" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
+                <TextBlock Text="Losses"   Grid.Column="3" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
+                <TextBlock Text="XP"       Grid.Column="4" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
+                <TextBlock Text="Status"   Grid.Column="5" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
+                <TextBlock Text="Pickup"   Grid.Column="6" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
+            </Grid>
+
+            <!-- Squad Rows -->
+            <ScrollViewer Grid.Row="4"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          MaxHeight="260">
+                <ItemsControl ItemsSource="{Binding SquadSummaries}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,0,0,4"
+                                    Padding="0,7"
+                                    Background="{StaticResource BackgroundBlueBrush}"
+                                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="64"/>
+                                        <ColumnDefinition Width="110"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{Binding SquadId}"
+                                               Grid.Column="0"
+                                               Foreground="{StaticResource ForegroundLightBlueBrush}"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"
+                                               Margin="8,0,0,0"/>
+
+                                    <TextBlock Text="{Binding InfantryKilled}"
+                                               Grid.Column="1"
+                                               Foreground="{StaticResource ForegroundWhiteBrush}"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Text="{Binding VehiclesDestroyed}"
+                                               Grid.Column="2"
+                                               Foreground="{StaticResource ForegroundWhiteBrush}"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Text="{Binding Losses}"
+                                               Grid.Column="3"
+                                               Foreground="{StaticResource ForegroundLightRedBrush}"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Text="{Binding ExperienceGained, StringFormat=F0}"
+                                               Grid.Column="4"
+                                               Foreground="{StaticResource AccentGreenBrush}"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Text="KIA"
+                                               Grid.Column="5"
+                                               Foreground="{StaticResource AccentRedBrush}"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"
+                                               Visibility="{Binding WasKilled, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                                    <TextBlock Text="{Binding PickedUpBlueprint}"
+                                               Grid.Column="6"
+                                               Foreground="{StaticResource ForegroundLightBlueBrush}"
+                                               VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"
+                                               ToolTip="{Binding PickedUpBlueprint}"
+                                               Visibility="{Binding PickedUpBlueprint, Converter={StaticResource NullVisibilityConverter}}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <!-- Close Button -->
+            <Button Grid.Row="5"
+                    Content="Return to Lobby"
+                    HorizontalAlignment="Center"
+                    Margin="0,20,0,0"
+                    Width="160" Height="38"
+                    Style="{StaticResource ActionButton}"
+                    Command="{Binding CloseCommand}"/>
+        </Grid>
+    </Border>
+
+</UserControl>

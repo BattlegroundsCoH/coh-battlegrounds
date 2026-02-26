@@ -49,7 +49,21 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     private bool _isMatchStarting = false;
     private bool _isWaitingForMatchOver = false;
 
+    private MatchOverViewModel? _matchOverResult;
+
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <summary>
+    /// Gets the view model for the post-match results overlay, or <see langword="null"/> when the overlay is not visible.
+    /// </summary>
+    public MatchOverViewModel? MatchOverResult {
+        get => _matchOverResult;
+        private set {
+            if (value == _matchOverResult) return;
+            _matchOverResult = value;
+            PropertyChanged?.Invoke(this, new(nameof(MatchOverResult)));
+        }
+    }
 
     public string LobbyName => _lobby.Name;
 
@@ -578,6 +592,11 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
     private async void ShowMatchResults() {
         var matchResult = await _lobby.GetMatchResults();
+        if (matchResult is null) {
+            _logger.LogWarning("Received MatchOver event but GetMatchResults returned null.");
+            return;
+        }
+        MatchOverResult = new MatchOverViewModel(matchResult, () => MatchOverResult = null);
     }
 
     private async Task SyncLobbyCompanies() {

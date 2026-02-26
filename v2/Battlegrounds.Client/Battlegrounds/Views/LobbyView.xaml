@@ -15,6 +15,7 @@
 
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converters:InvertedBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+        <converters:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
         <converters:LockImageConverter x:Key="LockImageConverter"/>
         <converters:LockStateConverter x:Key="LockStateConverter"/>
         <converters:EmptyStringToVisibilityConverter x:Key="EmptyStringToVisibilityConverter"/>
@@ -773,6 +774,23 @@
                 </Button.Content>
             </Button>
         </Grid>
-        
+
+        <!-- Match Over Overlay: shown when a match has just ended -->
+        <ContentControl Grid.RowSpan="3"
+                        Panel.ZIndex="100"
+                        Content="{Binding MatchOverResult}"
+                        Visibility="{Binding MatchOverResult, Converter={StaticResource NullVisibilityConverter}}">
+            <ContentControl.ContentTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <!-- Semi-transparent backdrop -->
+                        <Rectangle Fill="#BF000000"/>
+                        <!-- Centred results card -->
+                        <local:MatchOverView HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </ContentControl.ContentTemplate>
+        </ContentControl>
+
     </Grid>
 </UserControl>
