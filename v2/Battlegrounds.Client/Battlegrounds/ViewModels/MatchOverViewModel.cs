@@ -1,4 +1,5 @@
 using Battlegrounds.Models.Lobbies;
+using Battlegrounds.Models.Playing;
 
 using CommunityToolkit.Mvvm.Input;
 
@@ -7,9 +8,12 @@ namespace Battlegrounds.ViewModels;
 /// <summary>
 /// View model for the post-match results overlay, displayed at the end of a game.
 /// </summary>
-public sealed class MatchOverViewModel {
+/// <param name="data">The data representing the match results.</param>
+/// <param name="game">The game associated with this match.</param>
+/// <param name="onClose">The action to execute when the overlay is closed.</param>
+public sealed class MatchOverViewModel(MatchOverData data, Game game, Action onClose) {
 
-    private readonly MatchOverData _data;
+    private readonly MatchOverData _data = data;
 
     /// <summary>Gets whether the local player won the match.</summary>
     public bool IsVictory => _data.IsVictory;
@@ -30,11 +34,11 @@ public sealed class MatchOverViewModel {
     public IReadOnlyList<SquadMatchSummary> SquadSummaries => _data.SquadSummaries;
 
     /// <summary>Gets the command that dismisses this overlay and returns to the lobby view.</summary>
-    public IRelayCommand CloseCommand { get; }
+    public IRelayCommand CloseCommand { get; } = new RelayCommand(onClose);
 
-    public MatchOverViewModel(MatchOverData data, Action onClose) {
-        _data = data;
-        CloseCommand = new RelayCommand(onClose);
-    }
+    /// <summary>
+    /// Gets the game associated with this instance.
+    /// </summary>
+    public Game Game { get; } = game;
 
 }

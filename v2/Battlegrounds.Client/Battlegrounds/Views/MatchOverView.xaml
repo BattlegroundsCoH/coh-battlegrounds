@@ -14,6 +14,7 @@
         <converters:InvertedBooleanToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
         <converters:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
         <converters:DurationConverter x:Key="DurationConverter"/>
+        <converters:ScenarioIdToNameConverter x:Key="ScenarioConverter"/>
     </UserControl.Resources>
 
     <Border Width="720"
@@ -34,7 +35,7 @@
 
             <!-- Outcome Banner -->
             <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,16">
-                <TextBlock Text="VICTORY"
+                <TextBlock Text="VICTORY!"
                            FontSize="36" FontWeight="Bold"
                            HorizontalAlignment="Center"
                            Foreground="{StaticResource AccentGreenBrush}"
@@ -44,11 +45,17 @@
                            HorizontalAlignment="Center"
                            Foreground="{StaticResource AccentRedBrush}"
                            Visibility="{Binding IsVictory, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
-                <TextBlock Text="{Binding Scenario}"
-                           FontSize="15"
+                <TextBlock FontSize="15"
                            HorizontalAlignment="Center"
                            Foreground="{StaticResource ForegroundGrayBrush}"
-                           Margin="0,4,0,0"/>
+                           Margin="0,4,0,0">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource ScenarioConverter}">
+                            <Binding Path="Scenario"/>
+                            <Binding Path="Game"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
             </StackPanel>
 
             <!-- Match Metadata -->
@@ -97,8 +104,8 @@
                     <ColumnDefinition Width="110"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Squad"    Grid.Column="0" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold" Margin="8,0,0,0"/>
-                <TextBlock Text="Kills"    Grid.Column="1" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
-                <TextBlock Text="Vehicles" Grid.Column="2" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
+                <TextBlock Text="Infantry Kills"    Grid.Column="1" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
+                <TextBlock Text="Vehicle Vehicles" Grid.Column="2" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
                 <TextBlock Text="Losses"   Grid.Column="3" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
                 <TextBlock Text="XP"       Grid.Column="4" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
                 <TextBlock Text="Status"   Grid.Column="5" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>

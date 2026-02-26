@@ -596,7 +596,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             _logger.LogWarning("Received MatchOver event but GetMatchResults returned null.");
             return;
         }
-        MatchOverResult = new MatchOverViewModel(matchResult, () => MatchOverResult = null);
+        MatchOverResult = new MatchOverViewModel(matchResult, _lobby.Game, () => MatchOverResult = null);
     }
 
     private async Task SyncLobbyCompanies() {
