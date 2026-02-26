@@ -716,9 +716,11 @@ public sealed class MultiplayerLobby(
         await _gRPCClient.BeginMatchAsync(new Empty(), GetGrpcMetadata());
     }
 
-    public async Task EndMatch() {
+    public async Task EndMatch(EndMatchReason reason) {
         await _gRPCClient.EndMatchAsync(new() {
-            Reason = EndMatchReason.Unknown
+            Reason = reason switch {
+                _ => Proto.Lobbies.EndMatchReason.Unknown
+            }
         }, GetGrpcMetadata());
     }
 

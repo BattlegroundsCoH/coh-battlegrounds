@@ -4,6 +4,13 @@ using Battlegrounds.Models.Replays;
 
 namespace Battlegrounds.Models.Lobbies;
 
+public enum EndMatchReason {
+    Unknown,
+    ScarError,
+    GameCancelled,
+    MatchEndedInSuccess,
+}
+
 /// <summary>
 /// Represents a multiplayer game lobby for managing participants, teams, game settings, and session state.
 /// </summary>
@@ -84,12 +91,13 @@ public interface ILobby {
     /// <returns>A task that represents the asynchronous operation. The task completes when the match has been successfully
     /// started.</returns>
     Task BeginMatch();
-    
+
     /// <summary>
     /// Ends the current match and performs any necessary cleanup operations asynchronously.
     /// </summary>
+    /// <param name="reason">The reason for ending the match. This parameter provides context for why the match is being ended, such as a game cancellation or an error condition.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task EndMatch();
+    Task EndMatch(EndMatchReason reason);
 
     /// <summary>
     /// Retrieves the unique identifier of the local player, if available.

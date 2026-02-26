@@ -204,7 +204,7 @@ public class CoH3MatchDataBuilderTests {
             throw new NotImplementedException();
         }
 
-        public Task EndMatch() {
+        public Task EndMatch(EndMatchReason reason) {
             throw new NotImplementedException();
         }
 

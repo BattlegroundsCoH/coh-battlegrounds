@@ -226,7 +226,7 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
 
     public Task BeginMatch() => Task.CompletedTask; // NOP operation in singleplayer mode, match begins immediately when game is launched
 
-    public Task EndMatch() => Task.CompletedTask; // NOP operation in singleplayer mode, match ends immediately when game is ended
+    public Task EndMatch(EndMatchReason reason) => Task.CompletedTask; // NOP operation in singleplayer mode, match ends immediately when game is ended
 
     public ValueTask PublishSystemMessage(string message) => ValueTask.CompletedTask; // NOP operation in singleplayer mode, system messages are not needed
 

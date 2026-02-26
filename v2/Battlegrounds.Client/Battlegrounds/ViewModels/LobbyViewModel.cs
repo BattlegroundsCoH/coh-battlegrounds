@@ -417,14 +417,15 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             return; // Should never happen, but just in case
         }
 
+        // Notify server we're starting
+        // Will freeze lobby state for all other participants and prevent any further changes to the lobby (e.g. changing companies, maps, settings, etc.) and will also prevent new participants from joining
+        // (NOP in singleplayer)
+        await _lobby.BeginMatch();
+
+        EndMatchReason reason = EndMatchReason.Unknown;
         try {
             IsMatchStarting = true;
             LobbyState = "Starting match...";
-
-            // Notify server we're starting
-            // Will freeze lobby state for all other participants and prevent any further changes to the lobby (e.g. changing companies, maps, settings, etc.) and will also prevent new participants from joining
-            // (NOP in singleplayer)
-            await _lobby.BeginMatch();
 
             // Sync corrent lobby view status with backing model based on selected PickableCompany (based on host client view!)
             var synced = SyncLobbyCompanies(); // Start syncing companies (but do not await yet, as we can do this in parallel count down)
@@ -505,10 +506,12 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             var matchResult = await playResult.GameInstance.WaitForMatch();
             if (matchResult.Failed) {
                 LobbyState = "Match failed to complete, please check logs for details.";
+                reason = EndMatchReason.GameCancelled;
                 await Task.Delay(5000); // Wait for 5 seconds before resetting state
                 return;
             } else if (matchResult.ScarError) {
                 LobbyState = "Fatal SCAR error occurred during match, please check logs.";
+                reason = EndMatchReason.ScarError;
                 await Task.Delay(5000); // Wait for 5 seconds before resetting state
                 return;
             } else if (matchResult.BugSplat) {
@@ -536,6 +539,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                 LobbyState = "Match results reported successfully!";
             }
 
+            reason = EndMatchReason.MatchEndedInSuccess;
+
             await Task.Delay(5000); // Wait for 5 seconds before resetting state
 
         } finally {
@@ -543,7 +548,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             IsWaitingForMatchOver = false;
             IsPlaying = false;
             SyncState(); // Resync state after match is over (or an error occurred)
-            await _lobby.EndMatch(); // End the match and return to lobby state (NOP in singleplayer)
+            await _lobby.EndMatch(reason); // End the match and return to lobby state (NOP in singleplayer)
         }
 
     }
