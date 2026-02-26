@@ -39,7 +39,7 @@ namespace Battlegrounds.Models.Lobbies;
 public sealed class MultiplayerLobby(
     string lobbyId, 
     AsyncServerStreamingCall<LobbyStateUpdate> stateUpdater, 
-    Proto.Lobbies.LobbyService.LobbyServiceClient gRPCClient, 
+    LobbyService.LobbyServiceClient gRPCClient, 
     LobbySetup setup,
     IBattlegroundsServerAPI serverAPI,
     IUserService userService,
@@ -50,7 +50,7 @@ public sealed class MultiplayerLobby(
     private readonly string _lobbyId = lobbyId;
 
     private readonly AsyncServerStreamingCall<LobbyStateUpdate> _stateUpdater = stateUpdater;
-    private readonly Proto.Lobbies.LobbyService.LobbyServiceClient _gRPCClient = gRPCClient;
+    private readonly LobbyService.LobbyServiceClient _gRPCClient = gRPCClient;
     private readonly IBattlegroundsServerAPI _serverAPI = serverAPI;
     private readonly ICompanyService _companyService = companyService;
     private readonly IUserService _userService = userService;
@@ -717,7 +717,9 @@ public sealed class MultiplayerLobby(
     }
 
     public async Task EndMatch() {
-        await _gRPCClient.EndMatchAsync(new Empty(), GetGrpcMetadata());
+        await _gRPCClient.EndMatchAsync(new() {
+            Reason = EndMatchReason.Unknown
+        }, GetGrpcMetadata());
     }
 
     public async ValueTask PublishSystemMessage(string message) {

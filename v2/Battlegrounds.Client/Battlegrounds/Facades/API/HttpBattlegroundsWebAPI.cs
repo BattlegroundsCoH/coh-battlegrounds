@@ -61,7 +61,7 @@ public sealed class HttpBattlegroundsWebAPI(
     }
 
     public async Task<RefreshResponse> RefreshTokenAsync(RefreshRequest request) {
-        _logger.LogDebug("Refreshing token using {Endpoint}", RefreshEndpoint);
+        _logger.LogDebug("Refreshing token using {Endpoint} using request {@Request}", RefreshEndpoint, request);
         HttpRequestMessage requestMessage = new(HttpMethod.Post, RefreshEndpoint) {
             Content = JsonContent.Create(request, options: _jsonOptions)
         };

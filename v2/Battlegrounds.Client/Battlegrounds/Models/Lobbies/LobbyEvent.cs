@@ -14,6 +14,7 @@ public enum LobbyEventType {
     GameStarted,
     GameCancelled,
     GameEnded,
+    MatchOver,
     TrayMessage, // Never sent or received by the server, only used for the client to display messages in the tray
     TrayMessageHide, // Never sent or received by the server, only used for the client to hide messages in the tray
     SystemMessage,

@@ -19,12 +19,12 @@ public sealed record ApiUser(
 );
 
 public sealed record RefreshRequest(
-    [property: JsonPropertyName("refresh_token")] string RefreshToken
+    [property: JsonPropertyName("refreshToken")] string RefreshToken
 );
 
 public sealed record RefreshResponse(
     [property: JsonPropertyName("token")] string Token,
-    [property: JsonPropertyName("refresh_token")] string RefreshToken
+    [property: JsonPropertyName("refreshToken")] string RefreshToken
 );
 
 public sealed record StartAuthResponse(
