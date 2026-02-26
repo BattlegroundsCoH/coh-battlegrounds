@@ -246,6 +246,8 @@ public sealed class MultiplayerLobby(
                     _participants.Add(participantUnready with { IsReady = false });
                 }
                 return new LobbyEvent(LobbyEventType.ParticipantUnready, update.ParticipantId);
+            case LobbyEventType.MatchOver:
+                return new LobbyEvent(LobbyEventType.MatchOver); // Instructs the LobbyViewModel to show the match results screen.
             default:
                 _logger.Warning("Unhandled gRPC lobby event type: {EventType}", eventType);
                 break;
