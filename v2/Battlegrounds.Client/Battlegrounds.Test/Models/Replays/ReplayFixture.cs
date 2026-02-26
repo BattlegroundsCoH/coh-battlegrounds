@@ -1,5 +1,11 @@
 ﻿namespace Battlegrounds.Test.Models.Replays;
 
+/// <summary>
+/// Provides static members for accessing sample replay file locations used in testing scenarios.
+/// </summary>
+/// <remarks>Each member represents the path to a specific replay file located in the test data directory. The
+/// class ensures that the referenced files exist at the expected locations, throwing an assertion error if a file is
+/// missing. Intended for use in automated tests that require replay data.</remarks>
 public static class ReplayFixture {
 
     /// <summary>
@@ -27,7 +33,21 @@ public static class ReplayFixture {
     /// </remarks>
     public static readonly string TEMP_10_05_2025__20_55_FILE = GetReplayLocation("temp_10-05-2025__20_55.rec");
 
+    /// <summary>
+    /// Gets the location of a sample replay file for testing.
+    /// </summary>
+    /// <remarks>
+    /// Validates that the file exists at the specified path and throws an assertion error if it does not.
+    /// </remarks>
     public static readonly string TEMP_19_06_2025__18_31_FILE = GetReplayLocation("temp_19-06-2025__18_31.rec");
+
+    /// <summary>
+    /// Gets the location of a sample replay file for testing.
+    /// </summary>
+    /// <remarks>
+    /// Validates that the file exists at the specified path and throws an assertion error if it does not.
+    /// </remarks>
+    public static readonly string TEMP_26_02_2026__17_40_FILE = GetReplayLocation("temp_26-02-2026__17_40.rec");
 
     private static string GetReplayLocation(string replayName) {
         var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "Playbacks", replayName);

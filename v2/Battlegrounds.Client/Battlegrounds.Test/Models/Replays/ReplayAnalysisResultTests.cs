@@ -331,7 +331,7 @@ public sealed class ReplayAnalysisResultTests {
                     new MatchStartReplayEvent.PlayerData(1000, "Player 1", "company1", 0)
                 ]),
                 new MatchOverReplayEvent(TimeSpan.Zero.Add(TimeSpan.FromSeconds(60)), [1000], [], [
-                    new MatchOverReplayEvent.PlayerStatistics(1000, 0, "Player 1", 0, 5)
+                    new MatchOverReplayEvent.PlayerStatistics(1000, 0, "Player 1", 0, 5, 0)
                 ])
             ],
             GameId = "TestGameId",

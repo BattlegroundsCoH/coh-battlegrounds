@@ -65,6 +65,9 @@
     <None Update="TestData\Playbacks\temp_25-05-2025__17_36.rec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\Playbacks\temp_26-02-2026__17_40.rec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

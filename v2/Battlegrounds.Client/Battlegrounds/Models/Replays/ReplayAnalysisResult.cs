@@ -169,7 +169,7 @@ public sealed class ReplayAnalysisResult {
                 modifiers.AddLast(CompanyEventModifier.Pickup(pickupEvent.SquadCompanyId, pickupEvent.IsEntityBlueprint ? pickupEvent.WeaponName : string.Empty)); // Warning, may be a problem for CoH2 which uses slot items
             } else if (replayEvent is SquadRecalledEvent recalledEvent) {
                 modifiers.AddLast(CompanyEventModifier.ExperienceGain(recalledEvent.SquadCompanyId, recalledEvent.Experience));
-                modifiers.AddLast(CompanyEventModifier.Statistics(recalledEvent.SquadCompanyId, recalledEvent.InfantryKills, recalledEvent.VehicleKills));
+                modifiers.AddLast(CompanyEventModifier.Statistics(recalledEvent.SquadCompanyId, recalledEvent.InfantryKills, recalledEvent.VehicleKills, recalledEvent.EntityLosses));
             } else {
                 _logger.Warning("Unhandled replay event type: {ReplayType}", replayEvent.GetType().Name);
             }

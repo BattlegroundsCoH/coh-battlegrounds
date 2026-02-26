@@ -46,8 +46,8 @@ public class CoH3ReplayParserTest {
     }
 
     [Test]
-    public void CanParseSampleCoH3ReplayWithBgBroadcastEvents() {
-        string replayLocation = ReplayFixture.TEMP_19_06_2025__18_31_FILE;
+    public void CanParseSampleCoH3ReplayWithBgEvents() {
+        string replayLocation = ReplayFixture.TEMP_26_02_2026__17_40_FILE;
         var replay = _parser.ParseReplayFile(replayLocation);
         Assert.That(replay, Is.Not.Null, "Replay should not be null.");
         using (Assert.EnterMultipleScope()) {
@@ -56,9 +56,8 @@ public class CoH3ReplayParserTest {
             Assert.That(replay.Duration, Is.GreaterThan(TimeSpan.Zero), "Replay duration should be greater than zero.");
             Assert.That(replay.Events, Has.Count.GreaterThan(0), "Replay should have events.");
             Assert.That(replay.Events.OfType<MatchStartReplayEvent>().SingleOrDefault(), Is.Not.Null, "Replay should contain a MatchStartReplayEvent.");
-            Assert.That(replay.Events.OfType<SquadDeployedEvent>().Count(), Is.EqualTo(12), "Replay should contain SquadDeployedEvent(s).");
+            Assert.That(replay.Events.OfType<SquadDeployedEvent>().Count(), Is.EqualTo(4), "Replay should contain SquadDeployedEvent(s).");
         }
-
     }
 
 }

@@ -257,7 +257,7 @@ public sealed class CoH3ReplayParser : IReplayParser {
                 ?? throw new InvalidDataException($"Failed to parse broadcast message '{message}' in tick {tickId} for player {command.PlayerId}.");
 
             // Filter to only track events published by the player
-            if (replayEvent is MatchStartReplayEvent || (replayEvent.Player is not null && replayEvent.Player.PlayerId == command.PlayerId)) {
+            if (replayEvent is MatchStartReplayEvent or MatchOverReplayEvent || (replayEvent.Player is not null && replayEvent.Player.PlayerId == command.PlayerId)) {
                 events.Add(replayEvent);
             }
 

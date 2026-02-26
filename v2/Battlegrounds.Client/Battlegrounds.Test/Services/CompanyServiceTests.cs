@@ -237,7 +237,7 @@ public class CompanyServiceTests
         int infantryKills = 10;
         int vehicleKills = 5;
         LinkedList<CompanyEventModifier> events = new LinkedList<CompanyEventModifier>();
-        _ = events.AddLast(CompanyEventModifier.Statistics(targetSquad.Id, infantryKills, vehicleKills));
+        _ = events.AddLast(CompanyEventModifier.Statistics(targetSquad.Id, infantryKills, vehicleKills, 0));
 
         // Act
         var updated = await companyService.ApplyEvents(events, company, false);
@@ -261,7 +261,7 @@ public class CompanyServiceTests
         CompanyService companyService = CreateCompanyService(logger);
         Company company = CompanyFixture.DESERT_RATS;
         LinkedList<CompanyEventModifier> events = new LinkedList<CompanyEventModifier>();
-        _ = events.AddLast(CompanyEventModifier.Statistics(7777, 10, 5));
+        _ = events.AddLast(CompanyEventModifier.Statistics(7777, 10, 5, 0));
 
         // Act
         var updated = await companyService.ApplyEvents(events, company, false);
