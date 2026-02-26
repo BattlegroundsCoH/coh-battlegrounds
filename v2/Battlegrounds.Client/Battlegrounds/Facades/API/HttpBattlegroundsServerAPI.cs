@@ -30,6 +30,8 @@ public sealed class HttpBattlegroundsServerAPI(
     private readonly ICompanyDeserializer _companyDeserializer = companyDeserializer;
     private readonly Configuration _configuration = configuration;
 
+    public static readonly string GetLobbiesEndpoint = "/api/v1/lobbies"; // No authentication required
+    public static readonly string GetLobbyResultEndpoint = "/api/v1/lobbies/result"; // No authentication required
     public static readonly string UploadCompanyEndpoint = "/api/v1/companies/upload"; // Requires authentication
     public static readonly string DeleteCompanyEndpoint = "/api/v1/companies/delete"; // Requires authentication
     public static readonly string GetCompanyInfoEndpoint = "/api/v1/companies/info"; // No authentication required
@@ -262,7 +264,7 @@ public sealed class HttpBattlegroundsServerAPI(
 
     public async Task<IEnumerable<BrowserLobby>> GetLobbiesAsync() {
 
-        var requestUri = $"{BaseUrl}/api/v1/lobbies";
+        var requestUri = $"{BaseUrl}{GetLobbiesEndpoint}";
         _logger.LogInformation("Sending GET request to {RequestUri} to retrieve lobbies", requestUri);
 
         HttpRequestMessage request = new(HttpMethod.Get, requestUri);
@@ -281,22 +283,9 @@ public sealed class HttpBattlegroundsServerAPI(
 
     }
 
-    private static string ToUrlEncodedString(Dictionary<string, string> parameters) {
-        return string.Join("&", parameters.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value)}"));
-    }
-
-    private async Task<HttpRequestMessage> GetHttpRequestWithAuthHeaders(HttpMethod method, string requestUri) {
-        string token = await _userService.GetLocalUserTokenAsync(); // Will refresh token if expired
-        if (string.IsNullOrEmpty(token)) {
-            throw new InvalidOperationException("No authentication token found for the local user. Cannot perform API operations that require authentication.");
-        }
-        HttpRequestMessage request = new(method, requestUri);
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        return request;
-    }
 
     public async Task<bool> UploadGamemodeAsync(string lobbyId, string gamemodeLocation, UploadProgressUpdateDelegate? progressUpdate = null) {
-        
+
         string endpoint = $"{BaseUrl}{UploadGamemodeEndpoint}";
         var parameters = new Dictionary<string, string> {
             { "guid", lobbyId }
@@ -331,35 +320,73 @@ public sealed class HttpBattlegroundsServerAPI(
         };
         string requestUri = $"{endpoint}?{ToUrlEncodedString(parameters)}";
         _logger.LogInformation("Sending GET request to {RequestUri} to download gamemode for lobby {LobbyId}", requestUri, lobbyId);
-        
+
         HttpRequestMessage request = new(HttpMethod.Get, requestUri);
         request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
-        
+
         HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
         if (response.IsSuccessStatusCode) {
             _logger.LogInformation("Gamemode for lobby {LobbyId} retrieved successfully. Saving to {DestinationPath}", lobbyId, destinationPath);
-            
+
             long? totalBytes = response.Content.Headers.ContentLength;
             long bytesDownloaded = 0;
-            
+
             using Stream contentStream = await response.Content.ReadAsStreamAsync();
             using FileStream fileStream = new(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
-            
+
             byte[] buffer = new byte[8192]; // 8KB chunks
             int bytesRead;
-            
+
             while ((bytesRead = await contentStream.ReadAsync(buffer)) > 0) {
                 await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
                 bytesDownloaded += bytesRead;
                 progressUpdate?.Invoke(bytesDownloaded, totalBytes);
             }
-            
+
             _logger.LogInformation("Gamemode for lobby {LobbyId} downloaded successfully. Total bytes: {BytesDownloaded}", lobbyId, bytesDownloaded);
             return true;
         } else {
             _logger.LogError("Failed to retrieve gamemode for lobby {LobbyId}. Status code: {StatusCode}, Reason: {ReasonPhrase}", lobbyId, response.StatusCode, response.ReasonPhrase);
             return false;
         }
+    }
+
+    public async Task<MatchResult?> GetLatestMatchResult(string lobbyId) {
+
+        string endpoint = $"{BaseUrl}{GetLobbyResultEndpoint}";
+        var parameters = new Dictionary<string, string> {
+            { "lobbyId", lobbyId }
+        };
+        string requestUri = $"{endpoint}?{ToUrlEncodedString(parameters)}";
+        _logger.LogInformation("Sending GET request to {RequestUri} to get latest match result for lobby {LobbyId}", requestUri, lobbyId);
+
+        HttpRequestMessage request = new(HttpMethod.Get, requestUri);
+        request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
+
+        HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
+        if (response.IsSuccessStatusCode) {
+            _logger.LogInformation("Latest match result for lobby {LobbyId} retrieved successfully.", lobbyId);
+            Stream contentStream = await response.Content.ReadAsStreamAsync();
+            return await JsonSerializer.DeserializeAsync<MatchResult?>(contentStream, serializerOptions);
+        } else {
+            _logger.LogError("Failed to retrieve latest match result for lobby {LobbyId}. Status code: {StatusCode}, Reason: {ReasonPhrase}", lobbyId, response.StatusCode, response.ReasonPhrase);
+            return null;
+        }
+
+    }
+
+    private static string ToUrlEncodedString(Dictionary<string, string> parameters) {
+        return string.Join("&", parameters.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value)}"));
+    }
+
+    private async Task<HttpRequestMessage> GetHttpRequestWithAuthHeaders(HttpMethod method, string requestUri) {
+        string token = await _userService.GetLocalUserTokenAsync(); // Will refresh token if expired
+        if (string.IsNullOrEmpty(token)) {
+            throw new InvalidOperationException("No authentication token found for the local user. Cannot perform API operations that require authentication.");
+        }
+        HttpRequestMessage request = new(method, requestUri);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        return request;
     }
 
 }

@@ -264,5 +264,14 @@ public interface ILobby {
     /// <param name="slotIndex">The zero-based index of the player slot to remove. Must be within the valid range of player slots for the team.</param>
     /// <returns>A task that represents the asynchronous operation of removing the player.</returns>
     Task KickPlayer(Team team, int slotIndex);
+    
+    /// <summary>
+    /// Asynchronously retrieves the results of the completed match, if available.
+    /// </summary>
+    /// <remarks>Callers should check for a <see langword="null"/> result to determine if the match has not
+    /// yet finished. This method does not block waiting for the match to complete.</remarks>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="MatchOverData"/> object
+    /// with the match results if the match has concluded; otherwise, <see langword="null"/>.</returns>
+    Task<MatchOverData?> GetMatchResults();
 
 }

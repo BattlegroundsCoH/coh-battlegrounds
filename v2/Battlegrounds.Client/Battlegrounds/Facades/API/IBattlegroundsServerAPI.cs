@@ -118,5 +118,13 @@ public interface IBattlegroundsServerAPI {
     /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the download is
     /// successful; otherwise, <see langword="false"/>.</returns>
     Task<bool> DownloadGamemodeAsync(string lobbyId, string destinationPath, DownloadProgressUpdateDelegate? progressUpdate = null);
+    
+    /// <summary>
+    /// Asynchronously retrieves the most recent match result for the specified lobby.
+    /// </summary>
+    /// <param name="lobbyId">The unique identifier of the lobby for which to retrieve the latest match result. Cannot be null or empty.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the latest match result for the
+    /// specified lobby, or null if no match has been played.</returns>
+    Task<MatchResult?> GetLatestMatchResult(string lobbyId);
 
 }

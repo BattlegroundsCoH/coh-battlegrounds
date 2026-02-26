@@ -29,6 +29,8 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
     private bool _isActive = true;
     private bool _disposedValue;
 
+    private MatchResult? _lastMatchResult;
+
     public string Name { get; } = lobbySetup.Name;
 
     public bool IsHost => true;
@@ -68,23 +70,23 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
             return false; // Cannot report match result if it failed or replay is null
         }
 
-        var result = matchResult.GetMatchResult(this);
-        if (result == MatchResult.Unknown) {
+        _lastMatchResult = matchResult.GetMatchResult(this);
+        if (_lastMatchResult == MatchResult.Unknown) {
             _logger.Error("Match result for game {GameId} could not be determined", matchResult.GameId);
             return false; // Cannot determine match result
         }
 
-        if (!result.IsValid) {
+        if (!_lastMatchResult.IsValid) {
             _logger.Error("Match result for game {GameId} is invalid", matchResult.GameId);
             return false;
         }
 
-        if (result.CompanyModifiers.TryGetValue(_localParticipant.ParticipantId, out var localEvents) && localEvents.Count == 0) {
+        if (_lastMatchResult.CompanyModifiers.TryGetValue(_localParticipant.ParticipantId, out var localEvents) && localEvents.Count == 0) {
             _logger.Warning("No events for local participant {ParticipantId} in match result", _localParticipant.ParticipantId);
             return false; // No events for local participant, nothing to report
         }
 
-        var localCompanyId = result.PlayerCompanies[_localParticipant.ParticipantId];
+        var localCompanyId = _lastMatchResult.PlayerCompanies[_localParticipant.ParticipantId];
         _logger.Information("Reporting match result for game {GameId} with local company ID {CompanyId}", matchResult.GameId, localCompanyId);
 
         // Apply the company changes to the local company
@@ -94,8 +96,8 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
             return false; // Failed to apply company changes, cannot report
         }
 
-        result.LobbyId = "local-singleplayer"; // Set the lobby ID to indicate this is a local singleplayer match
-        var reported = await _serverAPI.ReportMatchResults(result); // Report the match result to the server
+        _lastMatchResult.LobbyId = "local-singleplayer"; // Set the lobby ID to indicate this is a local singleplayer match
+        var reported = await _serverAPI.ReportMatchResults(_lastMatchResult); // Report the match result to the server
         if (!reported) {
             _logger.Error("Failed to report match result for game {GameId} to the server", matchResult.GameId);
         } else {
@@ -235,5 +237,12 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
     public Task MarkReady(bool isReady) => Task.CompletedTask; // NOP operation in singleplayer mode, player is always ready
 
     public Task KickPlayer(Team team, int slotIndex) => Task.CompletedTask; // NOP operation in singleplayer mode, cannot kick players
+
+    public Task<MatchOverData?> GetMatchResults() {
+        if (_lastMatchResult is null) {
+            return Task.FromResult<MatchOverData?>(null); // No match result available
+        }
+        return Task.FromResult<MatchOverData?>(MatchOverData.FromMatchResultForPlayer(_lastMatchResult, _localParticipant.ParticipantId));
+    }
 
 }

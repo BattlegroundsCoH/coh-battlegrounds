@@ -754,4 +754,13 @@ public sealed class MultiplayerLobby(
         throw new NotImplementedException();
     }
 
+    public async Task<MatchOverData?> GetMatchResults() {
+        var serverVersion = await _serverAPI.GetLatestMatchResult(_lobbyId);
+        if (serverVersion is null) {
+            _logger.Error("Failed to retrieve match results from the server for lobby {LobbyId}", _lobbyId);
+            return null;
+        }
+        return MatchOverData.FromMatchResultForPlayer(serverVersion, _localParticipant.ParticipantId);
+    }
+
 }

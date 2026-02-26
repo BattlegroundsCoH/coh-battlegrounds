@@ -99,7 +99,7 @@ public sealed class CoH3AppInstance(Game game) : GameAppInstance {
 
     private const string SCAR_ERROR_INDICATOR = "GameWorld::OnFatalScarError";
 
-    public override async Task<MatchResult> WaitForMatch() {
+    public override async Task<MatchPlayResult> WaitForMatch() {
 
         if (_process is null) {
             throw new InvalidOperationException("Game process is not running.");
@@ -110,7 +110,7 @@ public sealed class CoH3AppInstance(Game game) : GameAppInstance {
         int exitCode = _process.ExitCode;
         if (exitCode != 0) {
             // TODO: Check if bugsplat is running and report that
-            return new MatchResult {
+            return new MatchPlayResult {
                 Failed = true,
                 ErrorMessage = $"Game exited with code {exitCode}."
             };
@@ -136,7 +136,7 @@ public sealed class CoH3AppInstance(Game game) : GameAppInstance {
 
         if (string.IsNullOrEmpty(replayFilePath)) {
             _logger.Warning("No replay file found");
-            return new MatchResult {
+            return new MatchPlayResult {
                 Failed = true,
                 ErrorMessage = "Replay file not found."
             };
@@ -151,7 +151,7 @@ public sealed class CoH3AppInstance(Game game) : GameAppInstance {
             string contents = await File.ReadAllTextAsync(warnings);
             if (contents.Contains(SCAR_ERROR_INDICATOR)) {
                 _logger.Error("Found SCAR error in warnings log: {WarningsLogPath}", warnings);
-                return new MatchResult {
+                return new MatchPlayResult {
                     Failed = true,
                     ScarError = true,
                     ErrorMessage = "SCAR error detected in warnings log."
@@ -163,7 +163,7 @@ public sealed class CoH3AppInstance(Game game) : GameAppInstance {
 
         // TODO: Check for scar errors in warnings log
 
-        return new MatchResult {
+        return new MatchPlayResult {
             Failed = false,
             ReplayFilePath = replayFilePath
         };

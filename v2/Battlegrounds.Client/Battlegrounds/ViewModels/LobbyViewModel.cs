@@ -361,6 +361,9 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                 case LobbyEventType.TrayMessageHide:
                     TrayMessage = string.Empty;
                     break;
+                case LobbyEventType.MatchOver:
+                    ShowMatchResults();
+                    break;
                 default:
                     break;
             }
@@ -571,6 +574,10 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             TotalKills = 0,
             TotalLosses = 0
         };
+    }
+
+    private async void ShowMatchResults() {
+        var matchResult = await _lobby.GetMatchResults();
     }
 
     private async Task SyncLobbyCompanies() {

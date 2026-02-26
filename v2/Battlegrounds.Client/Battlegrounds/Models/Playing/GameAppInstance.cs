@@ -8,6 +8,6 @@ public abstract class GameAppInstance {
 
     public abstract Task<bool> Launch(params string[] args);
 
-    public abstract Task<MatchResult> WaitForMatch();
+    public abstract Task<MatchPlayResult> WaitForMatch();
 
 }

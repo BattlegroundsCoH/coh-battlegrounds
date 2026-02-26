@@ -286,6 +286,9 @@ public class CoH3MatchDataBuilderTests {
         ValueTask<UploadGamemodeResult> ILobby.UploadGamemode(string gamemodeLocation) {
             throw new NotImplementedException();
         }
+
+        public Task<MatchOverData?> GetMatchResults() =>
+            Task.FromResult<MatchOverData?>(null);
     }
 
     #endregion
