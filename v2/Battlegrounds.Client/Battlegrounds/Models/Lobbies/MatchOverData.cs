@@ -16,7 +16,7 @@ namespace Battlegrounds.Models.Lobbies;
 /// <param name="PickedUpBlueprint">Optional blueprint picked up by this squad.</param>
 public sealed record SquadMatchSummary(
     int SquadId,
-    SquadBlueprint Blueprint,
+    SquadBlueprint? Blueprint,
     int InfantryKilled,
     int VehiclesDestroyed,
     int Losses,
@@ -70,17 +70,14 @@ public sealed class MatchOverData {
     /// <param name="playerId">The ID of the player to project the result for.</param>
     /// <param name="matchCompanies">A dictionary of company data for the match, used to provide context for the player's performance.</param>
     /// <returns>A populated <see cref="MatchOverData"/>, or an invalid instance if the result or player ID is invalid.</returns>
-    public static MatchOverData FromMatchResultForPlayer(MatchResult result, string playerId, Dictionary<string, Company> matchCompanies) {
+    public static MatchOverData FromMatchResultForPlayer(MatchResult result, string playerId, Dictionary<string, Company>? matchCompanies = null) {
         if (!result.IsValid || string.IsNullOrEmpty(playerId))
             return new MatchOverData { IsValid = false };
 
         result.PlayerCompanies.TryGetValue(playerId, out var companyId);
         result.CompanyModifiers.TryGetValue(playerId, out var modifiers);
 
-        Company? playerCompany = matchCompanies.TryGetValue(companyId ?? string.Empty, out var comp) ? comp : null;
-        if (playerCompany is null) {
-            return new MatchOverData { IsValid = false };
-        }
+        Company? playerCompany = matchCompanies is not null && matchCompanies.TryGetValue(companyId ?? string.Empty, out var comp) ? comp : null;
 
         var squadData = new Dictionary<int, (int kills, int vehicles, int losses, float xp, bool killed, string? pickup)>();
 
@@ -122,15 +119,17 @@ public sealed class MatchOverData {
         };
     }
 
-    private static SquadMatchSummary CreateMatchSummary(Company company, int squadId, int kills, int vehicles, int losses, float xp, bool killed, string? pickup) {
-        Squad squad = company.Squads.FirstOrDefault(x =>  x.Id == squadId) ?? throw new InvalidOperationException($"Squad with ID {squadId} not found in company {company.Id}");
+    private static SquadMatchSummary CreateMatchSummary(Company? company, int squadId, int kills, int vehicles, int losses, float xp, bool killed, string? pickup) {
+        Squad? squad = company is not null
+            ? company.Squads.FirstOrDefault(x => x.Id == squadId) ?? throw new InvalidOperationException($"Squad with ID {squadId} not found in company {company.Id}")
+            : null;
         return new SquadMatchSummary(
             SquadId: squadId,
-            Blueprint: squad.Blueprint,
+            Blueprint: squad?.Blueprint,
             InfantryKilled: kills,
             VehiclesDestroyed: vehicles,
             Losses: losses,
-            ExperienceGained: killed ? 0 : (xp - squad.Experience),
+            ExperienceGained: killed ? 0 : (squad is not null ? xp - squad.Experience : xp),
             WasKilled: killed,
             PickedUpBlueprint: killed ? string.Empty : pickup
         );

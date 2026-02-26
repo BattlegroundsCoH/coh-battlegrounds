@@ -96,7 +96,7 @@
             <!-- Squad Table Header -->
             <Grid Grid.Row="3" Margin="0,0,0,6">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -106,7 +106,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Squad"    Grid.Column="0" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold" Margin="8,0,0,0"/>
                 <TextBlock Text="Infantry Kills"    Grid.Column="1" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
-                <TextBlock Text="Vehicle Vehicles" Grid.Column="2" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
+                <TextBlock Text="Vehicle Kills" Grid.Column="2" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
                 <TextBlock Text="Losses"   Grid.Column="3" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
                 <TextBlock Text="XP"       Grid.Column="4" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
                 <TextBlock Text="Status"   Grid.Column="5" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
@@ -117,6 +117,7 @@
             <ScrollViewer Grid.Row="4"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled"
+                          Style="{StaticResource ChatScrollViewer}"
                           MaxHeight="260">
                 <ItemsControl ItemsSource="{Binding SquadSummaries}">
                     <ItemsControl.ItemTemplate>
@@ -129,7 +130,7 @@
                                     CornerRadius="4">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="100"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
@@ -140,9 +141,10 @@
 
                                     <StackPanel 
                                         Orientation="Horizontal"
-                                        Grid.Column="0">
+                                        Grid.Column="0"
+                                               Margin="8,0,0,0">
 
-                                        <Image Width="24" Height="24"
+                                        <Image Width="32" Height="32"
                                                VerticalAlignment="Center">
                                             <Image.Source>
                                                 <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
@@ -152,11 +154,14 @@
                                             </Image.Source>
                                         </Image>
 
-                                        <TextBlock Text="{Binding SquadId}"
+                                        <TextBlock
                                                Foreground="{StaticResource ForegroundLightBlueBrush}"
                                                FontWeight="SemiBold"
                                                VerticalAlignment="Center"
-                                               Margin="8,0,0,0"/>
+                                               Margin="10,0,0,0">
+                                            <Run>#</Run>
+                                            <Run Text="{Binding SquadId}"/>
+                                        </TextBlock>
 
                                     </StackPanel>
                                     
