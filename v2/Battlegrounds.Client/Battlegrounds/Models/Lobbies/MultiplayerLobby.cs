@@ -70,6 +70,8 @@ public sealed class MultiplayerLobby(
     private bool _isReady = false;
     private bool _disposedValue = false;
 
+    private Dictionary<string, Company>? _latestMatchCompanies;
+
     private Map _map = setup.Map;
 
     public string Name { get; } = setup.Name;
@@ -303,6 +305,7 @@ public sealed class MultiplayerLobby(
             return false; // Cannot report match result if it failed or replay is null
         }
 
+        _latestMatchCompanies = _companies.ToDictionary(kvp => kvp.Key, kvp => kvp.Value); // Cache the latest company states before the match result is applied, so that we can show the changes to the player on the match results screen
         var result = matchResult.GetMatchResult(this);
         if (result == MatchResult.Unknown) {
             _logger.Error("Match result for game {GameId} could not be determined", matchResult.GameId);
@@ -760,7 +763,11 @@ public sealed class MultiplayerLobby(
             _logger.Error("Failed to retrieve match results from the server for lobby {LobbyId}", _lobbyId);
             return null;
         }
-        return MatchOverData.FromMatchResultForPlayer(serverVersion, _localParticipant.ParticipantId);
+        if (_latestMatchCompanies is null) {
+            _logger.Error("Latest match companies data is null for lobby {LobbyId}, cannot determine match results for the local player.", _lobbyId);
+            return null;
+        }
+        return MatchOverData.FromMatchResultForPlayer(serverVersion, _localParticipant.ParticipantId, _latestMatchCompanies);
     }
 
 }

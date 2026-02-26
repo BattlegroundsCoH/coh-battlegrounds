@@ -15,6 +15,7 @@
         <converters:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
         <converters:DurationConverter x:Key="DurationConverter"/>
         <converters:ScenarioIdToNameConverter x:Key="ScenarioConverter"/>
+        <converters:BlueprintIconMultiBindingConverter x:Key="BlueprintIconMultiConverter"/>
     </UserControl.Resources>
 
     <Border Width="720"
@@ -137,13 +138,28 @@
                                         <ColumnDefinition Width="110"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Text="{Binding SquadId}"
-                                               Grid.Column="0"
+                                    <StackPanel 
+                                        Orientation="Horizontal"
+                                        Grid.Column="0">
+
+                                        <Image Width="24" Height="24"
+                                               VerticalAlignment="Center">
+                                            <Image.Source>
+                                                <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
+                                                    <Binding Path="Blueprint"/>
+                                                    <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                                </MultiBinding>
+                                            </Image.Source>
+                                        </Image>
+
+                                        <TextBlock Text="{Binding SquadId}"
                                                Foreground="{StaticResource ForegroundLightBlueBrush}"
                                                FontWeight="SemiBold"
                                                VerticalAlignment="Center"
                                                Margin="8,0,0,0"/>
 
+                                    </StackPanel>
+                                    
                                     <TextBlock Text="{Binding InfantryKilled}"
                                                Grid.Column="1"
                                                Foreground="{StaticResource ForegroundWhiteBrush}"

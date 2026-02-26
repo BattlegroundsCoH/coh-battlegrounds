@@ -30,6 +30,7 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
     private bool _disposedValue;
 
     private MatchResult? _lastMatchResult;
+    private Dictionary<string, Company>? _lastMatchCompanies;
 
     public string Name { get; } = lobbySetup.Name;
 
@@ -70,6 +71,7 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
             return false; // Cannot report match result if it failed or replay is null
         }
 
+        _lastMatchCompanies = Companies.ToDictionary(kvp => kvp.Key, kvp => kvp.Value); // Store the companies before applying changes so we can include them in the match result report
         _lastMatchResult = matchResult.GetMatchResult(this);
         if (_lastMatchResult == MatchResult.Unknown) {
             _logger.Error("Match result for game {GameId} could not be determined", matchResult.GameId);
@@ -244,9 +246,14 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
 
     public Task<MatchOverData?> GetMatchResults() {
         if (_lastMatchResult is null) {
+            _logger.Warning("No match result available for game {GameId}, cannot generate match over data", Game.Id);
             return Task.FromResult<MatchOverData?>(null); // No match result available
         }
-        return Task.FromResult<MatchOverData?>(MatchOverData.FromMatchResultForPlayer(_lastMatchResult, _localParticipant.ParticipantId));
+        if (_lastMatchCompanies is null) {
+            _logger.Error("Last match result is available but last match companies are not, cannot generate match over data");
+            return Task.FromResult<MatchOverData?>(null); // Cannot generate match over data without companies
+        }
+        return Task.FromResult<MatchOverData?>(MatchOverData.FromMatchResultForPlayer(_lastMatchResult, _localParticipant.ParticipantId, _lastMatchCompanies));
     }
 
 }
