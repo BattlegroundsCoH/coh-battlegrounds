@@ -46,7 +46,7 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
     private readonly IBattlegroundsWebAPI _webAPI = webAPI;
     private readonly IBrowserService _browserService = browserService;
 
-    private readonly TaskCompletionSource<bool> _hasLoggedInUser = new TaskCompletionSource<bool>();
+    private TaskCompletionSource<bool> _hasLoggedInUser = new TaskCompletionSource<bool>();
 
     private User? _localUser;
     private string _token = string.Empty;
@@ -104,7 +104,12 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
     }
 
     public Task<bool> LogOutAsync() {
-        throw new NotImplementedException();
+        _token = string.Empty;
+        _tokenExpiration = DateTime.MinValue;
+        _refreshToken = string.Empty;
+        _localUser = null;
+        _hasLoggedInUser = new TaskCompletionSource<bool>();
+        return Task.FromResult(true);
     }
 
     private async Task<string> GetToken() {

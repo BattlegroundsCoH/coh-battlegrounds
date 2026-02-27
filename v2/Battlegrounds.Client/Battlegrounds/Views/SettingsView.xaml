@@ -1,0 +1,264 @@
+<UserControl x:Class="Battlegrounds.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:Battlegrounds.ViewModels"
+             xmlns:settings="clr-namespace:Battlegrounds.ViewModels.Settings"
+             xmlns:selectors="clr-namespace:Battlegrounds.Selectors"
+             xmlns:converters="clr-namespace:Battlegrounds.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="900"
+             d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}">
+
+    <UserControl.Resources>
+        <converters:NullVisibilityConverter x:Key="NullToCollapsed"/>
+
+        <!-- String property editor -->
+        <DataTemplate x:Key="StringPropertyTemplate" DataType="{x:Type settings:SettingsPropertyModel}">
+            <StackPanel Margin="0,0,0,12">
+                <TextBlock Text="{Binding Name}"
+                           Foreground="{StaticResource ForegroundWhiteBrush}"
+                           FontWeight="SemiBold"
+                           FontSize="13"
+                           Margin="0,0,0,2"/>
+                <TextBlock Text="{Binding Description}"
+                           Foreground="{StaticResource ForegroundGrayBrush}"
+                           FontSize="11"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,6"
+                           Visibility="{Binding Description, Converter={StaticResource NullToCollapsed}}"/>
+                <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                         Background="{StaticResource BackgroundDarkBlueBrush}"
+                         Foreground="{StaticResource ForegroundWhiteBrush}"
+                         CaretBrush="{StaticResource ForegroundWhiteBrush}"
+                         BorderBrush="{StaticResource BackgroundLightGrayBrush}"
+                         BorderThickness="1"
+                         Padding="8,6"
+                         FontSize="13"
+                         ToolTip="{Binding Tooltip}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <!-- Integer property editor -->
+        <DataTemplate x:Key="IntegerPropertyTemplate" DataType="{x:Type settings:SettingsPropertyModel}">
+            <StackPanel Margin="0,0,0,12">
+                <TextBlock Text="{Binding Name}"
+                           Foreground="{StaticResource ForegroundWhiteBrush}"
+                           FontWeight="SemiBold"
+                           FontSize="13"
+                           Margin="0,0,0,2"/>
+                <TextBlock Text="{Binding Description}"
+                           Foreground="{StaticResource ForegroundGrayBrush}"
+                           FontSize="11"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,6"
+                           Visibility="{Binding Description, Converter={StaticResource NullToCollapsed}}"/>
+                <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                         Background="{StaticResource BackgroundDarkBlueBrush}"
+                         Foreground="{StaticResource ForegroundWhiteBrush}"
+                         CaretBrush="{StaticResource ForegroundWhiteBrush}"
+                         BorderBrush="{StaticResource BackgroundLightGrayBrush}"
+                         BorderThickness="1"
+                         Padding="8,6"
+                         FontSize="13"
+                         MinWidth="200"
+                         MaxWidth="300"
+                         HorizontalAlignment="Left"
+                         ToolTip="{Binding Tooltip}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <!-- Boolean property editor -->
+        <DataTemplate x:Key="BooleanPropertyTemplate" DataType="{x:Type settings:SettingsPropertyModel}">
+            <StackPanel Margin="0,0,0,12">
+                <CheckBox IsChecked="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                          Foreground="{StaticResource ForegroundWhiteBrush}"
+                          FontSize="13"
+                          ToolTip="{Binding Tooltip}">
+                    <CheckBox.Content>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}"
+                                       Foreground="{StaticResource ForegroundWhiteBrush}"
+                                       FontWeight="SemiBold"
+                                       FontSize="13"/>
+                            <TextBlock Text="{Binding Description}"
+                                       Foreground="{StaticResource ForegroundGrayBrush}"
+                                       FontSize="11"
+                                       TextWrapping="Wrap"
+                                       Margin="0,2,0,0"
+                                       Visibility="{Binding Description, Converter={StaticResource NullToCollapsed}}"/>
+                        </StackPanel>
+                    </CheckBox.Content>
+                </CheckBox>
+            </StackPanel>
+        </DataTemplate>
+
+        <!-- File path property editor -->
+        <DataTemplate x:Key="FilePathPropertyTemplate" DataType="{x:Type settings:SettingsPropertyModel}">
+            <StackPanel Margin="0,0,0,12">
+                <TextBlock Text="{Binding Name}"
+                           Foreground="{StaticResource ForegroundWhiteBrush}"
+                           FontWeight="SemiBold"
+                           FontSize="13"
+                           Margin="0,0,0,2"/>
+                <TextBlock Text="{Binding Description}"
+                           Foreground="{StaticResource ForegroundGrayBrush}"
+                           FontSize="11"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,6"
+                           Visibility="{Binding Description, Converter={StaticResource NullToCollapsed}}"/>
+                <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                         Background="{StaticResource BackgroundDarkBlueBrush}"
+                         Foreground="{StaticResource ForegroundWhiteBrush}"
+                         CaretBrush="{StaticResource ForegroundWhiteBrush}"
+                         BorderBrush="{StaticResource BackgroundLightGrayBrush}"
+                         BorderThickness="1"
+                         Padding="8,6"
+                         FontSize="13"
+                         ToolTip="{Binding Tooltip}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <!-- Directory path property editor -->
+        <DataTemplate x:Key="DirectoryPathPropertyTemplate" DataType="{x:Type settings:SettingsPropertyModel}">
+            <StackPanel Margin="0,0,0,12">
+                <TextBlock Text="{Binding Name}"
+                           Foreground="{StaticResource ForegroundWhiteBrush}"
+                           FontWeight="SemiBold"
+                           FontSize="13"
+                           Margin="0,0,0,2"/>
+                <TextBlock Text="{Binding Description}"
+                           Foreground="{StaticResource ForegroundGrayBrush}"
+                           FontSize="11"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,6"
+                           Visibility="{Binding Description, Converter={StaticResource NullToCollapsed}}"/>
+                <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                         Background="{StaticResource BackgroundDarkBlueBrush}"
+                         Foreground="{StaticResource ForegroundWhiteBrush}"
+                         CaretBrush="{StaticResource ForegroundWhiteBrush}"
+                         BorderBrush="{StaticResource BackgroundLightGrayBrush}"
+                         BorderThickness="1"
+                         Padding="8,6"
+                         FontSize="13"
+                         ToolTip="{Binding Tooltip}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <!-- Selection property editor -->
+        <DataTemplate x:Key="SelectionPropertyTemplate" DataType="{x:Type settings:SettingsPropertyModel}">
+            <StackPanel Margin="0,0,0,12">
+                <TextBlock Text="{Binding Name}"
+                           Foreground="{StaticResource ForegroundWhiteBrush}"
+                           FontWeight="SemiBold"
+                           FontSize="13"
+                           Margin="0,0,0,2"/>
+                <TextBlock Text="{Binding Description}"
+                           Foreground="{StaticResource ForegroundGrayBrush}"
+                           FontSize="11"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,6"
+                           Visibility="{Binding Description, Converter={StaticResource NullToCollapsed}}"/>
+                <ComboBox ItemsSource="{Binding Options}"
+                          SelectedItem="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                          Style="{StaticResource SettingsComboBox}"
+                          Background="{StaticResource BackgroundDarkBlueBrush}"
+                          Foreground="{StaticResource ForegroundWhiteBrush}"
+                          BorderBrush="{StaticResource BackgroundLightGrayBrush}"
+                          BorderThickness="1"
+                          Padding="8,6"
+                          FontSize="13"
+                          MinWidth="200"
+                          MaxWidth="300"
+                          HorizontalAlignment="Left"
+                          ToolTip="{Binding Tooltip}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <!-- Template selector -->
+        <selectors:ConfigurationPropertyTemplateSelector x:Key="PropertyTemplateSelector"
+            StringTemplate="{StaticResource StringPropertyTemplate}"
+            IntegerTemplate="{StaticResource IntegerPropertyTemplate}"
+            BooleanTemplate="{StaticResource BooleanPropertyTemplate}"
+            FilePathTemplate="{StaticResource FilePathPropertyTemplate}"
+            DirectoryPathTemplate="{StaticResource DirectoryPathPropertyTemplate}"
+            SelectionTemplate="{StaticResource SelectionPropertyTemplate}"/>
+
+        </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="16,16,16,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Content="← Back"
+                    Style="{StaticResource ActionButton}"
+                    Command="{Binding BackCommand}"
+                    Margin="0,0,16,0"/>
+
+            <TextBlock Grid.Column="1"
+                       Text="Settings"
+                       Foreground="{StaticResource ForegroundWhiteBrush}"
+                       FontSize="24"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"/>
+
+            <Button Grid.Column="2"
+                    Content="Save"
+                    Style="{StaticResource ActionButton}"
+                    Command="{Binding SaveCommand}"/>
+        </Grid>
+
+        <!-- Sections -->
+        <ScrollViewer Grid.Row="1"
+                      Style="{StaticResource ChatScrollViewer}"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Padding="16,0">
+            <ItemsControl ItemsSource="{Binding Sections}" Margin="16,8,16,16">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type settings:SettingsSectionModel}">
+                        <Border Background="{StaticResource BackgroundBlueBrush}"
+                                CornerRadius="12"
+                                Padding="20"
+                                Margin="0,0,0,16">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.3" Color="Black"/>
+                            </Border.Effect>
+                            <StackPanel>
+                                <!-- Section header -->
+                                <TextBlock Text="{Binding Name}"
+                                           Foreground="{StaticResource ForegroundWhiteBrush}"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Margin="0,0,0,4"/>
+                                <TextBlock Text="{Binding Description}"
+                                           Foreground="{StaticResource ForegroundGrayBrush}"
+                                           FontSize="12"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,16"/>
+
+                                <!-- Properties -->
+                                <ItemsControl ItemsSource="{Binding Properties}"
+                                              ItemTemplateSelector="{StaticResource PropertyTemplateSelector}"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+    </Grid>
+
+</UserControl>

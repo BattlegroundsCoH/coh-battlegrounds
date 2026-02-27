@@ -59,6 +59,13 @@ public sealed class BattlegroundsApp {
 
     public bool IsFirstRun => _isFirstRun;
 
+    /// <summary>
+    /// Persists the current in-memory configuration to disk.
+    /// </summary>
+    public void SaveConfiguration() {
+        File.WriteAllText(_configFilePath, _configuration.ToJson());
+    }
+
     public BattlegroundsApp() {
         if (Instance is not null) {
             throw new InvalidOperationException("BattlegroundsApp instance already exists.");
@@ -176,6 +183,10 @@ public sealed class BattlegroundsApp {
         // Register Company Editor view model
         services.AddTransient<CompanyEditorView>();
         services.AddSingleton<CompanyEditorViewModel>();
+
+        // Register Settings view
+        services.AddTransient<SettingsView>();
+        services.AddTransient<SettingsViewModel>();
 
         // Register other view models as needed
 

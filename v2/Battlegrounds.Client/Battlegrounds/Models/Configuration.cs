@@ -21,14 +21,16 @@ public sealed class Configuration {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
 
+    [ConfigurationSection("API", "Settings related to the Battlegrounds API", developerModeOnly: true, priority: 100)]
     public sealed class APIConfiguration {
         private string _loginUrlOverride = string.Empty; // Allows overriding the login URL for testing or custom servers
+
+        [ConfigurationProperty("Base URL", "The base URL for the Battlegrounds API. This is the root endpoint for all API requests. Ensure that the URL is correct and accessible from the application environment.")]
         public string BaseUrl { get; set; } = "https://api.test.cohbattlegrounds.com";
+
+        [ConfigurationProperty("Login Endpoint", "The endpoint for user authentication. This URL is used to obtain access tokens for API requests. Ensure that the endpoint is correct and that the authentication service is operational.")]
         public string LoginEndpoint { get; set; } = "https://bjcgardajdviqkwgryin.supabase.co/auth/v1/token?grant_type=password";
-        public string RefreshEndpoint { get; set; } = "/auth/refresh";
-        public string PublicKeyEndpoint { get; set; } = "/publickey";
-        public string AuthStatusEndpoint { get; set; } = "/auth/<IdP>/status"; // Endpoint to check authentication status
-        public string AuthStartEndpoint { get; set; } = "/auth/<IdP>/start"; // Endpoint to start authentication with a provider
+
         public string LoginUrlOverride {
             get => string.IsNullOrEmpty(_loginUrlOverride) ? BaseUrl : _loginUrlOverride;
             set => _loginUrlOverride = value;
@@ -36,8 +38,10 @@ public sealed class Configuration {
         public TimeSpan RequestTimeout { get; set; } = TimeSpan.FromSeconds(15); // Default timeout for API requests
     }
 
+    [ConfigurationSection("Company of Heroes 3", "Settings for Company of Heroes 3", priority: 10)]
     public sealed class CoH3Configuration {
-
+        
+        [ConfigurationProperty("Install Path", "The file system path where Company of Heroes 3 is installed. This path is used to locate the game executable and related files. Ensure that the path is correct and that the application has appropriate permissions to access it.")]
         public string InstallPath { get; set; } = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Company of Heroes 3";
 
         public string ModProjectPath { get; set; } = "E:\\coh3-dev\\coh3-bg-wincondition\\bg_wincondition\\bg_wincondition.coh3mod";
@@ -51,8 +55,10 @@ public sealed class Configuration {
 
     }
 
+    [ConfigurationSection("Company of Heroes 2", "Settings for Company of Heroes 2", isVisible: false, priority: 20)]
     public sealed class CoH2Configuration {
 
+        [ConfigurationProperty("Install Path", "The file system path where Company of Heroes 2 is installed. This path is used to locate the game executable and related files. Ensure that the path is correct and that the application has appropriate permissions to access it.")]
         public string InstallPath { get; set; } = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Company of Heroes 2";
 
         [JsonIgnore]
@@ -120,16 +126,20 @@ public sealed class Configuration {
     /// <summary>
     /// Gets or sets the configuration settings for Company of Heroes 2.
     /// </summary>
+    [ConfigurationInclude()]
     public CoH2Configuration CoH2 { get; set; } = new CoH2Configuration(); // Configuration for Company of Heroes 2
 
     /// <summary>
     /// Gets or sets the configuration settings for Company of Heroes 3.
     /// </summary>
+    [ConfigurationInclude()]
     public CoH3Configuration CoH3 { get; set; } = new CoH3Configuration(); // Configuration for Company of Heroes 3
 
     /// <summary>
     /// Gets or sets the host URL for the Battlegrounds server.
     /// </summary>
+    [ConfigurationSection("Server", "Settings related to the Battlegrounds server", developerModeOnly: true, priority: 90)]
+    [ConfigurationProperty("Battlegrounds Server Host", "The host URL for the Battlegrounds server. This is the address that the application will use to connect to the server for game-related operations. Ensure that the host is correct and that the server is operational and accessible from the application environment.", developerModeOnly: true)]
     public string BattlegroundsServerHost { get; set; } = "bg.test.service.cohbattlegrounds.com";
 
     /// <summary>
@@ -137,11 +147,15 @@ public sealed class Configuration {
     /// </summary>
     /// <remarks>Ensure that the specified port is not already in use by another application and is 
     /// accessible through the network firewall, if applicable.</remarks>
+    [ConfigurationSection("Server", "Settings related to the Battlegrounds server", developerModeOnly: true, priority: 90)]
+    [ConfigurationProperty("Battlegrounds HTTP Server Port", "The port number used by the Battlegrounds HTTP server. Ensure that the specified port is not already in use by another application and is accessible through the network firewall, if applicable.", developerModeOnly: true)]
     public int BattlegroundsHttpServerPort { get; set; } = 443;
 
     /// <summary>
     /// Gets or sets the port number used by the Battlegrounds gRPC server.
     /// </summary>
+    [ConfigurationSection("Server", "Settings related to the Battlegrounds server", developerModeOnly: true, priority: 90)]
+    [ConfigurationProperty("Battlegrounds gRPC Server Port", "The port number used by the Battlegrounds gRPC server. Ensure that the specified port is not already in use by another application and is accessible through the network firewall, if applicable.", developerModeOnly: true)]
     public int BattlegroundsGrpcServerPort { get; set; } = 8082;
 
     /// <summary>
@@ -163,6 +177,13 @@ public sealed class Configuration {
     /// Gets or sets a value indicating whether the game should run in debug mode.
     /// </summary>
     public bool GameDebugMode { get; set; } = false; // Should the '-debug' flag be passed to the game?
+
+    /// <summary>
+    /// Gets or sets the display language for the application.
+    /// </summary>
+    [ConfigurationSection("General", "General application settings", priority: 0)]
+    [ConfigurationProperty("Language", "The display language for the application.", propertyType: ConfigurationPropertyType.Selection, Options = ["English", "Spanish", "French", "German", "Polish"])]
+    public string Language { get; set; } = "English";
 
     /// <summary>
     /// Gets or sets the logging level for the application.

@@ -23,4 +23,8 @@ public partial class MainWindow : Window {
         return [new CustomPopupPlacement(new Point(x, y), PopupPrimaryAxis.Vertical)];
     }
 
+    private void LogOutButton_Click(object sender, RoutedEventArgs e) {
+        ProfileToggle.IsChecked = false;
+    }
+
 }

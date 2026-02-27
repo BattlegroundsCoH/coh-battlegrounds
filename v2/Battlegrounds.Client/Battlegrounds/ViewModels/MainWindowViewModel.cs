@@ -92,8 +92,7 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
     }
 
     private void OpenSettings() {
-        // TODO: Navigate to a settings view when available
-        // SetContent(_serviceProvider.GetRequiredService<SettingsView>());
+        SetContent(_serviceProvider.GetRequiredService<SettingsView>());
     }
 
     private async Task LogoutAsync() {

@@ -28,17 +28,17 @@ public sealed class HttpBattlegroundsWebAPI(
     private string _authToken = string.Empty;
 
     public string LoginEndpoint => $"{_configuration.API.LoginUrlOverride}{_configuration.API.LoginEndpoint}";
-    public string RefreshEndpoint => $"{_configuration.API.LoginUrlOverride}{_configuration.API.RefreshEndpoint}";
-    public string PublicKeyEndpoint => $"{_configuration.API.LoginUrlOverride}{_configuration.API.PublicKeyEndpoint}";
+    public string RefreshEndpoint => $"{_configuration.API.LoginUrlOverride}/auth/refresh";
+    public string PublicKeyEndpoint => $"{_configuration.API.LoginUrlOverride}/publickey";
 
-    public string AuthStartEndpoint(AuthProvider authProvider) => $"{_configuration.API.BaseUrl}{_configuration.API.AuthStartEndpoint.Replace("<IdP>", authProvider switch {
+    public string AuthStartEndpoint(AuthProvider authProvider) => $"{_configuration.API.BaseUrl}{("/auth/<IdP>/start").Replace("<IdP>", authProvider switch {
         AuthProvider.Battlegrounds => "battlegrounds",
         AuthProvider.Steam => "steam",
         AuthProvider.Discord => "discord",
         _ => throw new ArgumentOutOfRangeException(nameof(authProvider), $"Unsupported authentication provider: {authProvider}")
     })}";
 
-    public string AuthStatusEndpoint(AuthProvider authProvider) => $"{_configuration.API.BaseUrl}{_configuration.API.AuthStatusEndpoint.Replace("<IdP>", authProvider switch {
+    public string AuthStatusEndpoint(AuthProvider authProvider) => $"{_configuration.API.BaseUrl}{("/auth/<IdP>/status").Replace("<IdP>", authProvider switch {
         AuthProvider.Battlegrounds => "battlegrounds",
         AuthProvider.Steam => "steam",
         AuthProvider.Discord => "discord",

@@ -1,0 +1,135 @@
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Reflection;
+
+using Battlegrounds.Models;
+using Battlegrounds.ViewModels.Settings;
+
+using CommunityToolkit.Mvvm.Input;
+
+using Microsoft.Extensions.Logging;
+
+namespace Battlegrounds.ViewModels;
+
+public sealed class SettingsViewModel : INotifyPropertyChanged {
+
+    private static bool IsDeveloperMode =>
+#if DEBUG
+        true;
+#else
+        false;
+#endif
+
+    private readonly Configuration _configuration;
+    private readonly BattlegroundsApp _app;
+    private readonly MainWindowViewModel _mainWindowViewModel;
+    private readonly ILogger<SettingsViewModel> _logger;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public ObservableCollection<SettingsSectionModel> Sections { get; } = [];
+
+    public IRelayCommand SaveCommand { get; }
+
+    public IRelayCommand BackCommand { get; }
+
+    public SettingsViewModel(Configuration configuration, BattlegroundsApp app, MainWindowViewModel mainWindowViewModel, ILogger<SettingsViewModel> logger) {
+        _configuration = configuration;
+        _app = app;
+        _mainWindowViewModel = mainWindowViewModel;
+        _logger = logger;
+
+        SaveCommand = new RelayCommand(Save);
+        BackCommand = new RelayCommand(GoBack);
+
+        BuildSections();
+    }
+
+    private void BuildSections() {
+
+        Sections.Clear();
+
+        var sectionMap = new Dictionary<string, SettingsSectionModel>();
+
+        foreach (var property in typeof(Configuration).GetProperties(BindingFlags.Public | BindingFlags.Instance)) {
+
+            // Check if the property type is a nested configuration class with a section attribute
+            var typeSectionAttr = property.PropertyType.GetCustomAttribute<ConfigurationSectionAttribute>();
+            if (typeSectionAttr is not null) {
+
+                if (!typeSectionAttr.IsVisible)
+                    continue;
+
+                if (typeSectionAttr.DeveloperModeOnly && !IsDeveloperMode)
+                    continue;
+
+                var nestedObj = property.GetValue(_configuration);
+                if (nestedObj is null)
+                    continue;
+
+                var section = GetOrCreateSection(sectionMap, typeSectionAttr.Name, typeSectionAttr.Description, typeSectionAttr.Priority);
+                AddPropertiesFromObject(section, nestedObj);
+                continue;
+            }
+
+            // Check if the property itself has ConfigurationSection + ConfigurationProperty (flat property)
+            var propertySectionAttr = property.GetCustomAttribute<ConfigurationSectionAttribute>();
+            var propertyConfigAttr = property.GetCustomAttribute<ConfigurationPropertyAttribute>();
+            if (propertySectionAttr is not null && propertyConfigAttr is not null) {
+
+                if (!propertySectionAttr.IsVisible)
+                    continue;
+
+                if (propertySectionAttr.DeveloperModeOnly && !IsDeveloperMode)
+                    continue;
+
+                if (propertyConfigAttr.DeveloperModeOnly && !IsDeveloperMode)
+                    continue;
+
+                var section = GetOrCreateSection(sectionMap, propertySectionAttr.Name, propertySectionAttr.Description, propertySectionAttr.Priority);
+                section.Properties.Add(new SettingsPropertyModel(property, _configuration, propertyConfigAttr));
+            }
+
+        }
+
+        var sorted = sectionMap.Values.OrderBy(s => s.Priority).ToList();
+        Sections.Clear();
+        foreach (var s in sorted)
+            Sections.Add(s);
+
+    }
+
+    private static void AddPropertiesFromObject(SettingsSectionModel section, object owner) {
+        foreach (var prop in owner.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)) {
+            var attr = prop.GetCustomAttribute<ConfigurationPropertyAttribute>();
+            if (attr is null)
+                continue;
+            if (attr.DeveloperModeOnly && !IsDeveloperMode)
+                continue;
+            section.Properties.Add(new SettingsPropertyModel(prop, owner, attr));
+        }
+    }
+
+    private static SettingsSectionModel GetOrCreateSection(Dictionary<string, SettingsSectionModel> map, string name, string description, int priority) {
+        if (!map.TryGetValue(name, out var section)) {
+            section = new SettingsSectionModel(name, description, priority);
+            map[name] = section;
+        }
+        return section;
+    }
+
+    private void Save() {
+        foreach (var section in Sections) {
+            foreach (var property in section.Properties) {
+                property.Apply();
+            }
+        }
+        _app.SaveConfiguration();
+        _logger.LogInformation("Configuration saved successfully.");
+    }
+
+    private void GoBack() {
+        _mainWindowViewModel.GoBack();
+    }
+
+}
