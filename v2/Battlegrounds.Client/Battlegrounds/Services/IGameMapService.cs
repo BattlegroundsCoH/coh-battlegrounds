@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 
 namespace Battlegrounds.Services;
@@ -13,7 +12,13 @@ namespace Battlegrounds.Services;
 /// interface enables retrieval of maps by game identifier, scenario name, or generic game type, allowing flexible
 /// access patterns for different use cases.</remarks>
 public interface IGameMapService {
-    
+
+    /// <summary>
+    /// Asynchronously loads map data required for application functionality.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous load operation. The task completes when all map data has been loaded.</returns>
+    Task LoadMapsAsync();
+
     /// <summary>
     /// Asynchronously retrieves the latest map associated with the specified game.
     /// </summary>
@@ -22,7 +27,7 @@ public interface IGameMapService {
     /// <param name="gameId">The unique identifier of the game for which to retrieve the latest map. This parameter cannot be null or empty.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the latest map for the specified
     /// game.</returns>
-    Task<Map> GetLatestMapAsync(string gameId);
+    Task<Scenario> GetLatestMapAsync(string gameId);
 
     /// <summary>
     /// Retrieves the map associated with the specified scenario name for the given game instance.
@@ -31,8 +36,8 @@ public interface IGameMapService {
     /// game instance.</remarks>
     /// <param name="game">The game instance for which the scenario map is to be retrieved. This parameter must not be null.</param>
     /// <param name="mapId">The name of the scenario whose map is requested. This parameter must not be empty.</param>
-    /// <returns>A Map object representing the scenario's map. Returns null if no map is found for the specified scenario name.</returns>
-    Map GetMapByScenarioName(Game game, string mapId);
+    /// <returns>A Scenario object representing the scenario's map. Returns null if no map is found for the specified scenario name.</returns>
+    Scenario GetMapByScenarioName(Game game, string mapId);
 
     /// <summary>
     /// Attempts to retrieve a map associated with the specified scenario name from the given game.
@@ -42,7 +47,7 @@ public interface IGameMapService {
     /// <param name="map">When this method returns <see langword="true"/>, contains the map associated with the specified scenario name;
     /// otherwise, contains <see langword="null"/>.</param>
     /// <returns><see langword="true"/> if a map with the specified scenario name is found; otherwise, <see langword="false"/>.</returns>
-    bool TryGetMapByScenarioName(Game game, string mapId, [NotNullWhen(true)] out Map? map);
+    bool TryGetMapByScenarioName(Game game, string mapId, [NotNullWhen(true)] out Scenario? map);
 
     /// <summary>
     /// Retrieves a collection of maps associated with the specified game identifier.
@@ -52,7 +57,7 @@ public interface IGameMapService {
     /// <param name="gameId">The unique identifier of the game for which to retrieve maps. This parameter cannot be null or empty.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of maps related to the
     /// specified game. The list will be empty if no maps are found.</returns>
-    Task<List<Map>> GetMapsForGame(string gameId);
+    Task<List<Scenario>> GetMapsForGame(string gameId);
 
     /// <summary>
     /// Retrieves a collection of maps associated with the specified game type.
@@ -62,6 +67,6 @@ public interface IGameMapService {
     /// <typeparam name="T">The type of game for which maps are being retrieved. Must inherit from the Game class.</typeparam>
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of Map objects associated
     /// with the specified game type.</returns>
-    Task<List<Map>> GetMapsForGame<T>() where T : Game;
+    Task<List<Scenario>> GetMapsForGame<T>() where T : Game;
 
 }

@@ -7,8 +7,6 @@ using Battlegrounds.Parsers;
 
 using Microsoft.Extensions.Logging;
 
-using Serilog;
-
 namespace Battlegrounds.Services.Data;
 
 public sealed class GameLocaleService(ILogger<GameLocaleService> logger) : IGameLocaleService {
@@ -36,12 +34,8 @@ public sealed class GameLocaleService(ILogger<GameLocaleService> logger) : IGame
         // Load CoH3 locale strings
         try {
             var stopwatch = Stopwatch.StartNew();
-            using var coh3localeStream = File.OpenRead("Assets/Factions/coh3/locale.yaml");
-            var coh3Locales = await localeParser.ParseLocalesAsync(coh3localeStream);
-            if (!coh3Locales.TryGetValue(Language, out var coh3entries)) {
-                coh3entries = coh3Locales[Consts.UCS_LANG_ENGLISH]; // Fallback to English if the requested language is not available
-            }
-            _localeStringsCoH3 = coh3entries; // Store the locale strings for CoH3
+            await ParseResourceAsync(localeParser, "Assets/Factions/coh3/locale.yaml", _localeStringsCoH3);
+            await ParseResourceAsync(localeParser, "Assets/Scenarios/coh3/locale.yaml", _localeStringsCoH3);
             stopwatch.Stop();
             _logger.LogInformation("Loaded {Count} CoH3 locale strings in {ElapsedMilliseconds} ms.", _localeStringsCoH3.Count, stopwatch.ElapsedMilliseconds);
         } catch (Exception ex) {
@@ -53,6 +47,25 @@ public sealed class GameLocaleService(ILogger<GameLocaleService> logger) : IGame
 
         return true;
 
+    }
+
+    private async Task ParseResourceAsync(LocaleParser localeParser, string resource, Dictionary<uint, string> targetDic) {
+        if (!File.Exists(resource)) {
+            _logger.LogWarning("Locale resource file not found: {Resource}", resource);
+            return;
+        }
+        using var coh3localeStream = File.OpenRead(resource);
+        var coh3Locales = await localeParser.ParseLocalesAsync(coh3localeStream);
+        if (!coh3Locales.TryGetValue(Language, out var coh3entries)) {
+            if (!coh3Locales.ContainsKey(Consts.UCS_LANG_ENGLISH)) {
+                _logger.LogWarning("Requested language '{Language}' and fallback language '{FallbackLanguage}' not found in locale resource: {Resource}", Language, Consts.UCS_LANG_ENGLISH, resource);
+                return;
+            }
+            coh3entries = coh3Locales[Consts.UCS_LANG_ENGLISH]; // Fallback to English if the requested language is not available
+        }
+        foreach (var entry in coh3entries) {
+            targetDic[entry.Key] = entry.Value;
+        }
     }
 
     public string ResolveLocaleString<T>(uint key, params object[] args) where T : Game {

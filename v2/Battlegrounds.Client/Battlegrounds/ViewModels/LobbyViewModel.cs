@@ -141,7 +141,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
     }
 
-    public string SelectedMapPreview => $"pack://siteoforigin:,,,/Assets/Scenarios/{_lobby.Game.Id}/{_selectedMap.Preview}.png";
+    public string SelectedMapPreview => $"pack://siteoforigin:,,,/Assets/Scenarios/{_lobby.Game.Id}/mm/{_selectedMap.Preview}.png";
 
     public ICollection<LobbySettingViewModel> SelectedSettings {
         get => _settings;
@@ -254,7 +254,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
     private async void SyncLobbyView() {
         SyncLobbySettings();
-        AvailableMaps = await _gameMapService.GetMapsForGame(_lobby.Game.Id);
+        AvailableMaps = [.. (await _gameMapService.GetMapsForGame(_lobby.Game.Id)).Select(Map.FromScenario)];
         Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
         Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
         PollLobbyEvents();

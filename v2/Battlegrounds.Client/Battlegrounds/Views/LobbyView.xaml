@@ -686,7 +686,7 @@
                     <Border Grid.Row="1"
                             Background="{StaticResource BackgroundDarkBlueBrush}"
                             CornerRadius="4">
-                        <Image Source="{Binding SelectedMapPreview, FallbackValue='Assets/Scenarios/CoH3/pachino_2p_mm_handmade.png'}"
+                        <Image Source="{Binding SelectedMapPreview, FallbackValue='Assets/Scenarios/CoH3/mm/pachino_2p_mm_handmade.png'}"
                                Stretch="UniformToFill"/>
                     </Border>
 

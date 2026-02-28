@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Data;
 
-using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Services;
 
@@ -19,13 +18,13 @@ public sealed class ScenarioIdToNameConverter : AbstractAppDependable, IMultiVal
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
         if (values is [string scenarioId, string gameId]) {
             Game game = GameService.GetGame(gameId);
-            if (GameMapService.TryGetMapByScenarioName(game, scenarioId, out Map? map)) {
-                return map.Name;
+            if (GameMapService.TryGetMapByScenarioName(game, scenarioId, out Scenario? map)) {
+                return map.Name.AsString();
             }
             return scenarioId;
         } else if (values is [string scenarioId2, Game game2]) {
-            if (GameMapService.TryGetMapByScenarioName(game2, scenarioId2, out Map? map)) {
-                return map.Name;
+            if (GameMapService.TryGetMapByScenarioName(game2, scenarioId2, out Scenario? map)) {
+                return map.Name.AsString();
             }
             return scenarioId2;
         }

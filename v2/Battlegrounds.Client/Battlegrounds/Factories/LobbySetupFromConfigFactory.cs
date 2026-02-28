@@ -34,7 +34,7 @@ public sealed class LobbySetupFromConfigFactory(Configuration configuration, IGa
         var lobbySetup = new LobbySetup {
             Name = name,
             Self = self,
-            Map = await _mapService.GetLatestMapAsync(game.Id) ?? throw new InvalidOperationException("No map found for the specified game."),
+            Map = Map.FromScenario(await _mapService.GetLatestMapAsync(game.Id) ?? throw new InvalidOperationException("No map found for the specified game.")),
             Settings = GetSettings(game, configuration),
             Participants = participants,
             Game = game,

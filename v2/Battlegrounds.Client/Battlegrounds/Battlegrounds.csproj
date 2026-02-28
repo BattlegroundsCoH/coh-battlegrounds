@@ -520,18 +520,26 @@
     <None Update="Assets\Misc\unlocked.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Scenarios\CoH3\pachino_2p_mm_handmade.png">
+    <None Update="Assets\Scenarios\coh3\locale.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Scenarios\CoH3\rural_town_4p_mm_handmade.png">
+    <None Update="Assets\Scenarios\coh3\mm\pachino_2p_mm_handmade.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Scenarios\CoH3\semois_4p_mm_handmade.png">
+    <None Update="Assets\Scenarios\coh3\mm\rural_town_4p_mm_handmade.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Scenarios\CoH3\semois_2p_mm_handmade.png">
+    <None Update="Assets\Scenarios\coh3\scenarios.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Scenarios\coh3\mm\semois_4p_mm_handmade.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Scenarios\coh3\mm\semois_2p_mm_handmade.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties assets_4scenarios_4coh3_4scenarios-coh3_1yaml__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

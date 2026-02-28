@@ -78,6 +78,8 @@ public sealed class Configuration {
             // TODO: Other settings can be added here as needed
         };
 
+        public string ScenarioId { get; set; } = gameId is Playing.CoH3.GameId ? "pachino_2p" : "2p_angoville"; // Default scenario ID based on game
+
         public TeamType Team1Type { get; set; } = TeamType.Allies; // Default team type for team 1
         public TeamType Team2Type { get; set; } = TeamType.Axis; // Default team type for team 2
 

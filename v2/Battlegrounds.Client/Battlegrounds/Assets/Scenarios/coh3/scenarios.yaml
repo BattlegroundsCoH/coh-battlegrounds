@@ -1,0 +1,27 @@
+# 2p_pachino
+- name: $11233971
+  description: $11233971
+  preview: pachino_2p_mm_handmade
+  maxPlayers: 2
+  scenario-name: pachino_2p
+
+# 2p_semois
+- name: $11260805
+  description: $11260805
+  preview: semois_2p_mm_handmade
+  maxPlayers: 2
+  scenario-name: semois_2p
+
+# 4p_pachino
+- name: $11233973
+  description: $11233973
+  preview: pachino_4p_mm_handmade
+  maxPlayers: 4
+  scenario-name: rural_town_4p
+
+# 4p_semois
+- name: $11272017
+  description: $11233974
+  preview: semois_4p_mm_handmade
+  maxPlayers: 4
+  scenario-name: semois_4p

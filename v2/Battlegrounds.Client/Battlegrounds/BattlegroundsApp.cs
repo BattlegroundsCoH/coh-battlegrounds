@@ -212,6 +212,7 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<IArchiverService, CoH3ArchiverService>();
         services.AddSingleton<CoH3ArchiverService>();
         services.AddSingleton<CoH3ReplayParser>();
+        services.AddSingleton<ScenarioParser<CoH3>>();
         services.AddSingleton<IUserService, UserService>();
         services.AddSingleton<ICompanyService, CompanyService>();
         services.AddSingleton<IGameLocaleService, GameLocaleService>();
@@ -246,14 +247,6 @@ public sealed class BattlegroundsApp {
         var logger = ServiceProvider.GetRequiredService<ILogger<BattlegroundsApp>>();
         logger.LogInformation("Battlegrounds is finishing startup...");
 
-        // Trigger async loading of locales
-        var localeService = ServiceProvider.GetRequiredService<IGameLocaleService>();
-        if (!await localeService.LoadLocalesAsync()) {
-            logger.LogError("Failed to load game locales. The application may not function correctly.");
-        } else {
-            logger.LogInformation("Game locales loaded successfully.");
-        }
-
         // Trigger async loading of blueprints
         LoadData(ServiceProvider);
 
@@ -276,6 +269,18 @@ public sealed class BattlegroundsApp {
     private static async void LoadData(IServiceProvider serviceProvider) {
 
         var logger = serviceProvider.GetRequiredService<ILogger<BattlegroundsApp>>();
+
+        // Trigger async loading of locales
+        var localeService = serviceProvider.GetRequiredService<IGameLocaleService>();
+        if (!await localeService.LoadLocalesAsync()) {
+            logger.LogError("Failed to load game locales. The application may not function correctly.");
+        } else {
+            logger.LogInformation("Game locales loaded successfully.");
+        }
+
+        var gameMapService = serviceProvider.GetRequiredService<IGameMapService>();
+        await gameMapService.LoadMapsAsync();
+
         var blueprintService = serviceProvider.GetRequiredService<IBlueprintService>();
         await blueprintService.LoadBlueprints();
 

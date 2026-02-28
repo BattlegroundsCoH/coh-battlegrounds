@@ -77,6 +77,10 @@ public sealed class LocaleParser() {
                 _logger.Warning("Unsupported language '{Language}' found in locale data, skipping.", lang);
                 continue;
             }
+            if (entries is null) {
+                _logger.Warning("No entries found for language '{Language}' in locale data, skipping.", lang);
+                continue;
+            }
             result[lang] = entries.ToDictionary(kvp => kvp.Key.Value, kvp => kvp.Value);
         }
         return result;
