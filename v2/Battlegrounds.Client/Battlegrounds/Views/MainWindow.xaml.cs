@@ -27,4 +27,8 @@ public partial class MainWindow : Window {
         ProfileToggle.IsChecked = false;
     }
 
+    private void SettingsButton_Click(object sender, RoutedEventArgs e) {
+        ProfileToggle.IsChecked = false;
+    }
+
 }

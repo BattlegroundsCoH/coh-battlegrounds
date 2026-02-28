@@ -135,7 +135,8 @@
 
                             <Button Style="{StaticResource ProfileMenuItemButton}"
                                     Content="⚙  Settings"
-                                    Command="{Binding SettingsCommand}"/>
+                                    Command="{Binding SettingsCommand}"
+                                    Click="SettingsButton_Click"/>
                             <Button Style="{StaticResource ProfileMenuItemButton}"
                                     Content="👤  Profile"
                                     IsEnabled="False"/>
