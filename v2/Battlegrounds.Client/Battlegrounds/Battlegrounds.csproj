@@ -523,6 +523,15 @@
     <None Update="Assets\Scenarios\coh3\locale.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Scenarios\coh3\mm\alamein_4p_mm_handmade.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Scenarios\coh3\mm\angoville_farms_2p_mm_handmade.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Scenarios\coh3\mm\benghazi_6p_mm_handmade.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Scenarios\coh3\mm\pachino_2p_mm_handmade.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

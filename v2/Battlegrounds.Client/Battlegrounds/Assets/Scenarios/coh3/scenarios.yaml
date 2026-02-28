@@ -1,3 +1,10 @@
+# 2p_angoville_farms
+- name: $11266341
+  description: $11266341
+  preview: angoville_farms_2p_mm_handmade
+  maxPlayers: 2
+  scenario-name: angoville_farms_2p
+
 # 2p_pachino
 - name: $11233971
   description: $11233971
@@ -25,3 +32,17 @@
   preview: semois_4p_mm_handmade
   maxPlayers: 4
   scenario-name: semois_4p
+  
+# 4p_semois
+- name: $11266017
+  description: $11266017
+  preview: alamein_4p_mm_handmade
+  maxPlayers: 4
+  scenario-name: alamein_4p
+
+# 6p_benghazi
+- name: $11258017
+  description: $11258017
+  preview: benghazi_6p_mm_handmade
+  maxPlayers: 6
+  scenario-name: benghazi_6p
