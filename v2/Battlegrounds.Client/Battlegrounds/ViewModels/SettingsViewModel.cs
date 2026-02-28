@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.ViewModels;
 
-public sealed class SettingsViewModel : INotifyPropertyChanged {
+public sealed class SettingsViewModel {
 
     private static bool IsDeveloperMode =>
 #if DEBUG
@@ -24,8 +24,6 @@ public sealed class SettingsViewModel : INotifyPropertyChanged {
     private readonly BattlegroundsApp _app;
     private readonly MainWindowViewModel _mainWindowViewModel;
     private readonly ILogger<SettingsViewModel> _logger;
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     public ObservableCollection<SettingsSectionModel> Sections { get; } = [];
 

@@ -6,6 +6,7 @@ using System.Text.Json;
 
 using Battlegrounds.Models;
 using Battlegrounds.Models.Companies;
+using Battlegrounds.Models.Gamemodes;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Replays;
 using Battlegrounds.Serializers;
@@ -41,8 +42,10 @@ public sealed class HttpBattlegroundsServerAPI(
     public static readonly string DownloadCompanyEndpoint = "/api/v1/companies/download"; // No authentication required
     public static readonly string UploadGamemodeEndpoint = "/api/v1/gamemodes/upload"; // Requires authentication
     public static readonly string DownloadGamemodeEndpoint = "/api/v1/gamemodes/download"; // No authentication required
-
     public static readonly string ReportMatchResultsEndpoint = "/api/v1/match/report"; // Requires authentication
+    public static readonly string ServerAvailabilityEndpoint = "/api/v1/up"; // No authentication required
+    public static readonly string LatestWinconditionSrcEndpoint = "/api/v1/winconditionsrc/latest"; // No authentication required
+    public static readonly string DownloadLatestWinconditionSrcEndpoint = "/api/v1/winconditionsrc/download"; // No authentication required
 
     public string BaseUrl => $"{_configuration.BattlegroundsServerHost}:{_configuration.BattlegroundsHttpServerPort}";
 
@@ -373,6 +376,51 @@ public sealed class HttpBattlegroundsServerAPI(
         } else {
             _logger.LogError("Failed to retrieve latest match result for lobby {LobbyId}. Status code: {StatusCode}, Reason: {ReasonPhrase}", lobbyId, response.StatusCode, response.ReasonPhrase);
             return null;
+        }
+
+    }
+
+    public async Task<LatestWinconditionDTO> GetLatestWinconditionSourceMetadata() {
+
+        string endpoint = $"{BaseUrl}{LatestWinconditionSrcEndpoint}";
+        HttpRequestMessage request = new(HttpMethod.Get, endpoint);
+        request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
+
+        HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
+        if (response.IsSuccessStatusCode) {
+            _logger.LogInformation("Latest wincondition source metadata retrieved successfully.");
+            Stream contentStream = await response.Content.ReadAsStreamAsync();
+            if (await JsonSerializer.DeserializeAsync<LatestWinconditionDTO?>(contentStream, serializerOptions) is LatestWinconditionDTO dto) {
+                return dto;
+            } else {
+                _logger.LogError("Failed to deserialize latest wincondition source metadata. Response content could not be parsed.");
+                throw new InvalidDataException("Response content could not be parsed as LatestWinconditionDTO.");
+            }
+        } 
+
+        throw new InvalidDataException($"Failed to retrieve latest wincondition source metadata. Status code: {response.StatusCode}, Reason: {response.ReasonPhrase}");
+
+    }
+
+    public async Task<bool> DownloadLatestWinconditionSource(string tag, string outWinconditionPath) {
+
+        string requestUri = $"{BaseUrl}{DownloadLatestWinconditionSrcEndpoint}/{tag}";
+        _logger.LogInformation("Sending GET request to {RequestUri} to download latest wincondition source for tag {Tag}", requestUri, tag);
+
+        HttpRequestMessage request = new(HttpMethod.Get, requestUri);
+        request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
+
+        HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
+        if (response.IsSuccessStatusCode) {
+            _logger.LogInformation("Latest wincondition source for tag {Tag} downloaded successfully.", tag);
+            Stream contentStream = await response.Content.ReadAsStreamAsync();
+            await using (FileStream fileStream = new(outWinconditionPath, FileMode.Create, FileAccess.Write, FileShare.None)) {
+                await contentStream.CopyToAsync(fileStream);
+            }
+            return true;
+        } else {
+            _logger.LogError("Failed to download latest wincondition source for tag {Tag}. Status code: {StatusCode}, Reason: {ReasonPhrase}", tag, response.StatusCode, response.ReasonPhrase);
+            return false;
         }
 
     }

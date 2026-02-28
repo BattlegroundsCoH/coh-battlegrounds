@@ -260,13 +260,14 @@ public sealed class BattlegroundsApp {
         // Trigger async loading of statistics
         LoadStats(ServiceProvider);
 
+        // Trigger async loading of gamemode sources
+        LoadGamemodeSources(ServiceProvider);
+
         // Trigger auto login
         var loginViewModel = ServiceProvider.GetRequiredService<LoginViewModel>();
-        if (_isFirstRun) {
-            logger.LogInformation("This is the first run of Battlegrounds. Unable to auto-login");
-        } else {
+        if (!_isFirstRun) {
             if (!await loginViewModel.AutoLoginAsync()) {
-                logger.LogWarning("Auto-login failed. Please log in manually.");
+                logger.LogWarning("Auto-login failed -- user must log in again.");
             }
         }
 
@@ -296,6 +297,11 @@ public sealed class BattlegroundsApp {
         var statisticsService = serviceProvider.GetRequiredService<IStatisticsService>();
         await statisticsService.LoadStatisticsAsync();
         logger.LogInformation("Loaded player statistics from local store");
+    }
+
+    private static async void LoadGamemodeSources(IServiceProvider serviceProvider) {
+        var playService = serviceProvider.GetRequiredService<IPlayService>();
+        await playService.EnsureModSourceIsAvailable();
     }
 
 }

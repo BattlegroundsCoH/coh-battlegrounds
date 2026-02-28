@@ -64,7 +64,6 @@ public sealed class CoH3ArchiverService(CoH3 game, Configuration configuration, 
         }
     }
 
-
     public async Task<bool> CreateModArchiveAsync(string modProjectFilePath) { // TODO: More error handling
 
         _logger.LogInformation("Creating mod archive for {ModProjectFilePath}", modProjectFilePath);

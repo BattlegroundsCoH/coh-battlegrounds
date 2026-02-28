@@ -41,9 +41,10 @@ public sealed class Configuration {
     [ConfigurationSection("Company of Heroes 3", "Settings for Company of Heroes 3", priority: 10)]
     public sealed class CoH3Configuration {
         
-        [ConfigurationProperty("Install Path", "The file system path where Company of Heroes 3 is installed. This path is used to locate the game executable and related files. Ensure that the path is correct and that the application has appropriate permissions to access it.")]
+        [ConfigurationProperty("Install Path", "The file system path where Company of Heroes 3 is installed. This path is used to locate the game executable and related files. Ensure that the path is correct and that the application has appropriate permissions to access it.", propertyType: ConfigurationPropertyType.DirectoryPath)]
         public string InstallPath { get; set; } = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Company of Heroes 3";
 
+        [ConfigurationProperty("Mod Project Path", "The file system path to the Company of Heroes 3 mod project. This path is used for mod development and should point to the root directory of the mod project. Ensure that the path is correct and that the application has appropriate permissions to access it.", propertyType: ConfigurationPropertyType.FilePath, developerModeOnly: true)]
         public string ModProjectPath { get; set; } = "E:\\coh3-dev\\coh3-bg-wincondition\\bg_wincondition\\bg_wincondition.coh3mod";
 
         public string MatchDataPath { get; set; } = "E:\\coh3-dev\\coh3-bg-wincondition\\bg_wincondition\\assets\\scar\\winconditions\\match_data.scar";
@@ -159,31 +160,33 @@ public sealed class Configuration {
     public int BattlegroundsGrpcServerPort { get; set; } = 8082;
 
     /// <summary>
-    /// Gets or sets a value indicating whether movies should be skipped in the game.
-    /// </summary>
-    public bool SkipMovies { get; set; } = false; // Should '-nomovies' be passed to the game?
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the game should run in windowed mode.
-    /// </summary>
-    public bool WindowedMode { get; set; } = false; // Should the '-windowed' flag be passed to the game?
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the game should run in developer mode.
-    /// </summary>
-    public bool GameDevMode { get; set; } = false; // Should the '-dev' flag be passed to the game?
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the game should run in debug mode.
-    /// </summary>
-    public bool GameDebugMode { get; set; } = false; // Should the '-debug' flag be passed to the game?
-
-    /// <summary>
     /// Gets or sets the display language for the application.
     /// </summary>
     [ConfigurationSection("General", "General application settings", priority: 0)]
     [ConfigurationProperty("Language", "The display language for the application.", propertyType: ConfigurationPropertyType.Selection, Options = ["English", "Spanish", "French", "German", "Polish"])]
     public string Language { get; set; } = "English";
+
+    /// <summary>
+    /// Gets or sets a value indicating whether companies are automatically synchronized with the server.
+    /// </summary>
+    [ConfigurationSection("General", "General application settings", priority: 0)]
+    [ConfigurationProperty("Auto Sync Companies", "Indicates whether companies should be automatically synchronized with the server.", propertyType: ConfigurationPropertyType.Boolean)]
+    public bool AutoSyncCompanies { get; set; } = true; // Should companies be automatically synced with the server?
+
+    /// <summary>
+    /// Gets or sets a value indicating whether wincondition source files are automatically synchronized with the
+    /// server.
+    /// </summary>
+    [ConfigurationSection("General", "General application settings", priority: 0)]
+    [ConfigurationProperty("Auto Sync Wincondition Source Files", "Indicates whether wincondition source files should be automatically synchronized with the server.", propertyType: ConfigurationPropertyType.Boolean)]
+    public bool AutoSyncWinconditionSourceFiles { get; set; } = true; // Should wincondition source files be automatically synced with the server?
+
+    /// <summary>
+    /// Gets or sets a value indicating whether telemetry data is sent to the server.
+    /// </summary>
+    [ConfigurationSection("General", "General application settings", priority: 0)]
+    [ConfigurationProperty("Enable Telemetry", "Indicates whether telemetry should be sent to the server.", propertyType: ConfigurationPropertyType.Boolean)]
+    public bool EnableTelemetry { get; set; } = false; // Should telemetry be sent to the server?
 
     /// <summary>
     /// Gets or sets the logging level for the application.

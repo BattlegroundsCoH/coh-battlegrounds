@@ -270,6 +270,11 @@ public sealed class CompanyService(
 
     public async Task SyncWithServerAsync() {
 
+        if (!_configuration.AutoSyncCompanies) {
+            _logger.LogInformation("Auto-syncing of companies with remote server is disabled in configuration. Skipping synchronization.");
+            return;
+        }
+
         if (!await _userService.IsUserLoggedIn) {
             _logger.LogWarning("No user is currently logged in. Skipping synchronization with remote server.");
             return;

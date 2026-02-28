@@ -35,4 +35,12 @@ public interface IPlayService {
     /// launch was successful or failed.</returns>
     Task<LaunchGameAppResult> LaunchGameApp(Game game);
 
+    /// <summary>
+    /// Ensures that the mod source is available for use, performing any necessary checks or setup asynchronously.
+    /// Fetches the wincondition source files from the server if they are not already present locally. This method should be called before attempting to build or launch a game mode that relies on the mod source.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task completes when the mod source is confirmed to be
+    /// available.</returns>
+    Task EnsureModSourceIsAvailable();
+
 }

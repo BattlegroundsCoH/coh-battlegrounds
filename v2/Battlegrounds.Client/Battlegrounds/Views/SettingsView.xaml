@@ -193,70 +193,79 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Grid Grid.Row="0" Margin="16,16,16,8">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="0"
-                    Content="← Back"
-                    Style="{StaticResource ActionButton}"
-                    Command="{Binding BackCommand}"
-                    Margin="0,0,16,0"/>
-
-            <TextBlock Grid.Column="1"
-                       Text="Settings"
-                       Foreground="{StaticResource ForegroundWhiteBrush}"
-                       FontSize="24"
-                       FontWeight="SemiBold"
-                       VerticalAlignment="Center"/>
-
-            <Button Grid.Column="2"
-                    Content="Save"
-                    Style="{StaticResource ActionButton}"
-                    Command="{Binding SaveCommand}"/>
-        </Grid>
 
         <!-- Sections -->
         <ScrollViewer Grid.Row="1"
                       Style="{StaticResource ChatScrollViewer}"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled"
-                      Padding="16,0">
-            <ItemsControl ItemsSource="{Binding Sections}" Margin="16,8,16,16">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type settings:SettingsSectionModel}">
-                        <Border Background="{StaticResource BackgroundBlueBrush}"
-                                CornerRadius="12"
-                                Padding="20"
-                                Margin="0,0,0,16">
-                            <Border.Effect>
-                                <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.3" Color="Black"/>
-                            </Border.Effect>
-                            <StackPanel>
-                                <!-- Section header -->
-                                <TextBlock Text="{Binding Name}"
-                                           Foreground="{StaticResource ForegroundWhiteBrush}"
-                                           FontSize="18"
-                                           FontWeight="Bold"
-                                           Margin="0,0,0,4"/>
-                                <TextBlock Text="{Binding Description}"
-                                           Foreground="{StaticResource ForegroundGrayBrush}"
-                                           FontSize="12"
-                                           TextWrapping="Wrap"
-                                           Margin="0,0,0,16"/>
+                      Padding="0,0,0,0">
+            <StackPanel>
 
-                                <!-- Properties -->
-                                <ItemsControl ItemsSource="{Binding Properties}"
-                                              ItemTemplateSelector="{StaticResource PropertyTemplateSelector}"/>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                <!-- Header -->
+                <Grid Grid.Row="0" Margin="16,16,16,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0"
+                    Content="←  Back"
+                    Style="{StaticResource ActionButton}"
+                    Command="{Binding BackCommand}"
+                    Margin="2,0,0,0"/>
+
+                    <TextBlock Grid.Column="1"
+                       Text="Settings"
+                       Foreground="{StaticResource ForegroundWhiteBrush}"
+                       FontSize="24"
+                       FontWeight="SemiBold"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+
+                </Grid>
+                
+                <ItemsControl ItemsSource="{Binding Sections}" Margin="16,8,16,0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type settings:SettingsSectionModel}">
+                            <Border Background="{StaticResource BackgroundBlueBrush}"
+                    CornerRadius="12"
+                    Padding="20"
+                    Margin="0,0,0,16">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.3" Color="Black"/>
+                                </Border.Effect>
+                                <StackPanel>
+                                    <!-- Section header -->
+                                    <TextBlock Text="{Binding Name}"
+                               Foreground="{StaticResource ForegroundWhiteBrush}"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Margin="0,0,0,4"/>
+                                    <TextBlock Text="{Binding Description}"
+                               Foreground="{StaticResource ForegroundGrayBrush}"
+                               FontSize="12"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,16"/>
+
+                                    <!-- Properties -->
+                                    <ItemsControl ItemsSource="{Binding Properties}"
+                                  ItemTemplateSelector="{StaticResource PropertyTemplateSelector}"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                
+                <Button Grid.Column="2"
+                    Content="Save"
+                    Style="{StaticResource ActionButton}"
+                    Command="{Binding SaveCommand}"
+                        Margin="16,0,16,16"/>
+                
+            </StackPanel>
+            
         </ScrollViewer>
 
     </Grid>

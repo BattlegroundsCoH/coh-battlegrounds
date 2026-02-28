@@ -1,6 +1,7 @@
 ﻿using System.IO;
 
 using Battlegrounds.Models.Companies;
+using Battlegrounds.Models.Gamemodes;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Replays;
 
@@ -126,5 +127,21 @@ public interface IBattlegroundsServerAPI {
     /// <returns>A task that represents the asynchronous operation. The task result contains the latest match result for the
     /// specified lobby, or null if no match has been played.</returns>
     Task<MatchResult?> GetLatestMatchResult(string lobbyId);
+    
+    /// <summary>
+    /// Asynchronously retrieves the metadata for the most recent win condition source.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a <see
+    /// cref="LatestWinconditionDTO"/> instance with metadata for the latest win condition source.</returns>
+    Task<LatestWinconditionDTO> GetLatestWinconditionSourceMetadata();
+    
+    /// <summary>
+    /// Downloads the latest wincondition source file for the specified tag and saves it to the provided output path.
+    /// </summary>
+    /// <param name="tag">The tag identifying the version of the wincondition source to download. Cannot be null or empty.</param>
+    /// <param name="outWinconditionPath">The file system path where the downloaded wincondition source will be saved. Must be a valid writable path.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the download
+    /// succeeds; otherwise, <see langword="false"/>.</returns>
+    Task<bool> DownloadLatestWinconditionSource(string tag, string outWinconditionPath);
 
 }
