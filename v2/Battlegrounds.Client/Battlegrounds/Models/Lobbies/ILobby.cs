@@ -185,8 +185,9 @@ public interface ILobby {
     /// <param name="team">The team to which the company will be assigned. Cannot be null.</param>
     /// <param name="slotId">The identifier of the slot within the team where the company will be set.</param>
     /// <param name="id">The unique identifier of the company to assign to the slot. Cannot be null or empty.</param>
+    /// <param name="faction">The faction to assign to the slot. Cannot be null or empty.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task SetCompany(Team team, int slotId, string id);
+    Task SetCompany(Team team, int slotId, string id, string faction);
     
     /// <summary>
     /// Asynchronously sets the current map to the specified value.

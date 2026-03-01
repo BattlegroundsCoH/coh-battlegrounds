@@ -128,8 +128,8 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
         return (null, -1);
     }
 
-    public async Task SetCompany(Team team, int slotId, string id) {
-        team.Slots[slotId] = team.Slots[slotId] with { CompanyId = id };
+    public async Task SetCompany(Team team, int slotId, string id, string faction) {
+        team.Slots[slotId] = team.Slots[slotId] with { CompanyId = id, Faction = faction };
         await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI
     }
 

@@ -350,7 +350,7 @@ public sealed class MultiplayerLobby(
         }, GetGrpcMetadata());
     }
 
-    public async Task SetCompany(Team team, int slotId, string companyId) {
+    public async Task SetCompany(Team team, int slotId, string companyId, string faction) {
         var local = GetLocalPlayerSlot();
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
             LobbyId = _lobbyId,
@@ -360,7 +360,7 @@ public sealed class MultiplayerLobby(
                 Slot = new Slot {
                     Id = slotId,
                     ParticipantId = team.Slots[slotId].ParticipantId ?? string.Empty,
-                    Faction = team.Slots[slotId].Faction,
+                    Faction = faction,
                     CompanyId = companyId,
                     AiDifficulty = team.Slots[slotId].Difficulty.Name,
                     Hidden = team.Slots[slotId].Hidden,
@@ -370,7 +370,7 @@ public sealed class MultiplayerLobby(
         }, GetGrpcMetadata());
         if (IsHost || (local.team == team && slotId == local.slotId)) {
             // Push the local event too to update the UI immediately
-            team.Slots[slotId] = team.Slots[slotId] with { CompanyId = companyId };
+            team.Slots[slotId] = team.Slots[slotId] with { CompanyId = companyId, Faction = faction };
             await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI
         }
     }

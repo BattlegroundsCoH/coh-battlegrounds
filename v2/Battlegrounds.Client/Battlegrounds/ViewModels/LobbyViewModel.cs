@@ -321,7 +321,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             return;
         }
 
-        await _lobby.SetCompany(team, slotId, company.Id);
+        await _lobby.SetCompany(team, slotId, company.Id, company.Faction);
 
     }
 
@@ -368,6 +368,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                     // Update team slots as well, since some slots may become hidden/unhidden based on map selection
                     Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
                     Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
+                    PropertyChanged?.Invoke(this, new(nameof(SelectedMap)));
+                    PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
                     break;
                 case LobbyEventType.SettingUpdated:
                     PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
@@ -684,7 +686,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             }
         }
         if (company.Company is not null) {
-            await _lobby.SetCompany(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, slotIndex, company.Company.Id);
+            await _lobby.SetCompany(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, slotIndex, company.Company.Id, company.Company.Faction);
             return;
         }
     }
