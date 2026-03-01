@@ -52,7 +52,7 @@
 
                 <!-- Username Input -->
                 <StackPanel Grid.Row="1" Margin="0,0,0,20">
-                    <TextBlock Text="EMAIL" 
+                    <TextBlock Text="USERNAME" 
                                FontSize="12" 
                                Foreground="{StaticResource ForegroundGrayBrush}" 
                                Margin="0,0,0,8"/>
@@ -141,6 +141,7 @@
                                Grid.Column="2"/>
                 </Grid>
 
+                <!--
                 <Button
                     Margin="0,10,0,0"
                     Style="{StaticResource AuthButton}"
@@ -157,15 +158,14 @@
                                    Foreground="{StaticResource ForegroundLightGrayBrush}" 
                                    HorizontalAlignment="Center"/>
                     </StackPanel>
-                </Button>
+                </Button> -->
 
-                <!-- Steam login (Currently not supported) -->
+                <!-- Steam login -->
                 <Button
                     Style="{StaticResource AuthButton}"
                     Margin="0,10,0,0"
                     Grid.Row="8"
-                    Command="{Binding ContinueWithSteamCommand}"
-                        IsEnabled="False">
+                    Command="{Binding ContinueWithSteamCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Image 
                             Source="pack://application:,,,/Battlegrounds;component/Assets/IdP_steam.png" 

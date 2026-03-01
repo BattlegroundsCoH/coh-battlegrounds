@@ -303,6 +303,10 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
 
         var slot = team.Slots[slotId];
+        if (string.IsNullOrEmpty(slot.Faction)) {
+            return; // TODO: Pick first faction with companies available, or prompt user to pick a faction before they can select a company?
+        }
+
         var company = _localPlayerCompaniesByAlliance[_lobby.Game.GetFactionAlliance(slot.Faction)].FirstOrDefault();
         if (company is null) {
             return;
@@ -663,6 +667,12 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     private async Task SetSlotCompany(int teamIndex, int slotIndex, PickableCompany? company) {
         if (company is null) {
             return;
+        }
+        if (!IsHost) { // Add guard against non-host clients trying to change companies for other players (as this should only be allowed for the host client, but just in case)
+            var (selfTeam, selfSlot) = _lobby.GetLocalPlayerSlot();
+            if (selfTeam != (teamIndex == 0 ? _lobby.Team1 : _lobby.Team2) || selfSlot != slotIndex) {
+                return;
+            }
         }
         if (company.Company is not null) {
             await _lobby.SetCompany(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, slotIndex, company.Company.Id);

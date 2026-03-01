@@ -120,9 +120,10 @@ public sealed class LobbyService(
         return new SingleplayerLobby(lobbySetup, _serverAPI, _companyService);
     }
 
+
     private async Task<ILobby> CreateMultiplayerLobbyAsync(string name, string? password, Game game) {
         _logger.LogInformation("Creating multiplayer lobby with name: {LobbyName} for game: {GameId}", name, game.Id);
-        var localUser = _userService.GetLocalUserAsync().Result ?? throw new InvalidOperationException("Cannot create a multiplayer lobby without a local user.");
+        var localUser = await _userService.GetLocalUserAsync() ?? throw new InvalidOperationException("Cannot create a multiplayer lobby without a local user.");
 
         try {
 
@@ -140,7 +141,7 @@ public sealed class LobbyService(
             };
 
             var stream = client.HostLobby(hostRequest, headers);
-            var lobby = await _multiplayerLobbyFactory.GetLobby(client, stream, lobbySetup);
+            var lobby = await _multiplayerLobbyFactory.GetLobbyAsHost(client, stream, lobbySetup);
             _ = lobby.PollGrpcUpdates(); // Start polling for updates immediately after lobby creation
             await lobby.PublishInitialState();
 
@@ -218,7 +219,7 @@ public sealed class LobbyService(
                 { "authorization", $"Bearer {_userService.GetLocalUserToken()}" },
             };
             var stream = client.JoinLobby(joinRequest, headers);
-            var multiplayerLobby = await _multiplayerLobbyFactory.GetLobby(client, stream, lobbySetup, isHost: false);
+            var multiplayerLobby = await _multiplayerLobbyFactory.GetLobbyAsNonHost(lobby, client, stream);
             _ = multiplayerLobby.PollGrpcUpdates();
             ActiveLobby = multiplayerLobby;
             return multiplayerLobby;
