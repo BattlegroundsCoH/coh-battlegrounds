@@ -672,7 +672,7 @@
                 <Grid Margin="15">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="200"/> <!-- Map Preview -->
+                        <RowDefinition Height="240"/> <!-- Map Preview -->
                         <RowDefinition Height="*"/>   <!-- Settings -->
                     </Grid.RowDefinitions>
 

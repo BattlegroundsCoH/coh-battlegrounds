@@ -21,6 +21,7 @@ public sealed class MultiplayerViewModel : INotifyPropertyChanged {
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private readonly ILobbyService _lobbyService;
+    private readonly IGameMapService _gameMapService;
     private readonly IServiceProvider _serviceProvider;
 
     private readonly ObservableCollection<BrowserLobby> _lobbies = [];
@@ -30,6 +31,7 @@ public sealed class MultiplayerViewModel : INotifyPropertyChanged {
     private bool _isConnected;
     private bool _isLoading;
     private int _playersOnline;
+    private BrowserLobby? _selectedLobby;
 
     public bool IsConnected {
         get => _isConnected;
@@ -75,15 +77,37 @@ public sealed class MultiplayerViewModel : INotifyPropertyChanged {
         }
     }
 
+    public BrowserLobby? SelectedLobby {
+        get => _selectedLobby;
+        set {
+            if (_selectedLobby == value) {
+                return;
+            }
+            _selectedLobby = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedLobby)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasSelectedLobby)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedLobbyMapPreview)));
+        }
+    }
+
+    public bool HasSelectedLobby => _selectedLobby is not null;
+
+    public string? SelectedLobbyMapPreview => _selectedLobby is not null
+        ? $"pack://siteoforigin:,,,/Assets/Scenarios/{_selectedLobby.Game}/mm/{_gameMapService.GetMapByScenarioNameOrNull(_selectedLobby.Game, _selectedLobby.Map)?.Preview}.png"
+        : null;
+
     public IAsyncRelayCommand CreateLobby => new AsyncRelayCommand(CreateLobbyAsync);
 
     public IAsyncRelayCommand RefreshLobbies => new AsyncRelayCommand(RefreshLobbiesAsync);
 
+    public IAsyncRelayCommand JoinLobbyCommand => new AsyncRelayCommand(JoinSelectedLobbyAsync);
+
     public ICollectionView Lobbies => _lobbyView;
 
-    public MultiplayerViewModel(IServiceProvider serviceProvider, ILobbyService lobbyService) {
+    public MultiplayerViewModel(IServiceProvider serviceProvider, ILobbyService lobbyService, IGameMapService gameMapService) {
         _serviceProvider = serviceProvider;
         _lobbyService = lobbyService;
+        _gameMapService = gameMapService;
         _lobbyView = CollectionViewSource.GetDefaultView(_lobbies);
         _lobbyView.Filter = item => true;
         InitialiseAsync();
@@ -155,6 +179,28 @@ public sealed class MultiplayerViewModel : INotifyPropertyChanged {
         var mainWindow = _serviceProvider.GetRequiredService<MainWindowViewModel>();
         mainWindow.SetContent(LobbyViewFactory.CreateLobbyViewForLobby(_serviceProvider, lobby));
 
+    }
+
+    private async Task JoinSelectedLobbyAsync() {
+        if (_selectedLobby is null) {
+            return;
+        }
+
+        string? password = null;
+        if (_selectedLobby.IsPasswordProtected) {
+            // TODO: Show a password prompt dialog
+        }
+
+        var gameService = _serviceProvider.GetRequiredService<IGameService>();
+        var game = gameService.GetGame(_selectedLobby.Game);
+        var joinedLobby = await _lobbyService.JoinLobbyAsync(_selectedLobby, game, password);
+        if (joinedLobby is null) {
+            StatusMessage = "Failed to join lobby.";
+            return;
+        }
+
+        var mainWindowVm = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+        mainWindowVm.SetContent(LobbyViewFactory.CreateLobbyViewForLobby(_serviceProvider, joinedLobby));
     }
 
 }

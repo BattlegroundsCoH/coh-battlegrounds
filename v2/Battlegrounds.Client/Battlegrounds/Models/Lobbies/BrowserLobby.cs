@@ -1,5 +1,7 @@
 ﻿namespace Battlegrounds.Models.Lobbies;
 
+public sealed record BrowserLobbySlot(int Index, bool IsOccupied, bool IsHidden, bool IsLocked, string Faction, string GameId);
+
 public sealed class BrowserLobby {
 
     public required string Id { get; init; }
@@ -9,6 +11,8 @@ public sealed class BrowserLobby {
     public required string Host { get; init; }
 
     public required bool IsPasswordProtected { get; init; } = false;
+
+    public Dictionary<string, string> Settings { get; init; } = [];
 
     public required string Map { get; init; }
 
@@ -23,5 +27,9 @@ public sealed class BrowserLobby {
     public string Players => $"{CurrentPlayers}/{MaxPlayers}";
 
     public bool CanJoin => CurrentPlayers < MaxPlayers;
+
+    public BrowserLobbySlot[] Team1Slots { get; init; } = [];
+
+    public BrowserLobbySlot[] Team2Slots { get; init; } = [];
 
 }

@@ -73,4 +73,11 @@ public sealed class GameMapService(ScenarioParser<CoH3> scenarioParser, Configur
         return _mapsByGame[game.Id].TryGetValue(mapId, out map);
     }
 
+    public Scenario? GetMapByScenarioNameOrNull(string game, string mapId) {
+        if (_mapsByGame.TryGetValue(game, out var maps) && maps.TryGetValue(mapId, out var map)) {
+            return map;
+        }
+        return null;
+    }
+
 }

@@ -40,6 +40,15 @@ public interface IGameMapService {
     Scenario GetMapByScenarioName(Game game, string mapId);
 
     /// <summary>
+    /// Retrieves the scenario map associated with the specified game and map identifier, or returns null if no matching
+    /// scenario is found.
+    /// </summary>
+    /// <param name="game">The name of the game for which to retrieve the scenario map. Cannot be null or empty.</param>
+    /// <param name="mapId">The identifier of the map within the specified game. Cannot be null or empty.</param>
+    /// <returns>A <see cref="Scenario"/> object representing the scenario map if found; otherwise, <see langword="null"/>.</returns>
+    Scenario? GetMapByScenarioNameOrNull(string game, string mapId);
+
+    /// <summary>
     /// Attempts to retrieve a map associated with the specified scenario name from the given game.
     /// </summary>
     /// <param name="game">The game instance from which to search for the map. Cannot be null.</param>

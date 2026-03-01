@@ -35,7 +35,7 @@ public sealed class FactionIconMultiBindingConverter : IMultiValueConverter {
             else
                 return DependencyProperty.UnsetValue; // Handle case where second value is not a string or Game
         }
-        if (values[0] is not string faction) {
+        if (values[0] is not string faction || string.IsNullOrEmpty(faction)) {
             return Binding.DoNothing; // Handle invalid input gracefully
         }
         return _converter.Convert(faction, targetType, gameId, culture);

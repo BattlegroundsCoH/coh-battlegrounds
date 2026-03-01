@@ -253,16 +253,24 @@ public sealed class HttpBattlegroundsServerAPI(
         public required Dictionary<string, string> Settings { get; init; } // Contains map, game mode, etc.
         public BrowserLobby ToBrowserLobby() {
             int maxPlayers = Teams.Sum(t => t.Slots.Count(s => !s.Hidden && !s.Locked));
+            string hostname = Participants.FirstOrDefault(p => p.ParticipantId == Host)?.ParticipantName ?? "Host name unavailable...";
             return new BrowserLobby {
                 Id = Id,
                 Name = Name,
-                Host = Host,
+                Host = hostname,
                 CurrentPlayers = Participants.Count,
                 MaxPlayers = maxPlayers,
-                Map = Settings.TryGetValue("map", out string? map) ? map : "Unknown Map",
-                GameMode = Settings.TryGetValue("gameMode", out string? gamemode) ? gamemode : "Unknown Game Mode",
+                Map = Settings.TryGetValue("$map", out string? map) ? map : "Unknown Map",
+                Settings = Settings.Where(x => x.Key != "$map").ToDictionary(x => x.Key, x => x.Value), // Exclude map from settings as it has its own property in BrowserLobby
+                GameMode = Settings.TryGetValue(LobbySetting.SETTING_GAMEMODE, out string? gamemode) ? gamemode : "Unknown Game Mode",
                 IsPasswordProtected = HasPassword,
-                Game = Game
+                Game = Game,
+                Team1Slots = Teams.ElementAtOrDefault(0)?.Slots
+                    .Where(x => !x.Hidden)
+                    .Select(s => new BrowserLobbySlot(s.Index, !string.IsNullOrEmpty(s.ParticipantId), s.Hidden, s.Locked, s.Faction, Game)).ToArray() ?? [],
+                Team2Slots = Teams.ElementAtOrDefault(1)?.Slots
+                    .Where(x => !x.Hidden)
+                    .Select(s => new BrowserLobbySlot(s.Index, !string.IsNullOrEmpty(s.ParticipantId), s.Hidden, s.Locked, s.Faction, Game)).ToArray() ?? []
             };
         }
     }

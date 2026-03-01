@@ -19,7 +19,7 @@
             <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
             <Setter Property="BorderBrush" Value="{StaticResource BackgroundLightBlueBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Padding" Value="6"/>
             <Setter Property="Margin" Value="0"/>
             <Setter Property="SnapsToDevicePixels" Value="True"/>
             <Setter Property="Template">
@@ -42,11 +42,12 @@
         <Style x:Key="LobbyListViewItem" TargetType="ListViewItem">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
-            <Setter Property="Padding" Value="6,2"/>
+            <Setter Property="Padding" Value="10,8"/>
             <Setter Property="Margin" Value="0,2,0,2"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListViewItem">
@@ -58,6 +59,7 @@
                             <ContentPresenter 
                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                        Margin="{TemplateBinding Padding}"
                         SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -76,6 +78,78 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Custom lobby row template -->
+        <DataTemplate x:Key="LobbyItemTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Lock icon (only shown when password protected) -->
+                <TextBlock Text="🔒"
+                           FontSize="13"
+                           VerticalAlignment="Center"
+                           Margin="0,0,8,0"
+                           Foreground="{StaticResource ForegroundGrayBrush}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsPasswordProtected}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <!-- Lobby name and map/mode -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Name}"
+                               FontWeight="SemiBold"
+                               FontSize="13"
+                               Foreground="{StaticResource ForegroundWhiteBrush}"
+                               TextTrimming="CharacterEllipsis"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                        <TextBlock Text="{Binding Map}"
+                                   FontSize="11"
+                                   Foreground="{StaticResource ForegroundGrayBrush}"
+                                   TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text=" · "
+                                   FontSize="11"
+                                   Foreground="{StaticResource ForegroundGrayBrush}"/>
+                        <TextBlock Text="{Binding GameMode}"
+                                   FontSize="11"
+                                   Foreground="{StaticResource ForegroundGrayBrush}"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Player count badge -->
+                <Border Grid.Column="2"
+                        CornerRadius="10"
+                        Padding="8,3"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CanJoin}" Value="False">
+                                    <Setter Property="Background" Value="{StaticResource AccentRedBrush}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <TextBlock Text="{Binding Players}"
+                               Foreground="{StaticResource ForegroundWhiteBrush}"
+                               FontSize="11"
+                               FontWeight="SemiBold"/>
+                </Border>
+            </Grid>
+        </DataTemplate>
 
     </UserControl.Resources>
     <Grid Margin="10">
@@ -116,39 +190,28 @@
             </StackPanel>
         </Grid>
 
-        <!-- Lobby List -->
-        <ListView 
-            Grid.Row="1" 
-            ItemsSource="{Binding Lobbies}"
-            Style="{StaticResource LobbyListView}"
-            ItemContainerStyle="{StaticResource LobbyListViewItem}"
-            IsEnabled="{Binding IsConnected}"
-            BorderThickness="0">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name" 
-                  Width="200"
-                  DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Players" 
-                  Width="100"
-                  DisplayMemberBinding="{Binding Players}"/>
-                    <GridViewColumn Header="Game Type" 
-                  Width="150"
-                  DisplayMemberBinding="{Binding GameMode}"/>
-                    <GridViewColumn Header="Map" 
-                  Width="150"
-                  DisplayMemberBinding="{Binding Map}"/>
-                    <GridViewColumn Header="Status" 
-                  Width="100">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding CanJoin, Converter={StaticResource JoinableStatusConverter}}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <!-- Main Content: Lobby list + Preview panel -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="320"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Lobby List -->
+            <ListView 
+                Grid.Column="0"
+                ItemsSource="{Binding Lobbies}"
+                SelectedItem="{Binding SelectedLobby, Mode=TwoWay}"
+                Style="{StaticResource LobbyListView}"
+                ItemContainerStyle="{StaticResource LobbyListViewItem}"
+                ItemTemplate="{StaticResource LobbyItemTemplate}"
+                IsEnabled="{Binding IsConnected}"
+                BorderThickness="0"
+                Margin="0,0,10,0"/>
+
+            <!-- Preview panel -->
+            <local:LobbyPreviewView Grid.Column="1" DataContext="{Binding}"/>
+        </Grid>
 
         <!-- Bottom Status Bar -->
         <StatusBar Grid.Row="2" Height="30" 
@@ -168,7 +231,7 @@
             Background="#80000000" 
             Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
             <ProgressBar IsIndeterminate="True" 
-                         Style="{StaticResource  AnimatedProgressBar}"
+                         Style="{StaticResource AnimatedProgressBar}"
                  Width="200" 
                  Height="4"/>
         </Grid>

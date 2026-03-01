@@ -9,6 +9,7 @@ using Grpc.Core;
 using Microsoft.Extensions.Logging;
 
 using HostLobbyRequest = Battlegrounds.Proto.Lobbies.HostLobbyRequest;
+using JoinLobbyRequest = Battlegrounds.Proto.Lobbies.JoinLobbyRequest;
 
 namespace Battlegrounds.Services.Playing;
 
@@ -192,6 +193,40 @@ public sealed class LobbyService(
     /// <returns>A task that represents the asynchronous operation. The task result contains an  IEnumerable{T} of BrowserLobby
     /// objects representing the available lobbies. If no lobbies are available, the collection will be empty.</returns>
     public async Task<IEnumerable<BrowserLobby>> GetLobbiesAsync() => await _serverAPI.GetLobbiesAsync();
+
+    /// <summary>
+    /// Joins an existing multiplayer lobby.
+    /// </summary>
+    /// <param name="lobby">The browser lobby entry to join.</param>
+    /// <param name="game">The game associated with the lobby.</param>
+    /// <param name="password">The optional password required to join a protected lobby.</param>
+    /// <returns>The joined <see cref="ILobby"/> instance, or <see langword="null"/> if the attempt failed.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if an active lobby already exists.</exception>
+    public async Task<ILobby?> JoinLobbyAsync(BrowserLobby lobby, Game game, string? password = null) {
+        if (HasActiveLobby) {
+            throw new InvalidOperationException("Cannot join a lobby while an active lobby exists.");
+        }
+        try {
+            var localUser = await _userService.GetLocalUserAsync() ?? throw new InvalidOperationException("Cannot join a lobby without a local user.");
+            var lobbySetup = await _lobbySetupFromConfigFactory.FromConfig(lobby.Name, game, localUser);
+            var client = _clientFactory.CreateClient(_configuration);
+            var joinRequest = new JoinLobbyRequest {
+                LobbyId = lobby.Id,
+                Password = password ?? string.Empty,
+            };
+            var headers = new Metadata {
+                { "authorization", $"Bearer {_userService.GetLocalUserToken()}" },
+            };
+            var stream = client.JoinLobby(joinRequest, headers);
+            var multiplayerLobby = await _multiplayerLobbyFactory.GetLobby(client, stream, lobbySetup, isHost: false);
+            _ = multiplayerLobby.PollGrpcUpdates();
+            ActiveLobby = multiplayerLobby;
+            return multiplayerLobby;
+        } catch (Exception ex) {
+            _logger.LogError(ex, "Failed to join lobby with ID: {LobbyId}", lobby.Id);
+            return null;
+        }
+    }
 
     /// <summary>
     /// Asynchronously determines whether the server is available.

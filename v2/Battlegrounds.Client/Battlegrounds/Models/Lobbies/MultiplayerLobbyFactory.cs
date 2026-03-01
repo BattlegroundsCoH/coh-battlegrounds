@@ -32,7 +32,7 @@ public sealed class MultiplayerLobbyFactory(IServiceProvider serviceProvider) {
     /// <returns>A task that represents the asynchronous operation. The task result contains the created and initialized
     /// MultiplayerLobby instance.</returns>
     /// <exception cref="InvalidOperationException">Thrown if the initial response from the server is not received, indicating that the lobby could not be started.</exception>
-    public async Task<MultiplayerLobby> GetLobby(Proto.Lobbies.LobbyService.LobbyServiceClient client, AsyncServerStreamingCall<LobbyStateUpdate> stream, LobbySetup setup) {
+    public async Task<MultiplayerLobby> GetLobby(LobbyService.LobbyServiceClient client, AsyncServerStreamingCall<LobbyStateUpdate> stream, LobbySetup setup, bool isHost = true) {
         var scope = serviceProvider.CreateScope();
         var provider = scope.ServiceProvider;
         var serverAPI = provider.GetRequiredService<IBattlegroundsServerAPI>();
@@ -48,7 +48,7 @@ public sealed class MultiplayerLobbyFactory(IServiceProvider serviceProvider) {
         var hostResponse = stream.ResponseStream.Current;
 
         var lobby = new MultiplayerLobby(hostResponse.LobbyId, stream, client, setup, serverAPI, userService, companyService, mapService) {
-            IsHost = true, // The host is the one who created the lobby
+            IsHost = isHost,
         };
 
         return lobby;
