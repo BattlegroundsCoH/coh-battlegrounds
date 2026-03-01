@@ -288,7 +288,6 @@ public sealed class HttpBattlegroundsServerAPI(
 
     }
 
-
     public async Task<bool> UploadGamemodeAsync(string lobbyId, string gamemodeLocation, UploadProgressUpdateDelegate? progressUpdate = null) {
 
         string endpoint = $"{BaseUrl}{UploadGamemodeEndpoint}";

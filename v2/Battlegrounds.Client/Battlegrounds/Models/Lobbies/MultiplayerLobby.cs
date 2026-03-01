@@ -566,9 +566,14 @@ public sealed class MultiplayerLobby(
         await PublishTeam(0, setup.Team1);
         await PublishTeam(1, setup.Team2);
 
+        // Publish settings
         foreach (var setting in setup.Settings) {
             await PublishSetting(setting);
         }
+
+        // Publish map (Minor hack, should use the proper gRPC procedure for changing the map.
+        // But this avoids having the server re-send new team data
+        await PublishSetting("$map", _map.ScenarioName);
 
     }
 
@@ -623,6 +628,20 @@ public sealed class MultiplayerLobby(
             },
         }, metadata);
     }
+
+
+    private async Task PublishSetting(string key, string value) {
+        var metadata = GetGrpcMetadata();
+        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+            LobbyId = _lobbyId,
+            EventType = LobbyEventType.SettingUpdated.ToString(),
+            SettingsUpdate = new Proto.Lobbies.LobbySetting {
+                Key = key,
+                NewValue = value,
+            },
+        }, metadata);
+    }
+
 
     public void Dispose() {
         if (!_disposedValue) {
