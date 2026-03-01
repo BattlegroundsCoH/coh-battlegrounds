@@ -303,11 +303,20 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
 
         var slot = team.Slots[slotId];
+        var factionAlliance = _lobby.Game.GetFactionAlliance(slot.Faction);
         if (string.IsNullOrEmpty(slot.Faction)) {
-            return; // TODO: Pick first faction with companies available, or prompt user to pick a faction before they can select a company?
+            var teamAlliance = team.TeamType switch {
+                TeamType.Allies => FactionAlliance.Allies,
+                TeamType.Axis => FactionAlliance.Axis,
+                _ => FactionAlliance.Unspecified
+            };
+            if (teamAlliance is FactionAlliance.Unspecified) {
+                return; // Cannot determine alliance for team, so cannot determine which companies to show
+            }
+            factionAlliance = teamAlliance;
         }
 
-        var company = _localPlayerCompaniesByAlliance[_lobby.Game.GetFactionAlliance(slot.Faction)].FirstOrDefault();
+        var company = _localPlayerCompaniesByAlliance[factionAlliance].FirstOrDefault();
         if (company is null) {
             return;
         }
