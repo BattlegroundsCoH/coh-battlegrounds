@@ -5,8 +5,14 @@ namespace Battlegrounds.Views;
 public partial class HomeView : UserControl {
     
     public HomeView(ViewModels.HomeViewModel viewModel) {
-        InitializeComponent();
         DataContext = viewModel;
+        InitializeComponent();
+    }
+
+    private void HomeView_Initialized(object? sender, EventArgs e) {
+        if (DataContext is ViewModels.HomeViewModel vm) {
+            vm.OnViewActivated();
+        }
     }
 
 }

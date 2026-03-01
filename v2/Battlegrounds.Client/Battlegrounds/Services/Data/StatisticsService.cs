@@ -8,9 +8,19 @@ using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.Services.Data;
 
-public sealed class StatisticsService(Configuration configuration, ILogger<StatisticsService> logger) : IStatisticsService {
+/// <summary>
+/// Provides services for loading, storing, and retrieving user match statistics.
+/// </summary>
+/// <remarks>This service manages match statistics on a per-user basis and ensures data persistence. All
+/// operations are asynchronous and thread-safe. The service should be loaded before accessing statistics
+/// data.</remarks>
+/// <param name="configuration">The configuration settings used to determine statistics storage paths and serialization options.</param>
+/// <param name="userService">The user service used to identify the current user context for statistics operations.</param>
+/// <param name="logger">The logger used to record informational and error messages during statistics operations.</param>
+public sealed class StatisticsService(Configuration configuration, IUserService userService, ILogger<StatisticsService> logger) : IStatisticsService {
 
     private readonly Configuration _configuration = configuration;
+    private readonly IUserService _userService = userService;
     private readonly ILogger<StatisticsService> _logger = logger;
 
     private readonly TaskCompletionSource _loadCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -27,7 +37,7 @@ public sealed class StatisticsService(Configuration configuration, ILogger<Stati
             Directory.CreateDirectory(_configuration.StatisticsPath);
         }
 
-        await _matchesPlayedStore.LoadStore(_configuration.StatisticsPath);
+        await _matchesPlayedStore.LoadStore(_userService, _configuration.StatisticsPath);
 
         _loadCompletionSource.SetResult();
 
@@ -35,7 +45,7 @@ public sealed class StatisticsService(Configuration configuration, ILogger<Stati
 
     public async Task RegisterPlayedMatchAsync(MatchPlayed match) {
         _matchesPlayedStore.AddRecord(match);
-        await _matchesPlayedStore.SaveStore(_configuration.StatisticsPath); // Immediately save after adding a new record to ensure data is not lost in case of a crash.
+        await _matchesPlayedStore.SaveStore(_userService, _configuration.StatisticsPath); // Immediately save after adding a new record to ensure data is not lost in case of a crash.
     }
 
     private class RecordStore<T>(string id, ILogger<StatisticsService> logger, Predicate<T>? retentionPredicate = null) {
@@ -43,8 +53,10 @@ public sealed class StatisticsService(Configuration configuration, ILogger<Stati
         private readonly ILogger<StatisticsService> _log = logger;
         private readonly IList<T> _records = [];
 
-        public async Task LoadStore(string storePath) {
-            string filePath = Path.Combine(storePath, $"{id}.json");
+        public async Task LoadStore(IUserService userService, string storePath) {
+            await userService.IsUserLoggedIn;
+            string userId = (await userService.GetLocalUserAsync() ?? throw new InvalidOperationException("No local user found. Cannot load store without a user context.")).UserId;
+            string filePath = Path.Combine(storePath, $"{id}_{userId}.json");
             if (!File.Exists(filePath)) {
                 return;
             }
@@ -60,12 +72,13 @@ public sealed class StatisticsService(Configuration configuration, ILogger<Stati
             }
         }
 
-        public async Task SaveStore(string storePath) {
+        public async Task SaveStore(IUserService userService, string storePath) {
+            string userId = (await userService.GetLocalUserAsync() ?? throw new InvalidOperationException("No local user found. Cannot load store without a user context.")).UserId;
             var toStore = _records;
             if (retentionPredicate is not null) {
                 toStore = [.. _records.Where(r => retentionPredicate(r))];
             }
-            string filePath = Path.Combine(storePath, $"{id}.json");
+            string filePath = Path.Combine(storePath, $"{id}_{userId}.json");
             using var stream = File.Create(filePath);
             await JsonSerializer.SerializeAsync(stream, toStore, Configuration.JsonSerializerOptions);
         }

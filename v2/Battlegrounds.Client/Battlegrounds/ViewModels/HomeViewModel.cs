@@ -48,7 +48,6 @@ public sealed class HomeViewModel : INotifyPropertyChanged {
     public HomeViewModel(IStatisticsService statisticsService, ICompanyService companyService) {
         _statisticsService = statisticsService;
         _companyService = companyService;
-        OnViewModelInitialized();
     }
 
     public void OnDataLoaded() {
@@ -58,6 +57,10 @@ public sealed class HomeViewModel : INotifyPropertyChanged {
     public void UpdateUser(User user) {
         _welcomeMessage = $"Welcome back, {user?.UserDisplayName ?? "Commander"}!";
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(WelcomeMessage)));
+    }
+
+    public void OnViewActivated() {
+        OnViewModelInitialized();
     }
 
     private async void OnViewModelInitialized() {
