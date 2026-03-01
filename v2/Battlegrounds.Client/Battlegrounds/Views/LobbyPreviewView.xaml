@@ -60,34 +60,56 @@
                     </TextBlock>
 
                     <!-- Slot label -->
-                    <TextBlock Grid.Column="1"
-                               VerticalAlignment="Center"
-                               Margin="4,0,0,0"
+                    <StackPanel Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Margin="4,0,0,0">
+                        <TextBlock FontSize="14">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsOccupied}" Value="True">
+                                            <Setter Property="Text" Value="{Binding Name}"/>
+                                            <Setter Property="FontWeight" Value="DemiBold"/>
+                                            <Setter Property="Foreground" Value="{StaticResource ForegroundLightGrayBrush}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsOccupied}" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        
+                        <TextBlock 
                                FontSize="12">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="Open"/>
-                                <Setter Property="Foreground" Value="{StaticResource ForegroundGrayBrush}"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsOccupied}" Value="True">
-                                        <Setter Property="Text">
-                                            <Setter.Value>
-                                                <MultiBinding Converter="{StaticResource FactionNameConverter}">
-                                                    <Binding Path="Faction"/>
-                                                    <Binding Path="GameId"/>
-                                                </MultiBinding>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsLocked}" Value="True">
-                                        <Setter Property="Text" Value="Locked"/>
-                                        <Setter Property="Foreground" Value="{StaticResource ForegroundDarkGrayBrush}"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="Open"/>
+                                    <Setter Property="Foreground" Value="{StaticResource ForegroundGrayBrush}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsOccupied}" Value="True">
+                                            <Setter Property="Text">
+                                                <Setter.Value>
+                                                    <MultiBinding Converter="{StaticResource FactionNameConverter}">
+                                                        <Binding Path="Faction"/>
+                                                        <Binding Path="GameId"/>
+                                                    </MultiBinding>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="FontSize" Value="8"/>
+                                            <Setter Property="FontStyle" Value="Oblique"/>
+                                            <Setter Property="Foreground" Value="{StaticResource ForegroundGrayBrush}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                                            <Setter Property="Text" Value="Locked"/>
+                                            <Setter Property="Foreground" Value="{StaticResource ForegroundDarkGrayBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                    
                 </Grid>
             </Border>
         </DataTemplate>

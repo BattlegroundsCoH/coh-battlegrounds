@@ -13,6 +13,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converter:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converter:JoinableStatusConverter x:Key="JoinableStatusConverter"/>
+        <converter:ScenarioIdToNameConverter x:Key="ScenarioIdToNameConverter"/>
 
         <Style x:Key="LobbyListView" TargetType="ListView">
             <Setter Property="Background" Value="{StaticResource BackgroundBlueBrush}"/>
@@ -114,10 +115,16 @@
                                Foreground="{StaticResource ForegroundWhiteBrush}"
                                TextTrimming="CharacterEllipsis"/>
                     <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
-                        <TextBlock Text="{Binding Map}"
-                                   FontSize="11"
+                        <TextBlock FontSize="11"
                                    Foreground="{StaticResource ForegroundGrayBrush}"
-                                   TextTrimming="CharacterEllipsis"/>
+                                   TextTrimming="CharacterEllipsis">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource ScenarioIdToNameConverter}">
+                                    <Binding Path="Map"/>
+                                    <Binding Path="Game"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                         <TextBlock Text=" · "
                                    FontSize="11"
                                    Foreground="{StaticResource ForegroundGrayBrush}"/>

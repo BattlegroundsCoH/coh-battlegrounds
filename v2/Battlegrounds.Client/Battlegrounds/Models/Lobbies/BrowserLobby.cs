@@ -1,6 +1,6 @@
 ﻿namespace Battlegrounds.Models.Lobbies;
 
-public sealed record BrowserLobbySlot(int Index, bool IsOccupied, bool IsHidden, bool IsLocked, string Faction, string GameId);
+public sealed record BrowserLobbySlot(int Index, string Name, bool IsOccupied, bool IsHidden, bool IsLocked, string Faction, string GameId);
 
 public sealed class BrowserLobby {
 

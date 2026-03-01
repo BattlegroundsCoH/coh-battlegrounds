@@ -267,10 +267,10 @@ public sealed class HttpBattlegroundsServerAPI(
                 Game = Game,
                 Team1Slots = Teams.ElementAtOrDefault(0)?.Slots
                     .Where(x => !x.Hidden)
-                    .Select(s => new BrowserLobbySlot(s.Index, !string.IsNullOrEmpty(s.ParticipantId), s.Hidden, s.Locked, s.Faction, Game)).ToArray() ?? [],
+                    .Select(s => new BrowserLobbySlot(s.Index, Participants.FirstOrDefault(p => p.ParticipantId == s.ParticipantId)?.ParticipantName ?? "Unknown", !string.IsNullOrEmpty(s.ParticipantId), s.Hidden, s.Locked, s.Faction, Game)).ToArray() ?? [],
                 Team2Slots = Teams.ElementAtOrDefault(1)?.Slots
                     .Where(x => !x.Hidden)
-                    .Select(s => new BrowserLobbySlot(s.Index, !string.IsNullOrEmpty(s.ParticipantId), s.Hidden, s.Locked, s.Faction, Game)).ToArray() ?? []
+                    .Select(s => new BrowserLobbySlot(s.Index, Participants.FirstOrDefault(p => p.ParticipantId == s.ParticipantId)?.ParticipantName ?? "Unknown", !string.IsNullOrEmpty(s.ParticipantId), s.Hidden, s.Locked, s.Faction, Game)).ToArray() ?? []
             };
         }
     }
