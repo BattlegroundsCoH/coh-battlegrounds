@@ -244,10 +244,6 @@ public class CoH3MatchDataBuilderTests {
             throw new NotImplementedException();
         }
 
-        public Task SetCompany(Team team, int slotId, string id) {
-            throw new NotImplementedException();
-        }
-
         public Task<bool> SetMap(Map map) {
             throw new NotImplementedException();
         }
@@ -268,9 +264,6 @@ public class CoH3MatchDataBuilderTests {
             throw new NotImplementedException();
         }
 
-        public Task<UploadGamemodeResult> UploadGamemode(string gamemodeLocation) =>
-            Task.FromResult(new UploadGamemodeResult());
-
         public ValueTask<bool> WaitForAllPlayersHaveGamemode() {
             throw new NotImplementedException();
         }
@@ -289,6 +282,10 @@ public class CoH3MatchDataBuilderTests {
 
         public Task<MatchOverData?> GetMatchResults() =>
             Task.FromResult<MatchOverData?>(null);
+
+        public Task SetCompany(Team team, int slotId, string id, string faction) {
+            throw new NotImplementedException();
+        }
     }
 
     #endregion
