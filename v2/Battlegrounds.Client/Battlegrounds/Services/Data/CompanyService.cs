@@ -29,11 +29,14 @@ public sealed class CompanyService(
 
     public int CompanyCount { get; private set;  }
 
-    public async ValueTask<bool> DeleteCompany(string companyId, bool syncWithRemote = true) {
+    public async Task<bool> DeleteCompany(string companyId, bool syncWithRemote = true) {
         if (string.IsNullOrEmpty(companyId)) {
             throw new ArgumentException("Company ID cannot be null or empty.", nameof(companyId));
         }
-        string companyFilePath = Path.Combine(_configuration.CompaniesPath, $"{companyId}.bgc");
+
+        string companiesPath = await GetOrCreateLocalUserCompanyPath() ?? throw new InvalidOperationException("Failed to get or create local user company path. Cannot delete company.");
+
+        string companyFilePath = Path.Combine(companiesPath, $"{companyId}.bgc");
         if (!File.Exists(companyFilePath)) {
             _logger.LogWarning("Company file {CompanyFile} does not exist.", companyFilePath);
             return false; // Return false if the company file does not exist
@@ -78,10 +81,41 @@ public sealed class CompanyService(
 
     public Task<IEnumerable<Company>> GetLocalCompanyCacheAsync() => Task.FromResult(_localCompanyCache.AsEnumerable());
 
-    public ValueTask<int> LoadPlayerCompaniesAsync() { // This method loads all companies from the local file system into the local cache. (May be asynced in the future)
+    private async Task<string?> GetOrCreateLocalUserCompanyPath() {
+
+        var localUser = await _userService.GetLocalUserAsync();
+        if (localUser is null) {
+            _logger.LogWarning("No local user found. Cannot load companies without a logged-in user.");
+            return null;
+        }
+
+        string path = Path.Combine(_configuration.CompaniesPath, localUser.UserId);
+        if (!Directory.Exists(path)) {
+            try {
+                Directory.CreateDirectory(path);
+                _logger.LogInformation("Created local company directory for user {UserId} at path {Path}.", localUser.UserId, path);
+            } catch (Exception ex) {
+                _logger.LogError(ex, "Error creating local company directory for user {UserId} at path {Path}: {ExMessage}", localUser.UserId, path, ex.Message);
+                return null;
+            }
+        }
+
+        return path;
+
+    }
+
+    public async Task<int> LoadPlayerCompaniesAsync() { // This method loads all companies from the local file system into the local cache. (May be asynced in the future)
+
+        string? companiesPath = await GetOrCreateLocalUserCompanyPath();
+        if (companiesPath is null) {
+            _logger.LogError("Failed to get or create local user company path. Cannot load companies.");
+            return 0; // Return 0 if the local user company path could not be created
+        }
+
         _localCompanies.Clear(); // Clear the local companies list before loading
         int loaded = 0;
-        string[] companyFiles = Directory.GetFiles(_configuration.CompaniesPath, "*.bgc", SearchOption.TopDirectoryOnly);
+
+        string[] companyFiles = Directory.GetFiles(companiesPath, "*.bgc", SearchOption.TopDirectoryOnly);
         for (int i = 0; i < companyFiles.Length; i++) {
             string companyFile = companyFiles[i];
             try {
@@ -95,10 +129,10 @@ public sealed class CompanyService(
             }
         }
         CompanyCount = loaded; // Update the company count after loading
-        return ValueTask.FromResult(loaded); // Return the number of loaded companies
+        return loaded; // Return the number of loaded companies
     }
 
-    public async ValueTask<SaveCompanyResult> SaveCompany(Company company, bool syncWithRemote = true) {
+    public async Task<SaveCompanyResult> SaveCompany(Company company, bool syncWithRemote = true) {
         if (company is null) {
             throw new ArgumentNullException(nameof(company), "Company cannot be null.");
         }
@@ -106,7 +140,8 @@ public sealed class CompanyService(
         _companySerializer.SerializeCompany(serializedCompanyStream, company);
         serializedCompanyStream.Seek(0, SeekOrigin.Begin); // Reset the stream position to the beginning
 
-        string companyFilePath = Path.Combine(_configuration.CompaniesPath, $"{company.Id}.bgc");
+        string companiesPath = await GetOrCreateLocalUserCompanyPath() ?? throw new InvalidOperationException("Failed to get or create local user company path. Cannot save company.");
+        string companyFilePath = Path.Combine(companiesPath, $"{company.Id}.bgc");
         try {
             File.WriteAllBytes(companyFilePath, serializedCompanyStream.ToArray()); // Save the serialized company to a file
             UpdateLocalCompanies(company);

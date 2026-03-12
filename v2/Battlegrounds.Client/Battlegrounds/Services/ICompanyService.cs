@@ -54,7 +54,7 @@ public interface ICompanyService {
     /// Loads all companies from the local file system into the local cache.
     /// </summary>
     /// <returns>The amount of companies that were loaded</returns>
-    ValueTask<int> LoadPlayerCompaniesAsync();
+    Task<int> LoadPlayerCompaniesAsync();
 
     /// <summary>
     /// Gets a company by its ID
@@ -111,9 +111,9 @@ public interface ICompanyService {
     /// <param name="companyId">The unique identifier of the company to delete. Cannot be null or empty.</param>
     /// <param name="syncWithRemote">Flag to determine if the deletion should be synchronized with the remote server.
     /// <see langword="true"/> to synchronize with the remote server; otherwise, <see langword="false"/>.</param>
-    /// <returns>A <see cref="ValueTask{TResult}"/> representing the asynchronous operation.  The result is <see
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  The result is <see
     /// langword="true"/> if the company was successfully deleted; otherwise, <see langword="false"/>.</returns>
-    ValueTask<bool> DeleteCompany(string companyId, bool syncWithRemote = true);
+    Task<bool> DeleteCompany(string companyId, bool syncWithRemote = true);
 
     /// <summary>
     /// Saves the specified company to the local database and optionally synchronizes it with a remote server.
@@ -124,9 +124,9 @@ public interface ICompanyService {
     /// <param name="company">The company to be saved. Cannot be null.</param>
     /// <param name="syncWithRemote">A value indicating whether the company should be synchronized with the remote server. <see langword="true"/> to
     /// synchronize with the remote server; otherwise, <see langword="false"/>.</param>
-    /// <returns>A <see cref="ValueTask{TResult}"/> representing the asynchronous operation.  The result is <see
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  The result is <see
     /// langword="true"/> if the company was successfully saved; otherwise, <see langword="false"/>.</returns>
-    ValueTask<SaveCompanyResult> SaveCompany(Company company, bool syncWithRemote = true);
+    Task<SaveCompanyResult> SaveCompany(Company company, bool syncWithRemote = true);
 
     /// <summary>
     /// Applies a list of replay events to a company, updating its state accordingly.
