@@ -215,9 +215,9 @@ public sealed class MultiplayerLobby(
                     return null; // Setting not found, ignore the update
                 }
             case LobbyEventType.MapUpdated:
-                var newMap = _mapService.GetMapByScenarioName(Game, update.SettingsUpdate.NewValue); // Re-use the SettingsUpdate message to get the new map name, as the server doesn't send a separate message for map updates currently
+                var newMap = _mapService.GetMapByScenarioName(Game, update.Map.MapId);
                 _map = Map.FromScenario(newMap);
-                return new LobbyEvent(LobbyEventType.MapUpdated, newMap);
+                return new LobbyEvent(LobbyEventType.MapUpdated, _map);
             case LobbyEventType.GameStarted:
                 return new LobbyEvent(LobbyEventType.GameStarted); // Instructs the LobbyViewModel to start the game.
             case LobbyEventType.GameCancelled:

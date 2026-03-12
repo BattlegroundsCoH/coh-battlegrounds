@@ -363,6 +363,9 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                     if (lobbyEvent.Arg is not Map updatedMap) {
                         break;
                     }
+                    if (updatedMap == _selectedMap) {
+                        break; // No change
+                    }
                     _selectedMap = updatedMap; // NOP if already selected (so NOP for host)
 
                     // Update team slots as well, since some slots may become hidden/unhidden based on map selection
@@ -370,6 +373,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                     Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
                     PropertyChanged?.Invoke(this, new(nameof(SelectedMap)));
                     PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
+                    PropertyChanged?.Invoke(this, new(nameof(SelectedMapPreview)));
                     break;
                 case LobbyEventType.SettingUpdated:
                     PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
@@ -416,8 +420,11 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             return; // Already left
         }
         await _lobbyService.LeaveLobbyAsync(_lobby);
-        _mainWindowVm.SetContent(null); // Return to default content (probably multiplayer view or home view)
-        // TODO: Tell main window to return to multiplayer view (if multiplayer lobby) or home if singleplayer lobby
+        if (_lobby is SingleplayerLobby) {
+            _mainWindowVm.SetContent(_mainWindowVm.HomeView); // Return to home view for singleplayer lobby
+        } else {
+            _mainWindowVm.SetContent(_mainWindowVm.MultiplayerView); // Return to multiplayer view for multiplayer lobby
+        }
     }
 
     private async Task SendChatMessage() {
