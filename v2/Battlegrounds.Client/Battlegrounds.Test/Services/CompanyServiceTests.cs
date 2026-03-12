@@ -358,7 +358,9 @@ public class CompanyServiceTests
     public async Task ApplyEvents_CommitLocallyTrue_SavesCompanySuccessfully()
     {
         // Arrange
+        const string testUserId = "test-user-apply-events";
         IUserService userService = Substitute.For<IUserService>();
+        userService.GetLocalUserAsync().Returns(new User { Email = "test@test.com", UserId = testUserId });
         IBattlegroundsServerAPI battlegroundsServerAPI = Substitute.For<IBattlegroundsServerAPI>();
         Configuration configuration = new Configuration() { CompaniesPath = Path.GetTempPath() };
         var bps = new BlueprintFixtureService();
@@ -384,7 +386,7 @@ public class CompanyServiceTests
         Assert.That(updated.Version, Is.EqualTo(company.Version + 1));
 
         // Clean up
-        string companyFilePath = Path.Combine(configuration.CompaniesPath, $"{updated.GameId}_{updated.Faction}_{updated.Id}.cmpny");
+        string companyFilePath = Path.Combine(configuration.CompaniesPath, testUserId, $"{updated.Id}.bgc");
         if (File.Exists(companyFilePath))
         {
             File.Delete(companyFilePath);
