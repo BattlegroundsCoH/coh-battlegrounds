@@ -31,6 +31,9 @@
     <Color x:Key="BackgroundPurple">#523352</Color>
     <SolidColorBrush x:Key="BackgroundPurpleBrush" Color="{StaticResource BackgroundPurple}" />
 
+    <Color x:Key="BackgroundLightOrange">#e57f45</Color>
+    <SolidColorBrush x:Key="BackgroundLightOrangeBrush" Color="{StaticResource BackgroundLightOrange}" />
+
     <Color x:Key="ForegroundWhite">#ffffff</Color>
     <SolidColorBrush x:Key="ForegroundWhiteBrush" Color="{StaticResource ForegroundWhite}" />
 
@@ -49,8 +52,14 @@
     <Color x:Key="ForegroundDarkRed">#b30000</Color>
     <SolidColorBrush x:Key="ForegroundDarkRedBrush" Color="{StaticResource ForegroundDarkRed}" />
 
+    <Color x:Key="ForegroundDarkGreen">#00b300</Color>
+    <SolidColorBrush x:Key="ForegroundDarkGreenBrush" Color="{StaticResource ForegroundDarkGreen}" />
+
     <Color x:Key="ForegroundGray">#a0a0a0</Color>
     <SolidColorBrush x:Key="ForegroundGrayBrush" Color="{StaticResource ForegroundGray}" />
+
+    <Color x:Key="ForegroundDarkOrange">#ff8c00</Color>
+    <SolidColorBrush x:Key="ForegroundDarkOrangeBrush" Color="{StaticResource ForegroundDarkOrange}" />
 
     <Color x:Key="AccentAuthDark">#27272a</Color>
     <SolidColorBrush x:Key="AccentAuthDarkBrush" Color="{StaticResource AccentAuthDark}" />

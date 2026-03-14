@@ -191,6 +191,16 @@ public sealed class Configuration {
     public bool EnableTelemetry { get; set; } = false; // Should telemetry be sent to the server?
 
     /// <summary>
+    /// Gets or sets the URL of the GitHub repository associated with the project.
+    /// </summary>
+    /// <remarks>This property can be used to provide users with a reference to the project's source code and
+    /// issue tracker. It is intended for informational purposes and may be used in developer mode or for support
+    /// scenarios.</remarks>
+    [ConfigurationSection("General", "General application settings", priority: 0)]
+    [ConfigurationProperty("GitHub Repository", "The URL of the GitHub repository for the project. This can be used for reference or to direct users to the source code and issue tracker.", propertyType: ConfigurationPropertyType.String, developerModeOnly: true)]
+    public string GithubRepository { get; set; } = "https://github.com/BattlegroundsCoH/coh-battlegrounds";
+
+    /// <summary>
     /// Gets or sets the logging level for the application.
     /// </summary>
     public string LogLevel { get; set; } =

@@ -203,6 +203,7 @@ public sealed class BattlegroundsApp {
         services.AddTransient<DialogModalViewModel>(); // Note: this is transient, so a new instance will be created each time it's requested
 
         // Register services
+        services.AddSingleton<IUpdateService, UpdateService>();
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<ILobbyService, LobbyService>();
         services.AddSingleton<IPlayService, PlayService>();
@@ -262,6 +263,16 @@ public sealed class BattlegroundsApp {
             if (!await loginViewModel.AutoLoginAsync()) {
                 logger.LogWarning("Auto-login failed -- user must log in again.");
             }
+        }
+
+        var userService = ServiceProvider.GetRequiredService<IUserService>();
+        await userService.IsUserLoggedIn;
+
+        var updateService = ServiceProvider.GetRequiredService<IUpdateService>();
+        if (await updateService.CheckForUpdatesAsync()) {
+            logger.LogInformation("An update is available.");
+            var homeViewModel = ServiceProvider.GetRequiredService<HomeViewModel>();
+            homeViewModel.NotifyUpdateAvailable(updateService.AvailableVersion ?? string.Empty);
         }
 
     }

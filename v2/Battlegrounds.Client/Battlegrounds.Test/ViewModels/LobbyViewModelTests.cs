@@ -151,6 +151,7 @@ public sealed class LobbyViewModelTests {
         services.AddSingleton(Substitute.For<IUserService>());
         services.AddSingleton(Substitute.For<IBrowserService>());
         services.AddSingleton(Substitute.For<IGameService>());
+        services.AddSingleton(Substitute.For<IUpdateService>());
         services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
 
         // These need default returns so the async-void SyncLobbyView doesn't crash
@@ -176,13 +177,47 @@ public sealed class LobbyViewModelTests {
     }
 
     /// <summary>
-    /// Creates a <see cref="LobbyViewModel"/> and waits briefly for async constructor
-    /// work (<c>SyncLobbyView</c>, <c>LoadLocalPlayerCompanies</c>) to settle.
+    /// Creates a <see cref="LobbyViewModel"/>. All mocked async operations return
+    /// already-completed tasks, so the <c>async void SyncLobbyView</c> chain runs
+    /// synchronously during construction — no additional settling delay is required.
     /// </summary>
-    private static async Task<LobbyViewModel> CreateVmAsync(ILobby lobby, IServiceProvider sp) {
-        var vm = new LobbyViewModel(lobby, sp, NullLogger<LobbyViewModel>.Instance);
-        await Task.Delay(150); // let async-void initialization settle
-        return vm;
+    private static Task<LobbyViewModel> CreateVmAsync(ILobby lobby, IServiceProvider sp)
+        => Task.FromResult(new LobbyViewModel(lobby, sp, NullLogger<LobbyViewModel>.Instance));
+
+    // ── Test synchronization helpers ─────────────────────────────────────────
+
+    /// <summary>
+    /// Polls <paramref name="condition"/> every <paramref name="pollMs"/> milliseconds until
+    /// it returns <see langword="true"/> or <paramref name="timeoutMs"/> elapses.
+    /// </summary>
+    private static async Task WaitUntilAsync(Func<bool> condition, int timeoutMs = 2000, int pollMs = 10) {
+        int elapsed = 0;
+        while (!condition()) {
+            if (elapsed >= timeoutMs)
+                Assert.Fail($"Condition not met within {timeoutMs} ms.");
+            await Task.Delay(pollMs);
+            elapsed += pollMs;
+        }
+    }
+
+    /// <summary>
+    /// Returns a <see cref="Task"/> that completes the next time <paramref name="vm"/> raises
+    /// <see cref="INotifyPropertyChanged.PropertyChanged"/> for <paramref name="propertyName"/>.
+    /// Throws <see cref="TimeoutException"/> if no matching notification fires within
+    /// <paramref name="timeoutMs"/> milliseconds.
+    /// </summary>
+    private static Task WaitForPropertyChangedAsync(
+        INotifyPropertyChanged vm, string propertyName, int timeoutMs = 2000) {
+        var tcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        PropertyChangedEventHandler? handler = null;
+        handler = (_, e) => {
+            if (e.PropertyName == propertyName) {
+                vm.PropertyChanged -= handler;
+                tcs.TrySetResult();
+            }
+        };
+        vm.PropertyChanged += handler;
+        return tcs.Task.WaitAsync(TimeSpan.FromMilliseconds(timeoutMs));
     }
 
     // ── CanStartMatch ─────────────────────────────────────────────────────────
@@ -369,8 +404,9 @@ public sealed class LobbyViewModelTests {
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
         var msg = new ChatMessage("local-player-1", "Player One", ChatChannel.All, "Hello!");
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.ParticipantMessage, msg));
-        await Task.Delay(100);
+        await processed;
         events.Writer.Complete();
 
         Assert.That(vm.ChatMessages, Has.Count.EqualTo(1));
@@ -384,8 +420,9 @@ public sealed class LobbyViewModelTests {
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
         var msg = new ChatMessage("other-player-2", "Player Two", ChatChannel.All, "Hi there!");
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.ParticipantMessage, msg));
-        await Task.Delay(100);
+        await processed;
         events.Writer.Complete();
 
         Assert.That(vm.ChatMessages, Has.Count.EqualTo(1));
@@ -397,8 +434,9 @@ public sealed class LobbyViewModelTests {
         var (lobby, events) = CreateLobby(startEventLoop: true);
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.ParticipantMessage, "not a ChatMessage"));
-        await Task.Delay(100);
+        await processed;
         events.Writer.Complete();
 
         Assert.That(vm.ChatMessages, Is.Empty);
@@ -411,8 +449,9 @@ public sealed class LobbyViewModelTests {
         var (lobby, events) = CreateLobby(startEventLoop: true);
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TrayMessage, "Uploading..."));
-        await Task.Delay(100);
+        await processed;
         events.Writer.Complete();
 
         Assert.That(vm.TrayMessage, Is.EqualTo("Uploading..."));
@@ -423,8 +462,9 @@ public sealed class LobbyViewModelTests {
         var (lobby, events) = CreateLobby(startEventLoop: true);
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TrayMessage, 42));
-        await Task.Delay(100);
+        await processed;
         events.Writer.Complete();
 
         Assert.That(vm.TrayMessage, Is.EqualTo(string.Empty));
@@ -435,10 +475,13 @@ public sealed class LobbyViewModelTests {
         var (lobby, events) = CreateLobby(startEventLoop: true);
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
+        var firstProcessed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TrayMessage, "Something"));
-        await Task.Delay(50);
+        await firstProcessed;
+
+        var secondProcessed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TrayMessageHide));
-        await Task.Delay(100);
+        await secondProcessed;
         events.Writer.Complete();
 
         Assert.That(vm.TrayMessage, Is.EqualTo(string.Empty));
@@ -452,8 +495,9 @@ public sealed class LobbyViewModelTests {
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
         var newMap = new Map("New Map", "Desc", 4, "new_preview", "new_map_4p");
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.MapUpdated, newMap));
-        await Task.Delay(100);
+        await processed;
         events.Writer.Complete();
 
         Assert.That(vm.SelectedMap, Is.EqualTo(newMap));
@@ -468,8 +512,9 @@ public sealed class LobbyViewModelTests {
         vm.PropertyChanged += (_, e) => fired.Add(e.PropertyName!);
 
         // Push the same map that is already selected
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.MapUpdated, DefaultMap));
-        await Task.Delay(100);
+        await processed;
         events.Writer.Complete();
 
         Assert.That(fired, Has.No.Member(nameof(vm.SelectedMap)));
@@ -486,8 +531,9 @@ public sealed class LobbyViewModelTests {
         vm.PropertyChanged += (_, e) => fired.Add(e.PropertyName!);
 
         // This is how MultiplayerLobby.ToggleSlotLock, RemoveAI, SetSlotAIDifficulty send the event
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, TeamType.Allies));
-        await Task.Delay(100);
+        await processed;
         events.Writer.Complete();
 
         Assert.That(fired, Contains.Item(nameof(vm.Team1Slots)));
@@ -509,8 +555,9 @@ public sealed class LobbyViewModelTests {
         vm.PropertyChanged += (_, e) => fired.Add(e.PropertyName!);
 
         // MultiplayerLobby.MapAndApplyGrpcEvent sends int teamId, not TeamType
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, 0));
-        await Task.Delay(100);
+        await processed;
         events.Writer.Complete();
 
         // BUG: neither team is refreshed because the VM expects TeamType, not int
@@ -534,8 +581,9 @@ public sealed class LobbyViewModelTests {
         vm.PropertyChanged += (_, e) => fired.Add(e.PropertyName!);
 
         // SingleplayerLobby.SetMap writes TeamUpdated with no Arg
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated));
-        await Task.Delay(100);
+        await processed;
         events.Writer.Complete();
 
         // BUG: neither team is refreshed
@@ -561,8 +609,9 @@ public sealed class LobbyViewModelTests {
         vm.PropertyChanged += (_, e) => fired.Add(e.PropertyName!);
 
         // This is how MapAndApplyGrpcEvent sends setting updates (with the LobbySetting as Arg)
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated, setting));
-        await Task.Delay(100);
+        await processed;
         events.Writer.Complete();
 
         Assert.That(fired, Contains.Item(nameof(vm.SelectedSettings)));
@@ -583,8 +632,9 @@ public sealed class LobbyViewModelTests {
         vm.PropertyChanged += (_, e) => fired.Add(e.PropertyName!);
 
         // Both SingleplayerLobby.SetSetting and MultiplayerLobby.SetSetting send this form
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated));
-        await Task.Delay(100);
+        await processed;
         events.Writer.Complete();
 
         // PropertyChanged still fires (so the UI re-reads existing wrappers), but no targeted swap
@@ -598,9 +648,10 @@ public sealed class LobbyViewModelTests {
         var (lobby, events) = CreateLobby(startEventLoop: true);
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(
             new LobbyEvent(LobbyEventType.SlotCompanyDownloadProgress, (0, 0, 0.5f)));
-        await Task.Delay(100);
+        await processed;
         events.Writer.Complete();
 
         var slot = vm.Team1Slots.FirstOrDefault(x => x.Slot.Index == 0);
@@ -613,16 +664,17 @@ public sealed class LobbyViewModelTests {
         var (lobby, events) = CreateLobby(startEventLoop: true);
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(
             new LobbyEvent(LobbyEventType.SlotCompanyDownloadProgress, (0, 0, 1.0f)));
-        await Task.Delay(100);
+        await processed;
 
         var slot = vm.Team1Slots.FirstOrDefault(x => x.Slot.Index == 0);
         Assert.That(slot, Is.Not.Null);
         Assert.That(slot!.CompanyDownloadProgress, Is.EqualTo(1.0f), "Should be 1.0 immediately after the event");
 
-        // Wait for the 2-second auto-hide + buffer
-        await Task.Delay(2500);
+        // Poll until the 2-second production-code delay in HideDownloadProgressAfterDelay elapses
+        await WaitUntilAsync(() => slot.CompanyDownloadProgress == 0f, timeoutMs: 3000);
         events.Writer.Complete();
 
         Assert.That(slot.CompanyDownloadProgress, Is.EqualTo(0f), "Should be reset to 0 after auto-hide delay");
@@ -636,8 +688,9 @@ public sealed class LobbyViewModelTests {
         lobby.GetMatchResults().Returns(Task.FromResult<MatchOverData?>(null));
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.MatchOver));
-        await Task.Delay(150);
+        await processed;
         events.Writer.Complete();
 
         Assert.That(vm.MatchOverResult, Is.Null);

@@ -7,6 +7,8 @@ using Battlegrounds.Models.Playing;
 using Battlegrounds.Models.Statistics;
 using Battlegrounds.Services;
 
+using CommunityToolkit.Mvvm.Input;
+
 namespace Battlegrounds.ViewModels;
 
 public record RecentMatchViewModel(string GameId, string CompanyFaction, string CompanyName, string Map, bool Victory, DateTime Timestamp, TimeSpan Duration);
@@ -15,17 +17,21 @@ public record FeaturedCompanyViewModel(string CompanyFaction, string CompanyName
 
 public record NewsOrUpdatesViewModel();
 
-public sealed class HomeViewModel : INotifyPropertyChanged {
+public sealed class HomeViewModel(IStatisticsService statisticsService, ICompanyService companyService, IUpdateService updateService) : INotifyPropertyChanged {
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private readonly TaskCompletionSource _dataLoadedCompletionSource = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-    private readonly IStatisticsService _statisticsService;
-    private readonly ICompanyService _companyService;
+    private readonly IStatisticsService _statisticsService = statisticsService;
+    private readonly ICompanyService _companyService = companyService;
+    private readonly IUpdateService _updateService = updateService;
 
     private string _welcomeMessage = "Welcome back, Commander!";
 
     public string WelcomeMessage => _welcomeMessage;
+
+    public bool IsUpdateAvailable { get; private set; } = false;
+    public string NewVersionNumber { get; private set; } = string.Empty;
 
     public int TotalMatches { get; private set; } = 0;
     public int TotalVictories { get; private set; } = 0;
@@ -45,10 +51,7 @@ public sealed class HomeViewModel : INotifyPropertyChanged {
 
     public ObservableCollection<NewsOrUpdatesViewModel> NewsAndUpdates { get; } = [];
 
-    public HomeViewModel(IStatisticsService statisticsService, ICompanyService companyService) {
-        _statisticsService = statisticsService;
-        _companyService = companyService;
-    }
+    public IAsyncRelayCommand InstallUpdateCommand => new AsyncRelayCommand(InstallUpdate, () => IsUpdateAvailable);
 
     public void OnDataLoaded() {
         _dataLoadedCompletionSource.SetResult();
@@ -153,6 +156,18 @@ public sealed class HomeViewModel : INotifyPropertyChanged {
             return $"{hours} hours {totalPlayTime.Minutes} minutes";
         }
         return $"{(int)totalPlayTime.TotalMinutes} minutes";
+    }
+
+    public void NotifyUpdateAvailable(string version) {
+        NewVersionNumber = version;
+        IsUpdateAvailable = true;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsUpdateAvailable)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NewVersionNumber)));
+        InstallUpdateCommand.NotifyCanExecuteChanged();
+    }
+
+    private async Task InstallUpdate() {
+        await _updateService.DownloadAndInstallUpdate();
     }
 
 }
