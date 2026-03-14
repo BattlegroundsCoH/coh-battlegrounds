@@ -219,7 +219,7 @@ Two GitHub Actions workflows are defined in `.github/workflows/`:
 
 Runs on every push to `master` and on all pull requests. Steps:
 1. Check out the repository (including submodules).
-2. Set up .NET 9 SDK.
+2. Set up .NET 10 SDK.
 3. Restore dependencies.
 4. Build and run all non-integration tests.
 
