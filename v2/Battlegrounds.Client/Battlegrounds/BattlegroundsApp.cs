@@ -203,6 +203,7 @@ public sealed class BattlegroundsApp {
         services.AddTransient<DialogModalViewModel>(); // Note: this is transient, so a new instance will be created each time it's requested
 
         // Register services
+        services.AddSingleton<IUpdateService, UpdateService>();
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<ILobbyService, LobbyService>();
         services.AddSingleton<IPlayService, PlayService>();
@@ -263,6 +264,8 @@ public sealed class BattlegroundsApp {
                 logger.LogWarning("Auto-login failed -- user must log in again.");
             }
         }
+
+        // TODO: Check for updates and notify user if update is available
 
     }
 
