@@ -811,4 +811,22 @@ public sealed class MultiplayerLobby(
         return MatchOverData.FromMatchResultForPlayer(serverVersion, _localParticipant.ParticipantId, _latestMatchCompanies);
     }
 
+    public async Task SyncRemoteCompanies() {
+
+        for (int teamId = 0; teamId < 2; teamId++) {
+            var team = teamId == 0 ? setup.Team1 : setup.Team2;
+            for (int slotIndex = 0; slotIndex < team.Slots.Length; slotIndex++) {
+                var slot = team.Slots[slotIndex];
+                if (!string.IsNullOrEmpty(slot.CompanyId) && !string.IsNullOrEmpty(slot.ParticipantId)) {
+                    await _companyService.DownloadRemoteCompanyAsync(slot.CompanyId, slot.ParticipantId, downloadProgressUpdate: async (downloaded, total) => {
+                        long totalBytes = total ?? 0;
+                        float progress = totalBytes > 0 ? (float)downloaded / totalBytes : 0;
+                        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SlotCompanyDownloadProgress, (teamId, slotIndex, progress))); // Notify the UI about the download progress for this slot
+                    }); // Start downloading company data for each participant in the lobby to ensure we have the latest data for all participants
+                }
+            }
+        }
+
+    }
+
 }

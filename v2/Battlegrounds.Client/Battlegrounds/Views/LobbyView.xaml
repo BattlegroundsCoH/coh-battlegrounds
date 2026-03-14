@@ -23,6 +23,8 @@
         <converters:ButtonStateToContentConverter x:Key="ButtonStateToContentConverter"/>
         <converters:ReadyStateConverter x:Key="ReadyStateConverter"/>
         <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
+        <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
+        <converters:DownloadProgressArcConverter x:Key="DownloadProgressArcConverter"/>
 
         <DataTemplate x:Key="CompanyComboBoxItemTemplate">
             <Grid>
@@ -86,6 +88,35 @@
                                                 ImageSource="pack://application:,,,/Battlegrounds;component/Assets/dummy_avatar.png"/>
                                         </Ellipse.Fill>
                                     </Ellipse>
+
+                                    <!-- Company download progress doughnut (overlays avatar, hidden when progress = 0) -->
+                                    <Grid Width="40" Height="40"
+                                          Margin="10,0,0,0"
+                                          Grid.Column="0"
+                                          VerticalAlignment="Center"
+                                          Visibility="{Binding CompanyDownloadProgress, Converter={StaticResource ZeroToVisibilityConverter}}">
+
+                                        <!-- Background track ring (full donut, semi-transparent) -->
+                                        <Path Fill="#55FFFFFF">
+                                            <Path.Data>
+                                                <PathGeometry FillRule="EvenOdd">
+                                                    <PathFigure StartPoint="20,4" IsClosed="True">
+                                                        <ArcSegment Point="20,36" Size="16,16" IsLargeArc="True" SweepDirection="Clockwise"/>
+                                                        <ArcSegment Point="20,4"  Size="16,16" IsLargeArc="True" SweepDirection="Clockwise"/>
+                                                    </PathFigure>
+                                                    <PathFigure StartPoint="20,10" IsClosed="True">
+                                                        <ArcSegment Point="20,30" Size="10,10" IsLargeArc="True" SweepDirection="Clockwise"/>
+                                                        <ArcSegment Point="20,10" Size="10,10" IsLargeArc="True" SweepDirection="Clockwise"/>
+                                                    </PathFigure>
+                                                </PathGeometry>
+                                            </Path.Data>
+                                        </Path>
+
+                                        <!-- Progress arc -->
+                                        <Path Fill="{StaticResource AccentBlueBrush}"
+                                              Data="{Binding CompanyDownloadProgress, Converter={StaticResource DownloadProgressArcConverter}}"/>
+
+                                    </Grid>
 
                                     <!-- Player Name -->
                                     <TextBlock Text="{Binding DisplayName}" 

@@ -105,6 +105,8 @@ public sealed class MultiplayerLobbyFactory(IServiceProvider serviceProvider) {
             IsHost = false,
         };
 
+        _ = lobby.SyncRemoteCompanies(); // Trigger initial sync/download of companies by other participants, but don't await it here as it may take some time and we want to return the lobby immediately
+
         return lobby;
 
     }

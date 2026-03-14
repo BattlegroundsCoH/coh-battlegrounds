@@ -57,7 +57,7 @@ public sealed class CompanyService(
 
     public async Task<Company?> DownloadRemoteCompanyAsync(string companyId, string? userId = null, bool storeLocally = false, DownloadProgressUpdateDelegate? downloadProgressUpdate = null) {
         string actualUserId = await ResolveUserId(userId); // Resolve the user ID synchronously for simplicity
-        Company? company = await _serverAPI.GetCompanyAsync(companyId, actualUserId); // Download the company from the remote store
+        Company? company = await _serverAPI.GetCompanyAsync(companyId, actualUserId, progressUpdate: downloadProgressUpdate); // Download the company from the remote store
         if (company is null) {
             _logger.LogWarning("Company with ID {CompanyId} not found for user {UserId}.", companyId, actualUserId);
             return null;

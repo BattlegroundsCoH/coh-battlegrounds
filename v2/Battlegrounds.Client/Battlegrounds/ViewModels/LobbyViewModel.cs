@@ -420,6 +420,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                             slotVm.CompanyDownloadProgress = progress;
                             PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
                             PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
+                            if (progress >= 1.0f)
+                                _ = HideDownloadProgressAfterDelay(slotVm);
                             break;
                         case (int teamId, int slotId, Company company):
                             ICollection<LobbySlotViewModel> slots = teamId switch {
@@ -652,6 +654,13 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             TotalKills = 0,
             TotalLosses = 0
         };
+    }
+
+    private async Task HideDownloadProgressAfterDelay(LobbySlotViewModel slotVm) {
+        await Task.Delay(TimeSpan.FromSeconds(2));
+        slotVm.CompanyDownloadProgress = 0f;
+        PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
+        PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
     }
 
     private async void ShowMatchResults() {
