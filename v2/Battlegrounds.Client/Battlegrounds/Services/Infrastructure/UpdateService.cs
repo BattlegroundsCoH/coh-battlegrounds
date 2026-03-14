@@ -24,6 +24,8 @@ public sealed class UpdateService(Configuration configuration, ILogger<UpdateSer
     private bool? _hasDetectedUpdates;
     private UpdateInfo? _updateInfo;
 
+    public string? AvailableVersion => _updateInfo?.TargetFullRelease.Version.ToString();
+
     public async Task<bool> CheckForUpdatesAsync() {
 
         if (_hasDetectedUpdates.HasValue) {

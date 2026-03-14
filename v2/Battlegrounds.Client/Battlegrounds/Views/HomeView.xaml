@@ -63,6 +63,78 @@
                   Style="{StaticResource ChatScrollViewer}">
         <StackPanel>
             
+            <!-- Infrastructure Section -->
+            <Border Margin="10,0,10,15" CornerRadius="12" ClipToBounds="True">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Setter Property="Background" Value="{StaticResource BackgroundBlueBrush}"/>
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect BlurRadius="18" ShadowDepth="3" Opacity="0.55" Color="#e57f45"/>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsUpdateAvailable}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+
+                <Grid>
+                    <!-- Orange left accent strip -->
+                    <Border Width="6" HorizontalAlignment="Left"
+                            Background="{StaticResource AccentOrangeBrush}"
+                            CornerRadius="12,0,0,12"/>
+
+                    <!-- Card content -->
+                    <Grid Margin="26,16,20,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Icon + text -->
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+
+                            <!-- Circular icon badge -->
+                            <Border Width="44" Height="44" CornerRadius="22"
+                                    Background="{StaticResource AccentOrangeBrush}"
+                                    Margin="0,0,14,0"
+                                    VerticalAlignment="Center">
+                                <TextBlock Text="↑"
+                                           FontSize="22" FontWeight="Bold"
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="New Version Available"
+                                           FontSize="16" FontWeight="Bold"
+                                           Foreground="{StaticResource AccentOrangeBrush}"/>
+                                <TextBlock FontSize="13"
+                                           Foreground="{StaticResource ForegroundLightGrayBrush}">
+                                    <Run Text="Version "/>
+                                    <Run Text="{Binding NewVersionNumber, Mode=OneWay}"
+                                         FontWeight="SemiBold"
+                                         Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                                    <Run Text=" is ready to install"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Install Now button -->
+                        <Button Grid.Column="1"
+                                Style="{StaticResource CautionActionButton}"
+                                Content="Install Now"
+                                Command="{Binding InstallUpdateCommand}"
+                                VerticalAlignment="Center"/>
+                    </Grid>
+                </Grid>
+            </Border>
+            
             <!-- Hero Section -->
             <Border Style="{StaticResource DashboardCard}" Padding="20" Margin="10,0,10,15">
                 <StackPanel>

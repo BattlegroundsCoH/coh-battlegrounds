@@ -9,6 +9,11 @@
 public interface IUpdateService {
 
     /// <summary>
+    /// Gets the version string of the available update, or <see langword="null"/> if no update has been detected.
+    /// </summary>
+    string? AvailableVersion { get; }
+
+    /// <summary>
     /// Checks asynchronously whether a newer version of the application is available.
     /// </summary>
     /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if an update is

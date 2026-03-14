@@ -265,7 +265,15 @@ public sealed class BattlegroundsApp {
             }
         }
 
-        // TODO: Check for updates and notify user if update is available
+        var userService = ServiceProvider.GetRequiredService<IUserService>();
+        await userService.IsUserLoggedIn;
+
+        var updateService = ServiceProvider.GetRequiredService<IUpdateService>();
+        if (await updateService.CheckForUpdatesAsync()) {
+            logger.LogInformation("An update is available.");
+            var homeViewModel = ServiceProvider.GetRequiredService<HomeViewModel>();
+            homeViewModel.NotifyUpdateAvailable(updateService.AvailableVersion ?? string.Empty);
+        }
 
     }
 
