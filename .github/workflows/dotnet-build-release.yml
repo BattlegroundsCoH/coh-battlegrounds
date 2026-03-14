@@ -54,7 +54,7 @@ jobs:
           --packDir publish/
           --mainExe Battlegrounds.exe
           --packTitle "Company of Heroes: Battlegrounds"
-          --icon v2/Battlegrounds.Client/Battlegrounds/Assets/app.ico
+          --icon v2/Battlegrounds.Client/Battlegrounds/app.ico
           --outputDir releases/
         shell: pwsh
 

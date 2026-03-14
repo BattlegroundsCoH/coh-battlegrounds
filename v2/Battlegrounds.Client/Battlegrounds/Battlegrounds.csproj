@@ -7,6 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <AssemblyName>Battlegrounds</AssemblyName>
+    <ApplicationIcon>App.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +24,10 @@
     <Page Remove="Resources\Strings.xaml" />
     <Page Remove="Resources\Styles.xaml" />
     <Page Remove="Resources\Values.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="App.ico" />
   </ItemGroup>
 
   <ItemGroup>
