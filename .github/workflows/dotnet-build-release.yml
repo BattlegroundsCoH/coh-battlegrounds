@@ -53,7 +53,7 @@ jobs:
           --packVersion ${{ steps.version.outputs.VERSION }}
           --packDir publish/
           --mainExe Battlegrounds.exe
-          --packTitle "Company of Heroes: Battlegrounds"
+          --packTitle "Battlegrounds"
           --icon v2/Battlegrounds.Client/Battlegrounds/app.ico
           --outputDir releases/
         shell: pwsh
