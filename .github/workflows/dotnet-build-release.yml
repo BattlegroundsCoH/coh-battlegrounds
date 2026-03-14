@@ -1,0 +1,66 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write   # Required to create GitHub Releases and upload assets
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install Velopack CLI
+        run: dotnet tool install -g vpk
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          $version = "${{ github.ref_name }}" -replace '^v', ''
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+
+      - name: Restore
+        run: dotnet restore v2/Battlegrounds.Client/Battlegrounds.Client.sln
+
+      - name: Publish (self-contained, win-x64)
+        run: >
+          dotnet publish v2/Battlegrounds.Client/Battlegrounds/Battlegrounds.csproj
+          -c Release
+          -r win-x64
+          --self-contained true
+          -o publish/
+        shell: pwsh
+
+      - name: Pack with Velopack
+        run: >
+          vpk pack
+          --packId Battlegrounds
+          --packVersion ${{ steps.version.outputs.VERSION }}
+          --packDir publish/
+          --mainExe Battlegrounds.exe
+          --packTitle "Company of Heroes: Battlegrounds"
+          --icon v2/Battlegrounds.Client/Battlegrounds/Assets/app.ico
+          --outputDir releases/
+        shell: pwsh
+
+      - name: Upload to GitHub Releases
+        run: >
+          vpk upload github
+          --repoUrl https://github.com/BattlegroundsCoH/coh-battlegrounds
+          --token ${{ secrets.GITHUB_TOKEN }}
+          --tag ${{ github.ref_name }}
+          --outputDir releases/
+          --releaseName "Battlegrounds ${{ github.ref_name }}"
+        shell: pwsh

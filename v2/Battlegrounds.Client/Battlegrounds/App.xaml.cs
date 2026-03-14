@@ -4,6 +4,8 @@ using Battlegrounds.Views;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Velopack;
+
 namespace Battlegrounds;
 
 /// <summary>
@@ -12,6 +14,10 @@ namespace Battlegrounds;
 public partial class App : Application {
 
     private IServiceProvider? _serviceProvider = null!;
+
+    public App() {
+        VelopackApp.Build().Run();
+    }
 
     protected override void OnStartup(StartupEventArgs e) {
         
