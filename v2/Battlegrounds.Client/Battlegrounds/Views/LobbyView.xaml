@@ -134,11 +134,23 @@
                                         </ComboBox>
 
                                         <!-- Selected company -->
-                                        <TextBlock Text="{Binding DisplayName}"
+                                        <StackPanel
+                                            Margin="10,0,0,0"
+                                            Visibility="{Binding CanSetCompany, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                                            
+                                            <Image Width="32" Height="32">
+                                                <Image.Source>
+                                                    <MultiBinding Converter="{StaticResource FactionIconConverter}">
+                                                        <Binding Path="SelectedCompany.Faction"/>
+                                                        <Binding Path="SelectedCompany.GameId"/>
+                                                    </MultiBinding>
+                                                </Image.Source>
+                                            </Image>
+
+                                            <TextBlock Text="{Binding SelectedCompany.DisplayName}"
                                                    FontWeight="SemiBold"
-                                                   Margin="10,0,0,0"
-                                                   Visibility="{Binding CanSetCompany, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
                                                    Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                        </StackPanel>
 
 
                                     </Grid>

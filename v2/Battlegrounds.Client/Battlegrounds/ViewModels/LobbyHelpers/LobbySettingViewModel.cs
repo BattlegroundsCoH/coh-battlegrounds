@@ -4,7 +4,8 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Battlegrounds.ViewModels.LobbyHelpers;
 
-public sealed record LobbySettingViewModel(LobbySetting Setting, IAsyncRelayCommand<LobbySetting> SettingChangeCommand) { // TODO: Make bindings use the Setting object directly instead of duplicating references
+public sealed record LobbySettingViewModel(LobbySetting Setting, IAsyncRelayCommand<LobbySetting> SettingChangeCommand) {
+
     public string Name => Setting.Name;
     public LobbySettingType Type => Setting.Type;
 
@@ -47,4 +48,5 @@ public sealed record LobbySettingViewModel(LobbySetting Setting, IAsyncRelayComm
     public int MinValue => Setting.MinValue;
     public int MaxValue => Setting.MaxValue;
     public int Step => Setting.Step;
+
 }

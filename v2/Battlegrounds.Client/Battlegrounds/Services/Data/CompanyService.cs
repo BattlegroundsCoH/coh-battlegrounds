@@ -55,26 +55,26 @@ public sealed class CompanyService(
         return true; // Return true if deletion was successful and no remote sync is needed
     }
 
-    public async Task<Company?> DownloadRemoteCompanyAsync(string companyId, string? userId = null, bool storeLocally = false) {
+    public async Task<Company?> DownloadRemoteCompanyAsync(string companyId, string? userId = null, bool storeLocally = false, DownloadProgressUpdateDelegate? downloadProgressUpdate = null) {
         string actualUserId = await ResolveUserId(userId); // Resolve the user ID synchronously for simplicity
         Company? company = await _serverAPI.GetCompanyAsync(companyId, actualUserId); // Download the company from the remote store
         if (company is null) {
             _logger.LogWarning("Company with ID {CompanyId} not found for user {UserId}.", companyId, actualUserId);
             return null;
         }
+        _localCompanyCache.Add(company); // Add the downloaded company to the local cache
         if (storeLocally) {
             await SaveCompany(company, syncWithRemote: false); // Save the company locally without syncing with remote
         }
         return company; // Return the downloaded company
     }
 
-    public async Task<Company?> GetCompanyAsync(string companyId, string? userId = null, bool localOnly = false) {
+    public async ValueTask<Company?> GetCompanyAsync(string companyId, string? userId = null, bool localOnly = false, DownloadProgressUpdateDelegate? downloadProgressUpdate = null) {
         var localCompany = _localCompanyCache.FirstOrDefault(c => c.Id == companyId);
         if (localOnly || localCompany is not null) {
             return localCompany;
         }
-        string actualUserId = await ResolveUserId(userId);
-        return await DownloadRemoteCompanyAsync(companyId, actualUserId, storeLocally: false);
+        return await DownloadRemoteCompanyAsync(companyId, userId, storeLocally: false, downloadProgressUpdate: downloadProgressUpdate);
     }
 
     public Task<IEnumerable<Company>> GetLocalCompaniesAsync() => Task.FromResult(_localCompanies.AsEnumerable());

@@ -376,6 +376,15 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                     PropertyChanged?.Invoke(this, new(nameof(SelectedMapPreview)));
                     break;
                 case LobbyEventType.SettingUpdated:
+                    if (lobbyEvent.Arg is LobbySetting newLobbySetting) {
+                        var settingVm = SelectedSettings.FirstOrDefault(x => x.Name == newLobbySetting.Name);
+                        if (settingVm is not null) {
+                            SelectedSettings.Remove(settingVm);
+                            SelectedSettings.Add(new LobbySettingViewModel(newLobbySetting, new AsyncRelayCommand<LobbySetting>(SetSetting)));
+                        } else {
+                            SyncLobbySettings(); // If we can't find the setting, just resync all settings (should be rare)
+                        }
+                    }
                     PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
                     break;
                 case LobbyEventType.GameStarted:
@@ -396,6 +405,39 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                     break;
                 case LobbyEventType.MatchOver:
                     ShowMatchResults();
+                    break;
+                case LobbyEventType.SlotCompanyDownloadProgress:
+                    switch (lobbyEvent.Arg) {
+                        case (int teamId, int slotId, float progress):
+                            var slotVm = teamId switch {
+                                0 => Team1Slots.FirstOrDefault(x => x.Slot.Index == slotId),
+                                1 => Team2Slots.FirstOrDefault(x => x.Slot.Index == slotId),
+                                _ => throw new ArgumentException("Invalid team ID in SlotCompanyDownloadProgress event", nameof(lobbyEvent.Arg))
+                            };
+                            if (slotVm is null) {
+                                break;
+                            }
+                            slotVm.CompanyDownloadProgress = progress;
+                            PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
+                            PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
+                            break;
+                        case (int teamId, int slotId, Company company):
+                            ICollection<LobbySlotViewModel> slots = teamId switch {
+                                0 => Team1Slots,
+                                1 => Team2Slots,
+                                _ => throw new ArgumentException("Invalid team ID in SlotCompanyDownloadProgress event", nameof(lobbyEvent.Arg))
+                            };
+                            var slot = slots.FirstOrDefault(x => x.Slot.Index == slotId);
+                            if (slot is null) {
+                                break;
+                            }
+                            slots.Remove(slot);
+                            var updatedSlot = slot with { SelectedCompany = new PickableCompany(false, false, company) };
+                            slots.Add(updatedSlot);
+                            PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
+                            PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
+                            break;
+                    }
                     break;
                 default:
                     break;

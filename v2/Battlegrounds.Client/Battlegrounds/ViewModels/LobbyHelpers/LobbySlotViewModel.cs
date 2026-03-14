@@ -86,4 +86,6 @@ public sealed record LobbySlotViewModel(
 
     public bool CanKickOccupant => ParentContext.IsHost && Slot.Difficulty == AIDifficulty.HUMAN && !string.IsNullOrEmpty(Slot.ParticipantId) && Slot.ParticipantId != ParentContext.Model.GetLocalPlayerId();
 
+    public float CompanyDownloadProgress { get; set; }
+
 }

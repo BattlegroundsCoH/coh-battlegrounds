@@ -197,6 +197,10 @@ public sealed class MultiplayerLobby(
             case LobbyEventType.SlotUpdated:
                 var updatedSlot = update.SlotUpdate.Slot;
                 _teams[update.SlotUpdate.TeamId].Slots[updatedSlot.Id] = new(updatedSlot.Id, updatedSlot.ParticipantId, updatedSlot.Faction, updatedSlot.CompanyId, AIDifficulty.FromName(updatedSlot.AiDifficulty), updatedSlot.Hidden, updatedSlot.Locked);
+                if (!string.IsNullOrEmpty(updatedSlot.ParticipantId) && !string.IsNullOrEmpty(updatedSlot.CompanyId)) {
+                    // If the slot update contains a participant ID and company ID, update the company data for that participant, as it may have changed due to the slot update (eg. they switched to a different company or faction)
+                    _ = DownloadCompanyForParticipant(update.SlotUpdate.TeamId, updatedSlot.Id, updatedSlot.ParticipantId, updatedSlot.CompanyId); // Start the download but don't await it, as we don't want to block the processing of further lobby updates while waiting for the download to complete
+                }
                 return new LobbyEvent(LobbyEventType.TeamUpdated, update.SlotUpdate.TeamId); // Make UI simply update the whole team when a slot is updated for simplicity, as that's what the UI currently supports
             case LobbyEventType.SettingUpdated:
                 var newSetting = update.SettingsUpdate;
@@ -255,6 +259,24 @@ public sealed class MultiplayerLobby(
                 break;
         }
         return null; // No event to return
+    }
+
+    private async Task DownloadCompanyForParticipant(int teamId, int slotId, string participantId, string companyId) {
+
+        var company = await _companyService.GetCompanyAsync(companyId, participantId, downloadProgressUpdate: async (downloaded, total) => {
+            long totalBytes = total ?? 0;
+            float progress = totalBytes > 0 ? (float)downloaded / totalBytes : 0;
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SlotCompanyDownloadProgress, (teamId, slotId, progress))); // Notify the UI about the download progress
+        });
+
+        if (company is null) {
+            _logger.Error("Failed to download company data for participant {ParticipantId} with company ID {CompanyId}", participantId, companyId);
+            return;
+        }
+
+        _companies[company.Id] = company; // Update the company data for the participant in the local lobby state
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SlotCompanyDownloadProgress, (teamId, slotId, company))); // Notify the UI about the updated company data for the participant
+
     }
 
     public async Task<LaunchGameResult> LaunchGame() {

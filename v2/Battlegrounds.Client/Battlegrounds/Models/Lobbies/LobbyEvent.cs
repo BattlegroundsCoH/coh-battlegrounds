@@ -22,7 +22,8 @@ public enum LobbyEventType {
     UpdatedCompany,
     DownloadInitiated,
     DownloadProgress,
-    DownloadCompleted
+    DownloadCompleted,
+    SlotCompanyDownloadProgress, // Never sent or received by the server, only used for the client to update the download progress of a company in a slot
 }
 
 public sealed record LobbyEvent(LobbyEventType EventType, object? Arg = null);

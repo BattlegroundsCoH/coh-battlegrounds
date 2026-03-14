@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Models.Companies;
+﻿using Battlegrounds.Facades.API;
+using Battlegrounds.Models.Companies;
 
 namespace Battlegrounds.Services;
 
@@ -62,8 +63,9 @@ public interface ICompanyService {
     /// <param name="companyId">The ID of the company to get</param>
     /// <param name="userId">Optional user ID to specify which user to get the company for, if none is specified, local user is used</param>
     /// <param name="localOnly">Flag if only companies in the local cache should be checked</param>
-    /// <returns></returns>
-    Task<Company?> GetCompanyAsync(string companyId, string? userId = null, bool localOnly = false);
+    /// <param name="downloadProgressUpdate">Optional callback to receive progress updates if the company needs to be downloaded from the remote store</param>
+    /// <returns>The requested company, or null if not found</returns>
+    ValueTask<Company?> GetCompanyAsync(string companyId, string? userId = null, bool localOnly = false, DownloadProgressUpdateDelegate? downloadProgressUpdate = null);
 
     /// <summary>
     /// Retrieves all companies that are stored locally.
@@ -88,8 +90,9 @@ public interface ICompanyService {
     /// <param name="companyId">The ID of the company to download</param>
     /// <param name="userId">Optional user ID to specify which user to download from, if none is specified, local user is used</param>
     /// <param name="storeLocally">Flag to determine if the remote company should be stored locally</param>
+    /// <param name="downloadProgressUpdate">Optional callback to receive progress updates during the download process</param>
     /// <returns>The downloaded company</returns>
-    Task<Company?> DownloadRemoteCompanyAsync(string companyId, string? userId = null, bool storeLocally = false);
+    Task<Company?> DownloadRemoteCompanyAsync(string companyId, string? userId = null, bool storeLocally = false, DownloadProgressUpdateDelegate? downloadProgressUpdate = null);
 
     /// <summary>
     /// Synchronizes the specified company with the remote system.
