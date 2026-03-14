@@ -66,4 +66,5 @@ jobs:
           --tag ${{ github.ref_name }}
           --outputDir releases/
           --releaseName "Battlegrounds ${{ github.ref_name }}"
+          --merge
         shell: pwsh
