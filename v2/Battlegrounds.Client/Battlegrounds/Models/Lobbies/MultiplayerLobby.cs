@@ -817,12 +817,23 @@ public sealed class MultiplayerLobby(
             var team = teamId == 0 ? setup.Team1 : setup.Team2;
             for (int slotIndex = 0; slotIndex < team.Slots.Length; slotIndex++) {
                 var slot = team.Slots[slotIndex];
+                if (slot.ParticipantId == _localParticipant.ParticipantId) {
+                    continue; // Skip downloading company data for the local participant, as it should already be up to date
+                }
                 if (!string.IsNullOrEmpty(slot.CompanyId) && !string.IsNullOrEmpty(slot.ParticipantId)) {
-                    await _companyService.DownloadRemoteCompanyAsync(slot.CompanyId, slot.ParticipantId, downloadProgressUpdate: async (downloaded, total) => {
+                    var result = await _companyService.DownloadRemoteCompanyAsync(slot.CompanyId, slot.ParticipantId, downloadProgressUpdate: async (downloaded, total) => {
                         long totalBytes = total ?? 0;
                         float progress = totalBytes > 0 ? (float)downloaded / totalBytes : 0;
+                        _logger.Debug("Downloading company data for participant {ParticipantId} in team {TeamId} slot {SlotIndex}: {Progress:P2}", slot.ParticipantId, teamId, slotIndex, progress);
                         await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SlotCompanyDownloadProgress, (teamId, slotIndex, progress))); // Notify the UI about the download progress for this slot
                     }); // Start downloading company data for each participant in the lobby to ensure we have the latest data for all participants
+                    if (result is not null) {
+                        _companies[slot.CompanyId] = result; // Update the company data for this participant in the local lobby state
+                        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SlotCompanyDownloadProgress, (teamId, slotIndex, result))); // Notify the UI about the updated company data for this slot
+                    } else {
+                        _logger.Error("Failed to download company data for participant {ParticipantId} with company ID {CompanyId}", slot.ParticipantId, slot.CompanyId);
+                        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, $"Failed to download company data for participant {slot.ParticipantId}. Please report this issue.")); // Notify the UI about the failure to download company data for this participant
+                    }
                 }
             }
         }

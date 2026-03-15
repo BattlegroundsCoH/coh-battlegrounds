@@ -37,13 +37,13 @@ public interface IUserService {
     /// <summary>
     /// Authenticates a user asynchronously using their email and password.
     /// </summary>
-    /// <remarks>Ensure that the provided email and password are valid and correspond to an existing user
+    /// <remarks>Ensure that the provided username and password are valid and correspond to an existing user
     /// account. This method does not handle account lockout or multi-factor authentication scenarios.</remarks>
-    /// <param name="userEmail">The email address of the user attempting to log in. Cannot be null or empty.</param>
+    /// <param name="userName">The username of the user attempting to log in. Cannot be null or empty.</param>
     /// <param name="password">The password associated with the user's account. Cannot be null or empty.</param>
     /// <returns>A <see cref="User"/> object representing the authenticated user if the login is successful;  otherwise, <see
     /// langword="null"/> if the credentials are invalid.</returns>
-    Task<User?> LoginAsync(string userEmail, string password);
+    Task<User?> LoginAsync(string userName, string password);
 
     Task<bool> LogOutAsync();
 

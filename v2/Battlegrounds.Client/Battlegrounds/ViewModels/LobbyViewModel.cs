@@ -408,37 +408,35 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                     break;
                 case LobbyEventType.SlotCompanyDownloadProgress:
                     switch (lobbyEvent.Arg) {
-                        case (int teamId, int slotId, float progress):
-                            var slotVm = teamId switch {
-                                0 => Team1Slots.FirstOrDefault(x => x.Slot.Index == slotId),
-                                1 => Team2Slots.FirstOrDefault(x => x.Slot.Index == slotId),
-                                _ => throw new ArgumentException("Invalid team ID in SlotCompanyDownloadProgress event", nameof(lobbyEvent.Arg))
-                            };
+                        case (int teamId, int slotId, float progress): {
+                            var slotVm = (teamId == 0 ? Team1Slots : Team2Slots).FirstOrDefault(x => x.Slot.Index == slotId);
                             if (slotVm is null) {
                                 break;
                             }
                             slotVm.CompanyDownloadProgress = progress;
                             PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
                             PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
-                            if (progress >= 1.0f)
+                            if (progress >= 1.0f) {
                                 _ = HideDownloadProgressAfterDelay(slotVm);
+                            }
                             break;
-                        case (int teamId, int slotId, Company company):
-                            ICollection<LobbySlotViewModel> slots = teamId switch {
-                                0 => Team1Slots,
-                                1 => Team2Slots,
-                                _ => throw new ArgumentException("Invalid team ID in SlotCompanyDownloadProgress event", nameof(lobbyEvent.Arg))
-                            };
-                            var slot = slots.FirstOrDefault(x => x.Slot.Index == slotId);
+                        }
+                        case (int teamId, int slotId, Company company): {
+                            var slot = (teamId == 0 ? Team1Slots : Team2Slots).FirstOrDefault(x => x.Slot.Index == slotId);
                             if (slot is null) {
                                 break;
                             }
-                            slots.Remove(slot);
                             var updatedSlot = slot with { SelectedCompany = new PickableCompany(false, false, company) };
-                            slots.Add(updatedSlot);
+                            ICollection<LobbySlotViewModel> updatedSlots = [..(teamId == 0 ? Team1Slots : Team2Slots).Except([slot]).Append(updatedSlot).OrderBy(x => x.Slot.Index)];
+                            if (teamId == 0) {
+                                Team1Slots = updatedSlots;
+                            } else {
+                                Team2Slots = updatedSlots;
+                            }
                             PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
                             PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
                             break;
+                        }
                     }
                     break;
                 default:
@@ -771,6 +769,16 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     private async Task ToggleReady() {
         await _lobby.MarkReady(!_lobby.IsReady);
         PropertyChanged?.Invoke(this, new(nameof(IsReady)));
+    }
+
+    public Company? GetCompany(string companyId) {
+        if (LobbyCompanies.TryGetValue(companyId, out var company)) {
+            return company;
+        }
+        if (_lobby.Companies.TryGetValue(companyId, out var lobbyCompany)) {
+            return lobbyCompany;
+        }
+        return null;
     }
 
 }

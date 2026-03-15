@@ -77,28 +77,28 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
 
     public Task<User> GetUserAsync(string userId) => GetLocalUserAsync()!; // TODO: Implement this method to fetch user data from Battlegrounds API
 
-    public async Task<User?> LoginAsync(string userEmail, string password) {
+    public async Task<User?> LoginAsync(string userName, string password) {
 
         if (_localUser is not null && !IsExpired) {
             return _localUser; // Already logged in
         }
 
-        if (string.IsNullOrWhiteSpace(userEmail)) {
-            throw new ArgumentException("Username cannot be null or empty.", nameof(userEmail));
+        if (string.IsNullOrWhiteSpace(userName)) {
+            throw new ArgumentException("Username cannot be null or empty.", nameof(userName));
         }
 
         if (string.IsNullOrWhiteSpace(password)) {
             throw new ArgumentException("Password cannot be null or empty.", nameof(password));
         }
 
-        _logger.LogInformation("Logging in user {UserName}...", userEmail);
+        _logger.LogInformation("Logging in user {UserName}...", userName);
 
-        LoginResponse loginResponse = await _webAPI.LoginAsync(new LoginRequest(userEmail, password)) ?? throw new InvalidOperationException("Login response is null.");
-        StoreTokenAndUser(loginResponse.Token, loginResponse.RefreshToken, new DateTime(loginResponse.ExpiresAt, DateTimeKind.Utc), new User {
+        LoginResponse loginResponse = await _webAPI.LoginAsync(new LoginRequest(userName, password)) ?? throw new InvalidOperationException("Login response is null.");
+        StoreTokenAndUser(loginResponse.Token, loginResponse.RefreshToken, loginResponse.ExpiresAt, new User {
             UserId = loginResponse.User.Id,
             UserDisplayName = loginResponse.User.Username,
         });
-        _logger.LogInformation("User {UserName} with Id {Id} logged in successfully.", userEmail, _localUser.UserId);
+        _logger.LogInformation("User {UserName} with Id {Id} logged in successfully.", userName, _localUser.UserId);
         return _localUser;
 
     }

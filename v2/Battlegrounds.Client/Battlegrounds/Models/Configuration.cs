@@ -29,7 +29,7 @@ public sealed class Configuration {
         public string BaseUrl { get; set; } = "https://api.test.cohbattlegrounds.com";
 
         [ConfigurationProperty("Login Endpoint", "The endpoint for user authentication. This URL is used to obtain access tokens for API requests. Ensure that the endpoint is correct and that the authentication service is operational.")]
-        public string LoginEndpoint { get; set; } = "https://bjcgardajdviqkwgryin.supabase.co/auth/v1/token?grant_type=password";
+        public string LoginEndpoint { get; set; } = "https://api.test.cohbattlegrounds.com/auth/test/login";
 
         public string LoginUrlOverride {
             get => string.IsNullOrEmpty(_loginUrlOverride) ? BaseUrl : _loginUrlOverride;

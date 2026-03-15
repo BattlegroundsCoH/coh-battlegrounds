@@ -141,10 +141,10 @@
                                Grid.Column="2"/>
                 </Grid>
 
-                <!--
                 <Button
                     Margin="0,10,0,0"
                     Style="{StaticResource AuthButton}"
+                    Visibility="{Binding IsDiscordVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                     Grid.Row="7"
                     Command="{Binding ContinueWithDiscordCommand}">
 
@@ -158,7 +158,7 @@
                                    Foreground="{StaticResource ForegroundLightGrayBrush}" 
                                    HorizontalAlignment="Center"/>
                     </StackPanel>
-                </Button> -->
+                </Button>
 
                 <!-- Steam login -->
                 <Button

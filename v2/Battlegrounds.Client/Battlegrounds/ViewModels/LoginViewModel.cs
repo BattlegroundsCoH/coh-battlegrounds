@@ -65,6 +65,8 @@ public sealed class LoginViewModel : INotifyPropertyChanged {
 
     public IAsyncRelayCommand ContinueWithDiscordCommand { get; }
     
+    public bool IsDiscordVisible => true; // This can be made dynamic based on configuration or platform
+
     public IAsyncRelayCommand ContinueWithSteamCommand { get; }
 
     public LoginViewModel(ILogger<LoginViewModel> logger, UserViewModel userViewModel, HomeViewModel homeViewModel, IUserService userService, IBrowserService browserService) {

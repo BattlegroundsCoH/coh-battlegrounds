@@ -1,4 +1,5 @@
-﻿using Battlegrounds.Models.Lobbies;
+﻿using Battlegrounds.Models.Companies;
+using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 
 using CommunityToolkit.Mvvm.Input;
@@ -68,8 +69,10 @@ public sealed record LobbySlotViewModel(
             if (string.IsNullOrEmpty(_companyId)) {
                 return new PickableCompany(true, false, null);
             }
-            var company = ParentContext.LobbyCompanies[_companyId];
-            return new PickableCompany(false, false, company);
+            if (ParentContext.GetCompany(_companyId) is Company cmp) {
+                return new PickableCompany(false, false, cmp);
+            }
+            return new PickableCompany(true, false, null);
         }
         set {
             if (_selectedCompany == value)

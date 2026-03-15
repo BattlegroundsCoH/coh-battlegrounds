@@ -1,22 +1,17 @@
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading.Channels;
-using System.Threading.Tasks;
 
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Services;
 using Battlegrounds.ViewModels;
-using Battlegrounds.ViewModels.LobbyHelpers;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
 using NSubstitute;
-using NUnit.Framework;
 
 namespace Battlegrounds.Test.ViewModels;
 

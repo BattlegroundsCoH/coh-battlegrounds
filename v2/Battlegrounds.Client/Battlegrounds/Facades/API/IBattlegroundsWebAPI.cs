@@ -1,17 +1,20 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace Battlegrounds.Facades.API;
+
 public sealed record LoginRequest(
-        [property: JsonPropertyName("email")] string Email,
-        [property: JsonPropertyName("password")] string Password
+        [property: JsonPropertyName("Username")] string Username,
+        [property: JsonPropertyName("Password")] string Password
     );
+
 public sealed record LoginResponse(
-    [property: JsonPropertyName("access_token")] string Token,
-    [property: JsonPropertyName("refresh_token")] string RefreshToken,
-    [property: JsonPropertyName("expires_in")] int ExpiresIn,
-    [property: JsonPropertyName("expires_at")] long ExpiresAt,
+    [property: JsonPropertyName("token")] string Token,
+    [property: JsonPropertyName("refreshToken")] string RefreshToken,
+    [property: JsonPropertyName("expiresIn")] int ExpiresIn,
+    [property: JsonPropertyName("expiresAt")] DateTime ExpiresAt,
     [property: JsonPropertyName("user")] ApiUser User
 );
+
 public sealed record ApiUser(
     [property: JsonPropertyName("bgId")] string Id,
     [property: JsonPropertyName("username")] string Username,

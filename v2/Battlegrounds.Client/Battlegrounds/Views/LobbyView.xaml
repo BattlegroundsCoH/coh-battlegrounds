@@ -167,9 +167,11 @@
                                         <!-- Selected company -->
                                         <StackPanel
                                             Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Orientation="Horizontal"
                                             Visibility="{Binding CanSetCompany, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                                             
-                                            <Image Width="32" Height="32">
+                                            <Image Width="32" Height="32" VerticalAlignment="Center">
                                                 <Image.Source>
                                                     <MultiBinding Converter="{StaticResource FactionIconConverter}">
                                                         <Binding Path="SelectedCompany.Faction"/>
@@ -180,6 +182,8 @@
 
                                             <TextBlock Text="{Binding SelectedCompany.DisplayName}"
                                                    FontWeight="SemiBold"
+                                                       Margin="8,0,8,6"
+                                                       VerticalAlignment="Center"
                                                    Foreground="{StaticResource ForegroundGrayBrush}"/>
                                         </StackPanel>
 

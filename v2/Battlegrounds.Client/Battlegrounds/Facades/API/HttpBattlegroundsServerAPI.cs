@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.IO.Pipes;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -91,8 +92,26 @@ public sealed class HttpBattlegroundsServerAPI(
         HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
         if (response.IsSuccessStatusCode) {
             _logger.LogInformation("Company {CompanyId} retrieved successfully.", companyId);
-            Stream contentStream = await response.Content.ReadAsStreamAsync();
-            return _companyDeserializer.DeserializeCompany(contentStream);
+
+            long? totalBytes = response.Content.Headers.ContentLength;
+            long bytesDownloaded = 0;
+
+            using Stream contentStream = await response.Content.ReadAsStreamAsync();
+            using MemoryStream dataStream = new MemoryStream();
+            byte[] buffer = new byte[512]; // 512B chunks, small enough to provide smooth progress updates even for small companies while not causing too much overhead for larger companies
+            // In general, company files are relatively small (often around 2kb-4kb).
+            int bytesRead;
+
+            while ((bytesRead = await contentStream.ReadAsync(buffer)) > 0) {
+                await dataStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+                bytesDownloaded += bytesRead;
+                progressUpdate?.Invoke(bytesDownloaded, totalBytes);
+            }
+
+            // Reset stream position to the beginning before deserialization
+            dataStream.Position = 0;
+
+            return _companyDeserializer.DeserializeCompany(dataStream);
         } else {
             _logger.LogError("Failed to retrieve company {CompanyId}. Status code: {StatusCode}, Reason: {ReasonPhrase}", companyId, response.StatusCode, response.ReasonPhrase);
             return null;
