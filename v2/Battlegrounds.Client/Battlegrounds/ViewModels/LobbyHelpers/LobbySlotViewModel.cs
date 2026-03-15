@@ -15,6 +15,7 @@ public sealed record LobbySlotViewModel(
         IAsyncRelayCommand<AIDifficulty> DifficultyCommand,
         IAsyncRelayCommand<int> LockUnlockCommand,
         IAsyncRelayCommand<PickableCompany> SetCompanyCommand,
+        IAsyncRelayCommand<int> MoveToSlotCommand,
         LobbyViewModel ParentContext) {
 
     private PickableCompany? _selectedCompany = null;
@@ -32,7 +33,9 @@ public sealed record LobbySlotViewModel(
             return UserName;
         }
     }
-    
+
+    public bool IsLocalPlayer => ParentContext.LocalParticipant == Slot.ParticipantId;
+
     public List<PickableAIDifficulty> AvailableAIDifficulties => [new PickableAIDifficulty(AIDifficulty.HUMAN), new(AIDifficulty.EASY), new(AIDifficulty.NORMAL), new(AIDifficulty.HARD), new(AIDifficulty.EXPERT)];
     
     public PickableAIDifficulty SelectedAIDifficulty {
@@ -85,9 +88,13 @@ public sealed record LobbySlotViewModel(
 
     public bool HasOccupant => !string.IsNullOrEmpty(Slot.ParticipantId);
 
+    public bool IsOccupiable => !HasOccupant && !Slot.Locked;
+
     public bool CanSetCompany => (ParentContext.IsHost && Slot.Difficulty != AIDifficulty.HUMAN && !Slot.Locked) || (Slot.ParticipantId == ParentContext.Model.GetLocalPlayerId());
 
     public bool CanKickOccupant => ParentContext.IsHost && Slot.Difficulty == AIDifficulty.HUMAN && !string.IsNullOrEmpty(Slot.ParticipantId) && Slot.ParticipantId != ParentContext.Model.GetLocalPlayerId();
+
+    public IRelayCommand ShowCompanyPreviewCommand => new RelayCommand(() => ParentContext.ShowCompanyPreview(SelectedCompany?.Company));
 
     public float CompanyDownloadProgress { get; set; }
 

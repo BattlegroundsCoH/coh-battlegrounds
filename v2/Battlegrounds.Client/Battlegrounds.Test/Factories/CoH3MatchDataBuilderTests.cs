@@ -286,6 +286,10 @@ public class CoH3MatchDataBuilderTests {
         public Task SetCompany(Team team, int slotId, string id, string faction) {
             throw new NotImplementedException();
         }
+
+        public Task MoveToSlot(Team team, int slotIndex) {
+            throw new NotImplementedException();
+        }
     }
 
     #endregion

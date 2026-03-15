@@ -256,4 +256,23 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
         return Task.FromResult<MatchOverData?>(MatchOverData.FromMatchResultForPlayer(_lastMatchResult, _localParticipant.ParticipantId, _lastMatchCompanies));
     }
 
+    public async Task MoveToSlot(Team team, int slotIndex) {
+        var (currentTeam, currentSlot) = GetLocalPlayerSlot();
+        if (currentTeam == team && currentSlot == slotIndex) {
+            return; // Already in the desired slot
+        }
+
+        // Assign the local participant to the new slot
+        team.Slots[slotIndex] = team.Slots[slotIndex] with { ParticipantId = _localParticipant.ParticipantId, Difficulty = AIDifficulty.HUMAN, CompanyId = string.Empty, Locked = false };
+
+        // Clear the old slot
+        if (currentTeam is not null && currentSlot != -1) {
+            currentTeam.Slots[currentSlot] = currentTeam.Slots[currentSlot] with { ParticipantId = null, Difficulty = AIDifficulty.HUMAN, CompanyId = string.Empty, Locked = false };
+        }
+
+        // Trigger team updated event to notify the UI of the slot change
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated)); // Notify the UI of team changes
+
+    }
+
 }

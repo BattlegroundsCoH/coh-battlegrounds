@@ -14,7 +14,9 @@ public sealed class FactionIdToNameConverter : AbstractAppDependable, IMultiValu
     private IGameService GameService => ServiceProvider.GetRequiredService<IGameService>();
 
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
-        if (values is [string factionId, string gameId]) {
+        if (values is [_, ""]) {
+            return DependencyProperty.UnsetValue;
+        } else if (values is [string factionId, string gameId]) {
             Game game = GameService.GetGame(gameId);
             if (game.TryGetFactionName(factionId, out string? factionName)) {
                 return factionName;

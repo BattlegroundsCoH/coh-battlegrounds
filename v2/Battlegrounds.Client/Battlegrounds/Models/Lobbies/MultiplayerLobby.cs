@@ -193,7 +193,8 @@ public sealed class MultiplayerLobby(
                     var slot = update.TeamUpdate.Slots[i];
                     _teams[update.TeamUpdate.Id].Slots[i] = new Team.Slot(i, slot.ParticipantId, slot.Faction, slot.CompanyId, AIDifficulty.FromName(slot.AiDifficulty), slot.Hidden, slot.Locked);
                 }
-                return new LobbyEvent(LobbyEventType.TeamUpdated, update.TeamUpdate.Id);
+                var teamType = update.TeamUpdate.Id == 0 ? _team1.TeamType : _team2.TeamType;
+                return new LobbyEvent(LobbyEventType.TeamUpdated, teamType);
             case LobbyEventType.SlotUpdated:
                 var updatedSlot = update.SlotUpdate.Slot;
                 _teams[update.SlotUpdate.TeamId].Slots[updatedSlot.Id] = new(updatedSlot.Id, updatedSlot.ParticipantId, updatedSlot.Faction, updatedSlot.CompanyId, AIDifficulty.FromName(updatedSlot.AiDifficulty), updatedSlot.Hidden, updatedSlot.Locked);
@@ -418,8 +419,6 @@ public sealed class MultiplayerLobby(
             await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, "Failed to update the map. "+ errorReason)); // Notify the UI about the failure and reason
             return false;
         }
-        _map = map;
-        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.MapUpdated, map)); // Notify the UI of map change
         return true;
     }
 
@@ -838,6 +837,14 @@ public sealed class MultiplayerLobby(
             }
         }
 
+    }
+
+    public async Task MoveToSlot(Team team, int slotIndex) {
+        // Simple gRPC call to the server to move the local participant to the specified slot, the server will handle updating the lobby state and notifying all participants of the change
+        await _gRPCClient.MoveSlotAsync(new MoveSlotRequest {
+            TargetTeamId = GetIndexOfTeam(team),
+            TargetSlotId = slotIndex
+        }, GetGrpcMetadata());
     }
 
 }

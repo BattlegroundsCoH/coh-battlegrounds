@@ -50,6 +50,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     private bool _isWaitingForMatchOver = false;
 
     private MatchOverViewModel? _matchOverResult;
+    private CompanyPreviewViewModel? _companyPreviewResult;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -62,6 +63,18 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             if (value == _matchOverResult) return;
             _matchOverResult = value;
             PropertyChanged?.Invoke(this, new(nameof(MatchOverResult)));
+        }
+    }
+
+    /// <summary>
+    /// Gets the view model for the company preview overlay, or <see langword="null"/> when the overlay is not visible.
+    /// </summary>
+    public CompanyPreviewViewModel? CompanyPreviewResult {
+        get => _companyPreviewResult;
+        private set {
+            if (value == _companyPreviewResult) return;
+            _companyPreviewResult = value;
+            PropertyChanged?.Invoke(this, new(nameof(CompanyPreviewResult)));
         }
     }
 
@@ -225,6 +238,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             _selectedChatChannel = value;
         }
     }
+
+    public string? LocalParticipant => _lobby.GetLocalPlayerId();
 
     public LobbyViewModel(ILobby lobby, IServiceProvider serviceProvider, ILogger<LobbyViewModel> logger) {
         // Probably an anti-pattern to pass IServiceProvider instead of the specific services, but this class has many dependencies 
@@ -706,6 +721,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         var addAICommand = new AsyncRelayCommand<AIDifficulty>(args => AddAIToSlot(teamIndex, slot.Index, args));
         var lockUnlockCommand = new AsyncRelayCommand<int>(args => LockOrUnlockSlot(teamIndex, args));
         var setCompanyCommand = new AsyncRelayCommand<PickableCompany>(args => SetSlotCompany(teamIndex, slot.Index, args));
+        var moveToSlotCommand = new AsyncRelayCommand<int>(args => MoveToSlot(teamIndex, args));
         Participant? p = (from participant in _lobby.Participants where participant.ParticipantId == slot.ParticipantId select participant).FirstOrDefault();
         Company? c = string.IsNullOrEmpty(slot.CompanyId) ? null : (from company in _lobby.Companies where company.Key == slot.CompanyId select company.Value).FirstOrDefault();
         if (c is null && !string.IsNullOrEmpty(slot.CompanyId)) {
@@ -714,9 +730,13 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         FactionAlliance alliance = teamIndex == 0 ? FactionAlliance.Allies : FactionAlliance.Axis;
         if (p is null) {
             string companyName = c?.Name ?? string.Empty;
-            return new LobbySlotViewModel(slot, string.Empty, companyName, true, alliance, addAICommand, lockUnlockCommand, setCompanyCommand, this);
+            return new LobbySlotViewModel(slot, string.Empty, companyName, true, alliance, addAICommand, lockUnlockCommand, setCompanyCommand, moveToSlotCommand, this);
         }
-        return new LobbySlotViewModel(slot, p.ParticipantName, c?.Name ?? string.Empty, p.IsAIParticipant, alliance, addAICommand, lockUnlockCommand, setCompanyCommand, this);
+        return new LobbySlotViewModel(slot, p.ParticipantName, c?.Name ?? string.Empty, p.IsAIParticipant, alliance, addAICommand, lockUnlockCommand, setCompanyCommand, moveToSlotCommand, this);
+    }
+
+    private async Task MoveToSlot(int teamIndex, int slotIndex) {
+        await _lobby.MoveToSlot(teamIndex == 0 ? _lobby.Team1 : _lobby.Team2, slotIndex);
     }
 
     private async Task AddAIToSlot(int teamIndex, int slotIndex, AIDifficulty difficulty) {
@@ -785,6 +805,13 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             return lobbyCompany;
         }
         return null;
+    }
+
+    public void ShowCompanyPreview(Company? company) {
+        if (company is null) {
+            return;
+        }
+        CompanyPreviewResult = new CompanyPreviewViewModel(company, GameId, () => CompanyPreviewResult = null);
     }
 
 }

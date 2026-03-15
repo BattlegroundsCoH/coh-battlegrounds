@@ -63,6 +63,7 @@
                         <ControlTemplate TargetType="{x:Type ContentControl}">
                             <Border Background="{TemplateBinding Background}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
+                                    x:Name="SlotBorder"
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Visibility="{Binding Slot.Hidden, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
                                     CornerRadius="4">
@@ -94,7 +95,11 @@
                                           Margin="10,0,0,0"
                                           Grid.Column="0"
                                           VerticalAlignment="Center"
-                                          Visibility="{Binding CompanyDownloadProgress, Converter={StaticResource ZeroToVisibilityConverter}}">
+                                          Visibility="Collapsed">
+                                        
+                                        <!-- TODO: Use this:
+                                        Visibility="{Binding CompanyDownloadProgress, Converter={StaticResource ZeroToVisibilityConverter}}"
+                                        -->
 
                                         <!-- Background track ring (full donut, semi-transparent) -->
                                         <Path Fill="#55FFFFFF">
@@ -124,11 +129,14 @@
                                                FontWeight="SemiBold"
                                                Margin="10,0,0,0"
                                                VerticalAlignment="Center"
+                                               x:Name="DisplayName"
                                                Foreground="{StaticResource ForegroundWhiteBrush}"/>
                                     
                                     <!-- Company Selection -->
                                     <Grid
-                                        Grid.Column="2">
+                                        Grid.Column="2"
+                                        Visibility="{Binding HasOccupant, Converter={StaticResource BoolToVisibilityConverter}}"
+                                        Margin="0,0,8,0">
                                         
                                         <!-- Company selection -->
                                         <ComboBox
@@ -164,32 +172,48 @@
                                             </ComboBox.ItemTemplate>
                                         </ComboBox>
 
-                                        <!-- Selected company -->
-                                        <StackPanel
+                                        <!-- Selected company (view-only, clickable for preview) -->
+                                        <Button
                                             Margin="10,0,0,0"
+                                            Height="42"
+                                            Width="220"
                                             VerticalAlignment="Center"
-                                            Orientation="Horizontal"
+                                            Style="{StaticResource InspectButton}"
+                                            Command="{Binding ShowCompanyPreviewCommand}"
                                             Visibility="{Binding CanSetCompany, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                                            
-                                            <Image Width="32" Height="32" VerticalAlignment="Center">
-                                                <Image.Source>
-                                                    <MultiBinding Converter="{StaticResource FactionIconConverter}">
-                                                        <Binding Path="SelectedCompany.Faction"/>
-                                                        <Binding Path="SelectedCompany.GameId"/>
-                                                    </MultiBinding>
-                                                </Image.Source>
-                                            </Image>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Width="32" Height="32" VerticalAlignment="Center">
+                                                    <Image.Source>
+                                                        <MultiBinding Converter="{StaticResource FactionIconConverter}">
+                                                            <Binding Path="SelectedCompany.Faction"/>
+                                                            <Binding Path="SelectedCompany.GameId"/>
+                                                        </MultiBinding>
+                                                    </Image.Source>
+                                                </Image>
 
-                                            <TextBlock Text="{Binding SelectedCompany.DisplayName}"
-                                                   FontWeight="SemiBold"
-                                                       Margin="8,0,8,6"
-                                                       VerticalAlignment="Center"
-                                                   Foreground="{StaticResource ForegroundGrayBrush}"/>
-                                        </StackPanel>
-
+                                                <TextBlock Text="{Binding SelectedCompany.DisplayName}"
+                                                       FontWeight="SemiBold"
+                                                           Margin="8,0,8,6"
+                                                           VerticalAlignment="Center"
+                                                       Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                            </StackPanel>
+                                        </Button>
 
                                     </Grid>
                                     
+                                    <!-- Move to slot (if occupiable) -->
+                                    <Button
+                                            Content="Move to Slot"
+                                            Height="42"
+                                        Grid.Column="2"
+                                        Margin="0,0,8,0"
+                                            Width="220"
+                                            Style="{StaticResource ActionButton}"
+                                            Command="{Binding MoveToSlotCommand}"
+                                            CommandParameter="{Binding Slot.Index}"
+                                            Visibility="{Binding IsOccupiable, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+
                                     <!-- Controls (Lock/Unlock, AI Options) -->
                                     <StackPanel Grid.Column="3" 
                                             Orientation="Horizontal" 
@@ -232,6 +256,26 @@
                                     
                                 </Grid>
                             </Border>
+
+                            <ControlTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsLocalPlayer}" Value="True">
+                                    <Setter TargetName="SlotBorder" Property="BorderBrush" Value="{StaticResource ForegroundLightBlueBrush}"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding IsOccupiable}" Value="True">
+                                    <Setter TargetName="DisplayName" Property="Text" Value="Open Slot"/>
+                                    <Setter TargetName="DisplayName" Property="Foreground" Value="{StaticResource ForegroundGrayBrush}"/>
+                                    <Setter TargetName="DisplayName" Property="FontStyle" Value="Italic"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding Slot.Locked}" Value="True">
+                                    <Setter TargetName="DisplayName" Property="Text" Value="Locked Slot"/>
+                                    <Setter TargetName="DisplayName" Property="Foreground" Value="{StaticResource ForegroundGrayBrush}"/>
+                                    <Setter TargetName="DisplayName" Property="FontStyle" Value="Italic"/>
+                                </DataTrigger>
+
+                            </ControlTemplate.Triggers>
+                            
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -834,6 +878,23 @@
                         <Rectangle Fill="#BF000000"/>
                         <!-- Centred results card -->
                         <local:MatchOverView HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </ContentControl.ContentTemplate>
+        </ContentControl>
+
+        <!-- Company Preview Overlay: shown when inspecting another player's company -->
+        <ContentControl Grid.RowSpan="3"
+                        Panel.ZIndex="99"
+                        Content="{Binding CompanyPreviewResult}"
+                        Visibility="{Binding CompanyPreviewResult, Converter={StaticResource NullVisibilityConverter}}">
+            <ContentControl.ContentTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <!-- Semi-transparent backdrop -->
+                        <Rectangle Fill="#BF000000"/>
+                        <!-- Centred preview card -->
+                        <local:CompanyPreviewView HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
                 </DataTemplate>
             </ContentControl.ContentTemplate>

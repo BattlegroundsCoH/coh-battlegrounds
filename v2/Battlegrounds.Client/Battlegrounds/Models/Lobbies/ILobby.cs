@@ -274,5 +274,13 @@ public interface ILobby {
     /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="MatchOverData"/> object
     /// with the match results if the match has concluded; otherwise, <see langword="null"/>.</returns>
     Task<MatchOverData?> GetMatchResults();
+    
+    /// <summary>
+    /// Moves the local player to the specified team to the given slot asynchronously.
+    /// </summary>
+    /// <param name="team">The team to be moved to. Cannot be null.</param>
+    /// <param name="slotIndex">The zero-based index of the slot to move the team to. Must be within the valid range of available slots.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task MoveToSlot(Team team, int slotIndex);
 
 }
