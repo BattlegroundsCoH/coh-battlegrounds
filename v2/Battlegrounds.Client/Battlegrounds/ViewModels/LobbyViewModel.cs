@@ -417,7 +417,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                             PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
                             PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
                             if (progress >= 1.0f) {
-                                _ = HideDownloadProgressAfterDelay(slotVm);
+                                _ = HideDownloadProgressAfterDelay(teamId, slotId);
                             }
                             break;
                         }
@@ -654,9 +654,15 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         };
     }
 
-    private async Task HideDownloadProgressAfterDelay(LobbySlotViewModel slotVm) {
+    private async Task HideDownloadProgressAfterDelay(int teamId, int slotId) {
         await Task.Delay(TimeSpan.FromSeconds(2));
-        slotVm.CompanyDownloadProgress = 0f;
+
+        var slot = (teamId == 0 ? Team1Slots : Team2Slots).FirstOrDefault(x => x.Slot.Index == slotId);
+        if (slot is null) {
+            return;
+        }
+
+        slot.CompanyDownloadProgress = 0;
         PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
         PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
     }

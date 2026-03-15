@@ -9,6 +9,7 @@ public sealed class ZeroToVisibilityConverter : IValueConverter {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value switch {
         0 => Visibility.Collapsed,
         0.0f => Visibility.Collapsed,
+        0.0d => Visibility.Collapsed,
         null => Visibility.Collapsed,
         _ => Visibility.Visible
     };
