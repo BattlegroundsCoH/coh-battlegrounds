@@ -248,6 +248,36 @@ squads:
                     - infantry_anti_infantry
                     - infantry_support
                     - combat_engineer 
+                    
+    polish_lancer_africa_uk:
+        category: Infantry
+        faction-association: british_africa
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 220
+            ui:
+                screen-name: $11268069
+                help-text: $0 # No help text for this unit in the game files, using $0 as a placeholder
+                brief-text: $0 # No brief text for this unit in the game files, using $0 as a placeholder
+                icon-name: polish_lancer_afrika_uk
+            loadout:
+                entities:
+                    - ebp: polish_lancer_africa_uk
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 800
+                      name: Vet1
+                    - experience: 2400
+                      name: Vet2
+                    - experience: 4800
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - standard_infantry
+                    - infantry_anti_infantry
 
     medic_africa_uk:
         category: Support
@@ -492,6 +522,36 @@ squads:
                     - teamweapon
                     - artillery
                     - infantry_anti_infantry 
+                    
+    land_mattress_africa_uk:
+        category: Support
+        faction-association: british_africa
+        is-team-weapon: true
+        is-towable: true
+        extensions:
+            cost:
+                manpower: 340
+            ui:
+                screen-name: $11267970
+                icon-name: tw_land_mattress_africa_uk
+            loadout:
+                entities:
+                    - ebp: tw_land_mattress_africa_uk
+                      count: 1
+                    - ebp: crew_polish_africa_uk
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 1300
+                      name: Vet1
+                    - experience: 3900
+                      name: Vet2
+                    - experience: 7800
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - artillery
 
     cwt_15_truck_africa_uk:
         category: Support
@@ -916,6 +976,39 @@ squads:
                 slots: 1
                 available:
                     - hmg_sherman_us
+                    
+    sherman_firefly_africa_uk:
+        category: Armour
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 400
+                fuel: 110
+            ui:
+                screen-name: $11268197 # Sherman Firefly Tank
+                icon-name: sherman_firefly_uk
+            loadout:
+                entities:
+                    - ebp: sherman_firefly_africa_uk
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - medium_armor
+                    - vehicle_turret
+            upgrades:
+                slots: 1
+                available:
+                    - vehicle_tulips_firefly_africa_uk
 
     stuart_africa_uk:
         category: Armour

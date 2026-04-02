@@ -337,6 +337,9 @@
     <None Update="Assets\Factions\coh3\icons\piat_2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Factions\coh3\icons\polish_lancer_africa_uk.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3\icons\sapper_uk.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -347,6 +350,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\icons\semovente_75_18_ak.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Factions\coh3\icons\sherman_firefly_uk.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\icons\sherman_uk.png">
@@ -379,7 +385,13 @@
     <None Update="Assets\Factions\coh3\icons\tommy_uk.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Factions\coh3\icons\tulip_rockets.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3\icons\tw_howitzer_canonne_da_105_ak.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Factions\coh3\icons\tw_land_mattress_africa_uk.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\icons\tw_pak_38_ak.png">
@@ -430,10 +442,19 @@
     <None Update="Assets\Factions\coh3\symbols\halftrack_250_mortar_ger.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Factions\coh3\symbols\land_mattress.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3\symbols\m1_thompson_sub_machine_gun.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\symbols\mortar.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Factions\coh3\symbols\polish_lancer_africa_uk.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Factions\coh3\symbols\sherman_firefly_uk.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\symbols\shield.png">
@@ -470,6 +491,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\symbols\weapon_bren.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Factions\coh3\symbols\weapon_firefly_tulip_rocket.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\symbols\weapon_flamethrower.png">

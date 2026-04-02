@@ -161,6 +161,16 @@ upgrades:
                 screen-name: 11242531
                 icon-name: hmg_us
                 symbol-icon-name: tank_mg42
+                
+    vehicle_tulips_firefly_africa_uk:
+        faction-association: british_africa
+        extensions:
+            cost:
+                munitions: 140
+            ui:
+                screen-name: $11272522
+                icon-name: tulip_rockets
+                symbol-icon-name: weapon_firefly_tulip_rocket
 
     utility_kit_stuart_uk:
         faction-association: british_africa
