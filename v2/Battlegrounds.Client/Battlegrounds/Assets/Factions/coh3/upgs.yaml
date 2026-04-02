@@ -1,5 +1,9 @@
 upgrades:
 
+    #########################################
+    ## British Africa Upgrades
+    #########################################
+
     lmg_bren_tommy_africa_uk:
         faction-association: british_africa
         extensions:
@@ -191,6 +195,10 @@ upgrades:
                 screen-name: 11186706
                 icon-name: ability_british_tank_commander
                 symbol-icon-name: tank_vision
+                
+    #########################################
+    ## Afrika Korps Upgrades
+    #########################################
 
     lmg_breda_m30_bersaglieri_ak:
         faction-association: afrika_korps
@@ -381,3 +389,57 @@ upgrades:
                 screen-name: $11242533 # Medical Truck
                 icon-name: 2_5_truck_medical_ak
                 symbol-icon-name: 2_5_truck_medical_ger
+                
+    #########################################
+    ## German Upgrades
+    #########################################
+
+    flamethrower_grenadier_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11155599 # Flammenwerfer 34 Flamethrower Package
+                icon-name: anti_emplacement_package
+                symbol-icon-name: weapon_flamethrower
+                
+    flamethrower_pioneer_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11155599 # Flammenwerfer 34 Flamethrower Package
+                icon-name: anti_emplacement_package
+                symbol-icon-name: weapon_flamethrower
+
+    assault_package_grenadiers_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11192051 # Assault Package
+                icon-name: assault_package
+                symbol-icon-name: weapon_mp40
+                
+    utility_pioneer_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 30
+            ui:
+                screen-name: $11154006 # Utility Package
+                icon-name: hazard_removal_package
+                symbol-icon-name: weapon_wrench
+                
+    panzerjager_package_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 120
+            ui:
+                screen-name: $11242544 # Panzershreck Package
+                icon-name: panzershreck
+                symbol-icon-name: weapon_panzerschreck

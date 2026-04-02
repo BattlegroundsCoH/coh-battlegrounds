@@ -1,4 +1,9 @@
 squads:
+
+    #########################################
+    ## British Africa Squads
+    ##########################################
+
     tommy_africa_uk:
         category: Infantry
         faction-association: british_africa
@@ -260,7 +265,7 @@ squads:
                 screen-name: $11268069
                 help-text: $0 # No help text for this unit in the game files, using $0 as a placeholder
                 brief-text: $0 # No brief text for this unit in the game files, using $0 as a placeholder
-                icon-name: polish_lancer_afrika_uk
+                icon-name: polish_lancer_africa_uk
             loadout:
                 entities:
                     - ebp: polish_lancer_africa_uk
@@ -1072,6 +1077,10 @@ squads:
                     - vehicle
                     - medium_armor
                     - vehicle_turret
+
+    #########################################
+    ## Afrika Korps Squads
+    ##########################################
 
     assault_panzergrenadier_ak:
         category: Infantry
@@ -2187,3 +2196,106 @@ squads:
                 slots: 1
                 available:
                     - medical_truck_ak
+                    
+    #########################################
+    ## Wehrmacht Units
+    ##########################################
+
+    grenadier_ger:
+        category: Infantry
+        faction-association: german
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 260
+            ui:
+                screen-name: $11153531 # Grenadiers
+                icon-name: grenadier_ger
+            loadout:
+                entities:
+                    - ebp: grenadier_ger
+                      count: 6
+            veterancy:
+                ranks:
+                    - experience: 750
+                      name: Vet1
+                    - experience: 2250
+                      name: Vet2
+                    - experience: 4500
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - standard_infantry
+                    - grenadier
+                    - infantry_anti_infantry 
+            upgrades:
+                slots: 1
+                available:
+                    - assault_package_grenadiers_ger
+                    - flamethrower_grenadier_ger
+                    
+    pioneer_ger:
+        category: Infantry
+        faction-association: german
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 120
+            ui:
+                screen-name: $11153528 # Pioneers
+                icon-name: pioneer_ger
+            loadout:
+                entities:
+                    - ebp: pioneer_ger
+                      count: 3
+            veterancy:
+                ranks:
+                    - experience: 500
+                      name: Vet1
+                    - experience: 1500
+                      name: Vet2
+                    - experience: 3000
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - infantry_support 
+                    - combat_engineer
+                    - infantry_anti_infantry
+                    - standard_infantry 
+            upgrades:
+                slots: 1
+                available:
+                    - flamethrower_pioneer_ger
+                    - utility_pioneer_ger
+                    - panzerjager_package_ger
+                    
+    panzergrenadier_ger:
+        category: Infantry
+        faction-association: german
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 360
+            ui:
+                screen-name: $11166831 # Panzergrenadiers
+                icon-name: panzer_grenadier_ger
+            loadout:
+                entities:
+                    - ebp: panzergrenadier_ger
+                      count: 5
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - elite_infantry
+                    - panzergrenadier_ger
+                    - infantry_anti_infantry 
