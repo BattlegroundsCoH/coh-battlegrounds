@@ -401,7 +401,7 @@ upgrades:
                 munitions: 50
             ui:
                 screen-name: $11155599 # Flammenwerfer 34 Flamethrower Package
-                icon-name: anti_emplacement_package
+                icon-name: flamenwerfer_34_ger
                 symbol-icon-name: weapon_flamethrower
                 
     flamethrower_pioneer_ger:
@@ -411,7 +411,7 @@ upgrades:
                 munitions: 50
             ui:
                 screen-name: $11155599 # Flammenwerfer 34 Flamethrower Package
-                icon-name: anti_emplacement_package
+                icon-name: flamenwerfer_34_ger
                 symbol-icon-name: weapon_flamethrower
 
     assault_package_grenadiers_ger:
@@ -443,3 +443,74 @@ upgrades:
                 screen-name: $11242544 # Panzershreck Package
                 icon-name: panzershreck
                 symbol-icon-name: weapon_panzerschreck
+                
+    panzershreck_jaeger_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 90
+            ui:
+                screen-name: $11242544 # Panzershreck Package
+                icon-name: panzershreck
+                symbol-icon-name: weapon_panzerschreck
+                
+    stg44_stormtrooper_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 30
+            ui:
+                screen-name: $11243832 # Ambush Package
+                icon-name: stosstruppen_assault_package
+                symbol-icon-name: weapon_mp44
+                
+    g43_jaeger_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11170186 # Reconnaissance Package
+                icon-name: jager_weapon_upgrade
+                symbol-icon-name: weapon_gewehr43
+                
+    mg15_jaeger_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 80
+            ui:
+                screen-name: $11235787 # MG 15 Light Machine Gun
+                icon-name: mg15
+                symbol-icon-name: weapon_m15
+                
+    grb_39_grenade_launcher_fallschirmpioneer_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 85
+            ui:
+                screen-name: $11221245 # GrB 39 Grenade Launcher
+                icon-name: grb39_grenade_launcher_ger
+                symbol-icon-name: weapon_grb_grenade_launcher
+                
+    sturmpioneer_leader_ir_mp44_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 75
+            ui:
+                screen-name: $11271859 # Infarred Detection Kit
+                icon-name: mp44_ir
+                symbol-icon-name: smg_mp44_infrared
+                
+    sturmpioneer_leader_urban_assault_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11271886 # Urban Assault Kit
+                icon-name: flamenwerfer_34_ger
+                symbol-icon-name: weapon_flamethrower
+                

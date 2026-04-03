@@ -2299,3 +2299,279 @@ squads:
                     - elite_infantry
                     - panzergrenadier_ger
                     - infantry_anti_infantry 
+                    
+    stormtrooper_ger:
+        category: Infantry
+        faction-association: german
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 420
+            ui:
+                screen-name: $11153518 # Stormtroopers
+                icon-name: stormtrooper_ger
+            loadout:
+                entities:
+                    - ebp: stormtrooper_ger
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - elite_infantry
+                    - infantry_anti_infantry 
+            upgrades:
+                slots: 1
+                available:
+                    - stg44_stormtrooper_ger
+                    
+    sniper_ger:
+        category: Infantry
+        faction-association: german
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 340
+            ui:
+                screen-name: $11153331 # Sniper
+                icon-name: sniper_ger
+            loadout:
+                entities:
+                    - ebp: sniper_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - sniper
+                    - infantry_anti_infantry 
+                    
+    jaeger_ger:
+        category: Infantry
+        faction-association: german
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 340
+            ui:
+                screen-name: $11166827 # Jaeger Light Infantry
+                icon-name: jaeger_ger
+            loadout:
+                entities:
+                    - ebp: jaeger_ger
+                      count: 4
+                    - ebp: jaeger_support_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - jaeger_infantry
+                    - infantry_anti_infantry 
+            upgrades:
+                slots: 1
+                available:
+                    - panzershreck_jaeger_ger
+                    - g43_jaeger_ger 
+                    
+    medic_ger:
+        category: Support
+        faction-association: afrika_korps
+        is-infantry: true
+        enabled: false # Disabled since they're not actually available in the game
+        extensions:
+            cost:
+                manpower: 140 # Actual ingame cost is currently calculated as 135
+            ui:
+                screen-name: $11194869 # Medic
+                icon-name: medic_ger
+            loadout:
+                entities:
+                    - ebp: medic_ger
+                      count: 2
+            veterancy:
+                ranks:
+                    - experience: 400
+                      name: Vet1
+                    - experience: 800
+                      name: Vet2
+                    - experience: 1600
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                       
+    coastal_reserves_ger:
+        category: Infantry
+        faction-association: german
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 240
+            ui:
+                screen-name: $11202089 # Coastal Defense Infantry
+                icon-name: coastal_reserves_squad_wicd
+            loadout:
+                entities:
+                    - ebp: coastal_reserve_ger
+                      count: 6
+            veterancy:
+                ranks:
+                    - experience: 800
+                      name: Vet1
+                    - experience: 2400
+                      name: Vet2
+                    - experience: 4800
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - standard_infantry
+                    - infantry_anti_infantry 
+                         
+    coastal_officer_ger:
+        category: Infantry
+        faction-association: german
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 240
+            ui:
+                screen-name: $11254007 # Artillery Officer
+                icon-name: artillery_officer_wicd
+            loadout:
+                entities:
+                    - ebp: coastal_officer_ger
+                      count: 1
+                    - ebp: coastal_bodyguard_ger
+                      count: 3
+            veterancy:
+                ranks:
+                    - experience: 800
+                      name: Vet1
+                    - experience: 2400
+                      name: Vet2
+                    - experience: 4800
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - infantry_support
+                    - infantry_anti_infantry 
+                    
+    fallschirmjagers_ger:
+        category: Infantry
+        faction-association: german
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 320
+            ui:
+                screen-name: $11194942 # Fallschirmjagers
+                icon-name: fallschirmjagers_ger
+            loadout:
+                entities:
+                    - ebp: fallschirmjagers_ger
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - elite_infantry
+                    - infantry_anti_infantry 
+                    
+    fallschirmpioneers_ger:
+        category: Infantry
+        faction-association: german
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 260
+            ui:
+                screen-name: $11194943 # Fallschirmpioneers
+                icon-name: fallschirmpioneers_ger
+            loadout:
+                entities:
+                    - ebp: fallschirmpioneers_ger
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 900
+                      name: Vet1
+                    - experience: 2700
+                      name: Vet2
+                    - experience: 5400
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - combat_engineer
+                    - infantry_anti_infantry 
+                    - infantry_support  
+            upgrades:
+                slots: 1
+                available:
+                    - mg15_jaeger_ger
+                    - grb_39_grenade_launcher_fallschirmpioneer_ger 
+                          
+    sturmpioneer_ger:
+        category: Infantry
+        faction-association: german
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 210
+            ui:
+                screen-name: $11249689 # Sturmpioneers
+                icon-name: sturmpioneer_ger
+            loadout:
+                entities:
+                    - ebp: sturmpioneer_ger
+                      count: 3
+            veterancy:
+                ranks:
+                    - experience: 850
+                      name: Vet1
+                    - experience: 2550
+                      name: Vet2
+                    - experience: 5100
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - combat_engineer
+                    - infantry_anti_infantry 
+                    - standard_infantry  
+            upgrades:
+                slots: 1
+                available:
+                    - sturmpioneer_leader_ir_mp44_ger
+                    - sturmpioneer_leader_urban_assault_ger 
