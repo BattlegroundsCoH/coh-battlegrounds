@@ -300,16 +300,6 @@ upgrades:
                 icon-name: vampire_ht_ak_icon
                 symbol-icon-name: vampire_ht_ak_dec
 
-    spotting_scope_l6_40_ger:
-        faction-association: german # Also used by Afrika Korps
-        extensions:
-            cost:
-                munitions: 30
-            ui:
-                screen-name: $11158350 # Spotting Scope
-                icon-name: spotting_scopes
-                symbol-icon-name: tank_vision
-
     flamethrower_l640_ak:
         faction-association: afrika_korps
         extensions:
@@ -329,36 +319,6 @@ upgrades:
                 screen-name: $11235857 # MG-34 Top Gunner
                 icon-name: mg34_kettenkrad_ger
                 symbol-icon-name: weapon_mg42
-
-    mg42_panzer_ger:
-        faction-association: german # Also used by Afrika Korps
-        extensions:
-            cost:
-                munitions: 50
-            ui:
-                screen-name: $11235786 # MG-42 Top Gunner
-                icon-name: mg34_kettenkrad_ger
-                symbol-icon-name: weapon_mg42
-
-    camouflage_special_ops_ger:
-        faction-association: german # Also used by Afrika Korps
-        extensions:
-            cost:
-                munitions: 30
-            ui:
-                screen-name: $11170515 # Camouflage Special Ops
-                icon-name: camouflage_special_ops_ger
-                symbol-icon-name: spotter
-
-    side_skirts_mechanized_ger:
-        faction-association: german # Also used by Afrika Korps
-        extensions:
-            cost:
-                munitions: 50
-            ui:
-                screen-name: $11179606 # Side Skirts Mechanized
-                icon-name: side_skirts_mechanized_ger
-                symbol-icon-name: shield
 
     mg42_stug_ak:
         faction-association: afrika_korps
@@ -451,7 +411,7 @@ upgrades:
                 munitions: 90
             ui:
                 screen-name: $11242544 # Panzershreck Package
-                icon-name: panzershreck
+                icon-name: panzerschreck
                 symbol-icon-name: weapon_panzerschreck
                 
     stg44_stormtrooper_ger:
@@ -514,3 +474,133 @@ upgrades:
                 icon-name: flamenwerfer_34_ger
                 symbol-icon-name: weapon_flamethrower
                 
+    mg42_panzer_ger:
+        faction-association: german # Also used by Afrika Korps
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11235786 # MG-42 Top Gunner
+                icon-name: mg34_kettenkrad_ger
+                symbol-icon-name: weapon_mg42
+                
+    mg42_stug_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11235786 # MG-42 Top Gunner
+                icon-name: mg42_pintle
+                symbol-icon-name: weapon_mg42
+                
+    mg42_tiger_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11235786 # MG-42 Top Gunner
+                icon-name: mg42_pintle
+                symbol-icon-name: weapon_mg42
+
+    mg42_king_tiger_ger:
+        faction-association: german # Also used by Afrika Korps
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11235786 # MG-42 Top Gunner
+                icon-name: mg42_pintle
+                symbol-icon-name: weapon_mg42
+
+    camouflage_special_ops_ger:
+        faction-association: german # Also used by Afrika Korps
+        extensions:
+            cost:
+                munitions: 30
+            ui:
+                screen-name: $11170515 # Camouflage Special Ops
+                icon-name: camouflage_special_ops_ger
+                symbol-icon-name: spotter
+
+    side_skirts_mechanized_ger:
+        faction-association: german # Also used by Afrika Korps
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11179606 # Side Skirts Mechanized
+                icon-name: side_skirts_mechanized_ger
+                symbol-icon-name: shield
+                
+    spotting_scope_l6_40_ger:
+        faction-association: german # Also used by Afrika Korps
+        extensions:
+            cost:
+                munitions: 30
+            ui:
+                screen-name: $11158350 # Spotting Scope
+                icon-name: spotting_scopes
+                symbol-icon-name: tank_vision
+
+    spotting_scopes_ger:
+        faction-association: german # Also used by Afrika Korps
+        extensions:
+            cost:
+                munitions: 30
+            ui:
+                screen-name: $11158350 # Spotting Scope
+                icon-name: spotting_scopes
+                symbol-icon-name: tank_vision
+                
+    radio_armored_car_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11242551 # Radio Antenna
+                icon-name: cmdr_soviet_radio_intercept
+                symbol-icon-name: observer
+
+    20mm_panzerbuchse_armored_car_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11242548 # Panzerbuchse Anti Tank Gun
+                icon-name: panzerbuchse
+                symbol-icon-name: halftrack_250_20mm_ger
+                
+    medical_halftrack_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: $11242550 # Medical Conversion
+                icon-name: halftrack_medical_german
+                symbol-icon-name: medic
+                
+    stummel_halftrack_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: $11242552 # Stummel Conversion
+                icon-name: halftrack_stummel_german
+                symbol-icon-name: halftrack_stummel_ger
+                
+    communication_cables_kettenkrad_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 40
+            ui:
+                screen-name: $11182365 # Communication Cables
+                icon-name: communication_cables
+                symbol-icon-name: capture
+               

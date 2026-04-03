@@ -2825,4 +2825,654 @@ squads:
                     - teamweapon
                     - anti_air
                     - infantry_anti_infantry 
+                                     
+    armored_car_8_rad_ger:
+        category: Support
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 240
+                fuel: 50
+            ui:
+                screen-name: $11241733 # SdKfz 8 Rad Armoured Car
+                icon-name: armored_car_8_rad_german
+            loadout:
+                entities:
+                    - ebp: armored_car_8_rad_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+            upgrades:
+                slots: 1
+                available:
+                    - spotting_scopes_ger
+                    
+    armored_car_ger:
+        category: Support
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 220
+                fuel: 30
+            ui:
+                screen-name: $11241734 # SdKfz 222 Armoured Car
+                icon-name: armored_car_german
+            loadout:
+                entities:
+                    - ebp: armored_car_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 900
+                      name: Vet1
+                    - experience: 2700
+                      name: Vet2
+                    - experience: 5400
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+                    - vehicle_support 
+            upgrades:
+                slots: 1
+                available:
+                    - spotting_scopes_ger
+                    - radio_armored_car_ger
+                    - 20mm_panzerbuchse_armored_car_ger 
+                    
+    borgward_iv_ger:
+        category: Support
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 220
+                fuel: 30
+            ui:
+                screen-name: $11270110 # Borgward IV Wanze
+                icon-name: borgward_iv_ger
+            loadout:
+                entities:
+                    - ebp: borgward_iv_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+            upgrades:
+                slots: 1
+                available:
+                    - spotting_scopes_ger
+                    #- last_stand_borgward_iv_reload_charge_ger (Dont block this upgrade ingame)
+                      
+    halftrack_251_flak_ger:
+        category: Support
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 220
+                fuel: 20
+            ui:
+                screen-name: $11241737 # Flak Half-track
+                icon-name: halftrack_251_flak_german
+            loadout:
+                entities:
+                    - ebp: halftrack_251_flak_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+                    - anti_air 
+                    
+    halftrack_251_mmortar_ger:
+        category: Support
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 280
+                fuel: 40
+            ui:
+                screen-name: $11241738 # Mortar Half-track
+                icon-name: half-track_251_mortar_ger
+            loadout:
+                entities:
+                    - ebp: halftrack_251_mmortar_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+                    - vehicle_artillery 
+                    
+    halftrack_ger:
+        category: Support
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 220
+                fuel: 30
+            ui:
+                screen-name: $11241739 # Sdkfz 251 Halftrack
+                icon-name: halftrack_german
+                symbol-icon-name: halftrack_medical_ger
+            hold: {}
+            loadout:
+                entities:
+                    - ebp: halftrack_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 900
+                      name: Vet1
+                    - experience: 2700
+                      name: Vet2
+                    - experience: 5400
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+            upgrades:
+                slots: 1
+                available:
+                    - spotting_scopes_ger
+                    - medical_halftrack_ger
+                    - stummel_halftrack_ger
+                             
+    kettenkrad_ger:
+        category: Support
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 160
+            ui:
+                screen-name: $11241741 # Kettenkrad Recon Vehicle
+                icon-name: kettenkrad_german
+            loadout:
+                entities:
+                    - ebp: kettenkrad_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 500
+                      name: Vet1
+                    - experience: 1500
+                      name: Vet2
+                    - experience: 3000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+            upgrades:
+                slots: 1
+                available:
+                    - communication_cables_kettenkrad_ger
+                    
+    truck_2_5_ger:
+        category: Support
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 240
+                fuel: 15
+            ui:
+                screen-name: $11241745 # 2.5-tonne Utility Truck
+                icon-name: 2_5_truck_german
+                symbol-icon-name: 2_5_truck_ger
+            hold: {}
+            loadout:
+                entities:
+                    - ebp: truck_2_5_ger
+                      count: 1
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+                
+    brummbar_ger:
+        category: Armour
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 400
+                fuel: 120
+            ui:
+                screen-name: $11241735 # Sturmpanzer IV Brummbaer
+                icon-name: brummbar_german
+            loadout:
+                entities:
+                    - ebp: brummbar_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 2000
+                      name: Vet1
+                    - experience: 6000
+                      name: Vet2
+                    - experience: 12000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - heavy_armor
+            upgrades:
+                slots: 1
+                available:
+                    - spotting_scopes_ger
+                    - camouflage_special_ops_ger
+                    - side_skirts_mechanized_ger 
+                      
+    king_tiger_sdkfz_182_ger:
+        category: Armour
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 720
+                fuel: 200
+            ui:
+                screen-name: $11266553 # King Tiger
+                icon-name: king_tiger_german
+            loadout:
+                entities:
+                    - ebp: king_tiger_sdkfz_182_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 3440
+                      name: Vet1
+                    - experience: 10320
+                      name: Vet2
+                    - experience: 20640
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - heavy_armor
+                    - apex_armor 
+            upgrades:
+                slots: 1
+                available:
+                    - mg42_king_tiger_ger
+                    
+    marder_iii_ger:
+        category: Armour
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 240
+                fuel: 45
+            ui:
+                screen-name: $11241742 # Marder III M Tank Destroyer
+                icon-name: marder_iii_german
+            loadout:
+                entities:
+                    - ebp: marder_iii_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1300
+                      name: Vet1
+                    - experience: 3900
+                      name: Vet2
+                    - experience: 7800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+                    - vehicle_casemate_anti_tank 
+            upgrades:
+                slots: 1
+                available:
+                    - spotting_scopes_ger
+                    - camouflage_special_ops_ger
+                
+    nashorn_ger:
+        category: Armour
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 420
+                fuel: 120
+            ui:
+                screen-name: $11241743 # Nashorn Heavy Tank Destroyer
+                icon-name: nashorn_german
+            loadout:
+                entities:
+                    - ebp: nashorn_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 2000
+                      name: Vet1
+                    - experience: 6000
+                      name: Vet2
+                    - experience: 12000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - heavy_armor
+                    - vehicle_casemate_anti_tank 
+                              
+    panther_ger:
+        category: Armour
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 550
+                fuel: 100
+            ui:
+                screen-name: $11241747 # Panther Heavy Tank
+                icon-name: panther_german
+            loadout:
+                entities:
+                    - ebp: panther_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 2000
+                      name: Vet1
+                    - experience: 6000
+                      name: Vet2
+                    - experience: 12000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - heavy_armor
+                    - vehicle_anti_tank 
+            upgrades:
+                slots: 1
+                available:
+                    - spotting_scopes_ger
+                    
+    panzer_iv_cmd_ger:
+        category: Armour
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 380
+                fuel: 80
+            ui:
+                screen-name: $11226807 # Command Panzer IV Medium Tank
+                icon-name: panzer_iv_cmd_german
+            loadout:
+                entities:
+                    - ebp: panzer_iv_cmd_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - medium_armor
+            upgrades:
+                slots: 1
+                available:
+                    - spotting_scopes_ger
+                
+    panzer_iv_ger:
+        category: Armour
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 360
+                fuel: 100
+            ui:
+                screen-name: $11241748 # Panzer IV Medium Tank
+                icon-name: panzer_iv_german
+            loadout:
+                entities:
+                    - ebp: panzer_iv_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - medium_armor
+                    - vehicle_anti_tank 
+            upgrades:
+                slots: 1
+                available:
+                    - spotting_scopes_ger
+                    - mg42_panzer_ger
+                    - camouflage_special_ops_ger
+                    - side_skirts_mechanized_ger
+                
+    stug_iii_d_ger:
+        category: Armour
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 280
+                fuel: 55
+            ui:
+                screen-name: $11241663 # StuG III Ausf. D Assault Gun
+                icon-name: stug_iii_d_german
+            loadout:
+                entities:
+                    - ebp: stug_iii_d_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1300
+                      name: Vet1
+                    - experience: 3900
+                      name: Vet2
+                    - experience: 7800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - medium_armor
+                    - vehicle_casemate 
+            upgrades:
+                slots: 1
+                available:
+                    - spotting_scopes_ger
+                    - mg42_stug_ger
+                    - camouflage_special_ops_ger
+                    - side_skirts_mechanized_ger
+                
+    stug_iii_ger:
+        category: Armour
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 300
+                fuel: 70
+            ui:
+                screen-name: $11241750 # StuG III Ausf. G
+                icon-name: stug_iii_german
+            loadout:
+                entities:
+                    - ebp: stug_iii_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1300
+                      name: Vet1
+                    - experience: 3900
+                      name: Vet2
+                    - experience: 7800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - medium_armor
+                    - vehicle_casemate_anti_tank 
+            upgrades:
+                slots: 1
+                available:
+                    - spotting_scopes_ger
+                    - mg42_stug_ger
+                    - camouflage_special_ops_ger
+                    - side_skirts_mechanized_ger
+                
+    tiger_ger:
+        category: Armour
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 720
+                fuel: 200
+            ui:
+                screen-name: $11183176 # Tiger I Heavy Tank
+                icon-name: tiger_german
+            loadout:
+                entities:
+                    - ebp: tiger_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1300
+                      name: Vet1
+                    - experience: 3900
+                      name: Vet2
+                    - experience: 7800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - heavy_armor
+                    - apex_armor 
+            upgrades:
+                slots: 1
+                available:
+                    - mg42_tiger_ger
+                
+    wespe_ger:
+        category: Armour
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 320
+                fuel: 75
+            ui:
+                screen-name: $11239184 # Wespe Self-Propelled Artillery
+                icon-name: wespe_german
+            loadout:
+                entities:
+                    - ebp: wespe_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1500
+                      name: Vet1
+                    - experience: 4500
+                      name: Vet2
+                    - experience: 9000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - medium_armor
+                    - vehicle_artillery 
+            upgrades:
+                slots: 1
+                available:
+                    - spotting_scopes_ger
                  
+    wirbelwind_ger:
+        category: Armour
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 300
+                fuel: 70
+            ui:
+                screen-name: $11241751 # Wirbelwind Flakpanzer
+                icon-name: wirbelwind_german
+            loadout:
+                entities:
+                    - ebp: wirbelwind_ger
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1500
+                      name: Vet1
+                    - experience: 4500
+                      name: Vet2
+                    - experience: 9000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - medium_armor
+                    - anti_air 
+            upgrades:
+                slots: 1
+                available:
+                    - spotting_scopes_ger
+                    - camouflage_special_ops_ger 
+                

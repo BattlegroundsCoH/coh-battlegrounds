@@ -208,6 +208,9 @@
     <None Update="Assets\Factions\coh3\icons\churchill_uk.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Factions\coh3\icons\cmdr_soviet_radio_intercept.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3\icons\coastal_reserves_squad_wicd.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -616,6 +619,9 @@
     <None Update="Assets\Factions\coh3\symbols\blow_torch.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Factions\coh3\symbols\capture.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3\symbols\cwt_medical.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -634,13 +640,25 @@
     <None Update="Assets\Factions\coh3\symbols\halftrack_250_mortar_ger.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Factions\coh3\symbols\halftrack_medical_ger.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Factions\coh3\symbols\halftrack_stummel_ger.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3\symbols\land_mattress.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\symbols\m1_thompson_sub_machine_gun.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Factions\coh3\symbols\medic.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3\symbols\mortar.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Factions\coh3\symbols\observer.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\symbols\polish_lancer_africa_uk.png">
