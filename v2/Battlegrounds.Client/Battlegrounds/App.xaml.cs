@@ -23,7 +23,7 @@ public partial class App : Application {
         
         base.OnStartup(e);
 
-        var bgApp = new BattlegroundsApp();
+        var bgApp = new BattlegroundsApp(e.Args);
         bgApp.ConfigureFileStorage();
 
         var services = new ServiceCollection();

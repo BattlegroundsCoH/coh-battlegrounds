@@ -59,6 +59,8 @@ public sealed class BattlegroundsApp {
 
     public bool IsFirstRun => _isFirstRun;
 
+    public bool IsNoPlayModeConfigured { get; }
+
     /// <summary>
     /// Persists the current in-memory configuration to disk.
     /// </summary>
@@ -66,11 +68,13 @@ public sealed class BattlegroundsApp {
         File.WriteAllText(_configFilePath, _configuration.ToJson());
     }
 
-    public BattlegroundsApp() {
+    public BattlegroundsApp(params string[] args) {
         if (Instance is not null) {
             throw new InvalidOperationException("BattlegroundsApp instance already exists.");
         }
+        var argsAsHashset = new HashSet<string>();
         Instance = this;
+        IsNoPlayModeConfigured = args.Contains("--noplay"); // Instructs the app to not actually launch Company of Heroes
     }
 
     public void ConfigureFileStorage() {
@@ -206,7 +210,6 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<IUpdateService, UpdateService>();
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<ILobbyService, LobbyService>();
-        services.AddSingleton<IPlayService, PlayService>();
         services.AddSingleton<IReplayService, ReplayService>();
         services.AddSingleton<IGameService, GameService>();
         services.AddSingleton<IGameMapService, GameMapService>();
@@ -226,6 +229,16 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<IBattlegroundsWebAPI, HttpBattlegroundsWebAPI>();
         services.AddTransient<GrpcServerClientFactory>();
         services.AddTransient<LobbySetupFromConfigFactory>();
+
+        if (IsNoPlayModeConfigured) {
+            Log.ForContext<BattlegroundsApp>()
+                .Information("Battlegrounds is configured to be in no-play mode...");
+            // TODO: Configure non-play services here (e.g. mock play service, or just don't register a play service at all and have the app handle that case)
+        } else {
+            Log.ForContext<BattlegroundsApp>()
+                .Information("Battlegrounds is configured to be in play mode...");
+            services.AddSingleton<IPlayService, PlayService>();
+        }
 
         // Add getters
         services.AddSingleton(services => services.GetRequiredService<IGameService>().GetGame<CoH3>());
