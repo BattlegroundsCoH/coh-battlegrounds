@@ -2575,3 +2575,254 @@ squads:
                 available:
                     - sturmpioneer_leader_ir_mp44_ger
                     - sturmpioneer_leader_urban_assault_ger 
+                    
+    at_gun_75mm_ger:
+        category: Support
+        faction-association: german
+        is-team-weapon: true
+        is-towable: true
+        extensions:
+            cost:
+                manpower: 280
+            ui:
+                screen-name: $11215183 # 75mm Pak 40 AT Gun
+                icon-name: at_gun_75mm_ger
+            loadout:
+                entities:
+                    - ebp: at_gun_75mm_ger
+                      count: 1
+                    - ebp: crew_at_gun_75mm_ger
+                      count: 5
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - anti_tank
+                    - teamweapon_anti_tank 
+                    
+    at_gun_88mm_pak43_ger:
+        category: Support
+        faction-association: german
+        is-team-weapon: true
+        is-towable: true
+        extensions:
+            cost:
+                manpower: 340
+            ui:
+                screen-name: $11241729 # 88mm Pak43 AT Gun
+                icon-name: at_gun_88mm_mobile_ak # Reuse afrika korps icon
+            loadout:
+                entities:
+                    - ebp: tw_at_gun_88mm_pak43_ger
+                      count: 1
+                    - ebp: crew_at_gun_ger
+                      count: 5
+            veterancy:
+                ranks:
+                    - experience: 1300
+                      name: Vet1
+                    - experience: 3900
+                      name: Vet2
+                    - experience: 7800
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - anti_tank
+                    - elite_teamweapon 
+                    - teamweapon_anti_tank 
+                      
+    at_gun_lg40_ger:
+        category: Support
+        faction-association: german
+        is-team-weapon: true
+        is-towable: true
+        extensions:
+            cost:
+                manpower: 270
+            ui:
+                screen-name: $11241730 # 75mm LG40 AT Gun
+                icon-name: at_gun_75mm_lg40_german
+            loadout:
+                entities:
+                    - ebp: tw_at_gun_75mm_lg40_ger
+                      count: 1
+                    - ebp: crew_at_gun_fallschirmpioneers_ger
+                      count: 5
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - anti_tank
+                    - teamweapon_anti_tank 
+                                          
+    hmg_mg42_ger:
+        category: Support
+        faction-association: german
+        is-team-weapon: true
+        is-towable: false
+        extensions:
+            cost:
+                manpower: 240
+            ui:
+                screen-name: $11241731 # MG 42 Heavy Machine Gun
+                icon-name: hmg_mg42_ger
+            loadout:
+                entities:
+                    - ebp: w_mg42_hmg_ger
+                      count: 1
+                    - ebp: crew_hmg_ger
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 700
+                      name: Vet1
+                    - experience: 2100
+                      name: Vet2
+                    - experience: 4200
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - infantry_anti_infantry
+                    - teamweapon_burst 
+                    - suppression 
+                                                   
+    leig_75mm_ger:
+        category: Support
+        faction-association: german
+        is-team-weapon: true
+        is-towable: true
+        extensions:
+            cost:
+                manpower: 300
+            ui:
+                screen-name: $11201756 # Leichtgeschütz 75mm Light Gun
+                icon-name: leig_75mm_ger
+            loadout:
+                entities:
+                    - ebp: tw_howitzer_75mm_leig_ger
+                      count: 1
+                    - ebp: crew_leig_ger
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 1300
+                      name: Vet1
+                    - experience: 3900
+                      name: Vet2
+                    - experience: 7800
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - artillery
+                    - infantry_anti_infantry 
+                                                          
+    mortar_81mm_ger:
+        category: Support
+        faction-association: german
+        is-team-weapon: true
+        is-towable: false
+        extensions:
+            cost:
+                manpower: 260
+            ui:
+                screen-name: $11216831 # 81mm Mortar Team
+                icon-name: mortar_81mm_ger
+            loadout:
+                entities:
+                    - ebp: w_81mm_mortar_ger
+                      count: 1
+                    - ebp: crew_mortar_ger
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 750
+                      name: Vet1
+                    - experience: 2250
+                      name: Vet2
+                    - experience: 4500
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - mortar
+                    - infantry_anti_infantry 
+                                                       
+    nebelwerfer_150mm_ger:
+        category: Support
+        faction-association: german
+        is-team-weapon: true
+        is-towable: true
+        extensions:
+            cost:
+                manpower: 360
+            ui:
+                screen-name: $11153551 # Nebelwerfer 150mm Rocket Artillery
+                icon-name: nebelwerfer_150mm_ger
+            loadout:
+                entities:
+                    - ebp: tw_nebelwerfer_150mm_ger
+                      count: 1
+                    - ebp: crew_nebelwerfer_ger
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 1300
+                      name: Vet1
+                    - experience: 3900
+                      name: Vet2
+                    - experience: 7800
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - artillery
+                    - infantry_anti_infantry 
+                       
+    aa_gun_20mm_ger:
+        category: Support
+        faction-association: german
+        is-team-weapon: true
+        is-towable: true
+        extensions:
+            cost:
+                manpower: 270
+            ui:
+                screen-name: $11241728 # 20mm Auto Cannon
+                icon-name: aa_gun_20mm_german
+            loadout:
+                entities:
+                    - ebp: attributes\ebps\races\german\team_weapons\tw_aa_gun_20mm_ger
+                      count: 1
+                    - ebp: attributes\ebps\races\german\infantry\crew_aa_gun_20mm_ger
+                      count: 5
+            veterancy:
+                ranks:
+                    - experience: 1300
+                      name: Vet1
+                    - experience: 3900
+                      name: Vet2
+                    - experience: 7800
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - anti_air
+                    - infantry_anti_infantry 
+                 
