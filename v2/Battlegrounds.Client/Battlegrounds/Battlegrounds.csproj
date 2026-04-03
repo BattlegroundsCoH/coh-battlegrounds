@@ -8,6 +8,12 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>Battlegrounds</AssemblyName>
     <ApplicationIcon>App.ico</ApplicationIcon>
+    <Version>2.0.0</Version>
+    <PackageProjectUrl>https://cohbattlegrounds.com/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/BattlegroundsCoH/coh-battlegrounds</RepositoryUrl>
+    <Company>Battlegrounds Development Team</Company>
+    <Authors>Battlegrounds Development Team</Authors>
+    <Copyright>Copyright (C) 2026 Battlegrounds Development Team</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
