@@ -167,7 +167,7 @@ upgrades:
                 symbol-icon-name: weapon_firefly_tulip_rocket
 
     utility_kit_stuart_uk:
-        faction-association: british_africa
+        faction-association: british_africa # Also used by americans
         extensions:
             cost:
                 munitions: 40
@@ -306,6 +306,36 @@ upgrades:
                 icon-name: m9_bazooka
                 symbol-icon-name: weapon_m9_bazooka
                 
+    greyhound_side_skirts_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11258027 # Armored Skirts
+                icon-name: icon_upgrade_aef_m20_armored_skirts
+                symbol-icon-name: shield
+
+    hmg_greyhound_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11242500 # MH2 .50 Caliber Machine Gun
+                icon-name: 50cal_pintle
+                symbol-icon-name: tank_mg42
+                
+    hmg_hellcat_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11242500 # MH2 .50 Caliber Machine Gun
+                icon-name: 50cal_pintle
+                symbol-icon-name: tank_mg42
+                
     hmg_sherman_us:
         faction-association: american # Aslo used by british_africa
         extensions:
@@ -313,8 +343,38 @@ upgrades:
                 munitions: 50
             ui:
                 screen-name: 11242531
-                icon-name: hmg_us
+                icon-name: 50cal_pintle
                 symbol-icon-name: tank_mg42
+                
+    hmg_sherman_easy8_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11242504 # M2HB .50 Caliber Machine Gun
+                icon-name: 50cal_pintle
+                symbol-icon-name: tank_mg42
+                
+    30cal_weasal_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 30
+            ui:
+                screen-name: $11242497 # Pintle Mount .30 Caliber Machine Gun
+                icon-name: 30cal_pintle
+                symbol-icon-name: tank_mg42
+                
+    commander_stuart_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: 11186706
+                icon-name: ability_british_tank_commander
+                symbol-icon-name: tank_vision
                 
     #########################################
     ## Afrika Korps Upgrades

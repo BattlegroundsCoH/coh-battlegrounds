@@ -615,3 +615,588 @@ squads:
                     - teamweapon
                     - infantry_anti_infantry
                     - artillery 
+                       
+    ambulance_us:
+        category: Support
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 240
+                fuel: 10
+            ui:
+                screen-name: $11153435 # WC54 Ambulance
+                icon-name: 4x4_truck_medical_us
+            loadout:
+                entities:
+                    - ebp: ambulance_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 500
+                      name: Vet1
+                    - experience: 1000
+                      name: Vet2
+                    - experience: 1500
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+                       
+    halftrack_75mm_us:
+        category: Support
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 250
+                fuel: 30
+            ui:
+                screen-name: $11241672 # M3 75mm Gun Motor Carriage
+                icon-name: halftrack_75mm_us
+            loadout:
+                entities:
+                    - ebp: halftrack_75mm_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+                     
+    halftrack_medical_us:
+        category: Support
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 270
+                fuel: 30
+            ui:
+                screen-name: $11205860 # M3 Armoured Medical Halftrack
+                icon-name: halftrack_medical_us
+            loadout:
+                entities:
+                    - ebp: halftrack_medical_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+                     
+    halftrack_quad_us:
+        category: Support
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 250
+                fuel: 30
+            ui:
+                screen-name: $11205297 # M16 Multiple Gun Motor Carriage
+                icon-name: halftrack_quad_us
+            loadout:
+                entities:
+                    - ebp: halftrack_quad_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+                    - anti_air 
+                             
+    halftrack_us:
+        category: Support
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 250
+                fuel: 30
+            ui:
+                screen-name: $11153442 # M3 Armoured Personel Carrier
+                icon-name: halftrack_us
+            loadout:
+                entities:
+                    - ebp: halftrack_us
+                      count: 1
+            hold:
+                can-tow: true
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+                          
+    m29_weasal_us:
+        category: Support
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 220
+            ui:
+                screen-name: $11184326 # M29 Weasel Recon Vehicle
+                icon-name: m_29_weassel
+            loadout:
+                entities:
+                    - ebp: m29_weasal_us
+                      count: 1
+            hold:
+                can-tow: true
+            veterancy:
+                ranks:
+                    - experience: 700
+                      name: Vet1
+                    - experience: 2100
+                      name: Vet2
+                    - experience: 4200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - ultra_light
+            upgrades:
+                slots: 1
+                available:
+                    - 30cal_weasal_us
+                               
+    truck_4x4_us:
+        category: Support
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 220
+            ui:
+                screen-name: $11241674 # 1/4-ton 4x4 Truck
+                icon-name: 4x4_truck_us
+            loadout:
+                entities:
+                    - ebp: 4x4_truck_us
+                      count: 1
+            hold:
+                can-tow: true
+            veterancy:
+                ranks:
+                    - experience: 600
+                      name: Vet1
+                    - experience: 1800
+                      name: Vet2
+                    - experience: 3600
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - ultra_light
+                             
+    truck_6x6_us:
+        category: Support
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 260
+                fuel: 25
+            ui:
+                screen-name: $11201852 # Deuce and a Half Truck
+                icon-name: 6x6_truck_cckw_353_cp_us
+            loadout:
+                entities:
+                    - ebp: truck_6x6_us
+                      count: 1
+            hold:
+                can-tow: true
+            veterancy:
+                ranks:
+                    - experience: 300
+                      name: Vet1
+                    - experience: 600
+                      name: Vet2
+                    - experience: 1200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - ultra_light
+
+    ##########################################
+    ## Armour/Tank Squads
+    ##########################################
+
+    chaffee_us:
+        category: Armour
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 270
+                fuel: 60
+            ui:
+                screen-name: $11196343 # M24 Chaffee Light Tank
+                icon-name: chaffee_us
+            loadout:
+                entities:
+                    - ebp: chaffee_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1100
+                      name: Vet1
+                    - experience: 3300
+                      name: Vet2
+                    - experience: 6600
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+                    - vehicle_anti_tank
+                    
+    greyhound_us:
+        category: Armour
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 260
+                fuel: 50
+            ui:
+                screen-name: $11189538 # M8 Greyhound Armoured Car
+                icon-name: greyhound_us
+            loadout:
+                entities:
+                    - ebp: greyhound_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 500
+                      name: Vet1
+                    - experience: 1000
+                      name: Vet2
+                    - experience: 1500
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+            upgrades:
+                slots: 1
+                available:
+                    - greyhound_side_skirts_us
+                    - hmg_greyhound_us 
+                    
+    hellcat_us:
+        category: Armour
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 300
+                fuel: 80
+            ui:
+                screen-name: $11153453 # M18 Hellcat Tank Destroyer
+                icon-name: hellcat_us
+            loadout:
+                entities:
+                    - ebp: hellcat_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - medium_armor
+                    - vehicle_anti_tank
+            upgrades:
+                slots: 1
+                available:
+                    - hmg_hellcat_us 
+                       
+    pershing_us:
+        category: Armour
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 720
+                fuel: 200
+            ui:
+                screen-name: $11266057 # M26 Pershing Heavy Tank
+                icon-name: pershing_us
+            loadout:
+                entities:
+                    - ebp: pershing_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 3440
+                      name: Vet1
+                    - experience: 10320
+                      name: Vet2
+                    - experience: 20640
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - apex_armor
+                    - heavy_armor 
+                    - vehicle_anti_tank
+                        
+    scott_us:
+        category: Armour
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 280
+                fuel: 55
+            ui:
+                screen-name: $11238939 # M8 Scott Self-Propelled Gun
+                icon-name: scott_us
+            loadout:
+                entities:
+                    - ebp: scott_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - apex_armor
+                    - heavy_armor 
+                    - vehicle_anti_tank
+                    
+    sherman_76mm_us:
+        category: Armour
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 340
+                fuel: 90
+            ui:
+                screen-name: $11241676 # M4A1(76) Sherman Medium Tank
+                icon-name: sherman_76mm_us
+            loadout:
+                entities:
+                    - ebp: sherman_76mm_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - medium_armor
+            upgrades:
+                slots: 1
+                available:
+                    - hmg_sherman_us 
+                    
+    sherman_bulldozer_us:
+        category: Armour
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 380
+                fuel: 100
+            ui:
+                screen-name: $11241677 # M4(105) Sherman Bulldozer
+                icon-name: sherman_bulldozer_us
+            loadout:
+                entities:
+                    - ebp: sherman_bulldozer_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - medium_armor
+            upgrades:
+                slots: 1
+                available:
+                    - hmg_sherman_us 
+                    
+    sherman_easy_8_us:
+        category: Armour
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 375
+                fuel: 105
+            ui:
+                screen-name: $11241678 # M4A3E8 Sherman Easy Eight
+                icon-name: sherman_easy_8_us
+            loadout:
+                entities:
+                    - ebp: sherman_easy_8_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - medium_armor
+            upgrades:
+                slots: 1
+                available:
+                    - hmg_sherman_easy8_us 
+                      
+    sherman_us:
+        category: Armour
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 340
+                fuel: 90
+            ui:
+                screen-name: $11153450 # M4A1 Sherman Medium Tank
+                icon-name: sherman_us
+            loadout:
+                entities:
+                    - ebp: sherman_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - medium_armor
+            upgrades:
+                slots: 1
+                available:
+                    - hmg_sherman_us 
+                    
+    sherman_whizbang_us:
+        category: Armour
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 380
+                fuel: 80
+            ui:
+                screen-name: $11185673 # M4A1 Sherman "Whizbang"
+                icon-name: sherman_whizbang_us
+            loadout:
+                entities:
+                    - ebp: sherman_whizbang_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1500
+                      name: Vet1
+                    - experience: 4500
+                      name: Vet2
+                    - experience: 9000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - medium_armor
+                    - vehicle_artillery
+                    - artillery
+                    
+    stuart_us:
+        category: Armour
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 280
+                fuel: 35
+            ui:
+                screen-name: $11180071 # M3 Stuart Light Tank
+                icon-name: stuart_us
+            loadout:
+                entities:
+                    - ebp: stuart_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+            upgrades:
+                slots: 1
+                available:
+                    - utility_kit_stuart_uk 
+                    - commander_stuart_us 
