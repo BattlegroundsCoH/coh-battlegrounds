@@ -104,6 +104,20 @@ public abstract class Blueprint(string id, HashSet<BlueprintExtension> extension
     }
 
     /// <summary>
+    /// Determines whether an extension of the specified type exists and satisfies the given predicate.
+    /// </summary>
+    /// <typeparam name="T">The type of the extension to check. Must inherit from BlueprintExtension.</typeparam>
+    /// <param name="predicate">A predicate to test the extension of type T. The method returns true only if an extension of type T exists and
+    /// the predicate returns true for it.</param>
+    /// <returns>true if an extension of type T exists and the predicate returns true for it; otherwise, false.</returns>
+    public bool HasExtension<T>(Predicate<T> predicate) where T : BlueprintExtension {
+        if (_extensions.TryGetValue(typeof(T).Name, out var extension) && extension is T t) {
+            return predicate(t);
+        }
+        return false;
+    }
+
+    /// <summary>
     /// Determines whether an extension with the specified name exists.
     /// </summary>
     /// <param name="name">The name of the extension to check for. Cannot be null or empty.</param>

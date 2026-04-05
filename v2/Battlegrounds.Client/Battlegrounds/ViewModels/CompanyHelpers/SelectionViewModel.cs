@@ -55,6 +55,8 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
 
     public bool IsTransportable => IsSquad && (_squad.Blueprint.IsTowable || _squad.Blueprint.IsInfantry); // Check if the squad is transportable based on its blueprint.
 
+    public bool IsTowTransportable => IsSquad && _squad.Blueprint.IsTowable && !_squad.Blueprint.IsInfantry; // Check if the squad is tow transportable, which requires it to be towable and not infantry.
+
     public bool CanDisableTransport => IsSquad && !_squad.Blueprint.RequiresTowing; // Check if the squad requires towing, which disallows disabling transport.
 
     public bool HasTransport {
@@ -118,7 +120,9 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
 
     public IReadOnlyList<SlotItemViewModel> Items => _items.AsReadOnly(); // Upgrades are only available if this is a squad, otherwise it's empty.
 
-    public ICollection<SquadBlueprint> AvailableTransports => _parentViewModel.AvailableTransportUnits;
+    public ICollection<SquadBlueprint> AvailableTransports => IsTowTransportable 
+        ? _parentViewModel.AvailableTowTransportUnits 
+        : _parentViewModel.AvailableTransportUnits;
 
     public IReadOnlyList<RankStar> RankStars {
         get {
