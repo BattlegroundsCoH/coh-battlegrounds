@@ -399,3 +399,219 @@ squads:
                     - infantry
                     - elite_infantry
                     - infantry_anti_infantry
+                    
+    ##########################################
+    ## Support Squads
+    ##########################################
+
+    medic_us:
+        category: Support
+        faction-association: american
+        is-infantry: true
+        enabled: false # Disabled since they're not actually available in the game
+        extensions:
+            cost:
+                manpower: 170
+            ui:
+                screen-name: 11241690
+                help-text: 11189891
+                brief-text: 11158242
+                icon-name: medic_us
+            loadout:
+                entities:
+                    - ebp: medic_us
+                      count: 2
+            veterancy:
+                ranks:
+                    - experience: 560
+                      name: Vet1
+                    - experience: 1120
+                      name: Vet2
+                    - experience: 2576
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    
+    at_gun_3in_m5_us:
+        category: Support
+        faction-association: american
+        is-team-weapon: true
+        is-towable: true
+        extensions:
+            cost:
+                manpower: 380
+                fuel: 40
+            ui:
+                screen-name: $11266287 # 3-Inch M5 Anti-Tank Gun
+                icon-name: tw_at_gun_3in_m5_us
+            loadout:
+                entities:
+                    - ebp: tw_at_gun_3in_m5_us
+                      count: 1
+                    - ebp: crew_at_gun_heavy_us
+                      count: 6
+            veterancy:
+                ranks:
+                    - experience: 1800
+                      name: Vet1
+                    - experience: 5400
+                      name: Vet2
+                    - experience: 10800
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - anti_tank
+                    - teamweapon_anti_tank 
+                    
+    at_gun_57mm_us:
+        category: Support
+        faction-association: american
+        is-team-weapon: true
+        is-towable: true
+        extensions:
+            cost:
+                manpower: 270
+            ui:
+                screen-name: $11241670 # M1 Anti-tank Gun Team
+                icon-name: at_gun57mm_us
+            loadout:
+                entities:
+                    - ebp: tw_at_gun_57mm_us
+                      count: 1
+                    - ebp: crew_at_gun_57mm_us
+                      count: 5
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - anti_tank
+                    - teamweapon_anti_tank 
+                      
+    hmg_30cal_us:
+        category: Support
+        faction-association: american
+        is-team-weapon: true
+        extensions:
+            cost:
+                manpower: 240
+            ui:
+                screen-name: $11153431 # M1918 Machine Gun Team
+                icon-name: hmg_30cal_us
+            loadout:
+                entities:
+                    - ebp: w_30cal_hmg_us
+                      count: 1
+                    - ebp: crew_hmg_us
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 700
+                      name: Vet1
+                    - experience: 1200
+                      name: Vet2
+                    - experience: 4200
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - infantry_anti_infantry
+                    - teamweapon_burst 
+                      
+    hmg_50cal_us:
+        category: Support
+        faction-association: american
+        is-team-weapon: true
+        extensions:
+            cost:
+                manpower: 240
+            ui:
+                screen-name: $11266352 # M2HB .50 Caliber Machine Gun Team
+                icon-name: hmg_50cal_us
+            loadout:
+                entities:
+                    - ebp: w_50cal_hmg_us
+                      count: 1
+                    - ebp: crew_hmg_us
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 700
+                      name: Vet1
+                    - experience: 1200
+                      name: Vet2
+                    - experience: 4200
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - infantry_anti_infantry
+                    - teamweapon_burst 
+                          
+    mortar_81mm_us:
+        category: Support
+        faction-association: american
+        is-team-weapon: true
+        extensions:
+            cost:
+                manpower: 280
+            ui:
+                screen-name: $11180076 # M1 Mortar Team
+                icon-name: mortar_81mm_us
+            loadout:
+                entities:
+                    - ebp: w_81mm_mortar_us
+                      count: 1
+                    - ebp: crew_mortar_us
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 750
+                      name: Vet1
+                    - experience: 2250
+                      name: Vet2
+                    - experience: 4500
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - infantry_anti_infantry
+                    - mortar 
+                             
+    pack_howitzer_75mm_us:
+        category: Support
+        faction-association: american
+        is-team-weapon: true
+        extensions:
+            cost:
+                manpower: 320
+            ui:
+                screen-name: $11241712 # 75mm Pack Howitzer Team
+                icon-name: pack_howitzer_75mm_us
+            loadout:
+                entities:
+                    - ebp: tw_pack_howitzer_75mm_us
+                      count: 1
+                    - ebp: crew_howitzer_us
+                      count: 5
+            veterancy:
+                ranks:
+                    - experience: 850
+                      name: Vet1
+                    - experience: 2550
+                      name: Vet2
+                    - experience: 5100
+                      name: Vet3
+            types:
+                values:
+                    - teamweapon
+                    - infantry_anti_infantry
+                    - artillery 
