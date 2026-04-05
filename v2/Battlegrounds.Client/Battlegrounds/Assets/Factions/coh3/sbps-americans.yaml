@@ -1025,6 +1025,8 @@ squads:
                 entities:
                     - ebp: sherman_76mm_us
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800
@@ -1121,6 +1123,8 @@ squads:
                 entities:
                     - ebp: sherman_us
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800

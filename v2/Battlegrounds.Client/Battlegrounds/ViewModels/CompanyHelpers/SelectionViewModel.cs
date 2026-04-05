@@ -55,6 +55,8 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
 
     public bool IsTransportable => IsSquad && (_squad.Blueprint.IsTowable || _squad.Blueprint.IsInfantry); // Check if the squad is transportable based on its blueprint.
 
+    public bool CanHavePassengers => IsSquad && _squad.Blueprint.HasExtension<HoldExtension>(); // Check if the squad can have passengers, which requires the HoldExtension.
+
     public bool IsTowTransportable => IsSquad && _squad.Blueprint.IsTowable && !_squad.Blueprint.IsInfantry; // Check if the squad is tow transportable, which requires it to be towable and not infantry.
 
     public bool CanDisableTransport => IsSquad && !_squad.Blueprint.RequiresTowing; // Check if the squad requires towing, which disallows disabling transport.
@@ -116,6 +118,32 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
 
     public Squad.TransportSquad? Transport => _squad?.Transport; // Transport is only available if this is a squad, otherwise it's null.
 
+    public bool HasPassenger => IsSquad && _squad.HasPassenger;
+
+    public IReadOnlyList<Squad> AvailablePassengers {
+        get {
+            if (!IsSquad) return [];
+            var otherPassengerIds = _parentViewModel.GetPassengerIds(_squad.Id);
+            return _parentViewModel.GetPhaseSquads(_squad.Phase)
+                .Where(s => s.Id != _squad.Id && s.Blueprint.IsInfantry && !otherPassengerIds.Contains(s.Id))
+                .ToList()
+                .AsReadOnly();
+        }
+    }
+
+    public bool HasAvailablePassengers => AvailablePassengers.Count > 0;
+
+    public Squad? SelectedPassenger {
+        get => IsSquad && _squad.HasPassenger
+            ? _parentViewModel.GetPhaseSquads(_squad.Phase).FirstOrDefault(s => s.Id == _squad.Passenger.PassengerSquadId)
+            : null;
+        set {
+            if (IsSquad) {
+                _parentViewModel.SetSquadPassenger(_squad!, value);
+            }
+        }
+    }
+
     public IReadOnlyList<UpgradeViewModel> Upgrades => _upgrades.AsReadOnly(); // Upgrades are only available if this is a squad, otherwise it's empty.
 
     public IReadOnlyList<SlotItemViewModel> Items => _items.AsReadOnly(); // Upgrades are only available if this is a squad, otherwise it's empty.
@@ -151,6 +179,8 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
 
     public IRelayCommand<UpgradeBlueprint>? UpgradeCommand { get; }
 
+    public IRelayCommand? ClearPassengerCommand { get; }
+
     public SelectionViewModel(CompanyEditorViewModel parentViewModel, SquadBlueprint squadBlueprint) {
         _parentViewModel = parentViewModel ?? throw new ArgumentNullException(nameof(parentViewModel));
         _squadBlueprint = squadBlueprint ?? throw new ArgumentNullException(nameof(squadBlueprint));
@@ -167,6 +197,9 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
         CustomName = squad.HasCustomName ? squad.Name : string.Empty;
         RetireSquadCommand = new RelayCommand(() => parentViewModel.RetireSquadFromCompany(squad));
         UpgradeCommand = new RelayCommand<UpgradeBlueprint>(AddUpgrade);
+        ClearPassengerCommand = new RelayCommand(
+            () => parentViewModel.SetSquadPassenger(_squad!, null),
+            () => IsSquad && _squad!.HasPassenger);
         InitTransportOptions();
         SetUpgrades();
         SetItems();
@@ -244,6 +277,11 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AvailableTransports)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanUpgrade)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsInfantry)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanHavePassengers)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasPassenger)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AvailablePassengers)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasAvailablePassengers)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedPassenger)));
     }
 
 }

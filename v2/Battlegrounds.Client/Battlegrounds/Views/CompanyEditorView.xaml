@@ -112,87 +112,125 @@
                             BorderBrush="{StaticResource BackgroundLightBlueBrush}"
                             BorderThickness="1"
                             CornerRadius="4">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+                            <StackPanel>
 
-                                <!-- Unit Icon -->
-                                <Image 
-                                    Grid.Column="0"
-                                    Width="32"
-                                    Height="32"
-                                    Margin="0,0,12,0">
-                                    <Image.Source>
-                                        <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
-                                            <Binding Path="Blueprint"/>
-                                            <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
-                                        </MultiBinding>
-                                    </Image.Source>
-                                </Image>
+                                <!-- Main unit row -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <!-- Unit Name (and ID) -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock 
-                                        Foreground="{StaticResource ForegroundWhiteBrush}"
-                                        VerticalAlignment="Center">
-                                        <Run Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}}"/> (#<Run Text="{Binding Id, Mode=OneWay}"/>)
-                                    </TextBlock>
-                                    <!-- Custom Name (if any)-->
-                                    <TextBlock 
-                                        FontStyle="Italic"
-                                        Visibility="{Binding HasCustomName, Converter={StaticResource BooleanToVisibility}}"
-                                        Foreground="{StaticResource ForegroundWhiteBrush}"
-                                        VerticalAlignment="Center">
-                                        
-                                    </TextBlock>
+                                    <!-- Unit Icon -->
+                                    <Image 
+                                        Grid.Column="0"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="0,0,12,0">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
+                                                <Binding Path="Blueprint"/>
+                                                <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+
+                                    <!-- Unit Name (and ID) -->
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock 
+                                            Foreground="{StaticResource ForegroundWhiteBrush}"
+                                            VerticalAlignment="Center">
+                                            <Run Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}, Mode=OneWay}"/> (#<Run Text="{Binding Id, Mode=OneWay}"/>)
+                                        </TextBlock>
+                                        <!-- Custom Name (if any)-->
+                                        <TextBlock 
+                                            FontStyle="Italic"
+                                            Visibility="{Binding HasCustomName, Converter={StaticResource BooleanToVisibility}}"
+                                            Foreground="{StaticResource ForegroundWhiteBrush}"
+                                            VerticalAlignment="Center">
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <!-- Unit upgrades -->
+                                    <ItemsControl 
+                                        Grid.Column="2"
+                                        ItemsSource="{Binding Upgrades}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Image 
+                                                    Width="24"
+                                                    Height="24"
+                                                    Margin="0,0,4,0">
+                                                    <Image.Source>
+                                                        <MultiBinding Converter="{StaticResource BlueprintSymbolMultiConverter}">
+                                                            <Binding Path="."/>
+                                                            <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                                        </MultiBinding>
+                                                    </Image.Source>
+                                                </Image>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                    <!-- Unit transport -->
+                                    <Image 
+                                        Width="24"
+                                        Height="24"
+                                        Margin="0,0,4,0"
+                                        Grid.Column="3"
+                                        Visibility="{Binding HasTransport, Converter={StaticResource BooleanToVisibility}}">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{StaticResource BlueprintSymbolMultiConverter}">
+                                                <Binding Path="Transport.TransportBlueprint"/>
+                                                <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+                                </Grid>
+
+                                <!-- Passenger row — only visible when this unit carries a passenger -->
+                                <StackPanel Visibility="{Binding HasPassenger, Converter={StaticResource BooleanToVisibility}}">
+                                    <Border
+                                        Height="1"
+                                        Margin="0,5,0,5"
+                                        Background="{StaticResource BackgroundLightBlueBrush}"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <!-- Passenger Icon -->
+                                        <Image 
+                                            Grid.Column="0"
+                                            Width="24"
+                                            Height="24"
+                                            Margin="0,0,8,0">
+                                            <Image.Source>
+                                                <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
+                                                    <Binding Path="PassengerBlueprint"/>
+                                                    <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                                </MultiBinding>
+                                            </Image.Source>
+                                        </Image>
+                                        <!-- Passenger Name -->
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            FontSize="11"
+                                            VerticalAlignment="Center"
+                                            Foreground="{StaticResource ForegroundGrayBrush}">
+                                            ↳ <Run Text="{Binding PassengerBlueprint, Converter={StaticResource BlueprintNameConverter}, Mode=OneWay}"/> (#<Run Text="{Binding PassengerId, Mode=OneWay}"/>)
+                                        </TextBlock>
+                                    </Grid>
                                 </StackPanel>
-                                
-                                <!-- Unit upgrades -->
-                                <ItemsControl 
-                                    Grid.Column="2"
-                                    ItemsSource="{Binding Upgrades}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Image 
-                                                Width="24"
-                                                Height="24"
-                                                Margin="0,0,4,0">
-                                                <Image.Source>
-                                                    <MultiBinding Converter="{StaticResource BlueprintSymbolMultiConverter}">
-                                                        <Binding Path="."/>
-                                                        <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
-                                                    </MultiBinding>
-                                                </Image.Source>
-                                            </Image>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
 
-                                <!-- Unit transport -->
-                                <Image 
-                                    Width="24"
-                                    Height="24"
-                                    Margin="0,0,4,0"
-                                    Grid.Column="3"
-                                    Visibility="{Binding HasTransport, Converter={StaticResource BooleanToVisibility}}">
-                                    <Image.Source>
-                                        <MultiBinding Converter="{StaticResource BlueprintSymbolMultiConverter}">
-                                            <Binding Path="Transport.TransportBlueprint"/>
-                                            <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
-                                        </MultiBinding>
-                                    </Image.Source>
-                                </Image>
-
-                            </Grid>
+                            </StackPanel>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -1211,8 +1249,82 @@
                             </StackPanel>
                         </Border>
 
+                        <!-- Squad Passengers -->
+                        <Border
+                            Visibility="{Binding CanHavePassengers, Converter={StaticResource BooleanToVisibility}}"
+                            Background="{StaticResource BackgroundDarkBlueBrush}"
+                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Margin="8,0,8,8"
+                            Padding="8">
+
+                            <StackPanel>
+                                <TextBlock
+                                    Margin="4"
+                                    Text="Passenger Unit"
+                                    HorizontalAlignment="Center"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="{StaticResource ForegroundGrayBrush}"/>
+
+                                <!-- Infantry unit picker -->
+                                <ComboBox
+                                    Margin="4"
+                                    Style="{StaticResource SettingsComboBox}"
+                                    ItemsSource="{Binding AvailablePassengers}"
+                                    SelectedItem="{Binding SelectedPassenger, Mode=TwoWay}"
+                                    Visibility="{Binding HasAvailablePassengers, Converter={StaticResource BooleanToVisibility}}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Image Grid.Column="0"
+                                                       Width="24"
+                                                       Height="24"
+                                                       Margin="0,0,8,0">
+                                                    <Image.Source>
+                                                        <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
+                                                            <Binding Path="Blueprint"/>
+                                                            <Binding Path="DataContext.Game" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                                        </MultiBinding>
+                                                    </Image.Source>
+                                                </Image>
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{StaticResource ForegroundWhiteBrush}">
+                                                    <Run Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}, Mode=OneWay}"/> (#<Run Text="{Binding Id, Mode=OneWay}"/>)
+                                                </TextBlock>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+
+                                <TextBlock
+                                    Margin="4"
+                                    Text="No infantry units available in this phase."
+                                    FontStyle="Italic"
+                                    HorizontalAlignment="Center"
+                                    Foreground="{StaticResource ForegroundGrayBrush}"
+                                    Visibility="{Binding HasAvailablePassengers, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+
+                                <Button
+                                    Margin="4"
+                                    Content="Clear Passenger"
+                                    Style="{StaticResource DangerActionButton}"
+                                    Command="{Binding ClearPassengerCommand}"
+                                    Visibility="{Binding HasPassenger, Converter={StaticResource BooleanToVisibility}}"/>
+                            </StackPanel>
+
+                        </Border>
+
                     </StackPanel>
                     
+                    <!-- Retire Squad Button -->
                     <Grid
                         Grid.Row="4"
                         Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}">
