@@ -40,14 +40,46 @@ public enum SquadPhase : byte {
 /// </summary>
 public sealed class Squad {
 
-    public sealed record SlotItem(int Count, UpgradeBlueprint? UpgradeBlueprint, SlotItemBlueprint? SlotItemBlueprint); // UpgradeBlueprint for CoH3, SlotItemBlueprint for CoH2 because reasons...
+    /// <summary>
+    /// Represents an item assigned to a slot, including its quantity and associated blueprint information.
+    /// </summary>
+    /// <remarks>Either EntityBlueprint or SlotItemBlueprint is used depending on the game context. Only one
+    /// is typically relevant for a given slot item.</remarks>
+    /// <param name="Count">The number of items represented by this slot item. Must be zero or greater.</param>
+    /// <param name="EntityBlueprint">The entity blueprint associated with the slot item, or null if not applicable. Used for Company of Heroes 3.</param>
+    /// <param name="SlotItemBlueprint">The slot item blueprint associated with the slot item, or null if not applicable. Used for Company of Heroes 2.</param>
+    public sealed record SlotItem(int Count, EntityBlueprint? EntityBlueprint, SlotItemBlueprint? SlotItemBlueprint); // EntityBlueprint for CoH3, SlotItemBlueprint for CoH2 because reasons...
+
+    /// <summary>
+    /// Represents a transport squad configuration, including its blueprint and whether it is limited to drop-off
+    /// operations.
+    /// </summary>
+    /// <param name="TransportBlueprint">The blueprint that defines the transport squad's composition and capabilities. Cannot be null.</param>
+    /// <param name="DropOffOnly">true if the squad is restricted to drop-off operations only; otherwise, false.</param>
     public sealed record TransportSquad(SquadBlueprint TransportBlueprint, bool DropOffOnly);
+
+    /// <summary>
+    /// Represents a group of passengers identified by a unique squad identifier.
+    /// </summary>
+    /// <param name="PassengerSquadId">The unique identifier for the passenger squad.</param>
+    public sealed record PassengerSquad(int PassengerSquadId) {
+        
+        /// <summary>
+        /// Retrieves the squad with the specified passenger squad ID from the given company.
+        /// </summary>
+        /// <param name="company">The company from which to retrieve the squad. Cannot be null.</param>
+        /// <returns>The squad that matches the passenger squad ID.</returns>
+        /// <exception cref="InvalidOperationException">Thrown if no squad with the specified passenger squad ID exists in the company.</exception>
+        public Squad GetSquad(Company company) => company.Squads.FirstOrDefault(x => x.Id == PassengerSquadId) ?? throw new InvalidOperationException($"No squad found with ID {PassengerSquadId}");
+
+    }
 
     private readonly string _name = string.Empty;
     private readonly HashSet<SlotItem> _slotItems = [];
     private readonly HashSet<UpgradeBlueprint> _upgrades = [];
 
     private TransportSquad? _transport = null;
+    private PassengerSquad? _pasenger = null;
 
     /// <summary>
     /// Gets or initializes the unique identifier of this squad.
@@ -167,6 +199,20 @@ public sealed class Squad {
     [MemberNotNullWhen(true, nameof(Transport))]
     public bool HasTransport => _transport is not null;
 
+    /// <summary>
+    /// Gets the passenger squad associated with this instance.
+    /// </summary>
+    public PassengerSquad? Passenger {
+        get => _pasenger;
+        init => _pasenger = value;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether a passenger is associated with this instance.
+    /// </summary>
+    [MemberNotNullWhen(true, nameof(Passenger))]
+    public bool HasPassenger => _pasenger is not null;
+
     public override bool Equals(object? obj) {
         if (obj is Squad other) {
             return Id == other.Id;
@@ -182,7 +228,7 @@ public sealed class Squad {
         return $"({Blueprint.Id}) - Phase: {Phase}, Rank: {Rank}, Experience: {Experience:F2}";
     }
 
-    public Squad Update(float? experience = null, int? matchCounts = null, int? infantryKills = null, int? vehicleKills = null, List<SlotItem>? slotItems = null) {
+    public Squad Update(float? experience = null, int? matchCounts = null, int? infantryKills = null, int? vehicleKills = null, List<SlotItem>? slotItems = null, PassengerSquad? passenger = null) {
         return new Squad() {
             Id = this.Id,
             Name = this.Name,
@@ -196,7 +242,8 @@ public sealed class Squad {
             Blueprint = this.Blueprint,
             SlotItems = slotItems ?? [.. this.SlotItems], // Use existing slot items if not provided
             Upgrades = this.Upgrades, // Keep existing upgrades
-            Transport = this.Transport // Keep existing transport squad if any
+            Transport = this.Transport, // Keep existing transport squad if any
+            Passenger = passenger ?? this.Passenger // Keep existing passenger squad if any 
         };
     }
 

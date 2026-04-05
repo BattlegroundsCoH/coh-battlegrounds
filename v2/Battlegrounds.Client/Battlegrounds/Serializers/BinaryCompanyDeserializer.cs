@@ -12,11 +12,15 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
     
     private readonly IBlueprintService _blueprintService = blueprintService;
 
-    private static readonly uint[] SUPPORTED_VERSIONS = [BinaryCompanySerializer.BINARY_COMPANY_VERSION_1, BinaryCompanySerializer.BINARY_COMPANY_VERSION_2];
+    private static readonly uint[] SUPPORTED_VERSIONS = [
+        BinaryCompanySerializer.BINARY_COMPANY_VERSION_1, 
+        BinaryCompanySerializer.BINARY_COMPANY_VERSION_2, 
+        BinaryCompanySerializer.BINARY_COMPANY_VERSION_3
+    ];
 
     public bool IgnoreUnknownSquads { get; set; } = true; // Ignore squads that are not recognized by the serializer instead of throwing an exception.
 
-    public bool IsSupportedVersion(uint version) => SUPPORTED_VERSIONS.Contains(version);
+    public static bool IsSupportedVersion(uint version) => SUPPORTED_VERSIONS.Contains(version);
 
     public Company DeserializeCompany(Stream source) {
         using var reader = new BinaryReader(source, Encoding.UTF8, true);
@@ -63,7 +67,7 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
         uint squadCount = reader.ReadUInt32(); // Number of squads
         var squads = new List<Squad>((int)squadCount);
         for (int i = 0; i < squadCount; i++) {
-            if (ReadSquad(gameId, reader) is Squad sq) {
+            if (ReadSquad(gameId, version, reader) is Squad sq) {
                 squads.Add(sq);
             } else if (IgnoreUnknownSquads) {
                 // TODO: Log the ignored squad
@@ -89,10 +93,11 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
 
     }
 
-    private readonly record struct IntermediateSlotItem(int Count, string? UpgradeId, string? SlotItemId);
+    private readonly record struct IntermediateSlotItem(int Count, string? EntityId, string? SlotItemId);
     private readonly record struct IntermediateTransportSquad(bool Enabled, string? BlueprintId, bool DropOffOnly);
+    private readonly record struct IntermediatePassengerSquad(bool Enabled, int PassengerSquadId);
 
-    private Squad? ReadSquad(string gameId, BinaryReader reader) {
+    private Squad? ReadSquad(string gameId, uint companyFileVersion, BinaryReader reader) {
 
         int squadId = reader.ReadInt32(); // Squad ID
         string blueprintId = ReadASCIIString(reader); // Squad Blueprint ID will always be ASCII
@@ -138,6 +143,14 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
             transport = new IntermediateTransportSquad(true, transportBlueprintId, transportType == 0x01);
         }
 
+        IntermediatePassengerSquad passenger = new IntermediatePassengerSquad(false, -1);
+        if (companyFileVersion == BinaryCompanySerializer.BINARY_COMPANY_VERSION_3) {
+            if (reader.ReadByte() == (byte)0x1) { // Passenger squad flag, added in version 3
+                int passengerSquadId = reader.ReadInt32(); // Passenger squad ID
+                passenger = new IntermediatePassengerSquad(true, passengerSquadId);
+            }
+        }
+
         if (!_blueprintService.TryGetBlueprint(gameId, blueprintId, out SquadBlueprint? blueprint)) {
             return null;
         }
@@ -146,9 +159,9 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
         for (int i = 0; i < slotItems.Length; i++) {
             if (!string.IsNullOrEmpty(slotItems[i].SlotItemId)) {
                 throw new NotImplementedException("SlotItemBlueprint handling is not implemented yet.");
-            } else if (!string.IsNullOrEmpty(slotItems[i].UpgradeId)) {
-                if (_blueprintService.TryGetBlueprint(gameId, slotItems[i].UpgradeId!, out UpgradeBlueprint? upgrade)) {
-                    parsedSlotItems[i] = new Squad.SlotItem(slotItems[i].Count, upgrade, null);
+            } else if (!string.IsNullOrEmpty(slotItems[i].EntityId)) {
+                if (_blueprintService.TryGetBlueprint(gameId, slotItems[i].EntityId!, out EntityBlueprint? itemEBP)) {
+                    parsedSlotItems[i] = new Squad.SlotItem(slotItems[i].Count, itemEBP, null);
                 } else {
                     // Log
                     return null; // Return null if the upgrade blueprint is not found
@@ -178,6 +191,11 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
             }
         }
 
+        Squad.PassengerSquad? passengerSquad = null;
+        if (passenger.Enabled) {
+            passengerSquad = new Squad.PassengerSquad(passenger.PassengerSquadId);
+        }
+
         return new Squad {
             Id = squadId,
             Blueprint = blueprint,
@@ -191,7 +209,8 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
             LastUpdatedAt = lastUpdatedAt,
             MatchCounts = matchCounts,
             TotalInfantryKills = totalInfantryKills,
-            TotalVehicleKills = totalVehicleKills
+            TotalVehicleKills = totalVehicleKills,
+            Passenger = passengerSquad
         };
 
     }

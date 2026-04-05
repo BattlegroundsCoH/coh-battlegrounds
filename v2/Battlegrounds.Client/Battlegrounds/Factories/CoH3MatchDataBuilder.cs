@@ -7,10 +7,27 @@ using Battlegrounds.Models.Playing;
 
 namespace Battlegrounds.Factories;
 
+/// <summary>
+/// Provides functionality to build and write Company of Heroes 3 match data in Lua format, including teams, companies,
+/// and global match settings.
+/// </summary>
+/// <param name="lobby">The lobby instance containing team, company, and participant information for the match. Cannot be null.</param>
+/// <param name="game">The game context providing access to match-specific settings and file paths. Cannot be null.</param>
 public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
 
+    /// <summary>
+    /// Gets the unique identifier for the match.
+    /// </summary>
     public Guid MatchId { get; } = Guid.CreateVersion7();
 
+    /// <summary>
+    /// Asynchronously builds and returns a Lua-formatted string containing match data, including teams, companies, and
+    /// global match settings.
+    /// </summary>
+    /// <remarks>The returned Lua string includes information about the match ID, teams, companies, and
+    /// several global flags. The method executes on a background thread.</remarks>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a string with the serialized match
+    /// data in Lua format.</returns>
     public Task<string> BuildMatchData() => Task.Run(() => {
         LuaSourceFileBuilder luaSourceFileBuilder = new();
         luaSourceFileBuilder
@@ -29,6 +46,13 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
         return luaSourceFileBuilder.ToString();
     });
 
+    /// <summary>
+    /// Asynchronously writes the specified match data to the match data file, overwriting any existing content.
+    /// </summary>
+    /// <param name="matchData">The match data to write to the file. Cannot be null.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the data was
+    /// written successfully.</returns>
+    /// <exception cref="Exception">Thrown if an I/O error occurs while creating or writing to the match data file.</exception>
     public async Task<bool> WriteMatchData(string matchData) {
         try {
             using var fs = File.Open(game.MatchDataPath, FileMode.Create);
@@ -67,13 +91,16 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
     private void BuildCompanyData(LuaSourceFileBuilder.TableBuilder table, Company company) {
         table.AddFieldValue("name", company.Name);
         table.AddNestedFieldTable("units", squadsTable => {
+            HashSet<int> carriedSquads = [..(from squad in company.Squads
+                                             where squad.HasPassenger
+                                             select squad.Passenger!.PassengerSquadId)];
             foreach (var squad in company.Squads) {
-                squadsTable.AddNestedTable(squad.Id, x => BuildCompanySquadData(x, squad));
+                squadsTable.AddNestedTable(squad.Id, x => BuildCompanySquadData(x, squad, !carriedSquads.Contains(squad.Id)));
             }
         });
     }
 
-    private void BuildCompanySquadData(LuaSourceFileBuilder.TableBuilder table, Squad squad) {
+    private void BuildCompanySquadData(LuaSourceFileBuilder.TableBuilder table, Squad squad, bool isVisible) {
         if (squad.HasCustomName) {
             table.AddFieldValue("name", squad.Name);
         }
@@ -82,18 +109,31 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
             .AddFieldValue("blueprint", squad.Blueprint.Id)
             .AddFieldValue("phase", (int)squad.Phase) // Phase is an enum, but we store it as an int for Lua compatibility
             .AddFieldValue("category", (byte)squad.Blueprint.Category)
+            .AddFieldValue("visible", isVisible) // If the squad is a passenger, it will be hidden in the UI and only visible when inspecting the transport, so we need to mark it as not visible in the match data
             .AddNestedFieldTable("cost", subTable => BuildCostData(subTable, squad.Blueprint.Cost)); // TODO: Make cost calculation based on transport and upgrades
-        var items = from item in squad.SlotItems
-                       where item.UpgradeBlueprint != null
-                       select item.UpgradeBlueprint;
-        var upgradeList = squad.Upgrades.Concat(items).ToList();
-        if (upgradeList.Count > 0) {
+
+        // Write upgrades table
+        if (squad.Upgrades.Count > 0) {
             table.AddNestedFieldTable("upgrades", upgradeTable => {
-                foreach (var upgrade in upgradeList) {
+                foreach (var upgrade in squad.Upgrades) {
                     upgradeTable.AddValue(upgrade.Id);
                 }
             });
         }
+
+        // Write slot items table. In CoH3, slot items can only be entities, so we only write the entity blueprint ID for each slot item.
+        var slotItems = from item in squad.SlotItems
+                        where item.EntityBlueprint != null // In CoH3, slot items can only be entities
+                        select item;
+        if (squad.SlotItems.Count > 0) {
+            table.AddNestedFieldTable("items", itemsTable => {
+                foreach (var item in squad.SlotItems) {
+                    itemsTable.AddValue(item.EntityBlueprint!.Id);
+                }
+            });
+        }
+
+        // Write transport data if the squad has a transport.
         if (squad.HasTransport) {
             table.AddNestedFieldTable("transport", transportTable => {
                 var transport = squad.Transport!;
@@ -101,6 +141,12 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
                     .AddFieldValue("dropoff", transport.DropOffOnly);
             });
         }
+
+        // Write passenger data if the squad has a passenger.
+        if (squad.HasPassenger) {
+            table.AddFieldValue("passenger", squad.Passenger.PassengerSquadId); // Company Squad Id of the passenger squad. The actual passenger squad data will be written as a separate squad in the squads table, but it will be marked as not visible since it's a passenger and only visible when inspecting the transport.
+        }
+
     }
 
     private static void BuildCostData(LuaSourceFileBuilder.TableBuilder table, CostExtension cost) 

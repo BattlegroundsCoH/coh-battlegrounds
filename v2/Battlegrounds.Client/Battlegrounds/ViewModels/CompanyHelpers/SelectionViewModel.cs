@@ -210,8 +210,8 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
         }
         List<SlotItemViewModel> availableItems = 
             [..from item in _squad.SlotItems 
-               where item.UpgradeBlueprint is not null || item.SlotItemBlueprint is not null
-               select new SlotItemViewModel((Blueprint?)item.SlotItemBlueprint ?? (Blueprint?)item.UpgradeBlueprint!, item.Count)];
+               where item.EntityBlueprint is not null || item.SlotItemBlueprint is not null
+               select new SlotItemViewModel((Blueprint?)item.SlotItemBlueprint ?? (Blueprint?)item.EntityBlueprint!, item.Count)];
         _items.Clear();
         _items.AddRange(availableItems);
     }

@@ -234,6 +234,13 @@ public sealed class CompanyService(
                     if (squad is not null) {
                         squads.Remove(squad);
                         _logger.LogInformation("Squad {SquadId} killed in replay event.", modifierEvent.SquadId);
+                        var carrier = squads.FirstOrDefault(s => s.HasPassenger && s.Passenger?.PassengerSquadId == squad.Id);
+                        if (carrier is not null) {
+                            squads.Remove(carrier); // Remove the carrier squad from the list as well, since it should be removed along with the passenger
+                            carrier = carrier.Update(passenger: null); // Update the carrier squad to remove the passenger reference
+                            squads.Add(carrier); // Add the updated carrier squad back to the list
+                            _logger.LogInformation("Carrier squad {CarrierSquadId} removed along with passenger squad {SquadId} in replay event.", carrier.Id, squad.Id);
+                        }
                     } else {
                         _logger.LogWarning("Squad {SquadId} not found for killing event.", modifierEvent.SquadId);
                     }

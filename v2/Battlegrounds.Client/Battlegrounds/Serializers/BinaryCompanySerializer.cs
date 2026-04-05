@@ -11,7 +11,8 @@ public sealed class BinaryCompanySerializer : ICompanySerializer {
 
     public static readonly uint BINARY_COMPANY_VERSION_1 = 1;
     public static readonly uint BINARY_COMPANY_VERSION_2 = 2;
-    public static readonly uint BINARY_COMPANY_VERSION_LATEST = BINARY_COMPANY_VERSION_2;
+    public static readonly uint BINARY_COMPANY_VERSION_3 = 3;
+    public static readonly uint BINARY_COMPANY_VERSION_LATEST = BINARY_COMPANY_VERSION_3;
     public static readonly byte[] BINARY_COMPANY_HEADER = [0x42, 0x47, 0x43, 0x0]; // "BGC" in ASCII
 
     public void SerializeCompany(Stream destination, Company company) {
@@ -64,14 +65,14 @@ public sealed class BinaryCompanySerializer : ICompanySerializer {
         for (int i = 0; i < squad.SlotItems.Count; i++) {
             var item = squad.SlotItems[i];
             writer.Write(item.Count); // Item count
-            if (item.UpgradeBlueprint is UpgradeBlueprint upgrade) {
-                writer.Write((byte)0x01); // Upgrade item type
-                WriteASCIIString(writer, upgrade.Id); // Upgrade Blueprint ID will always be ASCII
+            if (item.EntityBlueprint is EntityBlueprint entity) {
+                writer.Write((byte)0x01); // Entity item type
+                WriteASCIIString(writer, entity.Id); // Entity Blueprint ID will always be ASCII
             } else if (item.SlotItemBlueprint is SlotItemBlueprint slotItem) {
                 writer.Write((byte)0x02); // Slot item type
                 WriteASCIIString(writer, slotItem.Id); // Slot Item Blueprint ID will always be ASCII
             } else {
-                throw new InvalidDataException("Slot item must have either an UpgradeBlueprint or a SlotItemBlueprint.");
+                throw new InvalidDataException("Slot item must have either an EntityBlueprint or a SlotItemBlueprint.");
             }
         }
 
@@ -92,6 +93,14 @@ public sealed class BinaryCompanySerializer : ICompanySerializer {
                 false => (byte)0x00 // Regular transport
             });
             WriteASCIIString(writer, transport.TransportBlueprint.Id); // Transport Blueprint ID will always be ASCII
+        }
+
+        // Write passenger if any
+        if (!squad.HasPassenger) {
+            writer.Write((byte)0x0); // No passenger
+        } else {
+            writer.Write((byte)0x1); // Passenger present
+            writer.Write(squad.Passenger.PassengerSquadId); // Passenger squad ID
         }
 
     }
