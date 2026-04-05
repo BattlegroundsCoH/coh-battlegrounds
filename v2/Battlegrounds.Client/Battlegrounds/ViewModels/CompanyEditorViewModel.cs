@@ -38,7 +38,9 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
     private CompanyEditorViewModelContext _context;
     private bool _isDirty = false; // Indicates if the company has unsaved changes
+    private bool _isEditingName = false;
     private string _companyName = string.Empty;
+    private string _editingCompanyName = string.Empty;
     private string _companyState = string.Empty;
     private SelectionViewModel? _selectionViewModel;
 
@@ -63,9 +65,33 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
     public ICommand SetSelectedSquadCommand { get; }
 
+    public ICommand BeginRenameCommand { get; }
+
+    public ICommand CommitRenameCommand { get; }
+
+    public ICommand CancelRenameCommand { get; }
+
     public Game Game => _game;
 
     public string Faction => _faction;
+
+    public bool IsEditingName {
+        get => _isEditingName;
+        set {
+            if (_isEditingName == value) return;
+            _isEditingName = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsEditingName)));
+        }
+    }
+
+    public string EditingCompanyName {
+        get => _editingCompanyName;
+        set {
+            if (_editingCompanyName == value) return;
+            _editingCompanyName = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EditingCompanyName)));
+        }
+    }
 
     public bool IsDirty {
         get => _isDirty;
@@ -173,6 +199,9 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         LeaveCommand = new AsyncRelayCommand(ExitEditor);
         SaveCommand = new AsyncRelayCommand(SaveCompany);
         SetSelectedSquadCommand = new RelayCommand<object>(SetSelectedSquad);
+        BeginRenameCommand = new RelayCommand(BeginRename);
+        CommitRenameCommand = new RelayCommand(CommitRename);
+        CancelRenameCommand = new RelayCommand(CancelRename);
 
         if (_context.IsNewCompany) {
             _game = _context.Parameters.Game ?? throw new ArgumentNullException(nameof(context), "Game must be provided for a new company.");
@@ -192,6 +221,24 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
         LoadBlueprints();
 
+    }
+
+    private void BeginRename() {
+        EditingCompanyName = CompanyName;
+        IsEditingName = true;
+    }
+
+    private void CommitRename() {
+        if (!IsEditingName) return;
+        IsEditingName = false;
+        if (!string.IsNullOrWhiteSpace(EditingCompanyName) && EditingCompanyName != CompanyName) {
+            CompanyName = EditingCompanyName;
+            IsDirty = true;
+        }
+    }
+
+    private void CancelRename() {
+        IsEditingName = false;
     }
 
     private void LoadBlueprints() {

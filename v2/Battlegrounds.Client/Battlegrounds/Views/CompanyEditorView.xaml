@@ -455,13 +455,45 @@
                 Style="{StaticResource BackButton}"
                 Command="{Binding LeaveCommand}"/>
 
-            <TextBlock Grid.Column="1"
-               Text="{Binding CompanyName}" 
-               FontSize="24" 
-               FontWeight="Bold"
-               Foreground="{StaticResource ForegroundWhiteBrush}"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"/>
+            <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                <!-- Display: click to begin editing -->
+                <TextBlock
+                    Text="{Binding CompanyName}"
+                    FontSize="24"
+                    FontWeight="Bold"
+                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Cursor="Hand"
+                    ToolTip="Click to rename"
+                    Visibility="{Binding IsEditingName, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                    <TextBlock.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding BeginRenameCommand}"/>
+                    </TextBlock.InputBindings>
+                </TextBlock>
+
+                <!-- Edit: inline TextBox -->
+                <TextBox
+                    x:Name="CompanyNameTextBox"
+                    Text="{Binding EditingCompanyName, UpdateSourceTrigger=PropertyChanged}"
+                    FontSize="24"
+                    FontWeight="Bold"
+                    MinWidth="200"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                    Background="Transparent"
+                    BorderBrush="{StaticResource AccentBlueBrush}"
+                    BorderThickness="0,0,0,1"
+                    CaretBrush="{StaticResource ForegroundWhiteBrush}"
+                    SelectionBrush="{StaticResource AccentBlueBrush}"
+                    Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibility}}"
+                    IsVisibleChanged="CompanyNameTextBox_IsVisibleChanged"
+                    KeyDown="CompanyNameTextBox_KeyDown"
+                    LostFocus="CompanyNameTextBox_LostFocus"/>
+
+            </Grid>
 
             <Image 
                 Width="36" 
