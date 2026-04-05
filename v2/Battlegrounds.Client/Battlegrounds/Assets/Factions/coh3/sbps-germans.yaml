@@ -1035,6 +1035,8 @@ squads:
                 entities:
                     - ebp: panther_ger
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 2000
@@ -1099,7 +1101,9 @@ squads:
             loadout:
                 entities:
                     - ebp: panzer_iv_ger
-                      count: 1
+                      count: 1            
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800
