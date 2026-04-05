@@ -53,6 +53,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     private ICollection<SquadBlueprint> _availableSupportUnits = Array.Empty<SquadBlueprint>();
     private ICollection<SquadBlueprint> _availableArmourUnits = Array.Empty<SquadBlueprint>();
     private ICollection<SquadBlueprint> _availableTransportUnits = Array.Empty<SquadBlueprint>();
+    private ICollection<SquadBlueprint> _availableTowTransportUnits = Array.Empty<SquadBlueprint>();
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -109,6 +110,8 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     public ICollection<SquadBlueprint> AvailableArmourUnits => _availableArmourUnits;
 
     public ICollection<SquadBlueprint> AvailableTransportUnits => _availableTransportUnits;
+
+    public ICollection<SquadBlueprint> AvailableTowTransportUnits => _availableTowTransportUnits;
 
     public ICollection<Squad> StartingUnits => _startingUnits.AsReadOnly();
 
@@ -205,8 +208,11 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
                                   where bp.Category is SquadCategory.Armour && bp.Enabled is true
                                   select bp];
         _availableTransportUnits = [..from bp in squadBlueprints
-                                      where bp.HasExtension<HoldExtension>() && bp.Category is SquadCategory.Support
+                                      where bp.HasExtension<HoldExtension>(ext => !ext.HasTankRiders) && bp.Category is SquadCategory.Support
                                       select bp];
+        _availableTowTransportUnits = [..from bp in squadBlueprints
+                                         where bp.HasExtension<HoldExtension>(ext => ext.CanTow) && bp.Category is SquadCategory.Support
+                                         select bp];
     }
 
     private async Task ExitEditor() {

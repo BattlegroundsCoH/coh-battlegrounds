@@ -112,7 +112,7 @@ public sealed class BlueprintService(IGameLocaleService localeService, ILogger<B
         return repository;
     }
 
-    private async Task<List<T>> LoadAndLogBlueprints<T>(string path, Func<Stream, Task<List<T>>> loader) where T : Blueprint {
+    private async Task<List<T>> LoadAndLogBlueprintsFromPath<T>(string path, Func<Stream, Task<List<T>>> loader) where T : Blueprint {
         if (!File.Exists(path)) {
             throw new FileNotFoundException($"Blueprint file not found: {path}");
         }
@@ -128,6 +128,14 @@ public sealed class BlueprintService(IGameLocaleService localeService, ILogger<B
         stopwatch.Stop();
         _logger.LogInformation("Loaded {Count} blueprints from {Path} in {ElapsedMilliseconds} ms.", blueprints.Count, path, stopwatch.ElapsedMilliseconds);
         return blueprints;
+    }
+
+    private async Task<IEnumerable<T>> LoadAndLogBlueprintsFromPattern<T>(string path, string pattern, Func<Stream, Task<List<T>>> loader) where T : Blueprint {
+        string[] files = Directory.GetFiles(path, pattern);
+        var results = files.ToAsyncEnumerable()
+            .Select((string file, CancellationToken token) => new ValueTask<List<T>>(LoadAndLogBlueprintsFromPath<T>(file, loader)))
+            .SelectMany(x => x);
+        return await results.ToListAsync();
     }
 
     /// <summary>
@@ -158,8 +166,8 @@ public sealed class BlueprintService(IGameLocaleService localeService, ILogger<B
             var coh3BpParser = new BlueprintParser<CoH3>(_localeService, LoggerFactory.Create(x => x.AddSerilog()).CreateLogger<BlueprintParser<CoH3>>());
 
             // Load blueprints for CoH3 from YAML files
-            var coh3SbpTask = LoadAndLogBlueprints("Assets/Factions/CoH3/sbps.yaml", coh3BpParser.ParseSquadBlueprints);
-            var coh3UpgTask = LoadAndLogBlueprints("Assets/Factions/CoH3/upgs.yaml", coh3BpParser.ParseUpgradeBlueprints);
+            var coh3SbpTask = LoadAndLogBlueprintsFromPattern("Assets/Factions/CoH3/", "sbps*.yaml", coh3BpParser.ParseSquadBlueprints);
+            var coh3UpgTask = LoadAndLogBlueprintsFromPath("Assets/Factions/CoH3/upgs.yaml", coh3BpParser.ParseUpgradeBlueprints);
 
             // Wait for all tasks to complete before proceeding
             await Task.WhenAll(coh3SbpTask, coh3UpgTask);
