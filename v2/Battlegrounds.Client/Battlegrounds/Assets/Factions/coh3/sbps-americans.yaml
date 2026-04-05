@@ -1,0 +1,401 @@
+##############################################
+## American Squads
+##############################################
+
+squads:
+
+    ##########################################
+    ## Infantry Squads
+    ##########################################
+
+    riflemen_us:
+        category: Infantry
+        faction-association: american
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 270
+            ui:
+                screen-name: $11241668 # Riflemen Squad
+                icon-name: riflemen_us
+            loadout:
+                entities:
+                    - ebp: rifleman_squad_leader_us
+                      count: 1
+                    - ebp: rifleman_us
+                      count: 5
+            veterancy:
+                ranks:
+                    - experience: 900
+                      name: Vet1
+                    - experience: 2700
+                      name: Vet2
+                    - experience: 5400
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - standard_infantry
+                    - infantry_anti_infantry
+            upgrades:
+                slots: 1
+                available:
+                    - bar_rifleman_squad_us
+                    - m1941_lmg_rifleman_us
+                    - m1919a6_rifleman_squad_us
+                    
+    artillery_observers_us:
+        category: Infantry
+        faction-association: american
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 200
+            ui:
+                screen-name: $11259086 # Artillery Observer Squad
+                icon-name: artillery_observers_us
+            loadout:
+                entities:
+                    - ebp: artillery_observer_leader_radio_us
+                      count: 1
+                    - ebp: artillery_observer_us
+                      count: 3
+            veterancy:
+                ranks:
+                    - experience: 900
+                      name: Vet1
+                    - experience: 2700
+                      name: Vet2
+                    - experience: 5400
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - standard_infantry
+                    - infantry_anti_infantry
+            upgrades:
+                slots: 1
+                available:
+                    - utility_scout_us
+                       
+    assault_engineer_us:
+        category: Infantry
+        faction-association: american
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 200
+            ui:
+                screen-name: $11182517 # Assault Engineer Squad
+                icon-name: assault_engineer_us
+            loadout:
+                entities:
+                    - ebp: assault_engineer_us
+                      count: 5
+            veterancy:
+                ranks:
+                    - experience: 750
+                      name: Vet1
+                    - experience: 2250
+                      name: Vet2
+                    - experience: 4500
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - standard_infantry
+                    - infantry_anti_infantry
+                    - combat_engineer
+                    - infantry_support 
+            upgrades:
+                slots: 1
+                available:
+                    - flamethrower_engineer_us
+                    - utility_engineer_us
+                    - m1941_lmg_special_operations_us
+                    - thompson_assault_engineers_us
+                    
+    bazooka_team_us:
+        category: Infantry
+        faction-association: american
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 250
+            ui:
+                screen-name: $11153316 # Bazooka Squad
+                icon-name: bazooka_team_us
+            loadout:
+                entities:
+                    - ebp: bazooka_team_us
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - standard_infantry
+                    - infantry_anti_tank
+                    
+    captain_us:
+        category: Infantry
+        faction-association: american
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 150
+            ui:
+                screen-name: $11155138 # Captain Retinue
+                icon-name: captain_us
+            loadout:
+                entities:
+                    - ebp: rifleman_captain_us
+                      count: 2
+                    - ebp: captain_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 750
+                      name: Vet1
+                    - experience: 2250
+                      name: Vet2
+                    - experience: 4500
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - captain
+                    - infantry_anti_infantry
+            upgrades:
+                slots: 1
+                available:
+                    - m1941_lmg_special_operations_us
+                    - bar_captain_us
+                    
+    engineer_us:
+        category: Infantry
+        faction-association: american
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 180
+            ui:
+                screen-name: $11218381 # Engineer Squad
+                icon-name: engineer_us
+            loadout:
+                entities:
+                    - ebp: engineer_us
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 600
+                      name: Vet1
+                    - experience: 1800
+                      name: Vet2
+                    - experience: 3600
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - combat_engineer
+                    - infantry_anti_infantry
+                    - standard_infantry
+                    - infantry_support
+            upgrades:
+                slots: 1
+                available:
+                    - m1941_lmg_special_operations_us
+                    - utility_engineer_us
+                    - flamethrower_engineer_us
+                    
+    paratrooper_us:
+        category: Infantry
+        faction-association: american
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 380
+            ui:
+                screen-name: $11153226 # Paratrooper Squad
+                icon-name: paratrooper_us
+            loadout:
+                entities:
+                    - ebp: paratrooper_us
+                      count: 6
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - elite_infantry
+                    - infantry_anti_infantry
+                    - paratrooper
+            upgrades:
+                slots: 1
+                available:
+                    - bazooka_paratrooper_us
+                    - m1919a6_paratrooper_us
+                             
+    pathfinder_us:
+        category: Infantry
+        faction-association: american
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 200
+            ui:
+                screen-name: $11153224 # Pathfinder Squad
+                icon-name: pathfinder_us
+            loadout:
+                entities:
+                    - ebp: pathfinder_leader_us
+                      count: 1
+                    - ebp: pathfinder_us
+                      count: 3
+            veterancy:
+                ranks:
+                    - experience: 900
+                      name: Vet1
+                    - experience: 2700
+                      name: Vet2
+                    - experience: 5400
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - standard_infantry
+                    - infantry_anti_infantry
+            upgrades:
+                slots: 1
+                available:
+                    - utility_scout_us
+                              
+    ranger_us:
+        category: Infantry
+        faction-association: american
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 450
+            ui:
+                screen-name: $11153225 # Ranger Squad
+                icon-name: ranger_us
+            loadout:
+                entities:
+                    - ebp: ranger_us
+                      count: 6
+            veterancy:
+                ranks:
+                    - experience: 2000
+                      name: Vet1
+                    - experience: 4000
+                      name: Vet2
+                    - experience: 8000
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - elite_infantry
+                    - infantry_anti_infantry
+                       
+    scout_us:
+        category: Infantry
+        faction-association: american
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 130
+            ui:
+                screen-name: $11218066 # Scout Squad
+                icon-name: scout_us
+            loadout:
+                entities:
+                    - ebp: scout_leader_us
+                      count: 1
+                    - ebp: scout_us
+                      count: 2
+            veterancy:
+                ranks:
+                    - experience: 600
+                      name: Vet1
+                    - experience: 1800
+                      name: Vet2
+                    - experience: 3600
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - standard_infantry
+                    - infantry_anti_infantry
+            upgrades:
+                slots: 1
+                available:
+                    - utility_scout_us
+                    
+    sniper_us:
+        category: Infantry
+        faction-association: american
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 340
+            ui:
+                screen-name: $11153331 # Sniper
+                icon-name: sniper_us
+            loadout:
+                entities:
+                    - ebp: sniper_us
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 900
+                      name: Vet1
+                    - experience: 2700
+                      name: Vet2
+                    - experience: 5400
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - sniper
+                    - infantry_anti_infantry
+                      
+    ssf_comandos_us:
+        category: Infantry
+        faction-association: american
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 360
+            ui:
+                screen-name: $11183862 # SSF Commando Squad
+                icon-name: ssf_commandos_us
+            loadout:
+                entities:
+                    - ebp: ssf_comandos_us
+                      count: 6
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - elite_infantry
+                    - infantry_anti_infantry

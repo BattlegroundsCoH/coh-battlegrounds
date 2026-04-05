@@ -156,16 +156,6 @@ upgrades:
                 icon-name: ability_main_gun
                 symbol-icon-name: tank_kwk
 
-    hmg_sherman_us:
-        faction-association: american # Aslo used by british_africa
-        extensions:
-            cost:
-                munitions: 50
-            ui:
-                screen-name: 11242531
-                icon-name: hmg_us
-                symbol-icon-name: tank_mg42
-                
     vehicle_tulips_firefly_africa_uk:
         faction-association: british_africa
         extensions:
@@ -195,6 +185,136 @@ upgrades:
                 screen-name: 11186706
                 icon-name: ability_british_tank_commander
                 symbol-icon-name: tank_vision
+                
+    #########################################
+    ## American Upgrades
+    #########################################
+    
+    bar_rifleman_squad_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: $11156394 # M1918 Browning Automatic Rifle
+                icon-name: m1918a2_browning
+                symbol-icon-name: weapon_m1918a2_browning
+                
+    bar_captain_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 60
+            ui:
+                screen-name: $11156394 # M1918 Browning Automatic Rifle
+                icon-name: m1918a2_browning
+                symbol-icon-name: weapon_m1918a2_browning
+                
+    m1941_lmg_rifleman_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 75
+            ui:
+                screen-name: $11191144 # M1941 Light Machine Gun Package
+                brief-text: $11242818 # Upgrades the squad with one M1941 Light Machine Gun. 
+                icon-name: johnson_lmg_us
+                symbol-icon-name: weapon_johnson_lmg
+                
+    m1919a6_rifleman_squad_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 90
+            ui:
+                screen-name: $11191144 # M1941 Light Machine Gun Package
+                brief-text: $11251622 # Adds one M1919A6 Light Machine Gun, increasing anti-infantry firepower. 
+                icon-name: lmg_m1919a6
+                symbol-icon-name: weapon_m1919a6
+                
+    m1919a6_paratrooper_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 90
+            ui:
+                screen-name: $11191144 # M1941 Light Machine Gun Package
+                brief-text: $11251622 # Adds one M1919A6 Light Machine Gun, increasing anti-infantry firepower. 
+                icon-name: lmg_m1919a6
+                symbol-icon-name: weapon_m1919a6
+                
+    utility_scout_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 90
+            ui:
+                screen-name: $11154011 # Utility Package
+                icon-name: flare_gun
+                symbol-icon-name: spotter
+                
+    flamethrower_engineer_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: $11219755 # M2 Flamethrower
+                icon-name: flamethrower_m2
+                symbol-icon-name: weapon_flamethrower
+                
+    utility_engineer_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 30
+            ui:
+                screen-name: $11154006 # Utility Package
+                icon-name: hazard_removal_package
+                symbol-icon-name: weapon_wrench
+                  
+    m1941_lmg_special_operations_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 75
+            ui:
+                screen-name: $11191144 # M1941 Light Machine Gun Package
+                brief-text: $11242818 # Upgrades the squad with one M1941 Light Machine Gun. 
+                icon-name: johnson_lmg_us
+                symbol-icon-name: weapon_johnson_lmg
+                   
+    thompson_assault_engineers_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 75
+            ui:
+                screen-name: 11189629
+                help-text: 11242613
+                brief-text: 11242884
+                icon-name: m1_thompson_sub_machine_gun
+                symbol-icon-name: m1_thompson_sub_machine_gun
+                
+    bazooka_paratrooper_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 100
+            ui:
+                screen-name: $11161616 # M9 Bazooka Package
+                icon-name: m9_bazooka
+                symbol-icon-name: weapon_m9_bazooka
+                
+    hmg_sherman_us:
+        faction-association: american # Aslo used by british_africa
+        extensions:
+            cost:
+                munitions: 50
+            ui:
+                screen-name: 11242531
+                icon-name: hmg_us
+                symbol-icon-name: tank_mg42
                 
     #########################################
     ## Afrika Korps Upgrades

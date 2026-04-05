@@ -159,3 +159,21 @@
     $11241745: 2.5-tonne Utility Truck
     $11239184: Wespe Self-Propelled Artillery
     $11241751: Wirbelwind Flakpanzer
+    $11241668: Riflemen Squad
+    $11156394: M1918 Browning Automatic Rifle
+    $11191144: Light Machine Gun Package # Actual game text is "M1941 Light Machine Gun Package" but is shared between two different upgrades, so using a more generic name here.
+    $11242818: Upgrades the squad with one M1941 Light Machine Gun. 
+    $11251622: Adds one M1919A6 Light Machine Gun, increasing anti-infantry firepower. 
+    $11259086: Artillery Observer Squad
+    $11154011: Utility Package
+    $11182517: Assault Engineer Squad
+    $11219755: M2 Flamethrower
+    $11153316: Bazooka Squad
+    $11155138: Captain Retinue
+    $11218381: Engineer Squad
+    $11153226: Paratrooper Squad
+    $11161616: M9 Bazooka Package
+    $11153224: Pathfinder Squad
+    $11218066: Scout Squad
+    $11183862: SSF Commando Squad
+    $11153225: Ranger Squad
