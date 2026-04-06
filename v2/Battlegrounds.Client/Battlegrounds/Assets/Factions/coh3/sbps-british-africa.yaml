@@ -735,6 +735,8 @@ squads:
                 entities:
                     - ebp: centaur_uk
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1500
@@ -759,6 +761,8 @@ squads:
                 entities:
                     - ebp: churchill_black_prince_africa_uk
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 2000
@@ -789,6 +793,8 @@ squads:
                 entities:
                     - ebp: churchill_crocodile_africa_uk
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 2000
@@ -819,6 +825,8 @@ squads:
                 entities:
                     - ebp: churchill_africa_uk
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 2000
@@ -849,6 +857,8 @@ squads:
             ui:
                 screen-name: 11189924 # Crusader III Tank
                 icon-name: crusader_57mm_uk
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800
@@ -879,6 +889,8 @@ squads:
                 entities:
                     - ebp: crusader_africa_uk
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800
@@ -899,6 +911,8 @@ squads:
             ui:
                 screen-name: 11184735 # Crusader AA Tank
                 icon-name: crusader_aa_uk
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1500
@@ -952,6 +966,8 @@ squads:
                 entities:
                     - ebp: matilda_africa_uk
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800
@@ -984,6 +1000,8 @@ squads:
                       name: Vet2
                     - experience: 10800
                       name: Vet3
+            hold:
+                enable-passengers: true
             types:
                 values:
                     - vehicle
@@ -1009,6 +1027,8 @@ squads:
                 entities:
                     - ebp: sherman_firefly_africa_uk
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800

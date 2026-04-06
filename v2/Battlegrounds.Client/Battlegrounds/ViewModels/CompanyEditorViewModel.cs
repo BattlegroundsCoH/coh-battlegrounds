@@ -139,27 +139,27 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
     public ICollection<SquadBlueprint> AvailableTowTransportUnits => _availableTowTransportUnits;
 
-    public ICollection<Squad> StartingUnits => _startingUnits.AsReadOnly();
+    public IReadOnlyList<PhaseSquadViewModel> StartingUnits => BuildPhaseViewModels(_startingUnits);
 
-    public ICollection<Squad> SkirmishPhaseUnits => _skirmishPhaseUnits.AsReadOnly();
+    public IReadOnlyList<PhaseSquadViewModel> SkirmishPhaseUnits => BuildPhaseViewModels(_skirmishPhaseUnits);
 
-    public ICollection<Squad> BattlePhaseUnits => _battlePhaseUnits.AsReadOnly();
+    public IReadOnlyList<PhaseSquadViewModel> BattlePhaseUnits => BuildPhaseViewModels(_battlePhaseUnits);
 
-    public ICollection<Squad> ReservesPhaseUnits => _reservesPhaseUnits.AsReadOnly();
+    public IReadOnlyList<PhaseSquadViewModel> ReservesPhaseUnits => BuildPhaseViewModels(_reservesPhaseUnits);
 
-    public int StartingUnitsCount => StartingUnits.Count;
+    public int StartingUnitsCount => _startingUnits.Count;
     public int StartingUnitsMax => 4;
     public bool CanAddStartingUnit => StartingUnitsCount < StartingUnitsMax;
 
-    public int SkirmishPhaseUnitsCount => SkirmishPhaseUnits.Count;
+    public int SkirmishPhaseUnitsCount => _skirmishPhaseUnits.Count;
     public int SkirmishPhaseUnitsMax => 8;
     public bool CanAddSkirmishPhaseUnit => SkirmishPhaseUnitsCount < SkirmishPhaseUnitsMax;
 
-    public int BattlePhaseUnitsCount => BattlePhaseUnits.Count;
+    public int BattlePhaseUnitsCount => _battlePhaseUnits.Count;
     public int BattlePhaseUnitsMax => 12;
     public bool CanAddBattlePhaseUnit => BattlePhaseUnitsCount < BattlePhaseUnitsMax;
 
-    public int ReservesPhaseUnitsCount => ReservesPhaseUnits.Count;
+    public int ReservesPhaseUnitsCount => _reservesPhaseUnits.Count;
     public int ReservesPhaseUnitsMax => 6;
     public bool CanAddReservesPhaseUnit => ReservesPhaseUnitsCount < ReservesPhaseUnitsMax;
 
@@ -255,7 +255,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
                                   where bp.Category is SquadCategory.Armour && bp.Enabled is true
                                   select bp];
         _availableTransportUnits = [..from bp in squadBlueprints
-                                      where bp.HasExtension<HoldExtension>(ext => !ext.HasTankRiders) && bp.Category is SquadCategory.Support
+                                      where bp.HasExtension<HoldExtension>(ext => !ext.EnablePassengers) && bp.Category is SquadCategory.Support
                                       select bp];
         _availableTowTransportUnits = [..from bp in squadBlueprints
                                          where bp.HasExtension<HoldExtension>(ext => ext.CanTow) && bp.Category is SquadCategory.Support
@@ -337,6 +337,9 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         if (any is SquadBlueprint squad) {
             SelectionViewModel = new SelectionViewModel(this, squad);
             SelectionTitle = "Squad Overview";
+        } else if (any is PhaseSquadViewModel pvm) {
+            SelectionViewModel = new SelectionViewModel(this, pvm.Squad);
+            SelectionTitle = $"Squad #{pvm.Id}";
         } else if (any is Squad existingSquad) {
             SelectionViewModel = new SelectionViewModel(this, existingSquad);
             SelectionTitle = $"Squad #{existingSquad.Id}";
@@ -420,7 +423,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         SetSelectedSquad(null); // Clear the selection after retiring a squad
     }
 
-    public void SetSquadDeploymentMethod(Squad refSquad, SquadBlueprint? transport, bool isDropOffOnly) {
+    public void SetSquadDeploymentMethod(Squad refSquad, SquadBlueprint? transport) {
 
         var squad = FindSquadFromId(refSquad.Id); // The caller doesn't have latest squad data, so we find it by ID
         if (squad.Blueprint.RequiresTowing && transport is null) {
@@ -430,7 +433,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
         Squad.TransportSquad? transportSquad = null;
         if (transport is not null) {
-            transportSquad = new Squad.TransportSquad(transport, isDropOffOnly);
+            transportSquad = new Squad.TransportSquad(transport, true);
         }
 
         if (squad.HasTransport && transportSquad is not null && squad.Transport.TransportBlueprint == transportSquad.TransportBlueprint) {
@@ -451,6 +454,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             MatchCounts = squad.MatchCounts,
             TotalVehicleKills = squad.TotalVehicleKills,
             TotalInfantryKills = squad.TotalInfantryKills,
+            Passenger = squad.Passenger,
         });
 
         IsDirty = true; // Mark the company as dirty after changing deployment method
@@ -480,10 +484,58 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             AddedToCompanyAt = squad.AddedToCompanyAt,
             MatchCounts = squad.MatchCounts,
             TotalVehicleKills = squad.TotalVehicleKills,
-            TotalInfantryKills = squad.TotalInfantryKills
+            TotalInfantryKills = squad.TotalInfantryKills,
+            Passenger = squad.Passenger,
         };
         SetSelectedSquad(SwapSquad(squad, updatedSquad)); // Update the selection to the upgraded squad
         IsDirty = true; // Mark the company as dirty after applying an upgrade
+    }
+
+    public IReadOnlyList<Squad> GetPhaseSquads(SquadPhase phase) => phase switch {
+        SquadPhase.StartingPhase => _startingUnits.AsReadOnly(),
+        SquadPhase.SkirmishPhase => _skirmishPhaseUnits.AsReadOnly(),
+        SquadPhase.BattlePhase => _battlePhaseUnits.AsReadOnly(),
+        SquadPhase.ReservesPhase => _reservesPhaseUnits.AsReadOnly(),
+        _ => Array.Empty<Squad>()
+    };
+
+    public IReadOnlySet<int> GetPassengerIds(int excludeSquadId = -1) {
+        return _startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits)
+            .Where(s => s.HasPassenger && s.Id != excludeSquadId)
+            .Select(s => s.Passenger!.PassengerSquadId)
+            .ToHashSet();
+    }
+
+    public void SetSquadPassenger(Squad squad, Squad? passenger) {
+        if (squad.HasPassenger && passenger is not null && squad.Passenger.PassengerSquadId == passenger.Id)
+            return;
+        if (!squad.HasPassenger && passenger is null)
+            return;
+        Squad updatedSquad = new Squad {
+            Id = squad.Id,
+            Name = squad.Name,
+            Phase = squad.Phase,
+            Blueprint = squad.Blueprint,
+            Experience = squad.Experience,
+            Upgrades = squad.Upgrades,
+            SlotItems = [.. squad.SlotItems],
+            Transport = squad.Transport,
+            Passenger = passenger is not null ? new Squad.PassengerSquad(passenger.Id) : null,
+            AddedToCompanyAt = squad.AddedToCompanyAt,
+            LastUpdatedAt = DateTime.UtcNow,
+            MatchCounts = squad.MatchCounts,
+            TotalInfantryKills = squad.TotalInfantryKills,
+            TotalVehicleKills = squad.TotalVehicleKills,
+        };
+        SetSelectedSquad(SwapSquad(squad, updatedSquad));
+        IsDirty = true;
+    }
+
+    private IReadOnlyList<PhaseSquadViewModel> BuildPhaseViewModels(List<Squad> squads) {
+        var allSquadsById = _startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits)
+            .ToDictionary(s => s.Id);
+        return [.. squads.Select(s => new PhaseSquadViewModel(s,
+            s.HasPassenger ? allSquadsById.GetValueOrDefault(s.Passenger.PassengerSquadId) : null))];
     }
 
     private Squad FindSquadFromId(int id) {

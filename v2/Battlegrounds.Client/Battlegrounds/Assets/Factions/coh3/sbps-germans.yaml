@@ -905,6 +905,8 @@ squads:
                 entities:
                     - ebp: brummbar_ger
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 2000
@@ -939,6 +941,8 @@ squads:
                 entities:
                     - ebp: king_tiger_sdkfz_182_ger
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 3440
@@ -1035,6 +1039,8 @@ squads:
                 entities:
                     - ebp: panther_ger
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 2000
@@ -1068,6 +1074,8 @@ squads:
                 entities:
                     - ebp: panzer_iv_cmd_ger
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800
@@ -1099,7 +1107,9 @@ squads:
             loadout:
                 entities:
                     - ebp: panzer_iv_ger
-                      count: 1
+                      count: 1            
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800
@@ -1136,6 +1146,8 @@ squads:
                 entities:
                     - ebp: stug_iii_d_ger
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1300
@@ -1172,6 +1184,8 @@ squads:
                 entities:
                     - ebp: stug_iii_ger
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1300
@@ -1208,6 +1222,8 @@ squads:
                 entities:
                     - ebp: tiger_ger
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1300
