@@ -233,7 +233,13 @@ public sealed class BattlegroundsApp {
         if (IsNoPlayModeConfigured) {
             Log.ForContext<BattlegroundsApp>()
                 .Information("Battlegrounds is configured to be in no-play mode...");
-            // TODO: Configure non-play services here (e.g. mock play service, or just don't register a play service at all and have the app handle that case)
+            services.AddSingleton(new SimulationParameters {
+                LaunchSuccessful = true,
+                RunParameters = new SimulatedAppRunParameters {
+                    
+                }
+            });
+            services.AddSingleton<IPlayService, SimulatedPlayService>(); // Use the simulated play service which does not actually launch games, for testing and development purposes
         } else {
             Log.ForContext<BattlegroundsApp>()
                 .Information("Battlegrounds is configured to be in play mode...");

@@ -3,12 +3,11 @@ using System.IO.Compression;
 using System.Text.Json;
 
 using Battlegrounds.Facades.API;
-using Battlegrounds.Factories;
 using Battlegrounds.Models;
 using Battlegrounds.Models.Gamemodes;
-using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Services.Infrastructure;
+using Battlegrounds.Services.Playing.Common;
 
 using Microsoft.Extensions.Logging;
 
@@ -24,57 +23,14 @@ namespace Battlegrounds.Services.Playing;
 /// <param name="app">The application instance used to launch game applications.</param>
 /// <param name="battlegroundsServerAPI">The API client used to interact with the Battlegrounds server for matchmaking and lobby management.</param>
 /// <param name="logger">The logger used to log information and errors during game mode building and launching operations.</param>
-public sealed class PlayService(CoH3ArchiverService coh3Archiver, Configuration configuration, BattlegroundsApp app, IBattlegroundsServerAPI battlegroundsServerAPI, ILogger<PlayService> logger) : IPlayService {
+public sealed class PlayService(CoH3ArchiverService coh3Archiver, Configuration configuration, BattlegroundsApp app, IBattlegroundsServerAPI battlegroundsServerAPI, ILogger<PlayService> logger) : AbstractPlayService(coh3Archiver) {
 
-    private readonly CoH3ArchiverService _coh3Archiver = coh3Archiver;
     private readonly Configuration _configuration = configuration;
     private readonly BattlegroundsApp _battlegroundsApp = app;
     private readonly IBattlegroundsServerAPI _battlegroundsServerAPI = battlegroundsServerAPI;
     private readonly ILogger<PlayService> _logger = logger;
 
-
-    public Task<BuildGamemodeResult> BuildGamemode(ILobby lobby) {
-
-        var targetGame = lobby.Game;
-
-        if (targetGame is CoH3 coh3) {
-            return BuildCoH3Gamemode(lobby, coh3);
-        }
-
-        throw new NotImplementedException();
-
-    }
-
-    private async Task<BuildGamemodeResult> BuildCoH3Gamemode(ILobby lobby, CoH3 coh3) {
-        
-        CoH3MatchDataBuilder matchDataBuilder = new(lobby, coh3);
-
-        string matchDataLuaSource = await matchDataBuilder.BuildMatchData();
-
-        if (!await matchDataBuilder.WriteMatchData(matchDataLuaSource)) {
-            return new BuildGamemodeResult() {
-                Failed = true,
-                ErrorMessage = "Failed to write match data file."
-            };
-        }
-
-        if (!await _coh3Archiver.CreateModArchiveAsync(coh3.ModProjectPath)) { 
-            return new BuildGamemodeResult() {
-                Failed = true,
-                ErrorMessage = "Failed to create mod archive."
-            };
-        }
-
-        return new BuildGamemodeResult() {
-            Failed = false,
-            ErrorMessage = string.Empty,
-            GamemodeSgaFileLocation = CoH3ArchiverService.ArchiveDestination,
-            MatchId = matchDataBuilder.MatchId,
-        };
-
-    }
-
-    public async Task<LaunchGameAppResult> LaunchGameApp(Game game)
+    public override async Task<LaunchGameAppResult> LaunchGameApp(Game game)
         => game switch {
             CoH3 coh3 => await LaunchCoH3GameApp(coh3),
             _ => (new LaunchGameAppResult() {
@@ -104,7 +60,7 @@ public sealed class PlayService(CoH3ArchiverService coh3Archiver, Configuration 
 
     }
 
-    public async Task EnsureModSourceIsAvailable() {
+    public override async Task EnsureModSourceIsAvailable() {
 
         if (!_battlegroundsApp.IsFirstRun && !_configuration.AutoSyncWinconditionSourceFiles) {
             _logger.LogInformation("Auto-sync of win condition source files is disabled in configuration. Skipping sync.");
