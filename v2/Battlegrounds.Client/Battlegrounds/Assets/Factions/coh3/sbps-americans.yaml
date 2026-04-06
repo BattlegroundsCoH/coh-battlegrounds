@@ -932,6 +932,8 @@ squads:
                 entities:
                     - ebp: hellcat_us
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800
@@ -965,6 +967,8 @@ squads:
                 entities:
                     - ebp: pershing_us
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 3440
@@ -1059,6 +1063,8 @@ squads:
                 entities:
                     - ebp: sherman_bulldozer_us
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800
@@ -1091,6 +1097,8 @@ squads:
                 entities:
                     - ebp: sherman_easy_8_us
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800
@@ -1157,6 +1165,8 @@ squads:
                 entities:
                     - ebp: sherman_whizbang_us
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1500

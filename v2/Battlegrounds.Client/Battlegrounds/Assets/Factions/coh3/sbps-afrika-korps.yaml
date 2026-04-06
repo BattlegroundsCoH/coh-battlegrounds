@@ -561,6 +561,8 @@ squads:
                 entities:
                     - ebp: elefant_tank_destroyer_ak
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 2750
@@ -850,6 +852,8 @@ squads:
                 entities:
                     - ebp: panzer_iii_ak
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800
@@ -884,6 +888,8 @@ squads:
                 entities:
                     - ebp: panzer_iii_flame_ak
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800
@@ -912,6 +918,8 @@ squads:
                 entities:
                     - ebp: panzer_iv_ak
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800
@@ -945,6 +953,8 @@ squads:
                 entities:
                     - ebp: panzer_iv_stubby_ak
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1800
@@ -1009,6 +1019,8 @@ squads:
                 entities:
                     - ebp: stug_iii_ak
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1500
@@ -1043,6 +1055,8 @@ squads:
                 entities:
                     - ebp: stug_iii_d_ak
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 1000
@@ -1077,6 +1091,8 @@ squads:
                 entities:
                     - ebp: tiger_ak
                       count: 1
+            hold:
+                enable-passengers: true
             veterancy:
                 ranks:
                     - experience: 2750
