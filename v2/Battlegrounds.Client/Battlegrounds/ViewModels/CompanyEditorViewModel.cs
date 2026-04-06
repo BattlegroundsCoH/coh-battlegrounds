@@ -423,7 +423,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         SetSelectedSquad(null); // Clear the selection after retiring a squad
     }
 
-    public void SetSquadDeploymentMethod(Squad refSquad, SquadBlueprint? transport, bool isDropOffOnly) {
+    public void SetSquadDeploymentMethod(Squad refSquad, SquadBlueprint? transport) {
 
         var squad = FindSquadFromId(refSquad.Id); // The caller doesn't have latest squad data, so we find it by ID
         if (squad.Blueprint.RequiresTowing && transport is null) {
@@ -433,7 +433,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
         Squad.TransportSquad? transportSquad = null;
         if (transport is not null) {
-            transportSquad = new Squad.TransportSquad(transport, isDropOffOnly);
+            transportSquad = new Squad.TransportSquad(transport, true);
         }
 
         if (squad.HasTransport && transportSquad is not null && squad.Transport.TransportBlueprint == transportSquad.TransportBlueprint) {
@@ -454,6 +454,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             MatchCounts = squad.MatchCounts,
             TotalVehicleKills = squad.TotalVehicleKills,
             TotalInfantryKills = squad.TotalInfantryKills,
+            Passenger = squad.Passenger,
         });
 
         IsDirty = true; // Mark the company as dirty after changing deployment method
@@ -483,7 +484,8 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             AddedToCompanyAt = squad.AddedToCompanyAt,
             MatchCounts = squad.MatchCounts,
             TotalVehicleKills = squad.TotalVehicleKills,
-            TotalInfantryKills = squad.TotalInfantryKills
+            TotalInfantryKills = squad.TotalInfantryKills,
+            Passenger = squad.Passenger,
         };
         SetSelectedSquad(SwapSquad(squad, updatedSquad)); // Update the selection to the upgraded squad
         IsDirty = true; // Mark the company as dirty after applying an upgrade
@@ -500,7 +502,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     public IReadOnlySet<int> GetPassengerIds(int excludeSquadId = -1) {
         return _startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits)
             .Where(s => s.HasPassenger && s.Id != excludeSquadId)
-            .Select(s => s.Passenger.PassengerSquadId)
+            .Select(s => s.Passenger!.PassengerSquadId)
             .ToHashSet();
     }
 

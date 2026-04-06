@@ -1227,16 +1227,6 @@
                                     Foreground="{StaticResource ForegroundWhiteBrush}"
                                     VerticalContentAlignment="Center"/>
 
-                                <RadioButton 
-                                    Style="{StaticResource TransportRadioButton}"
-                                    x:Name="StayRadio"
-                                    GroupName="TransportSelection"
-                                    Content="Transport (Stay)"
-                                    IsChecked="{Binding HasStayTransport}"
-                                    Margin="4"
-                                    Foreground="{StaticResource ForegroundWhiteBrush}"
-                                    VerticalContentAlignment="Center"/>
-
                                 <ComboBox
                                     Margin="4"
                                     Style="{StaticResource SettingsComboBox}"

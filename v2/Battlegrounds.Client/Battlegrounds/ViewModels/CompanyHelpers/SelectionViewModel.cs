@@ -23,7 +23,6 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
 
     private bool _hasTransport = false;
     private bool _hasDropOffTransport = false;
-    private bool _hasStayTransport = false;
     private SquadBlueprint? _transportBlueprint;
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -68,7 +67,7 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
             _hasTransport = value;
             if (!value) {
                 //_transportBlueprint = null; // Clear the transport blueprint if transport is disabled.
-                _parentViewModel.SetSquadDeploymentMethod(_squad!, null, _hasDropOffTransport);
+                _parentViewModel.SetSquadDeploymentMethod(_squad!, null);
             }
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasTransport)));
         }
@@ -81,22 +80,9 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
             _hasDropOffTransport = value;
             if (value) {
                 TransportBlueprint = _transportBlueprint ?? AvailableTransports.FirstOrDefault(); // Set the transport blueprint to the first available transport if drop-off is enabled.
-                _parentViewModel.SetSquadDeploymentMethod(_squad!, _transportBlueprint, value);
+                _parentViewModel.SetSquadDeploymentMethod(_squad!, _transportBlueprint);
             }
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasDropOffTransport)));
-        }
-    }
-
-    public bool HasStayTransport {
-        get => _hasStayTransport;
-        set {
-            if (value == _hasStayTransport) return;
-            _hasStayTransport = value;
-            if (value) {
-                TransportBlueprint = _transportBlueprint ?? AvailableTransports.FirstOrDefault(); // Set the transport blueprint to the first available transport if drop-off is enabled.
-                _parentViewModel.SetSquadDeploymentMethod(_squad!, _transportBlueprint, !value);
-            }
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasStayTransport)));
         }
     }
 
@@ -105,7 +91,7 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
         set {
             if (value == _transportBlueprint) return;
             _transportBlueprint = value;
-            _parentViewModel.SetSquadDeploymentMethod(_squad!, _transportBlueprint, _hasDropOffTransport);
+            _parentViewModel.SetSquadDeploymentMethod(_squad!, _transportBlueprint);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TransportBlueprint)));
         }
     }
@@ -211,7 +197,6 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
             return;
         HasTransport = _squad.HasTransport;
         HasDropOffTransport = _squad.Transport?.DropOffOnly ?? false;
-        HasStayTransport = !_squad.Transport?.DropOffOnly ?? false;
         TransportBlueprint = _squad.Transport?.TransportBlueprint;
     }
 
