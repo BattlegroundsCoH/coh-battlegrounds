@@ -15,7 +15,8 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
     private static readonly uint[] SUPPORTED_VERSIONS = [
         BinaryCompanySerializer.BINARY_COMPANY_VERSION_1, 
         BinaryCompanySerializer.BINARY_COMPANY_VERSION_2, 
-        BinaryCompanySerializer.BINARY_COMPANY_VERSION_3
+        BinaryCompanySerializer.BINARY_COMPANY_VERSION_3,
+        BinaryCompanySerializer.BINARY_COMPANY_VERSION_4
     ];
 
     public bool IgnoreUnknownSquads { get; set; } = true; // Ignore squads that are not recognized by the serializer instead of throwing an exception.
@@ -64,6 +65,25 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
 
         string faction = ReadASCIIString(reader); // Faction will always be ASCII
 
+        string doctrineId = version >= BinaryCompanySerializer.BINARY_COMPANY_VERSION_4 ? ReadASCIIString(reader) : "faction_default"; // Default doctrine ID for older versions
+        uint doctrineVersion = version >= BinaryCompanySerializer.BINARY_COMPANY_VERSION_4 ? reader.ReadUInt32() : 1; // Default doctrine version for older versions
+
+        List<CapturedItem> items;
+        if (version < BinaryCompanySerializer.BINARY_COMPANY_VERSION_4) {
+            items = [];
+        } else {
+            uint itemCount = reader.ReadUInt32(); // Number of captured items
+            items = new List<CapturedItem>((int)itemCount);
+            for (int i = 0; i < itemCount; i++) {
+                if (ReadItem(gameId, companyVersion, reader) is CapturedItem ci) {
+                    items.Add(ci);
+                } else {
+                    // TODO: Allow ignoring unknown captured items in future versions if necessary, but for now we will throw an exception to ensure data integrity.
+                    throw new InvalidDataException($"Unknown item encountered at index {i}.");
+                }
+            }
+        }
+
         uint squadCount = reader.ReadUInt32(); // Number of squads
         var squads = new List<Squad>((int)squadCount);
         for (int i = 0; i < squadCount; i++) {
@@ -83,11 +103,14 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
             Name = name,
             GameId = gameId,
             Faction = faction,
+            DoctrineId = doctrineId,
+            DoctrineVersion = doctrineVersion,
             CreatedAt = createdAt,
             CreatedBy = createdBy,
             UpdatedAt = updatedAt,
             UpdatedBy = updatedBy,
             Squads = squads,
+            CapturedItems = items,
             Version = companyVersion
         };
 
@@ -96,6 +119,27 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
     private readonly record struct IntermediateSlotItem(int Count, string? EntityId, string? SlotItemId);
     private readonly record struct IntermediateTransportSquad(bool Enabled, string? BlueprintId, bool DropOffOnly);
     private readonly record struct IntermediatePassengerSquad(bool Enabled, int PassengerSquadId);
+    private readonly record struct IntermediateCapturedItem(bool Enabled, int Id, string BlueprintId, int CapturedBySquadId, DateTime CapturedAt);
+
+    private CapturedItem? ReadItem(string gameId, uint companyFileVersion, BinaryReader reader) {
+
+        int itemId = reader.ReadInt32(); // Item ID
+        string blueprintId = ReadASCIIString(reader); // Item Blueprint ID will always be ASCII
+        int squadCapturer = reader.ReadInt32(); // Squad that captured the item
+        DateTime capturedAt = new DateTime(reader.ReadInt64(), DateTimeKind.Utc); // Captured at timestamp
+
+        if (!_blueprintService.TryGetBlueprint(gameId, blueprintId, out EntityBlueprint? itemEBP)) {
+            return null;
+        }
+
+        return new CapturedItem {
+            Id = itemId,
+            ItemBlueprint = itemEBP,
+            CapturedBySquadId = squadCapturer,
+            CapturedAt = capturedAt
+        };
+
+    }
 
     private Squad? ReadSquad(string gameId, uint companyFileVersion, BinaryReader reader) {
 
@@ -135,20 +179,51 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
             upgrades[i] = ReadASCIIString(reader); // Upgrade Blueprint ID will always be ASCII
         }
 
-        bool hasTransport = reader.ReadByte() == (byte)0x1; // Transport squad flag
         IntermediateTransportSquad transport = new IntermediateTransportSquad(false, null, false);
-        if (hasTransport) {
-            byte transportType = reader.ReadByte(); // Transport type (0 for regular, 1 for drop-off only)
-            string transportBlueprintId = ReadASCIIString(reader); // Transport Blueprint ID will always be ASCII
-            transport = new IntermediateTransportSquad(true, transportBlueprintId, transportType == 0x01);
-        }
-
         IntermediatePassengerSquad passenger = new IntermediatePassengerSquad(false, -1);
-        if (companyFileVersion == BinaryCompanySerializer.BINARY_COMPANY_VERSION_3) {
-            if (reader.ReadByte() == (byte)0x1) { // Passenger squad flag, added in version 3
+        IntermediateCapturedItem captureItem = new IntermediateCapturedItem(false, -1, string.Empty, -1, DateTime.MinValue);
+        if (companyFileVersion < BinaryCompanySerializer.BINARY_COMPANY_VERSION_4) {
+
+            bool hasTransport = reader.ReadByte() == (byte)0x1; // Transport squad flag
+            if (hasTransport) {
+                byte transportType = reader.ReadByte(); // Transport type (0 for regular, 1 for drop-off only)
+                string transportBlueprintId = ReadASCIIString(reader); // Transport Blueprint ID will always be ASCII
+                transport = new IntermediateTransportSquad(true, transportBlueprintId, transportType == 0x01);
+            }
+
+            if (companyFileVersion == BinaryCompanySerializer.BINARY_COMPANY_VERSION_3) {
+                if (reader.ReadByte() == (byte)0x1) { // Passenger squad flag, added in version 3
+                    int passengerSquadId = reader.ReadInt32(); // Passenger squad ID
+                    passenger = new IntermediatePassengerSquad(true, passengerSquadId);
+                }
+            }
+
+        } else {
+
+            byte flags = reader.ReadByte(); // Flags for transport and passenger squads
+            bool hasTransport = (flags & 0x01) != 0;
+            bool hasPassenger = (flags & 0x02) != 0;
+            bool isCapturedWeapon = (flags & 0x04) != 0; // Captured weapon flag, added in version 4
+
+            if (hasTransport) {
+                byte transportType = reader.ReadByte(); // Transport type (0 for regular, 1 for drop-off only)
+                string transportBlueprintId = ReadASCIIString(reader); // Transport Blueprint ID will always be ASCII
+                transport = new IntermediateTransportSquad(true, transportBlueprintId, transportType == 0x01);
+            }
+
+            if (hasPassenger) { // Passenger squad flag, added in version 3
                 int passengerSquadId = reader.ReadInt32(); // Passenger squad ID
                 passenger = new IntermediatePassengerSquad(true, passengerSquadId);
             }
+
+            if (isCapturedWeapon) { // Captured weapon flag, added in version 4
+                int capturedItemId = reader.ReadInt32(); // Captured item ID
+                string capturedItemBlueprintId = ReadASCIIString(reader); // Captured item Blueprint ID will always be ASCII
+                int capturingSquadId = reader.ReadInt32(); // Squad that captured the item
+                DateTime capturedAt = new DateTime(reader.ReadInt64(), DateTimeKind.Utc); // Captured at timestamp
+                captureItem = new IntermediateCapturedItem(true, capturedItemId, capturedItemBlueprintId, capturingSquadId, capturedAt);
+            }
+
         }
 
         if (!_blueprintService.TryGetBlueprint(gameId, blueprintId, out SquadBlueprint? blueprint)) {
@@ -196,6 +271,18 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
             passengerSquad = new Squad.PassengerSquad(passenger.PassengerSquadId);
         }
 
+        Squad.CaptureInfo? captureInfo = null;
+        if (captureItem.Enabled) {
+            var foundWeapon = _blueprintService.TryGetBlueprint(gameId, captureItem.BlueprintId, out EntityBlueprint? capturedItemEBP);
+            var foundCrew = _blueprintService.TryGetBlueprint(gameId, captureItem.BlueprintId, out SquadBlueprint? capturedCrewBP);
+            if (foundWeapon && foundCrew) {
+                captureInfo = new Squad.CaptureInfo(captureItem.Id, capturedItemEBP, capturedCrewBP);
+            } else {
+                // Log the unknown captured item blueprint
+                return null; // Return null if the captured item blueprint is not found
+            }
+        }
+
         return new Squad {
             Id = squadId,
             Blueprint = blueprint,
@@ -210,7 +297,8 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
             MatchCounts = matchCounts,
             TotalInfantryKills = totalInfantryKills,
             TotalVehicleKills = totalVehicleKills,
-            Passenger = passengerSquad
+            Passenger = passengerSquad,
+            CapturedWeapon = captureInfo
         };
 
     }

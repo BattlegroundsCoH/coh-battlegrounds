@@ -74,12 +74,22 @@ public sealed class Squad {
 
     }
 
+    /// <summary>
+    /// Represents a weapon that has been captured, including its associated entity blueprint and the blueprint of the
+    /// crew operating it.
+    /// </summary>
+    /// <param name="CompanyItemId">The unique identifier for the company item associated with the captured weapon.</param>
+    /// <param name="WeaponEntityBlueprint">The blueprint that defines the captured weapon entity. May be null if no weapon is associated.</param>
+    /// <param name="CrewBlueprint">The blueprint that defines the crew assigned to the captured weapon. May be null if no crew is assigned.</param>
+    public sealed record CaptureInfo(int CompanyItemId, EntityBlueprint? WeaponEntityBlueprint, SquadBlueprint? CrewBlueprint);
+
     private readonly string _name = string.Empty;
     private readonly HashSet<SlotItem> _slotItems = [];
     private readonly HashSet<UpgradeBlueprint> _upgrades = [];
 
     private TransportSquad? _transport = null;
     private PassengerSquad? _pasenger = null;
+    private CaptureInfo? _capturedWeapon = null;
 
     /// <summary>
     /// Gets or initializes the unique identifier of this squad.
@@ -212,6 +222,22 @@ public sealed class Squad {
     /// </summary>
     [MemberNotNullWhen(true, nameof(Passenger))]
     public bool HasPassenger => _pasenger is not null;
+
+    /// <summary>
+    /// Gets the information about the weapon that was captured, if any.
+    /// </summary>
+    public CaptureInfo? CapturedWeapon {
+        get => _capturedWeapon;
+        init => _capturedWeapon = value;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether a weapon has been captured.
+    /// </summary>
+    /// <remarks>When this property is <see langword="true"/>, the <c>CapturedWeapon</c> property is
+    /// guaranteed to be non-null.</remarks>
+    [MemberNotNullWhen(true, nameof(CapturedWeapon))]
+    public bool IsCapturedWeapon => _capturedWeapon is not null;
 
     public override bool Equals(object? obj) {
         if (obj is Squad other) {

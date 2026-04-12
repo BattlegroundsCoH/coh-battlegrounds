@@ -9,6 +9,7 @@
 public sealed class Company {
 
     private readonly List<Squad> _squads = [];
+    private readonly List<CapturedItem> _capturedItems = [];
 
     /// <summary>
     /// Gets the unique identifier for the company. This ID is used to uniquely identify the company across the system and should be treated as immutable after the company instance is created.
@@ -62,6 +63,16 @@ public sealed class Company {
     public uint Version { get; init; } = 1;
 
     /// <summary>
+    /// Gets the unique identifier for the doctrine this company is associated with.
+    /// </summary>
+    public string DoctrineId { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Gets the version number of the doctrine configuration schema.
+    /// </summary>
+    public uint DoctrineVersion { get; init; } = 1;
+
+    /// <summary>
     /// Gets the collection of squads associated with this instance.
     /// </summary>
     /// <remarks>The collection is read-only after initialization. Use the company initializer or constructor
@@ -69,6 +80,16 @@ public sealed class Company {
     public IReadOnlyList<Squad> Squads {
         get => _squads.AsReadOnly();
         init => _squads = [.. value];
+    }
+
+    /// <summary>
+    /// Gets the collection of captured items associated with this instance.
+    /// </summary>
+    /// <remarks>The collection is read-only and reflects the items captured at the time of initialization.
+    /// Modifications to the returned list are not permitted.</remarks>
+    public IReadOnlyList<CapturedItem> CapturedItems {
+        get => _capturedItems.AsReadOnly();
+        init => _capturedItems = [.. value];
     }
 
 }

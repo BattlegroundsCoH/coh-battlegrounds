@@ -128,7 +128,8 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
         if (squad.SlotItems.Count > 0) {
             table.AddNestedFieldTable("items", itemsTable => {
                 foreach (var item in squad.SlotItems) {
-                    itemsTable.AddValue(item.EntityBlueprint!.Id);
+                    for (int i = 0; i < item.Count; i++) // Repeat the item for the count, since in CoH3, multiple slot items of the same type are represented as multiple entries in the items table
+                        itemsTable.AddValue(item.EntityBlueprint!.Id);
                 }
             });
         }
@@ -145,6 +146,12 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
         // Write passenger data if the squad has a passenger.
         if (squad.HasPassenger) {
             table.AddFieldValue("passenger", squad.Passenger.PassengerSquadId); // Company Squad Id of the passenger squad. The actual passenger squad data will be written as a separate squad in the squads table, but it will be marked as not visible since it's a passenger and only visible when inspecting the transport.
+        }
+
+        // Write capture data
+        if (squad.IsCapturedWeapon) {
+            table.AddFieldValue("capture_weapon", squad.CapturedWeapon.WeaponEntityBlueprint!.Id); // Entity blueprint ID of the captured weapon to spawn
+            table.AddFieldValue("crew_blueprint", squad.CapturedWeapon.CrewBlueprint!.Id); // Squad blueprint ID of the crew for the captured weapon (determines visually, what soldier models are used)
         }
 
     }

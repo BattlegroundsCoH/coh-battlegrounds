@@ -82,6 +82,7 @@
 
   <ItemGroup>
     <Folder Include="Assets\Factions\coh3\icons\" />
+    <Folder Include="Assets\Factions\coh3\doctrines\" />
   </ItemGroup>
 
   <ItemGroup>

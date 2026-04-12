@@ -12,7 +12,8 @@ public sealed class BinaryCompanySerializer : ICompanySerializer {
     public static readonly uint BINARY_COMPANY_VERSION_1 = 1;
     public static readonly uint BINARY_COMPANY_VERSION_2 = 2;
     public static readonly uint BINARY_COMPANY_VERSION_3 = 3;
-    public static readonly uint BINARY_COMPANY_VERSION_LATEST = BINARY_COMPANY_VERSION_3;
+    public static readonly uint BINARY_COMPANY_VERSION_4 = 4;
+    public static readonly uint BINARY_COMPANY_VERSION_LATEST = BINARY_COMPANY_VERSION_4;
     public static readonly byte[] BINARY_COMPANY_HEADER = [0x42, 0x47, 0x43, 0x0]; // "BGC" in ASCII
 
     public void SerializeCompany(Stream destination, Company company) {
@@ -39,10 +40,29 @@ public sealed class BinaryCompanySerializer : ICompanySerializer {
 
         WriteASCIIString(writer, company.Faction); // Faction will always be ASCII
 
-        writer.Write((uint)company.Squads.Count); // Number of squads
-        for (int i = 0; i < company.Squads.Count; i++) {
-            WriteSquad(writer, company.Squads[i]);
+        WriteASCIIString(writer, company.DoctrineId ?? "faction_default"); // Doctrine ID will always be ASCII, but can be null (default to "faction_default")
+        writer.Write(company.DoctrineVersion); // Doctrine version as integer
+
+        var items = company.CapturedItems ?? [];
+        writer.Write((uint)items.Count);
+        for (int i = 0; i < items.Count; i++) {
+            WriteCapturedItem(writer, items[i]);
         }
+
+        var squads = company.Squads ?? [];
+        writer.Write((uint)squads.Count); // Number of squads
+        for (int i = 0; i < squads.Count; i++) {
+            WriteSquad(writer, squads[i]);
+        }
+
+    }
+
+    private static void WriteCapturedItem(BinaryWriter writer, CapturedItem capturedItem) {
+
+        writer.Write(capturedItem.Id); // Captured item ID
+        WriteASCIIString(writer, capturedItem.ItemBlueprint?.Id ?? string.Empty); // Item Blueprint ID will always be ASCII (can be null)
+        writer.Write(capturedItem.CapturedBySquadId); // Captured by squad ID
+        writer.Write(capturedItem.CapturedAt.Ticks); // Captured at timestamp
 
     }
 
@@ -82,11 +102,15 @@ public sealed class BinaryCompanySerializer : ICompanySerializer {
             WriteASCIIString(writer, squad.Upgrades[i].Id); // Upgrade Blueprint ID will always be ASCII
         }
 
+        // Write data flags
+        byte dataFlags = 0;
+        dataFlags |= (byte)(squad.HasTransport ? 0x01 : 0x00); // Bit 0 indicates presence of transport
+        dataFlags |= (byte)(squad.HasPassenger ? 0x02 : 0x00); // Bit 1 indicates presence of passenger
+        dataFlags |= (byte)(squad.IsCapturedWeapon ? 0x04 : 0x00); // Bit 2 indicates if this squad has a captured weapon
+        writer.Write(dataFlags);
+
         // Write transport if any
-        if (!squad.HasTransport) {
-            writer.Write((byte)0x0); // No transport
-        } else {
-            writer.Write((byte)0x1); // Transport present
+        if (squad.HasTransport) {
             var transport = squad.Transport ?? throw new InvalidDataException("Transport must not be null if HasTransport is true.");
             writer.Write(transport.DropOffOnly switch {
                 true => (byte)0x01, // Drop-off only transport
@@ -96,11 +120,16 @@ public sealed class BinaryCompanySerializer : ICompanySerializer {
         }
 
         // Write passenger if any
-        if (!squad.HasPassenger) {
-            writer.Write((byte)0x0); // No passenger
-        } else {
-            writer.Write((byte)0x1); // Passenger present
+        if (squad.HasPassenger) {
             writer.Write(squad.Passenger.PassengerSquadId); // Passenger squad ID
+        }
+
+        // Write captured weapon if any
+        if (squad.IsCapturedWeapon) {
+            var weapon = squad.CapturedWeapon ?? throw new InvalidDataException("Captured weapon must not be null if IsCapturedWeapon is true.");
+            writer.Write(weapon.CompanyItemId); // Company item ID for the captured weapon
+            WriteASCIIString(writer, weapon.WeaponEntityBlueprint?.Id ?? string.Empty); // Weapon Entity Blueprint ID will always be ASCII (can be null)
+            WriteASCIIString(writer, weapon.CrewBlueprint?.Id ?? string.Empty); // Crew Blueprint ID will always be ASCII (can be null)
         }
 
     }
