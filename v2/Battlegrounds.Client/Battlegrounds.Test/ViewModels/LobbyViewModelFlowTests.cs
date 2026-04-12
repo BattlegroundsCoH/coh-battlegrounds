@@ -134,6 +134,8 @@ public sealed class LobbyViewModelFlowTests {
         ss.IsLoaded.Returns(Task.CompletedTask);
         services.AddSingleton(ss);
 
+        services.AddSingleton(TimeProvider.System);
+
         services.AddSingleton<UserViewModel>();
         services.AddSingleton<HomeViewModel>();
         services.AddSingleton<LoginViewModel>();

@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 using Battlegrounds.Models.Companies;
@@ -22,6 +22,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     public const string MAX_MESSAGE_LENGTH_REACHED = "Chat message truncated to 180 characters.";
 
     private readonly ILogger<LobbyViewModel> _logger;
+    private readonly TimeProvider _timeProvider;
     private readonly ILobby _lobby;
     private readonly ILobbyService _lobbyService;
     private readonly IPlayService _playService;
@@ -247,6 +248,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
         _lobby = lobby;
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _timeProvider = serviceProvider.GetRequiredService<TimeProvider>();
         _lobbyService = serviceProvider.GetRequiredService<ILobbyService>();
         _playService = serviceProvider.GetRequiredService<IPlayService>();
         _replayService = serviceProvider.GetRequiredService<IReplayService>();
@@ -293,7 +295,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
     private async void LoadLocalPlayerCompanies() {
 
-        string[] factions = _lobby.Game.FactionIds;
+        string[] factions = _lobby.Game.FactionIds ?? [];
         foreach (string faction in factions) {
             var alliance = _lobby.Game.GetFactionAlliance(faction);
             if (!_localPlayerCompaniesByAlliance.TryGetValue(alliance, out var existingCompanies)) {
@@ -331,7 +333,10 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             factionAlliance = teamAlliance;
         }
 
-        var company = _localPlayerCompaniesByAlliance[factionAlliance].FirstOrDefault();
+        if (!_localPlayerCompaniesByAlliance.TryGetValue(factionAlliance, out var allianceCompanies)) {
+            return;
+        }
+        var company = allianceCompanies.FirstOrDefault();
         if (company is null) {
             return;
         }
@@ -356,6 +361,13 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                     var (localPlayerTeam, _) = _lobby.GetLocalPlayerSlot();
                     bool isAllied = localPlayerTeam?.Participants.Any(x => x == chatEvent.SenderId) ?? false;
                     ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, chatEvent.Channel, isSelf, isAllied, chatEvent.Sender, chatEvent.Message));
+                    PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
+                    break;
+                case LobbyEventType.ParticipantJoined:
+                    if (lobbyEvent.Arg is not Participant newParticipant) {
+                        break;
+                    }
+                    ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, ChatChannel.All, false, false, "System", $"{newParticipant.ParticipantName} has joined the lobby.", IsSystemMessage: true));
                     PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
                     break;
                 case LobbyEventType.TeamUpdated:
@@ -549,7 +561,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             for (int i = waitSeconds; i > 0; i--) {
                 LobbyState = $"Starting match in {i} second{(i > 1 ? "s" : string.Empty)}...";
                 await _lobby.PublishSystemMessage($"Match starting in {i} second{(i > 1 ? "s" : string.Empty)}...");
-                await Task.Delay(1000);
+                await Task.Delay(TimeSpan.FromSeconds(1), _timeProvider);
             }
 
             await synced; // Ensure companies are synced before building gamemode
@@ -558,7 +570,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             var buildResult = await _playService.BuildGamemode(_lobby);
             if (buildResult.Failed) {
                 LobbyState = "Failed to build gamemode, please check logs for details.";
-                await Task.Delay(5000); // Wait for 5 seconds before resetting state
+                await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             }
 
@@ -566,7 +578,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             var uploadResult = await _lobby.UploadGamemode(buildResult.GamemodeSgaFileLocation); // NOP operation in singleplayer mode
             if (uploadResult.Failed) {
                 LobbyState = "Failed to upload gamemode, please check logs for details.";
-                await Task.Delay(5000); // Wait for 5 seconds before resetting state
+                await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             }
 
@@ -574,7 +586,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             var allDownloaded = await _lobby.WaitForAllPlayersHaveGamemode();
             if (!allDownloaded) { 
                 LobbyState = "Failed while waiting for players to download gamemode, please check logs for details.";
-                await Task.Delay(5000); // Wait for 5 seconds before resetting state
+                await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             }
 
@@ -582,7 +594,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             var launchResult = await _lobby.LaunchGame(); // for multiplayer this means tell other players to launch (NOP in singleplayer)
             if (launchResult.Failed) {
                 LobbyState = "Failed to launch game, please check logs for details.";
-                await Task.Delay(5000); // Wait for 5 seconds before resetting state
+                await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             }
 
@@ -594,7 +606,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             var playResult = await _playService.LaunchGameApp(_lobby.Game);
             if (playResult.Failed) {
                 LobbyState = "Failed to launch game application.";
-                await Task.Delay(5000); // Wait for 5 seconds before resetting state
+                await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             }
 
@@ -603,16 +615,16 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             if (matchResult.Failed) {
                 LobbyState = "Match failed to complete, please check logs for details.";
                 reason = EndMatchReason.GameCancelled;
-                await Task.Delay(5000); // Wait for 5 seconds before resetting state
+                await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             } else if (matchResult.ScarError) {
                 LobbyState = "Fatal SCAR error occurred during match, please check logs.";
                 reason = EndMatchReason.ScarError;
-                await Task.Delay(5000); // Wait for 5 seconds before resetting state
+                await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             } else if (matchResult.BugSplat) {
                 LobbyState = "BugSplat occurred during match, please check logs.";
-                await Task.Delay(5000); // Wait for 5 seconds before resetting state
+                await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             }
 
@@ -620,7 +632,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             var replayAnalysis = await _replayService.AnalyseReplay(matchResult.ReplayFilePath, _lobby.Game.Id);
             if (replayAnalysis.Failed) {
                 LobbyState = "Failed to analyse replay, please check logs for details.";
-                await Task.Delay(5000); // Wait for 5 seconds before resetting state
+                await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             }
 
@@ -637,7 +649,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
             reason = EndMatchReason.MatchEndedInSuccess;
 
-            await Task.Delay(5000); // Wait for 5 seconds before resetting state
+            await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
 
         } finally {
             IsMatchStarting = false;
@@ -670,7 +682,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     }
 
     private async Task HideDownloadProgressAfterDelay(int teamId, int slotId) {
-        await Task.Delay(TimeSpan.FromSeconds(2));
+        await Task.Delay(TimeSpan.FromSeconds(2), _timeProvider);
 
         var slot = (teamId == 0 ? Team1Slots : Team2Slots).FirstOrDefault(x => x.Slot.Index == slotId);
         if (slot is null) {
@@ -699,7 +711,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         var t2MappedCompanies = t2PickedCompanies.ToAsyncEnumerable().Select(MapPickableCompanyToCompany);
         await foreach (var company in t1MappedCompanies.Concat(t2MappedCompanies)) {
             var resolved = await company;
-            _lobby.Companies.Add(resolved!.Id, resolved);
+            if (resolved is null) continue;
+            _lobby.Companies.Add(resolved.Id, resolved);
         }
     }
 

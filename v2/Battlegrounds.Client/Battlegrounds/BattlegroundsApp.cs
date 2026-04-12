@@ -227,6 +227,7 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<ICompanyDeserializer, BinaryCompanyDeserializer>();
         services.AddSingleton<IBattlegroundsServerAPI, HttpBattlegroundsServerAPI>();
         services.AddSingleton<IBattlegroundsWebAPI, HttpBattlegroundsWebAPI>();
+        services.AddSingleton(TimeProvider.System);
         services.AddTransient<GrpcServerClientFactory>();
         services.AddTransient<LobbySetupFromConfigFactory>();
 

@@ -94,7 +94,10 @@ public sealed class MultiplayerLobby(
 
     public Map Map => _map;
 
-    public bool IsReady => _isReady;
+    public bool IsReady {
+        get => _isReady;
+        init => _isReady = value;
+    }
 
     public string? GetLocalPlayerId() => _localParticipant.ParticipantId;
 
@@ -157,7 +160,11 @@ public sealed class MultiplayerLobby(
             try {
                 if (await _stateUpdater.ResponseStream.MoveNext()) {
                     var lobbyEvent = MapAndApplyGrpcEvent(_stateUpdater.ResponseStream.Current);
-                    _internalEvents.Writer.TryWrite(lobbyEvent ?? new LobbyEvent(LobbyEventType.SystemMessage, "Received an unrecognized lobby update from the server.")); // Map the gRPC update to a LobbyEvent and push it to the internal channel
+                    if (lobbyEvent is not null) {
+                        _internalEvents.Writer.TryWrite(lobbyEvent); // Map the gRPC update to a LobbyEvent and push it to the internal channel
+                    }
+                } else {
+                    break; // Stream ended; stop polling
                 }
             } catch (RpcException rpcEx) when (rpcEx.StatusCode is StatusCode.Cancelled or StatusCode.Unavailable) {
                 _logger.Information("gRPC lobby updates stream was cancelled or is unavailable, likely due to leaving the lobby or shutting down. Stopping the update poller.");
@@ -180,7 +187,9 @@ public sealed class MultiplayerLobby(
         }
         switch (eventType) {
             case LobbyEventType.ParticipantJoined:
-                throw new NotImplementedException("Participant joined event is not yet implemented in the gRPC lobby handler.");
+                Participant joinedParticipant = new Participant(-1, update.ParticipantUpdate.ParticipantId, update.ParticipantUpdate.Name, update.ParticipantUpdate.IsAi, update.ParticipantUpdate.Ready);
+                _participants.Add(joinedParticipant);
+                return new LobbyEvent(LobbyEventType.ParticipantJoined, joinedParticipant);
             case LobbyEventType.ParticipantLeft:
                 throw new NotImplementedException("Participant left event is not yet implemented in the gRPC lobby handler.");
             case LobbyEventType.ParticipantMessage:
@@ -668,6 +677,8 @@ public sealed class MultiplayerLobby(
         if (!_disposedValue) {
             _isActive = false;
             _disposedValue = true;
+            // Complete the internal event channel so any consumers waiting on GetNextEvent() will unblock
+            _internalEvents.Writer.TryComplete();
             // Close connection with the server (and the lobby) and dispose of the gRPC client
             _stateUpdater.Dispose();
         }
@@ -755,7 +766,7 @@ public sealed class MultiplayerLobby(
 
     public Participant? GetParticipant(string participantId) => _participants.FirstOrDefault(p => p.ParticipantId == participantId);
 
-    public int GetRealPlayersCount() => _participants.Count(x => x.IsAIParticipant);
+    public int GetRealPlayersCount() => _participants.Count(x => !x.IsAIParticipant);
 
     public async Task BeginMatch() {
         await _gRPCClient.BeginMatchAsync(new Empty(), GetGrpcMetadata());
@@ -784,6 +795,9 @@ public sealed class MultiplayerLobby(
     }
 
     public async Task MarkReady(bool isReady) {
+        if (IsHost) {
+            return; // The host cannot mark themselves as ready/unready, as they are always considered ready
+        }
         _isReady = isReady;
         var eventType = isReady ? LobbyEventType.ParticipantReady : LobbyEventType.ParticipantUnready;
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
