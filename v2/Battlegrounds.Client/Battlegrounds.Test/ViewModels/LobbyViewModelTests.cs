@@ -162,6 +162,8 @@ public sealed class LobbyViewModelTests {
         statisticsService.IsLoaded.Returns(Task.CompletedTask);
         services.AddSingleton(statisticsService);
 
+        services.AddSingleton(TimeProvider.System);
+
         // Concrete sealed view-models needed by MainWindowViewModel
         services.AddSingleton<UserViewModel>();
         services.AddSingleton<HomeViewModel>();

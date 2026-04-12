@@ -50,6 +50,7 @@ public sealed class MultiplayerLobbyFactory(IServiceProvider serviceProvider) {
 
         var lobby = new MultiplayerLobby(hostResponse.LobbyId, stream, client, setup, serverAPI, userService, companyService, mapService) {
             IsHost = true,
+            IsReady = true // The host is always considered ready
         };
 
         return lobby;
@@ -103,6 +104,7 @@ public sealed class MultiplayerLobbyFactory(IServiceProvider serviceProvider) {
 
         var lobby = new MultiplayerLobby(browserLobby.Id, stream, client, setup, serverAPI, userService, companyService, mapService) {
             IsHost = false,
+            IsReady = false, // Non-host participants are not considered ready until they explicitly mark themselves as ready
         };
 
         _ = lobby.SyncRemoteCompanies(); // Trigger initial sync/download of companies by other participants, but don't await it here as it may take some time and we want to return the lobby immediately
