@@ -1,0 +1,23 @@
+doctrine:
+    id: british_tobruk # Unique identifier for the doctrine
+    version: 1 # Version number for the doctrine, useful for tracking changes
+    faction: british_africa # The faction this doctrine belongs to
+    name: Tobruk Defenders # The name of the doctrine, which will be displayed in the game
+    parent: british_default # Inherit from the default British doctrine
+    description: "The Tobruk Defenders doctrine focuses on the defense of the strategic port city of Tobruk in North Africa during World War II. This doctrine emphasizes the use of fortified positions, anti-tank defenses, and a strong infantry presence to hold off enemy advances. The Tobruk Defenders are known for their resilience and determination in the face of overwhelming odds, making them a formidable force in defensive operations."
+    type-limits: # Limits for each unit type
+        apex_armor: 1 # Only one apex armor unit allowed
+        elite_infantry: 6 # Up to six elite infantry units allowed
+    phase-limits: # These values should add up to 32
+        initial: 7
+        skirmish: 9
+        battle: 11
+        reserves: 5
+    blueprints: # List of unit available in this doctrine
+        squads:
+            - australian_light_infantry_africa_uk
+        upgrades: []
+    ability-tree: []
+    crew_blueprint: australian_light_infantry_africa_uk # Use the Australian Light Infantry as the crew unit for this doctrine
+    cost-modifiers: 
+        squads: [] # Modify the deployment cost of squads

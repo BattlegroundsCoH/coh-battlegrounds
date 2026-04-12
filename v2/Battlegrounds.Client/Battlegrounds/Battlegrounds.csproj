@@ -92,6 +92,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\Factions\coh3\doctrines\british_tobruk.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3\ebps.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
