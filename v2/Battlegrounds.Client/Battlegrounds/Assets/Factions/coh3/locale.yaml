@@ -60,9 +60,9 @@
     $11235858: Breda M30 Light Machine Gun Package
     $11202089: Coastal Defense Infantry
     $11200651: Guastatori Assault Engineers
-    $11235856: Flamethrower Package
+    $11235856: Lanciafiamme Model 40
     $11166831: Panzergrenadiers
-    $11235859: MG34 Machine Gun Package
+    $11235859: MG-34 Light Machine Gun Package
     $11181909: Panzerjäger Infantry # Remember to save as UTF-8 with BOM to preserve the special characters
     $11265924: Tank Buster Package
     $11181912: Panzerpioneers
@@ -93,7 +93,7 @@
     $11238856: M13/40 Tank
     $11241651: Marder III Tank Destroyer
     $11241656: Panzer III
-    $11235857: MG-34 Top Gunner
+    $11235857: MG-34 Heavy Machine Gun
     $11238847: Panzer III Flame Tank
     $11153600: Panzer IV
     $11235786: MG-42 Top Gunner
@@ -204,3 +204,5 @@
     $11185673: M4A1 Sherman "Whizbang"
     $11241674: 1/4-ton 4x4 Truck
     $11201852: Deuce and a Half Truck
+    $11201335: Panzerbüchse 39 Anti-Tank Rifle
+    $11246773: Pak 38 Anti-Tank Gun

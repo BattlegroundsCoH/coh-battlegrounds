@@ -396,7 +396,7 @@ upgrades:
             cost:
                 munitions: 80
             ui:
-                screen-name: $11235856 # Flamethrower Package
+                screen-name: $11235856 # Lanciafiamme Model 40
                 icon-name: anti_emplacement_package
                 symbol-icon-name: weapon_flamethrower
 

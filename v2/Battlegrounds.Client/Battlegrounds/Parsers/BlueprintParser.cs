@@ -32,6 +32,10 @@ public sealed class BlueprintParser<G> where G : Game {
         public Dictionary<string, Dictionary<string, object>> Squads { get; set; } = [];
     }
 
+    private class EntityBlueprints {
+        public Dictionary<string, Dictionary<string, object>> Entities { get; set; } = [];
+    }
+
     private class UpgradeBlueprints {
         public Dictionary<string, Dictionary<string, object>> Upgrades { get; set; } = [];
     }
@@ -82,6 +86,26 @@ public sealed class BlueprintParser<G> where G : Game {
 
     }
 
+    public async Task<List<EntityBlueprint>> ParseEntityBlueprints(Stream source) {
+        ArgumentNullException.ThrowIfNull(source, nameof(source));
+
+        if (!source.CanRead) {
+            throw new ArgumentException("The provided stream is not readable.", nameof(source));
+        }
+
+        using StreamReader reader = new(source, leaveOpen: true);
+
+        EntityBlueprints entityBlueprints = await Task.Run(() => _deserializer.Deserialize<EntityBlueprints>(reader));
+        List<EntityBlueprint> blueprints = new(entityBlueprints?.Entities.Count ?? 0);
+        foreach (var (bpid, bp) in entityBlueprints?.Entities ?? []) {
+            bp[nameof(Blueprint.Id)] = bpid; // Ensure the id is set in the dictionary
+            blueprints.Add(DeserializeFromDictionary<EntityBlueprint>(bp.Select(x => new KeyValuePair<string, object>(HyphenatedNamingConvention.Instance.Reverse(x.Key), x.Value)).ToDictionary()));
+        }
+
+        return blueprints;
+
+    }
+
     public async Task<List<UpgradeBlueprint>> ParseUpgradeBlueprints(Stream source) {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         if (!source.CanRead) {
@@ -116,6 +140,8 @@ public sealed class BlueprintParser<G> where G : Game {
         { "loadout", typeof(LoadoutExtension) },
         { nameof(TypesExtension), typeof(TypesExtension) },
         { "types", typeof(TypesExtension) },
+        { nameof(SimItemExtension), typeof(SimItemExtension) },
+        { "sim-item", typeof(SimItemExtension) },
     };
 
     private T DeserializeFromDictionary<T>(Dictionary<string, object> data) where T : Blueprint, new() {

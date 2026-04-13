@@ -1,0 +1,114 @@
+##############################################
+## Afrika Korps Weapon Items
+##############################################
+
+entities:
+
+    w_panzerschrek_panzerjager_ak:
+        category: Weapon
+        faction-association: afrika_korps
+        extensions:
+            ui:
+                screen-name: $11242544 # Panzershreck Package
+                icon-name: panzershreck
+                symbol-icon-name: weapon_panzerschreck
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: 0.33
+                weapon-blueprint: panzerschreck_panzerjager_ak
+                
+    w_panzerbuchse39_at_rifle_ak:
+        category: Weapon
+        faction-association: afrika_korps
+        extensions:
+            ui:
+                screen-name: $11201335 # Panzerbüchse 39 Anti-Tank Rifle
+                icon-name: panzerbuchse_at_rifle
+                symbol-icon-name: weapon_ptrs
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: 0.33
+                weapon-blueprint: panzerbuchse39_at_rifle_ak
+                
+    w_flamethrower_guastatori_ak:
+        category: Weapon
+        faction-association: afrika_korps
+        extensions:
+            ui:
+                screen-name: $11235856 # Lanciafiamme Model 40
+                icon-name: anti_emplacement_package
+                symbol-icon-name: weapon_flamethrower
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: 0.33
+                weapon-blueprint: flamethrower_guastatori_ak
+                
+    w_flamethrower_panzerpioneer_ak:
+        category: Weapon
+        faction-association: afrika_korps
+        extensions:
+            ui:
+                screen-name: $11155599
+                icon-name: flamenwerfer_34_ger
+                symbol-icon-name: weapon_flamethrower
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: 0.33
+                weapon-blueprint: flamethrower_panzerpioneer_ak
+                
+    w_lmg_breda_m30_bersaglieri_ak:
+        category: Weapon
+        faction-association: afrika_korps
+        extensions:
+            ui:
+                screen-name: $11235858 # Breda M30 Light Machine Gun Package
+                icon-name: breda_model_30_ak
+                symbol-icon-name: weapon_breda_model_30lmg
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: 0.33
+                weapon-blueprint: lmg_breda_m30_bersaglieri_ak
+                
+    w_lmg_panzergrenadier_ak:
+        category: Weapon
+        faction-association: afrika_korps
+        extensions:
+            ui:
+                screen-name: $11235859 # MG-34 Light Machine Gun Package
+                icon-name: mg34
+                symbol-icon-name: weapon_mg42
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: 0.33
+                weapon-blueprint: lmg_panzergrenadier_ak
+                
+    w_lmg_panzerjaeger_ak:
+        category: Weapon
+        faction-association: afrika_korps
+        extensions:
+            ui:
+                screen-name: $11235859 # MG-34 Light Machine Gun Package
+                icon-name: mg34
+                symbol-icon-name: weapon_mg42
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: 0.33
+                weapon-blueprint: lmg_panzerjaeger_42_ak
+                
+    w_hmg_34_ak:
+        category: TeamWeapon
+        faction-association: afrika_korps
+        extensions:
+            ui:
+                screen-name: $11235857 # MG-34 Heavy Machine Gun
+                icon-name: hmg_mg_34_ak_weapon
+                symbol-icon-name: weapon_mg42
+                
+    tw_pak_38_ak:
+        category: TeamWeapon
+        faction-association: afrika_korps
+        extensions:
+            ui:
+                screen-name: $11246773 # Pak 38 Anti-Tank Gun
+                icon-name: tw_pak_38_ak
+                symbol-icon-name: 75mm_at_gun_ger
