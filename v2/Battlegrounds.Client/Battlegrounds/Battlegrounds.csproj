@@ -806,6 +806,9 @@
     <None Update="Assets\Factions\coh3\symbols\75mm_at_gun_ger.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Factions\coh3\symbols\at_gun_88mm_mobile_ak.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3\symbols\blow_torch.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -837,6 +840,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\symbols\land_mattress.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Factions\coh3\symbols\leig_75mm_ger.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Factions\coh3\symbols\m1_thompson_sub_machine_gun.png">
