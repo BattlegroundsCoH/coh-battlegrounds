@@ -9,6 +9,10 @@ namespace Battlegrounds.Test.Services;
 
 public sealed class BlueprintFixtureService : IBlueprintService { // Test fixture for IBlueprintService
 
+    private class RepositoryFixture : IBlueprintRepository {
+        public T GetBlueprint<T>(string blueprintId) where T : Blueprint => throw new NotImplementedException();
+    }
+
     public static readonly SquadBlueprint[] COH3_SQUADS = [
         SquadBlueprintFixture.SBP_TOMMY_UK,
         SquadBlueprintFixture.SBP_HALFTRACK_M3_UK,
@@ -94,5 +98,6 @@ public sealed class BlueprintFixtureService : IBlueprintService { // Test fixtur
         return typeof(T).Name;
     }
 
+    public IBlueprintRepository GetBlueprintRepositoryForGame<T>() where T : Game => new RepositoryFixture();
 
 }

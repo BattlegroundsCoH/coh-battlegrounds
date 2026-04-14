@@ -31,4 +31,24 @@ public interface IBlueprintService {
 
     ICollection<T> GetBlueprintsForGame<T>(string gameId) where T : Blueprint;
 
+    IBlueprintRepository GetBlueprintRepositoryForGame<T>() where T : Game;
+
+}
+
+/// <summary>
+/// Represents a repository that provides access to blueprints by their unique identifiers.
+/// </summary>
+/// <remarks>Implementations of this interface are responsible for retrieving blueprint instances of a specified
+/// type. The repository may support various storage mechanisms or caching strategies. Thread safety and performance
+/// characteristics depend on the specific implementation.</remarks>
+public interface IBlueprintRepository {
+    
+    /// <summary>
+    /// Retrieves a blueprint of the specified type by its unique identifier.
+    /// </summary>
+    /// <typeparam name="T">The type of blueprint to retrieve. Must inherit from Blueprint.</typeparam>
+    /// <param name="blueprintId">The unique identifier of the blueprint to retrieve. Cannot be null or empty.</param>
+    /// <returns>An instance of type T representing the requested blueprint, or null if no matching blueprint is found.</returns>
+    T GetBlueprint<T>(string blueprintId) where T : Blueprint;
+
 }

@@ -15,6 +15,8 @@ using CommunityToolkit.Mvvm.Input;
 
 using Microsoft.Extensions.Logging;
 
+using static Battlegrounds.Models.Companies.Squad;
+
 namespace Battlegrounds.ViewModels;
 
 public sealed record CompanyEditorViewModelContext(
@@ -42,7 +44,9 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     private string _companyName = string.Empty;
     private string _editingCompanyName = string.Empty;
     private string _companyState = string.Empty;
-    private SelectionViewModel? _selectionViewModel;
+
+    private SquadSelectionViewModel? _selectionViewModel;
+    private ItemSelectionViewModel? _itemSelectionViewModel;
 
     private string _selectionTitle = "No Selection";
 
@@ -57,6 +61,9 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     private ICollection<SquadBlueprint> _availableTransportUnits = Array.Empty<SquadBlueprint>();
     private ICollection<SquadBlueprint> _availableTowTransportUnits = Array.Empty<SquadBlueprint>();
 
+    private readonly List<CapturedItem> _capturedItems = [];
+    private readonly HashSet<int> _assignedCapturedItemIds = [];
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public IAsyncRelayCommand LeaveCommand { get; }
@@ -70,6 +77,10 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     public ICommand CommitRenameCommand { get; }
 
     public ICommand CancelRenameCommand { get; }
+
+    public ICommand SetSelectedCapturedItemCommand { get; }
+
+    public ICommand AddItemToSquadCommand { get; }
 
     public Game Game => _game;
 
@@ -120,12 +131,36 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         }
     }
 
-    public SelectionViewModel? SelectionViewModel {
+    public bool HasSquadSelection => _selectionViewModel is not null;
+
+    public SquadSelectionViewModel? SquadSelectionViewModel {
         get => _selectionViewModel;
         set {
             if (_selectionViewModel == value) return;
             _selectionViewModel = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectionViewModel)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SquadSelectionViewModel)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasSquadSelection)));
+        }
+    }
+
+    public bool HasItemSelection => _itemSelectionViewModel is not null;
+
+    public ItemSelectionViewModel? ItemSelectionViewModel {
+        get => _itemSelectionViewModel;
+        set {
+            if (_itemSelectionViewModel == value) return;
+            _itemSelectionViewModel = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ItemSelectionViewModel)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasItemSelection)));
+        }
+    }
+
+    public int SelectedAvailableUnitTabIndex {
+        get => field;
+        set {
+            if (field == value) return;
+            field = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedAvailableUnitTabIndex)));
         }
     }
 
@@ -138,6 +173,11 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     public ICollection<SquadBlueprint> AvailableTransportUnits => _availableTransportUnits;
 
     public ICollection<SquadBlueprint> AvailableTowTransportUnits => _availableTowTransportUnits;
+
+    public IReadOnlyList<CapturedItem> AvailableCapturedItems =>
+        [.. _capturedItems.Where(ci => ci.ItemBlueprint is not null && !_assignedCapturedItemIds.Contains(ci.Id))];
+
+    public bool HasCapturedItems => AvailableCapturedItems.Count > 0;
 
     public IReadOnlyList<PhaseSquadViewModel> StartingUnits => BuildPhaseViewModels(_startingUnits);
 
@@ -202,6 +242,8 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         BeginRenameCommand = new RelayCommand(BeginRename);
         CommitRenameCommand = new RelayCommand(CommitRename);
         CancelRenameCommand = new RelayCommand(CancelRename);
+        SetSelectedCapturedItemCommand = new RelayCommand<CapturedItem>(SetSelectedCapturedItem);
+        AddItemToSquadCommand = new RelayCommand<ItemSelectionViewModel.SquadAssignable>(AddItemToSquad);
 
         if (_context.IsNewCompany) {
             _game = _context.Parameters.Game ?? throw new ArgumentNullException(nameof(context), "Game must be provided for a new company.");
@@ -217,10 +259,19 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             _skirmishPhaseUnits.AddRange(_context.Company.Squads.Where(s => s.Phase == SquadPhase.SkirmishPhase));
             _battlePhaseUnits.AddRange(_context.Company.Squads.Where(s => s.Phase == SquadPhase.BattlePhase));
             _reservesPhaseUnits.AddRange(_context.Company.Squads.Where(s => s.Phase == SquadPhase.ReservesPhase));
+            _capturedItems.AddRange(_context.Company.CapturedItems);
+            foreach (var itemId in _context.Company.Squads.SelectMany(GetSquadCaptureItems)) {
+                _assignedCapturedItemIds.Add(itemId);
+            }
         }
 
         LoadBlueprints();
 
+    }
+
+    private IEnumerable<int> GetSquadCaptureItems(Squad squad) {
+        IEnumerable<int> seed = squad.IsCapturedWeapon ?[ squad.CapturedWeapon!.CompanyItemId] : [];
+        return seed.Union(squad.SlotItems.Select(x => x.CompanyItemId));
     }
 
     private void BeginRename() {
@@ -333,31 +384,139 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
     }
 
-    private void SetSelectedSquad(object? any) {
-        if (any is SquadBlueprint squad) {
-            SelectionViewModel = new SelectionViewModel(this, squad);
-            SelectionTitle = "Squad Overview";
-        } else if (any is PhaseSquadViewModel pvm) {
-            SelectionViewModel = new SelectionViewModel(this, pvm.Squad);
-            SelectionTitle = $"Squad #{pvm.Id}";
-        } else if (any is Squad existingSquad) {
-            SelectionViewModel = new SelectionViewModel(this, existingSquad);
-            SelectionTitle = $"Squad #{existingSquad.Id}";
+    private void AddItemToSquad(ItemSelectionViewModel.SquadAssignable? itemAssignment) {
+        ArgumentNullException.ThrowIfNull(itemAssignment, nameof(itemAssignment));
+
+        var item = itemAssignment.ViewModel.Item;
+        var squad = itemAssignment.Squad;
+
+        var updatedSquad = SwapSquad(squad, new Squad {
+            Id = squad.Id,
+            SlotItems = [.. squad.SlotItems, new SlotItem(item.Id, item.ItemBlueprint, null)],
+            Upgrades = squad.Upgrades,
+            Blueprint = squad.Blueprint,
+            Experience = squad.Experience,
+            Name = squad.Name,
+            Phase = squad.Phase,
+            Transport = squad.Transport,
+            LastUpdatedAt = DateTime.UtcNow,
+            AddedToCompanyAt = squad.AddedToCompanyAt,
+            MatchCounts = squad.MatchCounts,
+            TotalVehicleKills = squad.TotalVehicleKills,
+            TotalInfantryKills = squad.TotalInfantryKills,
+            Passenger = squad.Passenger,
+            CapturedWeapon = squad.CapturedWeapon
+        });
+
+        SetSelectedSquad(updatedSquad); // Update the selection to the squad with the new item
+
+        // Refresh capture items
+        _assignedCapturedItemIds.Add(item.Id);
+
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AvailableCapturedItems)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasCapturedItems)));
+
+        if (!HasCapturedItems) {
+            SelectedAvailableUnitTabIndex = 0; // Reset to the first tab if no captured items are left
+        }
+
+        IsDirty = true;
+
+    }
+
+    private void SetSelectedCapturedItem(CapturedItem? item) {
+        SquadSelectionViewModel = null;
+        if (item is CapturedItem { IsTeamWeapon: true }) {
+            ItemSelectionViewModel = new ItemSelectionViewModel(this, item);
+            SelectionTitle = "Captured Team Weapon";
+        } else if (item is CapturedItem { IsTeamWeapon: false}) {
+            ItemSelectionViewModel = new ItemSelectionViewModel(this, item);
+            SelectionTitle = "Captured Weapon";
         } else {
-            SelectionViewModel = null; // Clear selection if not a valid squad or blueprint
+            ItemSelectionViewModel = null; // Clear selection if not a valid captured item
             SelectionTitle = "No Selection";
         }
     }
 
-    public void AddSquadToCompany(SquadPhase phase, SquadBlueprint blueprint) {
-        Squad.TransportSquad? transport = null;
-        if (blueprint.RequiresTowing) { // Set mandatory transport for squads that require towing
-            if (_availableTransportUnits.FirstOrDefault() is not SquadBlueprint defaultTransport) {
-                _logger.LogWarning("No available transport units for squad that requires towing. Cannot add squad to company.");
-                return; // No transport available, cannot add squad
-            }
-            transport = new Squad.TransportSquad(defaultTransport, false);
+    private void SetSelectedSquad(object? any) {
+        ItemSelectionViewModel = null; // Clear any existing item selection
+        if (any is SquadBlueprint squad) {
+            SquadSelectionViewModel = new SquadSelectionViewModel(this, squad);
+            SelectionTitle = "Squad Overview";
+        } else if (any is PhaseSquadViewModel pvm) {
+            SquadSelectionViewModel = new SquadSelectionViewModel(this, pvm.Squad);
+            SelectionTitle = $"Squad #{pvm.Id}";
+        } else if (any is Squad existingSquad) {
+            SquadSelectionViewModel = new SquadSelectionViewModel(this, existingSquad);
+            SelectionTitle = $"Squad #{existingSquad.Id}";
+        } else {
+            SquadSelectionViewModel = null; // Clear selection if not a valid squad or blueprint
+            SelectionTitle = "No Selection";
         }
+    }
+
+    public void AddCapturedSquadToCompany(SquadPhase phase, CapturedItem capturedItem) {
+
+        if (capturedItem.ItemBlueprint is not EntityBlueprint { TeamWeapon: TeamWeaponExtension teamWeapon }) {
+            throw new ArgumentException("Captured item is not a team weapon and cannot be added as a squad.", nameof(capturedItem));
+        }
+
+        var squadBlueprint = (SquadBlueprint?)teamWeapon.RecrewSquadBlueprint ?? throw new InvalidOperationException("Captured item does not have a valid squad blueprint for recruewing.");
+        var crewBlueprint = _blueprintService.GetBlueprint<CoH3, SquadBlueprint>(_game.GetFactionCrewSquadBlueprint(Faction));
+
+        var transport = GetDefaultTransportSquad(squadBlueprint);
+
+        Squad squad = new Squad {
+            Id = GetNextSquadId(),
+            Phase = phase,
+            Blueprint = squadBlueprint,
+            Transport = transport,
+            AddedToCompanyAt = DateTime.UtcNow,
+            CapturedWeapon = new Squad.CaptureInfo(capturedItem.Id, capturedItem.ItemBlueprint, crewBlueprint)
+        };
+
+        // Add to assigned captured items to prevent re-adding the same captured item
+        _assignedCapturedItemIds.Add(capturedItem.Id);
+
+        switch (phase) {
+            case SquadPhase.StartingPhase:
+                _startingUnits.Add(squad);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StartingUnits)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StartingUnitsCount)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddStartingUnit)));
+                break;
+            case SquadPhase.SkirmishPhase:
+                _skirmishPhaseUnits.Add(squad);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SkirmishPhaseUnits)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SkirmishPhaseUnitsCount)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddSkirmishPhaseUnit)));
+                break;
+            case SquadPhase.BattlePhase:
+                _battlePhaseUnits.Add(squad);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BattlePhaseUnits)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BattlePhaseUnitsCount)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddBattlePhaseUnit)));
+                break;
+            case SquadPhase.ReservesPhase:
+                _reservesPhaseUnits.Add(squad);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ReservesPhaseUnits)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ReservesPhaseUnitsCount)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddReservesPhaseUnit)));
+                break;
+        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalManpowerCost)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalMunitionsCost)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalFuelCost)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AvailableCapturedItems)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasCapturedItems)));
+        IsDirty = true; // Mark the company as dirty after adding a squad
+
+        SetSelectedCapturedItem(null);
+
+    }
+
+    public void AddSquadToCompany(SquadPhase phase, SquadBlueprint blueprint) {
+        var transport = GetDefaultTransportSquad(blueprint);
         Squad squad = new Squad() {
             Id = GetNextSquadId(),
             Phase = phase,
@@ -395,6 +554,17 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalMunitionsCost)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalFuelCost)));
         IsDirty = true; // Mark the company as dirty after adding a squad
+    }
+
+    private TransportSquad? GetDefaultTransportSquad(SquadBlueprint blueprint) {
+        if (blueprint.RequiresTowing) { // Set mandatory transport for squads that require towing
+            if (_availableTransportUnits.FirstOrDefault() is not SquadBlueprint defaultTransport) {
+                _logger.LogWarning("No available transport units for squad that requires towing. Cannot add squad to company.");
+                return null; // No transport available, cannot add squad
+            }
+            return new TransportSquad(defaultTransport, false);
+        }
+        return null;
     }
 
     public void RetireSquadFromCompany(Squad squad) {
@@ -455,6 +625,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             TotalVehicleKills = squad.TotalVehicleKills,
             TotalInfantryKills = squad.TotalInfantryKills,
             Passenger = squad.Passenger,
+            CapturedWeapon = squad.CapturedWeapon,
         });
 
         IsDirty = true; // Mark the company as dirty after changing deployment method
@@ -486,9 +657,38 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             TotalVehicleKills = squad.TotalVehicleKills,
             TotalInfantryKills = squad.TotalInfantryKills,
             Passenger = squad.Passenger,
+            CapturedWeapon = squad.CapturedWeapon,
         };
         SetSelectedSquad(SwapSquad(squad, updatedSquad)); // Update the selection to the upgraded squad
         IsDirty = true; // Mark the company as dirty after applying an upgrade
+    }
+
+    public void RemoveItemFromSquad(Squad squad, SlotItem item) {
+        Squad updatedSquad = new Squad {
+            Id = squad.Id,
+            SlotItems = [.. squad.SlotItems.Except([item])],
+            Upgrades = squad.Upgrades,
+            Blueprint = squad.Blueprint,
+            Experience = squad.Experience,
+            Name = squad.Name,
+            Phase = squad.Phase,
+            Transport = squad.Transport,
+            LastUpdatedAt = DateTime.UtcNow,
+            AddedToCompanyAt = squad.AddedToCompanyAt,
+            MatchCounts = squad.MatchCounts,
+            TotalVehicleKills = squad.TotalVehicleKills,
+            TotalInfantryKills = squad.TotalInfantryKills,
+            Passenger = squad.Passenger,
+            CapturedWeapon = squad.CapturedWeapon,
+        };
+        _assignedCapturedItemIds.Remove(item.CompanyItemId); // Remove the item from assigned captured items
+        SetSelectedSquad(SwapSquad(squad, updatedSquad)); // Update the selection to new squad
+        IsDirty = true; // Mark the company as dirty after removing an item
+
+        // Refresh capture items (since we removed an item, it may now be available again)
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AvailableCapturedItems)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasCapturedItems)));
+
     }
 
     public IReadOnlyList<Squad> GetPhaseSquads(SquadPhase phase) => phase switch {
@@ -526,6 +726,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             MatchCounts = squad.MatchCounts,
             TotalInfantryKills = squad.TotalInfantryKills,
             TotalVehicleKills = squad.TotalVehicleKills,
+            CapturedWeapon = squad.CapturedWeapon,
         };
         SetSelectedSquad(SwapSquad(squad, updatedSquad));
         IsDirty = true;
@@ -599,5 +800,15 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     private static float SumManpowerCost(Squad squad) => squad.Blueprint.Cost.Manpower + squad.Upgrades.Sum(static x => x.Cost.Manpower);
     private static float SumMunitionsCost(Squad squad) => squad.Blueprint.Cost.Munitions + squad.Upgrades.Sum(static x => x.Cost.Munitions);
     private static float SumFuelCost(Squad squad) => squad.Blueprint.Cost.Fuel + squad.Upgrades.Sum(static x => x.Cost.Fuel);
+
+    public void DestroyItem(CapturedItem capturedItem) {
+        _capturedItems.Remove(capturedItem);
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AvailableCapturedItems)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasCapturedItems)));
+        if (!HasCapturedItems) {
+            SelectedAvailableUnitTabIndex = 0; // Reset to the first tab if no captured items are left
+        }
+        SetSelectedCapturedItem(null); // Clear the selection if the destroyed item was selected
+    }
 
 }

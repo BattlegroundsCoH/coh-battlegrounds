@@ -1,8 +1,10 @@
 ﻿using Battlegrounds.Models.Blueprints;
+using Battlegrounds.Models.Companies;
+
+using CommunityToolkit.Mvvm.Input;
 
 namespace Battlegrounds.ViewModels.CompanyHelpers;
 
-public sealed record SlotItemViewModel(Blueprint Blueprint, int Count) {
-    public bool IsUpgrade => Blueprint is UpgradeBlueprint; // Determines if the blueprint is an upgrade or a slot item.
-    public bool IsSlotItem => Blueprint is SlotItemBlueprint; // Determines if the blueprint is a slot item or an upgrade.
+public sealed record SlotItemViewModel(Squad.SlotItem Item, IRelayCommand<SlotItemViewModel>? RemoveItemCommand) {
+    public Blueprint Blueprint => Item.EntityBlueprint!; // Gets the blueprint associated with the slot item.
 }

@@ -30,4 +30,9 @@ public sealed class CapturedItem {
     /// </summary>
     public DateTime CapturedAt { get; init; }
 
+    /// <summary>
+    /// Gets a value indicating whether the item is classified as a team weapon.
+    /// </summary>
+    public bool IsTeamWeapon => ItemBlueprint?.Category is EntityCategory.TeamWeapon;
+
 }

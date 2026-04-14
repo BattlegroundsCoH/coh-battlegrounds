@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>bgc-edit</AssemblyName>
+    <RootNamespace>Battlegrounds.Cli</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Battlegrounds\Battlegrounds.csproj" />
+  </ItemGroup>
+
+  <!-- Link YAML blueprint + locale assets so BlueprintService/GameLocaleService can resolve them at relative paths -->
+  <ItemGroup>
+    <Content Include="..\Battlegrounds\Assets\Factions\coh3\sbps-americans.yaml"
+             Link="Assets\Factions\coh3\sbps-americans.yaml"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\Battlegrounds\Assets\Factions\coh3\sbps-british-africa.yaml"
+             Link="Assets\Factions\coh3\sbps-british-africa.yaml"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\Battlegrounds\Assets\Factions\coh3\sbps-germans.yaml"
+             Link="Assets\Factions\coh3\sbps-germans.yaml"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\Battlegrounds\Assets\Factions\coh3\sbps-afrika-korps.yaml"
+             Link="Assets\Factions\coh3\sbps-afrika-korps.yaml"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\Battlegrounds\Assets\Factions\coh3\ebps-afrika-korps-weapons.yaml"
+             Link="Assets\Factions\coh3\ebps-afrika-korps-weapons.yaml"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\Battlegrounds\Assets\Factions\coh3\upgs.yaml"
+             Link="Assets\Factions\coh3\upgs.yaml"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\Battlegrounds\Assets\Factions\coh3\locale.yaml"
+             Link="Assets\Factions\coh3\locale.yaml"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\Battlegrounds\Assets\Scenarios\coh3\locale.yaml"
+             Link="Assets\Scenarios\coh3\locale.yaml"
+             CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

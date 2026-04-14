@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battlegrounds.IntegrationTest", "Battlegrounds.IntegrationTest\Battlegrounds.IntegrationTest.csproj", "{50C648E6-A38E-4E69-BE81-6F8C9EBF5890}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battlegrounds.Cli", "Battlegrounds.Cli\Battlegrounds.Cli.csproj", "{BFA87C22-D7D9-4F80-AEBE-38E8D197FAEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,18 @@ Global
 		{50C648E6-A38E-4E69-BE81-6F8C9EBF5890}.Release|x64.Build.0 = Release|Any CPU
 		{50C648E6-A38E-4E69-BE81-6F8C9EBF5890}.Release|x86.ActiveCfg = Release|Any CPU
 		{50C648E6-A38E-4E69-BE81-6F8C9EBF5890}.Release|x86.Build.0 = Release|Any CPU
+		{BFA87C22-D7D9-4F80-AEBE-38E8D197FAEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFA87C22-D7D9-4F80-AEBE-38E8D197FAEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFA87C22-D7D9-4F80-AEBE-38E8D197FAEF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BFA87C22-D7D9-4F80-AEBE-38E8D197FAEF}.Debug|x64.Build.0 = Debug|Any CPU
+		{BFA87C22-D7D9-4F80-AEBE-38E8D197FAEF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BFA87C22-D7D9-4F80-AEBE-38E8D197FAEF}.Debug|x86.Build.0 = Debug|Any CPU
+		{BFA87C22-D7D9-4F80-AEBE-38E8D197FAEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFA87C22-D7D9-4F80-AEBE-38E8D197FAEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFA87C22-D7D9-4F80-AEBE-38E8D197FAEF}.Release|x64.ActiveCfg = Release|Any CPU
+		{BFA87C22-D7D9-4F80-AEBE-38E8D197FAEF}.Release|x64.Build.0 = Release|Any CPU
+		{BFA87C22-D7D9-4F80-AEBE-38E8D197FAEF}.Release|x86.ActiveCfg = Release|Any CPU
+		{BFA87C22-D7D9-4F80-AEBE-38E8D197FAEF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -11,7 +11,7 @@ namespace Battlegrounds.ViewModels.CompanyHelpers;
 
 public sealed record RankStar(bool IsEarned);
 
-public sealed class SelectionViewModel : INotifyPropertyChanged {
+public sealed class SquadSelectionViewModel : INotifyPropertyChanged {
 
     private readonly CompanyEditorViewModel _parentViewModel;
     private readonly SquadBlueprint _squadBlueprint;
@@ -165,9 +165,11 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
 
     public IRelayCommand<UpgradeBlueprint>? UpgradeCommand { get; }
 
+    public IRelayCommand<SlotItemViewModel>? RemoveItemCommand { get; }
+
     public IRelayCommand? ClearPassengerCommand { get; }
 
-    public SelectionViewModel(CompanyEditorViewModel parentViewModel, SquadBlueprint squadBlueprint) {
+    public SquadSelectionViewModel(CompanyEditorViewModel parentViewModel, SquadBlueprint squadBlueprint) {
         _parentViewModel = parentViewModel ?? throw new ArgumentNullException(nameof(parentViewModel));
         _squadBlueprint = squadBlueprint ?? throw new ArgumentNullException(nameof(squadBlueprint));
         CustomName = string.Empty;        
@@ -176,13 +178,14 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
         NotifyAll();
     }
 
-    public SelectionViewModel(CompanyEditorViewModel parentViewModel, Squad squad) {
+    public SquadSelectionViewModel(CompanyEditorViewModel parentViewModel, Squad squad) {
         _parentViewModel = parentViewModel ?? throw new ArgumentNullException(nameof(parentViewModel));
         _squad = squad;
         _squadBlueprint = squad.Blueprint;
         CustomName = squad.HasCustomName ? squad.Name : string.Empty;
         RetireSquadCommand = new RelayCommand(() => parentViewModel.RetireSquadFromCompany(squad));
         UpgradeCommand = new RelayCommand<UpgradeBlueprint>(AddUpgrade);
+        RemoveItemCommand = new RelayCommand<SlotItemViewModel>(RemoveItem);
         ClearPassengerCommand = new RelayCommand(
             () => parentViewModel.SetSquadPassenger(_squad!, null),
             () => IsSquad && _squad!.HasPassenger);
@@ -229,7 +232,7 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
         List<SlotItemViewModel> availableItems = 
             [..from item in _squad.SlotItems 
                where item.EntityBlueprint is not null || item.SlotItemBlueprint is not null
-               select new SlotItemViewModel((Blueprint?)item.SlotItemBlueprint ?? (Blueprint?)item.EntityBlueprint!, item.Count)];
+               select new SlotItemViewModel(item, RemoveItemCommand)];
         _items.Clear();
         _items.AddRange(availableItems);
     }
@@ -246,6 +249,18 @@ public sealed class SelectionViewModel : INotifyPropertyChanged {
             throw new InvalidOperationException("Cannot apply upgrade to a squad that does not exist.");
         }
         _parentViewModel.ApplyUpgradeToSquad(_squad, upgrade);
+    }
+
+    private void RemoveItem(SlotItemViewModel? model) {
+        if (model is null) {
+            return; // No model
+        }
+        if (!IsSquad)
+            return; // No squad to upgrade
+        if (_squad is null) {
+            throw new InvalidOperationException("Cannot remove item from a squad that does not exist.");
+        }
+        _parentViewModel.RemoveItemFromSquad(_squad, model.Item);
     }
 
     private void NotifyAll() {

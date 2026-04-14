@@ -14,6 +14,8 @@ public sealed class EntityBlueprint(string id, EntityCategory category, HashSet<
 
     public EntityCategory Category { get; init; } = category;
 
+    public TeamWeaponExtension TeamWeapon => TryGetExtension(out TeamWeaponExtension? ext) ? ext : TeamWeaponExtension.None;
+
     public EntityBlueprint() : this(string.Empty, EntityCategory.Soldier, []) {
         // Default constructor for deserialization or empty instances
     }

@@ -45,10 +45,10 @@ public sealed class Squad {
     /// </summary>
     /// <remarks>Either EntityBlueprint or SlotItemBlueprint is used depending on the game context. Only one
     /// is typically relevant for a given slot item.</remarks>
-    /// <param name="Count">The number of items represented by this slot item. Must be zero or greater.</param>
+    /// <param name="CompanyItemId">The number of items represented by this slot item. Must be zero or greater.</param>
     /// <param name="EntityBlueprint">The entity blueprint associated with the slot item, or null if not applicable. Used for Company of Heroes 3.</param>
     /// <param name="SlotItemBlueprint">The slot item blueprint associated with the slot item, or null if not applicable. Used for Company of Heroes 2.</param>
-    public sealed record SlotItem(int Count, EntityBlueprint? EntityBlueprint, SlotItemBlueprint? SlotItemBlueprint); // EntityBlueprint for CoH3, SlotItemBlueprint for CoH2 because reasons...
+    public sealed record SlotItem(int CompanyItemId, EntityBlueprint? EntityBlueprint, SlotItemBlueprint? SlotItemBlueprint); // EntityBlueprint for CoH3, SlotItemBlueprint for CoH2 because reasons...
 
     /// <summary>
     /// Represents a transport squad configuration, including its blueprint and whether it is limited to drop-off

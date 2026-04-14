@@ -10,7 +10,7 @@ entities:
         extensions:
             ui:
                 screen-name: $11242544 # Panzershreck Package
-                icon-name: panzershreck
+                icon-name: panzerschreck
                 symbol-icon-name: weapon_panzerschreck
             sim-item:
                 item-inventory-space: 1
@@ -103,6 +103,8 @@ entities:
                 screen-name: $11235857 # MG-34 Heavy Machine Gun
                 icon-name: hmg_mg_34_ak_weapon
                 symbol-icon-name: weapon_mg42
+            team-weapon:
+                recrew-squad-blueprint: hmg_mg34_ak
                 
     tw_pak_38_ak:
         category: TeamWeapon

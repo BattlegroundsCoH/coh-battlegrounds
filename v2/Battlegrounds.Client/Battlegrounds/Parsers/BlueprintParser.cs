@@ -41,12 +41,24 @@ public sealed class BlueprintParser<G> where G : Game {
     }
 
     private readonly ILogger<BlueprintParser<G>> _logger;
+    private readonly IBlueprintRepository _blueprintRepository;
     private readonly IGameLocaleService _localeService;
     private readonly IDeserializer _deserializer;
     private readonly DictionaryDeserializer _dictionaryDeserializer;
 
-    public BlueprintParser(IGameLocaleService localeService, ILogger<BlueprintParser<G>> logger) {
+    /// <summary>
+    /// Initializes a new instance of the BlueprintParser class with the specified blueprint service, locale service,
+    /// and logger.
+    /// </summary>
+    /// <remarks>Registers type converters for localized strings and blueprint references to support parsing
+    /// operations. The blueprint repository is resolved for the specified game type.</remarks>
+    /// <param name="blueprintService">The blueprint service used to obtain the blueprint repository for the game type.</param>
+    /// <param name="localeService">The locale service used for string localization during parsing. Cannot be null.</param>
+    /// <param name="logger">The logger used to record diagnostic and error information for the parser.</param>
+    /// <exception cref="ArgumentNullException">Thrown if localeService is null.</exception>
+    public BlueprintParser(IBlueprintService blueprintService, IGameLocaleService localeService, ILogger<BlueprintParser<G>> logger) {
         _logger = logger;
+        _blueprintRepository = blueprintService.GetBlueprintRepositoryForGame<G>();
         _localeService = localeService ?? throw new ArgumentNullException(nameof(localeService));
         _deserializer = new DeserializerBuilder()
             .WithNamingConvention(HyphenatedNamingConvention.Instance)
@@ -57,6 +69,12 @@ public sealed class BlueprintParser<G> where G : Game {
 
         // Register a type converter for strings to use the locale service
         _dictionaryDeserializer.RegisterTypeConverter(ConvertLocStr);
+
+        // Register type converters for blueprint references
+        _dictionaryDeserializer.RegisterTypeConverter(ConvertToSquadBlueprintReference);
+        _dictionaryDeserializer.RegisterTypeConverter(ConvertToEntityBlueprintReference);
+        _dictionaryDeserializer.RegisterTypeConverter(ConvertToUpgradeBlueprintReference);
+
     }
 
     private LocaleString ConvertLocStr(string str) {
@@ -66,6 +84,27 @@ public sealed class BlueprintParser<G> where G : Game {
         return uint.TryParse(str, out uint key) ? _localeService.FromGame<G>(key) : LocaleString.TempString(str);
     }
 
+    private BlueprintReference<SquadBlueprint> ConvertToSquadBlueprintReference(string str) {
+        return new BlueprintReference<SquadBlueprint>(_blueprintRepository, str);
+    }
+
+    private BlueprintReference<EntityBlueprint> ConvertToEntityBlueprintReference(string str) {
+        return new BlueprintReference<EntityBlueprint>(_blueprintRepository, str);
+    }
+
+    private BlueprintReference<UpgradeBlueprint> ConvertToUpgradeBlueprintReference(string str) {
+        return new BlueprintReference<UpgradeBlueprint>(_blueprintRepository, str);
+    }
+
+    /// <summary>
+    /// Asynchronously parses a stream containing squad blueprint data and returns a list of squad blueprints.
+    /// </summary>
+    /// <remarks>The method does not close the provided stream after reading. The caller is responsible for
+    /// managing the stream's lifetime.</remarks>
+    /// <param name="source">The stream from which to read the squad blueprint data. The stream must be readable and positioned at the start
+    /// of the data.</param>
+    /// <returns>A list of squad blueprints parsed from the provided stream. The list will be empty if no blueprints are found.</returns>
+    /// <exception cref="ArgumentException">Thrown if the provided stream is not readable.</exception>
     public async Task<List<SquadBlueprint>> ParseSquadBlueprints(Stream source) {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
 
@@ -86,6 +125,17 @@ public sealed class BlueprintParser<G> where G : Game {
 
     }
 
+    /// <summary>
+    /// Parses a stream containing entity blueprint data and returns a list of deserialized entity blueprints.
+    /// </summary>
+    /// <remarks>The stream is not closed by this method. The caller is responsible for managing the stream's
+    /// lifetime. The method expects the stream to contain data in a format compatible with the deserializer used for
+    /// entity blueprints.</remarks>
+    /// <param name="source">The stream from which to read the entity blueprint data. The stream must be readable and positioned at the start
+    /// of the data to parse.</param>
+    /// <returns>A list of deserialized entity blueprints parsed from the provided stream. The list will be empty if no entities
+    /// are found.</returns>
+    /// <exception cref="ArgumentException">Thrown if the provided stream is not readable.</exception>
     public async Task<List<EntityBlueprint>> ParseEntityBlueprints(Stream source) {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
 
@@ -106,6 +156,13 @@ public sealed class BlueprintParser<G> where G : Game {
 
     }
 
+    /// <summary>
+    /// Parses upgrade blueprint data from the specified stream and returns a list of upgrade blueprints.
+    /// </summary>
+    /// <param name="source">The stream containing the upgrade blueprint data to parse. The stream must be readable and positioned at the
+    /// start of the data.</param>
+    /// <returns>A list of upgrade blueprints parsed from the provided stream. The list will be empty if no blueprints are found.</returns>
+    /// <exception cref="ArgumentException">Thrown if the provided stream is not readable.</exception>
     public async Task<List<UpgradeBlueprint>> ParseUpgradeBlueprints(Stream source) {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         if (!source.CanRead) {
@@ -142,6 +199,8 @@ public sealed class BlueprintParser<G> where G : Game {
         { "types", typeof(TypesExtension) },
         { nameof(SimItemExtension), typeof(SimItemExtension) },
         { "sim-item", typeof(SimItemExtension) },
+        { nameof(TeamWeaponExtension), typeof(TeamWeaponExtension) },
+        { "team-weapon", typeof(TeamWeaponExtension) }
     };
 
     private T DeserializeFromDictionary<T>(Dictionary<string, object> data) where T : Blueprint, new() {
