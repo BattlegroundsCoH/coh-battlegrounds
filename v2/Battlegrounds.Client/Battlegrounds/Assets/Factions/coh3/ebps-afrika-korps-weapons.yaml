@@ -114,6 +114,8 @@ entities:
                 screen-name: $11246773 # Pak 38 Anti-Tank Gun
                 icon-name: tw_pak_38_ak
                 symbol-icon-name: 75mm_at_gun_ger
+            team-weapon:
+                recrew-squad-blueprint: at_gun_50mm_pak_38_ak
                 
     tw_at_gun_88mm_flak_36_mobile_ak:
         category: TeamWeapon
@@ -123,6 +125,8 @@ entities:
                 screen-name: $11235855 # Flak 36 88mm Anti-Aircraft Gun
                 icon-name: at_gun_88mm_mobile_ak
                 symbol-icon-name: at_gun_88mm_mobile_ak
+            team-weapon:
+                recrew-squad-blueprint: at_gun_88mm_mobile_ak
 
     tw_howitzer_75mm_leig_ak:
         category: TeamWeapon
@@ -132,3 +136,5 @@ entities:
                 screen-name: $11235779 # LeIG 18 Infantry Support Gun
                 icon-name: leig_75mm_ak
                 symbol-icon-name: leig_75mm_ger
+            team-weapon:
+                recrew-squad-blueprint: leig_75mm_ak
