@@ -14,7 +14,7 @@ entities:
                 symbol-icon-name: weapon_panzerschreck
             sim-item:
                 item-inventory-space: 1
-                drop-chance: 0.33
+                drop-chance: '0.33'
                 weapon-blueprint: panzerschreck_panzerjager_ak
                 
     w_panzerbuchse39_at_rifle_ak:
@@ -27,7 +27,7 @@ entities:
                 symbol-icon-name: weapon_ptrs
             sim-item:
                 item-inventory-space: 1
-                drop-chance: 0.33
+                drop-chance: '0.33'
                 weapon-blueprint: panzerbuchse39_at_rifle_ak
                 
     w_flamethrower_guastatori_ak:
@@ -40,7 +40,7 @@ entities:
                 symbol-icon-name: weapon_flamethrower
             sim-item:
                 item-inventory-space: 1
-                drop-chance: 0.33
+                drop-chance: '0.33'
                 weapon-blueprint: flamethrower_guastatori_ak
                 
     w_flamethrower_panzerpioneer_ak:
@@ -53,7 +53,7 @@ entities:
                 symbol-icon-name: weapon_flamethrower
             sim-item:
                 item-inventory-space: 1
-                drop-chance: 0.33
+                drop-chance: '0.33'
                 weapon-blueprint: flamethrower_panzerpioneer_ak
                 
     w_lmg_breda_m30_bersaglieri_ak:
@@ -66,7 +66,7 @@ entities:
                 symbol-icon-name: weapon_breda_model_30lmg
             sim-item:
                 item-inventory-space: 1
-                drop-chance: 0.33
+                drop-chance: '0.33'
                 weapon-blueprint: lmg_breda_m30_bersaglieri_ak
                 
     w_lmg_panzergrenadier_ak:
@@ -79,7 +79,7 @@ entities:
                 symbol-icon-name: weapon_mg42
             sim-item:
                 item-inventory-space: 1
-                drop-chance: 0.33
+                drop-chance: '0.33'
                 weapon-blueprint: lmg_panzergrenadier_ak
                 
     w_lmg_panzerjaeger_ak:
@@ -92,7 +92,7 @@ entities:
                 symbol-icon-name: weapon_mg42
             sim-item:
                 item-inventory-space: 1
-                drop-chance: 0.33
+                drop-chance: '0.33'
                 weapon-blueprint: lmg_panzerjaeger_42_ak
                 
     w_hmg_34_ak:
