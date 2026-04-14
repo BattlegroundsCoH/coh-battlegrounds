@@ -269,7 +269,8 @@ public sealed class Squad {
             SlotItems = slotItems ?? [.. this.SlotItems], // Use existing slot items if not provided
             Upgrades = this.Upgrades, // Keep existing upgrades
             Transport = this.Transport, // Keep existing transport squad if any
-            Passenger = passenger ?? this.Passenger // Keep existing passenger squad if any 
+            Passenger = passenger ?? this.Passenger, // Keep existing passenger squad if any 
+            CapturedWeapon = this.CapturedWeapon,
         };
     }
 

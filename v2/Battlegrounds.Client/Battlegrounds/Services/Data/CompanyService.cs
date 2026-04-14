@@ -2,6 +2,7 @@
 
 using Battlegrounds.Facades.API;
 using Battlegrounds.Models;
+using Battlegrounds.Models.Blueprints;
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Serializers;
 
@@ -13,6 +14,7 @@ public sealed class CompanyService(
     IUserService userService,
     ICompanyDeserializer companyDeserializer,
     ICompanySerializer companySerializer,
+    IBlueprintService blueprintService,
     IBattlegroundsServerAPI serverAPI,
     ILogger<CompanyService> logger,
     Configuration configuration) : ICompanyService {
@@ -22,6 +24,7 @@ public sealed class CompanyService(
     private readonly IUserService _userService = userService;
     private readonly ICompanyDeserializer _companyDeserializer = companyDeserializer;
     private readonly ICompanySerializer _companySerializer = companySerializer;
+    private readonly IBlueprintService _blueprintService = blueprintService;
     private readonly Configuration _configuration = configuration;
         
     private readonly HashSet<Company> _localCompanyCache = []; // This is the local cache of companies, which is used to avoid unnecessary remote calls.
@@ -215,6 +218,7 @@ public sealed class CompanyService(
     public async ValueTask<Company?> ApplyEvents(LinkedList<CompanyEventModifier>? localEvents, Company company, bool commitLocally = false) {
 
         List<Squad> squads = [.. company.Squads];
+        List<CapturedItem> capturedItems = [.. company.CapturedItems];
         var enumerator = localEvents?.GetEnumerator() ?? throw new ArgumentNullException(nameof(localEvents), "Local events cannot be null.");
         while (enumerator.MoveNext()) {
             CompanyEventModifier modifierEvent = enumerator.Current;
@@ -273,10 +277,29 @@ public sealed class CompanyService(
                 case CompanyEventModifier.EVENT_TYPE_PICKUP: {
                     int indexOfSquad = squads.FindIndex(s => s.Id == modifierEvent.SquadId);
                     if (indexOfSquad >= 0) {
-                        throw new NotImplementedException("Pickup event handling is not implemented yet."); // Placeholder for pickup event handling
+                        EntityBlueprint? blueprint = _blueprintService.GetBlueprint<EntityBlueprint>(company.GameId, modifierEvent.BlueprintArg ?? throw new InvalidOperationException("Blueprint argument is null for pickup event."));
+                        CapturedItem newWeaponItem = new CapturedItem {
+                            CapturedAt = DateTime.Now,
+                            CapturedBySquadId = modifierEvent.SquadId,
+                            ItemBlueprint = blueprint,
+                            Id = capturedItems.Count > 0 ? capturedItems.Max(ci => ci.Id) + 1 : 1, // Generate a new ID based on the max existing ID
+                        };
+                        capturedItems.Add(newWeaponItem); // Add the new captured item to the list
+                        squads[indexOfSquad] = squads[indexOfSquad].Update(slotItems: [new Squad.SlotItem(newWeaponItem.Id, blueprint, null)]); // Update the squad in the list with the new weapon
                     } else {
                         _logger.LogWarning("Squad {SquadId} not found for pickup event.", modifierEvent.SquadId);
                     }
+                    break;
+                }
+                case CompanyEventModifier.EVENT_TYPE_CAPTURE: {
+                    EntityBlueprint? blueprint = _blueprintService.GetBlueprint<EntityBlueprint>(company.GameId, modifierEvent.BlueprintArg ?? throw new InvalidOperationException("Blueprint argument is null for pickup event."));
+                    CapturedItem newWeaponItem = new CapturedItem {
+                        CapturedAt = DateTime.Now,
+                        CapturedBySquadId = -1,
+                        ItemBlueprint = blueprint,
+                        Id = capturedItems.Count > 0 ? capturedItems.Max(ci => ci.Id) + 1 : 1, // Generate a new ID based on the max existing ID
+                    };
+                    capturedItems.Add(newWeaponItem); // Add the new captured item to the list
                     break;
                 }
                 default:
@@ -295,6 +318,9 @@ public sealed class CompanyService(
             UpdatedAt = DateTime.Now, // Update the timestamp to now
             UpdatedBy = "ReplayEventProcessor", // Indicate that the update was made by the replay event processor
             Squads = squads,
+            CapturedItems = capturedItems,
+            DoctrineId = company.DoctrineId,
+            DoctrineVersion = company.DoctrineVersion,
             Version = company.Version + 1 // Increment the version number
         };
 

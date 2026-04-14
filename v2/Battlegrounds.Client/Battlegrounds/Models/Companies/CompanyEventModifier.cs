@@ -17,6 +17,7 @@ public readonly struct CompanyEventModifier {
     public const string EVENT_TYPE_EXPERIENCE_GAIN = "experience_gain"; // Modifier for gaining experience
     public const string EVENT_TYPE_STATISTICS = "statistics"; // Modifier for statistics (update infantry killed, vehicles destroyed, etc.)
     public const string EVENT_TYPE_PICKUP = "pickup"; // Modifier for picking up items
+    public const string EVENT_TYPE_CAPTURE = "capture"; // Modifier for capturing items
 
     public int SquadId { get; init; } // Identifier for the squad this modifier applies to
 
@@ -73,6 +74,14 @@ public readonly struct CompanyEventModifier {
     /// <returns>A new CompanyEventModifier configured for a pickup event with the specified squad and blueprint.</returns>
     public static CompanyEventModifier Pickup(int squadId, string blueprintArg) 
         => new CompanyEventModifier() { SquadId = squadId, EventType = EVENT_TYPE_PICKUP, BlueprintArg = blueprintArg }; // Modifier for picking up items
+
+    /// <summary>
+    /// Creates a modifier that represents a capture event for a specified blueprint argument.
+    /// </summary>
+    /// <param name="blueprintArg">The identifier or argument associated with the blueprint to be captured. Cannot be null.</param>
+    /// <returns>A new instance of CompanyEventModifier configured for a capture event using the specified blueprint argument.</returns>
+    public static CompanyEventModifier Capture(string blueprintArg)
+        => new CompanyEventModifier() { EventType = EVENT_TYPE_CAPTURE, BlueprintArg = blueprintArg }; // Modifier for capturing items
 
     /// <summary>
     /// Creates a modifier representing an in-match event for the specified squad.
