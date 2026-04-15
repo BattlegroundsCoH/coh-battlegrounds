@@ -17,6 +17,56 @@ public sealed class BinaryCompanySerializationTests {
     }
 
     [Test]
+    public void CanSerializeAndDeserializeCapturedItems() {
+
+        using var stream = new MemoryStream();
+        _serializer.SerializeCompany(stream, CompanyFixture.DESERT_RATS);
+
+        stream.Seek(0, SeekOrigin.Begin);
+
+        var deserializedCompany = _deserializer.DeserializeCompany(stream);
+        Assert.That(deserializedCompany, Is.Not.Null, "Deserialized company should not be null.");
+
+        for (int i = 0; i < deserializedCompany.Squads.Count; i++) {
+            var originalSquad = CompanyFixture.DESERT_RATS.Squads[i];
+            var deserializedSquad = deserializedCompany.Squads[i];
+
+            Assert.That(deserializedSquad.SlotItems, Has.Count.EqualTo(originalSquad.SlotItems.Count),
+                $"Deserialized squad at index {i} should have the same number of slot items.");
+
+            for (int j = 0; j < deserializedSquad.SlotItems.Count; j++) {
+                var originalItem = originalSquad.SlotItems[j];
+                var deserializedItem = deserializedSquad.SlotItems[j];
+                using (Assert.EnterMultipleScope()) {
+                    Assert.That(deserializedItem.CompanyItemId, Is.EqualTo(originalItem.CompanyItemId),
+                        $"Slot item ID at squad {i}, item {j} should match.");
+                    Assert.That(deserializedItem.EntityBlueprint.Id, Is.EqualTo(originalItem.EntityBlueprint.Id),
+                        $"Slot item blueprint ID at squad {i}, item {j} should match.");
+                }
+            }
+        }
+
+    }
+
+    [Test]
+    public void CapturedItemsCountIsPreservedAfterRoundTrip() {
+
+        var totalOriginalCapturedItems = CompanyFixture.DESERT_RATS.Squads.Sum(s => s.SlotItems.Count);
+
+        using var stream = new MemoryStream();
+        _serializer.SerializeCompany(stream, CompanyFixture.DESERT_RATS);
+
+        stream.Seek(0, SeekOrigin.Begin);
+
+        var deserializedCompany = _deserializer.DeserializeCompany(stream);
+        var totalDeserializedCapturedItems = deserializedCompany.Squads.Sum(s => s.SlotItems.Count);
+
+        Assert.That(totalDeserializedCapturedItems, Is.EqualTo(totalOriginalCapturedItems),
+            "Total number of captured items across all squads should be preserved after round-trip serialization.");
+
+    }
+
+    [Test]
     public void CanSerializeAndDeserializeDesertRats() {
 
         using var stream = new MemoryStream();
@@ -28,23 +78,24 @@ public sealed class BinaryCompanySerializationTests {
         // Deserialize the company to verify serialization
         var deserializedCompany = _deserializer.DeserializeCompany(stream);
         Assert.That(deserializedCompany, Is.Not.Null, "Deserialized company should not be null.");
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(deserializedCompany.Id, Is.EqualTo(CompanyFixture.DESERT_RATS.Id), "Deserialized company ID should match.");
             Assert.That(deserializedCompany.Name, Is.EqualTo(CompanyFixture.DESERT_RATS.Name), "Deserialized company name should match.");
             Assert.That(deserializedCompany.Faction, Is.EqualTo(CompanyFixture.DESERT_RATS.Faction), "Deserialized company faction should match.");
             Assert.That(deserializedCompany.GameId, Is.EqualTo(CompanyFixture.DESERT_RATS.GameId), "Deserialized company game ID should match.");
             Assert.That(deserializedCompany.Squads, Has.Count.EqualTo(CompanyFixture.DESERT_RATS.Squads.Count), "Deserialized company should have the same number of squads.");
-        });
+        }
 
         for (int i = 0; i < deserializedCompany.Squads.Count; i++) {
             var originalSquad = CompanyFixture.DESERT_RATS.Squads[i];
             var deserializedSquad = deserializedCompany.Squads[i];
-            Assert.Multiple(() => {
+            using (Assert.EnterMultipleScope()) {
                 Assert.That(deserializedSquad.Id, Is.EqualTo(originalSquad.Id), $"Deserialized squad ID at index {i} should match.");
                 Assert.That(deserializedSquad.Blueprint.Id, Is.EqualTo(originalSquad.Blueprint.Id), $"Deserialized squad blueprint ID at index {i} should match.");
                 Assert.That(deserializedSquad.Experience, Is.EqualTo(originalSquad.Experience).Within(0.01f), $"Deserialized squad experience at index {i} should match.");
                 Assert.That(deserializedSquad.Phase, Is.EqualTo(originalSquad.Phase), $"Deserialized squad phase at index {i} should match.");
-            });
+                Assert.That(deserializedSquad.SlotItems, Has.Count.EqualTo(originalSquad.SlotItems.Count), $"Deserialized squad captured items count at index {i} should match.");
+            }
         }
 
     }
