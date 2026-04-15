@@ -254,6 +254,19 @@ public sealed class Squad {
         return $"({Blueprint.Id}) - Phase: {Phase}, Rank: {Rank}, Experience: {Experience:F2}";
     }
 
+    /// <summary>
+    /// Creates a new Squad instance with updated values for the specified properties, while retaining existing values
+    /// for properties not provided.
+    /// </summary>
+    /// <remarks>The returned Squad instance has its LastUpdatedAt property set to the current UTC time. This
+    /// method does not modify the original Squad instance.</remarks>
+    /// <param name="experience">The new experience value for the squad. If null, the current experience is retained.</param>
+    /// <param name="matchCounts">The new total number of matches played by the squad. If null, the current match count is retained.</param>
+    /// <param name="infantryKills">The new total number of infantry kills. If null, the current total is retained.</param>
+    /// <param name="vehicleKills">The new total number of vehicle kills. If null, the current total is retained.</param>
+    /// <param name="slotItems">A list of slot items to assign to the squad. If null, the current slot items are retained.</param>
+    /// <param name="passenger">The passenger squad to associate with this squad. If null, the current passenger squad is retained.</param>
+    /// <returns>A new Squad instance with updated values for the specified properties and existing values for all others.</returns>
     public Squad Update(float? experience = null, int? matchCounts = null, int? infantryKills = null, int? vehicleKills = null, List<SlotItem>? slotItems = null, PassengerSquad? passenger = null) {
         return new Squad() {
             Id = this.Id,
