@@ -1,0 +1,173 @@
+##############################################
+## German Weapon Items
+##############################################
+entities:
+
+    w_hmg42_stormtrooper_ger:
+        category: Weapon
+        faction-association: german
+        extensions:
+            ui:
+                screen-name: $11235788
+                icon-name: hmg42
+                symbol-icon-name: weapon_hmg42
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: mg42_stormtrooper_ger
+     
+    w_mp44_ir_sturmpioneer_ger:
+        category: Weapon
+        faction-association: german
+        extensions:
+            ui:
+                screen-name: $11271891
+                icon-name: mp44_ir
+                symbol-icon-name: smg_mp44_infrared.png
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: mp44_ir_sturmpioneer_ger
+     
+    w_flamethrower_grenadier_ger:
+        category: Weapon
+        faction-association: german
+        extensions:
+            ui:
+                screen-name: $11155599
+                icon-name: flamenwerfer_34_ger
+                symbol-icon-name: weapon_flamethrower
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: flamethrower_grenadier_ger
+     
+    w_flamethrower_pioneer_ger:
+        category: Weapon
+        faction-association: german
+        extensions:
+            ui:
+                screen-name: $11155599
+                icon-name: flamenwerfer_34_ger
+                symbol-icon-name: weapon_flamethrower
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: flamethrower_pioneer_us
+         
+    w_grb_39_grenade_launcher_he_ger:
+        category: Weapon
+        faction-association: german
+        extensions:
+            ui:
+                screen-name: $11221245
+                icon-name: grb39_grenade_launcher_ger
+                symbol-icon-name: weapon_grb_grenade_launcher
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: grb_39_grenade_launcher_he_ger
+     
+    w_panzerbuchse39_at_rifle_ger:
+        category: Weapon
+        faction-association: german
+        extensions:
+            ui:
+                screen-name: $11222418
+                icon-name: panzerbuchse_at_rifle
+                symbol-icon-name: weapon_ptrs
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: panzerbuchse39_at_rifle_ger
+     
+    w_panzerschrek_stormtrooper_ger:
+        category: Weapon
+        faction-association: german
+        extensions:
+            ui:
+                screen-name: $11235783
+                icon-name: panzerschreck
+                symbol-icon-name: weapon_panzerschreck
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: panzerschreck_stormtrooper_ger
+     
+    w_hmg_42_ger:
+        category: TeamWeapon
+        faction-association: german
+        extensions:
+            ui:
+                screen-name: $11235786
+                icon-name: hmg_mg42_weapon_ger
+                symbol-icon-name: weapon_mg42
+            team-weapon:
+                recrew-squad-blueprint: hmg_mg42_ger
+                
+    w_81mm_mortar_ger:
+        category: TeamWeapon
+        faction-association: german
+        extensions:
+            ui:
+                screen-name: $11235784
+                icon-name: mortar_81mm_weapon_ger
+                symbol-icon-name: mortar
+            team-weapon:
+                recrew-squad-blueprint: mortar_81mm_ger
+                
+    tw_at_gun_75mm_ger: # Pak 40 Anti-Tank Gun
+        category: TeamWeapon
+        faction-association: german
+        extensions:
+            ui:
+                screen-name: $11195166
+                icon-name: at_gun_75mm_ger
+                symbol-icon-name: 75mm_at_gun_ger
+            team-weapon:
+                recrew-squad-blueprint: at_gun_75mm_ger
+                
+    tw_at_gun_75mm_lg40_ger:
+        category: TeamWeapon
+        faction-association: german
+        extensions:
+            ui:
+                screen-name: $11235778
+                icon-name: at_gun_75mm_lg40_german
+                symbol-icon-name: lg_40_anti-tank_gun
+            team-weapon:
+                recrew-squad-blueprint: at_gun_lg40_ger
+                
+    tw_howitzer_75mm_leig_ger:
+        category: TeamWeapon
+        faction-association: german
+        extensions:
+            ui:
+                screen-name: $11235779 # LeIG 18 Infantry Support Gun
+                icon-name: leig_75mm_ak
+                symbol-icon-name: leig_75mm_ger
+            team-weapon:
+                recrew-squad-blueprint: leig_75mm_ger
+                
+    tw_nebelwerfer_150mm_ger:
+        category: TeamWeapon
+        faction-association: german
+        extensions:
+            ui:
+                screen-name: $11235782
+                icon-name: nebelwerfer_150mm_ger
+                symbol-icon-name: rocket_nebelwerfer_41_150mm_ger
+            team-weapon:
+                recrew-squad-blueprint: nebelwerfer_150mm_ger
+                
+    tw_aa_gun_20mm_ger:
+        category: TeamWeapon
+        faction-association: german
+        extensions:
+            ui:
+                screen-name: $11235777
+                icon-name: aa_gun_20mm_german
+                symbol-icon-name: aa_gun_20mm_ger
+            team-weapon:
+                recrew-squad-blueprint: aa_gun_20mm_ger
+                

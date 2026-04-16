@@ -67,8 +67,8 @@
     $11265924: Tank Buster Package
     $11181912: Panzerpioneers
     $11242445: Fieldcraft Package
-    $11155599: Flammenwerfer 34 Flamethrower Package
-    $11221245: GrB39 Grenade Launcher Package
+    $11155599: Flammenwerfer 34 Flamethrower
+    $11221245: GrB39 Grenade Launcher
     $11241634: Pak 38 Anti-Tank Gun
     $11241635: 88mm Flak 36 Anti-Aircraft Gun
     $11222849: MG-34 Heavy Machine Gun Team
@@ -96,7 +96,7 @@
     $11235857: MG-34 Heavy Machine Gun
     $11238847: Panzer III Flame Tank
     $11153600: Panzer IV
-    $11235786: MG-42 Top Gunner
+    $11235786: MG-42 Machine Gun
     $11241661: Panzer IV Stubby
     $11216342: Semovente 75/18
     $11170515: Camouflage Special Ops
@@ -224,3 +224,12 @@
     $11235629: 2-pounder Anti-Tank Gun
     $11235630: 6-pounder Anti-Tank Gun
     $11271900: Land Mattress Rocket Launcher
+    $11235788: MG-42 Heavy Machine Gun
+    $11271891: Infrared Stg 44 Assault Rifle
+    $11222418: Panzerbüchse 39 Anti-Tank Rifle
+    $11235783: RPzB 54 Panzershreck
+    $11235784: GrW 34 Mortar
+    $11195166: Pak 40 Anti-Tank Gun
+    $11235778: LG40 Recoilless Gun
+    $11235782: Nebelwerfer 42
+    $11235777: Flak 30 Anti-Aircraft Gun
