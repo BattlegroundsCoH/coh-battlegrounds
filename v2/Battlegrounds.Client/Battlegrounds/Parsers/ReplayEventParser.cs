@@ -47,8 +47,17 @@ public static class ReplayEventParser {
                 timestamp,
                 player ?? throw new InvalidDataException("Expected player but found none"),
                 ushort.Parse((string)eventTable["companyId"]),
-                (eventTable.TryGetValue("ebp", out object? value) ? value.ToString() : eventTable["upg"].ToString()) ?? throw new ArgumentException("Weapon name not found in event table.", nameof(luaEncodedTable)),
+                (eventTable.TryGetValue("ebp", out object? value) ? value.ToString() : eventTable["slot_item"].ToString()) ?? throw new ArgumentException("Weapon name not found in event table.", nameof(luaEncodedTable)),
                 eventTable.ContainsKey("ebp")),
+            "weapon_captured" => new SquadTeamWeaponCaptureEvent(
+                timestamp,
+                player ?? throw new InvalidDataException("Expected player but found none"),
+                eventTable.GetValueOrDefault("ebp", "").ToString() ?? string.Empty,
+                eventTable.GetValueOrDefault("sbp", "").ToString() ?? string.Empty,
+                ParseFloat(eventTable.GetValueOrDefault("experience", "0").ToString() ?? "0"),
+                int.Parse(eventTable.GetValueOrDefault("infantryKills", "0").ToString() ?? "0"),
+                int.Parse(eventTable.GetValueOrDefault("vehicleKills", "0").ToString() ?? "0"),
+                int.Parse(eventTable.GetValueOrDefault("losses", "0").ToString() ?? "0")),
             "match_data" => MapToMatchStartReplayEvent(timestamp, eventTable),
             "match_over_results" => MapToMatchOverReplayEvent(timestamp, eventTable),
             _ => MapToUnknownEvent(timestamp, eventTable["type"].ToString() ?? string.Empty, eventTable)

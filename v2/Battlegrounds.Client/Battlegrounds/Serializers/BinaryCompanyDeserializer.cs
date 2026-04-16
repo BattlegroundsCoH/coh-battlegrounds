@@ -69,6 +69,7 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
         uint doctrineVersion = version >= BinaryCompanySerializer.BINARY_COMPANY_VERSION_4 ? reader.ReadUInt32() : 1; // Default doctrine version for older versions
 
         List<CapturedItem> items;
+        Dictionary<int, CapturedItem> inventory = new Dictionary<int, CapturedItem>();
         if (version < BinaryCompanySerializer.BINARY_COMPANY_VERSION_4) {
             items = [];
         } else {
@@ -77,6 +78,7 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
             for (int i = 0; i < itemCount; i++) {
                 if (ReadItem(gameId, companyVersion, reader) is CapturedItem ci) {
                     items.Add(ci);
+                    inventory[ci.Id] = ci;
                 } else {
                     // TODO: Allow ignoring unknown captured items in future versions if necessary, but for now we will throw an exception to ensure data integrity.
                     throw new InvalidDataException($"Unknown item encountered at index {i}.");
@@ -87,7 +89,7 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
         uint squadCount = reader.ReadUInt32(); // Number of squads
         var squads = new List<Squad>((int)squadCount);
         for (int i = 0; i < squadCount; i++) {
-            if (ReadSquad(gameId, version, reader) is Squad sq) {
+            if (ReadSquad(gameId, version, inventory, reader) is Squad sq) {
                 squads.Add(sq);
             } else if (IgnoreUnknownSquads) {
                 // TODO: Log the ignored squad
@@ -116,10 +118,10 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
 
     }
 
-    private readonly record struct IntermediateSlotItem(int Count, string? EntityId, string? SlotItemId);
+    private readonly record struct IntermediateSlotItem(int ItemId, string? EntityId, string? SlotItemId);
     private readonly record struct IntermediateTransportSquad(bool Enabled, string? BlueprintId, bool DropOffOnly);
     private readonly record struct IntermediatePassengerSquad(bool Enabled, int PassengerSquadId);
-    private readonly record struct IntermediateCapturedItem(bool Enabled, int Id, string BlueprintId, int CapturedBySquadId, DateTime CapturedAt);
+    private readonly record struct IntermediateCapturedItem(bool Enabled, int Id, string? WeaponBlueprintId, string? CrewBlueprintId);
 
     private CapturedItem? ReadItem(string gameId, uint companyFileVersion, BinaryReader reader) {
 
@@ -141,7 +143,7 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
 
     }
 
-    private Squad? ReadSquad(string gameId, uint companyFileVersion, BinaryReader reader) {
+    private Squad? ReadSquad(string gameId, uint companyFileVersion, Dictionary<int, CapturedItem> inventory, BinaryReader reader) {
 
         int squadId = reader.ReadInt32(); // Squad ID
         string blueprintId = ReadASCIIString(reader); // Squad Blueprint ID will always be ASCII
@@ -160,16 +162,21 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
         ushort slotItemCount = reader.ReadUInt16(); // Number of slot items
         var slotItems = new IntermediateSlotItem[slotItemCount];
         for (int i = 0; i < slotItemCount; i++) {
-            int count = reader.ReadInt32(); // Item count
-            byte itemType = reader.ReadByte(); // Item type (1 for Upgrade, 2 for SlotItem)
-            if (itemType == 0x01) { // Upgrade item
-                slotItems[i] = new IntermediateSlotItem(count, ReadASCIIString(reader), null); // Upgrade Blueprint ID will always be ASCII
-                // Add upgrade logic here
-            } else if (itemType == 0x02) { // Slot item
-                slotItems[i] = new IntermediateSlotItem(count, null, ReadASCIIString(reader)); // Slot Item Blueprint ID will always be ASCII
-                // Add slot item logic here
+            if (companyFileVersion < BinaryCompanySerializer.BINARY_COMPANY_VERSION_4) {
+                int count = reader.ReadInt32(); // Item count
+                byte itemType = reader.ReadByte(); // Item type (1 for Upgrade, 2 for SlotItem)
+                if (itemType == 0x01) { // Upgrade item
+                    slotItems[i] = new IntermediateSlotItem(count, ReadASCIIString(reader), null); // Upgrade Blueprint ID will always be ASCII
+                                                                                                   // Add upgrade logic here
+                } else if (itemType == 0x02) { // Slot item
+                    slotItems[i] = new IntermediateSlotItem(count, null, ReadASCIIString(reader)); // Slot Item Blueprint ID will always be ASCII
+                                                                                                   // Add slot item logic here
+                } else {
+                    throw new InvalidDataException($"Unknown item type: {itemType}");
+                }
             } else {
-                throw new InvalidDataException($"Unknown item type: {itemType}");
+                int itemId = reader.ReadInt32(); // Item ID
+                slotItems[i] = new IntermediateSlotItem(itemId, null, null); // Entity ID will always be ASCII
             }
         }
 
@@ -181,7 +188,7 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
 
         IntermediateTransportSquad transport = new IntermediateTransportSquad(false, null, false);
         IntermediatePassengerSquad passenger = new IntermediatePassengerSquad(false, -1);
-        IntermediateCapturedItem captureItem = new IntermediateCapturedItem(false, -1, string.Empty, -1, DateTime.MinValue);
+        IntermediateCapturedItem captureItem = new IntermediateCapturedItem(false, -1, null, null);
         if (companyFileVersion < BinaryCompanySerializer.BINARY_COMPANY_VERSION_4) {
 
             bool hasTransport = reader.ReadByte() == (byte)0x1; // Transport squad flag
@@ -219,9 +226,8 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
             if (isCapturedWeapon) { // Captured weapon flag, added in version 4
                 int capturedItemId = reader.ReadInt32(); // Captured item ID
                 string capturedItemBlueprintId = ReadASCIIString(reader); // Captured item Blueprint ID will always be ASCII
-                int capturingSquadId = reader.ReadInt32(); // Squad that captured the item
-                DateTime capturedAt = new DateTime(reader.ReadInt64(), DateTimeKind.Utc); // Captured at timestamp
-                captureItem = new IntermediateCapturedItem(true, capturedItemId, capturedItemBlueprintId, capturingSquadId, capturedAt);
+                string capturedCrewBlueprintId = ReadASCIIString(reader); // Captured crew Blueprint ID will always be ASCII
+                captureItem = new IntermediateCapturedItem(true, capturedItemId, capturedItemBlueprintId, capturedCrewBlueprintId);
             }
 
         }
@@ -232,18 +238,26 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
 
         Squad.SlotItem[] parsedSlotItems = new Squad.SlotItem[slotItems.Length];
         for (int i = 0; i < slotItems.Length; i++) {
-            if (!string.IsNullOrEmpty(slotItems[i].SlotItemId)) {
-                throw new NotImplementedException("SlotItemBlueprint handling is not implemented yet.");
-            } else if (!string.IsNullOrEmpty(slotItems[i].EntityId)) {
-                if (_blueprintService.TryGetBlueprint(gameId, slotItems[i].EntityId!, out EntityBlueprint? itemEBP)) {
-                    parsedSlotItems[i] = new Squad.SlotItem(slotItems[i].Count, itemEBP, null);
+
+            if (companyFileVersion < BinaryCompanySerializer.BINARY_COMPANY_VERSION_4) {
+
+                if (!string.IsNullOrEmpty(slotItems[i].SlotItemId)) {
+                    throw new NotImplementedException("SlotItemBlueprint handling is not implemented yet.");
+                } else if (!string.IsNullOrEmpty(slotItems[i].EntityId)) {
+                    if (_blueprintService.TryGetBlueprint(gameId, slotItems[i].EntityId!, out EntityBlueprint? itemEBP)) {
+                        parsedSlotItems[i] = new Squad.SlotItem(slotItems[i].ItemId, itemEBP, null);
+                    } else {
+                        // Log
+                        return null; // Return null if the upgrade blueprint is not found
+                    }
                 } else {
-                    // Log
-                    return null; // Return null if the upgrade blueprint is not found
+                    throw new InvalidDataException("Slot item must have either an UpgradeBlueprint or a SlotItemBlueprint.");
                 }
+
             } else {
-                throw new InvalidDataException("Slot item must have either an UpgradeBlueprint or a SlotItemBlueprint.");
+                parsedSlotItems[i] = new Squad.SlotItem(slotItems[i].ItemId, inventory.TryGetValue(slotItems[i].ItemId, out CapturedItem? ci) ? ci.ItemBlueprint : null, null);
             }
+
         }
 
         UpgradeBlueprint[] parsedUpgrades = new UpgradeBlueprint[upgrades.Length];
@@ -273,8 +287,8 @@ public sealed class BinaryCompanyDeserializer(IBlueprintService blueprintService
 
         Squad.CaptureInfo? captureInfo = null;
         if (captureItem.Enabled) {
-            var foundWeapon = _blueprintService.TryGetBlueprint(gameId, captureItem.BlueprintId, out EntityBlueprint? capturedItemEBP);
-            var foundCrew = _blueprintService.TryGetBlueprint(gameId, captureItem.BlueprintId, out SquadBlueprint? capturedCrewBP);
+            var foundWeapon = _blueprintService.TryGetBlueprint(gameId, captureItem.WeaponBlueprintId!, out EntityBlueprint? capturedItemEBP);
+            var foundCrew = _blueprintService.TryGetBlueprint(gameId, captureItem.CrewBlueprintId!, out SquadBlueprint? capturedCrewBP);
             if (foundWeapon && foundCrew) {
                 captureInfo = new Squad.CaptureInfo(captureItem.Id, capturedItemEBP, capturedCrewBP);
             } else {

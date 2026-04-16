@@ -25,7 +25,7 @@ namespace Battlegrounds.Services.Data;
 /// <param name="logger">The service logger</param>
 public sealed class BlueprintService(IGameLocaleService localeService, ILogger<BlueprintService> logger) : IBlueprintService {
 
-    private class BlueprintRepository {
+    private class BlueprintRepository : IBlueprintRepository {
 
         private readonly Dictionary<string, Dictionary<string, Blueprint>> _blueprints = [];
 
@@ -103,6 +103,8 @@ public sealed class BlueprintService(IGameLocaleService localeService, ILogger<B
         return false;
     }
 
+    public IBlueprintRepository GetBlueprintRepositoryForGame<T>() where T : Game => GetBlueprintRepository<T>();
+
     private BlueprintRepository GetBlueprintRepository<T1>()
         where T1 : Game {
         var gameId = GetGameId<T1>();
@@ -162,26 +164,37 @@ public sealed class BlueprintService(IGameLocaleService localeService, ILogger<B
 
         try {
 
+            var coh3Blueprints = new Dictionary<string, Dictionary<string, Blueprint>>();
+            var coh3Repository = new BlueprintRepository() { Blueprints = coh3Blueprints };
+            _gameBlueprintRepositories.Add(CoH3.GameId, coh3Repository);
+
+            // Track the time taken to load blueprints for performance monitoring
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
             // Create a new blueprint parser for CoH3
-            var coh3BpParser = new BlueprintParser<CoH3>(_localeService, LoggerFactory.Create(x => x.AddSerilog()).CreateLogger<BlueprintParser<CoH3>>());
+            var coh3BpParser = new BlueprintParser<CoH3>(this, _localeService, LoggerFactory.Create(x => x.AddSerilog()).CreateLogger<BlueprintParser<CoH3>>());
 
             // Load blueprints for CoH3 from YAML files
             var coh3SbpTask = LoadAndLogBlueprintsFromPattern("Assets/Factions/CoH3/", "sbps*.yaml", coh3BpParser.ParseSquadBlueprints);
+            var coh3EbpTask = LoadAndLogBlueprintsFromPattern("Assets/Factions/CoH3/", "ebps*.yaml", coh3BpParser.ParseEntityBlueprints);
             var coh3UpgTask = LoadAndLogBlueprintsFromPath("Assets/Factions/CoH3/upgs.yaml", coh3BpParser.ParseUpgradeBlueprints);
 
             // Wait for all tasks to complete before proceeding
-            await Task.WhenAll(coh3SbpTask, coh3UpgTask);
+            await Task.WhenAll(coh3SbpTask, coh3EbpTask, coh3UpgTask);
 
             // Add blueprints for CoH3
-            _gameBlueprintRepositories.Add(CoH3.GameId, new BlueprintRepository() {
-                Blueprints = new Dictionary<string, Dictionary<string, Blueprint>>() {
-                    { nameof(SquadBlueprint), (await coh3SbpTask).ToDictionary(k => k.Id, v => v as Blueprint) },
-                    { nameof(UpgradeBlueprint), (await coh3UpgTask).ToDictionary(k => k.Id, v => v as Blueprint)},
-                    { nameof(SlotItemBlueprint), [] } // No slot items for CoH3, but we need it here to avoid NPEs later
-                }
-            });
+            coh3Blueprints[nameof(EntityBlueprint)] = (await coh3EbpTask).ToDictionary(k => k.Id, v => v as Blueprint);
+            coh3Blueprints[nameof(SquadBlueprint)] = (await coh3SbpTask).ToDictionary(k => k.Id, v => v as Blueprint);
+            coh3Blueprints[nameof(UpgradeBlueprint)] = (await coh3UpgTask).ToDictionary(k => k.Id, v => v as Blueprint);
+            coh3Blueprints[nameof(SlotItemBlueprint)] = []; // No slot items for CoH3, but we need it here to avoid NPEs later
 
             _isLoaded = true;
+
+            // Stop the stopwatch and log the total time taken to load blueprints
+            stopwatch.Stop();
+
+            // Log the total time taken to load blueprints for performance monitoring
+            _logger.LogInformation("Finished loading blueprints in {ElapsedMilliseconds} ms.", stopwatch.ElapsedMilliseconds);
 
         } catch (Exception e) {
             _logger.LogError(e, "An error occurred while loading blueprints.");

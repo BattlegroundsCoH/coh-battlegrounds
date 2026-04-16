@@ -6,10 +6,10 @@ namespace Battlegrounds.ViewModels.CompanyHelpers;
 /// <summary>
 /// View model wrapper for a <see cref="Squad"/> displayed in a phase column, including its resolved passenger squad (if any).
 /// </summary>
-public sealed class PhaseSquadViewModel {
+public sealed class PhaseSquadViewModel(Squad squad, Squad? passengerSquad = null) {
 
-    private readonly Squad _squad;
-    private readonly Squad? _passengerSquad;
+    private readonly Squad _squad = squad;
+    private readonly Squad? _passengerSquad = passengerSquad;
 
     public Squad Squad => _squad;
 
@@ -23,6 +23,8 @@ public sealed class PhaseSquadViewModel {
 
     public IReadOnlyList<UpgradeBlueprint> Upgrades => _squad.Upgrades;
 
+    public IReadOnlyList<Squad.SlotItem> Items => _squad.SlotItems;
+
     public Squad.TransportSquad? Transport => _squad.Transport;
 
     public bool HasTransport => _squad.HasTransport;
@@ -32,10 +34,5 @@ public sealed class PhaseSquadViewModel {
     public SquadBlueprint? PassengerBlueprint => _passengerSquad?.Blueprint;
 
     public int? PassengerId => _passengerSquad?.Id;
-
-    public PhaseSquadViewModel(Squad squad, Squad? passengerSquad = null) {
-        _squad = squad;
-        _passengerSquad = passengerSquad;
-    }
 
 }

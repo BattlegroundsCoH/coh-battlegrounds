@@ -8,8 +8,13 @@ namespace Battlegrounds.Converters;
 
 public sealed class BlueprintBriefTextConverter : IValueConverter {
 
+    public const string EmptyIfNotFound = "EmptyStringIfNotFound";
+
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
         if (value is Blueprint blueprint && blueprint.TryGetExtension(out UIExtension? uiExtension)) {
+            if (parameter is EmptyIfNotFound) {
+                return uiExtension.BriefText.AsStringOrEmpty();
+            }
             return uiExtension.BriefText.AsString();
         }
         return "Unknown Blueprint";

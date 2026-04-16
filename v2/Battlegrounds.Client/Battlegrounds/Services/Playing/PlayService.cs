@@ -70,7 +70,7 @@ public sealed class PlayService(CoH3ArchiverService coh3Archiver, Configuration 
         var storedWinconditionSourceMetadataPath = Path.Combine(_configuration.DocumentsPath, "wc_metadata.json");
         LatestWinconditionDTO storedMetadata;
         if (File.Exists(storedWinconditionSourceMetadataPath)) {
-            var storedMetadataStream = File.OpenRead(storedWinconditionSourceMetadataPath);
+            using var storedMetadataStream = File.OpenRead(storedWinconditionSourceMetadataPath);
             storedMetadata = await JsonSerializer.DeserializeAsync<LatestWinconditionDTO>(storedMetadataStream) ?? throw new Exception("Deserialized metadata was null.");
         } else {
             _logger.LogInformation("No stored win condition source metadata found. Will attempt to fetch latest metadata from server.");

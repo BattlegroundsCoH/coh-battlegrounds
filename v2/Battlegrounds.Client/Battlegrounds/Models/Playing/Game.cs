@@ -65,4 +65,12 @@ public abstract class Game {
     /// <returns>true if the faction name was found and assigned to factionName; otherwise, false.</returns>
     public abstract bool TryGetFactionName(string factionId, [NotNullWhen(true)] out string? factionName);
 
+    /// <summary>
+    /// Retrieves the blueprint identifier for the crew squad associated with the specified faction.
+    /// </summary>
+    /// <param name="factionId">The unique identifier of the faction for which to retrieve the crew squad blueprint. Cannot be null or empty.</param>
+    /// <returns>A string containing the blueprint identifier for the faction's crew squad. Returns null if the faction does not
+    /// have an associated crew squad blueprint.</returns>
+    public abstract string GetFactionCrewSquadBlueprint(string factionId);
+
 }

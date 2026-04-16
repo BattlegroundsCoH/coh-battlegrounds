@@ -12,6 +12,7 @@ using Battlegrounds.Models.Companies;
 using Battlegrounds.Serializers;
 using Battlegrounds.Services;
 using Battlegrounds.Services.Data;
+using Battlegrounds.Test.Models.Blueprints;
 using Battlegrounds.Test.Models.Companies;
 using Microsoft.Extensions;
 using Microsoft.Extensions.Logging;
@@ -47,6 +48,7 @@ public class CompanyServiceTests
             _users,
             new BinaryCompanyDeserializer(bps),
             new BinaryCompanySerializer(),
+            new BlueprintFixtureService(),
             _battlegroundsServerAPI,
             Substitute.For<ILogger<CompanyService>>(),
             _configuration);
@@ -281,19 +283,23 @@ public class CompanyServiceTests
     /// Tests that ApplyEvents throws NotImplementedException when processing a pickup event with a valid squad ID.
     /// </summary>
     [Test]
-    public void ApplyEvents_PickupEventWithValidSquadId_ThrowsNotImplementedException()
+    public async Task ApplyEvents_PickupEventWithValidSquadId_GrantsWeaponAndAddsToCompanyInventory()
     {
         // Arrange
         CompanyService companyService = CreateCompanyService();
         Company company = CompanyFixture.DESERT_RATS;
         Squad targetSquad = company.Squads[0];
         LinkedList<CompanyEventModifier> events = new LinkedList<CompanyEventModifier>();
-        _ = events.AddLast(CompanyEventModifier.Pickup(targetSquad.Id, "test_blueprint"));
+        _ = events.AddLast(CompanyEventModifier.Pickup(targetSquad.Id, EntityBlueprintFixture.EBP_W_PANZERSHREK_PANZERJAGER_AK.Id));
 
-        // Act & Assert
-        var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
-            await companyService.ApplyEvents(events, company, false));
-        Assert.That(ex.Message, Does.Contain("Pickup event handling is not implemented yet"));
+        // Act
+        var updatedCompany = await companyService.ApplyEvents(events, company, false);
+
+        // Assert
+        Assert.That(updatedCompany, Is.Not.Null);
+        Assert.That(updatedCompany.CapturedItems, Has.Count.EqualTo(1));
+        Assert.That(updatedCompany.CapturedItems[0].ItemBlueprint, Is.EqualTo(EntityBlueprintFixture.EBP_W_PANZERSHREK_PANZERJAGER_AK));
+
     }
 
     /// <summary>
@@ -369,6 +375,7 @@ public class CompanyServiceTests
             userService,
             new BinaryCompanyDeserializer(bps),
             new BinaryCompanySerializer(),
+            Substitute.For<IBlueprintService>(),
             battlegroundsServerAPI,
             logger,
             configuration);
@@ -417,6 +424,7 @@ public class CompanyServiceTests
             userService,
             new BinaryCompanyDeserializer(bps),
             companySerializer,
+            Substitute.For<IBlueprintService>(),
             battlegroundsServerAPI,
             logger,
             configuration);
@@ -445,6 +453,7 @@ public class CompanyServiceTests
             userService,
             new BinaryCompanyDeserializer(bps),
             new BinaryCompanySerializer(),
+            new BlueprintFixtureService(),
             battlegroundsServerAPI,
             logger ?? Substitute.For<ILogger<CompanyService>>(),
             configuration);
@@ -473,6 +482,7 @@ public class CompanyServiceTests
             userService,
             companyDeserializer,
             companySerializer,
+            Substitute.For<IBlueprintService>(),
             serverAPI,
             logger,
             configuration);

@@ -49,7 +49,7 @@
     $11180068: Mk. 3 Grant Tank
     $11180069: Humber Armoured Car
     $11189939: M4A1 Sherman Tank
-    $11242531: 50. Caliber M2 Browning Machine Gun Package
+    $11242531: 50. Caliber M2 Browning Machine Gun
     $11180071: M3 Stuart Light Tank
     $11242534: Utility Kit
     $11186706: Tank Commander
@@ -60,15 +60,15 @@
     $11235858: Breda M30 Light Machine Gun Package
     $11202089: Coastal Defense Infantry
     $11200651: Guastatori Assault Engineers
-    $11235856: Flamethrower Package
+    $11235856: Lanciafiamme Model 40
     $11166831: Panzergrenadiers
-    $11235859: MG34 Machine Gun Package
+    $11235859: MG-34 Light Machine Gun Package
     $11181909: Panzerjäger Infantry # Remember to save as UTF-8 with BOM to preserve the special characters
     $11265924: Tank Buster Package
     $11181912: Panzerpioneers
     $11242445: Fieldcraft Package
-    $11155599: Flammenwerfer 34 Flamethrower Package
-    $11221245: GrB39 Grenade Launcher Package
+    $11155599: Flammenwerfer 34 Flamethrower
+    $11221245: GrB39 Grenade Launcher
     $11241634: Pak 38 Anti-Tank Gun
     $11241635: 88mm Flak 36 Anti-Aircraft Gun
     $11222849: MG-34 Heavy Machine Gun Team
@@ -93,10 +93,10 @@
     $11238856: M13/40 Tank
     $11241651: Marder III Tank Destroyer
     $11241656: Panzer III
-    $11235857: MG-34 Top Gunner
+    $11235857: MG-34 Heavy Machine Gun
     $11238847: Panzer III Flame Tank
     $11153600: Panzer IV
-    $11235786: MG-42 Top Gunner
+    $11235786: MG-42 Machine Gun
     $11241661: Panzer IV Stubby
     $11216342: Semovente 75/18
     $11170515: Camouflage Special Ops
@@ -204,3 +204,32 @@
     $11185673: M4A1 Sherman "Whizbang"
     $11241674: 1/4-ton 4x4 Truck
     $11201852: Deuce and a Half Truck
+    $11201335: Panzerbüchse 39 Anti-Tank Rifle
+    $11246773: Pak 38 Anti-Tank Gun
+    $11235855: Flak 36 Anti-Aircraft Gun
+    $11235779: LeIG 18 Infantry Support Gun
+    $11222399: M1919A6 Browning Machine Gun
+    $11191156: Johnson M1941 Light Machine Gun
+    $11150310: M2 Flamethrower
+    $11154001: M9 Bazooka
+    $11207633: M1919 Browning Heavy Machine Gun
+    $11248964: M1 81mm Mortar
+    $11219713: M1 Anti-Tank Gun
+    $11235632: M1 Pack Howitzer
+    $11222401: Bren Light Machine Gun
+    $11235633: Boys Anti-Tank Rifle
+    $11222398: PIAT
+    $11207634: Vickers Heavy Machine Gun
+    $11235634: 3-inch Mortar
+    $11235629: 2-pounder Anti-Tank Gun
+    $11235630: 6-pounder Anti-Tank Gun
+    $11271900: Land Mattress Rocket Launcher
+    $11235788: MG-42 Heavy Machine Gun
+    $11271891: Infrared Stg 44 Assault Rifle
+    $11222418: Panzerbüchse 39 Anti-Tank Rifle
+    $11235783: RPzB 54 Panzershreck
+    $11235784: GrW 34 Mortar
+    $11195166: Pak 40 Anti-Tank Gun
+    $11235778: LG40 Recoilless Gun
+    $11235782: Nebelwerfer 42
+    $11235777: Flak 30 Anti-Aircraft Gun

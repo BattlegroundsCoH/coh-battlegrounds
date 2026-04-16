@@ -1,0 +1,164 @@
+##############################################
+## American Weapon Items
+##############################################
+entities:
+    
+    w_bar_riflemen_us:
+        category: Weapon
+        faction-association: american
+        extensions:
+            ui:
+                screen-name: $11156394
+                icon-name: m1918a2_browning
+                symbol-icon-name: weapon_bar
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: bar_riflemen_us
+                
+    w_m1919a6_paratrooper_us:
+        category: Weapon
+        faction-association: american
+        extensions:
+            ui:
+                screen-name: $11222399
+                icon-name: lmg_m1919a6
+                symbol-icon-name: weapon_m1919a6
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.1'
+                weapon-blueprint: m1919a6_paratrooper_us
+                
+    w_m1919a6_riflemen_us:
+        category: Weapon
+        faction-association: american
+        extensions:
+            ui:
+                screen-name: $11222399
+                icon-name: lmg_m1919a6
+                symbol-icon-name: weapon_m1919a6
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.1'
+                weapon-blueprint: m1919a6_riflemen_us
+                
+    w_m1941_lmg_devils_brigade_us:
+        category: Weapon
+        faction-association: american
+        extensions:
+            ui:
+                screen-name: $11191156
+                icon-name: johnson_lmg_us
+                symbol-icon-name: weapon_johnson_lmg
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: m1919a6_riflemen_us
+                    
+    w_flamethrower_engineer_us:
+        category: Weapon
+        faction-association: american
+        extensions:
+            ui:
+                screen-name: $11150310
+                icon-name: flamethrower_m2
+                symbol-icon-name: weapon_flamethrower
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: flamethrower_engineer_us
+                    
+    w_bazooka_bazooka_team_us:
+        category: Weapon
+        faction-association: american
+        extensions:
+            ui:
+                screen-name: $11154001
+                icon-name: m9_bazooka
+                symbol-icon-name: weapon_m9_bazooka
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: bazooka_bazooka_team_us
+                    
+    w_bazooka_devils_brigade_us:
+        category: Weapon
+        faction-association: american
+        extensions:
+            ui:
+                screen-name: $11154001
+                icon-name: m9_bazooka
+                symbol-icon-name: weapon_m9_bazooka
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: bazooka_devils_brigade_us
+                    
+    w_bazooka_paratroopers_us:
+        category: Weapon
+        faction-association: american
+        extensions:
+            ui:
+                screen-name: $11154001
+                icon-name: m9_bazooka
+                symbol-icon-name: weapon_m9_bazooka
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: bazooka_paratroopers_us
+                    
+    w_30cal_hmg_us:
+        category: TeamWeapon
+        faction-association: american
+        extensions:
+            ui:
+                screen-name: $11207633
+                icon-name: hmg_30cal_weapon_us
+                symbol-icon-name: hmg
+            team-weapon:
+                recrew-squad-blueprint: hmg_30cal_us
+                    
+    w_50cal_hmg_us:
+        category: TeamWeapon
+        faction-association: american
+        extensions:
+            ui:
+                screen-name: $11242531
+                icon-name: hmg_50cal_weapon_us
+                symbol-icon-name: hmg
+            team-weapon:
+                recrew-squad-blueprint: hmg_50cal_us
+                
+    w_81mm_mortar_us:
+        category: TeamWeapon
+        faction-association: american
+        extensions:
+            ui:
+                screen-name: $11248964
+                icon-name: mortar_81mm_weapon_us
+                symbol-icon-name: mortar
+            team-weapon:
+                recrew-squad-blueprint: mortar_81mm_us
+                
+    tw_at_gun_57mm_us:
+        category: TeamWeapon
+        faction-association: american
+        extensions:
+            ui:
+                screen-name: $11219713
+                icon-name: at_gun57mm_us
+                symbol-icon-name: at_gun_m1_57mm_us
+            team-weapon:
+                recrew-squad-blueprint: at_gun_57mm_us
+                
+    tw_pack_howitzer_75mm_us:
+        category: TeamWeapon
+        faction-association: american
+        extensions:
+            ui:
+                screen-name: $11235632
+                icon-name: pack_howitzer_75mm_us.png
+                symbol-icon-name: vehicle_aef_pack_howitzer_symbol
+            team-weapon:
+                recrew-squad-blueprint: pack_howitzer_75mm_us
+                

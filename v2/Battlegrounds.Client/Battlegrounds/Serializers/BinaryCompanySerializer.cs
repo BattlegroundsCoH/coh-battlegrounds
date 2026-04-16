@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Text;
 
-using Battlegrounds.Models.Blueprints;
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Playing;
 
@@ -84,16 +83,7 @@ public sealed class BinaryCompanySerializer : ICompanySerializer {
         writer.Write((ushort)squad.SlotItems.Count); // Number of slot items
         for (int i = 0; i < squad.SlotItems.Count; i++) {
             var item = squad.SlotItems[i];
-            writer.Write(item.Count); // Item count
-            if (item.EntityBlueprint is EntityBlueprint entity) {
-                writer.Write((byte)0x01); // Entity item type
-                WriteASCIIString(writer, entity.Id); // Entity Blueprint ID will always be ASCII
-            } else if (item.SlotItemBlueprint is SlotItemBlueprint slotItem) {
-                writer.Write((byte)0x02); // Slot item type
-                WriteASCIIString(writer, slotItem.Id); // Slot Item Blueprint ID will always be ASCII
-            } else {
-                throw new InvalidDataException("Slot item must have either an EntityBlueprint or a SlotItemBlueprint.");
-            }
+            writer.Write(item.CompanyItemId); // Item id from company "inventory"
         }
 
         // Write upgrades

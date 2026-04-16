@@ -128,8 +128,7 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
         if (squad.SlotItems.Count > 0) {
             table.AddNestedFieldTable("items", itemsTable => {
                 foreach (var item in squad.SlotItems) {
-                    for (int i = 0; i < item.Count; i++) // Repeat the item for the count, since in CoH3, multiple slot items of the same type are represented as multiple entries in the items table
-                        itemsTable.AddValue(item.EntityBlueprint!.Id);
+                    itemsTable.AddValue(item.EntityBlueprint!.Id);
                 }
             });
         }

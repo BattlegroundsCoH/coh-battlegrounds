@@ -83,6 +83,11 @@ public sealed class ReplayAnalysisResult {
                     companyChanges[pid].AddLast(recalledEvent);
                     break;
                 }
+                case SquadTeamWeaponCaptureEvent captureEvent: {
+                    _logger.Debug("Captured team weapon {EntityName} for player {PlayerId} at {Timestamp}", captureEvent.EntityName, pid, captureEvent.Timestamp);
+                    companyChanges[pid].AddLast(captureEvent);
+                    break;
+                }
                 default:
                     _logger.Warning("Unhandled replay event type: {EventType}", replayEvent.GetType().Name);
                     break;
@@ -170,6 +175,8 @@ public sealed class ReplayAnalysisResult {
             } else if (replayEvent is SquadRecalledEvent recalledEvent) {
                 modifiers.AddLast(CompanyEventModifier.ExperienceGain(recalledEvent.SquadCompanyId, recalledEvent.Experience));
                 modifiers.AddLast(CompanyEventModifier.Statistics(recalledEvent.SquadCompanyId, recalledEvent.InfantryKills, recalledEvent.VehicleKills, recalledEvent.EntityLosses));
+            } else if (replayEvent is SquadTeamWeaponCaptureEvent captureEvent) { 
+                modifiers.AddLast(CompanyEventModifier.Capture(captureEvent.EntityName));
             } else {
                 _logger.Warning("Unhandled replay event type: {ReplayType}", replayEvent.GetType().Name);
             }

@@ -12,18 +12,20 @@ namespace Battlegrounds.Test.Parsers;
 [TestFixture, TestOf(typeof(BlueprintParser<>))]
 public class BlueprintParserTests {
 
+    private IBlueprintService _blueprintService;
     private IGameLocaleService _gameLocaleService = null!;
     private BlueprintParser<CoH3> _parser = null!;
 
     [SetUp]
     public void SetUp() {
         _gameLocaleService = Substitute.For<IGameLocaleService>();
-        _parser = new BlueprintParser<CoH3>(_gameLocaleService, new TestLogger<BlueprintParser<CoH3>>());
+        _blueprintService = Substitute.For<IBlueprintService>();
+        _parser = new BlueprintParser<CoH3>(_blueprintService, _gameLocaleService, new TestLogger<BlueprintParser<CoH3>>());
     }
 
     [Test]
     public void Constructor_ThrowsArgumentNullException_WhenLocaleServiceIsNull() {
-        Assert.Throws<ArgumentNullException>(() => new BlueprintParser<CoH3>(null!, null!));
+        Assert.Throws<ArgumentNullException>(() => new BlueprintParser<CoH3>(_blueprintService, null!, null!));
     }
 
     [Test]

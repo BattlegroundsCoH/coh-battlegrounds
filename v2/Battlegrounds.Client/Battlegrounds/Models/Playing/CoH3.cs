@@ -53,4 +53,12 @@ public sealed class CoH3(Configuration configuration) : Game, ICoH3Game { // Ste
         return false;
     }
 
+    public override string GetFactionCrewSquadBlueprint(string factionId) => factionId switch {
+        "british_africa" => "tommy_africa_uk",
+        "afrika_korps" => "panzerpioneer_ak",
+        "german" => "grenadier_ger",
+        "american" => "riflemen_us",
+        _ => throw new ArgumentException($"Unknown faction ID: {factionId}")
+    };
+
 }

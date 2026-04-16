@@ -9,6 +9,10 @@ namespace Battlegrounds.Test.Services;
 
 public sealed class BlueprintFixtureService : IBlueprintService { // Test fixture for IBlueprintService
 
+    private class RepositoryFixture : IBlueprintRepository {
+        public T GetBlueprint<T>(string blueprintId) where T : Blueprint => throw new NotImplementedException();
+    }
+
     public static readonly SquadBlueprint[] COH3_SQUADS = [
         SquadBlueprintFixture.SBP_TOMMY_UK,
         SquadBlueprintFixture.SBP_HALFTRACK_M3_UK,
@@ -17,6 +21,10 @@ public sealed class BlueprintFixtureService : IBlueprintService { // Test fixtur
         SquadBlueprintFixture.SBP_PANZERGRENADIER_AK,
         SquadBlueprintFixture.SBP_HALFTRACK_250_AK,
         SquadBlueprintFixture.SBP_PANZER_III_AK
+    ];
+
+    public static readonly EntityBlueprint[] COH3_ENTITIES = [
+        EntityBlueprintFixture.EBP_W_PANZERSHREK_PANZERJAGER_AK
     ];
 
     public static readonly UpgradeBlueprint[] COH3_UPGRADES = [
@@ -46,6 +54,11 @@ public sealed class BlueprintFixtureService : IBlueprintService { // Test fixtur
                 return bp;
             }
             throw new KeyNotFoundException($"Upgrade blueprint with ID '{blueprintId}' not found for game '{gameId}'.");
+        } else if (typeof(T) == typeof(EntityBlueprint)) {
+            if (gameId == CoH3.GameId && COH3_ENTITIES.FirstOrDefault(e => e.Id == blueprintId) is T bp) {
+                return bp;
+            }
+            throw new KeyNotFoundException($"Entity blueprint with ID '{blueprintId}' not found for game '{gameId}'.");
         }
         throw new NotImplementedException($"Blueprints of type {typeof(T).Name} are not supported in this fixture service.");
     }
@@ -77,7 +90,7 @@ public sealed class BlueprintFixtureService : IBlueprintService { // Test fixtur
     }
 
     public ICollection<Blueprint> GetBlueprintsForGame(string gameId) => gameId switch {
-        CoH3.GameId => [.. COH3_SQUADS, .. COH3_UPGRADES],
+        CoH3.GameId => [.. COH3_SQUADS, .. COH3_UPGRADES, .. COH3_ENTITIES],
         _ => throw new KeyNotFoundException($"Blueprint repository for game {gameId} not found.")
     };
 
@@ -94,5 +107,6 @@ public sealed class BlueprintFixtureService : IBlueprintService { // Test fixtur
         return typeof(T).Name;
     }
 
+    public IBlueprintRepository GetBlueprintRepositoryForGame<T>() where T : Game => new RepositoryFixture();
 
 }

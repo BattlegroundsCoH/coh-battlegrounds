@@ -111,7 +111,13 @@ public sealed class HttpBattlegroundsServerAPI(
             // Reset stream position to the beginning before deserialization
             dataStream.Position = 0;
 
-            return _companyDeserializer.DeserializeCompany(dataStream);
+            try {
+                return _companyDeserializer.DeserializeCompany(dataStream);
+            } catch (Exception e) {
+                _logger.LogError(e, "Failed to deserialize company {CompanyId}.", companyId);
+                return null;
+            }
+
         } else {
             _logger.LogError("Failed to retrieve company {CompanyId}. Status code: {StatusCode}, Reason: {ReasonPhrase}", companyId, response.StatusCode, response.ReasonPhrase);
             return null;

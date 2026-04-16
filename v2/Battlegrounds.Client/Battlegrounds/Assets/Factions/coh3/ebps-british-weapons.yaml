@@ -1,0 +1,123 @@
+##############################################
+## British Weapon Items
+##############################################
+entities:
+    
+    w_bren_lmg_africa_uk:
+        category: Weapon
+        faction-association: british_africa
+        extensions:
+            ui:
+                screen-name: $11222401
+                icon-name: icon_upgrade_british_bren
+                symbol-icon-name: weapon_bren
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: bren_lmg_africa_uk
+                
+    w_bazooka_guards_africa_uk:
+        category: Weapon
+        faction-association: british_africa
+        extensions:
+            ui:
+                screen-name: $11154001
+                icon-name: m9_bazooka
+                symbol-icon-name: weapon_m9_bazooka
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: bazooka_guards_africa_uk
+                
+    w_boys_anti_tank_rifle_africa_uk:
+        category: Weapon
+        faction-association: british_africa
+        extensions:
+            ui:
+                screen-name: $11235633
+                icon-name: icon_upgrade_boys_at_gun
+                symbol-icon-name: weapon_boys_at_gun
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: boys_at_rifle_africa_uk
+                   
+    w_sappers_piat_uk:
+        category: Weapon
+        faction-association: british_africa
+        extensions:
+            ui:
+                screen-name: $11222398
+                icon-name: piat_2
+                symbol-icon-name: weapon_piat
+            sim-item:
+                item-inventory-space: 1
+                drop-chance: '0.33'
+                weapon-blueprint: sapper_piat_uk
+                 
+    w_vickers_hmg_africa_uk:
+        category: TeamWeapon
+        faction-association: british_africa
+        extensions:
+            ui:
+                screen-name: $11207634
+                icon-name: hmg_vickers_africa_weapon_uk
+                symbol-icon-name: hmg
+            team-weapon:
+                recrew-squad-blueprint: hmg_vickers_africa_uk
+                    
+    w_81mm_mortar_uk:
+        category: TeamWeapon
+        faction-association: british_africa
+        extensions:
+            ui:
+                screen-name: $11235634
+                icon-name: mortar_81mm_africa_weapon_uk
+                symbol-icon-name: mortar
+            team-weapon:
+                recrew-squad-blueprint: mortar_81mm_africa_uk
+                    
+    tw_at_gun_2pdr_africa_uk:
+        category: TeamWeapon
+        faction-association: british_africa
+        extensions:
+            ui:
+                screen-name: $11235629
+                icon-name: at_gun_2pdr_uk
+                symbol-icon-name: at_gun_2pdr_uk
+            team-weapon:
+                recrew-squad-blueprint: at_gun_2pdr_africa_uk
+                    
+    tw_at_gun_6pdr_africa_uk:
+        category: TeamWeapon
+        faction-association: british_africa
+        extensions:
+            ui:
+                screen-name: $11235630
+                icon-name: at_gun_6pdr_uk
+                symbol-icon-name: at_gun_6pdr_uk
+            team-weapon:
+                recrew-squad-blueprint: at_gun_6pdr_africa_uk
+                    
+    tw_land_mattress_africa_uk:
+        category: TeamWeapon
+        faction-association: british_africa
+        extensions:
+            ui:
+                screen-name: $11271900
+                icon-name: tw_land_mattress_africa_uk
+                symbol-icon-name: land_mattress
+            team-weapon:
+                recrew-squad-blueprint: land_mattress_africa_uk
+                    
+    tw_pack_howitzer_75mm_africa_uk:
+        category: TeamWeapon
+        faction-association: british_africa
+        extensions:
+            ui:
+                screen-name: $11235632
+                icon-name: pack_howitzer_75mm_us.png
+                symbol-icon-name: vehicle_aef_pack_howitzer_symbol
+            team-weapon:
+                recrew-squad-blueprint: pack_howitzer_75mm_africa_uk
+                        
