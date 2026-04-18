@@ -1,0 +1,40 @@
+doctrine:
+    id: coh3_afrika_korps_default # Unique identifier for the doctrine
+    version: 1 # Version number for the doctrine, useful for tracking changes
+    faction: afrika_korps # The faction this doctrine belongs to
+    name: Afrika Korps Default # The name of the doctrine, which will be displayed in the game
+    is-visible: false # This doctrine is not visible in the UI
+    description: "The default Afrika Korps doctrine, which serves as the baseline for all other Afrika Korps doctrines."
+    type-limits: # Limits for each unit type
+        apex_armor: 2 # Only two apex armor units allowed
+    phase-limits: # These values should add up to 36
+        initial: 5
+        skirmish: 9
+        battle: 12
+        reserves: 10
+    blueprints: # List of blueprints available in this doctrine
+        squads:
+            - assault_panzergrenadier_ak
+            - panzergrenadier_ak
+            - panzerjaeger_inf_ak
+            - panzerpioneer_ak
+            - at_gun_50mm_pak_38_ak
+            - at_gun_88mm_mobile_ak
+            - hmg_mg34_ak
+            - leig_75mm_ak
+            - mortar_team_ak
+            - armored_car_8_rad_ak
+            - armored_car_222_ak
+            - halftrack_7_flak_ak
+            - halftrack_250_ak
+            - kradschutzen_motorcycle_ak
+            - marder_iii_ak
+            - panzer_iii_ak
+            - panzer_iv_ak
+            - panzer_iv_stubby_ak
+            - stug_iii_ak
+            - stug_iii_d_ak
+            - tiger_ak
+            - truck_2_5_ak 
+        upgrades: []
+    crew-blueprint: grenadier_ger

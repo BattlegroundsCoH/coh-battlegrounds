@@ -1,0 +1,41 @@
+doctrine:
+    id: coh3_american_default # Unique identifier for the doctrine
+    version: 1 # Version number for the doctrine, useful for tracking changes
+    faction: american # The faction this doctrine belongs to
+    name: American Default # The name of the doctrine, which will be displayed in the game
+    is-visible: false # This doctrine is not visible in the UI
+    description: "The default American doctrine, which serves as the baseline for all other American doctrines."
+    type-limits: # Limits for each unit type
+        apex_armor: 2 # Only two apex armor units allowed
+    phase-limits: # These values should add up to 36
+        initial: 5
+        skirmish: 9
+        battle: 12
+        reserves: 10
+    blueprints: # List of blueprints available in this doctrine
+        squads:
+            - riflemen_us
+            - bazooka_team_us
+            - captain_us
+            - engineer_us
+            - ranger_us
+            - scout_us
+            - sniper_us
+            - at_gun_57mm_us
+            - hmg_30cal_us
+            - mortar_81mm_us
+            - ambulance_us
+            - halftrack_75mm_us
+            - halftrack_medical_us
+            - halftrack_quad_us
+            - halftrack_us
+            - chaffee_us
+            - greyhound_us
+            - hellcat_us
+            - scott_us
+            - sherman_76mm_us
+            - sherman_bulldozer_us
+            - sherman_us
+            - stuart_us 
+        upgrades: []
+    crew-blueprint: riflemen_us

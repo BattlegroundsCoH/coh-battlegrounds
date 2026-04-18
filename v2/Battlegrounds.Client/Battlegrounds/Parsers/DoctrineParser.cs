@@ -79,7 +79,7 @@ public sealed class DoctrineParser<G> where G : Game {
             if (parser.Current is Scalar scalar) {
                 if (scalar.Value is null) {
                     parser.MoveNext(); // Move to the next parser event after reading the scalar value.
-                    return BlueprintReference<T>.Empty; // Return an empty reference if the scalar value is null.
+                    return BlueprintReference<T>.None; // Return an empty reference if the scalar value is null.
                 }
                 string? blueprintId = scalar.Value;
                 parser.MoveNext(); // Move to the next parser event after reading the scalar value.

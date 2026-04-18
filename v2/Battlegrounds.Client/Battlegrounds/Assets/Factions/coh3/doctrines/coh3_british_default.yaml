@@ -6,7 +6,7 @@ doctrine:
     is-visible: false # This doctrine is not visible in the UI
     description: "The default british doctrine, which serves as the baseline for all other British doctrines."
     type-limits: # Limits for each unit type
-        apex_armor: 1 # Only one apex armor unit allowed
+        apex_armor: 2 # Only two apex armor units allowed
     phase-limits: # These values should add up to 36
         initial: 5
         skirmish: 9

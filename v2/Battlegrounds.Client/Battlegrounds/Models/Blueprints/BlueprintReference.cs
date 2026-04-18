@@ -13,7 +13,7 @@ namespace Battlegrounds.Models.Blueprints;
 public class BlueprintReference<T>(IBlueprintRepository repository, string bp)
     where T : Blueprint {
     
-    public static readonly BlueprintReference<T> Empty = new(null!, string.Empty);
+    public static readonly BlueprintReference<T> None = new(null!, string.Empty);
 
     private readonly IBlueprintRepository _repository = repository;
     private readonly string _bp = bp;

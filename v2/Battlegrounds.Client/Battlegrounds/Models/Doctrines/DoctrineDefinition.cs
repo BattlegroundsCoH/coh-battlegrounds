@@ -72,6 +72,11 @@ public sealed class DoctrineDefinition {
         init => _costModifiers = value;
     }
 
+    /// <summary>
+    /// The technology tree definition for this doctrine.
+    /// </summary>
+    public DoctrineTechTreeDefinition? TechTree { get; init; }
+
     public bool IsValid(Company company) => throw new NotImplementedException();
 
     /// <summary>

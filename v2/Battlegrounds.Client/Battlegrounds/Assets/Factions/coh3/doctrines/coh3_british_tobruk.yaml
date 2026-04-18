@@ -16,10 +16,11 @@ doctrine:
     blueprints: # List of unit available in this doctrine
         squads:
             - australian_light_infantry_africa_uk
+            - archer_africa_uk 
         upgrades: []
-    ability-tree: []
     crew-blueprint: australian_light_infantry_africa_uk # Use the Australian Light Infantry as the crew unit for this doctrine
     cost-modifiers: 
-        squads: 
+        squads:
             tommy_africa_uk:
                 manpower: '1.1' # Increase the manpower cost of Tommy squads by 10%
+    tech-tree: null # Skip tech trees for now
