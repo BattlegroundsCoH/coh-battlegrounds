@@ -19,7 +19,7 @@ public sealed class DoctrineDefinition {
 
     public string Id { get; init; } = string.Empty;
 
-    public int Version { get; init; } = 1;
+    public uint Version { get; init; } = 1;
 
     public string Hash { get; init; } = string.Empty;
 

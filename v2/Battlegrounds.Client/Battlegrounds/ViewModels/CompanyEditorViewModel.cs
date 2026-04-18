@@ -42,6 +42,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
     private CompanyEditorViewModelContext _context;
     private bool _isDirty = false; // Indicates if the company has unsaved changes
+    private bool _isDoctrineDirty = false; // Indicates if the doctrine needs fixing
     private bool _isEditingName = false;
     private string _companyName = string.Empty;
     private string _editingCompanyName = string.Empty;
@@ -112,8 +113,32 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             if (_isDirty == value) return;
             _isDirty = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDirty)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanSave)));
         }
     }
+
+    public bool IsDoctrineDirty {
+        get => _isDoctrineDirty;
+        set {
+            if (_isDoctrineDirty == value) return;
+            _isDoctrineDirty = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDoctrineDirty)));
+        }
+    }
+
+    public bool IsValidCompany {
+        get;
+        set {
+            if (value == field) return;
+            field = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValidCompany)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanSave)));
+        }
+    }
+
+    public bool CanSave => IsDirty && IsValidCompany;
+
+    public string DoctrineName => _doctrine.Name;
 
     public string CompanyName {
         get => _companyName;
@@ -158,7 +183,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     }
 
     public int SelectedAvailableUnitTabIndex {
-        get => field;
+        get;
         set {
             if (field == value) return;
             field = value;
@@ -190,19 +215,19 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     public IReadOnlyList<PhaseSquadViewModel> ReservesPhaseUnits => BuildPhaseViewModels(_reservesPhaseUnits);
 
     public int StartingUnitsCount => _startingUnits.Count;
-    public int StartingUnitsMax => 4;
+    public int StartingUnitsMax => _doctrine.PhaseLimits.Initial;
     public bool CanAddStartingUnit => StartingUnitsCount < StartingUnitsMax;
 
     public int SkirmishPhaseUnitsCount => _skirmishPhaseUnits.Count;
-    public int SkirmishPhaseUnitsMax => 8;
+    public int SkirmishPhaseUnitsMax => _doctrine.PhaseLimits.Skirmish;
     public bool CanAddSkirmishPhaseUnit => SkirmishPhaseUnitsCount < SkirmishPhaseUnitsMax;
 
     public int BattlePhaseUnitsCount => _battlePhaseUnits.Count;
-    public int BattlePhaseUnitsMax => 12;
+    public int BattlePhaseUnitsMax => _doctrine.PhaseLimits.Battle;
     public bool CanAddBattlePhaseUnit => BattlePhaseUnitsCount < BattlePhaseUnitsMax;
 
     public int ReservesPhaseUnitsCount => _reservesPhaseUnits.Count;
-    public int ReservesPhaseUnitsMax => 6;
+    public int ReservesPhaseUnitsMax => _doctrine.PhaseLimits.Reserves;
     public bool CanAddReservesPhaseUnit => ReservesPhaseUnitsCount < ReservesPhaseUnitsMax;
 
     public IBlueprintService BlueprintService => _blueprintService; // Expose the blueprint service for use in the view model
@@ -257,7 +282,18 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         } else {
             _game = gameService.GetGame(_context.Company.GameId) ?? throw new ArgumentNullException(nameof(context), "Game must be provided for an existing company.");
             _faction = _context.Company.Faction;
-            _doctrine = doctrineService.GetDoctrineById(_context.Company.DoctrineId) ?? throw new ArgumentNullException(nameof(context), "Doctrine must be provided for an existing company.");
+
+            if (doctrineService.TryGetDoctrineById(_context.Company.DoctrineId, out var doctrine)) {
+                if (doctrine.Version != _context.Company.DoctrineVersion) {
+                    _logger.LogWarning("Doctrine {DoctrineId} version mismatch for company {CompanyName}. Expected version {ExpectedVersion}, but found version {ActualVersion}.", doctrine.Id, CompanyName, _context.Company.DoctrineVersion, doctrine.Version);
+                    IsDoctrineDirty = true;
+                }
+                _doctrine = doctrine;
+            } else {
+                _doctrine = doctrineService.GetBaseDoctrine(_game.Id, _faction);
+                IsDoctrineDirty = true;
+            }
+
             CompanyName = _context.Company.Name;
             CompanyState = $"Loaded company {CompanyName}";
             _startingUnits.AddRange(_context.Company.Squads.Where(s => s.Phase == SquadPhase.StartingPhase));
@@ -271,6 +307,8 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         }
 
         LoadBlueprints();
+        FixDoctrine();
+        VerifyCompany();
 
     }
 
@@ -298,9 +336,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     }
 
     private void LoadBlueprints() {
-        var squadBlueprints = (from bp in _blueprintService.GetBlueprintsForGame<SquadBlueprint>(_game.Id)
-                              where bp.FactionAssociation == _faction
-                              select bp).ToHashSet();
+        var squadBlueprints = _doctrine.Blueprints.Squads.Select(x => x.Blueprint).ToHashSet();
         _availableInfantryUnits = [..from bp in squadBlueprints
                                   where bp.Category is SquadCategory.Infantry && bp.Enabled is true
                                   select bp];
@@ -316,6 +352,68 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         _availableTowTransportUnits = [..from bp in squadBlueprints
                                          where bp.HasExtension<HoldExtension>(ext => ext.CanTow) && bp.Category is SquadCategory.Support
                                          select bp];
+    }
+
+    private async void FixDoctrine() {
+
+        if (!IsDoctrineDirty)
+            return;
+
+        // TODO: Show a modal to the user, informing them the selected doctrine is not valid for the company, and that they should pick another doctrine. For now, we will just log a warning and set the doctrine to the base doctrine for the faction.
+        _logger.LogWarning("Doctrine {DoctrineId} is not valid for company {CompanyName}. Setting doctrine to base doctrine for faction {Faction}.", _doctrine.Id, CompanyName, Faction);
+
+    }
+
+    private async void VerifyCompany() {
+
+        if (IsDoctrineDirty) {
+            IsValidCompany = false; // If the doctrine is dirty, we cannot verify the company, so we mark it as invalid.
+            return;
+        }
+        
+        bool isValid = true;
+        if (_startingUnits.Count > _doctrine.PhaseLimits.Initial) {
+            _logger.LogWarning("Company {CompanyName} has more starting units than allowed by doctrine {DoctrineId}.", CompanyName, _doctrine.Id);
+            CompanyState = $"Company has more starting units than allowed. You need to remove {_startingUnits.Count - _doctrine.PhaseLimits.Initial} unit(s).";
+            isValid = false;
+        }
+
+        if (_skirmishPhaseUnits.Count > _doctrine.PhaseLimits.Skirmish) {
+            _logger.LogWarning("Company {CompanyName} has more skirmish phase units than allowed by doctrine {DoctrineId}.", CompanyName, _doctrine.Id);
+            CompanyState = $"Company has more skirmish phase units than allowed. You need to remove {_skirmishPhaseUnits.Count - _doctrine.PhaseLimits.Skirmish} unit(s).";
+            isValid = false;
+        }
+
+        if (_battlePhaseUnits.Count > _doctrine.PhaseLimits.Battle) {
+            _logger.LogWarning("Company {CompanyName} has more battle phase units than allowed by doctrine {DoctrineId}.", CompanyName, _doctrine.Id);
+            CompanyState = $"Company has more battle phase units than allowed. You need to remove {_battlePhaseUnits.Count - _doctrine.PhaseLimits.Battle} unit(s).";
+            isValid = false;
+        }
+        
+        if (_reservesPhaseUnits.Count > _doctrine.PhaseLimits.Reserves) {
+            _logger.LogWarning("Company {CompanyName} has more reserves phase units than allowed by doctrine {DoctrineId}.", CompanyName, _doctrine.Id);
+            CompanyState = $"Company has more reserves phase units than allowed. You need to remove {_reservesPhaseUnits.Count - _doctrine.PhaseLimits.Reserves} unit(s).";
+            isValid = false;
+        }
+
+        // Grab all units
+        var allUnits = _startingUnits.Concat(_skirmishPhaseUnits).Concat(_battlePhaseUnits).Concat(_reservesPhaseUnits);
+        var typeCounts = allUnits.SelectMany(x => x.Blueprint.TryGetExtension<TypesExtension>(out TypesExtension? ext) ? ext.Values : Enumerable.Empty<string>())
+                                 .GroupBy(x => x)
+                                 .ToDictionary(g => g.Key, g => g.Count());
+
+        // Check if any unit type exceeds the allowed limit
+        foreach (var (ty, max) in _doctrine.TypeLimits) {
+            if (typeCounts.TryGetValue(ty, out int count) && count > max) {
+                _logger.LogWarning("Company {CompanyName} has more units of type {Type} than allowed by doctrine {DoctrineId}.", CompanyName, ty, _doctrine.Id);
+                CompanyState = $"Company has more units of type {ty} than allowed. You need to remove {count - max} unit(s).";
+                isValid = false;
+            }
+        }
+
+        // Mark the company as valid or invalid based on the checks performed
+        IsValidCompany = isValid;
+
     }
 
     private async Task ExitEditor() {
@@ -367,6 +465,9 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
                 CreatedBy = createdBy,
                 UpdatedBy = user,
                 Version = version,
+                DoctrineId = _doctrine.Id,
+                DoctrineVersion = _doctrine.Version,
+                CapturedItems = [.. _capturedItems],
                 Squads = [.. _startingUnits, .. _skirmishPhaseUnits, .. _battlePhaseUnits, .. _reservesPhaseUnits]
             };
 

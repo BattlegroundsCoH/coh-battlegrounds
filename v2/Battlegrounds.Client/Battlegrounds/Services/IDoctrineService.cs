@@ -1,4 +1,6 @@
-﻿using Battlegrounds.Models.Doctrines;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Battlegrounds.Models.Doctrines;
 
 namespace Battlegrounds.Services;
 
@@ -20,12 +22,28 @@ public interface IDoctrineService {
     DoctrineDefinition GetDoctrineById(string identifier);
 
     /// <summary>
+    /// Attempts to retrieve a doctrine definition by its identifier.
+    /// </summary>
+    /// <param name="identifier">The identifier of the doctrine to retrieve.</param>
+    /// <param name="doctrine">When this method returns true, contains the doctrine definition; otherwise, null.</param>
+    /// <returns>true if the doctrine was found; otherwise, false.</returns>
+    bool TryGetDoctrineById(string identifier, [NotNullWhen(true)] out DoctrineDefinition? doctrine);
+
+    /// <summary>
     /// Retrieves the doctrine definitions for a specific faction in a game.
     /// </summary>
     /// <param name="gameId">The game identifier.</param>
     /// <param name="faction">The faction name.</param>
     /// <returns>A collection of doctrine definitions for the specified faction.</returns>
     IEnumerable<DoctrineDefinition> GetDoctrinesForFaction(string gameId, string faction);
+
+    /// <summary>
+    /// Gets the base doctrine definition for the specified game and faction.
+    /// </summary>
+    /// <param name="gameId">The unique identifier of the game.</param>
+    /// <param name="faction">The faction identifier.</param>
+    /// <returns>The base doctrine definition for the specified game and faction.</returns>
+    DoctrineDefinition GetBaseDoctrine(string gameId, string faction);
 
     /// <summary>
     /// Loads doctrines.

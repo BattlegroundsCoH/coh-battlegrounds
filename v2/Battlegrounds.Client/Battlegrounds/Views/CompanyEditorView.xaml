@@ -802,17 +802,47 @@
 
             </Grid>
 
-            <Image 
-                Width="36" 
-                Height="36"
+            <Grid 
+                Width="320"
                 Grid.Column="2">
-                <Image.Source>
-                    <MultiBinding Converter="{StaticResource FactionIconConverter}">
-                        <Binding Path="Faction"/>
-                        <Binding Path="Game"/>
-                    </MultiBinding>
-                </Image.Source>
-            </Image>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal"
+                            Grid.Column="0"
+                        HorizontalAlignment="Right"
+                            Margin="0,0,8,0">
+
+                    <Image
+                        Width="16"
+                        Height="16"
+                        Margin="0,0,8,0"
+                        Visibility="{Binding IsDoctrineDirty, Converter={StaticResource BooleanToVisibility}}"
+                        Source="pack://siteoforigin:,,,/Assets/Misc/mission_icon_warning.png"/>
+
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                        Text="{Binding DoctrineName}"/>
+
+                </StackPanel>
+                
+                <Image 
+                    Width="36" 
+                    Height="36"
+                    Grid.Column="1">
+                    <Image.Source>
+                        <MultiBinding Converter="{StaticResource FactionIconConverter}">
+                            <Binding Path="Faction"/>
+                            <Binding Path="Game"/>
+                        </MultiBinding>
+                    </Image.Source>
+                </Image>
+            </Grid>
+            
 
         </Grid>
 
@@ -1916,7 +1946,7 @@
                 Command="{Binding SaveCommand}"
                 HorizontalAlignment="Right"
                 Style="{StaticResource ActionButton}"
-                IsEnabled="{Binding IsDirty}">
+                IsEnabled="{Binding CanSave}">
                 Save Company
             </Button>
         </Grid>

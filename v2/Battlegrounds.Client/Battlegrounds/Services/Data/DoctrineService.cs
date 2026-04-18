@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 using Battlegrounds.Models;
 using Battlegrounds.Models.Doctrines;
@@ -26,6 +27,23 @@ public sealed class DoctrineService(IBlueprintService blueprintService, Configur
         return from doctrine in _doctrines.Values
                where doctrine.Faction == faction
                select doctrine;
+    }
+
+    public DoctrineDefinition GetBaseDoctrine(string gameId, string faction) {
+        return gameId switch {
+            CoH3.GameId => faction switch {
+                "british_africa" => GetDoctrineById("coh3_british_default"),
+                "afrika_korps" => GetDoctrineById("coh3_afrika_korps_default"),
+                "german" => GetDoctrineById("coh3_german_default"),
+                "american" => GetDoctrineById("coh3_american_default"),
+                _ => throw new ArgumentException($"Faction '{faction}' is not supported for game ID '{gameId}'.")
+            },
+            _ => throw new NotSupportedException($"Game ID '{gameId}' is not supported.")
+        };
+    }
+
+    public bool TryGetDoctrineById(string identifier, [NotNullWhen(true)] out DoctrineDefinition? doctrine) {
+        return _doctrines.TryGetValue(identifier, out doctrine);
     }
 
     public async Task<int> LoadDoctrines(CancellationToken cancellationToken) {
