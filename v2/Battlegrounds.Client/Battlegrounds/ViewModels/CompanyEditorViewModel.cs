@@ -6,6 +6,7 @@ using Battlegrounds.Helpers;
 using Battlegrounds.Models.Blueprints;
 using Battlegrounds.Models.Blueprints.Extensions;
 using Battlegrounds.Models.Companies;
+using Battlegrounds.Models.Doctrines;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Services;
 using Battlegrounds.ViewModels.CompanyHelpers;
@@ -37,6 +38,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     private readonly ILogger<CompanyEditorViewModel> _logger;
     private readonly string _faction = string.Empty;
     private readonly Game _game;
+    private readonly DoctrineDefinition _doctrine;
 
     private CompanyEditorViewModelContext _context;
     private bool _isDirty = false; // Indicates if the company has unsaved changes
@@ -221,7 +223,8 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
     public CompanyEditorViewModel(
         CompanyEditorViewModelContext context, 
-        ICompanyService companyService, 
+        ICompanyService companyService,
+        IDoctrineService doctrineService,
         IBlueprintService blueprintService, 
         IUserService userService,
         IGameService gameService, 
@@ -248,11 +251,13 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         if (_context.IsNewCompany) {
             _game = _context.Parameters.Game ?? throw new ArgumentNullException(nameof(context), "Game must be provided for a new company.");
             _faction = _context.Parameters.Faction;
+            _doctrine = _context.Parameters.Doctrine ?? throw new ArgumentNullException(nameof(context), "Doctrine must be provided for a new company.");
             CompanyName = _context.Parameters.Name;
             CompanyState = $"Creating company {CompanyName}";
         } else {
             _game = gameService.GetGame(_context.Company.GameId) ?? throw new ArgumentNullException(nameof(context), "Game must be provided for an existing company.");
             _faction = _context.Company.Faction;
+            _doctrine = doctrineService.GetDoctrineById(_context.Company.DoctrineId) ?? throw new ArgumentNullException(nameof(context), "Doctrine must be provided for an existing company.");
             CompanyName = _context.Company.Name;
             CompanyState = $"Loaded company {CompanyName}";
             _startingUnits.AddRange(_context.Company.Squads.Where(s => s.Phase == SquadPhase.StartingPhase));

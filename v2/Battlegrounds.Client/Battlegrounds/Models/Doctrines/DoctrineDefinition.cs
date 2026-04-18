@@ -62,6 +62,16 @@ public sealed class DoctrineDefinition {
         init => _includeInclusion = value;
     }
 
+    public List<SquadBlueprint> ExclusiveSquadBlueprints {
+        get {
+            if (Parent is null)
+                return [];
+            var exclusiveSquads = (_includeInclusion?.Squads ?? []).ToHashSet();
+            exclusiveSquads.ExceptWith(Parent.Value.Blueprints.Squads);
+            return [.. exclusiveSquads.Select(x => x.Blueprint!)];
+        }
+    }
+
     /// <summary>
     /// Gets or initializes the cost modifiers.
     /// </summary>

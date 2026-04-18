@@ -22,6 +22,12 @@ public sealed class DoctrineService(IBlueprintService blueprintService, Configur
 
     public DoctrineDefinition GetDoctrineById(string identifier) => _doctrines[identifier];
 
+    public IEnumerable<DoctrineDefinition> GetDoctrinesForFaction(string gameId, string faction) {
+        return from doctrine in _doctrines.Values
+               where doctrine.Faction == faction
+               select doctrine;
+    }
+
     public async Task<int> LoadDoctrines(CancellationToken cancellationToken) {
         _logger.LogInformation("Loading doctrines...");
 

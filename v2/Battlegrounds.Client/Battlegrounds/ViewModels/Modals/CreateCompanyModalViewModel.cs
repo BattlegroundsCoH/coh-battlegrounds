@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Battlegrounds.Extensions;
 using Battlegrounds.Helpers;
 using Battlegrounds.Models.Companies;
+using Battlegrounds.Models.Doctrines;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Services;
 
@@ -12,7 +13,12 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Battlegrounds.ViewModels.Modals;
 
-public record CreateCompanyParameters([property:MemberNotNull(nameof(Game))] bool Create, string Name, Game? Game, string Faction);
+public record CreateCompanyParameters(
+    [property:MemberNotNull(nameof(Game),nameof(CreateCompanyParameters.Doctrine))] bool Create, 
+    string Name, 
+    Game? Game, 
+    string Faction, 
+    DoctrineDefinition? Doctrine);
 
 public sealed class CreateCompanyModalViewModel : INotifyModalDone, INotifyPropertyChanged {
     
@@ -24,11 +30,13 @@ public sealed class CreateCompanyModalViewModel : INotifyModalDone, INotifyPrope
 
     private readonly IGameService _gameService;
     private readonly ICompanyService _companyService;
+    private readonly IDoctrineService _doctrineService;
 
     private ICollection<string> _availableFactions = [];
     private string _companyName = "New Company";
     private Game _selectedGame;
     private string _faction = string.Empty;
+    private DoctrineDefinition? _definition;
 
     public string CompanyName {
         get => _companyName;
@@ -75,6 +83,21 @@ public sealed class CreateCompanyModalViewModel : INotifyModalDone, INotifyPrope
             }
             _faction = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedFaction)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AvailableDoctrines)));
+            SelectedDoctrine = AvailableDoctrines.FirstOrDefault();
+        }
+    }
+
+    public ICollection<DoctrineDefinition> AvailableDoctrines => [.. _doctrineService.GetDoctrinesForFaction(SelectedGame.Id, SelectedFaction).Where(x => x.IsVisible)];
+
+    public DoctrineDefinition? SelectedDoctrine {
+        get => _definition;
+        set {
+            if (_definition == value) {
+                return;
+            }
+            _definition = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedDoctrine)));
         }
     }
 
@@ -83,11 +106,12 @@ public sealed class CreateCompanyModalViewModel : INotifyModalDone, INotifyPrope
     public ICommand CreateCommand => _createCommand;
     public ICommand CancelCommand => _cancelCommand;
 
-    public CreateCompanyModalViewModel(IGameService gameService, ICompanyService companyService) {
+    public CreateCompanyModalViewModel(IGameService gameService, ICompanyService companyService, IDoctrineService doctrineService) {
         _createCommand = new RelayCommand(OnCreate, () => CanCreate);
         _cancelCommand = new RelayCommand(OnCancel);
         _gameService = gameService;
         _companyService = companyService;
+        _doctrineService = doctrineService;
         _selectedGame = gameService.GetGame<CoH3>(); // Default to CoH3, can be changed later
         OnUpdateFactionOptions();
     }
@@ -98,11 +122,11 @@ public sealed class CreateCompanyModalViewModel : INotifyModalDone, INotifyPrope
     }
 
     private void OnCreate() {
-        ModalDone?.Invoke(this, new CreateCompanyParameters(true, CompanyName, SelectedGame, SelectedFaction));
+        ModalDone?.Invoke(this, new CreateCompanyParameters(true, CompanyName, SelectedGame, SelectedFaction, SelectedDoctrine));
     }
 
     private void OnCancel() {
-        ModalDone?.Invoke(this, new CreateCompanyParameters(false, string.Empty, null, string.Empty));
+        ModalDone?.Invoke(this, new CreateCompanyParameters(false, string.Empty, null, string.Empty, null));
     }
 
     private async Task<string[]> GetAvailableFactions(Game game) { // Attempts to limit factions to those defined in the game and those that have fewer than 5 companies

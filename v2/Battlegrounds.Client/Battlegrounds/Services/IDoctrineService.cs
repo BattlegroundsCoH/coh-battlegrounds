@@ -20,6 +20,14 @@ public interface IDoctrineService {
     DoctrineDefinition GetDoctrineById(string identifier);
 
     /// <summary>
+    /// Retrieves the doctrine definitions for a specific faction in a game.
+    /// </summary>
+    /// <param name="gameId">The game identifier.</param>
+    /// <param name="faction">The faction name.</param>
+    /// <returns>A collection of doctrine definitions for the specified faction.</returns>
+    IEnumerable<DoctrineDefinition> GetDoctrinesForFaction(string gameId, string faction);
+
+    /// <summary>
     /// Loads doctrines.
     /// </summary>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>

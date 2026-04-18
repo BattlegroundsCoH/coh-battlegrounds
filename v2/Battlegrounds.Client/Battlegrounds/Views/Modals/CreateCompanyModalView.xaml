@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Battlegrounds.Views.Modals"
-                           xmlns:helpers="clr-namespace:Battlegrounds.Helpers"
-                           xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels.Modals"
+             xmlns:helpers="clr-namespace:Battlegrounds.Helpers"
+             xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels.Modals"
              xmlns:converters="clr-namespace:Battlegrounds.Converters"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=viewmodels:CreateCompanyModalViewModel}"
@@ -13,6 +13,7 @@
     <helpers:DialogUserControl.Resources>
         <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
         <converters:FactionIdToNameConverter x:Key="FactionIdToNameConverter"/>
+        <converters:BlueprintIconMultiBindingConverter x:Key="BlueprintIconMultiConverter"/>
 
         <DataTemplate x:Key="FactionComboBoxItemTemplate">
             <Grid>
@@ -40,6 +41,71 @@
                         </MultiBinding>
                     </TextBlock.Text>
                 </TextBlock>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate 
+            x:Key="DoctrineComboBoxItemTemplate">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <!-- Doctrine title -->
+                <TextBlock Text="{Binding Name}" Grid.Row="0"/>
+                <Grid.ToolTip>
+                    <ToolTip Style="{StaticResource BattlegroundsTooltip}" MaxWidth="480">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{Binding Name}" Grid.Row="0" Foreground="{StaticResource ForegroundWhiteBrush}" FontSize="14" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Description}" Grid.Row="1" TextWrapping="Wrap" Foreground="{StaticResource ForegroundWhiteBrush}" FontStyle="Italic"/>
+                            <StackPanel Grid.Row="2">
+                                <Grid Margin="0,8,0,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Additional Units" Grid.Row="0" Foreground="{StaticResource ForegroundWhiteBrush}" FontSize="12" FontWeight="DemiBold"/>
+                                    <ItemsControl 
+                                        Grid.Row="1"
+                                        Margin="0,4,0,0"
+                                        ItemsSource="{Binding ExclusiveSquadBlueprints}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Image 
+                                                        Grid.Column="0"
+                                                        Width="48"
+                                                        Height="48"
+                                                        Margin="0,0,12,0">
+                                                        <Image.Source>
+                                                            <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
+                                                                <Binding Path="."/>
+                                                                <Binding Path="DataContext.SelectedGame" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                                            </MultiBinding>
+                                                        </Image.Source>
+                                                    </Image>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </ToolTip>
+                </Grid.ToolTip>
             </Grid>
         </DataTemplate>
 
@@ -93,6 +159,16 @@
                               SelectedItem="{Binding SelectedFaction}"
                               Style="{StaticResource SettingsComboBox}"
                               ItemTemplate="{StaticResource FactionComboBoxItemTemplate}"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,8,0,12">
+                    <TextBlock Text="Doctrine"
+                       Foreground="{StaticResource ForegroundWhiteBrush}"
+                       Margin="0,0,0,5"/>
+                    <ComboBox ItemsSource="{Binding AvailableDoctrines}"
+                              SelectedItem="{Binding SelectedDoctrine}"
+                              Style="{StaticResource SettingsComboBox}"
+                              ItemTemplate="{StaticResource DoctrineComboBoxItemTemplate}"/>
                 </StackPanel>
 
             </StackPanel>
