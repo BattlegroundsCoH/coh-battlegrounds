@@ -660,6 +660,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalMunitionsCost)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalFuelCost)));
         IsDirty = true; // Mark the company as dirty after adding a squad
+        VerifyCompany();
     }
 
     private TransportSquad? GetDefaultTransportSquad(SquadBlueprint blueprint) {
@@ -697,6 +698,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalFuelCost)));
         IsDirty = true; // Mark the company as dirty after removing a squad
         SetSelectedSquad(null); // Clear the selection after retiring a squad
+        VerifyCompany(); // Re-verify the company after removing a squad
     }
 
     public void SetSquadDeploymentMethod(Squad refSquad, SquadBlueprint? transport) {
