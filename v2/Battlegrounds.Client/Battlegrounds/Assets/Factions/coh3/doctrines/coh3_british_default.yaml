@@ -1,0 +1,39 @@
+doctrine:
+    id: coh3_british_default # Unique identifier for the doctrine
+    version: 1 # Version number for the doctrine, useful for tracking changes
+    faction: british_africa # The faction this doctrine belongs to
+    name: British Default # The name of the doctrine, which will be displayed in the game
+    is-visible: false # This doctrine is not visible in the UI
+    description: "The default british doctrine, which serves as the baseline for all other British doctrines."
+    type-limits: # Limits for each unit type
+        apex_armor: 1 # Only one apex armor unit allowed
+    phase-limits: # These values should add up to 36
+        initial: 5
+        skirmish: 9
+        battle: 12
+        reserves: 10
+    blueprints: # List of blueprints available in this doctrine
+        squads:
+            - tommy_africa_uk
+            - commando_africa_uk
+            - guards_africa_uk
+            - sapper_africa_uk
+            - at_gun_2pdr_africa_uk
+            - at_gun_6pdr_africa_uk
+            - at_gun_17pdr_mobile_africa_uk
+            - hmg_vickers_africa_uk
+            - mortar_81mm_africa_uk
+            - pack_howitzer_75mm_africa_uk
+            - cwt_15_truck_africa_uk
+            - dingo_africa_uk
+            - humber_africa_uk
+            - crusader_57mm_africa_uk
+            - churchill_africa_uk
+            - crusader_africa_uk
+            - crusader_aa_africa_uk 
+            - grant_africa_uk 
+            - matilda_africa_uk
+            - sherman_africa_uk
+            - stuart_africa_uk 
+        upgrades: []
+    crew-blueprint: tommy_africa_uk
