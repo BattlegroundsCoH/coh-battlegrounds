@@ -1,0 +1,21 @@
+doctrine:
+    id: coh3_afrika_korps_panzerarmee
+    version: 1
+    faction: afrika_korps
+    name: Panzerarmee Afrika
+    parent: coh3_afrika_korps_default
+    description: "The Panzerarmee Afrika doctrine embodies Rommel's aggressive armored offensive across the North African desert. Panzer III Flame tanks incinerate fortified positions, while the Elefant tank destroyer dominates at long range. The Stuka Halftrack provides devastating mobile rocket barrages, and Recovery Halftracks keep the armored spearhead operational. This doctrine emphasizes overwhelming armored power and rapid offensive momentum."
+    type-limits:
+        apex_armor: 2
+    phase-limits: # These values should add up to 34
+        initial: 4
+        skirmish: 8
+        battle: 13
+        reserves: 9
+    blueprints:
+        squads:
+            - panzer_iii_flame_ak
+            - elefant_tank_destroyer_ak
+            - halftrack_251_stuka
+            - halftrack_recovery_ak
+        upgrades: []

@@ -1,0 +1,22 @@
+doctrine:
+    id: coh3_american_armored
+    version: 1
+    faction: american
+    name: Armored Company
+    parent: coh3_american_default
+    description: "The Armored Company doctrine represents the heavy armored push through the Italian peninsula. The fearsome M26 Pershing heavy tank leads the spearhead, supported by reliable M4A3E8 Sherman Easy Eights and devastating Sherman Whizbang rocket artillery tanks. Assault Engineers clear obstacles and fortifications ahead of the advance, while Deuce and a Half trucks maintain critical supply lines. This doctrine emphasizes overwhelming armored firepower."
+    type-limits:
+        apex_armor: 2
+    phase-limits: # These values should add up to 34
+        initial: 4
+        skirmish: 8
+        battle: 12
+        reserves: 10
+    blueprints:
+        squads:
+            - assault_engineer_us
+            - pershing_us
+            - sherman_easy_8_us
+            - sherman_whizbang_us
+            - truck_6x6_us
+        upgrades: []

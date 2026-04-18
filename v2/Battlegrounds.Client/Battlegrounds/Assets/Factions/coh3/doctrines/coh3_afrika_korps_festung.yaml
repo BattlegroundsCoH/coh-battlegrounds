@@ -1,0 +1,23 @@
+doctrine:
+    id: coh3_afrika_korps_festung
+    version: 1
+    faction: afrika_korps
+    name: Festung
+    parent: coh3_afrika_korps_default
+    description: "The Festung doctrine centers on fortified defensive positions and devastating long-range firepower. Italian Coastal Reserves hold the front line in prepared positions while Guastatori assault engineers construct fortifications and clear enemy obstacles. The Cannone da 105 howitzer delivers punishing artillery barrages, Goliath demolition vehicles deny approaches, and the mighty Elefant tank destroyer anchors the anti-tank defense. This doctrine excels at holding ground against overwhelming odds."
+    type-limits:
+        apex_armor: 2
+        elite_infantry: 4
+    phase-limits: # These values should add up to 32
+        initial: 7
+        skirmish: 8
+        battle: 10
+        reserves: 7
+    blueprints:
+        squads:
+            - coastal_reserve_ak
+            - guastatori_ak
+            - howitzer_cannone_da_105_ak
+            - elefant_tank_destroyer_ak
+            - goliath_ak
+        upgrades: []

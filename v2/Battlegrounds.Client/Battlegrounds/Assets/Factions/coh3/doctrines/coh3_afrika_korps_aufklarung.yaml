@@ -1,0 +1,21 @@
+doctrine:
+    id: coh3_afrika_korps_aufklarung
+    version: 1
+    faction: afrika_korps
+    name: "Aufkl\xE4rung"
+    parent: coh3_afrika_korps_default
+    description: "The Aufklärung doctrine focuses on mobile reconnaissance and raiding across the vast North African desert. Fast-moving Bersaglieri infantry provide forward scouting alongside nimble L6/40 light tanks, while the armored SdKfz 254 tractor serves as forward observation. Goliath remote-controlled demolition vehicles set devastating ambushes against unwary enemy columns. This doctrine rewards aggressive reconnaissance and hit-and-run tactics."
+    type-limits:
+        apex_armor: 1
+    phase-limits: # These values should add up to 34
+        initial: 6
+        skirmish: 10
+        battle: 10
+        reserves: 8
+    blueprints:
+        squads:
+            - bersaglieri_ak
+            - armored_tractor_254_ak
+            - goliath_ak
+            - l6_40_ak
+        upgrades: []

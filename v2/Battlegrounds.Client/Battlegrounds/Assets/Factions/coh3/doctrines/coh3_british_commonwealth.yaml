@@ -1,0 +1,22 @@
+doctrine:
+    id: coh3_british_commonwealth
+    version: 1
+    faction: british_africa
+    name: Commonwealth Forces
+    parent: coh3_british_default
+    description: "The Commonwealth Forces doctrine brings together the strength of the British Empire from across the globe. Tough Canadian Heavy Infantry provide aggressive close-range assault capability, while skilled Gurkhas from Nepal excel at stealthy long-range engagements. The versatile Centaur tank offers mobile fire support, and the terrifying Churchill Crocodile flamethrower tank incinerates fortified positions. This doctrine represents the diverse but unified Commonwealth fighting force."
+    type-limits:
+        apex_armor: 2
+        elite_infantry: 6
+    phase-limits: # These values should add up to 34
+        initial: 5
+        skirmish: 9
+        battle: 12
+        reserves: 8
+    blueprints:
+        squads:
+            - canadian_heavy_infantry_africa_uk
+            - gurkhas_africa_uk
+            - centaur_africa_uk
+            - churchill_crocodile_africa_uk
+        upgrades: []

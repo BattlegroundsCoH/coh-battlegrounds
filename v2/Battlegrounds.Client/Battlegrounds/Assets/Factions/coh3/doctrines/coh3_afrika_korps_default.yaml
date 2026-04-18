@@ -37,4 +37,4 @@ doctrine:
             - tiger_ak
             - truck_2_5_ak 
         upgrades: []
-    crew-blueprint: grenadier_ger
+    crew-blueprint: panzergrenadier_ak

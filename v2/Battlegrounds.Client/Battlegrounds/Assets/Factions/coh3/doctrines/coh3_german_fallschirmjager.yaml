@@ -1,0 +1,22 @@
+doctrine:
+    id: coh3_german_fallschirmjager
+    version: 1
+    faction: german
+    name: "Fallschirmj\xE4ger Division"
+    parent: coh3_german_default
+    description: "The Fallschirmjäger Division doctrine represents Germany's elite paratroopers defending the Italian peninsula, inspired by the fierce defense of Monte Cassino. Veteran Fallschirmjägers hold the line with tenacity, while Fallschirmpioneers handle engineering tasks and booby-trap enemy approaches. The lightweight LG40 recoilless gun provides airdrop-capable anti-tank firepower, and Borgward IV demolition vehicles deny key terrain to advancing Allied forces. This doctrine emphasizes elite infantry resilience and defensive ingenuity."
+    type-limits:
+        apex_armor: 1
+        elite_infantry: 6
+    phase-limits: # These values should add up to 34
+        initial: 6
+        skirmish: 10
+        battle: 10
+        reserves: 8
+    blueprints:
+        squads:
+            - fallschirmjagers_ger
+            - fallschirmpioneers_ger
+            - at_gun_lg40_ger
+            - borgward_iv_ger
+        upgrades: []
