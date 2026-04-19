@@ -91,6 +91,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\Doctrines\coh3\coh3_corpo_darmata.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Doctrines\coh3\coh3_desert_rats.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Doctrines\coh3\coh3_tobruk.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Factions\coh3\doctrines\coh3_afrika_korps_aufklarung.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

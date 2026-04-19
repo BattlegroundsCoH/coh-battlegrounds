@@ -5,6 +5,7 @@ doctrine:
     parent: coh3_british_default # Inherit from the default British doctrine
     description: "The Tobruk Defenders doctrine focuses on the defense of the strategic port city of Tobruk in North Africa during World War II. This doctrine emphasizes the use of fortified positions, anti-tank defenses, and a strong infantry presence to hold off enemy advances. The Tobruk Defenders are known for their resilience and determination in the face of overwhelming odds, making them a formidable force in defensive operations."
     short-description: "Defend Tobruk with fortified positions and strong infantry."
+    icon: "Doctrines/coh3/coh3_tobruk.png"
     type-limits: # Limits for each unit type
         apex_armor: 1 # Only one apex armor unit allowed
         elite_infantry: 6 # Up to six elite infantry units allowed

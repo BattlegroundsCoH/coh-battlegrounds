@@ -5,6 +5,7 @@ doctrine:
     parent: coh3_afrika_korps_default
     description: "The Corpo d'Armata doctrine represents Italy's contribution to the North African campaign. Italian Bersaglieri, Guastatori assault engineers, and Coastal Reserves provide numerous infantry, while L6/40 light tanks, M13/40 medium tanks, and Semovente self-propelled guns offer a range of Italian armored support. The Cannone da 105 howitzer delivers devastating long-range bombardments. This doctrine emphasizes strength in numbers over individual unit quality."
     short-description: "The Corpo d'Armata doctrine represents Italy's contribution to the North African campaign."
+    icon: "Doctrines/coh3/coh3_corpo_darmata.png"
     type-limits:
         apex_armor: 1
         elite_infantry: 4
