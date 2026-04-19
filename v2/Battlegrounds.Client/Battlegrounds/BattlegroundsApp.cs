@@ -209,6 +209,10 @@ public sealed class BattlegroundsApp {
         services.AddTransient<CreateCompanyModalView>();
         services.AddTransient<CreateCompanyModalViewModel>(); // Note: this is transient, so a new instance will be created each time it's requested
 
+        // Register modal for fixing a broken doctrine
+        services.AddTransient<FixDoctrineModalView>();
+        services.AddTransient<FixDoctrineModalViewModel>(); // Note: this is transient, so a new instance will be created each time it's requested
+
         // Register generic modal
         services.AddTransient<DialogModalView>();
         services.AddTransient<DialogModalViewModel>(); // Note: this is transient, so a new instance will be created each time it's requested

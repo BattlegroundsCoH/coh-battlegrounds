@@ -11,9 +11,11 @@ using Battlegrounds.Models.Playing;
 using Battlegrounds.Services;
 using Battlegrounds.ViewModels.CompanyHelpers;
 using Battlegrounds.ViewModels.Modals;
+using Battlegrounds.Views.Modals;
 
 using CommunityToolkit.Mvvm.Input;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using static Battlegrounds.Models.Companies.Squad;
@@ -36,9 +38,10 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     private readonly IUserService _userService;
     private readonly MainWindowViewModel _mainWindowViewModel;
     private readonly ILogger<CompanyEditorViewModel> _logger;
+    private readonly IServiceProvider _serviceProvider;
     private readonly string _faction = string.Empty;
     private readonly Game _game;
-    private readonly DoctrineDefinition _doctrine;
+    private DoctrineDefinition _doctrine;
 
     private CompanyEditorViewModelContext _context;
     private bool _isDirty = false; // Indicates if the company has unsaved changes
@@ -247,18 +250,20 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
     }
 
     public CompanyEditorViewModel(
-        CompanyEditorViewModelContext context, 
+        CompanyEditorViewModelContext context,
+        IServiceProvider serviceProvider,
         ICompanyService companyService,
         IDoctrineService doctrineService,
-        IBlueprintService blueprintService, 
+        IBlueprintService blueprintService,
         IUserService userService,
-        IGameService gameService, 
+        IGameService gameService,
         MainWindowViewModel mainWindowViewModel,
         ILogger<CompanyEditorViewModel> logger) {
 
         ArgumentNullException.ThrowIfNull(context, nameof(context));
         _context = context;
         _logger = logger;
+        _serviceProvider = serviceProvider;
         _companyService = companyService;
         _blueprintService = blueprintService;
         _userService = userService;
@@ -359,8 +364,42 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
         if (!IsDoctrineDirty)
             return;
 
-        // TODO: Show a modal to the user, informing them the selected doctrine is not valid for the company, and that they should pick another doctrine. For now, we will just log a warning and set the doctrine to the base doctrine for the faction.
-        _logger.LogWarning("Doctrine {DoctrineId} is not valid for company {CompanyName}. Setting doctrine to base doctrine for faction {Faction}.", _doctrine.Id, CompanyName, Faction);
+        _logger.LogWarning("Doctrine {DoctrineId} is outdated or missing for company {CompanyName}. Prompting the user to select a replacement.", _doctrine.Id, CompanyName);
+
+        FixDoctrineModalView modal = _serviceProvider.GetRequiredService<FixDoctrineModalView>();
+        if (modal.DataContext is not FixDoctrineModalViewModel viewModel) {
+            _logger.LogError("FixDoctrineModalView does not have a FixDoctrineModalViewModel as its DataContext.");
+            return;
+        }
+
+        viewModel.SetContext(_game, _faction, CompanyName);
+
+        var result = await _serviceProvider.GetRequiredService<IDialogService>().ShowDialogAsync<FixDoctrineParameters>(modal);
+
+        if (result is { Confirmed: true, Doctrine: not null }) {
+            _doctrine = result.Doctrine;
+            IsDoctrineDirty = false;
+            IsDirty = true;
+            LoadBlueprints();
+            // Notify all doctrine-dependent properties
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DoctrineName)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StartingUnitsMax)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddStartingUnit)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SkirmishPhaseUnitsMax)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddSkirmishPhaseUnit)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BattlePhaseUnitsMax)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddBattlePhaseUnit)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ReservesPhaseUnitsMax)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddReservesPhaseUnit)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AvailableInfantryUnits)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AvailableSupportUnits)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AvailableArmourUnits)));
+            VerifyCompany();
+        } else {
+            // User cancelled — editor remains blocked
+            IsValidCompany = false;
+            CompanyState = "Doctrine fix required. The company cannot be saved until a valid doctrine is selected.";
+        }
 
     }
 
@@ -413,6 +452,11 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
 
         // Mark the company as valid or invalid based on the checks performed
         IsValidCompany = isValid;
+
+        // Clear state message if the company is valid
+        if (IsValidCompany) {
+            CompanyState = IsDirty ? "Company is valid and ready to save." : string.Empty;
+        }
 
     }
 
