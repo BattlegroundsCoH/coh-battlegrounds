@@ -56,7 +56,23 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
         }
     }
 
-    public bool HasMainContent => _currentContent != null;
+    public bool HasMainContent => _currentContent is not null;
+
+    public bool IsHomeButtonActive {
+        get;
+        set {
+            field = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsHomeButtonActive)));
+        }
+    } = true;
+
+    public bool IsMultiplayerButtonActive {
+        get;
+        set {
+            field = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsMultiplayerButtonActive)));
+        }
+    } = false;
 
     public IAsyncRelayCommand SingleplayerCommand { get; }
 

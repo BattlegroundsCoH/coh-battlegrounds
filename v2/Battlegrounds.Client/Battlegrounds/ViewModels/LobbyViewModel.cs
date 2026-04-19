@@ -221,7 +221,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     }
 
     public string TrayMessage {
-        get => field;
+        get;
         set {
             if (value == field) return;
             field = value;
@@ -490,9 +490,11 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
         await _lobbyService.LeaveLobbyAsync(_lobby);
         if (_lobby is SingleplayerLobby) {
-            _mainWindowVm.SetContent(_mainWindowVm.HomeView); // Return to home view for singleplayer lobby
+            _mainWindowVm.IsHomeButtonActive = true; // Return to home view for singleplayer lobby
+            _mainWindowVm.SetContent(null); 
         } else {
-            _mainWindowVm.SetContent(_mainWindowVm.MultiplayerView); // Return to multiplayer view for multiplayer lobby
+            _mainWindowVm.IsMultiplayerButtonActive = true; // Return to multiplayer view for multiplayer lobby
+            _mainWindowVm.SetContent(null); 
         }
     }
 

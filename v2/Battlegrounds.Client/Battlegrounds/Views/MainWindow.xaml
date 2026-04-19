@@ -160,9 +160,9 @@
 
                 <!-- Navigation Menu -->
                 <StackPanel Margin="0,4,0,0">
-                    <RadioButton x:Name="HomeButton" Style="{StaticResource NavigationButton}" Content="Home" Margin="0,0,0,10" IsChecked="True"/>
+                    <RadioButton x:Name="HomeButton" Style="{StaticResource NavigationButton}" Content="Home" Margin="0,0,0,10" IsChecked="{Binding IsHomeButtonActive}"/>
                     <RadioButton x:Name="CompaniesButton" Style="{StaticResource NavigationButton}" Content="Companies" Margin="0,0,0,10"/>
-                    <RadioButton x:Name="MultiplayerButton" Style="{StaticResource NavigationButton}" Content="Multiplayer" Margin="0,0,0,10"/>
+                    <RadioButton x:Name="MultiplayerButton" Style="{StaticResource NavigationButton}" Content="Multiplayer" Margin="0,0,0,10" IsChecked="{Binding IsMultiplayerButtonActive}"/>
                     <RadioButton Style="{StaticResource NavigationButton}" Content="Single Player" Margin="0,0,0,10" Command="{Binding SingleplayerCommand}" />
                 </StackPanel>
 

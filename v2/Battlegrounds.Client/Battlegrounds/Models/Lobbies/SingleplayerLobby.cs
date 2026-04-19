@@ -271,7 +271,11 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
         }
 
         // Trigger team updated event to notify the UI of the slot change
-        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated)); // Notify the UI of team changes
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI of team changes
+
+        if (currentTeam is not null && currentTeam != team) {
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, currentTeam.TeamType)); // Notify the UI of team changes
+        }
 
     }
 
