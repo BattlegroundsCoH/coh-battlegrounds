@@ -5,6 +5,7 @@ doctrine:
     parent: coh3_american_default
     description: "The Airborne doctrine represents the 82nd and 101st Airborne Divisions' operations during the Italian campaign. Elite Paratroopers and Pathfinders form the core assault force, dropping behind enemy lines to seize key objectives. Light Pack Howitzers provide airdrop-capable artillery support, while nimble M29 Weasels handle reconnaissance and towing duties across rough Italian terrain. This doctrine trades heavy armor for elite infantry striking power."
     short-description: "Elite Paratroopers and Pathfinders form the core assault force, dropping behind enemy lines to seize key objectives."
+    icon: "Doctrines/coh3/coh3_airborne.png"
     type-limits:
         apex_armor: 1
         elite_infantry: 6
