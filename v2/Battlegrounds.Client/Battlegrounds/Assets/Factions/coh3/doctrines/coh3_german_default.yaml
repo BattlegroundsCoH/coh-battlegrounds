@@ -1,0 +1,47 @@
+doctrine:
+    id: coh3_german_default # Unique identifier for the doctrine
+    version: 1 # Version number for the doctrine, useful for tracking changes
+    faction: german # The faction this doctrine belongs to
+    name: German Default # The name of the doctrine, which will be displayed in the game
+    is-visible: false # This doctrine is not visible in the UI
+    description: "The default German doctrine, which serves as the baseline for all other German doctrines."
+    short-description: "The default German doctrine, which serves as the baseline for all other German doctrines."
+    icon: Factions/coh3_german.png # Path to the icon representing this doctrine in the UI
+    type-limits: # Limits for each unit type
+        apex_armor: 2 # Only two apex armor units allowed
+    phase-limits: # These values should add up to 36
+        initial: 5
+        skirmish: 9
+        battle: 12
+        reserves: 10
+    blueprints: # List of blueprints available in this doctrine
+        squads:
+            - grenadier_ger
+            - pioneer_ger
+            - panzergrenadier_ger
+            - stormtrooper_ger
+            - sniper_ger
+            - jaeger_ger
+            - at_gun_75mm_ger
+            - at_gun_88mm_pak43_ger
+            - hmg_mg42_ger
+            - leig_75mm_ger
+            - mortar_81mm_ger
+            - nebelwerfer_150mm_ger
+            - aa_gun_20mm_ger
+            - armored_car_ger
+            - halftrack_251_flak_ger
+            - halftrack_ger
+            - kettenkrad_ger
+            - truck_2_5_ger
+            - brummbar_ger
+            - marder_iii_ger
+            - panther_ger
+            - panzer_iv_cmd_ger
+            - panzer_iv_ger
+            - stug_iii_d_ger
+            - stug_iii_ger
+            - tiger_ger
+            - wirbelwind_ger 
+        upgrades: []
+    crew-blueprint: grenadier_ger

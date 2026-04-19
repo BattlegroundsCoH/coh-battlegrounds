@@ -1,0 +1,21 @@
+doctrine:
+    id: coh3_british_desert_rats
+    version: 1
+    name: Desert Rats
+    parent: coh3_british_default
+    description: "The Desert Rats doctrine represents the famous 7th Armoured Division's fast-moving armored warfare across the Western Desert. Reliable Valentine tanks provide mobile infantry support, while the powerful Sherman Firefly delivers devastating anti-armor capability with its 17-pounder gun. The Bishop self-propelled gun offers mobile artillery support, and the 4.2-inch Heavy Mortar pins enemy positions with sustained barrages. This doctrine rewards aggressive mobile warfare and combined arms coordination."
+    short-description: "The doctrine focuses on mobile armored warfare, leveraging the strengths of the 7th Armoured Division's vehicles and artillery to dominate the battlefield."
+    icon: "Doctrines/coh3/coh3_desert_rats.png"
+    type-limits:
+        apex_armor: 1
+    phase-limits: # These values should add up to 34
+        initial: 5
+        skirmish: 9
+        battle: 11
+        reserves: 9
+    blueprints:
+        squads:
+            - valentine_uk
+            - bishop_africa_uk
+            - mortar_heavy_4_2_africa_uk
+        upgrades: []

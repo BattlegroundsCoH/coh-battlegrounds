@@ -25,6 +25,13 @@ using Serilog;
 
 namespace Battlegrounds;
 
+/// <summary>
+/// Represents the main application class that manages the lifecycle, configuration, and dependency injection for the
+/// CoH Battlegrounds application.
+/// </summary>
+/// <remarks>Implements a singleton pattern through the <see cref="Instance"/> property. Handles first-run
+/// detection, file storage configuration in AppData and My Documents folders, and supports a no-play mode for testing
+/// and development purposes when launched with the --noplay argument.</remarks>
 public sealed class BattlegroundsApp {
 
     public static BattlegroundsApp? Instance { get; private set; }
@@ -202,6 +209,10 @@ public sealed class BattlegroundsApp {
         services.AddTransient<CreateCompanyModalView>();
         services.AddTransient<CreateCompanyModalViewModel>(); // Note: this is transient, so a new instance will be created each time it's requested
 
+        // Register modal for fixing a broken doctrine
+        services.AddTransient<FixDoctrineModalView>();
+        services.AddTransient<FixDoctrineModalViewModel>(); // Note: this is transient, so a new instance will be created each time it's requested
+
         // Register generic modal
         services.AddTransient<DialogModalView>();
         services.AddTransient<DialogModalViewModel>(); // Note: this is transient, so a new instance will be created each time it's requested
@@ -223,6 +234,7 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<IBlueprintService, BlueprintService>();
         services.AddSingleton<IStatisticsService, StatisticsService>();
         services.AddSingleton<IBrowserService, BrowserService>();
+        services.AddSingleton<IDoctrineService, DoctrineService>();
         services.AddSingleton<ICompanySerializer, BinaryCompanySerializer>();
         services.AddSingleton<ICompanyDeserializer, BinaryCompanyDeserializer>();
         services.AddSingleton<IBattlegroundsServerAPI, HttpBattlegroundsServerAPI>();
@@ -310,10 +322,13 @@ public sealed class BattlegroundsApp {
         }
 
         var gameMapService = serviceProvider.GetRequiredService<IGameMapService>();
-        await gameMapService.LoadMapsAsync();
+        var loadMapsTask = gameMapService.LoadMapsAsync();
 
         var blueprintService = serviceProvider.GetRequiredService<IBlueprintService>();
-        await blueprintService.LoadBlueprints();
+        var doctrineService = serviceProvider.GetRequiredService<IDoctrineService>();
+        var loadBlueprintsAndDoctrinesTask = blueprintService.LoadBlueprints().ContinueWith(_ => doctrineService.LoadDoctrines(CancellationToken.None));
+
+        await Task.WhenAll(loadMapsTask, loadBlueprintsAndDoctrinesTask);
 
         var companyService = serviceProvider.GetRequiredService<ICompanyService>();
         int companyCount = await companyService.LoadPlayerCompaniesAsync();

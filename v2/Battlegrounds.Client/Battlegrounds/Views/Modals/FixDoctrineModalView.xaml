@@ -1,0 +1,208 @@
+<helpers:DialogUserControl x:Class="Battlegrounds.Views.Modals.FixDoctrineModalView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helpers="clr-namespace:Battlegrounds.Helpers"
+             xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels.Modals"
+             xmlns:converters="clr-namespace:Battlegrounds.Converters"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=viewmodels:FixDoctrineModalViewModel}"
+             d:DesignHeight="560" d:DesignWidth="560">
+
+    <helpers:DialogUserControl.Resources>
+        <converters:NullVisibilityConverter x:Key="NullToVisibilityConverter"/>
+
+        <Style x:Key="DoctrineCardListBox" TargetType="ListBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DoctrineCardItem" TargetType="ListBoxItem">
+            <Setter Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Margin" Value="0,4,4,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Width" Value="140"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="CardBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                BorderThickness="2"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CardBorder" Property="Background" Value="{StaticResource BackgroundGrayBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="{StaticResource ForegroundLightBlueBrush}"/>
+                                <Setter TargetName="CardBorder" Property="Background" Value="{StaticResource BackgroundGrayBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="DoctrineCardDataTemplate">
+            <StackPanel>
+                <Image
+                    Width="42" Height="42"
+                    Margin="0,0,0,6"
+                    HorizontalAlignment="Center"
+                    Source="{Binding Icon}"
+                    RenderOptions.BitmapScalingMode="HighQuality"/>
+                <TextBlock
+                    Text="{Binding Name}"
+                    FontWeight="SemiBold"
+                    FontSize="11"
+                    TextWrapping="Wrap"
+                    HorizontalAlignment="Center"
+                    TextAlignment="Center"
+                    Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                <StackPanel.ToolTip>
+                    <ToolTip Style="{StaticResource BattlegroundsTooltip}">
+                        <StackPanel>
+                            <TextBlock
+                                Text="{Binding Name}"
+                                FontWeight="SemiBold"
+                                FontSize="11"
+                                TextWrapping="Wrap"
+                                Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                            <TextBlock
+                                Text="{Binding Description}"
+                                FontSize="11"
+                                TextWrapping="Wrap"
+                                MaxWidth="320"
+                                Foreground="{StaticResource ForegroundLightGrayBrush}"/>
+                        </StackPanel>
+                    </ToolTip>
+                </StackPanel.ToolTip>
+            </StackPanel>
+        </DataTemplate>
+
+    </helpers:DialogUserControl.Resources>
+
+    <Border
+        Background="{StaticResource BackgroundBlueBrush}"
+        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+        BorderThickness="1"
+        CornerRadius="8">
+        <Grid Margin="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <TextBlock
+                Text="FIX DOCTRINE"
+                FontSize="20"
+                FontWeight="Bold"
+                Foreground="{StaticResource ForegroundWhiteBrush}"
+                Margin="0,0,0,12"/>
+
+            <!-- Warning banner -->
+            <Border
+                Grid.Row="1"
+                Background="{StaticResource BackgroundLighRedBrush}"
+                BorderBrush="{StaticResource AccentOrangeBrush}"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="12,8"
+                Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock
+                        FontWeight="Bold"
+                        FontSize="12"
+                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                        TextWrapping="Wrap">
+                        The doctrine for <Run FontStyle="Italic" Text="{Binding CompanyName, Mode=OneWay}"/> is outdated or no longer available.
+                    </TextBlock>
+                    <TextBlock
+                        Margin="0,4,0,0"
+                        FontSize="11"
+                        Foreground="{StaticResource ForegroundLightGrayBrush}"
+                        TextWrapping="Wrap"
+                        Text="Please select a replacement doctrine below. Units that are incompatible with the new doctrine may need to be removed."/>
+                </StackPanel>
+            </Border>
+
+            <!-- Doctrine picker -->
+            <StackPanel Grid.Row="2">
+                <TextBlock
+                    Text="Doctrine"
+                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                    Margin="0,0,0,5"/>
+                <ListBox
+                    HorizontalAlignment="Center"
+                    ItemsSource="{Binding AvailableDoctrines}"
+                    SelectedItem="{Binding SelectedDoctrine}"
+                    Style="{StaticResource DoctrineCardListBox}"
+                    ItemContainerStyle="{StaticResource DoctrineCardItem}"
+                    ItemTemplate="{StaticResource DoctrineCardDataTemplate}"
+                    Margin="0,0,0,8"/>
+                <!-- Selected doctrine detail panel -->
+                <Border
+                    Background="{StaticResource BackgroundLightBlueBrush}"
+                    BorderBrush="{StaticResource ForegroundLightBlueBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="12,10"
+                    Visibility="{Binding SelectedDoctrine, Converter={StaticResource NullToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock
+                            Text="{Binding SelectedDoctrine.Name}"
+                            FontWeight="Bold"
+                            HorizontalAlignment="Center"
+                            FontSize="13"
+                            Foreground="{StaticResource ForegroundWhiteBrush}"
+                            Margin="0,0,0,4"/>
+                        <TextBlock
+                            Text="{Binding SelectedDoctrine.Description}"
+                            FontSize="11"
+                            TextWrapping="Wrap"
+                            Foreground="{StaticResource ForegroundLightGrayBrush}"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Buttons -->
+            <StackPanel
+                Grid.Row="3"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Margin="0,16,0,0">
+                <Button
+                    Content="Cancel"
+                    Style="{StaticResource DangerActionButton}"
+                    Width="100"
+                    Command="{Binding CancelCommand}"/>
+                <Button
+                    Content="Confirm"
+                    Style="{StaticResource ActionButton}"
+                    Margin="8,0,0,0"
+                    Width="100"
+                    Command="{Binding ConfirmCommand}"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</helpers:DialogUserControl>

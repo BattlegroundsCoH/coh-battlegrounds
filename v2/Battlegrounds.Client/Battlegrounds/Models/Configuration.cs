@@ -103,6 +103,11 @@ public sealed class Configuration {
     public string CompaniesPath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "CoHBattlegrounds", "companies");
 
     /// <summary>
+    /// Gets or sets the file path where doctrine data is stored.
+    /// </summary>
+    public string DoctrinesPath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "CoHBattlegrounds", "doctrines");
+
+    /// <summary>
     /// Gets or sets the file system path to the application's documents directory.
     /// </summary>
     /// <remarks>The default value points to a subdirectory within the user's My Documents folder. This path

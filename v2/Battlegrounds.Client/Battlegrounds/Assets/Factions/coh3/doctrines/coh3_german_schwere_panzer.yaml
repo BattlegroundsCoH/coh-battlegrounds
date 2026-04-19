@@ -1,0 +1,21 @@
+doctrine:
+    id: coh3_german_schwere_panzer
+    version: 1
+    name: Schwere Panzerkompanie
+    parent: coh3_german_default
+    description: "The Schwere Panzerkompanie doctrine represents late-war German heavy armor dominance on the Italian front. The mighty King Tiger leads the armored spearhead with virtually impenetrable frontal armor, while Nashorn heavy tank destroyers provide long-range anti-tank overwatch. SdKfz 8 Rad armored cars scout ahead for the advancing column, and Sturmpioneers clear mines, obstacles, and enemy fortifications in the path of the armored advance. This doctrine trades flexibility for raw armored power."
+    short-description: "The Schwere Panzerkompanie doctrine represents late-war German heavy armor dominance on the Italian front."
+    type-limits:
+        apex_armor: 2
+    phase-limits: # These values should add up to 32
+        initial: 4
+        skirmish: 7
+        battle: 12
+        reserves: 9
+    blueprints:
+        squads:
+            - sturmpioneer_ger
+            - king_tiger_sdkfz_182_ger
+            - nashorn_ger
+            - armored_car_8_rad_ger
+        upgrades: []

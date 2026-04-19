@@ -1,0 +1,22 @@
+doctrine:
+    id: coh3_german_kampfgruppe
+    version: 1
+    name: Kampfgruppe
+    parent: coh3_german_default
+    description: "The Kampfgruppe doctrine represents a flexible combined-arms battlegroup assembled from available German forces in the Italian theater. Elite Fallschirmjägers provide hard-hitting infantry, SdKfz 8 Rad armored cars deliver fast reconnaissance, and Sturmpioneers handle field engineering. Mortar Halftracks and Wespe self-propelled artillery guns ensure mobile fire support is always available. This versatile all-rounder doctrine adapts to any tactical situation on the battlefield."
+    short-description: "A flexible combined-arms battlegroup with elite Fallschirmjägers, SdKfz 8 Rad armored cars, Sturmpioneers, and mobile artillery support."
+    type-limits:
+        apex_armor: 2
+    phase-limits: # These values should add up to 36
+        initial: 5
+        skirmish: 9
+        battle: 12
+        reserves: 10
+    blueprints:
+        squads:
+            - fallschirmjagers_ger
+            - sturmpioneer_ger
+            - armored_car_8_rad_ger
+            - halftrack_251_mmortar_ger
+            - wespe_ger
+        upgrades: []
