@@ -4,7 +4,9 @@ doctrine:
     faction: british_africa # The faction this doctrine belongs to
     name: British Default # The name of the doctrine, which will be displayed in the game
     is-visible: false # This doctrine is not visible in the UI
-    description: "The default british doctrine, which serves as the baseline for all other British doctrines."
+    description: "The default british doctrine, which serves as the baseline for all other British doctrines."    
+    short-description: "The default british doctrine, which serves as the baseline for all other British doctrines."
+    icon: Factions/coh3_british_africa.png # Path to the icon representing this doctrine in the UI
     type-limits: # Limits for each unit type
         apex_armor: 2 # Only two apex armor units allowed
     phase-limits: # These values should add up to 36

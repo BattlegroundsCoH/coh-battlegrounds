@@ -1,10 +1,10 @@
 doctrine:
     id: coh3_american_special_ops
     version: 1
-    faction: american
     name: Special Operations
     parent: coh3_american_default
     description: "The Special Operations doctrine features the elite First Special Service Force (SSF) commandos executing precision strikes behind enemy lines in the Italian theater. Artillery Observers call in devastating fire missions on key targets, while the heavy M2HB .50 Caliber Machine Gun provides superior suppression firepower. The powerful 3-inch M5 Anti-Tank Gun anchors defensive positions against enemy armor. This doctrine rewards careful positioning and coordinated strikes."
+    short-description: "The Special Operations doctrine features the elite First Special Service Force (SSF) commandos executing precision strikes behind enemy lines in the Italian theater."
     type-limits:
         apex_armor: 1
         elite_infantry: 6

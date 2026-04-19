@@ -9,12 +9,16 @@
              xmlns:converters="clr-namespace:Battlegrounds.Converters"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=viewmodels:CreateCompanyModalViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="550" d:DesignWidth="800">
     <helpers:DialogUserControl.Resources>
         <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
         <converters:FactionIdToNameConverter x:Key="FactionIdToNameConverter"/>
+        <converters:NullVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <converters:BlueprintIconMultiBindingConverter x:Key="BlueprintIconMultiConverter"/>
-
+        <converters:BlueprintNameConverter x:Key="BlueprintNameConverter"/>
+        <converters:BlueprintBriefTextConverter x:Key="BlueprintBriefTextConverter"/>
+        <converters:BlueprintHelpTextConverter x:Key="BlueprintHelpTextConverter"/>
+        
         <DataTemplate x:Key="FactionComboBoxItemTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -44,69 +48,90 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate 
-            x:Key="DoctrineComboBoxItemTemplate">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <!-- Doctrine title -->
-                <TextBlock Text="{Binding Name}" Grid.Row="0"/>
-                <Grid.ToolTip>
-                    <ToolTip Style="{StaticResource BattlegroundsTooltip}" MaxWidth="480">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Text="{Binding Name}" Grid.Row="0" Foreground="{StaticResource ForegroundWhiteBrush}" FontSize="14" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Description}" Grid.Row="1" TextWrapping="Wrap" Foreground="{StaticResource ForegroundWhiteBrush}" FontStyle="Italic"/>
-                            <StackPanel Grid.Row="2">
-                                <Grid Margin="0,8,0,0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Text="Additional Units" Grid.Row="0" Foreground="{StaticResource ForegroundWhiteBrush}" FontSize="12" FontWeight="DemiBold"/>
-                                    <ItemsControl 
-                                        Grid.Row="1"
-                                        Margin="0,4,0,0"
-                                        ItemsSource="{Binding ExclusiveSquadBlueprints}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <WrapPanel/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Image 
-                                                        Grid.Column="0"
-                                                        Width="48"
-                                                        Height="48"
-                                                        Margin="0,0,12,0">
-                                                        <Image.Source>
-                                                            <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
-                                                                <Binding Path="."/>
-                                                                <Binding Path="DataContext.SelectedGame" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
-                                                            </MultiBinding>
-                                                        </Image.Source>
-                                                    </Image>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </Grid>
-                            </StackPanel>
-                        </Grid>
+        <Style x:Key="DoctrineCardListBox" TargetType="ListBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DoctrineCardItem" TargetType="ListBoxItem">
+            <Setter Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Margin" Value="0,4,4,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Width" Value="140"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="CardBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                BorderThickness="2"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CardBorder" Property="Background" Value="{StaticResource BackgroundGrayBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="{StaticResource ForegroundLightBlueBrush}"/>
+                                <Setter TargetName="CardBorder" Property="Background" Value="{StaticResource BackgroundGrayBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="DoctrineCardDataTemplate">
+            <StackPanel>
+                <Image 
+                    Width="42" Height="42"
+                    Margin="0,0,0,6"
+                    HorizontalAlignment="Center"
+                    Source="{Binding Icon}"
+                    RenderOptions.BitmapScalingMode="HighQuality"/>
+                <TextBlock 
+                    Text="{Binding Name}"
+                    FontWeight="SemiBold"
+                    FontSize="11"
+                    TextWrapping="Wrap"
+                    HorizontalAlignment="Center"
+                    TextAlignment="Center"
+                    Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                <StackPanel.ToolTip>
+                    <ToolTip Style="{StaticResource BattlegroundsTooltip}">
+                        <StackPanel>
+                            <TextBlock 
+                                Text="{Binding Name}"
+                                FontWeight="SemiBold"
+                                FontSize="11"
+                                TextWrapping="Wrap"
+                                HorizontalAlignment="Left"
+                                TextAlignment="Center"
+                                Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                            <TextBlock
+                                Text="{Binding Description}"
+                                FontSize="11"
+                                TextWrapping="Wrap"
+                                MaxWidth="320"
+                                Foreground="{StaticResource ForegroundLightGrayBrush}"/>
+                        </StackPanel>
                     </ToolTip>
-                </Grid.ToolTip>
-            </Grid>
+                </StackPanel.ToolTip>
+            </StackPanel>
         </DataTemplate>
 
     </helpers:DialogUserControl.Resources>
@@ -165,10 +190,108 @@
                     <TextBlock Text="Doctrine"
                        Foreground="{StaticResource ForegroundWhiteBrush}"
                        Margin="0,0,0,5"/>
-                    <ComboBox ItemsSource="{Binding AvailableDoctrines}"
-                              SelectedItem="{Binding SelectedDoctrine}"
-                              Style="{StaticResource SettingsComboBox}"
-                              ItemTemplate="{StaticResource DoctrineComboBoxItemTemplate}"/>
+                    <ListBox
+                        HorizontalAlignment="Center"
+                        ItemsSource="{Binding AvailableDoctrines}"
+                        SelectedItem="{Binding SelectedDoctrine}"
+                        Style="{StaticResource DoctrineCardListBox}"
+                        ItemContainerStyle="{StaticResource DoctrineCardItem}"
+                        ItemTemplate="{StaticResource DoctrineCardDataTemplate}"
+                        Margin="0,0,0,8"/>
+                    <!-- Selected doctrine detail panel -->
+                    <Border
+                        Background="{StaticResource BackgroundLightBlueBrush}"
+                        BorderBrush="{StaticResource ForegroundLightBlueBrush}"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Height="200"
+                        Padding="12,10"
+                        Visibility="{Binding SelectedDoctrine, Converter={StaticResource NullToVisibilityConverter}}">
+                        <StackPanel>
+                            <TextBlock
+                                Text="{Binding SelectedDoctrine.Name}"
+                                FontWeight="Bold"
+                                HorizontalAlignment="Center"
+                                FontSize="13"
+                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                Margin="0,0,0,4"/>
+                            <TextBlock
+                                Text="{Binding SelectedDoctrine.ShortDescription}"
+                                FontSize="11"
+                                TextWrapping="Wrap"
+                                Height="50"
+                                Foreground="{StaticResource ForegroundLightGrayBrush}"/>
+                            <Grid Margin="0,8,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock 
+                                    Text="Additional Units" 
+                                    Grid.Row="0" 
+                                    Foreground="{StaticResource ForegroundWhiteBrush}" 
+                                    FontSize="12" 
+                                    HorizontalAlignment="Center"
+                                    FontWeight="DemiBold"/>
+                                <ItemsControl 
+                                        Grid.Row="1"
+                                        Margin="0,4,0,0"
+                                        HorizontalAlignment="Center"
+                                        ItemsSource="{Binding SelectedDoctrine.ExclusiveSquadBlueprints}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Image 
+                                                        Grid.Column="0"
+                                                        Width="42"
+                                                        Height="42"
+                                                        Margin="0,0,12,0">
+                                                    <Image.Source>
+                                                        <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
+                                                            <Binding Path="."/>
+                                                            <Binding Path="DataContext.SelectedGame" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                                        </MultiBinding>
+                                                    </Image.Source>
+                                                    <Image.ToolTip>
+                                                        <ToolTip Style="{StaticResource BattlegroundsTooltip}" MaxWidth="360">
+                                                            <StackPanel>
+                                                                <TextBlock 
+                                                                    Text="{Binding Converter={StaticResource BlueprintNameConverter}}"
+                                                                    FontSize="16" 
+                                                                    FontWeight="Bold"
+                                                                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                                    TextWrapping="Wrap"/>
+                                                                <TextBlock 
+                                                                    Text="{Binding Converter={StaticResource BlueprintHelpTextConverter}}"
+                                                                    FontSize="14" 
+                                                                    Foreground="{StaticResource ForegroundGrayBrush}"
+                                                                    TextWrapping="Wrap"/>
+                                                                <TextBlock 
+                                                                    Text="{Binding Converter={StaticResource BlueprintBriefTextConverter}}"
+                                                                    FontSize="12"
+                                                                    FontStyle="Italic"
+                                                                    Margin="0,8,0,0"
+                                                                    Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                                            </StackPanel>
+                                                        </ToolTip>
+                                                    </Image.ToolTip>
+                                                </Image>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
 
             </StackPanel>

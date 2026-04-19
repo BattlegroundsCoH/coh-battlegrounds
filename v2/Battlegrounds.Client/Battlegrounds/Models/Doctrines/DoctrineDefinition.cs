@@ -23,11 +23,24 @@ public sealed class DoctrineDefinition {
 
     public string Hash { get; init; } = string.Empty;
 
-    public string Faction { get; init; } = string.Empty;
+    public string Faction {
+        get => string.IsNullOrEmpty(field) && Parent is not null ? Parent.Value.Faction : field;
+        init;
+    } = string.Empty;
 
     public string Name { get; init; } = string.Empty;
 
     public string Description { get; init; } = string.Empty;
+
+    public string ShortDescription {
+        get => string.IsNullOrEmpty(field) && Parent is not null ? Parent.Value.ShortDescription : field;
+        init;
+    } = string.Empty;
+
+    public string Icon {
+        get => string.IsNullOrEmpty(field) && Parent is not null ? Parent.Value.Icon : $"pack://siteoforigin:,,,/Assets/{field}";
+        init;
+    }
 
     public bool IsVisible { get; init; } = true;
 

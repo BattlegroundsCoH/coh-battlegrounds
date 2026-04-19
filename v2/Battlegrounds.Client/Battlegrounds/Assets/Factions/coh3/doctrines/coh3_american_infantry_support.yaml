@@ -1,10 +1,10 @@
 doctrine:
     id: coh3_american_infantry_support
     version: 1
-    faction: american
     name: Infantry Support Company
     parent: coh3_american_default
     description: "The Infantry Support Company doctrine provides a broad-based combined arms approach to the Italian campaign. Assault Engineers handle obstacles and fortifications at the front, while Pack Howitzers and heavy .50 Caliber Machine Guns bolster the infantry line with versatile fire support. Light trucks provide flexible logistics and towing capability across the difficult Italian terrain. This doctrine offers a well-rounded force suited to any battlefield situation."
+    short-description: "The Infantry Support Company doctrine provides a broad-based combined arms approach to the Italian campaign."
     type-limits:
         apex_armor: 2
     phase-limits: # These values should add up to 36

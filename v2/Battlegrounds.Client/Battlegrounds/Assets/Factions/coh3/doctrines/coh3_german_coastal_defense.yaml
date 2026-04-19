@@ -1,10 +1,10 @@
 doctrine:
     id: coh3_german_coastal_defense
     version: 1
-    faction: german
     name: "K\xFCstenverteidigung"
     parent: coh3_german_default
     description: "The Küstenverteidigung doctrine focuses on the defense of the Italian coastline against Allied amphibious landings. Coastal Reserve infantry and their Artillery Officer hold fortified positions along the shore, directing devastating barrages against landing forces. Mortar Halftracks provide mobile indirect fire support, while Nashorn heavy tank destroyers and Wespe self-propelled artillery deliver punishing long-range firepower against enemy armor and concentrations. This doctrine excels at area denial and coordinated defensive fire."
+    short-description: "The Küstenverteidigung doctrine focuses on the defense of the Italian coastline against Allied amphibious landings."
     type-limits:
         apex_armor: 2
     phase-limits: # These values should add up to 34

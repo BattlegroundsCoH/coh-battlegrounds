@@ -1,10 +1,11 @@
 doctrine:
     id: coh3_british_polish_corps
     version: 1
-    faction: british_africa
     name: Polish II Corps
     parent: coh3_british_default
     description: "The Polish II Corps doctrine commemorates the heroic Polish soldiers who fought under British command during the Italian campaign, most famously at the Battle of Monte Cassino. Determined Polish Lancers provide resilient infantry, backed by devastating Land Mattress rocket artillery and 4.2-inch Heavy Mortars that soften fortified positions before the assault. The mighty Churchill Black Prince heavy tank provides the armored punch needed for the final breakthrough. This doctrine excels at breaking through prepared defensive lines."
+    short-description: "Doctrine focused on the Polish II Corps, featuring resilient infantry, rocket artillery, and heavy tanks for breaking through fortified positions."
+    icon: Doctrines/coh3/coh3_polish_ii_corps.png
     type-limits:
         apex_armor: 1
     phase-limits: # These values should add up to 32
@@ -16,7 +17,7 @@ doctrine:
         squads:
             - polish_lancer_africa_uk
             - land_mattress_africa_uk
-            - mortar_heavy_4_2_africa_uk
+            - sherman_firefly_africa_uk
             - churchill_black_prince_africa_uk
         upgrades: []
     crew-blueprint: polish_lancer_africa_uk
