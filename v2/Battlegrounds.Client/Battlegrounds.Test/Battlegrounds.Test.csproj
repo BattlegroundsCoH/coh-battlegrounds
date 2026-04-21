@@ -60,6 +60,9 @@
     <None Update="TestData\Playbacks\temp_19-06-2025__18_31.rec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\Playbacks\temp_21-04-2026__17_14.rec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\Playbacks\temp_23-05-2025__23_51.rec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

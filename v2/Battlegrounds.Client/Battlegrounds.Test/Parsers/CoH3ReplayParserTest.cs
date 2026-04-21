@@ -60,4 +60,17 @@ public class CoH3ReplayParserTest {
         }
     }
 
+    [Test]
+    public void WillParseUpdatedCoH3ReplayFormat() {
+        string replayLocation = ReplayFixture.TEMP_21_04_2026__17_14_FILE;
+        var replay = _parser.ParseReplayFile(replayLocation);
+        Assert.That(replay, Is.Not.Null, "Replay should not be null.");
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(replay.GameId, Is.EqualTo(CoH3.GameId), "Replay Game ID should match CoH3.");
+            Assert.That(replay.Players, Has.Count.EqualTo(2), "Replay should have 2 players.");
+            Assert.That(replay.Duration, Is.GreaterThan(TimeSpan.Zero), "Replay duration should be greater than zero.");
+            Assert.That(replay.Events, Has.Count.GreaterThan(0), "Replay should have events.");
+        }
+    }
+
 }

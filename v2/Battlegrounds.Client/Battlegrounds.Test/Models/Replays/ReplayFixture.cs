@@ -49,6 +49,14 @@ public static class ReplayFixture {
     /// </remarks>
     public static readonly string TEMP_26_02_2026__17_40_FILE = GetReplayLocation("temp_26-02-2026__17_40.rec");
 
+    /// <summary>
+    /// Gets the location of a sample replay file for testing.
+    /// </summary>
+    /// <remarks>
+    /// Validates that the file exists at the specified path and throws an assertion error if it does not.
+    /// </remarks>
+    public static readonly string TEMP_21_04_2026__17_14_FILE = GetReplayLocation("temp_21-04-2026__17_14.rec");
+
     private static string GetReplayLocation(string replayName) {
         var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "Playbacks", replayName);
         Assert.That(File.Exists(path), Is.True, $"Replay file not found: {path}");

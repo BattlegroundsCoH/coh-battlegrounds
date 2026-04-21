@@ -12,6 +12,8 @@ public sealed class CoH3ReplayParser : IReplayParser {
 
     public const float COH3_TICK_RATE = 1.0f / 8.0f; // CoH3 uses 8 ticks per second
 
+    private const int COH3_V_2_3_0_CHUNKY_VERSION = 4595383;
+
     public Replay ParseReplayFile(string replayLocation) {
 
         if (!File.Exists(replayLocation))
@@ -51,6 +53,9 @@ public sealed class CoH3ReplayParser : IReplayParser {
         chunkyReader.Advance(6); // Skip 6 bytes (unknown data)
         uint playerCount = chunkyReader.ReadUInt32();
 
+        var chunkyHeaderVersion = dataFolder.Version;
+        var isCoH3_2_3_0_or_later = chunkyHeaderVersion >= COH3_V_2_3_0_CHUNKY_VERSION;
+
         ReplayPlayer[] players = new ReplayPlayer[playerCount];
         for (int i = 0; i < playerCount; i++) {
 
@@ -86,6 +91,9 @@ public sealed class CoH3ReplayParser : IReplayParser {
             SkipCoH3PlayerItems(chunkyReader, isHuman);
             chunkyReader.Advance(4); // Skip 4 bytes (unknown data)
             SkipCoH3PlayerItems(chunkyReader, isHuman);
+
+            if (isCoH3_2_3_0_or_later)
+                chunkyReader.Advance(4); // Skip 4 bytes (unknown data) for CoH3 2.3.0 or later
 
         }
 
