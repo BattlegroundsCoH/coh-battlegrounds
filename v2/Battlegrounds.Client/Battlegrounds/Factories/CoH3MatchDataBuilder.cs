@@ -83,10 +83,15 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
         table
             .AddFieldValue("id", participant.LobbyId)
             .AddFieldValue("name", participant.ParticipantName)
-            .AddFieldValue("faction", slot.Faction)
+            .AddFieldValue("faction", MapCompanyFaction(slot.Faction))
             .AddFieldValue("difficulty", (byte)slot.Difficulty)
             .AddFieldValue("company", slot.CompanyId);
     }
+
+    private static string MapCompanyFaction(string faction) => faction switch { // Too lazy to fix elsewhere, so just mapping here.
+        "german" => "germans",
+        _ => faction
+    };
 
     private void BuildCompanyData(LuaSourceFileBuilder.TableBuilder table, Company company) {
         table.AddFieldValue("name", company.Name);
@@ -95,12 +100,12 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
                                              where squad.HasPassenger
                                              select squad.Passenger!.PassengerSquadId)];
             foreach (var squad in company.Squads) {
-                squadsTable.AddNestedTable(squad.Id, x => BuildCompanySquadData(x, squad, !carriedSquads.Contains(squad.Id)));
+                squadsTable.AddNestedTable(squad.Id, x => BuildCompanySquadData(x, squad, company, !carriedSquads.Contains(squad.Id)));
             }
         });
     }
 
-    private void BuildCompanySquadData(LuaSourceFileBuilder.TableBuilder table, Squad squad, bool isVisible) {
+    private void BuildCompanySquadData(LuaSourceFileBuilder.TableBuilder table, Squad squad, Company company, bool isVisible) {
         if (squad.HasCustomName) {
             table.AddFieldValue("name", squad.Name);
         }
@@ -128,7 +133,10 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
         if (squad.SlotItems.Count > 0) {
             table.AddNestedFieldTable("items", itemsTable => {
                 foreach (var item in squad.SlotItems) {
-                    itemsTable.AddValue(item.EntityBlueprint!.Id);
+                    var companyItem = company.CapturedItems.FirstOrDefault(x => x.Id == item.CompanyItemId);
+                    if (companyItem?.ItemBlueprint is not null) {
+                        itemsTable.AddValue(companyItem.ItemBlueprint.Id);
+                    }
                 }
             });
         }
