@@ -3,21 +3,36 @@ using Battlegrounds.Models.Replays;
 using Battlegrounds.Parsers;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.Services.Playing;
 
-public sealed class ReplayService(IServiceProvider serviceProvider) : IReplayService {
+/// <summary>
+/// Provides game replay file analysis services with support for multiple game types.
+/// </summary>
+/// <param name="serviceProvider">Service provider used to resolve game-specific replay parsers.</param>
+/// <param name="logger">Logger for diagnostic messages and error tracking.</param>
+public sealed class ReplayService(IServiceProvider serviceProvider, ILogger<ReplayService> logger) : IReplayService {
+
+    private readonly ILogger<ReplayService> _logger = logger;
 
     public async Task<ReplayAnalysisResult> AnalyseReplay(string replayLocation, string gameId) {
-        var replay = gameId switch {
-            CoH3.GameId => await Task.FromResult(ParseCoH3ReplayFile(replayLocation)),
-            _ => throw new NotImplementedException($"Replay analysis for {gameId} is not implemented.")
-        };
-        // TODO: Compile replay events into actions to apply to companies
-        return new ReplayAnalysisResult {
-            Replay = replay,
-            GameId = gameId
-        };
+        try {
+            var replay = gameId switch {
+                CoH3.GameId => await Task.FromResult(ParseCoH3ReplayFile(replayLocation)),
+                _ => throw new NotImplementedException($"Replay analysis for {gameId} is not implemented.")
+            };
+            return new ReplayAnalysisResult {
+                Replay = replay,
+                GameId = gameId
+            };
+        } catch (Exception ex) {
+            _logger.LogError(ex, "Failed to analyse replay file at {ReplayLocation} for game {GameId}", replayLocation, gameId);
+            return new ReplayAnalysisResult {
+                Failed = true,
+                GameId = gameId
+            };
+        }
     }
 
     public Task<ReplayAnalysisResult> AnalyseReplay<T>(string replayLocation) where T : Game {
