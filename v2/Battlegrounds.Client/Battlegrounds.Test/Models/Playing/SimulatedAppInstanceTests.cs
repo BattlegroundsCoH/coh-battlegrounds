@@ -169,6 +169,10 @@ public class SimulatedAppInstanceTests {
         lobby.Companies.Returns(companies);
         lobby.Map.Returns(map);
         lobby.GetLocalPlayerId().Returns(localPlayerId);
+        lobby.GetTeam(Arg.Any<Participant>()).Returns(p => {
+            var participant = p.Arg<Participant>();
+            return team1.Participants.Contains(participant.ParticipantId) ? 0 : 1;
+        });
         return lobby;
     }
 

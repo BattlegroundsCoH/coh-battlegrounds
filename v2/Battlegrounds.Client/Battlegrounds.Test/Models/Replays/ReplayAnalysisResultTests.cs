@@ -52,11 +52,12 @@ public sealed class ReplayAnalysisResultTests {
             GameId = replay.GameId,
         };
 
+        var participant1 = new Participant(0, "p1", "Player 1", false, false);
+        var participant2 = new Participant(1, "p2", "Player 2", false, false);
         var lobby = Substitute.For<ILobby>();
-        lobby.Participants.Returns(new HashSet<Participant> {
-            new Participant(0, "p1", "Player 1", false, false),
-            new Participant(1, "p2", "Player 2", false, false)
-        });
+        lobby.Participants.Returns(new HashSet<Participant> { participant1, participant2 });
+        lobby.GetTeam(participant1).Returns(0);
+        lobby.GetTeam(participant2).Returns(1);
 
         // Act
         var matchResult = result.GetMatchResult(lobby);
@@ -94,10 +95,11 @@ public sealed class ReplayAnalysisResultTests {
             GameId = replay.GameId,
         };
         var lobby = Substitute.For<ILobby>();
-        lobby.Participants.Returns(new HashSet<Participant> {
-            new Participant(0, "p1", "Player 1", false, false),
-            new Participant(1, "p2", "Player 2", false, false)
-        });
+        var p1 = new Participant(0, "p1", "Player 1", false, false);
+        var p2 = new Participant(1, "p2", "Player 2", false, false);
+        lobby.Participants.Returns(new HashSet<Participant> { p1, p2 });
+        lobby.GetTeam(p1).Returns(0);
+        lobby.GetTeam(p2).Returns(1);
 
         // Act
         var matchResult = result.GetMatchResult(lobby);
@@ -145,6 +147,10 @@ public sealed class ReplayAnalysisResultTests {
             new Participant(0, "p1", "Player 1", false, false),
             new Participant(1, "p2", "Player 2", false, false)
         });
+        var p1 = lobby.Participants.First(p => p.LobbyId == 0);
+        var p2 = lobby.Participants.First(p => p.LobbyId == 1);
+        lobby.GetTeam(p1).Returns(0);
+        lobby.GetTeam(p2).Returns(1);
         // Act
         var matchResult = result.GetMatchResult(lobby);
         using (Assert.EnterMultipleScope()) {
@@ -408,11 +414,12 @@ public sealed class ReplayAnalysisResultTests {
             Replay = replay,
             GameId = replay.GameId,
         };
+        var p1 = new Participant(0, "p1", "Player 1", false, false);
+        var p2 = new Participant(1, "p2", "Player 2", false, false);
         var lobby = Substitute.For<ILobby>();
-        lobby.Participants.Returns(new HashSet<Participant> {
-            new Participant(0, "p1", "Player 1", false, false),
-            new Participant(1, "p2", "Player 2", false, false)
-        });
+        lobby.Participants.Returns(new HashSet<Participant> { p1, p2 });
+        lobby.GetTeam(p1).Returns(0);
+        lobby.GetTeam(p2).Returns(1);
 
         // Act
         var matchResult = result.GetMatchResult(lobby);
