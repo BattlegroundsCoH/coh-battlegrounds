@@ -26,6 +26,8 @@ public sealed class HomeViewModel(IStatisticsService statisticsService, ICompany
     private readonly ICompanyService _companyService = companyService;
     private readonly IUpdateService _updateService = updateService;
 
+    private bool _isInitialized = false;
+
     private string _welcomeMessage = "Welcome back, Commander!";
 
     public string WelcomeMessage => _welcomeMessage;
@@ -70,6 +72,65 @@ public sealed class HomeViewModel(IStatisticsService statisticsService, ICompany
 
         // Wait for the statistics service to load the data before updating the properties
         await Task.WhenAll(_statisticsService.IsLoaded, _dataLoadedCompletionSource.Task);
+
+        await UpdateData();
+
+        _isInitialized = true;
+
+    }
+
+    private static RecentMatchViewModel MapToRecentMatchViewModel(MatchPlayed match, Dictionary<string, Company> companies) {
+        return new RecentMatchViewModel(
+            GameId: match.GameId,
+            CompanyFaction: match.PlayerFaction,
+            CompanyName: companies.TryGetValue(match.PlayerCompanyId, out var company) ? company.Name : "Unknown Company",
+            Map: match.PlayedMap,
+            Victory: match.IsVictory,
+            Timestamp: match.DatePlayed,
+            Duration: match.Duration
+        );
+    }
+
+    private static FeaturedCompanyViewModel MapToFeaturedCompanyViewModel(Company company, int playCount) {
+        int veteranUnits = company.Squads.Where(x => x.Rank > 0).Count();
+        return new FeaturedCompanyViewModel(company.Faction, company.Name, company.GameId, playCount, veteranUnits);
+    }
+
+    private static string FormatPlayTime(TimeSpan totalPlayTime) {
+        int hours = (int)totalPlayTime.TotalHours;
+        if (hours > 2) {
+            if (hours > 10) {
+                return $"{hours} hours"; // Drop minutes if playtime exceeds 10 hours for a cleaner display
+            }
+            return $"{hours} hours {totalPlayTime.Minutes} minutes";
+        }
+        return $"{(int)totalPlayTime.TotalMinutes} minutes";
+    }
+
+    public void NotifyUpdateAvailable(string version) {
+        NewVersionNumber = version;
+        IsUpdateAvailable = true;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsUpdateAvailable)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NewVersionNumber)));
+        InstallUpdateCommand.NotifyCanExecuteChanged();
+    }
+
+    private async Task InstallUpdate() {
+        await _updateService.DownloadAndInstallUpdate();
+    }
+
+    public async void Refresh() {
+
+        if (!_isInitialized) {
+            return;
+        }
+
+        // Refresh logic here
+        await UpdateData();
+
+    }
+
+    private async Task UpdateData() {
 
         // Get the played matches from the statistics service and update the properties accordingly
         var playedMatches = _statisticsService.GetPlayedMatches();
@@ -128,46 +189,6 @@ public sealed class HomeViewModel(IStatisticsService statisticsService, ICompany
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MostPlayedScenario)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CompaniesOwned)));
 
-    }
-
-    private static RecentMatchViewModel MapToRecentMatchViewModel(MatchPlayed match, Dictionary<string, Company> companies) {
-        return new RecentMatchViewModel(
-            GameId: match.GameId,
-            CompanyFaction: match.PlayerFaction,
-            CompanyName: companies.TryGetValue(match.PlayerCompanyId, out var company) ? company.Name : "Unknown Company",
-            Map: match.PlayedMap,
-            Victory: match.IsVictory,
-            Timestamp: match.DatePlayed,
-            Duration: match.Duration
-        );
-    }
-
-    private static FeaturedCompanyViewModel MapToFeaturedCompanyViewModel(Company company, int playCount) {
-        int veteranUnits = company.Squads.Where(x => x.Rank > 0).Count();
-        return new FeaturedCompanyViewModel(company.Faction, company.Name, company.GameId, playCount, veteranUnits);
-    }
-
-    private static string FormatPlayTime(TimeSpan totalPlayTime) {
-        int hours = (int)totalPlayTime.TotalHours;
-        if (hours > 2) {
-            if (hours > 10) {
-                return $"{hours} hours"; // Drop minutes if playtime exceeds 10 hours for a cleaner display
-            }
-            return $"{hours} hours {totalPlayTime.Minutes} minutes";
-        }
-        return $"{(int)totalPlayTime.TotalMinutes} minutes";
-    }
-
-    public void NotifyUpdateAvailable(string version) {
-        NewVersionNumber = version;
-        IsUpdateAvailable = true;
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsUpdateAvailable)));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NewVersionNumber)));
-        InstallUpdateCommand.NotifyCanExecuteChanged();
-    }
-
-    private async Task InstallUpdate() {
-        await _updateService.DownloadAndInstallUpdate();
     }
 
 }

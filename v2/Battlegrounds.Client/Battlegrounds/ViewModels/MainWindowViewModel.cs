@@ -63,6 +63,9 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
         set {
             field = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsHomeButtonActive)));
+            if (value && HomeView is { DataContext: HomeViewModel homeViewModel }) {
+                homeViewModel.Refresh();
+            }
         }
     } = true;
 
