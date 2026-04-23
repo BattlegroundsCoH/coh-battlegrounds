@@ -861,4 +861,11 @@ public sealed class MultiplayerLobby(
         }, GetGrpcMetadata());
     }
 
+    public int GetTeam(Participant participant) {
+        if (Team1.Participants.Contains(participant.ParticipantId))
+            return 0;
+        else
+            return 1;
+    }
+
 }

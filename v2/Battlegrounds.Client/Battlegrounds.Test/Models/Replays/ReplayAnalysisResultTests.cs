@@ -1,5 +1,7 @@
 ﻿using Battlegrounds.Models.Lobbies;
+using Battlegrounds.Models.Playing;
 using Battlegrounds.Models.Replays;
+using Battlegrounds.Parsers;
 
 using NSubstitute;
 
@@ -421,6 +423,31 @@ public sealed class ReplayAnalysisResultTests {
             Assert.That(matchResult.CompanyModifiers["p1"], Has.Count.EqualTo(1)); // Player 1 has one events
             Assert.That(matchResult.CompanyModifiers["p2"], Has.Count.EqualTo(1)); // Player 2 has one event
         }
+
+    }
+
+    [Test]
+    public void GetMatchResult_ReturnsValidResult_UsingRealReplayData_ForCoH3() {
+
+        // Arrange
+        var replay = new CoH3ReplayParser().ParseReplayFile(ReplayFixture.TEMP_23_04_2026__17_29_FILE);
+        var result = new ReplayAnalysisResult {
+            Replay = replay,
+            Failed = false,
+            GameId = CoH3.GameId
+        };
+        var p1 = new Participant(0, "p1", "Player 1", true, false);
+        var p2 = new Participant(0, "p2", "Player 2", false, false);
+        var lobby = Substitute.For<ILobby>();
+        lobby.Participants.Returns(new HashSet<Participant> { p1, p2 });
+        lobby.GetTeam(p1).Returns(0);
+        lobby.GetTeam(p2).Returns(1);
+
+        // Act
+        var matchResult = result.GetMatchResult(lobby);
+
+        // Assert
+        Assert.That(matchResult.IsValid, Is.True);
 
     }
 

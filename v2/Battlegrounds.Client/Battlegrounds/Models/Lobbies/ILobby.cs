@@ -282,5 +282,12 @@ public interface ILobby {
     /// <param name="slotIndex">The zero-based index of the slot to move the team to. Must be within the valid range of available slots.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task MoveToSlot(Team team, int slotIndex);
+    
+    /// <summary>
+    /// Gets the team for the specified participant.
+    /// </summary>
+    /// <param name="participant">The participant to get the team for.</param>
+    /// <returns>The team identifier.</returns>
+    int GetTeam(Participant participant);
 
 }

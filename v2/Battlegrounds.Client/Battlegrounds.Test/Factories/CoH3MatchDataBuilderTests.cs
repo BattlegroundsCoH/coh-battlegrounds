@@ -290,6 +290,10 @@ public class CoH3MatchDataBuilderTests {
         public Task MoveToSlot(Team team, int slotIndex) {
             throw new NotImplementedException();
         }
+
+        public int GetTeam(Participant participant) {
+            throw new NotImplementedException();
+        }
     }
 
     #endregion

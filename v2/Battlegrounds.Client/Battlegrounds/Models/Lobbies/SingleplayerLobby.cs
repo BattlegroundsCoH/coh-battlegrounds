@@ -279,4 +279,11 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
 
     }
 
+    public int GetTeam(Participant participant) {
+        if (Team1.Participants.Contains(participant.ParticipantId))
+            return 0;
+        else
+            return 1;
+    }
+
 }

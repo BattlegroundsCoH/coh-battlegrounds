@@ -23,9 +23,11 @@ public sealed class ReplayAnalysisResult {
 
         Dictionary<int, LinkedList<ReplayEvent>> companyChanges = [];
         Dictionary<int, HashSet<ushort>> deployedSquads = [];
+        Dictionary<int, int> teams = [];
         foreach (var player in Replay.Players) {
             companyChanges[player.PlayerId] = [];
             deployedSquads[player.PlayerId] = [];
+            teams[player.PlayerId] = player.TeamId;
         }
 
         List<BadMatchEvent> badEvents = [];
@@ -105,9 +107,11 @@ public sealed class ReplayAnalysisResult {
         HashSet<string> winners = [];
         HashSet<string> losers = [];
         foreach (var playerData in registeredStartEvent.Players) {
+            var teamId = teams[playerData.PlayerId];
             Participant? participant = null;
             foreach (var p in lobby.Participants) {
-                if (p.LobbyId == playerData.ModId) {
+                var participantTeamId = lobby.GetTeam(p);
+                if (participantTeamId == teamId && p.LobbyId == playerData.ModId) {
                     participant = p;
                     break;
                 }
