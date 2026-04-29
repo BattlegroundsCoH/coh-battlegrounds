@@ -85,7 +85,7 @@ public sealed class CoH3ReplayParser : IReplayParser {
             }
             chunkyReader.Advance(18); // Skip 18 bytes (unknown data)
 
-            players[i] = new ReplayPlayer((int)playerId, (int)team, playerName, profileId, steamId, faction, aiProfile);
+            players[i] = new ReplayPlayer((int)playerId, (int)team, playerName, profileId, steamId, faction, aiProfile, IsHuman: isHuman);
 
             // Skip over items
             SkipCoH3PlayerItems(chunkyReader, isHuman);

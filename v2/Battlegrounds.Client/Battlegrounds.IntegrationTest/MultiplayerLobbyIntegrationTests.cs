@@ -149,6 +149,117 @@ public sealed class MultiplayerLobbyIntegrationTests : LobbyServerIntegrationTes
         Assert.That(chatMsg.Message, Is.EqualTo("Hello from participant!"));
     }
 
+    [Test]
+    public async Task StateSync_HostChangesMap_ParticipantReceivesMapUpdatedEvent() {
+        const string scenario = nameof(StateSync_HostChangesMap_ParticipantReceivesMapUpdatedEvent);
+
+        var lobbies = await FetchLobbiesAsync();
+        var browserLobby = lobbies.FirstOrDefault(l => l.Name == "IntegrationTestLobby");
+        Assume.That(browserLobby, Is.Not.Null);
+
+        await _harness.JoinLobbyAsync(browserLobby!, "participant-user-1", "ParticipantPlayer");
+
+        await LobbyIntegrationHarness.WaitForEventAsync(
+            _harness.HostLobby!,
+            LobbyEventType.TeamUpdated,
+            timeoutMs: 8000,
+            scenario: scenario);
+
+        string currentScenario = _harness.HostLobby!.Map.ScenarioName;
+        Map[] candidates = [
+            new Map("4p_test", "Integration Test Map 4p", 4, "4p_test_preview", "4p_test"),
+            new Map("6p_test", "Integration Test Map 6p", 6, "6p_test_preview", "6p_test"),
+            new Map("3p_test", "Integration Test Map 3p", 3, "3p_test_preview", "3p_test"),
+            new Map("2p_test", "Integration Test Map 2p", 2, "2p_test_preview", "2p_test")
+        ];
+
+        Map? selectedCandidate = null;
+        foreach (var candidate in candidates.Where(x => !string.Equals(x.ScenarioName, currentScenario, StringComparison.OrdinalIgnoreCase))) {
+            if (await _harness.HostLobby.SetMap(candidate)) {
+                selectedCandidate = candidate;
+                break;
+            }
+        }
+
+        if (selectedCandidate is null) {
+            ReportServerIssue(
+                scenario,
+                "Host should be able to change map to at least one alternative candidate.",
+                "Server rejected all map change candidates.",
+                $"Current map: {currentScenario}");
+            Assert.Fail("Unable to change map with known integration candidates.");
+            return;
+        }
+
+        Map targetMap = selectedCandidate;
+
+        var participantEvent = await TryWaitForEventOrReportAsync(
+            _harness.ParticipantLobby!,
+            LobbyEventType.MapUpdated,
+            scenario,
+            timeoutMs: 10000,
+            details: $"Expected map scenario: {targetMap.ScenarioName}");
+
+        Assert.That(participantEvent, Is.Not.Null, "Participant should receive MapUpdated event.");
+        if (participantEvent?.Arg is not Map mapArg) {
+            ReportServerIssue(
+                scenario,
+                "MapUpdated event should contain a Map argument.",
+                $"MapUpdated event argument type was '{participantEvent?.Arg?.GetType().Name ?? "null"}'.");
+            Assert.Fail("MapUpdated event argument was missing or invalid.");
+            return;
+        }
+
+        Assert.That(mapArg.ScenarioName, Is.EqualTo(targetMap.ScenarioName));
+    }
+
+    [Test]
+    public async Task StateSync_ParticipantMovesSlot_HostAndParticipantModelsUpdate() {
+        const string scenario = nameof(StateSync_ParticipantMovesSlot_HostAndParticipantModelsUpdate);
+        const string participantId = "participant-user-1";
+
+        var lobbies = await FetchLobbiesAsync();
+        var browserLobby = lobbies.FirstOrDefault(l => l.Name == "IntegrationTestLobby");
+        Assume.That(browserLobby, Is.Not.Null);
+
+        await _harness.JoinLobbyAsync(browserLobby!, participantId, "ParticipantPlayer");
+
+        await LobbyIntegrationHarness.WaitForEventAsync(
+            _harness.HostLobby!,
+            LobbyEventType.TeamUpdated,
+            timeoutMs: 8000,
+            scenario: scenario);
+
+        await _harness.ParticipantLobby!.MoveToSlot(_harness.ParticipantLobby.Team2, 0);
+
+        var hostUpdate = await TryWaitForEventOrReportAsync(
+            _harness.HostLobby!,
+            LobbyEventType.TeamUpdated,
+            scenario,
+            timeoutMs: 10000,
+            details: "Host should observe team update after participant slot move.");
+        Assert.That(hostUpdate, Is.Not.Null, "Host should receive TeamUpdated event after slot move.");
+
+        bool hostUpdated = _harness.HostLobby!.Team2.Slots.Any(slot => slot.ParticipantId == participantId);
+        if (!hostUpdated) {
+            ReportServerIssue(
+                scenario,
+                "Host lobby model should show participant in Team2 after move.",
+                "Host lobby model did not show moved participant in Team2.");
+        }
+
+        bool participantUpdated = _harness.ParticipantLobby!.Team2.Slots.Any(slot => slot.ParticipantId == participantId);
+        if (!participantUpdated) {
+            ReportServerIssue(
+                scenario,
+                "Participant lobby model should show local participant in Team2 after move.",
+                "Participant lobby model did not show local participant in Team2.");
+        }
+
+        Assert.That(hostUpdated, Is.True);
+        Assert.That(participantUpdated, Is.True);
+    }
+
     // ════════════════════════════════════════════════════════════════════════
     //  C — Ready state
     // ════════════════════════════════════════════════════════════════════════

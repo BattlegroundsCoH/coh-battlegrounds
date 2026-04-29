@@ -37,13 +37,13 @@ public sealed class UpdateService(Configuration configuration, ILogger<UpdateSer
 #else
         try {
 
-            if (!mgr.IsInstalled) {
+            if (!_mgr.IsInstalled) {
                 _hasDetectedUpdates = false;
                 _logger.LogInformation("No installation found, skipping update check");
                 return false;
             }
 
-            var update = await mgr.CheckForUpdatesAsync();
+            var update = await _mgr.CheckForUpdatesAsync();
             if (update is null) {
                 _hasDetectedUpdates = false;
                 _logger.LogInformation("No updates found");

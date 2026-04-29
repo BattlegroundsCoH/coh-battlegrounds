@@ -88,7 +88,7 @@ public sealed class CoH3ReplayWriter {
     }
 
     private static void WritePlayer(BinaryWriter w, ReplayPlayer player) {
-        bool isHuman = string.IsNullOrEmpty(player.AIProfile);
+        bool isHuman = player.IsHuman;
         w.Write((byte)(isHuman ? 1 : 0));
 
         WriteUTF16String(w, player.PlayerName);

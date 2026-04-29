@@ -1,3 +1,4 @@
+using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Test;
 
 using DotNet.Testcontainers.Builders;
@@ -46,6 +47,8 @@ public abstract class LobbyServerIntegrationTests {
 
     [OneTimeSetUp]
     public async Task OneTimeSetUp() {
+        ServerIssueReporter.Reset();
+
         _container = new ContainerBuilder()
             .WithImage(IntegrationTestImage)
             .WithPortBinding(8080, true)
@@ -65,9 +68,46 @@ public abstract class LobbyServerIntegrationTests {
 
     [OneTimeTearDown]
     public async Task OneTimeTearDown() {
+        try {
+            string outputDirectory = Path.Combine(TestContext.CurrentContext.WorkDirectory, "TestResults");
+            var (jsonPath, markdownPath) = ServerIssueReporter.WriteSummary(outputDirectory, GetType().Name);
+            _containerLogger.LogInformation(
+                "Server issue summary for {Fixture}: {Count} issue(s). JSON: {JsonPath}. Markdown: {MarkdownPath}.",
+                GetType().Name,
+                ServerIssueReporter.IssueCount,
+                jsonPath,
+                markdownPath);
+            TestContext.AddTestAttachment(jsonPath, "Server issue summary (JSON)");
+            TestContext.AddTestAttachment(markdownPath, "Server issue summary (Markdown)");
+        } catch (Exception ex) {
+            _containerLogger.LogError(ex, "Failed to write server issue summary for fixture {Fixture}.", GetType().Name);
+        }
+
         _containerLogger.LogInformation("Stopping integration test container.");
         _containerLogger.Dispose();
         await _container.StopAsync();
         await _container.DisposeAsync();
+    }
+
+    protected void ReportServerIssue(string scenario, string expected, string actual, string? details = null) {
+        ServerIssueReporter.Report(GetType().Name, scenario, expected, actual, details);
+    }
+
+    protected async Task<LobbyEvent?> TryWaitForEventOrReportAsync(
+        MultiplayerLobby lobby,
+        LobbyEventType eventType,
+        string scenario,
+        int timeoutMs = 5000,
+        string? details = null) {
+
+        var evt = await LobbyIntegrationHarness.TryWaitForEventAsync(lobby, eventType, timeoutMs, scenario);
+        if (evt is null) {
+            ReportServerIssue(
+                scenario,
+                $"Lobby should publish {eventType} within {timeoutMs} ms.",
+                $"Timed out waiting for {eventType}.",
+                details);
+        }
+        return evt;
     }
 }
