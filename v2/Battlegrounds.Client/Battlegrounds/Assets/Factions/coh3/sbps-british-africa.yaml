@@ -150,6 +150,68 @@ squads:
                     - infantry_assault
                     - infantry_anti_infantry 
                     - commandos 
+                        
+    ssb_africa_uk:
+        category: Infantry
+        faction-association: british_africa
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 270
+            ui:
+                screen-name: $11272963 # SSB Commandos
+                help-text: 11265170
+                brief-text: 11265805
+                icon-name: ssb_commando_uk
+            loadout:
+                entities:
+                    - ebp: ssb_africa_uk
+                      count: 3
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - elite_infantry
+                    - infantry_anti_infantry 
+
+    ssb_sniper_africa_uk:
+        category: Infantry
+        faction-association: british_africa
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 340
+            ui:
+                screen-name: $11273151 # SSB Sniper
+                help-text: 11265170
+                brief-text: 11265805
+                icon-name: sniper_uk
+            loadout:
+                entities:
+                    - ebp: ssb_sniper_africa_uk
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 1200
+                      name: Vet1
+                    - experience: 3600
+                      name: Vet2
+                    - experience: 7200
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - elite_infantry
+                    - infantry_anti_infantry 
+                    - infantry_anti_tank
+                    - sniper 
 
     guards_africa_uk:
         category: Infantry
@@ -596,6 +658,66 @@ squads:
                     - weapon_flak_mount_cwt_truck_uk
                     - medical_truck_uk 
             hold: {}
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+
+    
+    cwt_lrdg_truck_africa_uk_uk: # Because one _uk wasn't enough...
+        category: Support
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 250
+                fuel: 35
+            ui:
+                screen-name: $11273160 # CWT LRDG Truck
+                icon-name: cwt_lrdg_truck_africa_uk
+                symbol-icon-name: cwt_lrdg_truck_africa_uk
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            loadout:
+                entities:
+                    - ebp: cwt_lrdg_truck_africa_uk
+                      count: 1
+            hold: {}
+            types:
+                values:
+                    - vehicle
+                    - light_armor
+
+
+    cwt_lrdg_truck_2pdr_africa_uk:
+        category: Support
+        faction-association: british_africa
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 250
+                fuel: 35
+            ui:
+                screen-name: $11273164 # CWT LRDG Truck 2pdr
+                icon-name: cwt_lrdg_truck_2_pdr_africa_uk
+            veterancy:
+                ranks:
+                    - experience: 1000
+                      name: Vet1
+                    - experience: 3000
+                      name: Vet2
+                    - experience: 6000
+                      name: Vet3
+            loadout:
+                entities:
+                    - ebp: cwt_lrdg_truck_2pdr_africa_uk
+                      count: 1
             types:
                 values:
                     - vehicle

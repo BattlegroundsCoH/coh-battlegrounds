@@ -1,0 +1,23 @@
+doctrine:
+    id: coh3_british_lrdg
+    version: 1
+    name: Long Range Desert Group
+    parent: coh3_british_default
+    description: "The Long Range Desert Group doctrine represents the famous LRDG operating in the Western Desert. Reliable long range trucks provide mobile infantry support, while the SSB commandos deliver devastating firepower. This doctrine rewards aggressive mobile warfare and combined arms coordination."
+    short-description: "The Long Range Desert Group doctrine focuses on mobile warfare, leveraging the strengths of long range trucks and SSB commandos."
+    icon: "Doctrines/coh3/coh3_lrdg.png"
+    type-limits:
+        apex_armor: 0 # No access to apex armor units
+    phase-limits: # These values should add up to 30
+        initial: 2
+        skirmish: 9
+        battle: 11
+        reserves: 8
+    crew-blueprint: ssb_africa_uk
+    blueprints:
+        squads:
+            - ssb_africa_uk
+            - ssb_sniper_africa_uk 
+            - cwt_lrdg_truck_africa_uk_uk
+            - cwt_lrdg_truck_2pdr_africa_uk 
+        upgrades: []

@@ -1,0 +1,21 @@
+doctrine:
+    id: coh3_american_free_french
+    version: 1
+    name: Free French Infantry Support Company
+    parent: coh3_american_default
+    description: "The Free French Infantry Support Company doctrine provides a broad-based combined arms approach to the Italian campaign. Unlocking access to Free French units allows for unique tactical options and enhanced battlefield flexibility."
+    short-description: "The Free French Infantry Support Company doctrine provides a broad-based combined arms approach to the Italian campaign."
+    icon: "Doctrines/coh3/coh3_free_french.png"
+    type-limits:
+        apex_armor: 2
+    phase-limits: # These values should add up to 32
+        initial: 6
+        skirmish: 10
+        battle: 11
+        reserves: 5
+    crew-blueprint: french_infantry_us
+    blueprints:
+        squads:
+            - french_infantry_us
+            - char_b1_us
+        upgrades: []

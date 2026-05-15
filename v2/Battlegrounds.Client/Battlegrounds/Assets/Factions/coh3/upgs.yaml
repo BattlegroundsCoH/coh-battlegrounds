@@ -243,6 +243,28 @@ upgrades:
                 icon-name: lmg_m1919a6
                 symbol-icon-name: weapon_m1919a6
                 
+    lmg_m24_29_chatellerault_new_guard_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 90
+            ui:
+                screen-name: $11273493 # M24/29 Chatellerault Light Machine Gun Package
+                brief-text: $11251622 # Adds one M1919A6 Light Machine Gun, increasing anti-infantry firepower. 
+                icon-name: lmg_m24_29_chatellerault
+                symbol-icon-name: weapon_lmg_m24_29_chatellerault
+                
+    french_old_guard_lmg_m1919a6s_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 90
+            ui:
+                screen-name: $11191144 # M1941 Light Machine Gun Package
+                brief-text: $11251622 # Adds one M1919A6 Light Machine Gun, increasing anti-infantry firepower. 
+                icon-name: lmg_m1919a6
+                symbol-icon-name: weapon_m1919a6
+                
     utility_scout_us:
         faction-association: american
         extensions:
@@ -271,6 +293,16 @@ upgrades:
             ui:
                 screen-name: $11154006 # Utility Package
                 icon-name: hazard_removal_package
+                symbol-icon-name: weapon_wrench
+                  
+    french_engineering_upgrade_us:
+        faction-association: american
+        extensions:
+            cost:
+                munitions: 30
+            ui:
+                screen-name: $11273499 # Engineering Package
+                icon-name: engineering_kit
                 symbol-icon-name: weapon_wrench
                   
     m1941_lmg_special_operations_us:
@@ -409,6 +441,26 @@ upgrades:
                 screen-name: $11235859 # MG-34 Light Machine Gun Package
                 icon-name: mg34
                 symbol-icon-name: weapon_mg42
+                
+    lmg_kriegsmarine_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 90
+            ui:
+                screen-name: $11235788 # MG-42 Light Machine Gun Package
+                icon-name: mg42
+                symbol-icon-name: weapon_mg42
+                
+    mp44_kriegsmarine_ak:
+        faction-association: afrika_korps
+        extensions:
+            cost:
+                munitions: 40
+            ui:
+                screen-name: $11242486 # Stg 44 Assault Rifle
+                icon-name: mp44_double
+                symbol-icon-name: weapon_mp44
 
     tank_buster_package_panzerjager_ak:
         faction-association: afrika_korps
@@ -774,6 +826,16 @@ upgrades:
                 icon-name: halftrack_stummel_german
                 symbol-icon-name: halftrack_stummel_ger
                 
+    flame_halftrack_ger:
+        faction-association: german
+        extensions:
+            cost:
+                munitions: 75
+            ui:
+                screen-name: $11272935 # Flammpanzerwagen Conversion
+                icon-name: halftrack_flame
+                symbol-icon-name: tank_flamethrower.png
+
     communication_cables_kettenkrad_ger:
         faction-association: german
         extensions:
