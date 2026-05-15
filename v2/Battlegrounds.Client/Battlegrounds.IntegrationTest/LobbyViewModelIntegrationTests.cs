@@ -39,11 +39,13 @@ public sealed class LobbyViewModelIntegrationTests : LobbyServerIntegrationTests
     private LobbyViewModel _participantVm = null!;
     private FakeTimeProvider _fakeTime = null!;
     private BrowserLobby _browserLobby = null!;
+    private ILobbyService _lobbyService = null!;
 
     [SetUp]
     public async Task SetUp() {
         _fakeTime = new FakeTimeProvider();
         _harness = new LobbyIntegrationHarness(GrpcAddress, HttpApiBaseUrl);
+        _lobbyService = Substitute.For<ILobbyService>();
         var hostLobby = await _harness.CreateHostLobbyAsync("host-user-1", "HostPlayer");
         _hostVm = CreateVm(hostLobby, _fakeTime);
 
@@ -65,7 +67,7 @@ public sealed class LobbyViewModelIntegrationTests : LobbyServerIntegrationTests
         var services = new ServiceCollection();
 
         services.AddSingleton<TimeProvider>(clock);
-        services.AddSingleton(Substitute.For<ILobbyService>());
+        services.AddSingleton(_lobbyService);
         var playService = Substitute.For<IPlayService>();
         playService.LaunchGameApp(Arg.Any<Game>())
                .Returns(Task.FromResult(new LaunchGameAppResult { Failed = true }));
@@ -664,10 +666,14 @@ public sealed class LobbyViewModelIntegrationTests : LobbyServerIntegrationTests
 
         await Task.Delay(300);
 
-        // Configure LobbyService mock to call lobby.LeaveLobby
-        // The ILobbyService.LeaveLobbyAsync is mocked by default; invoking it won't actually
-        // close the gRPC stream. Instead we verify the command completes with an error complaining about the MultiplayerView.
-        // That indicates the LeaveLobby command closed the lobby and attempted to return to the multiplayer view, which is the expected behavior.
-        Assert.That(async () => await _participantVm.LeaveCommand.ExecuteAsync(null), Throws.InstanceOf<InvalidOperationException>().And.Message.Contain("Battlegrounds.Views.MultiplayerView"));
+        // Call leave
+        await _participantVm.LeaveCommand.ExecuteAsync(null);
+
+        // Verify lobby service got a leave lobby call for the participant's lobby
+        Received.InOrder(async () => {
+            await _lobbyService.LeaveLobbyAsync(Arg.Is<ILobby>(l => l == participantLobby));
+        });
+
     }
+
 }
