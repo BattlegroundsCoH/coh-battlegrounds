@@ -831,6 +831,7 @@ squads:
                     - spotting_scopes_ger
                     - medical_halftrack_ger
                     - stummel_halftrack_ger
+                    - flame_halftrack_ger 
                              
     kettenkrad_ger:
         category: Support
@@ -1241,6 +1242,37 @@ squads:
                 slots: 1
                 available:
                     - mg42_tiger_ger
+                
+    sturmtiger_ger:
+        category: Armour
+        faction-association: german
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 600
+                fuel: 180
+            ui:
+                screen-name: $11272880 # Sturmtiger Heavy Tank
+                icon-name: sturmtiger_german
+            loadout:
+                entities:
+                    - ebp: sturmtiger_ger
+                      count: 1
+            hold:
+                enable-passengers: true
+            veterancy:
+                ranks:
+                    - experience: 3440
+                      name: Vet1
+                    - experience: 10320
+                      name: Vet2
+                    - experience: 20640
+                      name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - heavy_armor
+                    - apex_armor 
                 
     wespe_ger:
         category: Armour

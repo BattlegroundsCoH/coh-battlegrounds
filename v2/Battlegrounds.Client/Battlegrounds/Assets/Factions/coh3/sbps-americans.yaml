@@ -44,6 +44,41 @@ squads:
                     - m1941_lmg_rifleman_us
                     - m1919a6_rifleman_squad_us
                     
+    french_infantry_us:
+        category: Infantry
+        faction-association: american
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 250
+            ui:
+                screen-name: $11272603 # French Riflemen
+                icon-name: french_infantry_us
+            loadout:
+                entities:
+                    - ebp: french_infantry_us
+                      count: 5
+            veterancy:
+                ranks:
+                    - experience: 850
+                      name: Vet1
+                    - experience: 2550
+                      name: Vet2
+                    - experience: 5100
+                      name: Vet3
+            types:
+                values:
+                    - infantry
+                    - standard_infantry
+                    - infantry_anti_infantry
+                    - french 
+            upgrades:
+                slots: 1
+                available:
+                    - lmg_m24_29_chatellerault_new_guard_us
+                    - french_engineering_upgrade_us
+                    - french_old_guard_lmg_m1919a6s_us
+                    
     artillery_observers_us:
         category: Infantry
         faction-association: american
@@ -983,6 +1018,37 @@ squads:
                     - apex_armor
                     - heavy_armor 
                     - vehicle_anti_tank
+                              
+    char_b1_us:
+        category: Armour
+        faction-association: american
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 720
+                fuel: 200
+            ui:
+                screen-name: $11272600 # Char B1 Heavy Tank
+                icon-name: char_b1_us
+            loadout:
+                entities:
+                    - ebp: char_b1_us
+                      count: 1
+            hold:
+                enable-passengers: true
+            veterancy:
+                ranks:
+                    - experience: 2000
+                      name: Vet1
+                    - experience: 6000
+                      name: Vet2
+                    - experience: 12000
+                      name: Vet3
+            types:
+                values:
+                    - vehicle
+                    - heavy_armor 
+                    - french
                         
     scott_us:
         category: Armour

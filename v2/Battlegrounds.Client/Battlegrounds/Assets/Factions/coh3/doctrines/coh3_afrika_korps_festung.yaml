@@ -17,7 +17,7 @@ doctrine:
     blueprints:
         squads:
             - coastal_reserve_ak
-            - guastatori_ak
+            - kriegsmaringe_infantry_ak 
             - howitzer_cannone_da_105_ak
             - elefant_tank_destroyer_ak
             - goliath_ak

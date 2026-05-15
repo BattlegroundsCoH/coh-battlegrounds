@@ -26,6 +26,7 @@ doctrine:
             - leig_75mm_ak
             - mortar_team_ak
             - armored_car_8_rad_ak
+            - armored_car_8_rad_command_ak 
             - armored_car_222_ak
             - halftrack_7_flak_ak
             - halftrack_250_ak

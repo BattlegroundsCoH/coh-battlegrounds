@@ -237,6 +237,40 @@ squads:
                     - infantry_anti_infantry 
                     - combat_engineer
                     
+    kriegsmaringe_infantry_ak:
+        category: Infantry
+        faction-association: afrika_korps
+        is-infantry: true
+        extensions:
+            cost:
+                manpower: 260
+            ui:
+                screen-name: $11270162 # Kriegsmarine Infantry
+                icon-name: kriegsmarine_ak
+            loadout:
+                entities:
+                    - ebp: kriegsmarine_infantry_ak
+                      count: 4
+            veterancy:
+                ranks:
+                    - experience: 900
+                      name: Vet1
+                    - experience: 2700
+                      name: Vet2
+                    - experience: 5400
+                      name: Vet3
+            upgrades:
+                slots: 1
+                available:
+                    - lmg_kriegsmarine_ak
+                    - mp44_kriegsmarine_ak 
+            types:
+                values:
+                    - infantry
+                    - infantry_support 
+                    - infantry_anti_infantry 
+                    - combat_engineer
+                    
     ##########################################
     ## Support Squads
     ##########################################
@@ -479,6 +513,36 @@ squads:
                       name: Vet2
                     - experience: 7200
                       name: Vet3
+            types:
+                values:
+                    - vehicle 
+                    - light_armor
+                    
+    armored_car_8_rad_command_ak:
+        category: Support
+        faction-association: afrika_korps
+        is-infantry: false
+        extensions:
+            cost:
+                manpower: 220
+                fuel: 25
+            ui:
+                screen-name: $11241638 # SdKfz 8 Rad Command Armoured Car
+                icon-name: armored_car_8_rad_command_ak
+            loadout:
+                entities:
+                    - ebp: armored_car_8_rad_command_ak
+                      count: 1
+            veterancy:
+                ranks:
+                    - experience: 900
+                      name: Vet1
+                    - experience: 2700
+                      name: Vet2
+                    - experience: 5400
+                      name: Vet3
+                    - experience: 7200
+                      name: Vet4
             types:
                 values:
                     - vehicle 

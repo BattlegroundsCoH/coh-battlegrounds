@@ -18,4 +18,5 @@ doctrine:
             - king_tiger_sdkfz_182_ger
             - nashorn_ger
             - armored_car_8_rad_ger
+            - sturmtiger_ger 
         upgrades: []
