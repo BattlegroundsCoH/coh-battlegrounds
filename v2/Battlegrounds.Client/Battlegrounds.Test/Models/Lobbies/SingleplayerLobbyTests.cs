@@ -1,8 +1,13 @@
 using Battlegrounds.Facades.API;
 using Battlegrounds.Factories;
+using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
+using Battlegrounds.Models.Replays;
+using Battlegrounds.Parsers;
 using Battlegrounds.Services;
+using Battlegrounds.Test.Models.Companies;
+using Battlegrounds.Test.Models.Replays;
 
 using NSubstitute;
 
@@ -66,6 +71,16 @@ public sealed class SingleplayerLobbyTests {
             setup.Value,
             Substitute.For<IBattlegroundsServerAPI>(),
             Substitute.For<ICompanyService>());
+    }
+
+    private static SingleplayerLobby CreateLobbyWithServices(LobbySetup? setup, out ICompanyService companyService, out IBattlegroundsServerAPI serverAPI) {
+        setup ??= CreateSetup();
+        companyService = Substitute.For<ICompanyService>();
+        serverAPI = Substitute.For<IBattlegroundsServerAPI>();
+        return new SingleplayerLobby(
+            setup.Value,
+            serverAPI,
+            companyService);
     }
 
     /// <summary>
@@ -658,6 +673,51 @@ public sealed class SingleplayerLobbyTests {
     public async Task GetMatchResults_ReturnsNull_WhenNoMatchPlayed() {
         using var lobby = CreateLobby();
         Assert.That(await lobby.GetMatchResults(), Is.Null);
+    }
+
+    // ── ReportMatchResult ──────────────────────────────────────────────────────
+
+    [Test]
+    public async Task ReportMatchResults_ReturnsTrue_WhenPlayerPositionsAreDifferentIngame() {
+
+        // Arrange
+        var self = new Participant(0, "local-player", "Player One", false, true);
+        var team1Slots = new Team.Slot[4] {
+            new Team.Slot(0, self.ParticipantId, "afrika_korps", "player-co", AIDifficulty.HUMAN, false, false),
+            new Team.Slot(1, null, "", "", AIDifficulty.HUMAN, true, false),
+            new Team.Slot(2, null, "", "", AIDifficulty.HUMAN, true, false),
+            new Team.Slot(3, null, "", "", AIDifficulty.HUMAN, true, false)
+        };
+        var team2Slots = new Team.Slot[4] {
+            new Team.Slot(0, null, "british_africa", "ai-co", AIDifficulty.HARD, false, false),
+            new Team.Slot(1, null, "", "", AIDifficulty.HUMAN, true, false),
+            new Team.Slot(2, null, "", "", AIDifficulty.HUMAN, true, false),
+            new Team.Slot(3, null, "", "", AIDifficulty.HUMAN, true, false)
+        };
+        using var lobby = CreateLobbyWithServices(new LobbySetup {
+            Game = new CoH3(new()),
+            Self = self,
+            Team1 = new Team(TeamType.Axis, "Axis", team1Slots),
+            Team2 = new Team(TeamType.Allies, "Allies", team2Slots),
+            Map = DefaultMap,
+            Participants = [self],
+        }, out var companyService, out var serverAPI);
+        lobby.Companies["019773d7-f449-7f9a-8893-b31719992661"] = CompanyFixture.AFRIKA_KORPS; // Company ID from replay
+        var replay = new CoH3ReplayParser().ParseReplayFile(ReplayFixture.TEMP_24_04_2026__19_25_FILE);
+        var result = new ReplayAnalysisResult {
+            Replay = replay,
+            Failed = false,
+            GameId = CoH3.GameId
+        };
+        _ = companyService.ApplyEvents(Arg.Any<LinkedList<CompanyEventModifier>>(), Arg.Is(CompanyFixture.AFRIKA_KORPS), true)
+            .Returns(ValueTask.FromResult<Company?>(CompanyFixture.AFRIKA_KORPS));
+
+        // Act
+        var isReported = await lobby.ReportMatchResult(result);
+
+        // Assert
+        Assert.That(isReported, Is.True);
+
     }
 
     // ── Dispose ──────────────────────────────────────────────────────────────

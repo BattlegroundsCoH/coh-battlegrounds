@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 using Battlegrounds.Facades.API;
 using Battlegrounds.Factories;
 using Battlegrounds.Models;
@@ -5,7 +7,9 @@ using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Proto.Lobbies;
+using Battlegrounds.Serializers;
 using Battlegrounds.Services;
+using Battlegrounds.Test;
 
 using Grpc.Core;
 using Grpc.Core.Interceptors;
@@ -34,6 +38,7 @@ namespace Battlegrounds.IntegrationTest;
 public sealed class LobbyIntegrationHarness : IAsyncDisposable {
 
     private readonly string _grpcAddress;
+    private readonly string? _httpApiBaseUrl;
     private readonly GrpcChannel _channel;
     private readonly LobbyService.LobbyServiceClient _grpcClient;
 
@@ -45,8 +50,9 @@ public sealed class LobbyIntegrationHarness : IAsyncDisposable {
     public MultiplayerLobby? HostLobby { get; private set; }
     public MultiplayerLobby? ParticipantLobby { get; private set; }
 
-    public LobbyIntegrationHarness(string grpcAddress) {
+    public LobbyIntegrationHarness(string grpcAddress, string? httpApiBaseUrl = null) {
         _grpcAddress = grpcAddress;
+        _httpApiBaseUrl = httpApiBaseUrl;
         _channel = GrpcChannel.ForAddress(_grpcAddress);
         _grpcClient = new LobbyService.LobbyServiceClient(_channel);
     }
@@ -120,20 +126,50 @@ public sealed class LobbyIntegrationHarness : IAsyncDisposable {
     /// </summary>
     /// <exception cref="TimeoutException">Thrown when no matching event arrives within the timeout.</exception>
     public static async Task<LobbyEvent> WaitForEventAsync(
-        MultiplayerLobby lobby, LobbyEventType eventType, int timeoutMs = 5000) {
+        MultiplayerLobby lobby, LobbyEventType eventType, int timeoutMs = 5000, string? scenario = null) {
 
-        using var cts = new CancellationTokenSource(timeoutMs);
-        while (!cts.Token.IsCancellationRequested) {
-            var evt = await lobby.GetNextEvent();
-            if (evt is null) {
+        if (timeoutMs <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(timeoutMs), timeoutMs, "Timeout must be greater than zero.");
+        }
+
+        TimeSpan timeout = TimeSpan.FromMilliseconds(timeoutMs);
+        long startedAt = Stopwatch.GetTimestamp();
+
+        while (true) {
+            TimeSpan remaining = timeout - Stopwatch.GetElapsedTime(startedAt);
+            if (remaining <= TimeSpan.Zero) {
                 break;
             }
+
+            LobbyEvent? evt;
+            try {
+                evt = await lobby.GetNextEvent().AsTask().WaitAsync(remaining);
+            } catch (TimeoutException ex) {
+                throw new TimeoutException(BuildTimeoutMessage(eventType, timeoutMs, scenario), ex);
+            }
+
+            if (evt is null) {
+                throw new TimeoutException(BuildTimeoutMessage(eventType, timeoutMs, scenario, "Lobby event stream closed before the expected event was observed."));
+            }
+
             if (evt.EventType == eventType) {
                 return evt;
             }
         }
-        throw new TimeoutException(
-            $"Timed out after {timeoutMs} ms waiting for {eventType} event.");
+
+        throw new TimeoutException(BuildTimeoutMessage(eventType, timeoutMs, scenario));
+    }
+
+    /// <summary>
+    /// Attempts to wait for an event and returns <see langword="null"/> on timeout instead of throwing.
+    /// </summary>
+    public static async Task<LobbyEvent?> TryWaitForEventAsync(
+        MultiplayerLobby lobby, LobbyEventType eventType, int timeoutMs = 5000, string? scenario = null) {
+        try {
+            return await WaitForEventAsync(lobby, eventType, timeoutMs, scenario);
+        } catch (TimeoutException) {
+            return null;
+        }
     }
 
     public async ValueTask DisposeAsync() {
@@ -161,11 +197,13 @@ public sealed class LobbyIntegrationHarness : IAsyncDisposable {
             { "x-test-user-name", userName },
         };
 
-    private static IServiceProvider BuildServiceProvider(string userId, string userName) {
+    private IServiceProvider BuildServiceProvider(string userId, string userName) {
         var services = new Microsoft.Extensions.DependencyInjection.ServiceCollection();
 
         var userService = Substitute.For<IUserService>();
-        userService.GetLocalUserToken().Returns(BuildTestJwt(userId));
+        string token = BuildTestJwt(userId);
+        userService.GetLocalUserToken().Returns(token);
+        userService.GetLocalUserTokenAsync().Returns(Task.FromResult(token));
         userService.GetLocalUserAsync().Returns(Task.FromResult<User?>(new User {
             UserId = userId,
             UserDisplayName = userName,
@@ -176,12 +214,44 @@ public sealed class LobbyIntegrationHarness : IAsyncDisposable {
         companyService.GetLocalCompaniesAsync().Returns(Task.FromResult<IEnumerable<Company>>([]));
         services.AddSingleton(companyService);
 
-        var serverAPI = Substitute.For<IBattlegroundsServerAPI>();
-        services.AddSingleton(serverAPI);
+        if (string.IsNullOrWhiteSpace(_httpApiBaseUrl)) {
+            var serverAPI = Substitute.For<IBattlegroundsServerAPI>();
+            services.AddSingleton(serverAPI);
+        } else {
+            var baseUri = new Uri(_httpApiBaseUrl);
+            var config = new Configuration {
+                BattlegroundsServerHost = $"{baseUri.Scheme}://{baseUri.Host}",
+                BattlegroundsHttpServerPort = baseUri.Port,
+            };
+
+            var companyDeserializer = Substitute.For<ICompanyDeserializer>();
+            var asyncHttpClient = new AsyncHttpClient(new HttpClient(), config, new TestLogger<AsyncHttpClient>());
+            var serverAPI = new HttpBattlegroundsServerAPI(
+                new TestLogger<HttpBattlegroundsServerAPI>(),
+                asyncHttpClient,
+                userService,
+                companyDeserializer,
+                config);
+
+            services.AddSingleton(config);
+            services.AddSingleton<ICompanyDeserializer>(companyDeserializer);
+            services.AddSingleton<IAsyncHttpClient>(asyncHttpClient);
+            services.AddSingleton<IBattlegroundsServerAPI>(serverAPI);
+        }
 
         var mapService = Substitute.For<IGameMapService>();
         mapService.GetMapByScenarioName(Arg.Any<Game>(), Arg.Any<string>())
-            .Returns(new Scenario { Name = (LocaleString)"unknown", Description = (LocaleString)"Unknown", MaxPlayers = 4, Preview = "unknown", ScenarioName = "unknown" });
+            .Returns(call => {
+                string scenarioName = call.ArgAt<string>(1);
+                int maxPlayers = scenarioName.StartsWith("2p", StringComparison.OrdinalIgnoreCase) ? 2 : 4;
+                return new Scenario {
+                    Name = (LocaleString)scenarioName,
+                    Description = (LocaleString)$"Scenario {scenarioName}",
+                    MaxPlayers = maxPlayers,
+                    Preview = $"{scenarioName}_preview",
+                    ScenarioName = scenarioName
+                };
+            });
         services.AddSingleton(mapService);
 
         var gameService = Substitute.For<IGameService>();
@@ -241,6 +311,12 @@ public sealed class LobbyIntegrationHarness : IAsyncDisposable {
         var header  = Base64UrlEncode("{\"alg\":\"none\",\"typ\":\"JWT\"}");
         var payload = Base64UrlEncode($"{{\"sub\":\"{userId}\",\"exp\":9999999999}}");
         return $"{header}.{payload}.";
+    }
+
+    private static string BuildTimeoutMessage(LobbyEventType eventType, int timeoutMs, string? scenario, string? reason = null) {
+        string scenarioInfo = string.IsNullOrWhiteSpace(scenario) ? string.Empty : $" Scenario: {scenario}.";
+        string reasonInfo = string.IsNullOrWhiteSpace(reason) ? string.Empty : $" {reason}";
+        return $"Timed out after {timeoutMs} ms waiting for {eventType} event.{scenarioInfo}{reasonInfo}";
     }
 }
 

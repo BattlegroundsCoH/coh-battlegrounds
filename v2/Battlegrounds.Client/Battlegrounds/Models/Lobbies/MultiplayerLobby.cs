@@ -817,11 +817,18 @@ public sealed class MultiplayerLobby(
             _logger.Error("Failed to retrieve match results from the server for lobby {LobbyId}", _lobbyId);
             return null;
         }
+
+        Dictionary<string, Company> matchCompanies;
         if (_latestMatchCompanies is null) {
-            _logger.Error("Latest match companies data is null for lobby {LobbyId}, cannot determine match results for the local player.", _lobbyId);
-            return null;
+            _logger.Warning(
+                "Latest match companies snapshot is null for lobby {LobbyId}; falling back to current company cache.",
+                _lobbyId);
+            matchCompanies = _companies.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        } else {
+            matchCompanies = _latestMatchCompanies;
         }
-        return MatchOverData.FromMatchResultForPlayer(serverVersion, _localParticipant.ParticipantId, _latestMatchCompanies);
+
+        return MatchOverData.FromMatchResultForPlayer(serverVersion, _localParticipant.ParticipantId, matchCompanies);
     }
 
     public async Task SyncRemoteCompanies() {

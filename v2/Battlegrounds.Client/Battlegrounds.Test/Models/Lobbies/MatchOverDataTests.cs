@@ -1,6 +1,7 @@
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Replays;
+using Battlegrounds.Test.Models.Blueprints;
 
 namespace Battlegrounds.Test.Models.Lobbies;
 
@@ -284,6 +285,108 @@ public sealed class MatchOverDataTests {
             Assert.That(data.SquadSummaries, Has.Count.EqualTo(3));
             Assert.That(data.SquadSummaries.Select(s => s.SquadId), Is.EquivalentTo(new[] { 1, 2, 3 }));
         }
+    }
+
+    [Test]
+    public void FromMatchResultForPlayer_UsesCompanyContextForBlueprintAndNetExperience() {
+        var company = new Company {
+            Id = CompanyId,
+            Squads = [
+                new Squad {
+                    Id = 1,
+                    Experience = 90f,
+                    Blueprint = SquadBlueprintFixture.SBP_TOMMY_UK
+                }
+            ]
+        };
+
+        var modifiers = new LinkedList<CompanyEventModifier>();
+        modifiers.AddLast(CompanyEventModifier.ExperienceGain(squadId: 1, experience: 150f));
+
+        var result = BuildValidResult(
+            playerCompanies: new Dictionary<string, string> { [PlayerId] = CompanyId },
+            companyModifiers: new Dictionary<string, LinkedList<CompanyEventModifier>> {
+                [PlayerId] = modifiers
+            });
+
+        var data = MatchOverData.FromMatchResultForPlayer(
+            result,
+            PlayerId,
+            new Dictionary<string, Company> { [CompanyId] = company });
+
+        var squad = data.SquadSummaries.Single(s => s.SquadId == 1);
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(squad.Blueprint, Is.EqualTo(SquadBlueprintFixture.SBP_TOMMY_UK));
+            Assert.That(squad.ExperienceGained, Is.EqualTo(60f));
+            Assert.That(squad.WasKilled, Is.False);
+        }
+    }
+
+    [Test]
+    public void FromMatchResultForPlayer_WhenSquadWasKilled_ResetsPickupAndExperienceGain() {
+        var company = new Company {
+            Id = CompanyId,
+            Squads = [
+                new Squad {
+                    Id = 1,
+                    Experience = 50f,
+                    Blueprint = SquadBlueprintFixture.SBP_TOMMY_UK
+                }
+            ]
+        };
+
+        var modifiers = new LinkedList<CompanyEventModifier>();
+        modifiers.AddLast(CompanyEventModifier.ExperienceGain(squadId: 1, experience: 120f));
+        modifiers.AddLast(CompanyEventModifier.Pickup(squadId: 1, blueprintArg: "weapon_sten"));
+        modifiers.AddLast(CompanyEventModifier.Kill(squadId: 1));
+
+        var result = BuildValidResult(
+            playerCompanies: new Dictionary<string, string> { [PlayerId] = CompanyId },
+            companyModifiers: new Dictionary<string, LinkedList<CompanyEventModifier>> {
+                [PlayerId] = modifiers
+            });
+
+        var data = MatchOverData.FromMatchResultForPlayer(
+            result,
+            PlayerId,
+            new Dictionary<string, Company> { [CompanyId] = company });
+
+        var squad = data.SquadSummaries.Single(s => s.SquadId == 1);
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(squad.WasKilled, Is.True);
+            Assert.That(squad.ExperienceGained, Is.EqualTo(0f));
+            Assert.That(squad.PickedUpBlueprint, Is.EqualTo(string.Empty));
+        }
+    }
+
+    [Test]
+    public void FromMatchResultForPlayer_WhenCompanyDoesNotContainSquad_ThrowsInvalidOperationException() {
+        var company = new Company {
+            Id = CompanyId,
+            Squads = [
+                new Squad {
+                    Id = 99,
+                    Experience = 0f,
+                    Blueprint = SquadBlueprintFixture.SBP_TOMMY_UK
+                }
+            ]
+        };
+
+        var modifiers = new LinkedList<CompanyEventModifier>();
+        modifiers.AddLast(CompanyEventModifier.Statistics(squadId: 1, infantryKilled: 1, vehiclesDestroyed: 0, losses: 0));
+
+        var result = BuildValidResult(
+            playerCompanies: new Dictionary<string, string> { [PlayerId] = CompanyId },
+            companyModifiers: new Dictionary<string, LinkedList<CompanyEventModifier>> {
+                [PlayerId] = modifiers
+            });
+
+        Assert.That(
+            () => MatchOverData.FromMatchResultForPlayer(
+                result,
+                PlayerId,
+                new Dictionary<string, Company> { [CompanyId] = company }),
+            Throws.TypeOf<InvalidOperationException>());
     }
 
 }

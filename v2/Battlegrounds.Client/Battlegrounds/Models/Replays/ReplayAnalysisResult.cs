@@ -30,6 +30,8 @@ public sealed class ReplayAnalysisResult {
             teams[player.PlayerId] = player.TeamId;
         }
 
+        bool isHuman(int id) => Replay.Players.FirstOrDefault(x => x.PlayerId == id)?.IsHuman ?? false;
+
         List<BadMatchEvent> badEvents = [];
 
         MatchStartReplayEvent? registeredStartEvent = null;
@@ -117,8 +119,10 @@ public sealed class ReplayAnalysisResult {
                 }
             }
             if (participant is null) {
-                _logger.Warning("No participant found for player {PlayerId} in lobby {LobbyName}", playerData.PlayerId, lobby.Name);
-                badEvents.Add(new BadMatchEvent(registeredStartEvent, $"No participant found for player {playerData.PlayerId}"));
+                if (isHuman(playerData.PlayerId)) {
+                    _logger.Warning("No participant found for human player {PlayerId} in lobby {LobbyName}", playerData.PlayerId, lobby.Name);
+                    badEvents.Add(new BadMatchEvent(registeredStartEvent, $"No participant found for human player {playerData.PlayerId}"));
+                }
                 continue;
             }
             if (registeredOverEvent is not null) {
@@ -162,7 +166,7 @@ public sealed class ReplayAnalysisResult {
             Winners = winners,
             Losers = losers,
             Players =lobby.Participants.Where(x => !x.IsAIParticipant).Select(x => x.ParticipantId).ToHashSet(),
-            IsValid = badEvents.Count == 0 && !string.IsNullOrEmpty(registeredStartEvent.MatchId) && !string.IsNullOrEmpty(registeredStartEvent.ModVersion),
+            IsValid = badEvents.Count == 0 && !string.IsNullOrEmpty(registeredStartEvent.MatchId) && !string.IsNullOrEmpty(registeredStartEvent.ModVersion) && Replay.Duration > TimeSpan.Zero,
         };
 
     }

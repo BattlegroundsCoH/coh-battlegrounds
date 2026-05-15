@@ -35,7 +35,6 @@
 
   <ItemGroup>
     <Folder Include="TestData\Blueprints\" />
-    <Folder Include="TestData\Playbacks\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,6 +66,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="TestData\Playbacks\temp_23-05-2025__23_51.rec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Playbacks\temp_24-04-2026__19_25.rec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="TestData\Playbacks\temp_25-05-2025__17_36.rec">

@@ -45,6 +45,7 @@ public sealed class ReplayAnalysisResultTests {
                 new MatchOverReplayEvent(TimeSpan.Zero.Add(TimeSpan.FromSeconds(3)), [1000], [1001], [])
             ],
             GameId = "TestGameId",
+            Duration = TimeSpan.FromSeconds(3),
         };
 
         var result = new ReplayAnalysisResult {
@@ -449,6 +450,31 @@ public sealed class ReplayAnalysisResultTests {
         lobby.Participants.Returns(new HashSet<Participant> { p1, p2 });
         lobby.GetTeam(p1).Returns(0);
         lobby.GetTeam(p2).Returns(1);
+
+        // Act
+        var matchResult = result.GetMatchResult(lobby);
+
+        // Assert
+        Assert.That(matchResult.IsValid, Is.True);
+
+    }
+
+    [Test]
+    public void GetMatchResult_ReturnsValidResult_UsingRealReplayData_ForCoH3_WithIncorrectTeamPositions() {
+
+        // Arrange
+        var replay = new CoH3ReplayParser().ParseReplayFile(ReplayFixture.TEMP_24_04_2026__19_25_FILE);
+        var result = new ReplayAnalysisResult {
+            Replay = replay,
+            Failed = false,
+            GameId = CoH3.GameId
+        };
+        var p1 = new Participant(0, "p1", "Player 1", true, false);
+        var p2 = new Participant(0, "p2", "Player 2", false, false);
+        var lobby = Substitute.For<ILobby>();
+        lobby.Participants.Returns(new HashSet<Participant> { p1, p2 });
+        lobby.GetTeam(p1).Returns(1); // Incorrect team position
+        lobby.GetTeam(p2).Returns(0); // Incorrect team position
 
         // Act
         var matchResult = result.GetMatchResult(lobby);

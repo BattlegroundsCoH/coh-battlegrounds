@@ -132,6 +132,10 @@ public sealed class HomeViewModel(IStatisticsService statisticsService, ICompany
 
     private async Task UpdateData() {
 
+        // Clean up existing data
+        RecentMatches.Clear();
+        FeaturedCompanies.Clear();
+
         // Get the played matches from the statistics service and update the properties accordingly
         var playedMatches = _statisticsService.GetPlayedMatches();
 
