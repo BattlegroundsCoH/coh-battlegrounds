@@ -18,4 +18,6 @@ doctrine:
         squads:
             - ssb_africa_uk
             - ssb_sniper_africa_uk 
+            - cwt_lrdg_truck_africa_uk_uk
+            - cwt_lrdg_truck_2pdr_africa_uk 
         upgrades: []
