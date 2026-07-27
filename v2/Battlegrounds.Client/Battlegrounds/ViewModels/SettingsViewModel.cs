@@ -27,9 +27,15 @@ public sealed class SettingsViewModel {
 
     public ObservableCollection<SettingsSectionModel> Sections { get; } = [];
 
+    /// <summary>
+    /// The signed-in user, surfaced here because the Account section is the only place the app
+    /// shows identity now that the top bar is gone.
+    /// </summary>
+    public UserViewModel UserViewModel => _mainWindowViewModel.UserViewModel;
+
     public IRelayCommand SaveCommand { get; }
 
-    public IRelayCommand BackCommand { get; }
+    public IAsyncRelayCommand LogoutCommand => _mainWindowViewModel.LogoutCommand;
 
     public SettingsViewModel(Configuration configuration, BattlegroundsApp app, MainWindowViewModel mainWindowViewModel, ILogger<SettingsViewModel> logger) {
         _configuration = configuration;
@@ -38,7 +44,6 @@ public sealed class SettingsViewModel {
         _logger = logger;
 
         SaveCommand = new RelayCommand(Save);
-        BackCommand = new RelayCommand(GoBack);
 
         BuildSections();
     }
@@ -124,10 +129,6 @@ public sealed class SettingsViewModel {
         }
         _app.SaveConfiguration();
         _logger.LogInformation("Configuration saved successfully.");
-    }
-
-    private void GoBack() {
-        _mainWindowViewModel.GoBack();
     }
 
 }

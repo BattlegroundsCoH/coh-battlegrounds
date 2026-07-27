@@ -45,6 +45,7 @@
 
   <ItemGroup>
     <Resource Include="Assets\auth.jpg" />
+    <Resource Include="Assets\BattlegroundsLogo.png" />
     <Resource Include="Assets\IdP_discord.png" />
     <Resource Include="Assets\IdP_steam.png" />
     <Resource Include="Rendering\Effects\ColourTintShader.ps" />
