@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
+
+  <assemblyIdentity version="2.0.0.0" name="Battlegrounds.app" />
+
+  <!--
+    Without a manifest the SDK embeds a default one declaring plain system DPI awareness.
+    That makes the app crisp only on the monitor it started on: move the window to a screen
+    at a different scale, or change the scale while it is running, and Windows stretches the
+    last-rendered bitmap instead of asking WPF to redraw — every glyph in the app goes soft.
+    PerMonitorV2 hands the DPI change to WPF, which re-renders at the new scale.
+  -->
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true/pm</dpiAware>
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
+      <longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
+    </windowsSettings>
+  </application>
+
+  <!-- PerMonitorV2 is only honoured for a process that declares the OS it was built for. -->
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- Windows 10 / 11 -->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
+    </application>
+  </compatibility>
+
+</assembly>

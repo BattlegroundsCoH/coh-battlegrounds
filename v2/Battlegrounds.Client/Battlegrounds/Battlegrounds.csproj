@@ -8,6 +8,8 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>Battlegrounds</AssemblyName>
     <ApplicationIcon>App.ico</ApplicationIcon>
+    <!-- Per-monitor DPI awareness; see the comments in the manifest. -->
+    <ApplicationManifest>app.manifest</ApplicationManifest>
     <Version>2.0.0</Version>
     <PackageProjectUrl>https://cohbattlegrounds.com/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/BattlegroundsCoH/coh-battlegrounds</RepositoryUrl>
@@ -34,6 +36,19 @@
 
   <ItemGroup>
     <Content Include="App.ico" />
+  </ItemGroup>
+
+  <!--
+    Design-system fonts, embedded so the app renders identically on a machine that has
+    neither installed. Oswald's static weights are instanced from the upstream variable
+    font (WPF only ever renders a variable font's default instance, so the four files
+    are not optional). Both families are SIL OFL; embedding is redistribution, so the
+    licences ship alongside the binary.
+  -->
+  <ItemGroup>
+    <Resource Include="Assets\Fonts\*.ttf" />
+    <Content Include="Assets\Fonts\OFL-Oswald.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\Fonts\OFL-JetBrainsMono.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
