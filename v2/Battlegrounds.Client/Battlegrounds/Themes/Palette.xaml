@@ -1,0 +1,91 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Raw palette — the only place a literal colour value may appear.
+
+        These are hues, not roles. Nothing outside Brushes.xaml should reference them:
+        views bind to the semantic brushes so that re-tinting the product is an edit to
+        this file plus (at most) a remap in Brushes.xaml.
+
+        Values are the Battlegrounds design system, mirrored from the website's
+        src/styles/global.css :root block (the upstream source of truth) and the
+        redesign handoff in Resources/client/.
+
+        Alpha-first notation: WPF hex is #AARRGGBB. The white hairlines below are the
+        CSS rgba(255,255,255,X) lines converted — .06 -> 0F, .08 -> 14, .09 -> 17,
+        .12 -> 1F, .15 -> 26.
+    -->
+
+    <!-- Warm near-black surface ramp, darkest to lightest. -->
+    <Color x:Key="Color.Base.900">#0b0907</Color>
+    <Color x:Key="Color.Base.850">#0f0d0a</Color>
+    <Color x:Key="Color.Base.800">#12100d</Color>
+    <Color x:Key="Color.Base.750">#15120d</Color>
+    <Color x:Key="Color.Base.700">#171410</Color>
+    <Color x:Key="Color.Base.600">#1c1912</Color>
+    <Color x:Key="Color.Base.500">#211d16</Color>
+    <Color x:Key="Color.Base.400">#2c2820</Color>
+
+    <!-- Warm off-white to olive-grey text ramp. -->
+    <Color x:Key="Color.Sand.100">#f2ede3</Color>
+    <Color x:Key="Color.Sand.300">#c4bba8</Color>
+    <Color x:Key="Color.Sand.400">#a39a89</Color>
+    <Color x:Key="Color.Sand.500">#8a8163</Color>
+    <Color x:Key="Color.Sand.600">#6b6455</Color>
+    <Color x:Key="Color.Sand.700">#5a5548</Color>
+
+    <!-- Gold: the accent. Headings, indicators, links, secondary fills. -->
+    <Color x:Key="Color.Gold.300">#f2ce7e</Color>
+    <Color x:Key="Color.Gold.400">#e0a53b</Color>
+    <Color x:Key="Color.Gold.500">#c98f2c</Color>
+
+    <!-- Red: the primary CTA colour and the destructive colour both. -->
+    <Color x:Key="Color.Red.300">#e6675e</Color>
+    <Color x:Key="Color.Red.400">#e6473d</Color>
+    <Color x:Key="Color.Red.500">#d6382f</Color>
+    <Color x:Key="Color.Red.700">#b02a22</Color>
+
+    <Color x:Key="Color.Amber.400">#f2b64a</Color>
+    <Color x:Key="Color.Amber.500">#d98a2e</Color>
+
+    <!-- Fully transparent amber. The start-match pulse animates between this and
+         Amber.400; a ColorAnimation needs both endpoints in the same hue or it fades
+         through grey. -->
+    <Color x:Key="Color.Caution.Transparent">#00f2b64a</Color>
+
+    <Color x:Key="Color.Green.400">#8ccf99</Color>
+    <Color x:Key="Color.Green.500">#6fbf7f</Color>
+
+    <!-- Allies blue. Informational only; never an interactive accent. -->
+    <Color x:Key="Color.Blue.400">#7fa7e6</Color>
+
+    <!-- Faction row tints (mockups use these behind the flag glyphs). -->
+    <Color x:Key="Color.Faction.Axis">#1c1a14</Color>
+    <Color x:Key="Color.Faction.Allies">#2a1512</Color>
+
+    <!-- Translucent white hairlines. -->
+    <Color x:Key="Color.Line.Soft">#0FFFFFFF</Color>
+    <Color x:Key="Color.Line.Default">#17FFFFFF</Color>
+    <Color x:Key="Color.Line.Strong">#1FFFFFFF</Color>
+
+    <!-- Scrims. Warm, not pure black — pure black reads cold against these surfaces. -->
+    <Color x:Key="Color.Scrim">#CC050403</Color>
+    <Color x:Key="Color.Scrim.Heavy">#E6050403</Color>
+
+    <!-- Panel floated over artwork: the login quote card, and anything like it. -->
+    <Color x:Key="Color.Scrim.Panel">#B8060503</Color>
+
+    <!-- Gradient stops fading artwork into an adjacent surface. -->
+    <Color x:Key="Color.Scrim.Fade.Mid">#330b0907</Color>
+    <Color x:Key="Color.Scrim.Fade.End">#260b0907</Color>
+
+    <!-- Gold at 40%: a frame that reads as accent without competing with content. -->
+    <Color x:Key="Color.Gold.Soft">#66e0a53b</Color>
+
+    <!-- White at 33%: an unfilled track behind a progress indicator. -->
+    <Color x:Key="Color.Track.Empty">#55FFFFFF</Color>
+
+    <Color x:Key="Color.Transparent">#00000000</Color>
+
+</ResourceDictionary>

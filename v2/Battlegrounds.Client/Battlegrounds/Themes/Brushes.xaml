@@ -1,0 +1,122 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Palette.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--
+        Semantic brushes — the layer views and control templates actually reference.
+
+        Every key names a *role* ("the surface a card sits on", "text you can ignore"),
+        never a hue. That is deliberate: the previous palette named its keys AccentBlue
+        and BackgroundDeepBlue, so recolouring the app to gold-on-charcoal would have
+        left every view asking for "blue" and getting gold.
+
+        Add a brush here when a new role appears. Do not add one because a view wants a
+        slightly different shade — that is a sign the view should reuse an existing role.
+    -->
+
+    <!-- ===================== Surfaces ===================== -->
+
+    <!-- The window itself, and the gutter between cards. -->
+    <SolidColorBrush x:Key="Brush.Surface.Window" Color="{StaticResource Color.Base.800}" />
+
+    <!-- Cards, panels, list rows sitting on the window. -->
+    <SolidColorBrush x:Key="Brush.Surface.Card" Color="{StaticResource Color.Base.700}" />
+
+    <!-- Popups, dropdowns, inputs — reads as lifted off the card. -->
+    <SolidColorBrush x:Key="Brush.Surface.Raised" Color="{StaticResource Color.Base.750}" />
+
+    <!-- Wells: chat input, code-ish areas. Reads as cut into the card. -->
+    <SolidColorBrush x:Key="Brush.Surface.Sunken" Color="{StaticResource Color.Base.850}" />
+
+    <!-- App chrome: top bar, footers, status strips. Darkest surface. -->
+    <SolidColorBrush x:Key="Brush.Surface.Chrome" Color="{StaticResource Color.Base.900}" />
+
+    <!-- Hover and selection share a value by design; selection adds an indicator bar. -->
+    <SolidColorBrush x:Key="Brush.Surface.Hover" Color="{StaticResource Color.Base.500}" />
+    <SolidColorBrush x:Key="Brush.Surface.Selected" Color="{StaticResource Color.Base.500}" />
+
+    <!-- Pressed state for surfaces that also hover. -->
+    <SolidColorBrush x:Key="Brush.Surface.Pressed" Color="{StaticResource Color.Base.400}" />
+
+    <!-- Full-window dim behind modals. -->
+    <SolidColorBrush x:Key="Brush.Surface.Scrim" Color="{StaticResource Color.Scrim}" />
+
+    <!-- A panel floated over artwork rather than over a surface. -->
+    <SolidColorBrush x:Key="Brush.Surface.Overlay" Color="{StaticResource Color.Scrim.Panel}" />
+
+    <!-- Unfilled portion of a progress track drawn over an image. -->
+    <SolidColorBrush x:Key="Brush.Surface.Track" Color="{StaticResource Color.Track.Empty}" />
+
+    <!-- ===================== Text ===================== -->
+
+    <SolidColorBrush x:Key="Brush.Text.Primary" Color="{StaticResource Color.Sand.100}" />
+    <SolidColorBrush x:Key="Brush.Text.Body" Color="{StaticResource Color.Sand.300}" />
+    <SolidColorBrush x:Key="Brush.Text.Muted" Color="{StaticResource Color.Sand.400}" />
+
+    <!-- Labels, metadata, table headers. -->
+    <SolidColorBrush x:Key="Brush.Text.Dim" Color="{StaticResource Color.Sand.500}" />
+
+    <!-- Disabled and placeholder text. -->
+    <SolidColorBrush x:Key="Brush.Text.Faint" Color="{StaticResource Color.Sand.600}" />
+
+    <!-- On a gold fill. White on gold fails contrast; this is the only correct choice. -->
+    <SolidColorBrush x:Key="Brush.Text.OnAccent" Color="{StaticResource Color.Base.800}" />
+
+    <!-- On a red or amber fill. -->
+    <SolidColorBrush x:Key="Brush.Text.OnPrimary" Color="#ffffff" />
+
+    <!-- ===================== Accent (gold) ===================== -->
+
+    <SolidColorBrush x:Key="Brush.Accent.Gold" Color="{StaticResource Color.Gold.400}" />
+    <SolidColorBrush x:Key="Brush.Accent.GoldHover" Color="{StaticResource Color.Gold.300}" />
+    <SolidColorBrush x:Key="Brush.Accent.GoldPressed" Color="{StaticResource Color.Gold.500}" />
+
+    <!-- ===================== Actions (red CTA) ===================== -->
+
+    <SolidColorBrush x:Key="Brush.Action.Primary" Color="{StaticResource Color.Red.500}" />
+    <SolidColorBrush x:Key="Brush.Action.PrimaryHover" Color="{StaticResource Color.Red.400}" />
+    <SolidColorBrush x:Key="Brush.Action.PrimaryPressed" Color="{StaticResource Color.Red.700}" />
+
+    <!-- ===================== Status ===================== -->
+
+    <SolidColorBrush x:Key="Brush.Status.Success" Color="{StaticResource Color.Green.500}" />
+    <SolidColorBrush x:Key="Brush.Status.SuccessHover" Color="{StaticResource Color.Green.400}" />
+    <SolidColorBrush x:Key="Brush.Status.Danger" Color="{StaticResource Color.Red.500}" />
+    <SolidColorBrush x:Key="Brush.Status.DangerHover" Color="{StaticResource Color.Red.400}" />
+
+    <!-- Red as *text*. The fill red is too dark to read on a dark surface. -->
+    <SolidColorBrush x:Key="Brush.Status.DangerText" Color="{StaticResource Color.Red.300}" />
+
+    <SolidColorBrush x:Key="Brush.Status.Caution" Color="{StaticResource Color.Amber.500}" />
+    <SolidColorBrush x:Key="Brush.Status.CautionHover" Color="{StaticResource Color.Amber.400}" />
+    <SolidColorBrush x:Key="Brush.Status.Info" Color="{StaticResource Color.Blue.400}" />
+
+    <!-- ===================== Borders ===================== -->
+
+    <!-- Card edges. The redesign uses these instead of drop shadows. -->
+    <SolidColorBrush x:Key="Brush.Border.Hairline" Color="{StaticResource Color.Line.Soft}" />
+    <SolidColorBrush x:Key="Brush.Border.Default" Color="{StaticResource Color.Line.Default}" />
+    <SolidColorBrush x:Key="Brush.Border.Strong" Color="{StaticResource Color.Line.Strong}" />
+
+    <!-- Opaque outline for ghost buttons and inputs at rest. -->
+    <SolidColorBrush x:Key="Brush.Border.Outline" Color="{StaticResource Color.Sand.700}" />
+
+    <!-- Focus is always gold, on every control. -->
+    <SolidColorBrush x:Key="Brush.Border.Focus" Color="{StaticResource Color.Gold.400}" />
+
+    <!-- Accent frame that must not compete with the content it surrounds. -->
+    <SolidColorBrush x:Key="Brush.Border.AccentSoft" Color="{StaticResource Color.Gold.Soft}" />
+
+    <!-- ===================== Faction tints ===================== -->
+
+    <SolidColorBrush x:Key="Brush.Faction.Axis" Color="{StaticResource Color.Faction.Axis}" />
+    <SolidColorBrush x:Key="Brush.Faction.Allies" Color="{StaticResource Color.Faction.Allies}" />
+
+    <!-- ===================== Utility ===================== -->
+
+    <SolidColorBrush x:Key="Brush.Transparent" Color="{StaticResource Color.Transparent}" />
+
+</ResourceDictionary>
