@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 
 using Battlegrounds.Views;
+using Battlegrounds.Views.Dev;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,8 +21,14 @@ public partial class App : Application {
     }
 
     protected override void OnStartup(StartupEventArgs e) {
-        
+
         base.OnStartup(e);
+
+        // --gallery opens the design-system gallery instead of the app.
+        if (e.Args.Contains("--gallery")) {
+            new StyleGalleryWindow().Show();
+            return;
+        }
 
         var bgApp = new BattlegroundsApp(e.Args);
         bgApp.ConfigureFileStorage();
