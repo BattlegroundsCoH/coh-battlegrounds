@@ -148,7 +148,7 @@ public sealed class Configuration {
     /// </summary>
     [ConfigurationSection("Server", "Settings related to the Battlegrounds server", developerModeOnly: true, priority: 90)]
     [ConfigurationProperty("Battlegrounds Server Host", "The host URL for the Battlegrounds server. This is the address that the application will use to connect to the server for game-related operations. Ensure that the host is correct and that the server is operational and accessible from the application environment.", developerModeOnly: true)]
-    public string BattlegroundsServerHost { get; set; } = "bg.test.service.cohbattlegrounds.com";
+    public string BattlegroundsServerHost { get; set; } = "bg.test.service.cohbg.com";
 
     /// <summary>
     /// Gets or sets the port number used by the Battlegrounds HTTP server.
