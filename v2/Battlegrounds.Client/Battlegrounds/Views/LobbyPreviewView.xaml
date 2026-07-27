@@ -18,10 +18,10 @@
 
         <!-- Slot card shown in the team composition grid -->
         <DataTemplate x:Key="SlotCardTemplate">
-            <Border Background="{StaticResource BackgroundBlueBrush}"
-                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+            <Border Background="{StaticResource Brush.Surface.Card}"
+                    BorderBrush="{StaticResource Brush.Border.Hairline}"
                     BorderThickness="1"
-                    CornerRadius="4"
+                    CornerRadius="0"
                     Height="44"
                     Margin="0,0,0,4">
                 <Grid Margin="8,0">
@@ -70,7 +70,7 @@
                                         <DataTrigger Binding="{Binding IsOccupied}" Value="True">
                                             <Setter Property="Text" Value="{Binding Name}"/>
                                             <Setter Property="FontWeight" Value="DemiBold"/>
-                                            <Setter Property="Foreground" Value="{StaticResource ForegroundLightGrayBrush}"/>
+                                            <Setter Property="Foreground" Value="{StaticResource Brush.Text.Body}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding IsOccupied}" Value="False">
                                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -85,7 +85,7 @@
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Text" Value="Open"/>
-                                    <Setter Property="Foreground" Value="{StaticResource ForegroundGrayBrush}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource Brush.Text.Dim}"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsOccupied}" Value="True">
                                             <Setter Property="Text">
@@ -98,11 +98,11 @@
                                             </Setter>
                                             <Setter Property="FontSize" Value="8"/>
                                             <Setter Property="FontStyle" Value="Oblique"/>
-                                            <Setter Property="Foreground" Value="{StaticResource ForegroundGrayBrush}"/>
+                                            <Setter Property="Foreground" Value="{StaticResource Brush.Text.Dim}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding IsLocked}" Value="True">
                                             <Setter Property="Text" Value="Locked"/>
-                                            <Setter Property="Foreground" Value="{StaticResource ForegroundDarkGrayBrush}"/>
+                                            <Setter Property="Foreground" Value="{StaticResource Brush.Text.Faint}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -122,21 +122,21 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="{Binding Name}"
-                           Foreground="{StaticResource ForegroundGrayBrush}"
+                           Foreground="{StaticResource Brush.Text.Dim}"
                            FontSize="12"/>
                 <TextBlock Grid.Column="1"
                            Text="{Binding Value}"
-                           Foreground="{StaticResource ForegroundLightBlueBrush}"
+                           Foreground="{StaticResource Brush.Accent.Gold}"
                            FontSize="12"
                            FontWeight="SemiBold"/>
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
 
-    <Border Background="{StaticResource BackgroundDarkBlueBrush}"
-            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+    <Border Background="{StaticResource Brush.Surface.Sunken}"
+            BorderBrush="{StaticResource Brush.Border.Hairline}"
             BorderThickness="1"
-            CornerRadius="8">
+            CornerRadius="0">
 
         <!-- No lobby selected placeholder -->
         <Grid>
@@ -148,7 +148,7 @@
                            HorizontalAlignment="Center"
                            Margin="0,0,0,12"/>
                 <TextBlock Text="Select a lobby"
-                           Foreground="{StaticResource ForegroundGrayBrush}"
+                           Foreground="{StaticResource Brush.Text.Dim}"
                            FontSize="14"
                            HorizontalAlignment="Center"/>
             </StackPanel>
@@ -160,48 +160,48 @@
                 <StackPanel Margin="14">
 
                     <!-- Map preview image -->
-                    <Border CornerRadius="6"
+                    <Border CornerRadius="0"
                             Height="280"
                             Margin="0,0,0,14"
                             ClipToBounds="True"
-                            Background="{StaticResource BackgroundBlueBrush}">
+                            Background="{StaticResource Brush.Surface.Card}">
                         <Image Source="{Binding SelectedLobbyMapPreview}"
                                Stretch="UniformToFill"/>
                     </Border>
 
                     <!-- Lobby name and host -->
                     <TextBlock Text="{Binding SelectedLobby.Name}"
-                               Foreground="{StaticResource ForegroundWhiteBrush}"
+                               Foreground="{StaticResource Brush.Text.Primary}"
                                FontSize="16"
                                FontWeight="Bold"
                                TextTrimming="CharacterEllipsis"/>
 
                     <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
                         <TextBlock Text="Host: "
-                                   Foreground="{StaticResource ForegroundGrayBrush}"
+                                   Foreground="{StaticResource Brush.Text.Dim}"
                                    FontSize="12"/>
                         <TextBlock Text="{Binding SelectedLobby.Host}"
-                                   Foreground="{StaticResource ForegroundLightBlueBrush}"
+                                   Foreground="{StaticResource Brush.Accent.Gold}"
                                    FontSize="12"
                                    FontWeight="SemiBold"/>
                         <TextBlock Text=" · "
-                                   Foreground="{StaticResource ForegroundGrayBrush}"
+                                   Foreground="{StaticResource Brush.Text.Dim}"
                                    FontSize="12"/>
                         <TextBlock Text="{Binding SelectedLobby.Players, StringFormat='{}{0} players'}"
-                                   Foreground="{StaticResource ForegroundGrayBrush}"
+                                   Foreground="{StaticResource Brush.Text.Dim}"
                                    FontSize="12"/>
                         <TextBlock Text=" · 🔒"
                                    FontSize="12"
-                                   Foreground="{StaticResource ForegroundGrayBrush}"
+                                   Foreground="{StaticResource Brush.Text.Dim}"
                                    Visibility="{Binding SelectedLobby.IsPasswordProtected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </StackPanel>
 
                     <!-- Separator -->
-                    <Separator Background="{StaticResource BackgroundLightBlueBrush}" Margin="0,12"/>
+                    <Separator Background="{StaticResource Brush.Border.Hairline}" Margin="0,12"/>
 
                     <!-- Team composition -->
                     <TextBlock Text="TEAM COMPOSITION"
-                               Foreground="{StaticResource ForegroundGrayBrush}"
+                               Foreground="{StaticResource Brush.Text.Dim}"
                                FontSize="11"
                                FontWeight="SemiBold"
                                Margin="0,0,0,8"/>
@@ -216,7 +216,7 @@
                         <!-- Team 1 -->
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="TEAM 1"
-                                       Foreground="{StaticResource AccentBlueBrush}"
+                                       Foreground="{StaticResource Brush.Accent.Gold}"
                                        FontSize="11"
                                        FontWeight="Bold"
                                        Margin="0,0,0,6"/>
@@ -226,7 +226,7 @@
                                           Visibility="{Binding SelectedLobby.Team1Slots.Length, Converter={StaticResource ZeroToVisibilityConverter}}"/>
                             <!-- Fallback when no slot data available -->
                             <TextBlock Text="No slot data"
-                                       Foreground="{StaticResource ForegroundGrayBrush}"
+                                       Foreground="{StaticResource Brush.Text.Dim}"
                                        FontSize="12">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
@@ -244,7 +244,7 @@
                         <!-- Team 2 -->
                         <StackPanel Grid.Column="2">
                             <TextBlock Text="TEAM 2"
-                                       Foreground="{StaticResource AccentRedBrush}"
+                                       Foreground="{StaticResource Brush.Status.Danger}"
                                        FontSize="11"
                                        FontWeight="Bold"
                                        Margin="0,0,0,6"/>
@@ -253,7 +253,7 @@
                                           Visibility="{Binding SelectedLobby.Team2Slots.Length, Converter={StaticResource ZeroToVisibilityConverter}}"/>
                             <!-- Fallback when no slot data available -->
                             <TextBlock Text="No slot data"
-                                       Foreground="{StaticResource ForegroundGrayBrush}"
+                                       Foreground="{StaticResource Brush.Text.Dim}"
                                        FontSize="12">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
@@ -270,11 +270,11 @@
                     </Grid>
 
                     <!-- Separator -->
-                    <Separator Background="{StaticResource BackgroundLightBlueBrush}" Margin="0,12"/>
+                    <Separator Background="{StaticResource Brush.Border.Hairline}" Margin="0,12"/>
 
                     <!-- Lobby settings -->
                     <TextBlock Text="SETTINGS"
-                               Foreground="{StaticResource ForegroundGrayBrush}"
+                               Foreground="{StaticResource Brush.Text.Dim}"
                                FontSize="11"
                                FontWeight="SemiBold"
                                Margin="0,0,0,8"/>
@@ -286,10 +286,10 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Map"
-                                   Foreground="{StaticResource ForegroundGrayBrush}"
+                                   Foreground="{StaticResource Brush.Text.Dim}"
                                    FontSize="12"/>
                         <TextBlock Grid.Column="1"
-                                   Foreground="{StaticResource ForegroundLightBlueBrush}"
+                                   Foreground="{StaticResource Brush.Accent.Gold}"
                                    FontSize="12"
                                    FontWeight="SemiBold">
                             <TextBlock.Text>
@@ -306,11 +306,11 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Game Mode"
-                                   Foreground="{StaticResource ForegroundGrayBrush}"
+                                   Foreground="{StaticResource Brush.Text.Dim}"
                                    FontSize="12"/>
                         <TextBlock Grid.Column="1"
                                    Text="{Binding SelectedLobby.GameMode}"
-                                   Foreground="{StaticResource ForegroundLightBlueBrush}"
+                                   Foreground="{StaticResource Brush.Accent.Gold}"
                                    FontSize="12"
                                    FontWeight="SemiBold"/>
                     </Grid>
@@ -321,7 +321,7 @@
 
                     <!-- Join button -->
                     <Button Content="Join Lobby"
-                            Style="{StaticResource ActionButton}"
+                            Style="{StaticResource Button.Primary}"
                             Command="{Binding JoinLobbyCommand}"
                             IsEnabled="{Binding SelectedLobby.CanJoin}"
                             Height="40"
@@ -329,14 +329,14 @@
                             Margin="0,16,0,0"/>
 
                     <TextBlock Text="🔒  Password required"
-                               Foreground="{StaticResource ForegroundGrayBrush}"
+                               Foreground="{StaticResource Brush.Text.Dim}"
                                FontSize="11"
                                HorizontalAlignment="Center"
                                Margin="0,6,0,0"
                                Visibility="{Binding SelectedLobby.IsPasswordProtected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                     <TextBlock Text="Lobby is full"
-                               Foreground="{StaticResource ForegroundLightRedBrush}"
+                               Foreground="{StaticResource Brush.Status.DangerText}"
                                FontSize="11"
                                HorizontalAlignment="Center"
                                Margin="0,6,0,0">

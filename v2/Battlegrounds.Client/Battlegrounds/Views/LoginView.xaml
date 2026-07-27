@@ -4,228 +4,174 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels"
+             xmlns:controls="clr-namespace:Battlegrounds.Controls"
              d:DataContext="{d:DesignInstance Type=viewmodels:LoginViewModel}"
-        MaxHeight="{StaticResource DEFAULT_APP_HEIGHT}" 
-        MaxWidth="{StaticResource DEFAULT_APP_WIDTH}"
-            Background="{StaticResource BackgroundAuthDarkBrush}" 
+             MaxHeight="{StaticResource DEFAULT_APP_HEIGHT}"
+             MaxWidth="{StaticResource DEFAULT_APP_WIDTH}"
+             Background="{StaticResource Brush.Surface.Chrome}"
+             FontFamily="{StaticResource Font.Body}"
+             FontSize="{StaticResource Font.Size.Body}"
              mc:Ignorable="d">
+
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-    </UserControl.Resources>
-    <Grid>
 
+        <Style x:Key="Login.FieldLabel" TargetType="controls:TrackedTextBlock" BasedOn="{StaticResource Display.Label}">
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MaxWidth="600"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
-        <Border 
-            Grid.Column="0">
 
-            <Grid Margin="30" VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+        <!-- ===================== Form ===================== -->
 
-                <!-- Logo/Title -->
-                <StackPanel Grid.Row="0" Margin="0,0,0,40" HorizontalAlignment="Left">
-                    <TextBlock Text="BATTLEGROUNDS" 
-                               FontSize="32" 
-                               FontWeight="Bold" 
-                               Foreground="{StaticResource ForegroundWhiteBrush}"
-                               HorizontalAlignment="Center"/>
-                    <TextBlock Text="Sign into your account" 
-                               FontSize="18" 
-                               Foreground="{StaticResource ForegroundLightGrayBrush}"
-                               HorizontalAlignment="Left"
-                               Margin="0,5,0,0"/>
-                </StackPanel>
+        <ScrollViewer Grid.Column="0"
+                      Style="{StaticResource ScrollViewer.Thin}"
+                      Width="560">
+            <StackPanel VerticalAlignment="Center" Margin="64,48">
 
-                <!-- Username Input -->
-                <StackPanel Grid.Row="1" Margin="0,0,0,20">
-                    <TextBlock Text="USERNAME" 
-                               FontSize="12" 
-                               Foreground="{StaticResource ForegroundGrayBrush}" 
-                               Margin="0,0,0,8"/>
-                    <Border Background="{StaticResource BackgroundAuthDarkBrush}" 
-                            CornerRadius="4" 
-                            BorderBrush="{StaticResource ForegroundWhiteBrush}" 
-                            BorderThickness="0.25">
-                        <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" 
-                                 Background="Transparent" 
-                                 BorderThickness="0" 
-                                 Padding="10,12" 
-                                 Foreground="{StaticResource ForegroundWhiteBrush}"
-                                 CaretBrush="{StaticResource ForegroundWhiteBrush}"/>
-                    </Border>
-                </StackPanel>
+                <controls:Eyebrow Text="ACCESS" Margin="0,0,0,22"/>
 
-                <!-- Password Input -->
-                <StackPanel Grid.Row="2" Margin="0,0,0,20">
-                    <TextBlock Text="PASSWORD" 
-                               FontSize="12" 
-                               Foreground="{StaticResource ForegroundGrayBrush}" 
-                               Margin="0,0,0,8"/>
-                    <Border Background="{StaticResource BackgroundAuthDarkBrush}" 
-                            CornerRadius="4" 
-                            BorderBrush="{StaticResource ForegroundWhiteBrush}" 
-                            BorderThickness="0.25">
-                        <PasswordBox x:Name="PasswordBox"
-                                     Background="Transparent" 
-                                     BorderThickness="0" 
-                                     Padding="10,12" 
-                                     Foreground="{StaticResource ForegroundWhiteBrush}"
-                                     CaretBrush="{StaticResource ForegroundWhiteBrush}"/>
-                    </Border>
-                </StackPanel>
+                <controls:TrackedTextBlock Style="{StaticResource Display.Hero}"
+                                           FontSize="46"
+                                           Text="WELCOME BACK"
+                                           Margin="0,0,0,8"/>
 
-                <!-- Spacer -->
-                <Grid Grid.Row="3"/>
+                <TextBlock Style="{StaticResource Text.Body}"
+                           Foreground="{StaticResource Brush.Text.Dim}"
+                           Text="Sign in to your account."
+                           Margin="0,0,0,34"/>
 
-                <!-- Login Button -->
-                <Button Grid.Row="4" 
-                        Content="LOGIN" 
-                        Style="{StaticResource AuthButton}"
+                <controls:TrackedTextBlock Style="{StaticResource Login.FieldLabel}" Text="USERNAME"/>
+                <TextBox Style="{StaticResource TextBox.Field}"
+                         Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,0,0,20"/>
+
+                <controls:TrackedTextBlock Style="{StaticResource Login.FieldLabel}" Text="PASSWORD"/>
+                <PasswordBox x:Name="PasswordBox"
+                             Style="{StaticResource PasswordBox.Field}"
+                             Margin="0,0,0,26"/>
+
+                <Button Style="{StaticResource Button.Cta}"
+                        Content="LOGIN"
+                        Padding="15"
                         Command="{Binding LoginCommand}"
                         CommandParameter="{Binding ElementName=PasswordBox}"
                         IsDefault="True"
                         IsEnabled="{Binding CanLogin}"/>
 
-                <TextBlock 
-                    Grid.Row="5"
-                    Foreground="{StaticResource ForegroundLightGrayBrush}" 
-                    HorizontalAlignment="Center" 
-                    Margin="0,4,0,0">
-                    
-                    <Run 
-                        Text="Don't have an account? "/>
-                    <Run 
-                        Text="Sign up now"
-                        FontWeight="Bold"
-                        TextDecorations="Underline"
-                        MouseDown="RegisterNow_MouseDown"
-                        Cursor="Hand"/>
-
+                <TextBlock Style="{StaticResource Text.Body}"
+                           FontSize="13"
+                           HorizontalAlignment="Center"
+                           Margin="0,16,0,0">
+                    <Run Text="Don't have an account? "/>
+                    <Run Text="Sign up now"
+                         FontWeight="Bold"
+                         Foreground="{StaticResource Brush.Accent.Gold}"
+                         TextDecorations="Underline"
+                         MouseDown="RegisterNow_MouseDown"
+                         Cursor="Hand"/>
                 </TextBlock>
 
-                <!-- Or with horizontal lines -->
-                <Grid 
-                    Grid.Row="6" 
-                    VerticalAlignment="Center" 
-                    Margin="0,20,0,20">
-
+                <!-- OR divider -->
+                <Grid Margin="0,24">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    
-                    <Separator Margin="0,0,10,0" VerticalAlignment="Center"
-                               Height="0.5"
-                               Grid.Column="0"/>
-                    <TextBlock Text="OR"
-                               Foreground="{StaticResource ForegroundLightGrayBrush}"
-                               VerticalAlignment="Center"
-                               Grid.Column="1"/>
-                    <Separator Margin="10,0,0,0" VerticalAlignment="Center"
-                               Height="0.5"
-                               Grid.Column="2"/>
+                    <Rectangle Grid.Column="0" Height="1" VerticalAlignment="Center"
+                               Fill="{StaticResource Brush.Border.Default}"/>
+                    <controls:TrackedTextBlock Grid.Column="1"
+                                               Style="{StaticResource Display.Label}"
+                                               Foreground="{StaticResource Brush.Text.Faint}"
+                                               FontSize="11"
+                                               Text="OR"
+                                               Margin="16,0"/>
+                    <Rectangle Grid.Column="2" Height="1" VerticalAlignment="Center"
+                               Fill="{StaticResource Brush.Border.Default}"/>
                 </Grid>
 
-                <Button
-                    Margin="0,10,0,0"
-                    Style="{StaticResource AuthButton}"
-                    Visibility="{Binding IsDiscordVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    Grid.Row="7"
-                    Command="{Binding ContinueWithDiscordCommand}">
-
+                <Button Style="{StaticResource Button.Ghost}"
+                        Margin="0,0,0,12"
+                        Visibility="{Binding IsDiscordVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Command="{Binding ContinueWithDiscordCommand}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="pack://application:,,,/Battlegrounds;component/Assets/IdP_discord.png" 
-                               Width="24" 
-                               Height="24" 
-                               Margin="0,0,8,0"/>
-                        <TextBlock Text="Continue with Discord" 
-                                   FontSize="12" 
-                                   Foreground="{StaticResource ForegroundLightGrayBrush}" 
-                                   HorizontalAlignment="Center"/>
+                        <Image Source="pack://application:,,,/Battlegrounds;component/Assets/IdP_discord.png"
+                               Width="22" Height="22" Margin="0,0,12,0"/>
+                        <TextBlock Text="Continue with Discord"
+                                   FontSize="13"
+                                   VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
 
-                <!-- Steam login -->
-                <Button
-                    Style="{StaticResource AuthButton}"
-                    Margin="0,10,0,0"
-                    Grid.Row="8"
-                    Command="{Binding ContinueWithSteamCommand}">
+                <Button Style="{StaticResource Button.Ghost}"
+                        Command="{Binding ContinueWithSteamCommand}">
                     <StackPanel Orientation="Horizontal">
-                        <Image 
-                            Source="pack://application:,,,/Battlegrounds;component/Assets/IdP_steam.png" 
-                            Width="24" 
-                            Height="24" 
-                            Margin="0,0,8,0"/>
-                        <TextBlock 
-                            Text="Continue with Steam" 
-                            FontSize="12" 
-                            Foreground="{StaticResource ForegroundLightGrayBrush}" 
-                            HorizontalAlignment="Center"/>
+                        <Image Source="pack://application:,,,/Battlegrounds;component/Assets/IdP_steam.png"
+                               Width="22" Height="22" Margin="0,0,12,0"/>
+                        <TextBlock Text="Continue with Steam"
+                                   FontSize="13"
+                                   VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
 
-                <!-- Error Message -->
-                <TextBlock Grid.Row="9" 
-                           Text="{Binding ErrorMessage}" 
-                           Foreground="{StaticResource AccentRedBrush}"
+                <TextBlock Style="{StaticResource Text.Error}"
+                           Text="{Binding ErrorMessage}"
                            HorizontalAlignment="Center"
                            TextWrapping="Wrap"
-                           Margin="16"
+                           Margin="0,16,0,0"
                            Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-            </Grid>
-        </Border>
+            </StackPanel>
+        </ScrollViewer>
 
-        <Grid Grid.Column="1" 
-              Background="{StaticResource BackgroundDeepBlueBrush}" >
+        <!-- ===================== Artwork ===================== -->
 
-            <Image Source="pack://application:,,,/Battlegrounds;component/Assets/auth.jpg" 
-                   Stretch="Fill"/>
+        <Grid Grid.Column="1" Background="{StaticResource Brush.Surface.Window}">
 
-            <Grid 
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center">
+            <Image Source="pack://application:,,,/Battlegrounds;component/Assets/auth.jpg"
+                   Stretch="UniformToFill"/>
 
-                <Border 
-                    Background="Black"
-                    Opacity="0.5">
-                </Border>
+            <!-- Fades the photo into the form column so the seam does not read as an edge. -->
+            <Rectangle>
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="{StaticResource Color.Base.900}" Offset="0"/>
+                        <GradientStop Color="{StaticResource Color.Scrim.Fade.Mid}" Offset="0.3"/>
+                        <GradientStop Color="{StaticResource Color.Scrim.Fade.End}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
 
-                <TextBlock 
-                    FontSize="24" 
-                    FontWeight="Bold" 
-                    Foreground="{StaticResource ForegroundWhiteBrush}" 
-                    HorizontalAlignment="Center"
-                    TextAlignment="Center"
-                    Margin="15"
-                    MaxWidth="500"
-                    TextWrapping="WrapWithOverflow">
-                    <Italic> "In the chaos of battle, when the ground shakes
-                    and the sky's aflame, remember that the ultimate
-                    victory belongs to those who remain true
-                    to their purpose"</Italic>
-                    <LineBreak/>                    
-                    <LineBreak/>
-                    - Company of Heroes: Battlegrounds
-                </TextBlock>
-            </Grid>
-
+            <Border HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    MaxWidth="360"
+                    Margin="0,0,44,0"
+                    Padding="28,26"
+                    Background="{StaticResource Brush.Surface.Overlay}"
+                    BorderBrush="{StaticResource Brush.Action.Primary}"
+                    BorderThickness="{StaticResource Stroke.EdgeLeft}">
+                <StackPanel>
+                    <TextBlock Foreground="{StaticResource Brush.Text.Primary}"
+                               FontFamily="{StaticResource Font.Heading}"
+                               FontStyle="Italic"
+                               FontSize="20"
+                               LineHeight="28"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,16"
+                               Text="&quot;In the chaos of battle, when the ground shakes and the sky's aflame, remember that the ultimate victory belongs to those who remain true to their purpose.&quot;"/>
+                    <controls:TrackedTextBlock Style="{StaticResource Display.Label}"
+                                               Foreground="{StaticResource Brush.Accent.Gold}"
+                                               FontSize="11"
+                                               Tracking="{StaticResource Track.Wider}"
+                                               Text="— COMPANY OF HEROES BATTLEGROUNDS"/>
+                </StackPanel>
+            </Border>
         </Grid>
 
     </Grid>

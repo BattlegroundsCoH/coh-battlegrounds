@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:Battlegrounds"
              xmlns:views="clr-namespace:Battlegrounds.Views">
     <Application.Resources>
-        <ResourceDictionary Source="Resources/Styles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Theme.xaml" />
     </Application.Resources>
 </Application>

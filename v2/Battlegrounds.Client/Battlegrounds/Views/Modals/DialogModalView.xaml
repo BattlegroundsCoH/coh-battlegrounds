@@ -15,10 +15,10 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </helpers:DialogUserControl.Resources>
     
-    <Border Background="{StaticResource BackgroundBlueBrush}"
-    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+    <Border Background="{StaticResource Brush.Surface.Card}"
+    BorderBrush="{StaticResource Brush.Border.Hairline}"
     BorderThickness="1"
-    CornerRadius="8">
+    CornerRadius="0">
         <Grid Margin="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -30,14 +30,14 @@
             <TextBlock Text="{Binding Header}"
                FontSize="20"
                FontWeight="Bold"
-               Foreground="{StaticResource ForegroundWhiteBrush}"
+               Foreground="{StaticResource Brush.Text.Primary}"
                Margin="0,0,0,20"/>
 
             <!-- Form Content -->
             <TextBlock Text="{Binding Description}"
                        Grid.Row="1"
                FontSize="14"
-               Foreground="{StaticResource ForegroundWhiteBrush}"
+               Foreground="{StaticResource Brush.Text.Primary}"
                        TextWrapping="WrapWithOverflow"
                Margin="0,0,0,20"/>
 
@@ -49,26 +49,26 @@
                     Content="Cancel"
                     Width="100"
                     Visibility="{Binding IsCancelVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    Style="{StaticResource DangerActionButton}"
+                    Style="{StaticResource Button.Danger}"
                     Command="{Binding CancelCommand}"/>
                 <Button Content="No"
                     Width="100"
                     Visibility="{Binding IsNoVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    Style="{StaticResource ActionButton}"
+                    Style="{StaticResource Button.Primary}"
                     Margin="8,0,0,0"
                     Command="{Binding NoCommand}"/>
                 <Button 
                     Content="Confirm"
                     Width="100"
                     Visibility="{Binding IsConfirmVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    Style="{StaticResource ActionButton}"
+                    Style="{StaticResource Button.Primary}"
                     Margin="8,0,0,0"
                     Command="{Binding ConfirmCommand}"/>
                 <Button 
                     Content="Yes"
                     Width="100"
                     Visibility="{Binding IsYesVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    Style="{StaticResource ActionButton}"
+                    Style="{StaticResource Button.Primary}"
                     Margin="8,0,0,0"
                     Command="{Binding YesCommand}"/>
             </StackPanel>

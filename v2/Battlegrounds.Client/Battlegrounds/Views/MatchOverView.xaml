@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:Battlegrounds.Converters"
              xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels"
+             xmlns:controls="clr-namespace:Battlegrounds.Controls"
              d:DataContext="{d:DesignInstance Type=viewmodels:MatchOverViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="560" d:DesignWidth="720">
@@ -18,12 +19,11 @@
         <converters:BlueprintIconMultiBindingConverter x:Key="BlueprintIconMultiConverter"/>
     </UserControl.Resources>
 
-    <Border Width="720"
-            MaxHeight="580"
-            Background="{StaticResource BackgroundDarkBlueBrush}"
-            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
-            BorderThickness="1"
-            CornerRadius="8">
+    <Border Width="760"
+            MaxHeight="620"
+            Background="{StaticResource Brush.Surface.Raised}"
+            BorderBrush="{StaticResource Brush.Border.Strong}"
+            BorderThickness="1">
         <Grid Margin="30,24,30,24">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/> <!-- Outcome banner -->
@@ -36,19 +36,21 @@
 
             <!-- Outcome Banner -->
             <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,16">
-                <TextBlock Text="VICTORY!"
-                           FontSize="36" FontWeight="Bold"
+                <controls:TrackedTextBlock Text="VICTORY!"
+                           Style="{StaticResource Display.Hero}"
+                           Tracking="{StaticResource Track.Wide}"
                            HorizontalAlignment="Center"
-                           Foreground="{StaticResource AccentGreenBrush}"
+                           Foreground="{StaticResource Brush.Status.Success}"
                            Visibility="{Binding IsVictory, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <TextBlock Text="DEFEAT"
-                           FontSize="36" FontWeight="Bold"
+                <controls:TrackedTextBlock Text="DEFEAT"
+                           Style="{StaticResource Display.Hero}"
+                           Tracking="{StaticResource Track.Wide}"
                            HorizontalAlignment="Center"
-                           Foreground="{StaticResource AccentRedBrush}"
+                           Foreground="{StaticResource Brush.Status.DangerText}"
                            Visibility="{Binding IsVictory, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
-                <TextBlock FontSize="15"
+                <TextBlock Style="{StaticResource Text.Body}"
                            HorizontalAlignment="Center"
-                           Foreground="{StaticResource ForegroundGrayBrush}"
+                           Foreground="{StaticResource Brush.Text.Dim}"
                            Margin="0,4,0,0">
                     <TextBlock.Text>
                         <MultiBinding Converter="{StaticResource ScenarioConverter}">
@@ -62,19 +64,19 @@
             <!-- Match Metadata -->
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,16">
                 <StackPanel Orientation="Horizontal" Margin="0,0,28,0">
-                    <TextBlock Text="Duration: " Foreground="{StaticResource ForegroundGrayBrush}"/>
+                    <TextBlock Text="Duration: " Foreground="{StaticResource Brush.Text.Dim}"/>
                     <TextBlock Text="{Binding MatchDuration, Converter={StaticResource DurationConverter}}"
-                               Foreground="{StaticResource ForegroundWhiteBrush}"
+                               Foreground="{StaticResource Brush.Text.Primary}"
                                FontWeight="SemiBold"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Status: " Foreground="{StaticResource ForegroundGrayBrush}"/>
+                    <TextBlock Text="Status: " Foreground="{StaticResource Brush.Text.Dim}"/>
                     <TextBlock Text="Concluded"
-                               Foreground="{StaticResource AccentGreenBrush}"
+                               Foreground="{StaticResource Brush.Status.Success}"
                                FontWeight="SemiBold"
                                Visibility="{Binding Concluded, Converter={StaticResource BoolToVisibilityConverter}}"/>
                     <TextBlock Text="Abandoned"
-                               Foreground="{StaticResource AccentRedBrush}"
+                               Foreground="{StaticResource Brush.Status.Danger}"
                                FontWeight="SemiBold"
                                Visibility="{Binding Concluded, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
                 </StackPanel>
@@ -82,15 +84,14 @@
 
             <!-- Bad Events Warning -->
             <Border Grid.Row="2"
-                    Background="{StaticResource BackgroundLighRedBrush}"
-                    BorderBrush="{StaticResource AccentRedBrush}"
+                    Background="{StaticResource Brush.Surface.Card}"
+                    BorderBrush="{StaticResource Brush.Status.Danger}"
                     BorderThickness="1"
-                    CornerRadius="4"
-                    Padding="12,6"
+                                        Padding="12,6"
                     Margin="0,0,0,14"
                     Visibility="{Binding HasBadEvents, Converter={StaticResource BoolToVisibilityConverter}}">
                 <TextBlock Text="⚠  Match data may be incomplete due to replay inconsistencies."
-                           Foreground="{StaticResource ForegroundLightRedBrush}"/>
+                           Foreground="{StaticResource Brush.Status.DangerText}"/>
             </Border>
 
             <!-- Squad Table Header -->
@@ -104,30 +105,30 @@
                     <ColumnDefinition Width="64"/>
                     <ColumnDefinition Width="110"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="Squad"    Grid.Column="0" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold" Margin="8,0,0,0"/>
-                <TextBlock Text="Infantry Kills"    Grid.Column="1" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
-                <TextBlock Text="Vehicle Kills" Grid.Column="2" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
-                <TextBlock Text="Losses"   Grid.Column="3" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
-                <TextBlock Text="XP"       Grid.Column="4" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
-                <TextBlock Text="Status"   Grid.Column="5" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
-                <TextBlock Text="Pickup"   Grid.Column="6" Foreground="{StaticResource ForegroundGrayBrush}" FontWeight="SemiBold"/>
+                <controls:TrackedTextBlock Text="SQUAD" Grid.Column="0" Style="{StaticResource Display.Label}" FontSize="11" Tracking="{StaticResource Track.Wide}" Margin="8,0,0,0"/>
+                <controls:TrackedTextBlock Text="INF. KILLS" Grid.Column="1" Style="{StaticResource Display.Label}" FontSize="11" Tracking="{StaticResource Track.Wide}"/>
+                <controls:TrackedTextBlock Text="VEH. KILLS" Grid.Column="2" Style="{StaticResource Display.Label}" FontSize="11" Tracking="{StaticResource Track.Wide}"/>
+                <controls:TrackedTextBlock Text="LOSSES" Grid.Column="3" Style="{StaticResource Display.Label}" FontSize="11" Tracking="{StaticResource Track.Wide}"/>
+                <controls:TrackedTextBlock Text="XP" Grid.Column="4" Style="{StaticResource Display.Label}" FontSize="11" Tracking="{StaticResource Track.Wide}"/>
+                <controls:TrackedTextBlock Text="STATUS" Grid.Column="5" Style="{StaticResource Display.Label}" FontSize="11" Tracking="{StaticResource Track.Wide}"/>
+                <controls:TrackedTextBlock Text="PICKUP" Grid.Column="6" Style="{StaticResource Display.Label}" FontSize="11" Tracking="{StaticResource Track.Wide}"/>
             </Grid>
 
             <!-- Squad Rows -->
             <ScrollViewer Grid.Row="4"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled"
-                          Style="{StaticResource ChatScrollViewer}"
+                          Style="{StaticResource ScrollViewer.Thin}"
                           MaxHeight="260">
                 <ItemsControl ItemsSource="{Binding SquadSummaries}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Margin="0,0,0,4"
                                     Padding="0,7"
-                                    Background="{StaticResource BackgroundBlueBrush}"
-                                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                    Background="{StaticResource Brush.Surface.Card}"
+                                    BorderBrush="{StaticResource Brush.Border.Hairline}"
                                     BorderThickness="1"
-                                    CornerRadius="4">
+                                    CornerRadius="0">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="100"/>
@@ -155,7 +156,8 @@
                                         </Image>
 
                                         <TextBlock
-                                               Foreground="{StaticResource ForegroundLightBlueBrush}"
+                                               Foreground="{StaticResource Brush.Accent.Gold}"
+                                               FontFamily="{StaticResource Font.Heading}"
                                                FontWeight="SemiBold"
                                                VerticalAlignment="Center"
                                                Margin="10,0,0,0">
@@ -167,34 +169,34 @@
                                     
                                     <TextBlock Text="{Binding InfantryKilled}"
                                                Grid.Column="1"
-                                               Foreground="{StaticResource ForegroundWhiteBrush}"
+                                               Foreground="{StaticResource Brush.Text.Primary}"
                                                VerticalAlignment="Center"/>
 
                                     <TextBlock Text="{Binding VehiclesDestroyed}"
                                                Grid.Column="2"
-                                               Foreground="{StaticResource ForegroundWhiteBrush}"
+                                               Foreground="{StaticResource Brush.Text.Primary}"
                                                VerticalAlignment="Center"/>
 
                                     <TextBlock Text="{Binding Losses}"
                                                Grid.Column="3"
-                                               Foreground="{StaticResource ForegroundLightRedBrush}"
+                                               Foreground="{StaticResource Brush.Status.DangerText}"
                                                VerticalAlignment="Center"/>
 
                                     <TextBlock Text="{Binding ExperienceGained, StringFormat=F0}"
                                                Grid.Column="4"
-                                               Foreground="{StaticResource AccentGreenBrush}"
+                                               Foreground="{StaticResource Brush.Status.Success}"
                                                VerticalAlignment="Center"/>
 
                                     <TextBlock Text="KIA"
                                                Grid.Column="5"
-                                               Foreground="{StaticResource AccentRedBrush}"
+                                               Foreground="{StaticResource Brush.Status.Danger}"
                                                FontWeight="SemiBold"
                                                VerticalAlignment="Center"
                                                Visibility="{Binding WasKilled, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
                                     <TextBlock Text="{Binding PickedUpBlueprint}"
                                                Grid.Column="6"
-                                               Foreground="{StaticResource ForegroundLightBlueBrush}"
+                                               Foreground="{StaticResource Brush.Accent.Gold}"
                                                VerticalAlignment="Center"
                                                TextTrimming="CharacterEllipsis"
                                                ToolTip="{Binding PickedUpBlueprint}"
@@ -208,11 +210,11 @@
 
             <!-- Close Button -->
             <Button Grid.Row="5"
-                    Content="Return to Lobby"
+                    Content="RETURN TO LOBBY"
                     HorizontalAlignment="Center"
                     Margin="0,20,0,0"
-                    Width="160" Height="38"
-                    Style="{StaticResource ActionButton}"
+                    Padding="32,12"
+                    Style="{StaticResource Button.Primary}"
                     Command="{Binding CloseCommand}"/>
         </Grid>
     </Border>

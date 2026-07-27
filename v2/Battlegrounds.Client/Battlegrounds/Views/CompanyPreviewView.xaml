@@ -21,10 +21,10 @@
         <DataTemplate x:Key="PreviewSquadTemplate">
             <Border Padding="8,6"
                     Margin="0,2"
-                    Background="{StaticResource BackgroundBlueBrush}"
-                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                    Background="{StaticResource Brush.Surface.Card}"
+                    BorderBrush="{StaticResource Brush.Border.Hairline}"
                     BorderThickness="1"
-                    CornerRadius="4">
+                    CornerRadius="0">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -48,7 +48,7 @@
                     <!-- Unit Name -->
                     <TextBlock Grid.Column="1"
                                Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}}"
-                               Foreground="{StaticResource ForegroundWhiteBrush}"
+                               Foreground="{StaticResource Brush.Text.Primary}"
                                VerticalAlignment="Center"
                                TextTrimming="CharacterEllipsis"/>
 
@@ -93,10 +93,10 @@
 
     </UserControl.Resources>
 
-    <Border Background="{StaticResource BackgroundDarkBlueBrush}"
-            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+    <Border Background="{StaticResource Brush.Surface.Sunken}"
+            BorderBrush="{StaticResource Brush.Border.Hairline}"
             BorderThickness="1"
-            CornerRadius="8"
+            CornerRadius="0"
             Width="820"
             MaxHeight="550">
         <Grid Margin="20">
@@ -128,8 +128,8 @@
                         <TextBlock Text="{Binding CompanyName}"
                                    FontSize="18"
                                    FontWeight="SemiBold"
-                                   Foreground="{StaticResource ForegroundWhiteBrush}"/>
-                        <TextBlock Foreground="{StaticResource ForegroundGrayBrush}" FontSize="12">
+                                   Foreground="{StaticResource Brush.Text.Primary}"/>
+                        <TextBlock Foreground="{StaticResource Brush.Text.Dim}" FontSize="12">
                             <TextBlock.Text>
                                 <MultiBinding Converter="{StaticResource FactionIdToNameConverter}">
                                     <Binding Path="Faction"/>
@@ -143,10 +143,10 @@
                 <!-- Squad Count -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="Total Squads: "
-                               Foreground="{StaticResource ForegroundGrayBrush}"
+                               Foreground="{StaticResource Brush.Text.Dim}"
                                VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding SquadCount}"
-                               Foreground="{StaticResource ForegroundLightBlueBrush}"
+                               Foreground="{StaticResource Brush.Accent.Gold}"
                                FontWeight="SemiBold"
                                VerticalAlignment="Center"/>
                 </StackPanel>
@@ -163,10 +163,10 @@
 
                 <!-- Starting Units -->
                 <Border Grid.Column="0"
-                        Background="{StaticResource BackgroundBlueBrush}"
-                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        Background="{StaticResource Brush.Surface.Card}"
+                        BorderBrush="{StaticResource Brush.Border.Hairline}"
                         BorderThickness="1"
-                        CornerRadius="6"
+                        CornerRadius="0"
                         Margin="0,0,4,0"
                         Padding="6">
                     <Grid>
@@ -175,14 +175,14 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <TextBlock FontSize="12" FontWeight="Bold"
-                                   Foreground="{StaticResource ForegroundGrayBrush}"
+                                   Foreground="{StaticResource Brush.Text.Dim}"
                                    HorizontalAlignment="Center"
                                    Margin="0,0,0,6">
                             <Run Text="Starting ("/>
                             <Run Text="{Binding StartingUnits.Count, Mode=OneWay}"/>
                             <Run Text=")"/>
                         </TextBlock>
-                        <ScrollViewer Grid.Row="1" Style="{StaticResource ChatScrollViewer}">
+                        <ScrollViewer Grid.Row="1" Style="{StaticResource ScrollViewer.Thin}">
                             <ItemsControl ItemsSource="{Binding StartingUnits}"
                                           ItemTemplate="{StaticResource PreviewSquadTemplate}"/>
                         </ScrollViewer>
@@ -191,10 +191,10 @@
 
                 <!-- Skirmish Units -->
                 <Border Grid.Column="1"
-                        Background="{StaticResource BackgroundBlueBrush}"
-                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        Background="{StaticResource Brush.Surface.Card}"
+                        BorderBrush="{StaticResource Brush.Border.Hairline}"
                         BorderThickness="1"
-                        CornerRadius="6"
+                        CornerRadius="0"
                         Margin="4,0"
                         Padding="6">
                     <Grid>
@@ -203,14 +203,14 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <TextBlock FontSize="12" FontWeight="Bold"
-                                   Foreground="{StaticResource ForegroundGrayBrush}"
+                                   Foreground="{StaticResource Brush.Text.Dim}"
                                    HorizontalAlignment="Center"
                                    Margin="0,0,0,6">
                             <Run Text="Skirmish ("/>
                             <Run Text="{Binding SkirmishUnits.Count, Mode=OneWay}"/>
                             <Run Text=")"/>
                         </TextBlock>
-                        <ScrollViewer Grid.Row="1" Style="{StaticResource ChatScrollViewer}">
+                        <ScrollViewer Grid.Row="1" Style="{StaticResource ScrollViewer.Thin}">
                             <ItemsControl ItemsSource="{Binding SkirmishUnits}"
                                           ItemTemplate="{StaticResource PreviewSquadTemplate}"/>
                         </ScrollViewer>
@@ -219,10 +219,10 @@
 
                 <!-- Battle Units -->
                 <Border Grid.Column="2"
-                        Background="{StaticResource BackgroundBlueBrush}"
-                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        Background="{StaticResource Brush.Surface.Card}"
+                        BorderBrush="{StaticResource Brush.Border.Hairline}"
                         BorderThickness="1"
-                        CornerRadius="6"
+                        CornerRadius="0"
                         Margin="4,0"
                         Padding="6">
                     <Grid>
@@ -231,14 +231,14 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <TextBlock FontSize="12" FontWeight="Bold"
-                                   Foreground="{StaticResource ForegroundGrayBrush}"
+                                   Foreground="{StaticResource Brush.Text.Dim}"
                                    HorizontalAlignment="Center"
                                    Margin="0,0,0,6">
                             <Run Text="Battle ("/>
                             <Run Text="{Binding BattleUnits.Count, Mode=OneWay}"/>
                             <Run Text=")"/>
                         </TextBlock>
-                        <ScrollViewer Grid.Row="1" Style="{StaticResource ChatScrollViewer}">
+                        <ScrollViewer Grid.Row="1" Style="{StaticResource ScrollViewer.Thin}">
                             <ItemsControl ItemsSource="{Binding BattleUnits}"
                                           ItemTemplate="{StaticResource PreviewSquadTemplate}"/>
                         </ScrollViewer>
@@ -247,10 +247,10 @@
 
                 <!-- Reserves Units -->
                 <Border Grid.Column="3"
-                        Background="{StaticResource BackgroundBlueBrush}"
-                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        Background="{StaticResource Brush.Surface.Card}"
+                        BorderBrush="{StaticResource Brush.Border.Hairline}"
                         BorderThickness="1"
-                        CornerRadius="6"
+                        CornerRadius="0"
                         Margin="4,0,0,0"
                         Padding="6">
                     <Grid>
@@ -259,14 +259,14 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <TextBlock FontSize="12" FontWeight="Bold"
-                                   Foreground="{StaticResource ForegroundGrayBrush}"
+                                   Foreground="{StaticResource Brush.Text.Dim}"
                                    HorizontalAlignment="Center"
                                    Margin="0,0,0,6">
                             <Run Text="Reserves ("/>
                             <Run Text="{Binding ReservesUnits.Count, Mode=OneWay}"/>
                             <Run Text=")"/>
                         </TextBlock>
-                        <ScrollViewer Grid.Row="1" Style="{StaticResource ChatScrollViewer}">
+                        <ScrollViewer Grid.Row="1" Style="{StaticResource ScrollViewer.Thin}">
                             <ItemsControl ItemsSource="{Binding ReservesUnits}"
                                           ItemTemplate="{StaticResource PreviewSquadTemplate}"/>
                         </ScrollViewer>
@@ -281,7 +281,7 @@
                         Margin="0,12,0,0">
                 <Button Content="Close"
                         Width="100"
-                        Style="{StaticResource ActionButton}"
+                        Style="{StaticResource Button.Primary}"
                         Command="{Binding CloseCommand}"/>
             </StackPanel>
         </Grid>

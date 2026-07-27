@@ -46,10 +46,10 @@
                             Padding="12,8"
                             Margin="4"
                             Width="320"
-                            Background="{StaticResource BackgroundBlueBrush}"
-                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                            Background="{StaticResource Brush.Surface.Card}"
+                            BorderBrush="{StaticResource Brush.Border.Hairline}"
                             BorderThickness="1"
-                            CornerRadius="4">
+                            CornerRadius="0">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -72,7 +72,7 @@
 
                                 <!-- Unit Name -->
                                 <TextBlock Grid.Column="1"
-                                 Foreground="{StaticResource ForegroundWhiteBrush}"
+                                 Foreground="{StaticResource Brush.Text.Primary}"
                                  VerticalAlignment="Center">
                                     <TextBlock.Text>
                                         <Binding Path="." Converter="{StaticResource BlueprintNameConverter}"/>
@@ -82,11 +82,11 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
-                                <Setter TargetName="UnitBorder" Property="BorderBrush" Value="{StaticResource AccentBlueBrush}"/>
+                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource Brush.Border.Hairline}"/>
+                                <Setter TargetName="UnitBorder" Property="BorderBrush" Value="{StaticResource Brush.Accent.Gold}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource BackgroundDarkBlueBrush}"/>
+                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource Brush.Surface.Sunken}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -109,10 +109,10 @@
                             Padding="12,8"
                             Margin="4"
                             Width="280"
-                            Background="{StaticResource BackgroundBlueBrush}"
-                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                            Background="{StaticResource Brush.Surface.Card}"
+                            BorderBrush="{StaticResource Brush.Border.Hairline}"
                             BorderThickness="1"
-                            CornerRadius="4">
+                            CornerRadius="0">
                             <StackPanel>
 
                                 <!-- Main unit row -->
@@ -141,7 +141,7 @@
                                     <!-- Unit Name (and ID) -->
                                     <StackPanel Grid.Column="1">
                                         <TextBlock 
-                                            Foreground="{StaticResource ForegroundWhiteBrush}"
+                                            Foreground="{StaticResource Brush.Text.Primary}"
                                             VerticalAlignment="Center">
                                             <Run Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}, Mode=OneWay}"/> (#<Run Text="{Binding Id, Mode=OneWay}"/>)
                                         </TextBlock>
@@ -149,7 +149,7 @@
                                         <TextBlock 
                                             FontStyle="Italic"
                                             Visibility="{Binding HasCustomName, Converter={StaticResource BooleanToVisibility}}"
-                                            Foreground="{StaticResource ForegroundWhiteBrush}"
+                                            Foreground="{StaticResource Brush.Text.Primary}"
                                             VerticalAlignment="Center">
                                         </TextBlock>
                                     </StackPanel>
@@ -226,7 +226,7 @@
                                     <Border
                                         Height="1"
                                         Margin="0,5,0,5"
-                                        Background="{StaticResource BackgroundLightBlueBrush}"/>
+                                        Background="{StaticResource Brush.Border.Hairline}"/>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
@@ -250,7 +250,7 @@
                                             Grid.Column="1"
                                             FontSize="11"
                                             VerticalAlignment="Center"
-                                            Foreground="{StaticResource ForegroundGrayBrush}">
+                                            Foreground="{StaticResource Brush.Text.Dim}">
                                             ↳ <Run Text="{Binding PassengerBlueprint, Converter={StaticResource BlueprintNameConverter}, Mode=OneWay}"/> (#<Run Text="{Binding PassengerId, Mode=OneWay}"/>)
                                         </TextBlock>
                                     </Grid>
@@ -260,11 +260,11 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
-                                <Setter TargetName="UnitBorder" Property="BorderBrush" Value="{StaticResource AccentBlueBrush}"/>
+                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource Brush.Border.Hairline}"/>
+                                <Setter TargetName="UnitBorder" Property="BorderBrush" Value="{StaticResource Brush.Accent.Gold}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource BackgroundDarkBlueBrush}"/>
+                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource Brush.Surface.Sunken}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -277,10 +277,10 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
                         <Border x:Name="Border"
-                        Background="{StaticResource BackgroundBlueBrush}"
-                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        Background="{StaticResource Brush.Surface.Card}"
+                        BorderBrush="{StaticResource Brush.Border.Hairline}"
                         BorderThickness="1"
-                        CornerRadius="4"
+                        CornerRadius="0"
                         Padding="12,8">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -292,7 +292,7 @@
                                     x:Name="RadioOuter"
                                     Width="16"
                                     Height="16"
-                                    Stroke="{StaticResource ForegroundGrayBrush}"
+                                    Stroke="{StaticResource Brush.Text.Dim}"
                                     StrokeThickness="1"
                                     Fill="Transparent"/>
 
@@ -300,7 +300,7 @@
                                     x:Name="RadioInner"
                                     Width="8"
                                     Height="8"
-                                    Fill="{StaticResource AccentBlueBrush}"
+                                    Fill="{StaticResource Brush.Accent.Gold}"
                                     Visibility="Collapsed"/>
 
                                 <ContentPresenter 
@@ -313,11 +313,11 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="RadioInner" Property="Visibility" Value="Visible"/>
-                                <Setter TargetName="Border" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
-                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource AccentBlueBrush}"/>
+                                <Setter TargetName="Border" Property="Background" Value="{StaticResource Brush.Border.Hairline}"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource Brush.Accent.Gold}"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                                <Setter TargetName="Border" Property="Background" Value="{StaticResource Brush.Border.Hairline}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.5"/>
@@ -371,10 +371,10 @@
                             Padding="12,8"
                             Margin="4"
                             Width="320"
-                            Background="{StaticResource BackgroundBlueBrush}"
-                            BorderBrush="{StaticResource AccentOrangeBrush}"
+                            Background="{StaticResource Brush.Surface.Card}"
+                            BorderBrush="{StaticResource Brush.Status.Caution}"
                             BorderThickness="1"
-                            CornerRadius="4">
+                            CornerRadius="0">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -400,14 +400,14 @@
                                     Grid.Column="1"
                                     Orientation="Vertical">
                                     <TextBlock
-                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        Foreground="{StaticResource Brush.Text.Primary}"
                                         VerticalAlignment="Center">
                                         <TextBlock.Text>
                                             <Binding Path="ItemBlueprint" Converter="{StaticResource BlueprintNameConverter}"/>
                                         </TextBlock.Text>
                                     </TextBlock>
                                     <TextBlock
-                                        Foreground="{StaticResource ForegroundLightGrayBrush}"
+                                        Foreground="{StaticResource Brush.Text.Body}"
                                         FontSize="11"
                                         FontStyle="Italic"
                                         VerticalAlignment="Center">
@@ -420,11 +420,11 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
-                                <Setter TargetName="UnitBorder" Property="BorderBrush" Value="{StaticResource AccentOrangeBrush}"/>
+                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource Brush.Border.Hairline}"/>
+                                <Setter TargetName="UnitBorder" Property="BorderBrush" Value="{StaticResource Brush.Status.Caution}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource BackgroundDarkBlueBrush}"/>
+                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource Brush.Surface.Sunken}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -447,10 +447,10 @@
                             Padding="12,8"
                             Margin="4"
                             Width="280"
-                            Background="{StaticResource BackgroundBlueBrush}"
-                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                            Background="{StaticResource Brush.Surface.Card}"
+                            BorderBrush="{StaticResource Brush.Border.Hairline}"
                             BorderThickness="1"
-                            CornerRadius="4">
+                            CornerRadius="0">
                             <StackPanel>
 
                                 <!-- Main unit row -->
@@ -479,7 +479,7 @@
                                     <!-- Unit Name (and ID) -->
                                     <StackPanel Grid.Column="1">
                                         <TextBlock 
-                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                Foreground="{StaticResource Brush.Text.Primary}"
                                 VerticalAlignment="Center">
                                 <Run Text="{Binding Squad.Blueprint, Converter={StaticResource BlueprintNameConverter}, Mode=OneWay}"/> (#<Run Text="{Binding Squad.Id, Mode=OneWay}"/>)
                                         </TextBlock>
@@ -487,7 +487,7 @@
                                         <TextBlock 
                                 FontStyle="Italic"
                                 Visibility="{Binding Squad.HasCustomName, Converter={StaticResource BooleanToVisibility}}"
-                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                Foreground="{StaticResource Brush.Text.Primary}"
                                 VerticalAlignment="Center">
                                         </TextBlock>
                                     </StackPanel>
@@ -512,11 +512,11 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
-                                <Setter TargetName="UnitBorder" Property="BorderBrush" Value="{StaticResource AccentBlueBrush}"/>
+                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource Brush.Border.Hairline}"/>
+                                <Setter TargetName="UnitBorder" Property="BorderBrush" Value="{StaticResource Brush.Accent.Gold}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource BackgroundDarkBlueBrush}"/>
+                                <Setter TargetName="UnitBorder" Property="Background" Value="{StaticResource Brush.Surface.Sunken}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -538,16 +538,16 @@
                         <Border 
                             x:Name="UpgradeBorder"
                             Margin="4"
-                            Background="{StaticResource BackgroundBlueBrush}"
-                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                            Background="{StaticResource Brush.Surface.Card}"
+                            BorderBrush="{StaticResource Brush.Border.Hairline}"
                             BorderThickness="1"
-                            CornerRadius="4">
+                            CornerRadius="0">
                             <Grid>
                                 <Border 
                                     x:Name="AppliedOverlay"
-                                    Background="{StaticResource AccentOrangeBrush}"
+                                    Background="{StaticResource Brush.Status.Caution}"
                                     Opacity="0.45"
-                                    CornerRadius="4"
+                                    CornerRadius="0"
                                     IsHitTestVisible="False"
                                     Visibility="{Binding IsUpgraded, Converter={StaticResource BooleanToVisibility}}"/>
                                 <Image 
@@ -567,13 +567,13 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="UpgradeBorder" Property="Background" 
-                                Value="{StaticResource BackgroundLightBlueBrush}"/>
+                                Value="{StaticResource Brush.Border.Hairline}"/>
                                 <Setter TargetName="UpgradeBorder" Property="BorderBrush" 
-                                Value="{StaticResource AccentBlueBrush}"/>
+                                Value="{StaticResource Brush.Accent.Gold}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="UpgradeBorder" Property="Background" 
-                                Value="{StaticResource BackgroundDarkBlueBrush}"/>
+                                Value="{StaticResource Brush.Surface.Sunken}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="UpgradeBorder" Property="Opacity" Value="0.5"/>
@@ -583,18 +583,18 @@
                 </Button.Template>
                 <Button.ToolTip>
 
-                    <ToolTip Style="{StaticResource BattlegroundsTooltip}">
+                    <ToolTip Style="{StaticResource ToolTip.Default}">
                         <StackPanel>
                             <TextBlock
                                 Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}}"
                                 FontSize="14"
                                 FontWeight="Bold"
-                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                Foreground="{StaticResource Brush.Text.Primary}"
                                 Margin="0,0,0,4"/>
 
                             <TextBlock
                                 Text="{Binding Blueprint, Converter={StaticResource BlueprintBriefTextConverter}}"
-                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                Foreground="{StaticResource Brush.Text.Primary}"
                                 TextWrapping="Wrap"
                                 Margin="0,0,0,12"/>
                             
@@ -615,7 +615,7 @@
                                     <TextBlock 
                                         Margin="4,0,0,0"
                                         Text="{Binding Blueprint.Cost.Manpower}"
-                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        Foreground="{StaticResource Brush.Text.Primary}"
                                         VerticalAlignment="Center"
                                         />
                                 </StackPanel>
@@ -631,7 +631,7 @@
                                     <TextBlock 
                                         Margin="4,0,0,0"
                                         Text="{Binding Blueprint.Cost.Munitions}"
-                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        Foreground="{StaticResource Brush.Text.Primary}"
                                         VerticalAlignment="Center"
                                         />
                                 </StackPanel>
@@ -647,7 +647,7 @@
                                     <TextBlock 
                                         Margin="4,0,0,0"
                                         Text="{Binding Blueprint.Cost.Fuel}"
-                                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        Foreground="{StaticResource Brush.Text.Primary}"
                                         VerticalAlignment="Center"
                                         />
                                 </StackPanel>
@@ -676,10 +676,10 @@
                         <Border 
                             x:Name="ItemBorder"
                             Margin="4"
-                            Background="{StaticResource BackgroundBlueBrush}"
-                            BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                            Background="{StaticResource Brush.Surface.Card}"
+                            BorderBrush="{StaticResource Brush.Border.Hairline}"
                             BorderThickness="1"
-                            CornerRadius="4">
+                            CornerRadius="0">
                             <Grid>
                                 <Image 
                                     Grid.Column="0"
@@ -698,13 +698,13 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="ItemBorder" Property="Background" 
-                                    Value="{StaticResource BackgroundLightBlueBrush}"/>
+                                    Value="{StaticResource Brush.Border.Hairline}"/>
                                 <Setter TargetName="ItemBorder" Property="BorderBrush" 
-                                    Value="{StaticResource AccentBlueBrush}"/>
+                                    Value="{StaticResource Brush.Accent.Gold}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="ItemBorder" Property="Background" 
-                                    Value="{StaticResource BackgroundDarkBlueBrush}"/>
+                                    Value="{StaticResource Brush.Surface.Sunken}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="ItemBorder" Property="Opacity" Value="0.5"/>
@@ -714,18 +714,18 @@
                 </Button.Template>
                 <Button.ToolTip>
 
-                    <ToolTip Style="{StaticResource BattlegroundsTooltip}">
+                    <ToolTip Style="{StaticResource ToolTip.Default}">
                         <StackPanel>
                             <TextBlock
                                 Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}}"
                                 FontSize="14"
                                 FontWeight="Bold"
-                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                Foreground="{StaticResource Brush.Text.Primary}"
                                 Margin="0,0,0,4"/>
 
                             <TextBlock
                                 Text="{Binding Blueprint, Converter={StaticResource BlueprintBriefTextConverter}}"
-                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                Foreground="{StaticResource Brush.Text.Primary}"
                                 TextWrapping="Wrap"
                                 Margin="0,0,0,12"/>
 
@@ -759,7 +759,7 @@
             </Grid.ColumnDefinitions>
 
             <Button Content="← Go Back" 
-                Style="{StaticResource BackButton}"
+                Style="{StaticResource Button.Ghost}"
                 Command="{Binding LeaveCommand}"/>
 
             <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -769,7 +769,7 @@
                     Text="{Binding CompanyName}"
                     FontSize="24"
                     FontWeight="Bold"
-                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                    Foreground="{StaticResource Brush.Text.Primary}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Cursor="Hand"
@@ -789,12 +789,12 @@
                     MinWidth="200"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                    Foreground="{StaticResource Brush.Text.Primary}"
                     Background="Transparent"
-                    BorderBrush="{StaticResource AccentBlueBrush}"
+                    BorderBrush="{StaticResource Brush.Accent.Gold}"
                     BorderThickness="0,0,0,1"
-                    CaretBrush="{StaticResource ForegroundWhiteBrush}"
-                    SelectionBrush="{StaticResource AccentBlueBrush}"
+                    CaretBrush="{StaticResource Brush.Text.Primary}"
+                    SelectionBrush="{StaticResource Brush.Accent.Gold}"
                     Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibility}}"
                     IsVisibleChanged="CompanyNameTextBox_IsVisibleChanged"
                     KeyDown="CompanyNameTextBox_KeyDown"
@@ -825,7 +825,7 @@
 
                     <TextBlock
                         VerticalAlignment="Center"
-                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                        Foreground="{StaticResource Brush.Text.Primary}"
                         Text="{Binding DoctrineName}"/>
 
                 </StackPanel>
@@ -868,8 +868,8 @@
                 <!-- Available Units -->
                 <TabControl 
                     Grid.Row="0"
-                    Background="{StaticResource BackgroundBlueBrush}"
-                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                    Background="{StaticResource Brush.Surface.Card}"
+                    BorderBrush="{StaticResource Brush.Border.Hairline}"
                     SelectedIndex="{Binding SelectedAvailableUnitTabIndex}"
                     BorderThickness="1"
                     Margin="8">
@@ -883,19 +883,19 @@
                                 Margin="4,0,0,0"
                                 Padding="12,8"
                                 BorderThickness="1,1,1,0"
-                                CornerRadius="4,4,0,0">
+                                CornerRadius="0">
                                             <ContentPresenter ContentSource="Header"
-                                            TextBlock.Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                            TextBlock.Foreground="{StaticResource Brush.Text.Dim}"/>
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsSelected" Value="True">
-                                                <Setter TargetName="Border" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
-                                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource BackgroundLightBlueBrush}"/>
-                                                <Setter Property="TextBlock.Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+                                                <Setter TargetName="Border" Property="Background" Value="{StaticResource Brush.Border.Hairline}"/>
+                                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource Brush.Border.Hairline}"/>
+                                                <Setter Property="TextBlock.Foreground" Value="{StaticResource Brush.Text.Primary}"/>
                                             </Trigger>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="Border" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
-                                                <Setter Property="TextBlock.Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+                                                <Setter TargetName="Border" Property="Background" Value="{StaticResource Brush.Border.Hairline}"/>
+                                                <Setter Property="TextBlock.Foreground" Value="{StaticResource Brush.Text.Primary}"/>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
@@ -941,13 +941,13 @@
                                 <Border
                                     Width="8"
                                     Height="8"
-                                    Background="{StaticResource AccentOrangeBrush}"
-                                    CornerRadius="2"
+                                    Background="{StaticResource Brush.Status.Caution}"
+                                    CornerRadius="0"
                                     Margin="0,0,5,0"
                                     VerticalAlignment="Center"/>
                                 <TextBlock
                                     Text="Captured"
-                                    Foreground="{StaticResource AccentOrangeBrush}"/>
+                                    Foreground="{StaticResource Brush.Status.Caution}"/>
                             </StackPanel>
                         </TabItem.Header>
                         <ItemsControl ItemsSource="{Binding AvailableCapturedItems}"
@@ -970,7 +970,7 @@
                         FontWeight="Bold"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Foreground="{StaticResource ForegroundGrayBrush}"/>
+                        Foreground="{StaticResource Brush.Text.Dim}"/>
 
                     <StackPanel 
                         Orientation="Horizontal" 
@@ -982,7 +982,7 @@
                             FontSize="12"
                             FontStyle="Italic"
                             VerticalAlignment="Center"
-                            Foreground="{StaticResource ForegroundGrayBrush}"
+                            Foreground="{StaticResource Brush.Text.Dim}"
                             Margin="8,0,8,0"/>
 
                         <StackPanel Orientation="Horizontal">
@@ -996,7 +996,7 @@
                                 <TextBlock 
                                     Margin="4,0,0,0"
                                     Text="{Binding TotalManpowerCost}"
-                                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                                    Foreground="{StaticResource Brush.Text.Primary}"
                                     VerticalAlignment="Center"/>
                             </StackPanel>
 
@@ -1011,7 +1011,7 @@
                                 <TextBlock 
                                     Margin="4,0,0,0"
                                     Text="{Binding TotalMunitionsCost}"
-                                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                                    Foreground="{StaticResource Brush.Text.Primary}"
                                     VerticalAlignment="Center"/>
                             </StackPanel>
 
@@ -1026,7 +1026,7 @@
                                 <TextBlock 
                                     Margin="4,0,0,0"
                                     Text="{Binding TotalFuelCost}"
-                                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                                    Foreground="{StaticResource Brush.Text.Primary}"
                                     VerticalAlignment="Center"/>
                             </StackPanel>
                         </StackPanel>
@@ -1046,10 +1046,10 @@
 
                     <Border
                         Grid.Column="0"
-                        Background="{StaticResource BackgroundBlueBrush}"
-                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        Background="{StaticResource Brush.Surface.Card}"
+                        BorderBrush="{StaticResource Brush.Border.Hairline}"
                         BorderThickness="1"
-                        CornerRadius="8"
+                        CornerRadius="0"
                         Margin="8,0">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -1060,12 +1060,12 @@
                                 FontSize="14" 
                                 Grid.Row="0"
                                 FontWeight="Bold"
-                                Foreground="{StaticResource ForegroundGrayBrush}"
+                                Foreground="{StaticResource Brush.Text.Dim}"
                                 Margin="0,0,0,8"
                                 HorizontalAlignment="Center">
                                 Starting Units (<Run Text="{Binding StartingUnitsCount, Mode=OneWay}"/>/<Run Text="{Binding StartingUnitsMax, Mode=OneWay}"/>)
                             </TextBlock>
-                            <ScrollViewer Style="{StaticResource ChatScrollViewer}" Grid.Row="1">
+                            <ScrollViewer Style="{StaticResource ScrollViewer.Thin}" Grid.Row="1">
                                 <ItemsControl
                                     ItemsSource="{Binding StartingUnits}"
                                     ItemTemplate="{StaticResource CompanyUnitTemplate}"/>
@@ -1074,10 +1074,10 @@
                     </Border>
 
                     <Border
-                        Background="{StaticResource BackgroundBlueBrush}"
-                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        Background="{StaticResource Brush.Surface.Card}"
+                        BorderBrush="{StaticResource Brush.Border.Hairline}"
                         BorderThickness="1"
-                        CornerRadius="8"
+                        CornerRadius="0"
                         Margin="8,0"
                         Grid.Column="1">
                         <Grid>
@@ -1089,12 +1089,12 @@
                                 FontSize="14" 
                                 Grid.Row="0"
                                 FontWeight="Bold"
-                                Foreground="{StaticResource ForegroundGrayBrush}"
+                                Foreground="{StaticResource Brush.Text.Dim}"
                                 Margin="0,0,0,8"
                                 HorizontalAlignment="Center">                                
                                 Skirmish Units (<Run Text="{Binding SkirmishPhaseUnitsCount, Mode=OneWay}"/>/<Run Text="{Binding SkirmishPhaseUnitsMax, Mode=OneWay}"/>)
                             </TextBlock>
-                            <ScrollViewer Style="{StaticResource ChatScrollViewer}" Grid.Row="1">
+                            <ScrollViewer Style="{StaticResource ScrollViewer.Thin}" Grid.Row="1">
                                 <ItemsControl
                                     ItemsSource="{Binding SkirmishPhaseUnits}"
                                     ItemTemplate="{StaticResource CompanyUnitTemplate}"/>
@@ -1103,10 +1103,10 @@
                     </Border>
 
                     <Border
-                        Background="{StaticResource BackgroundBlueBrush}"
-                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        Background="{StaticResource Brush.Surface.Card}"
+                        BorderBrush="{StaticResource Brush.Border.Hairline}"
                         BorderThickness="1"
-                        CornerRadius="8"
+                        CornerRadius="0"
                         Margin="8,0"
                         Grid.Column="2">
                         <Grid>
@@ -1118,12 +1118,12 @@
                                 FontSize="14" 
                                 Grid.Row="0"
                                 FontWeight="Bold"
-                                Foreground="{StaticResource ForegroundGrayBrush}"
+                                Foreground="{StaticResource Brush.Text.Dim}"
                                 Margin="0,0,0,8"
                                 HorizontalAlignment="Center">                                
                                 Battle Phase (<Run Text="{Binding BattlePhaseUnitsCount, Mode=OneWay}"/>/<Run Text="{Binding BattlePhaseUnitsMax, Mode=OneWay}"/>)
                             </TextBlock>
-                            <ScrollViewer Style="{StaticResource ChatScrollViewer}" Grid.Row="1">
+                            <ScrollViewer Style="{StaticResource ScrollViewer.Thin}" Grid.Row="1">
                                 <ItemsControl
                                     ItemsSource="{Binding BattlePhaseUnits}"
                                     ItemTemplate="{StaticResource CompanyUnitTemplate}"/>
@@ -1132,10 +1132,10 @@
                     </Border>
 
                     <Border
-                        Background="{StaticResource BackgroundBlueBrush}"
-                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        Background="{StaticResource Brush.Surface.Card}"
+                        BorderBrush="{StaticResource Brush.Border.Hairline}"
                         BorderThickness="1"
-                        CornerRadius="8"
+                        CornerRadius="0"
                         Margin="8,0"
                         Grid.Column="3">
                         <Grid>
@@ -1147,12 +1147,12 @@
                                 FontSize="14" 
                                 Grid.Row="0"
                                 FontWeight="Bold"
-                                Foreground="{StaticResource ForegroundGrayBrush}"
+                                Foreground="{StaticResource Brush.Text.Dim}"
                                 Margin="0,0,0,8"
                                 HorizontalAlignment="Center">                       
                                 Reserves (<Run Text="{Binding ReservesPhaseUnitsCount, Mode=OneWay}"/>/<Run Text="{Binding ReservesPhaseUnitsMax, Mode=OneWay}"/>)
                             </TextBlock>
-                            <ScrollViewer Style="{StaticResource ChatScrollViewer}" Grid.Row="1">
+                            <ScrollViewer Style="{StaticResource ScrollViewer.Thin}" Grid.Row="1">
                                 <ItemsControl
                                     ItemsSource="{Binding ReservesPhaseUnits}"
                                     ItemTemplate="{StaticResource CompanyUnitTemplate}"/>
@@ -1167,10 +1167,10 @@
             <!-- Selection/Hover infor -->
             <Border Grid.Column="1"
                   Margin="10,0,0,0"
-                  Background="{StaticResource BackgroundBlueBrush}"
-                  BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                  Background="{StaticResource Brush.Surface.Card}"
+                  BorderBrush="{StaticResource Brush.Border.Hairline}"
                   BorderThickness="1"
-                  CornerRadius="8">
+                  CornerRadius="0">
 
                 <Grid>
 
@@ -1186,7 +1186,7 @@
                             HorizontalAlignment="Center"
                             FontSize="18"
                             FontWeight="Bold"
-                            Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                            Foreground="{StaticResource Brush.Text.Primary}"/>
 
                     <!-- Selected unit information -->
                     <Grid 
@@ -1204,10 +1204,10 @@
 
                             <!-- Squad details -->
                             <Border Grid.Row="0"
-                                    Background="{StaticResource BackgroundDarkBlueBrush}"
-                                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                    Background="{StaticResource Brush.Surface.Sunken}"
+                                    BorderBrush="{StaticResource Brush.Border.Hairline}"
                                     BorderThickness="1"
-                                    CornerRadius="8"
+                                    CornerRadius="0"
                                     Margin="8,0,8,8"
                                     Padding="8"
                                     Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}">
@@ -1239,7 +1239,7 @@
                                                 Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}}"
                                                 FontSize="16" 
                                                 FontWeight="Bold"
-                                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                Foreground="{StaticResource Brush.Text.Primary}"
                                                 TextWrapping="Wrap"
                                                 Margin="8,0,0,0"/>
 
@@ -1247,7 +1247,7 @@
                                                 Text="{Binding CustomName}"
                                                 FontSize="16" 
                                                 FontStyle="Italic"
-                                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                Foreground="{StaticResource Brush.Text.Primary}"
                                                 TextWrapping="Wrap"
                                                 Margin="8,0,0,0"/>
                                     
@@ -1299,8 +1299,8 @@
                                                  Value="{Binding RankProgress}" 
                                                  Maximum="1"
                                                          VerticalAlignment="Center"
-                                                 Background="{StaticResource BackgroundDarkBlueBrush}"
-                                                 Foreground="{StaticResource AccentBlueBrush}"/>
+                                                 Background="{StaticResource Brush.Surface.Sunken}"
+                                                 Foreground="{StaticResource Brush.Accent.Gold}"/>
 
                                             <!-- Experience Points Display -->
                                             <TextBlock 
@@ -1309,7 +1309,7 @@
                                                 FontSize="10"
                                                 HorizontalAlignment="Center"
                                                          VerticalAlignment="Center"
-                                                Foreground="{StaticResource ForegroundWhiteBrush}">
+                                                Foreground="{StaticResource Brush.Text.Primary}">
                                                 <Run Text="{Binding Experience, StringFormat={}{0}}"/>
                                                 <Run Text="/"/>
                                                 <Run Text="{Binding NextRankExperience, StringFormat={}{0}}"/>
@@ -1320,14 +1320,14 @@
                                         <TextBlock 
                                             Text="{Binding Blueprint, Converter={StaticResource BlueprintHelpTextConverter}}"
                                             FontSize="14" 
-                                            Foreground="{StaticResource ForegroundGrayBrush}"
+                                            Foreground="{StaticResource Brush.Text.Dim}"
                                             TextWrapping="Wrap"/>
                                         <TextBlock 
                                             Text="{Binding Blueprint, Converter={StaticResource BlueprintBriefTextConverter}}"
                                             FontSize="12"
                                             FontStyle="Italic"
                                             Margin="0,8,0,0"
-                                            Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                            Foreground="{StaticResource Brush.Text.Dim}"/>
                                     </StackPanel>
 
                                     <!-- Squad Costs -->
@@ -1347,7 +1347,7 @@
                                             <TextBlock 
                                                 Margin="4,0,0,0"
                                                 Text="{Binding Blueprint.Cost.Manpower}"
-                                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                Foreground="{StaticResource Brush.Text.Primary}"
                                                 VerticalAlignment="Center"
                                                 />
                                         </StackPanel>
@@ -1363,7 +1363,7 @@
                                             <TextBlock 
                                                 Margin="4,0,0,0"
                                                 Text="{Binding Blueprint.Cost.Munitions}"
-                                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                Foreground="{StaticResource Brush.Text.Primary}"
                                                 VerticalAlignment="Center"
                                                 />
                                         </StackPanel>
@@ -1379,7 +1379,7 @@
                                             <TextBlock 
                                                 Margin="4,0,0,0"
                                                 Text="{Binding Blueprint.Cost.Fuel}"
-                                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                Foreground="{StaticResource Brush.Text.Primary}"
                                                 VerticalAlignment="Center"
                                                 />
                                         </StackPanel>
@@ -1396,10 +1396,10 @@
 
                                 <Border
                                     Visibility="{Binding IsSquad, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
-                                    Background="{StaticResource BackgroundDarkBlueBrush}"
-                                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                    Background="{StaticResource Brush.Surface.Sunken}"
+                                    BorderBrush="{StaticResource Brush.Border.Hairline}"
                                     BorderThickness="1"
-                                    CornerRadius="8"
+                                    CornerRadius="0"
                                     Margin="8,0,8,8"
                                     Padding="8">
 
@@ -1410,12 +1410,12 @@
                                             HorizontalAlignment="Center"
                                             FontSize="16"
                                             FontWeight="Bold"
-                                            Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                            Foreground="{StaticResource Brush.Text.Dim}"/>
                                         <Button 
                                             Content="Add to Starting Units" 
                                             Grid.Column="0" 
                                             Grid.Row="0" 
-                                            Style="{StaticResource ActionButton}" 
+                                            Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddStartingUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             Margin="4"
                                             Command="{Binding AddToCompanyCommand}">
@@ -1427,7 +1427,7 @@
                                             Content="Add to Skirmish Phase" 
                                             Grid.Column="1" 
                                             Grid.Row="0" 
-                                            Style="{StaticResource ActionButton}" 
+                                            Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddSkirmishPhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             Margin="4"
                                             Command="{Binding AddToCompanyCommand}">
@@ -1439,7 +1439,7 @@
                                             Content="Add to Battle Phase" 
                                             Grid.Column="0" 
                                             Grid.Row="1" 
-                                            Style="{StaticResource ActionButton}" 
+                                            Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddBattlePhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             Margin="4"
                                             Command="{Binding AddToCompanyCommand}">
@@ -1451,7 +1451,7 @@
                                             Content="Add to Reserves" 
                                             Grid.Column="1" 
                                             Grid.Row="1" 
-                                            Style="{StaticResource ActionButton}" 
+                                            Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddReservesPhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             Margin="4"
                                             Command="{Binding AddToCompanyCommand}">
@@ -1471,10 +1471,10 @@
                                 <!-- Squad upgrades -->
                                 <Border
                                     Visibility="{Binding HasUpgrades, Converter={StaticResource BooleanToVisibility}}"
-                                    Background="{StaticResource BackgroundDarkBlueBrush}"
-                                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                    Background="{StaticResource Brush.Surface.Sunken}"
+                                    BorderBrush="{StaticResource Brush.Border.Hairline}"
                                     BorderThickness="1"
-                                    CornerRadius="8"
+                                    CornerRadius="0"
                                     Margin="8,0,8,8"
                                     Padding="8">
                                     <StackPanel>
@@ -1485,7 +1485,7 @@
                                             HorizontalAlignment="Center"
                                             FontSize="16"
                                             FontWeight="Bold"
-                                            Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                            Foreground="{StaticResource Brush.Text.Dim}"/>
                                         <ItemsControl
                                             Grid.Row="1"
                                             ItemTemplate="{StaticResource SquadUpgradeTemplate}"
@@ -1502,10 +1502,10 @@
                                 <!-- Squad Items -->
                                 <Border
                                     Visibility="{Binding HasItems, Converter={StaticResource BooleanToVisibility}}"
-                                    Background="{StaticResource BackgroundDarkBlueBrush}"
-                                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                    Background="{StaticResource Brush.Surface.Sunken}"
+                                    BorderBrush="{StaticResource Brush.Border.Hairline}"
                                     BorderThickness="1"
-                                    CornerRadius="8"
+                                    CornerRadius="0"
                                     Margin="8,0,8,8"
                                     Padding="8">
                                     <StackPanel>
@@ -1516,7 +1516,7 @@
                                             HorizontalAlignment="Center"
                                             FontSize="16"
                                             FontWeight="Bold"
-                                            Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                            Foreground="{StaticResource Brush.Text.Dim}"/>
                                         <ItemsControl
                                             Grid.Row="1"
                                             ItemTemplate="{StaticResource SquadItemTemplate}"
@@ -1533,10 +1533,10 @@
                                 <!-- Squad Deployment -->
                                 <Border
                                     Visibility="{Binding IsTransportable, Converter={StaticResource BooleanToVisibility}}"
-                                    Background="{StaticResource BackgroundDarkBlueBrush}"
-                                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                    Background="{StaticResource Brush.Surface.Sunken}"
+                                    BorderBrush="{StaticResource Brush.Border.Hairline}"
                                     BorderThickness="1"
-                                    CornerRadius="8"
+                                    CornerRadius="0"
                                     Margin="8,0,8,8"
                                     Padding="8">
                                     <StackPanel>
@@ -1547,7 +1547,7 @@
                                             HorizontalAlignment="Center"
                                             FontSize="16"
                                             FontWeight="Bold"
-                                            Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                            Foreground="{StaticResource Brush.Text.Dim}"/>
 
                                         <RadioButton 
                                             Style="{StaticResource TransportRadioButton}"
@@ -1557,7 +1557,7 @@
                                             IsChecked="{Binding HasTransport, Converter={StaticResource InverseBooleanConverter}}"
                                             Margin="4"
                                             IsEnabled="{Binding CanDisableTransport}"
-                                            Foreground="{StaticResource ForegroundWhiteBrush}"
+                                            Foreground="{StaticResource Brush.Text.Primary}"
                                             VerticalContentAlignment="Center"/>
 
                                         <RadioButton 
@@ -1567,12 +1567,12 @@
                                             Content="Transport (Drop-Off)"
                                             IsChecked="{Binding HasDropOffTransport}"
                                             Margin="4"
-                                            Foreground="{StaticResource ForegroundWhiteBrush}"
+                                            Foreground="{StaticResource Brush.Text.Primary}"
                                             VerticalContentAlignment="Center"/>
 
                                         <ComboBox
                                             Margin="4"
-                                            Style="{StaticResource SettingsComboBox}"
+                                            Style="{StaticResource ComboBox.Default}"
                                             ItemTemplate="{StaticResource TransportItemTemplate}"
                                             ItemsSource="{Binding AvailableTransports}"
                                             SelectedItem="{Binding TransportBlueprint}"
@@ -1585,10 +1585,10 @@
                                 <!-- Squad Passengers -->
                                 <Border
                                     Visibility="{Binding CanHavePassengers, Converter={StaticResource BooleanToVisibility}}"
-                                    Background="{StaticResource BackgroundDarkBlueBrush}"
-                                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                    Background="{StaticResource Brush.Surface.Sunken}"
+                                    BorderBrush="{StaticResource Brush.Border.Hairline}"
                                     BorderThickness="1"
-                                    CornerRadius="8"
+                                    CornerRadius="0"
                                     Margin="8,0,8,8"
                                     Padding="8">
 
@@ -1599,12 +1599,12 @@
                                             HorizontalAlignment="Center"
                                             FontSize="16"
                                             FontWeight="Bold"
-                                            Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                            Foreground="{StaticResource Brush.Text.Dim}"/>
 
                                         <!-- Infantry unit picker -->
                                         <ComboBox
                                             Margin="4"
-                                            Style="{StaticResource SettingsComboBox}"
+                                            Style="{StaticResource ComboBox.Default}"
                                             ItemsSource="{Binding AvailablePassengers}"
                                             SelectedItem="{Binding SelectedPassenger, Mode=TwoWay}"
                                             Visibility="{Binding HasAvailablePassengers, Converter={StaticResource BooleanToVisibility}}">
@@ -1629,7 +1629,7 @@
                                                         <TextBlock
                                                             Grid.Column="1"
                                                             VerticalAlignment="Center"
-                                                            Foreground="{StaticResource ForegroundWhiteBrush}">
+                                                            Foreground="{StaticResource Brush.Text.Primary}">
                                                             <Run Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}, Mode=OneWay}"/> (#<Run Text="{Binding Id, Mode=OneWay}"/>)
                                                         </TextBlock>
                                                     </Grid>
@@ -1642,13 +1642,13 @@
                                             Text="No infantry units available in this phase."
                                             FontStyle="Italic"
                                             HorizontalAlignment="Center"
-                                            Foreground="{StaticResource ForegroundGrayBrush}"
+                                            Foreground="{StaticResource Brush.Text.Dim}"
                                             Visibility="{Binding HasAvailablePassengers, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
 
                                         <Button
                                             Margin="4"
                                             Content="Clear Passenger"
-                                            Style="{StaticResource DangerActionButton}"
+                                            Style="{StaticResource Button.Danger}"
                                             Command="{Binding ClearPassengerCommand}"
                                             Visibility="{Binding HasPassenger, Converter={StaticResource BooleanToVisibility}}"/>
                                     </StackPanel>
@@ -1668,7 +1668,7 @@
                                     Margin="8"
                                     Content="Retire Squad"
                                     Command="{Binding RetireSquadCommand}"
-                                    Style="{StaticResource DangerActionButton}"
+                                    Style="{StaticResource Button.Danger}"
                                     />
                             </Grid>
                     
@@ -1691,10 +1691,10 @@
                             
                             <!-- Item details -->
                             <Border Grid.Row="0"
-                                    Background="{StaticResource BackgroundDarkBlueBrush}"
-                                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                    Background="{StaticResource Brush.Surface.Sunken}"
+                                    BorderBrush="{StaticResource Brush.Border.Hairline}"
                                     BorderThickness="1"
-                                    CornerRadius="8"
+                                    CornerRadius="0"
                                     Margin="8,0,8,8"
                                     Padding="8"
                                     Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}">
@@ -1726,21 +1726,21 @@
                                             Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}}"
                                             FontSize="16" 
                                             FontWeight="Bold"
-                                            Foreground="{StaticResource ForegroundWhiteBrush}"
+                                            Foreground="{StaticResource Brush.Text.Primary}"
                                             TextWrapping="Wrap"
                                             HorizontalAlignment="Center"
                                             Margin="8,0,0,0"/>
                                         <TextBlock 
                                             Text="{Binding Blueprint, Converter={StaticResource BlueprintHelpTextConverter}, ConverterParameter='EmptyStringIfNotFound'}"
                                             FontSize="14" 
-                                            Foreground="{StaticResource ForegroundGrayBrush}"
+                                            Foreground="{StaticResource Brush.Text.Dim}"
                                             TextWrapping="Wrap"/>
                                         <TextBlock 
                                             Text="{Binding Blueprint, Converter={StaticResource BlueprintBriefTextConverter}, ConverterParameter='EmptyStringIfNotFound'}"
                                             FontSize="12"
                                             FontStyle="Italic"
                                             Margin="0,8,0,0"
-                                            Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                            Foreground="{StaticResource Brush.Text.Dim}"/>
                                     </StackPanel>
 
                                     <!-- Item Costs -->
@@ -1762,7 +1762,7 @@
                                             <TextBlock 
                                                 Margin="4,0,0,0"
                                                 Text="{Binding Cost.Manpower}"
-                                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                Foreground="{StaticResource Brush.Text.Primary}"
                                                 VerticalAlignment="Center"
                                                 />
                                         </StackPanel>
@@ -1778,7 +1778,7 @@
                                             <TextBlock 
                                                 Margin="4,0,0,0"
                                                 Text="{Binding Cost.Munitions}"
-                                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                Foreground="{StaticResource Brush.Text.Primary}"
                                                 VerticalAlignment="Center"
                                                 />
                                         </StackPanel>
@@ -1794,7 +1794,7 @@
                                             <TextBlock 
                                                 Margin="4,0,0,0"
                                                 Text="{Binding Cost.Fuel}"
-                                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                Foreground="{StaticResource Brush.Text.Primary}"
                                                 VerticalAlignment="Center"
                                                 />
                                         </StackPanel>
@@ -1811,10 +1811,10 @@
 
                                 <Border
                                     Visibility="{Binding IsTeamWeapon, Converter={StaticResource BooleanToVisibility}}"
-                                    Background="{StaticResource BackgroundDarkBlueBrush}"
-                                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                    Background="{StaticResource Brush.Surface.Sunken}"
+                                    BorderBrush="{StaticResource Brush.Border.Hairline}"
                                     BorderThickness="1"
-                                    CornerRadius="8"
+                                    CornerRadius="0"
                                     Margin="8,0,8,8"
                                     Padding="8">
 
@@ -1825,12 +1825,12 @@
                                             HorizontalAlignment="Center"
                                             FontSize="16"
                                             FontWeight="Bold"
-                                            Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                            Foreground="{StaticResource Brush.Text.Dim}"/>
                                         <Button 
                                             Content="Add to Starting Units" 
                                             Grid.Column="0" 
                                             Grid.Row="0" 
-                                            Style="{StaticResource ActionButton}" 
+                                            Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddStartingUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             Margin="4"
                                             Command="{Binding AddToCompanyCommand}">
@@ -1842,7 +1842,7 @@
                                             Content="Add to Skirmish Phase" 
                                             Grid.Column="1" 
                                             Grid.Row="0" 
-                                            Style="{StaticResource ActionButton}" 
+                                            Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddSkirmishPhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             Margin="4"
                                             Command="{Binding AddToCompanyCommand}">
@@ -1854,7 +1854,7 @@
                                             Content="Add to Battle Phase" 
                                             Grid.Column="0" 
                                             Grid.Row="1" 
-                                            Style="{StaticResource ActionButton}" 
+                                            Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddBattlePhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             Margin="4"
                                             Command="{Binding AddToCompanyCommand}">
@@ -1866,7 +1866,7 @@
                                             Content="Add to Reserves" 
                                             Grid.Column="1" 
                                             Grid.Row="1" 
-                                            Style="{StaticResource ActionButton}" 
+                                            Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddReservesPhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             Margin="4"
                                             Command="{Binding AddToCompanyCommand}">
@@ -1884,10 +1884,10 @@
                                 Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}">
                                 <Border
                                     Visibility="{Binding IsTeamWeapon, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
-                                    Background="{StaticResource BackgroundDarkBlueBrush}"
-                                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                    Background="{StaticResource Brush.Surface.Sunken}"
+                                    BorderBrush="{StaticResource Brush.Border.Hairline}"
                                     BorderThickness="1"
-                                    CornerRadius="8"
+                                    CornerRadius="0"
                                     Margin="8,0,8,8"
                                     Padding="8">
 
@@ -1898,11 +1898,11 @@
                                             HorizontalAlignment="Center"
                                             FontSize="16"
                                             FontWeight="Bold"
-                                            Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                            Foreground="{StaticResource Brush.Text.Dim}"/>
 
                                         <ScrollViewer 
                                             MaxHeight="348"
-                                            Style="{StaticResource ChatScrollViewer}">
+                                            Style="{StaticResource ScrollViewer.Thin}">
                                             <ItemsControl 
                                                 ItemsSource="{Binding ItemAssignableUnits}"
                                                 ItemTemplate="{StaticResource SquadItemAssignmentTemplate}"/>
@@ -1917,7 +1917,7 @@
                                     Grid.Row="4"
                                     VerticalAlignment="Bottom"
                                     Margin="8"
-                                    Style="{StaticResource DangerActionButton}"
+                                    Style="{StaticResource Button.Danger}"
                                     Command="{Binding DestroyItemCommand}"
                                     Content="Destroy Item"/>
 
@@ -1938,14 +1938,14 @@
                 VerticalAlignment="Center">
                 <Label 
                     Content="{Binding CompanyState}"
-                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                    Foreground="{StaticResource Brush.Text.Primary}"
                     VerticalAlignment="Center"/>
             </StackPanel>
 
             <Button 
                 Command="{Binding SaveCommand}"
                 HorizontalAlignment="Right"
-                Style="{StaticResource ActionButton}"
+                Style="{StaticResource Button.Primary}"
                 IsEnabled="{Binding CanSave}">
                 Save Company
             </Button>

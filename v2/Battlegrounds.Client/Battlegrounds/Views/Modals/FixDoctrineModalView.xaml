@@ -28,8 +28,8 @@
         </Style>
 
         <Style x:Key="DoctrineCardItem" TargetType="ListBoxItem">
-            <Setter Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
-            <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+            <Setter Property="Background" Value="{StaticResource Brush.Border.Hairline}"/>
+            <Setter Property="Foreground" Value="{StaticResource Brush.Text.Primary}"/>
             <Setter Property="Padding" Value="4"/>
             <Setter Property="Margin" Value="0,4,4,0"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -40,19 +40,19 @@
                     <ControlTemplate TargetType="ListBoxItem">
                         <Border x:Name="CardBorder"
                                 Background="{TemplateBinding Background}"
-                                BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                BorderBrush="{StaticResource Brush.Border.Hairline}"
                                 BorderThickness="2"
-                                CornerRadius="6"
+                                CornerRadius="0"
                                 Padding="{TemplateBinding Padding}">
                             <ContentPresenter/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="CardBorder" Property="Background" Value="{StaticResource BackgroundGrayBrush}"/>
+                                <Setter TargetName="CardBorder" Property="Background" Value="{StaticResource Brush.Surface.Hover}"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="{StaticResource ForegroundLightBlueBrush}"/>
-                                <Setter TargetName="CardBorder" Property="Background" Value="{StaticResource BackgroundGrayBrush}"/>
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="{StaticResource Brush.Accent.Gold}"/>
+                                <Setter TargetName="CardBorder" Property="Background" Value="{StaticResource Brush.Surface.Hover}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -75,22 +75,22 @@
                     TextWrapping="Wrap"
                     HorizontalAlignment="Center"
                     TextAlignment="Center"
-                    Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                    Foreground="{StaticResource Brush.Text.Primary}"/>
                 <StackPanel.ToolTip>
-                    <ToolTip Style="{StaticResource BattlegroundsTooltip}">
+                    <ToolTip Style="{StaticResource ToolTip.Default}">
                         <StackPanel>
                             <TextBlock
                                 Text="{Binding Name}"
                                 FontWeight="SemiBold"
                                 FontSize="11"
                                 TextWrapping="Wrap"
-                                Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                                Foreground="{StaticResource Brush.Text.Primary}"/>
                             <TextBlock
                                 Text="{Binding Description}"
                                 FontSize="11"
                                 TextWrapping="Wrap"
                                 MaxWidth="320"
-                                Foreground="{StaticResource ForegroundLightGrayBrush}"/>
+                                Foreground="{StaticResource Brush.Text.Body}"/>
                         </StackPanel>
                     </ToolTip>
                 </StackPanel.ToolTip>
@@ -100,10 +100,10 @@
     </helpers:DialogUserControl.Resources>
 
     <Border
-        Background="{StaticResource BackgroundBlueBrush}"
-        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+        Background="{StaticResource Brush.Surface.Card}"
+        BorderBrush="{StaticResource Brush.Border.Hairline}"
         BorderThickness="1"
-        CornerRadius="8">
+        CornerRadius="0">
         <Grid Margin="16">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -117,30 +117,30 @@
                 Text="FIX DOCTRINE"
                 FontSize="20"
                 FontWeight="Bold"
-                Foreground="{StaticResource ForegroundWhiteBrush}"
+                Foreground="{StaticResource Brush.Text.Primary}"
                 Margin="0,0,0,12"/>
 
             <!-- Warning banner -->
             <Border
                 Grid.Row="1"
-                Background="{StaticResource BackgroundLighRedBrush}"
-                BorderBrush="{StaticResource AccentOrangeBrush}"
+                Background="{StaticResource Brush.Surface.Card}"
+                BorderBrush="{StaticResource Brush.Status.Caution}"
                 BorderThickness="1"
-                CornerRadius="6"
+                CornerRadius="0"
                 Padding="12,8"
                 Margin="0,0,0,16">
                 <StackPanel>
                     <TextBlock
                         FontWeight="Bold"
                         FontSize="12"
-                        Foreground="{StaticResource ForegroundWhiteBrush}"
+                        Foreground="{StaticResource Brush.Text.Primary}"
                         TextWrapping="Wrap">
                         The doctrine for <Run FontStyle="Italic" Text="{Binding CompanyName, Mode=OneWay}"/> is outdated or no longer available.
                     </TextBlock>
                     <TextBlock
                         Margin="0,4,0,0"
                         FontSize="11"
-                        Foreground="{StaticResource ForegroundLightGrayBrush}"
+                        Foreground="{StaticResource Brush.Text.Body}"
                         TextWrapping="Wrap"
                         Text="Please select a replacement doctrine below. Units that are incompatible with the new doctrine may need to be removed."/>
                 </StackPanel>
@@ -150,7 +150,7 @@
             <StackPanel Grid.Row="2">
                 <TextBlock
                     Text="Doctrine"
-                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                    Foreground="{StaticResource Brush.Text.Primary}"
                     Margin="0,0,0,5"/>
                 <ListBox
                     HorizontalAlignment="Center"
@@ -162,10 +162,10 @@
                     Margin="0,0,0,8"/>
                 <!-- Selected doctrine detail panel -->
                 <Border
-                    Background="{StaticResource BackgroundLightBlueBrush}"
-                    BorderBrush="{StaticResource ForegroundLightBlueBrush}"
+                    Background="{StaticResource Brush.Border.Hairline}"
+                    BorderBrush="{StaticResource Brush.Accent.Gold}"
                     BorderThickness="1"
-                    CornerRadius="6"
+                    CornerRadius="0"
                     Padding="12,10"
                     Visibility="{Binding SelectedDoctrine, Converter={StaticResource NullToVisibilityConverter}}">
                     <StackPanel>
@@ -174,13 +174,13 @@
                             FontWeight="Bold"
                             HorizontalAlignment="Center"
                             FontSize="13"
-                            Foreground="{StaticResource ForegroundWhiteBrush}"
+                            Foreground="{StaticResource Brush.Text.Primary}"
                             Margin="0,0,0,4"/>
                         <TextBlock
                             Text="{Binding SelectedDoctrine.Description}"
                             FontSize="11"
                             TextWrapping="Wrap"
-                            Foreground="{StaticResource ForegroundLightGrayBrush}"/>
+                            Foreground="{StaticResource Brush.Text.Body}"/>
                     </StackPanel>
                 </Border>
             </StackPanel>
@@ -193,12 +193,12 @@
                 Margin="0,16,0,0">
                 <Button
                     Content="Cancel"
-                    Style="{StaticResource DangerActionButton}"
+                    Style="{StaticResource Button.Danger}"
                     Width="100"
                     Command="{Binding CancelCommand}"/>
                 <Button
                     Content="Confirm"
-                    Style="{StaticResource ActionButton}"
+                    Style="{StaticResource Button.Primary}"
                     Margin="8,0,0,0"
                     Width="100"
                     Command="{Binding ConfirmCommand}"/>
