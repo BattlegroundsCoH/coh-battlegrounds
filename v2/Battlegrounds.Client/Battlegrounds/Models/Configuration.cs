@@ -176,6 +176,16 @@ public sealed class Configuration {
     /// <summary>
     /// Gets or sets a value indicating whether companies are automatically synchronized with the server.
     /// </summary>
+    /// <summary>
+    /// Gets or sets the interface scale, as a percentage string.
+    /// </summary>
+    /// <remarks>Applied by <see cref="Services.IUiScaleService"/>, which swaps the design system's size
+    /// tokens rather than transforming the visual tree. Keep the options in step with
+    /// <c>UiScaleService.AvailableScales</c>.</remarks>
+    [ConfigurationSection("General", "General application settings", priority: 0)]
+    [ConfigurationProperty("UI Scale", "Scales text, controls and spacing throughout the app. Increase this if the interface looks small on a high-resolution or large display.", propertyType: ConfigurationPropertyType.Selection, Options = ["100%", "110%", "125%", "150%"])]
+    public string UiScale { get; set; } = "100%";
+
     [ConfigurationSection("General", "General application settings", priority: 0)]
     [ConfigurationProperty("Auto Sync Companies", "Indicates whether companies should be automatically synchronized with the server.", propertyType: ConfigurationPropertyType.Boolean)]
     public bool AutoSyncCompanies { get; set; } = true; // Should companies be automatically synced with the server?

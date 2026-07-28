@@ -1,0 +1,78 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--
+        UI scale 125%. See Metrics.Scale110.xaml for why these are hand-authored whole
+        numbers rather than a runtime multiplication, and which token families are
+        deliberately left out.
+    -->
+
+    <!-- ===================== Spacing ===================== -->
+
+    <Thickness x:Key="Space.XS">5</Thickness>
+    <Thickness x:Key="Space.S">10</Thickness>
+    <Thickness x:Key="Space.M">15</Thickness>
+    <Thickness x:Key="Space.L">20</Thickness>
+    <Thickness x:Key="Space.XL">25</Thickness>
+    <Thickness x:Key="Space.XXL">38</Thickness>
+
+    <Thickness x:Key="Space.Page">25</Thickness>
+    <Thickness x:Key="Space.Card">28</Thickness>
+    <Thickness x:Key="Space.Row">11,15</Thickness>
+    <Thickness x:Key="Space.Field">18,15</Thickness>
+    <Thickness x:Key="Space.Button">23,11</Thickness>
+    <Thickness x:Key="Space.ButtonLarge">40,19</Thickness>
+    <Thickness x:Key="Space.HeadingGap">0,0,0,18</Thickness>
+    <Thickness x:Key="Space.StatGap">0,10,0,0</Thickness>
+    <Thickness x:Key="Space.Badge">11,5</Thickness>
+
+    <!-- ===================== Control sizing ===================== -->
+
+    <sys:Double x:Key="Size.Control">45</sys:Double>
+    <sys:Double x:Key="Size.ControlLarge">55</sys:Double>
+    <sys:Double x:Key="Size.TopBar">75</sys:Double>
+    <sys:Double x:Key="Size.NavItem">56</sys:Double>
+    <sys:Double x:Key="Size.NavRail">250</sys:Double>
+    <sys:Double x:Key="Size.NavRailCompact">188</sys:Double>
+    <sys:Double x:Key="Size.NavLogo">200</sys:Double>
+
+    <sys:Double x:Key="Size.Breakpoint.Medium">1750</sys:Double>
+    <sys:Double x:Key="Size.Breakpoint.Expanded">2250</sys:Double>
+    <sys:Double x:Key="Size.NavIndicator">5</sys:Double>
+    <sys:Double x:Key="Size.ScrollBar">10</sys:Double>
+    <sys:Double x:Key="Size.MenuRow">48</sys:Double>
+    <sys:Double x:Key="Size.EyebrowRule">43</sys:Double>
+    <sys:Double x:Key="Size.Icon.XS">20</sys:Double>
+    <sys:Double x:Key="Size.Icon.S">25</sys:Double>
+    <sys:Double x:Key="Size.Icon.M">30</sys:Double>
+    <sys:Double x:Key="Size.Icon.L">40</sys:Double>
+    <sys:Double x:Key="Size.Icon.XL">53</sys:Double>
+    <sys:Double x:Key="Size.Icon.XXL">60</sys:Double>
+    <sys:Double x:Key="Size.Icon.Huge">88</sys:Double>
+    <sys:Double x:Key="Size.Dot">8</sys:Double>
+
+    <!-- ===================== Window ===================== -->
+    <sys:Double x:Key="Size.Window.DefaultWidth">2150</sys:Double>
+    <sys:Double x:Key="Size.Window.DefaultHeight">1225</sys:Double>
+    <sys:Double x:Key="Size.Window.MinWidth">1475</sys:Double>
+    <sys:Double x:Key="Size.Window.MinHeight">900</sys:Double>
+
+    <!-- ===================== Type ===================== -->
+
+    <sys:Double x:Key="Font.Size.DisplayLarge">58</sys:Double>
+    <sys:Double x:Key="Font.Size.Display">50</sys:Double>
+    <sys:Double x:Key="Font.Size.Title">38</sys:Double>
+    <sys:Double x:Key="Font.Size.PageTitle">30</sys:Double>
+    <sys:Double x:Key="Font.Size.Cta">28</sys:Double>
+    <sys:Double x:Key="Font.Size.Heading">25</sys:Double>
+    <sys:Double x:Key="Font.Size.Stat">43</sys:Double>
+    <sys:Double x:Key="Font.Size.Section">20</sys:Double>
+    <sys:Double x:Key="Font.Size.Group">23</sys:Double>
+    <sys:Double x:Key="Font.Size.Eyebrow">15</sys:Double>
+    <sys:Double x:Key="Font.Size.Body">18</sys:Double>
+    <sys:Double x:Key="Font.Size.BodySmall">16</sys:Double>
+    <sys:Double x:Key="Font.Size.Meta">14</sys:Double>
+    <sys:Double x:Key="Font.Size.Label">13</sys:Double>
+
+</ResourceDictionary>

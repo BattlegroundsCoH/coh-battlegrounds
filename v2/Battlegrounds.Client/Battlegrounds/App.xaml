@@ -4,6 +4,16 @@
              xmlns:local="clr-namespace:Battlegrounds"
              xmlns:views="clr-namespace:Battlegrounds.Views">
     <Application.Resources>
-        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Theme.xaml" />
+        <!--
+            Theme.xaml is still the only theme dictionary; the wrapper exists so that
+            UiScaleService can append a Themes/Scale/*.xaml overlay after it at runtime.
+            Merged dictionaries are searched last-to-first, so the overlay's token values
+            win over the base ones and every {DynamicResource} re-resolves on the swap.
+        -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Theme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

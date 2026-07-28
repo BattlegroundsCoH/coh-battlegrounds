@@ -11,7 +11,7 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         Background="{StaticResource Brush.Surface.Window}"
         FontFamily="{StaticResource Font.Body}"
-        FontSize="{StaticResource Font.Size.Body}"
+        FontSize="{DynamicResource Font.Size.Body}"
         controls:Responsive.IsBreakpointHost="True"
         UseLayoutRounding="True"
         TextOptions.TextFormattingMode="Display"

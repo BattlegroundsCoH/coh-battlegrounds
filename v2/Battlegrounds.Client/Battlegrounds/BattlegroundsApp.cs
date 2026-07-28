@@ -234,6 +234,7 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<IBlueprintService, BlueprintService>();
         services.AddSingleton<IStatisticsService, StatisticsService>();
         services.AddSingleton<IBrowserService, BrowserService>();
+        services.AddSingleton<IUiScaleService, UiScaleService>();
         services.AddSingleton<IDoctrineService, DoctrineService>();
         services.AddSingleton<ICompanySerializer, BinaryCompanySerializer>();
         services.AddSingleton<ICompanyDeserializer, BinaryCompanyDeserializer>();
@@ -279,6 +280,10 @@ public sealed class BattlegroundsApp {
 
         var logger = ServiceProvider.GetRequiredService<ILogger<BattlegroundsApp>>();
         logger.LogInformation("Battlegrounds is finishing startup...");
+
+        // Apply the UI scale before anything can await: App.OnStartup resolves MainWindow as soon as
+        // this method yields, and the window reads the scaled size tokens while it is being built.
+        ServiceProvider.GetRequiredService<IUiScaleService>().Apply(_configuration.UiScale);
 
         // Trigger async loading of blueprints
         LoadData(ServiceProvider);
