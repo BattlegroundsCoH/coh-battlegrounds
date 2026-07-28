@@ -67,7 +67,7 @@
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <!-- The rule is red even though the label is gold; that contrast
                              is the whole point of the mark. -->
-                        <Rectangle Width="34"
+                        <Rectangle Width="{DynamicResource Size.EyebrowRule}"
                                    Height="2"
                                    Margin="0,0,14,0"
                                    VerticalAlignment="Center"
@@ -94,7 +94,7 @@
                         <controls:TrackedTextBlock Style="{DynamicResource Display.StatLabel}"
                                                    Text="{TemplateBinding Label}"
                                                    HorizontalAlignment="Center"
-                                                   Margin="0,8,0,0" />
+                                                   Margin="{DynamicResource Space.StatGap}" />
                     </StackPanel>
                 </ControlTemplate>
             </Setter.Value>
@@ -110,7 +110,7 @@
         <Setter Property="FontSize" Value="{DynamicResource Font.Size.Meta}" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="controls:TrackedTextBlock.Tracking" Value="{DynamicResource Track.Wide}" />
-        <Setter Property="Padding" Value="9,4" />
+        <Setter Property="Padding" Value="{DynamicResource Space.Badge}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template">

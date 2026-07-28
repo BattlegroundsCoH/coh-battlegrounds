@@ -179,7 +179,7 @@
         <Setter Property="FontSize" Value="{DynamicResource Font.Size.BodySmall}" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="Padding" Value="16,11" />
-        <Setter Property="MinHeight" Value="38" />
+        <Setter Property="MinHeight" Value="{DynamicResource Size.MenuRow}" />
     </Style>
 
     <!--

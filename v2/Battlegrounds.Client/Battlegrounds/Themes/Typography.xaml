@@ -26,11 +26,19 @@
 
     <!-- ===================== Sizes ===================== -->
 
+    <!-- The login screen's headline, the one place the app goes bigger than Display. -->
+    <sys:Double x:Key="Font.Size.DisplayLarge">46</sys:Double>
     <sys:Double x:Key="Font.Size.Display">40</sys:Double>
     <sys:Double x:Key="Font.Size.Title">30</sys:Double>
     <sys:Double x:Key="Font.Size.PageTitle">24</sys:Double>
+    <!-- Caption on the primary call to action. -->
+    <sys:Double x:Key="Font.Size.Cta">22</sys:Double>
+    <!-- Heading for a panel or dialog: "TEAM 1", "AVAILABLE MATCHES", "CREATE NEW COMPANY". -->
+    <sys:Double x:Key="Font.Size.Heading">20</sys:Double>
     <sys:Double x:Key="Font.Size.Stat">34</sys:Double>
     <sys:Double x:Key="Font.Size.Section">16</sys:Double>
+    <sys:Double x:Key="Font.Size.Group">18</sys:Double>
+    <sys:Double x:Key="Font.Size.Eyebrow">12</sys:Double>
     <sys:Double x:Key="Font.Size.Body">14</sys:Double>
     <sys:Double x:Key="Font.Size.BodySmall">13</sys:Double>
     <sys:Double x:Key="Font.Size.Meta">11</sys:Double>
@@ -77,7 +85,7 @@
 
     <!-- Gold group heading: a game title above its companies. -->
     <Style x:Key="Display.Group" TargetType="controls:TrackedTextBlock" BasedOn="{StaticResource Display.Section}">
-        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.Group}" />
         <Setter Property="Tracking" Value="{DynamicResource Track.Snug}" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.Accent.Gold}" />
     </Style>
@@ -93,7 +101,7 @@
     <!-- Widely tracked gold eyebrow. The red tick beside it belongs to the Eyebrow control. -->
     <Style x:Key="Display.Eyebrow" TargetType="controls:TrackedTextBlock">
         <Setter Property="FontFamily" Value="{DynamicResource Font.Body}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.Eyebrow}" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Tracking" Value="{DynamicResource Track.Eyebrow}" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.Accent.Gold}" />

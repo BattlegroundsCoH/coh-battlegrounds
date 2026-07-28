@@ -5,6 +5,7 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Brushes.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Metrics.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Typography.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
@@ -25,13 +26,13 @@
                                 BorderThickness="1" />
                         <TextBlock Text="{TemplateBinding Label}"
                                    FontFamily="{DynamicResource Font.Body}"
-                                   FontSize="11"
+                                   FontSize="{DynamicResource Font.Size.Meta}"
                                    Foreground="{DynamicResource Brush.Text.Body}"
                                    Margin="0,6,0,0"
                                    TextTrimming="CharacterEllipsis" />
                         <TextBlock Text="{Binding Hex, RelativeSource={RelativeSource TemplatedParent}}"
                                    FontFamily="{DynamicResource Font.Body}"
-                                   FontSize="10"
+                                   FontSize="{DynamicResource Font.Size.Label}"
                                    Foreground="{DynamicResource Brush.Text.Faint}" />
                     </StackPanel>
                 </ControlTemplate>

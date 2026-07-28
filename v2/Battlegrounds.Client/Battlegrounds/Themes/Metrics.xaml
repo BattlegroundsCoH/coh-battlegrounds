@@ -37,6 +37,12 @@
     <!-- Gap below a section heading, applied as a bottom margin. -->
     <Thickness x:Key="Space.HeadingGap">0,0,0,14</Thickness>
 
+    <!-- Gap between a stat number and its caption. -->
+    <Thickness x:Key="Space.StatGap">0,8,0,0</Thickness>
+
+    <!-- StatusBadge interior. Tighter than Space.Row because the badge wraps one short word. -->
+    <Thickness x:Key="Space.Badge">9,4</Thickness>
+
     <!-- ===================== Strokes ===================== -->
 
     <Thickness x:Key="Stroke.None">0</Thickness>
@@ -56,8 +62,35 @@
     <sys:Double x:Key="Size.TopBar">60</sys:Double>
     <sys:Double x:Key="Size.NavItem">45</sys:Double>
     <sys:Double x:Key="Size.NavRail">200</sys:Double>
+    <sys:Double x:Key="Size.NavLogo">160</sys:Double>
     <sys:Double x:Key="Size.NavIndicator">4</sys:Double>
     <sys:Double x:Key="Size.ScrollBar">8</sys:Double>
+
+    <!-- Row in the profile dropdown. Deliberately not Size.Control — a menu row is taller. -->
+    <sys:Double x:Key="Size.MenuRow">38</sys:Double>
+
+    <!-- The red rule that heads an Eyebrow. Width only; the 2px thickness is a hairline
+         and stays put at every UI scale, like the other strokes. -->
+    <sys:Double x:Key="Size.EyebrowRule">34</sys:Double>
+
+    <!-- ===================== Icons ===================== -->
+    <!--
+        Icons and avatars. Before this scale existed the views had invented fifteen distinct
+        square sizes between 16 and 70, none of which scaled with the UI scale — so at 150%
+        the type grew and the icons beside it did not. Snap to the nearest step rather than
+        adding another.
+    -->
+
+    <sys:Double x:Key="Size.Icon.XS">16</sys:Double>
+    <sys:Double x:Key="Size.Icon.S">20</sys:Double>
+    <sys:Double x:Key="Size.Icon.M">24</sys:Double>
+    <sys:Double x:Key="Size.Icon.L">32</sys:Double>
+    <sys:Double x:Key="Size.Icon.XL">42</sys:Double>
+    <sys:Double x:Key="Size.Icon.XXL">48</sys:Double>
+    <sys:Double x:Key="Size.Icon.Huge">70</sys:Double>
+
+    <!-- Status dot: the ready/unready pip on a lobby slot. -->
+    <sys:Double x:Key="Size.Dot">6</sys:Double>
 
     <!-- ===================== Window ===================== -->
     <!--
