@@ -125,7 +125,22 @@
                                                Text="{Binding WelcomeMessage, Converter={StaticResource UpperCase}}"
                                                Margin="0,0,0,26"/>
 
-                    <UniformGrid Columns="4">
+                    <!--
+                        Two rows of two on a Compact window. The stat captions are TrackedTextBlocks
+                        and cannot trim, so "CURRENT RANK" would be clipped rather than shortened if
+                        all four stayed on one row.
+                    -->
+                    <UniformGrid>
+                        <UniformGrid.Style>
+                            <Style TargetType="UniformGrid">
+                                <Setter Property="Columns" Value="4"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding (controls:Responsive.Breakpoint), RelativeSource={RelativeSource Self}}" Value="Compact">
+                                        <Setter Property="Columns" Value="2"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </UniformGrid.Style>
                         <controls:StatTile Value="{Binding TotalMatches}" Label="TOTAL MATCHES"/>
                         <controls:StatTile Value="{Binding TotalVictories}" Label="VICTORIES"/>
                         <controls:StatTile Value="{Binding WinRate, StringFormat={}{0}%}" Label="WIN RATE"/>

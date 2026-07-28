@@ -62,6 +62,7 @@
     <sys:Double x:Key="Size.TopBar">60</sys:Double>
     <sys:Double x:Key="Size.NavItem">45</sys:Double>
     <sys:Double x:Key="Size.NavRail">200</sys:Double>
+    <sys:Double x:Key="Size.NavRailCompact">150</sys:Double>
     <sys:Double x:Key="Size.NavLogo">160</sys:Double>
     <sys:Double x:Key="Size.NavIndicator">4</sys:Double>
     <sys:Double x:Key="Size.ScrollBar">8</sys:Double>
@@ -91,6 +92,19 @@
 
     <!-- Status dot: the ready/unready pip on a lobby slot. -->
     <sys:Double x:Key="Size.Dot">6</sys:Double>
+
+    <!-- ===================== Breakpoints ===================== -->
+    <!--
+        Width thresholds for Responsive.Breakpoint: below Medium is Compact, at or above
+        Expanded is Expanded, in between is Medium.
+
+        They live here, and get scaled by the UI-scale overlays, because a 1400px window at
+        150% holds proportionally less content than the same window at 100% — a fixed pixel
+        threshold would report Expanded on a window that is visually cramped.
+    -->
+
+    <sys:Double x:Key="Size.Breakpoint.Medium">1400</sys:Double>
+    <sys:Double x:Key="Size.Breakpoint.Expanded">1800</sys:Double>
 
     <!-- ===================== Window ===================== -->
     <!--

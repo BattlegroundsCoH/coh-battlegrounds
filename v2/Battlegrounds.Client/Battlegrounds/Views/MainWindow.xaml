@@ -7,10 +7,12 @@
         xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels"
         xmlns:converters="clr-namespace:Battlegrounds.Converters"
         xmlns:views="clr-namespace:Battlegrounds.Views"
+        xmlns:controls="clr-namespace:Battlegrounds.Controls"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         Background="{StaticResource Brush.Surface.Window}"
         FontFamily="{StaticResource Font.Body}"
         FontSize="{StaticResource Font.Size.Body}"
+        controls:Responsive.IsBreakpointHost="True"
         UseLayoutRounding="True"
         TextOptions.TextFormattingMode="Display"
         mc:Ignorable="d"
@@ -50,7 +52,23 @@
                     scopes RadioButton exclusion to the parent container, so the two StackPanels
                     would otherwise each keep their own checked item.
                 -->
-                <Grid Width="{StaticResource Size.NavRail}">
+                <!--
+                    The rail narrows on a Compact window so the content area keeps its room. The
+                    labels are TrackedTextBlocks and cannot wrap or trim, so Size.NavRailCompact
+                    stays wide enough for "SINGLE PLAYER" at every UI scale rather than relying on
+                    the text to reflow.
+                -->
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Width" Value="{DynamicResource Size.NavRail}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding (controls:Responsive.Breakpoint), RelativeSource={RelativeSource Self}}" Value="Compact">
+                                    <Setter Property="Width" Value="{DynamicResource Size.NavRailCompact}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
