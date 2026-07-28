@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Globalization;
 using System.Reflection;
 
 using Battlegrounds.Extensions;
@@ -121,7 +122,7 @@ public class DictionaryDeserializer {
             return Enum.Parse(targetType, value.ToString() ?? string.Empty, true);
         }
         return value switch {
-            string str => _typeConverters.TryGetValue(targetType, out var converter) ? converter(str) : Convert.ChangeType(str, targetType),
+            string str => _typeConverters.TryGetValue(targetType, out var converter) ? converter(str) : Convert.ChangeType(str, targetType, CultureInfo.InvariantCulture),
             Dictionary<string, object> dict when targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>) =>
                 DeserializeFromDictionary(targetType.GetGenericArguments()[1], dict),
             Dictionary<object, object> dict when targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>) =>
