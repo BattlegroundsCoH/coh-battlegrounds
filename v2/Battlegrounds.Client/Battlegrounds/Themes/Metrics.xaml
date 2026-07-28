@@ -60,9 +60,19 @@
     <sys:Double x:Key="Size.ScrollBar">8</sys:Double>
 
     <!-- ===================== Window ===================== -->
-    <!-- Moved here from the retired Resources/Values.xaml. -->
+    <!--
+        Startup size only — the window is free to grow past it. These were previously
+        DEFAULT_APP_WIDTH/HEIGHT and were bound to MaxWidth/MaxHeight as well as
+        Width/Height, which capped the window at 1720x980 even when maximized.
 
-    <sys:Double x:Key="DEFAULT_APP_WIDTH">1720</sys:Double>
-    <sys:Double x:Key="DEFAULT_APP_HEIGHT">980</sys:Double>
+        The minimums are the floor the layout is designed to survive: below them views
+        clip rather than reflow. MainWindow scales them by the active UI scale, so a
+        150% user gets a proportionally larger floor.
+    -->
+
+    <sys:Double x:Key="Size.Window.DefaultWidth">1720</sys:Double>
+    <sys:Double x:Key="Size.Window.DefaultHeight">980</sys:Double>
+    <sys:Double x:Key="Size.Window.MinWidth">1180</sys:Double>
+    <sys:Double x:Key="Size.Window.MinHeight">720</sys:Double>
 
 </ResourceDictionary>
