@@ -130,22 +130,27 @@
             </Grid>
 
 
-            <!-- Modal Content Area -->
+            <!--
+                Modal Content Area.
+
+                The host bounds the dialog rather than sizing it. It used to set Width="400" and
+                MinHeight="300" on every dialog, which squeezed the company-creation wizard —
+                authored at 800 wide — into a 400px column. Each modal now declares its own
+                MinWidth/MaxWidth and the ScrollViewer keeps a tall one reachable instead of
+                clipping it against the window edge.
+            -->
             <Grid
             Visibility="{Binding HasDialog, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Hidden}"
             Background="{StaticResource Brush.Surface.Scrim}">
-                <ContentPresenter
-                Content="{Binding DialogContent}"
-                Margin="20"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center">
-                    <ContentPresenter.Style>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Width" Value="400"/>
-                            <Setter Property="MinHeight" Value="300"/>
-                        </Style>
-                    </ContentPresenter.Style>
-                </ContentPresenter>
+                <ScrollViewer Style="{StaticResource ScrollViewer.Thin}"
+                              Margin="{DynamicResource Space.Page}"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Auto">
+                    <ContentPresenter
+                        Content="{Binding DialogContent}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+                </ScrollViewer>
             </Grid>
 
         </Grid>

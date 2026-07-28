@@ -8,6 +8,7 @@
                            xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels.Modals"
              mc:Ignorable="d" 
                            d:DataContext="{d:DesignInstance Type=viewmodels:CreateLobbyModalViewModel}"
+                           MinWidth="420" MaxWidth="600"
              d:DesignHeight="450" d:DesignWidth="800">
     <Border Background="{StaticResource Brush.Surface.Card}"
         BorderBrush="{StaticResource Brush.Border.Hairline}"

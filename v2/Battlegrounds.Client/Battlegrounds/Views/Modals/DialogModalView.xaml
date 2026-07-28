@@ -9,6 +9,7 @@
                            xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels.Modals"
              mc:Ignorable="d"               
                            d:DataContext="{d:DesignInstance Type=viewmodels:DialogModalViewModel}"
+                           MinWidth="380" MaxWidth="560" MinHeight="200"
             d:DesignHeight="450" d:DesignWidth="800">
 
     <helpers:DialogUserControl.Resources>

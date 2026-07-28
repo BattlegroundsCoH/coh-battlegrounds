@@ -8,6 +8,7 @@
              xmlns:converters="clr-namespace:Battlegrounds.Converters"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewmodels:FixDoctrineModalViewModel}"
+             MinWidth="480" MaxWidth="680"
              d:DesignHeight="560" d:DesignWidth="560">
 
     <helpers:DialogUserControl.Resources>
