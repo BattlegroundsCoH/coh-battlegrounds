@@ -67,6 +67,35 @@ public sealed class Configuration {
 
     }
 
+    /// <summary>
+    /// The last known position, size and maximised state of the main window.
+    /// </summary>
+    /// <remarks>Stored in device-independent pixels, matching WPF's <see cref="System.Windows.Window.Left"/>
+    /// and friends. Values are only meaningful when <see cref="HasValue"/> is true.
+    ///
+    /// The coordinates are nullable rather than NaN-sentinelled: System.Text.Json refuses to write NaN
+    /// unless JsonNumberHandling.AllowNamedFloatingPointLiterals is set, so a NaN default would throw
+    /// while writing the default config on first run.</remarks>
+    public sealed class WindowPlacementConfiguration {
+
+        public double? Left { get; set; }
+        public double? Top { get; set; }
+        public double? Width { get; set; }
+        public double? Height { get; set; }
+        public bool Maximized { get; set; } = false;
+
+        /// <summary>
+        /// Gets whether a usable placement has been recorded. False on first run.
+        /// </summary>
+        [JsonIgnore]
+        public bool HasValue =>
+            Left is double left && !double.IsNaN(left) && !double.IsInfinity(left)
+            && Top is double top && !double.IsNaN(top) && !double.IsInfinity(top)
+            && Width is double width && !double.IsNaN(width) && !double.IsInfinity(width) && width > 0
+            && Height is double height && !double.IsNaN(height) && !double.IsInfinity(height) && height > 0;
+
+    }
+
     public sealed class LobbySetup(string gameId) {
 
         public sealed record Slot(bool IsLocal, string Faction, string CompanyId, AIDifficulty Difficulty, bool IsHidden, bool IsLocked);
@@ -214,6 +243,14 @@ public sealed class Configuration {
     [ConfigurationSection("General", "General application settings", priority: 0)]
     [ConfigurationProperty("GitHub Repository", "The URL of the GitHub repository for the project. This can be used for reference or to direct users to the source code and issue tracker.", propertyType: ConfigurationPropertyType.String, developerModeOnly: true)]
     public string GithubRepository { get; set; } = "https://github.com/BattlegroundsCoH/coh-battlegrounds";
+
+    /// <summary>
+    /// Gets or sets the last known placement of the main window.
+    /// </summary>
+    /// <remarks>Deliberately carries no <see cref="ConfigurationPropertyAttribute"/>: it is persisted state,
+    /// not something the user edits in Settings. <see cref="WindowPlacement.HasValue"/> is false on first run,
+    /// in which case the window falls back to its default size.</remarks>
+    public WindowPlacementConfiguration WindowPlacement { get; set; } = new WindowPlacementConfiguration();
 
     /// <summary>
     /// Gets or sets the logging level for the application.
