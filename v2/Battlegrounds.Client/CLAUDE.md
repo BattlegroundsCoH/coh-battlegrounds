@@ -19,6 +19,19 @@ dotnet run --project Battlegrounds/Battlegrounds.csproj -- --noplay # run withou
 dotnet run --project Battlegrounds.Cli/Battlegrounds.Cli.csproj     # run bgc-edit, the CLI company-file editor
 ```
 
+**`dotnet run` from this directory cannot load blueprints.** `BlueprintService` resolves
+`Assets/` relative to the working directory, and `dotnet run --project ...` keeps the shell's
+directory rather than the build output. The app starts and logs
+`DirectoryNotFoundException: ...\Battlegrounds.Client\Assets\Factions\CoH3` at
+`BlueprintService.LoadBlueprints`, then dies with an unhandled `KeyNotFoundException` the moment
+you open the Company Editor. To exercise anything blueprint-backed, run the built exe from its
+own output directory:
+
+```bash
+dotnet build
+cd Battlegrounds/bin/Debug/net10.0-windows7.0 && ./Battlegrounds.exe --noplay
+```
+
 ### Tests
 
 - **Unit/component tests** live in `Battlegrounds.Test` (NUnit 4 + NSubstitute). Most run with no external dependencies.
@@ -78,9 +91,13 @@ Rules that are load-bearing, not stylistic:
 - **Every dictionary merges what it references.** A `{StaticResource}` resolves against the
   dictionary itself and its ancestors, *never* against a sibling merged alongside it. Two
   dictionaries merged side by side in `Theme.xaml` cannot see each other's keys.
-- **`{DynamicResource}` inside `Themes/`, `{StaticResource}` inside `Views/`.**
-  `Themes/Generic.xaml` is resolved independently of `Application.Resources`, so a static
-  reference to a token from a control template there would not find it.
+- **`{DynamicResource}` inside `Themes/`, `{StaticResource}` inside `Views/`** — with one
+  exception. `Themes/Generic.xaml` is resolved independently of `Application.Resources`, so a
+  static reference to a token from a control template there would not find it.
+  **The exception: the scale-sensitive tokens — `Font.Size.*`, `Space.*`, `Size.*` — take
+  `{DynamicResource}` everywhere, `Views/` included.** The UI scale swaps their values at
+  runtime and a `{StaticResource}`, resolved once at parse time, cannot follow. Brushes,
+  `Radius.*` and `Stroke.*` keep taking `{StaticResource}` in `Views/`.
 - **Name tokens for their role, never their hue.** The pre-redesign palette named its keys
   `AccentBlue` and `BackgroundDeepBlue`; recolouring the app meant every view was asking for
   "blue" and getting gold. Add a brush when a new *role* appears, not when a view wants a
@@ -116,6 +133,95 @@ look soft:**
   quantises small tracking values away to nothing.
 - `app.manifest` declares `PerMonitorV2`. Without it the process is only system-DPI-aware and
   Windows bitmap-stretches the window on any monitor at a different scale.
+
+**Window sizing.** `Size.Window.DefaultWidth`/`DefaultHeight` (1720×980) are a *starting* size,
+not a cap. They were previously `DEFAULT_APP_WIDTH`/`HEIGHT` and were bound to `MaxWidth`/
+`MaxHeight` as well as `Width`/`Height`, which left the window unable to grow past 1720×980 even
+when maximized — on a large display the app sat as a fixed island. Never bind a window's `Max*`
+to them, and never let a hosted `UserControl` clamp its host (`LoginView` used to). The floor is
+`Size.Window.MinWidth`/`MinHeight` (1180×720): below that views clip rather than reflow.
+
+**UI scale.** `Configuration.UiScale` ("100%"/"110%"/"125%"/"150%") is applied by
+`IUiScaleService`, which merges a `Themes/Scale/Metrics.Scale*.xaml` overlay into
+`Application.Resources` *after* `Theme.xaml`. Merged dictionaries are searched last-to-first, so
+the overlay's values win and every `{DynamicResource}` re-resolves — no restart. `App.xaml` wraps
+`Theme.xaml` in a plain `ResourceDictionary` purely so there is a collection to append to; it is
+still the only theme dictionary.
+
+Two rules for the overlays:
+
+- **Hand-author whole numbers. Never multiply at runtime.** `14 * 1.25 = 17.5` puts glyphs on
+  half-pixels and undoes all three crispness requirements above. This is also why the scale is
+  *not* a `ScaleTransform` on the visual tree, which would have been a tenth of the code.
+- **Only scale-sensitive tokens belong in an overlay.** `Radius.*` and `Stroke.*` are absent on
+  purpose — a hairline stays one physical pixel at every scale. `Track.*` is absent because
+  tracking is in ems and already follows the font size.
+
+A new token that expresses a size must be added to all three overlays, or it silently stops
+scaling. `--gallery` has a scale switcher across the top for checking exactly that.
+
+**Views hold no literal font or icon sizes.** Every `FontSize` in `Views/` is a
+`{DynamicResource Font.Size.*}`, and every square icon is a `Size.Icon.*` step
+(`XS` 16 / `S` 20 / `M` 24 / `L` 32 / `XL` 42 / `XXL` 48 / `Huge` 70, plus `Size.Dot` 6). Snap to
+the nearest step rather than adding one — the views had drifted to fifteen distinct icon sizes
+before the scale existed. `Views/Dev/` is exempt: the gallery's tracking specimens hold `FontSize`
+constant on purpose to isolate the variable being demonstrated.
+
+**Spacing is only partly tokenised, and that is deliberate.** Uniform margins matching a `Space.*`
+value use the token. The ~300 remaining literals are directional gutters (`8,0,0,0`, `0,0,0,6`)
+that the scale does not model, and naming each one would be worse than leaving it. The spacing
+that governs how the UI feels at larger scales — card, button, field and row padding — lives in
+the theme layer and does scale.
+
+**Scaling a container does not scale fixed-coordinate vector art.** `LobbyView`'s download-progress
+donut is authored against a 40x40 box (and `DownloadProgressArcConverter` emits arcs in those
+coordinates), so it sits in a `Viewbox` that scales the design box. Resizing the container alone
+would have left the art drawn at 40px inside it.
+
+**Fluid layout.** Panels take a share of the space with `Min`/`Max` bounds rather than a fixed
+width, so extra width on a large window is shared instead of all landing on one column — e.g.
+`<ColumnDefinition Width="*" MinWidth="300" MaxWidth="440"/>`. Overlay cards
+(`MatchOverView`, `CompanyPreviewView`) are stretched by their host and centre-and-cap
+themselves, which is what lets them grow. Two traps worth knowing:
+
+- **A root `ScrollViewer` is the wrong tool for these pages.** A `ScrollViewer` measures its
+  child with infinity in the scrolling axis, which destroys star sizing in that axis. The page
+  layouts are star-based, so they rely on the window minimums instead, and scrollers go around
+  the *lists inside* panels. `HomeView`/`SettingsView` can have root scrollers because they are
+  `StackPanel`-based.
+- **A `WrapPanel` needs a vertical-only scroller.** Constrained width to wrap, unconstrained
+  height to overflow into — `VerticalScrollBarVisibility="Auto"` plus
+  `HorizontalScrollBarVisibility="Disabled"`.
+
+**Breakpoints.** WPF has no `AdaptiveTrigger`, so `Controls/Responsive.cs` provides one:
+`Responsive.IsBreakpointHost="True"` on a window makes it publish `Responsive.Breakpoint`
+(`Compact` / `Medium` / `Expanded`) as an **inheriting** attached property, which any descendant
+triggers on — the same mechanism `TrackedTextBlock.Tracking` uses. Deliberately not
+`VisualStateManager`; there are none in this codebase and everything else is `DataTrigger`-based.
+
+```xml
+<DataTrigger Binding="{Binding (controls:Responsive.Breakpoint), RelativeSource={RelativeSource Self}}" Value="Compact">
+```
+
+Thresholds are `Size.Breakpoint.*` tokens, so they scale with the UI scale — a 1900px window is
+`Expanded` at 100% but `Compact` at 150%, which is correct: it holds proportionally less. Because
+tokens can move without a resize, `MainWindow` calls `Responsive.Reevaluate()` on a scale change.
+
+**Adaptations must hide, shorten or restack — never assume text reflows.** `TrackedTextBlock`
+cannot wrap or trim, and every heading, label and button caption is one. The nav rail narrows to
+`Size.NavRailCompact` (kept wide enough for "SINGLE PLAYER" at every scale) rather than letting
+the labels clip.
+
+Repeated column tracks (a header plus its row template) use `Grid.IsSharedSizeScope` with
+`SharedSizeGroup` rather than being duplicated by hand; see `MatchOverView`. Square images
+(minimaps) get `Height="{Binding ActualWidth, RelativeSource={RelativeSource Self}}"` instead
+of a fixed height that crops them.
+
+`MainWindow.xaml.cs` restores the last placement from `Configuration.WindowPlacement` before
+`Show`, so `WindowStartupLocation="CenterScreen"` sees the final size when it centres. A saved
+rect that no longer lands on a connected display is rejected in favour of re-centring. The
+coordinates are `double?`, not NaN-sentinelled — `System.Text.Json` throws on NaN unless
+`AllowNamedFloatingPointLiterals` is set, and a NaN default crashes the first-run config write.
 
 `ControlAssist` supplies per-variant hover/pressed brushes and input placeholders so a single
 `ControlTemplate` serves every button variant. It exists because `Setter.Value` cannot be a
