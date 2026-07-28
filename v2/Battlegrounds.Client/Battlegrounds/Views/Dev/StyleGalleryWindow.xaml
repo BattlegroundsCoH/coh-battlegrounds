@@ -12,6 +12,7 @@
         FontSize="{StaticResource Font.Size.Body}"
         UseLayoutRounding="True"
         TextOptions.TextFormattingMode="Display"
+        controls:Responsive.IsBreakpointHost="True"
         Width="1280" Height="960"
         WindowStartupLocation="CenterScreen">
 
@@ -37,8 +38,48 @@
         </Style>
     </Window.Resources>
 
-    <!-- Focused on open so Page Up/Down scroll the gallery without clicking into it first. -->
-    <ScrollViewer x:Name="Scroller"
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--
+            UI scale switcher. The overlay dictionaries only reach {DynamicResource} references,
+            which the theme layer uses throughout but this gallery does not — so switching reopens
+            the window rather than mutating it in place. That also makes it an honest test: what
+            you see is what a fresh app start at that scale renders.
+        -->
+        <Border Grid.Row="0"
+                Background="{StaticResource Brush.Surface.Chrome}"
+                BorderBrush="{StaticResource Brush.Border.Default}"
+                BorderThickness="0,0,0,1"
+                Padding="36,14">
+            <StackPanel Orientation="Horizontal">
+                <controls:TrackedTextBlock Style="{StaticResource Display.Label}"
+                                           Text="UI SCALE"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,16,0" />
+                <Button Content="100%" Tag="100%" Click="OnScaleClicked" Style="{StaticResource Button.Subtle}" Margin="0,0,8,0" />
+                <Button Content="110%" Tag="110%" Click="OnScaleClicked" Style="{StaticResource Button.Subtle}" Margin="0,0,8,0" />
+                <Button Content="125%" Tag="125%" Click="OnScaleClicked" Style="{StaticResource Button.Subtle}" Margin="0,0,8,0" />
+                <Button Content="150%" Tag="150%" Click="OnScaleClicked" Style="{StaticResource Button.Subtle}" Margin="0,0,8,0" />
+                <controls:TrackedTextBlock x:Name="CurrentScaleLabel"
+                                           Style="{StaticResource Display.Label}"
+                                           VerticalAlignment="Center"
+                                           Margin="16,0,0,0" />
+
+                <!-- Live breakpoint readout: resize the window and watch it change. -->
+                <TextBlock Style="{StaticResource Text.Meta}"
+                           VerticalAlignment="Center"
+                           Margin="24,0,0,0"
+                           Text="{Binding (controls:Responsive.Breakpoint), RelativeSource={RelativeSource Self}, StringFormat=BREAKPOINT: {0}}" />
+            </StackPanel>
+        </Border>
+
+        <!-- Focused on open so Page Up/Down scroll the gallery without clicking into it first. -->
+        <ScrollViewer x:Name="Scroller"
+                  Grid.Row="1"
                   Style="{StaticResource ScrollViewer.Thin}"
                   Padding="36,28,28,48"
                   Focusable="True"
@@ -273,5 +314,6 @@
             </StackPanel>
 
         </StackPanel>
-    </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
 </Window>
