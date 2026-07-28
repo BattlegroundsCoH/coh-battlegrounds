@@ -161,9 +161,10 @@
                           Visibility="{Binding HasSelectedLobby, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <StackPanel Margin="14">
 
-                    <!-- Map preview image -->
+                    <!-- Map preview image. Square, tracking its own width — minimaps are square,
+                         so a fixed height cropped them as the panel resized. -->
                     <Border CornerRadius="0"
-                            Height="280"
+                            Height="{Binding ActualWidth, RelativeSource={RelativeSource Self}}"
                             Margin="0,0,0,14"
                             ClipToBounds="True"
                             Background="{StaticResource Brush.Surface.Card}">

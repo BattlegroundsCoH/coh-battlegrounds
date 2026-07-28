@@ -93,13 +93,17 @@
 
     </UserControl.Resources>
 
+    <!-- Bounded, not fixed — see the note on MatchOverView's root Border. -->
     <Border Background="{StaticResource Brush.Surface.Sunken}"
             BorderBrush="{StaticResource Brush.Border.Hairline}"
             BorderThickness="1"
             CornerRadius="0"
-            Width="820"
-            MaxHeight="550">
-        <Grid Margin="20">
+            MinWidth="760"
+            MaxWidth="1180"
+            MaxHeight="860"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+        <Grid Margin="{DynamicResource Space.XL}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>

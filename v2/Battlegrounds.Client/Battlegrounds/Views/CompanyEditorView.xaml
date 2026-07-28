@@ -849,11 +849,15 @@
         <!-- Main Content Area -->
         <Grid Grid.Row="1">
 
+            <!--
+                The sidebar takes a share of the width rather than a flat 330, so extra width on a
+                large window is split with the unit grid instead of all landing on the left.
+            -->
             <Grid.ColumnDefinitions>
                 <!-- Main Content -->
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
                 <!-- Right sidebar-->
-                <ColumnDefinition Width="330"/>
+                <ColumnDefinition Width="*" MinWidth="330" MaxWidth="480"/>
 
             </Grid.ColumnDefinitions>
 
@@ -905,35 +909,53 @@
 
                     </TabControl.Resources>
 
+                    <!--
+                        Each tab scrolls vertically. A WrapPanel needs a constrained width to wrap
+                        at all and an unconstrained height to overflow into, which is exactly what
+                        a vertical-only ScrollViewer gives it. Without these the rows past the
+                        bottom of the tab were simply clipped and unreachable.
+                    -->
                     <TabItem Header="Infantry">
-                        <ItemsControl ItemsSource="{Binding AvailableInfantryUnits}"
-                            ItemTemplate="{StaticResource AvailableUnitTemplate}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
+                        <ScrollViewer Style="{StaticResource ScrollViewer.Thin}"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <ItemsControl ItemsSource="{Binding AvailableInfantryUnits}"
+                                ItemTemplate="{StaticResource AvailableUnitTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </TabItem>
                     <TabItem Header="Support">
-                        <ItemsControl ItemsSource="{Binding AvailableSupportUnits}"
-                            ItemTemplate="{StaticResource AvailableUnitTemplate}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
+                        <ScrollViewer Style="{StaticResource ScrollViewer.Thin}"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <ItemsControl ItemsSource="{Binding AvailableSupportUnits}"
+                                ItemTemplate="{StaticResource AvailableUnitTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </TabItem>
                     <TabItem Header="Armour">
-                        <ItemsControl ItemsSource="{Binding AvailableArmourUnits}"
-                            ItemTemplate="{StaticResource AvailableUnitTemplate}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
+                        <ScrollViewer Style="{StaticResource ScrollViewer.Thin}"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <ItemsControl ItemsSource="{Binding AvailableArmourUnits}"
+                                ItemTemplate="{StaticResource AvailableUnitTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </TabItem>
                     <TabItem Visibility="{Binding HasCapturedItems, Converter={StaticResource BooleanToVisibility}}">
                         <TabItem.Header>
@@ -950,14 +972,18 @@
                                     Foreground="{StaticResource Brush.Status.Caution}"/>
                             </StackPanel>
                         </TabItem.Header>
-                        <ItemsControl ItemsSource="{Binding AvailableCapturedItems}"
-                            ItemTemplate="{StaticResource CapturedItemTemplate}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
+                        <ScrollViewer Style="{StaticResource ScrollViewer.Thin}"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <ItemsControl ItemsSource="{Binding AvailableCapturedItems}"
+                                ItemTemplate="{StaticResource CapturedItemTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </TabItem>
                 </TabControl>
 

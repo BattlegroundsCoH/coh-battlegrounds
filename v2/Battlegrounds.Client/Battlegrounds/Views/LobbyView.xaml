@@ -646,16 +646,22 @@
 
         <!-- Main Content Area -->
         <Grid Grid.Row="1">
+            <!--
+                The right panel takes a share of the width rather than a flat 300, so on a wide
+                window it grows with the teams area instead of leaving all the extra space to
+                the left. Min/Max keep the match settings legible without letting the panel
+                swallow the lobby.
+            -->
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>    <!-- Teams Area -->
-                <ColumnDefinition Width="300"/>  <!-- Right Panel -->
+                <ColumnDefinition Width="3*"/>                          <!-- Teams Area -->
+                <ColumnDefinition Width="*" MinWidth="300" MaxWidth="440"/>  <!-- Right Panel -->
             </Grid.ColumnDefinitions>
 
             <!-- Left Side - Teams and Chat -->
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>    <!-- Teams -->
-                    <RowDefinition Height="250"/>  <!-- Chat -->
+                    <RowDefinition Height="2*"/>                          <!-- Teams -->
+                    <RowDefinition Height="*" MinHeight="200" MaxHeight="360"/>  <!-- Chat -->
                 </Grid.RowDefinitions>
 
                 <!-- Teams Section -->
@@ -783,16 +789,20 @@
                 <Grid Margin="15">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="240"/> <!-- Map Preview -->
-                        <RowDefinition Height="*"/>   <!-- Settings -->
+                        <RowDefinition Height="Auto"/> <!-- Map Preview, sized square below -->
+                        <RowDefinition Height="*"/>    <!-- Settings -->
                     </Grid.RowDefinitions>
 
                                         <controls:TrackedTextBlock Text="MATCH SETTINGS"
                              Style="{StaticResource Display.Section}"
                              Margin="0,0,0,15"/>
 
-                    <!-- Map Preview -->
-                                        <Border Grid.Row="1"
+                    <!--
+                        Map Preview. Minimaps are square, so the container tracks its own width to
+                        stay square as the panel resizes — a fixed 240 height cropped them.
+                    -->
+                    <Border Grid.Row="1"
+                            Height="{Binding ActualWidth, RelativeSource={RelativeSource Self}}"
                             Background="{StaticResource Brush.Surface.Sunken}"
                             BorderBrush="{StaticResource Brush.Border.AccentSoft}"
                             BorderThickness="1">
@@ -895,8 +905,9 @@
                     <Grid>
                         <!-- Semi-transparent backdrop -->
                         <Rectangle Fill="{StaticResource Brush.Surface.Scrim}"/>
-                        <!-- Centred results card -->
-                        <local:MatchOverView HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <!-- Stretched, not centred: the card centres and caps itself, so stretching
+                             here is what lets it grow with the window instead of staying 760 wide. -->
+                        <local:MatchOverView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="40"/>
                     </Grid>
                 </DataTemplate>
             </ContentControl.ContentTemplate>
@@ -912,8 +923,8 @@
                     <Grid>
                         <!-- Semi-transparent backdrop -->
                         <Rectangle Fill="{StaticResource Brush.Surface.Scrim}"/>
-                        <!-- Centred preview card -->
-                        <local:CompanyPreviewView HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <!-- Stretched, not centred — see the MatchOverView overlay above. -->
+                        <local:CompanyPreviewView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="40"/>
                     </Grid>
                 </DataTemplate>
             </ContentControl.ContentTemplate>

@@ -19,12 +19,21 @@
         <converters:BlueprintIconMultiBindingConverter x:Key="BlueprintIconMultiConverter"/>
     </UserControl.Resources>
 
-    <Border Width="760"
-            MaxHeight="620"
+    <!--
+        Bounded, not fixed. This was Width="760" MaxHeight="620", which on a maximized window
+        left the results card occupying under half the width while a 20-squad company scrolled
+        through a 260px sliver. The host stretches this control now, so the card grows with the
+        window up to MaxWidth and shrinks with it down to MinWidth.
+    -->
+    <Border MinWidth="700"
+            MaxWidth="1180"
+            MaxHeight="900"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
             Background="{StaticResource Brush.Surface.Raised}"
             BorderBrush="{StaticResource Brush.Border.Strong}"
             BorderThickness="1">
-        <Grid Margin="30,24,30,24">
+        <Grid Margin="30,24,30,24" Grid.IsSharedSizeScope="True">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/> <!-- Outcome banner -->
                 <RowDefinition Height="Auto"/> <!-- Metadata row -->
@@ -94,16 +103,23 @@
                            Foreground="{StaticResource Brush.Status.DangerText}"/>
             </Border>
 
-            <!-- Squad Table Header -->
+            <!--
+                Squad Table Header.
+
+                The header and the row template below declare the same seven tracks. They are
+                bound together by SharedSizeGroup (scope is on the Grid at the top of this file)
+                so the two stay aligned without anyone remembering to edit both — the fixed
+                100/64/110 used to be duplicated by hand.
+            -->
             <Grid Grid.Row="3" Margin="0,0,0,6">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="Auto" MinWidth="100" SharedSizeGroup="MatchOver.Squad"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="64"/>
-                    <ColumnDefinition Width="110"/>
+                    <ColumnDefinition Width="Auto" MinWidth="64" SharedSizeGroup="MatchOver.Status"/>
+                    <ColumnDefinition Width="Auto" MinWidth="110" SharedSizeGroup="MatchOver.Pickup"/>
                 </Grid.ColumnDefinitions>
                 <controls:TrackedTextBlock Text="SQUAD" Grid.Column="0" Style="{StaticResource Display.Label}" FontSize="{DynamicResource Font.Size.Meta}" Tracking="{StaticResource Track.Wide}" Margin="8,0,0,0"/>
                 <controls:TrackedTextBlock Text="INF. KILLS" Grid.Column="1" Style="{StaticResource Display.Label}" FontSize="{DynamicResource Font.Size.Meta}" Tracking="{StaticResource Track.Wide}"/>
@@ -115,11 +131,12 @@
             </Grid>
 
             <!-- Squad Rows -->
+            <!-- No MaxHeight: row 4 is the '*' row, so the list already takes whatever the card's
+                 MaxHeight leaves over and scrolls inside that. -->
             <ScrollViewer Grid.Row="4"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled"
-                          Style="{StaticResource ScrollViewer.Thin}"
-                          MaxHeight="260">
+                          Style="{StaticResource ScrollViewer.Thin}">
                 <ItemsControl ItemsSource="{Binding SquadSummaries}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -131,13 +148,13 @@
                                     CornerRadius="0">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="Auto" MinWidth="100" SharedSizeGroup="MatchOver.Squad"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="64"/>
-                                        <ColumnDefinition Width="110"/>
+                                        <ColumnDefinition Width="Auto" MinWidth="64" SharedSizeGroup="MatchOver.Status"/>
+                                        <ColumnDefinition Width="Auto" MinWidth="110" SharedSizeGroup="MatchOver.Pickup"/>
                                     </Grid.ColumnDefinitions>
 
                                     <StackPanel 

@@ -22,16 +22,20 @@
     </UserControl.Resources>
 
     <Grid>
+        <!--
+            The form takes a share of the width rather than a fixed 560. Min/Max keep it
+            readable: it never gets narrower than the fields need, and never stretches into a
+            full-width band of whitespace on an ultrawide display. The artwork takes the rest.
+        -->
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*" MinWidth="480" MaxWidth="720"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
         <!-- ===================== Form ===================== -->
 
         <ScrollViewer Grid.Column="0"
-                      Style="{StaticResource ScrollViewer.Thin}"
-                      Width="560">
+                      Style="{StaticResource ScrollViewer.Thin}">
             <StackPanel VerticalAlignment="Center" Margin="64,48">
 
                 <controls:Eyebrow Text="ACCESS" Margin="0,0,0,22"/>

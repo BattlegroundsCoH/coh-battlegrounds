@@ -199,9 +199,10 @@
 
         <!-- Main Content: Lobby list + Preview panel -->
         <Grid Grid.Row="1">
+            <!-- Preview panel shares the extra width rather than pinning at 320. -->
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="320"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*" MinWidth="320" MaxWidth="460"/>
             </Grid.ColumnDefinitions>
 
             <!-- Lobby List -->
