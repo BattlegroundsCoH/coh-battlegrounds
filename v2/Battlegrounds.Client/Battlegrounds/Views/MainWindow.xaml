@@ -38,7 +38,7 @@
         <Grid Visibility="{Binding UserViewModel.IsAuthenticated, Converter={StaticResource BooleanToVisibilityConverter}}">
 
             <!-- Main Content Area -->
-            <Grid Margin="20" Visibility="{Binding HasMainContent, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+            <Grid Margin="{DynamicResource Space.XL}" Visibility="{Binding HasMainContent, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -59,7 +59,7 @@
 
                     <Image Grid.Row="0"
                            Source="pack://application:,,,/Battlegrounds;component/Assets/BattlegroundsLogo.png"
-                           Width="160"
+                           MaxWidth="{DynamicResource Size.NavLogo}"
                            Stretch="Uniform"
                            HorizontalAlignment="Left"
                            Margin="16,4,16,28"
@@ -101,7 +101,7 @@
                 </ContentPresenter>
             </Grid>
 
-            <Grid Margin="20" Visibility="{Binding HasMainContent, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid Margin="{DynamicResource Space.XL}" Visibility="{Binding HasMainContent, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <ContentPresenter>
                     <ContentPresenter.Style>
                         <Style TargetType="ContentPresenter">

@@ -43,7 +43,7 @@
                 Background="{StaticResource Brush.Surface.Raised}"
                 BorderBrush="{StaticResource Brush.Border.Hairline}"
                 BorderThickness="1"
-                Padding="16">
+                Padding="{DynamicResource Space.L}">
             <Grid>
                 <TreeView x:Name="CompanySelectionTreeView"
                           MouseDoubleClick="CompanySelectionTreeView_MouseDoubleClick"
@@ -83,7 +83,7 @@
 
                                                     <ToggleButton x:Name="Expander"
                                                                   Grid.Column="0"
-                                                                  Width="16" Height="16"
+                                                                  Width="{DynamicResource Size.Icon.XS}" Height="{DynamicResource Size.Icon.XS}"
                                                                   Cursor="Hand"
                                                                   IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
                                                                   Visibility="{Binding HasItems, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibility}}">
@@ -137,7 +137,7 @@
                                                            VerticalAlignment="Center"
                                                            Text="{Binding GameType, Converter={StaticResource GameIdToGameNameConverter}}"/>
                                 <TextBlock Style="{StaticResource Text.Meta}"
-                                           FontSize="13"
+                                           FontSize="{DynamicResource Font.Size.BodySmall}"
                                            VerticalAlignment="Center"
                                            Margin="10,0,0,0"
                                            Text="{Binding CompanyCount}"/>
@@ -159,12 +159,12 @@
                                             </Grid.ColumnDefinitions>
 
                                             <Border Grid.Column="0"
-                                                    Width="28" Height="28"
+                                                    Width="{DynamicResource Size.Icon.M}" Height="{DynamicResource Size.Icon.M}"
                                                     Margin="0,0,12,0"
                                                     Background="{StaticResource Brush.Faction.Axis}"
                                                     BorderBrush="{StaticResource Brush.Border.Default}"
                                                     BorderThickness="1">
-                                                <Image Width="18" Height="18">
+                                                <Image Width="{DynamicResource Size.Icon.XS}" Height="{DynamicResource Size.Icon.XS}">
                                                     <Image.Source>
                                                         <MultiBinding Converter="{StaticResource FactionIconMultiBindingConverter}">
                                                             <Binding Path="Faction"/>
@@ -183,7 +183,7 @@
                                             <Button Grid.Column="2"
                                                     Style="{StaticResource Button.Primary}"
                                                     Content="EDIT"
-                                                    FontSize="11"
+                                                    FontSize="{DynamicResource Font.Size.Meta}"
                                                     Padding="14,5"
                                                     Margin="8,0,8,0"
                                                     Command="{Binding DataContext.EditCompanyCommand,
@@ -194,7 +194,7 @@
                                             <Button Grid.Column="3"
                                                     Style="{StaticResource Button.Danger}"
                                                     Content="DELETE"
-                                                    FontSize="11"
+                                                    FontSize="{DynamicResource Font.Size.Meta}"
                                                     Padding="14,5"
                                                     Command="{Binding DataContext.DeleteCompanyCommand,
                                                               RelativeSource={RelativeSource FindAncestor,
@@ -230,7 +230,7 @@
                 Padding="16,10"
                 Margin="0,14,0,0">
             <TextBlock Style="{StaticResource Text.Meta}"
-                       FontSize="12"
+                       FontSize="{DynamicResource Font.Size.Eyebrow}"
                        Text="{Binding StatusMessage}"/>
         </Border>
     </Grid>

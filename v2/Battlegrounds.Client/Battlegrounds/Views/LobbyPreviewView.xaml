@@ -31,7 +31,7 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Faction icon when slot is occupied -->
-                    <Image Width="28" Height="28"
+                    <Image Width="{DynamicResource Size.Icon.M}" Height="{DynamicResource Size.Icon.M}"
                            VerticalAlignment="Center"
                            Visibility="{Binding IsOccupied, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <Image.Source>
@@ -44,7 +44,7 @@
 
                     <!-- Lock icon when slot is locked and unoccupied -->
                     <TextBlock Text="🔒"
-                               FontSize="14"
+                               FontSize="{DynamicResource Font.Size.Body}"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Center"
                                Visibility="{Binding IsLocked, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -63,7 +63,7 @@
                     <StackPanel Grid.Column="1"
                                 VerticalAlignment="Center"
                                 Margin="4,0,0,0">
-                        <TextBlock FontSize="14">
+                        <TextBlock FontSize="{DynamicResource Font.Size.Body}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Style.Triggers>
@@ -81,7 +81,7 @@
                         </TextBlock>
                         
                         <TextBlock 
-                               FontSize="12">
+                               FontSize="{DynamicResource Font.Size.Eyebrow}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Text" Value="Open"/>
@@ -96,7 +96,9 @@
                                                     </MultiBinding>
                                                 </Setter.Value>
                                             </Setter>
-                                            <Setter Property="FontSize" Value="8"/>
+                                            <!-- Was a literal 8, below Font.Size.Label (10), the smallest step the
+                                 type scale defines. Raised to the floor so it scales with the rest. -->
+                            <Setter Property="FontSize" Value="{DynamicResource Font.Size.Label}"/>
                                             <Setter Property="FontStyle" Value="Oblique"/>
                                             <Setter Property="Foreground" Value="{StaticResource Brush.Text.Dim}"/>
                                         </DataTrigger>
@@ -123,11 +125,11 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="{Binding Name}"
                            Foreground="{StaticResource Brush.Text.Dim}"
-                           FontSize="12"/>
+                           FontSize="{DynamicResource Font.Size.Eyebrow}"/>
                 <TextBlock Grid.Column="1"
                            Text="{Binding Value}"
                            Foreground="{StaticResource Brush.Accent.Gold}"
-                           FontSize="12"
+                           FontSize="{DynamicResource Font.Size.Eyebrow}"
                            FontWeight="SemiBold"/>
             </Grid>
         </DataTemplate>
@@ -144,12 +146,12 @@
                         HorizontalAlignment="Center"
                         Visibility="{Binding HasSelectedLobby, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
                 <TextBlock Text="📋"
-                           FontSize="40"
+                           FontSize="{DynamicResource Font.Size.Display}"
                            HorizontalAlignment="Center"
                            Margin="0,0,0,12"/>
                 <TextBlock Text="Select a lobby"
                            Foreground="{StaticResource Brush.Text.Dim}"
-                           FontSize="14"
+                           FontSize="{DynamicResource Font.Size.Body}"
                            HorizontalAlignment="Center"/>
             </StackPanel>
 
@@ -172,26 +174,26 @@
                     <!-- Lobby name and host -->
                     <TextBlock Text="{Binding SelectedLobby.Name}"
                                Foreground="{StaticResource Brush.Text.Primary}"
-                               FontSize="16"
+                               FontSize="{DynamicResource Font.Size.Section}"
                                FontWeight="Bold"
                                TextTrimming="CharacterEllipsis"/>
 
                     <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
                         <TextBlock Text="Host: "
                                    Foreground="{StaticResource Brush.Text.Dim}"
-                                   FontSize="12"/>
+                                   FontSize="{DynamicResource Font.Size.Eyebrow}"/>
                         <TextBlock Text="{Binding SelectedLobby.Host}"
                                    Foreground="{StaticResource Brush.Accent.Gold}"
-                                   FontSize="12"
+                                   FontSize="{DynamicResource Font.Size.Eyebrow}"
                                    FontWeight="SemiBold"/>
                         <TextBlock Text=" · "
                                    Foreground="{StaticResource Brush.Text.Dim}"
-                                   FontSize="12"/>
+                                   FontSize="{DynamicResource Font.Size.Eyebrow}"/>
                         <TextBlock Text="{Binding SelectedLobby.Players, StringFormat='{}{0} players'}"
                                    Foreground="{StaticResource Brush.Text.Dim}"
-                                   FontSize="12"/>
+                                   FontSize="{DynamicResource Font.Size.Eyebrow}"/>
                         <TextBlock Text=" · 🔒"
-                                   FontSize="12"
+                                   FontSize="{DynamicResource Font.Size.Eyebrow}"
                                    Foreground="{StaticResource Brush.Text.Dim}"
                                    Visibility="{Binding SelectedLobby.IsPasswordProtected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </StackPanel>
@@ -202,7 +204,7 @@
                     <!-- Team composition -->
                     <TextBlock Text="TEAM COMPOSITION"
                                Foreground="{StaticResource Brush.Text.Dim}"
-                               FontSize="11"
+                               FontSize="{DynamicResource Font.Size.Meta}"
                                FontWeight="SemiBold"
                                Margin="0,0,0,8"/>
 
@@ -217,7 +219,7 @@
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="TEAM 1"
                                        Foreground="{StaticResource Brush.Accent.Gold}"
-                                       FontSize="11"
+                                       FontSize="{DynamicResource Font.Size.Meta}"
                                        FontWeight="Bold"
                                        Margin="0,0,0,6"/>
                             <!-- Slots when available -->
@@ -227,7 +229,7 @@
                             <!-- Fallback when no slot data available -->
                             <TextBlock Text="No slot data"
                                        Foreground="{StaticResource Brush.Text.Dim}"
-                                       FontSize="12">
+                                       FontSize="{DynamicResource Font.Size.Eyebrow}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -245,7 +247,7 @@
                         <StackPanel Grid.Column="2">
                             <TextBlock Text="TEAM 2"
                                        Foreground="{StaticResource Brush.Status.Danger}"
-                                       FontSize="11"
+                                       FontSize="{DynamicResource Font.Size.Meta}"
                                        FontWeight="Bold"
                                        Margin="0,0,0,6"/>
                             <ItemsControl ItemsSource="{Binding SelectedLobby.Team2Slots}"
@@ -254,7 +256,7 @@
                             <!-- Fallback when no slot data available -->
                             <TextBlock Text="No slot data"
                                        Foreground="{StaticResource Brush.Text.Dim}"
-                                       FontSize="12">
+                                       FontSize="{DynamicResource Font.Size.Eyebrow}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -275,7 +277,7 @@
                     <!-- Lobby settings -->
                     <TextBlock Text="SETTINGS"
                                Foreground="{StaticResource Brush.Text.Dim}"
-                               FontSize="11"
+                               FontSize="{DynamicResource Font.Size.Meta}"
                                FontWeight="SemiBold"
                                Margin="0,0,0,8"/>
 
@@ -287,10 +289,10 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Map"
                                    Foreground="{StaticResource Brush.Text.Dim}"
-                                   FontSize="12"/>
+                                   FontSize="{DynamicResource Font.Size.Eyebrow}"/>
                         <TextBlock Grid.Column="1"
                                    Foreground="{StaticResource Brush.Accent.Gold}"
-                                   FontSize="12"
+                                   FontSize="{DynamicResource Font.Size.Eyebrow}"
                                    FontWeight="SemiBold">
                             <TextBlock.Text>
                                 <MultiBinding Converter="{StaticResource ScenarioIdToNameConverter}">
@@ -307,11 +309,11 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Game Mode"
                                    Foreground="{StaticResource Brush.Text.Dim}"
-                                   FontSize="12"/>
+                                   FontSize="{DynamicResource Font.Size.Eyebrow}"/>
                         <TextBlock Grid.Column="1"
                                    Text="{Binding SelectedLobby.GameMode}"
                                    Foreground="{StaticResource Brush.Accent.Gold}"
-                                   FontSize="12"
+                                   FontSize="{DynamicResource Font.Size.Eyebrow}"
                                    FontWeight="SemiBold"/>
                     </Grid>
 
@@ -325,19 +327,19 @@
                             Command="{Binding JoinLobbyCommand}"
                             IsEnabled="{Binding SelectedLobby.CanJoin}"
                             Height="40"
-                            FontSize="14"
+                            FontSize="{DynamicResource Font.Size.Body}"
                             Margin="0,16,0,0"/>
 
                     <TextBlock Text="🔒  Password required"
                                Foreground="{StaticResource Brush.Text.Dim}"
-                               FontSize="11"
+                               FontSize="{DynamicResource Font.Size.Meta}"
                                HorizontalAlignment="Center"
                                Margin="0,6,0,0"
                                Visibility="{Binding SelectedLobby.IsPasswordProtected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                     <TextBlock Text="Lobby is full"
                                Foreground="{StaticResource Brush.Status.DangerText}"
-                               FontSize="11"
+                               FontSize="{DynamicResource Font.Size.Meta}"
                                HorizontalAlignment="Center"
                                Margin="0,6,0,0">
                         <TextBlock.Style>

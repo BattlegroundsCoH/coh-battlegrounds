@@ -105,13 +105,13 @@
                     <ColumnDefinition Width="64"/>
                     <ColumnDefinition Width="110"/>
                 </Grid.ColumnDefinitions>
-                <controls:TrackedTextBlock Text="SQUAD" Grid.Column="0" Style="{StaticResource Display.Label}" FontSize="11" Tracking="{StaticResource Track.Wide}" Margin="8,0,0,0"/>
-                <controls:TrackedTextBlock Text="INF. KILLS" Grid.Column="1" Style="{StaticResource Display.Label}" FontSize="11" Tracking="{StaticResource Track.Wide}"/>
-                <controls:TrackedTextBlock Text="VEH. KILLS" Grid.Column="2" Style="{StaticResource Display.Label}" FontSize="11" Tracking="{StaticResource Track.Wide}"/>
-                <controls:TrackedTextBlock Text="LOSSES" Grid.Column="3" Style="{StaticResource Display.Label}" FontSize="11" Tracking="{StaticResource Track.Wide}"/>
-                <controls:TrackedTextBlock Text="XP" Grid.Column="4" Style="{StaticResource Display.Label}" FontSize="11" Tracking="{StaticResource Track.Wide}"/>
-                <controls:TrackedTextBlock Text="STATUS" Grid.Column="5" Style="{StaticResource Display.Label}" FontSize="11" Tracking="{StaticResource Track.Wide}"/>
-                <controls:TrackedTextBlock Text="PICKUP" Grid.Column="6" Style="{StaticResource Display.Label}" FontSize="11" Tracking="{StaticResource Track.Wide}"/>
+                <controls:TrackedTextBlock Text="SQUAD" Grid.Column="0" Style="{StaticResource Display.Label}" FontSize="{DynamicResource Font.Size.Meta}" Tracking="{StaticResource Track.Wide}" Margin="8,0,0,0"/>
+                <controls:TrackedTextBlock Text="INF. KILLS" Grid.Column="1" Style="{StaticResource Display.Label}" FontSize="{DynamicResource Font.Size.Meta}" Tracking="{StaticResource Track.Wide}"/>
+                <controls:TrackedTextBlock Text="VEH. KILLS" Grid.Column="2" Style="{StaticResource Display.Label}" FontSize="{DynamicResource Font.Size.Meta}" Tracking="{StaticResource Track.Wide}"/>
+                <controls:TrackedTextBlock Text="LOSSES" Grid.Column="3" Style="{StaticResource Display.Label}" FontSize="{DynamicResource Font.Size.Meta}" Tracking="{StaticResource Track.Wide}"/>
+                <controls:TrackedTextBlock Text="XP" Grid.Column="4" Style="{StaticResource Display.Label}" FontSize="{DynamicResource Font.Size.Meta}" Tracking="{StaticResource Track.Wide}"/>
+                <controls:TrackedTextBlock Text="STATUS" Grid.Column="5" Style="{StaticResource Display.Label}" FontSize="{DynamicResource Font.Size.Meta}" Tracking="{StaticResource Track.Wide}"/>
+                <controls:TrackedTextBlock Text="PICKUP" Grid.Column="6" Style="{StaticResource Display.Label}" FontSize="{DynamicResource Font.Size.Meta}" Tracking="{StaticResource Track.Wide}"/>
             </Grid>
 
             <!-- Squad Rows -->
@@ -145,7 +145,7 @@
                                         Grid.Column="0"
                                                Margin="8,0,0,0">
 
-                                        <Image Width="32" Height="32"
+                                        <Image Width="{DynamicResource Size.Icon.L}" Height="{DynamicResource Size.Icon.L}"
                                                VerticalAlignment="Center">
                                             <Image.Source>
                                                 <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">

@@ -20,11 +20,11 @@
                 <TextBlock Text="{Binding Name}"
                            Foreground="{StaticResource Brush.Text.Primary}"
                            FontWeight="SemiBold"
-                           FontSize="13"
+                           FontSize="{DynamicResource Font.Size.BodySmall}"
                            Margin="0,0,0,2"/>
                 <TextBlock Text="{Binding Description}"
                            Foreground="{StaticResource Brush.Text.Dim}"
-                           FontSize="11"
+                           FontSize="{DynamicResource Font.Size.Meta}"
                            TextWrapping="Wrap"
                            Margin="0,0,0,6"
                            Visibility="{Binding Description, Converter={StaticResource NullToCollapsed}}"/>
@@ -35,7 +35,7 @@
                          BorderBrush="{StaticResource Brush.Surface.Hover}"
                          BorderThickness="1"
                          Padding="8,6"
-                         FontSize="13"
+                         FontSize="{DynamicResource Font.Size.BodySmall}"
                          ToolTip="{Binding Tooltip}"/>
             </StackPanel>
         </DataTemplate>
@@ -46,11 +46,11 @@
                 <TextBlock Text="{Binding Name}"
                            Foreground="{StaticResource Brush.Text.Primary}"
                            FontWeight="SemiBold"
-                           FontSize="13"
+                           FontSize="{DynamicResource Font.Size.BodySmall}"
                            Margin="0,0,0,2"/>
                 <TextBlock Text="{Binding Description}"
                            Foreground="{StaticResource Brush.Text.Dim}"
-                           FontSize="11"
+                           FontSize="{DynamicResource Font.Size.Meta}"
                            TextWrapping="Wrap"
                            Margin="0,0,0,6"
                            Visibility="{Binding Description, Converter={StaticResource NullToCollapsed}}"/>
@@ -61,7 +61,7 @@
                          BorderBrush="{StaticResource Brush.Surface.Hover}"
                          BorderThickness="1"
                          Padding="8,6"
-                         FontSize="13"
+                         FontSize="{DynamicResource Font.Size.BodySmall}"
                          MinWidth="200"
                          MaxWidth="300"
                          HorizontalAlignment="Left"
@@ -74,17 +74,17 @@
             <StackPanel Margin="0,0,0,12">
                 <CheckBox IsChecked="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
                           Foreground="{StaticResource Brush.Text.Primary}"
-                          FontSize="13"
+                          FontSize="{DynamicResource Font.Size.BodySmall}"
                           ToolTip="{Binding Tooltip}">
                     <CheckBox.Content>
                         <StackPanel>
                             <TextBlock Text="{Binding Name}"
                                        Foreground="{StaticResource Brush.Text.Primary}"
                                        FontWeight="SemiBold"
-                                       FontSize="13"/>
+                                       FontSize="{DynamicResource Font.Size.BodySmall}"/>
                             <TextBlock Text="{Binding Description}"
                                        Foreground="{StaticResource Brush.Text.Dim}"
-                                       FontSize="11"
+                                       FontSize="{DynamicResource Font.Size.Meta}"
                                        TextWrapping="Wrap"
                                        Margin="0,2,0,0"
                                        Visibility="{Binding Description, Converter={StaticResource NullToCollapsed}}"/>
@@ -100,11 +100,11 @@
                 <TextBlock Text="{Binding Name}"
                            Foreground="{StaticResource Brush.Text.Primary}"
                            FontWeight="SemiBold"
-                           FontSize="13"
+                           FontSize="{DynamicResource Font.Size.BodySmall}"
                            Margin="0,0,0,2"/>
                 <TextBlock Text="{Binding Description}"
                            Foreground="{StaticResource Brush.Text.Dim}"
-                           FontSize="11"
+                           FontSize="{DynamicResource Font.Size.Meta}"
                            TextWrapping="Wrap"
                            Margin="0,0,0,6"
                            Visibility="{Binding Description, Converter={StaticResource NullToCollapsed}}"/>
@@ -115,7 +115,7 @@
                          BorderBrush="{StaticResource Brush.Surface.Hover}"
                          BorderThickness="1"
                          Padding="8,6"
-                         FontSize="13"
+                         FontSize="{DynamicResource Font.Size.BodySmall}"
                          ToolTip="{Binding Tooltip}"/>
             </StackPanel>
         </DataTemplate>
@@ -126,11 +126,11 @@
                 <TextBlock Text="{Binding Name}"
                            Foreground="{StaticResource Brush.Text.Primary}"
                            FontWeight="SemiBold"
-                           FontSize="13"
+                           FontSize="{DynamicResource Font.Size.BodySmall}"
                            Margin="0,0,0,2"/>
                 <TextBlock Text="{Binding Description}"
                            Foreground="{StaticResource Brush.Text.Dim}"
-                           FontSize="11"
+                           FontSize="{DynamicResource Font.Size.Meta}"
                            TextWrapping="Wrap"
                            Margin="0,0,0,6"
                            Visibility="{Binding Description, Converter={StaticResource NullToCollapsed}}"/>
@@ -141,7 +141,7 @@
                          BorderBrush="{StaticResource Brush.Surface.Hover}"
                          BorderThickness="1"
                          Padding="8,6"
-                         FontSize="13"
+                         FontSize="{DynamicResource Font.Size.BodySmall}"
                          ToolTip="{Binding Tooltip}"/>
             </StackPanel>
         </DataTemplate>
@@ -152,11 +152,11 @@
                 <TextBlock Text="{Binding Name}"
                            Foreground="{StaticResource Brush.Text.Primary}"
                            FontWeight="SemiBold"
-                           FontSize="13"
+                           FontSize="{DynamicResource Font.Size.BodySmall}"
                            Margin="0,0,0,2"/>
                 <TextBlock Text="{Binding Description}"
                            Foreground="{StaticResource Brush.Text.Dim}"
-                           FontSize="11"
+                           FontSize="{DynamicResource Font.Size.Meta}"
                            TextWrapping="Wrap"
                            Margin="0,0,0,6"
                            Visibility="{Binding Description, Converter={StaticResource NullToCollapsed}}"/>
@@ -168,7 +168,7 @@
                           BorderBrush="{StaticResource Brush.Surface.Hover}"
                           BorderThickness="1"
                           Padding="8,6"
-                          FontSize="13"
+                          FontSize="{DynamicResource Font.Size.BodySmall}"
                           MinWidth="200"
                           MaxWidth="300"
                           HorizontalAlignment="Left"
@@ -207,7 +207,7 @@
                            Margin="16,16,16,8"
                            Text="Settings"
                            Foreground="{StaticResource Brush.Text.Primary}"
-                           FontSize="24"
+                           FontSize="{DynamicResource Font.Size.PageTitle}"
                            FontWeight="SemiBold"
                            VerticalAlignment="Center"/>
 
@@ -219,7 +219,7 @@
                 -->
                 <Border Background="{StaticResource Brush.Surface.Card}"
                         CornerRadius="0"
-                        Padding="20"
+                        Padding="{DynamicResource Space.XL}"
                         Margin="16,8,16,16">
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.3" Color="Black"/>
@@ -232,7 +232,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Ellipse Grid.Column="0"
-                                 Width="48" Height="48"
+                                 Width="{DynamicResource Size.Icon.XXL}" Height="{DynamicResource Size.Icon.XXL}"
                                  Margin="0,0,16,0"
                                  VerticalAlignment="Center">
                             <Ellipse.Fill>
@@ -243,17 +243,17 @@
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock Text="Account"
                                        Foreground="{StaticResource Brush.Text.Primary}"
-                                       FontSize="18"
+                                       FontSize="{DynamicResource Font.Size.Group}"
                                        FontWeight="Bold"
                                        Margin="0,0,0,4"/>
                             <TextBlock Text="{Binding UserViewModel.LocalUser.UserDisplayName}"
                                        Foreground="{StaticResource Brush.Text.Primary}"
-                                       FontSize="13"
+                                       FontSize="{DynamicResource Font.Size.BodySmall}"
                                        FontWeight="SemiBold"
                                        TextTrimming="CharacterEllipsis"/>
                             <TextBlock Text="{Binding UserViewModel.LocalUser.Email}"
                                        Foreground="{StaticResource Brush.Text.Dim}"
-                                       FontSize="12"
+                                       FontSize="{DynamicResource Font.Size.Eyebrow}"
                                        TextTrimming="CharacterEllipsis"
                                        Visibility="{Binding UserViewModel.LocalUser.Email, Converter={StaticResource NullToCollapsed}}"/>
                         </StackPanel>
@@ -271,7 +271,7 @@
                         <DataTemplate DataType="{x:Type settings:SettingsSectionModel}">
                             <Border Background="{StaticResource Brush.Surface.Card}"
                     CornerRadius="0"
-                    Padding="20"
+                    Padding="{DynamicResource Space.XL}"
                     Margin="0,0,0,16">
                                 <Border.Effect>
                                     <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.3" Color="Black"/>
@@ -280,12 +280,12 @@
                                     <!-- Section header -->
                                     <TextBlock Text="{Binding Name}"
                                Foreground="{StaticResource Brush.Text.Primary}"
-                               FontSize="18"
+                               FontSize="{DynamicResource Font.Size.Group}"
                                FontWeight="Bold"
                                Margin="0,0,0,4"/>
                                     <TextBlock Text="{Binding Description}"
                                Foreground="{StaticResource Brush.Text.Dim}"
-                               FontSize="12"
+                               FontSize="{DynamicResource Font.Size.Eyebrow}"
                                TextWrapping="Wrap"
                                Margin="0,0,0,16"/>
 

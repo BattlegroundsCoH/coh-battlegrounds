@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Battlegrounds.Views.CompanyEditorView"
+<UserControl x:Class="Battlegrounds.Views.CompanyEditorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -44,7 +44,7 @@
                         <Border 
                             x:Name="UnitBorder"
                             Padding="12,8"
-                            Margin="4"
+                            Margin="{DynamicResource Space.XS}"
                             Width="320"
                             Background="{StaticResource Brush.Surface.Card}"
                             BorderBrush="{StaticResource Brush.Border.Hairline}"
@@ -59,8 +59,8 @@
                                 <!-- Unit Icon -->
                                 <Image 
                                     Grid.Column="0"
-                                    Width="32"
-                                    Height="32"
+                                    Width="{DynamicResource Size.Icon.L}"
+                                    Height="{DynamicResource Size.Icon.L}"
                                     Margin="0,0,12,0">
                                     <Image.Source>
                                         <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
@@ -107,7 +107,7 @@
                         <Border 
                             x:Name="UnitBorder"
                             Padding="12,8"
-                            Margin="4"
+                            Margin="{DynamicResource Space.XS}"
                             Width="280"
                             Background="{StaticResource Brush.Surface.Card}"
                             BorderBrush="{StaticResource Brush.Border.Hairline}"
@@ -127,8 +127,8 @@
                                     <!-- Unit Icon -->
                                     <Image 
                                         Grid.Column="0"
-                                        Width="32"
-                                        Height="32"
+                                        Width="{DynamicResource Size.Icon.L}"
+                                        Height="{DynamicResource Size.Icon.L}"
                                         Margin="0,0,12,0">
                                         <Image.Source>
                                             <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
@@ -167,8 +167,8 @@
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <Image 
-                                                        Width="24"
-                                                        Height="24"
+                                                        Width="{DynamicResource Size.Icon.M}"
+                                                        Height="{DynamicResource Size.Icon.M}"
                                                         Margin="0,0,4,0">
                                                         <Image.Source>
                                                             <MultiBinding Converter="{StaticResource BlueprintSymbolMultiConverter}">
@@ -190,8 +190,8 @@
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <Image 
-                                                        Width="24"
-                                                        Height="24"
+                                                        Width="{DynamicResource Size.Icon.M}"
+                                                        Height="{DynamicResource Size.Icon.M}"
                                                         Margin="0,0,4,0">
                                                         <Image.Source>
                                                             <MultiBinding Converter="{StaticResource BlueprintSymbolMultiConverter}">
@@ -207,8 +207,8 @@
 
                                     <!-- Unit transport -->
                                     <Image 
-                                        Width="24"
-                                        Height="24"
+                                        Width="{DynamicResource Size.Icon.M}"
+                                        Height="{DynamicResource Size.Icon.M}"
                                         Margin="0,0,4,0"
                                         Grid.Column="3"
                                         Visibility="{Binding HasTransport, Converter={StaticResource BooleanToVisibility}}">
@@ -235,8 +235,8 @@
                                         <!-- Passenger Icon -->
                                         <Image 
                                             Grid.Column="0"
-                                            Width="24"
-                                            Height="24"
+                                            Width="{DynamicResource Size.Icon.M}"
+                                            Height="{DynamicResource Size.Icon.M}"
                                             Margin="0,0,8,0">
                                             <Image.Source>
                                                 <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
@@ -248,7 +248,7 @@
                                         <!-- Passenger Name -->
                                         <TextBlock
                                             Grid.Column="1"
-                                            FontSize="11"
+                                            FontSize="{DynamicResource Font.Size.Meta}"
                                             VerticalAlignment="Center"
                                             Foreground="{StaticResource Brush.Text.Dim}">
                                             ↳ <Run Text="{Binding PassengerBlueprint, Converter={StaticResource BlueprintNameConverter}, Mode=OneWay}"/> (#<Run Text="{Binding PassengerId, Mode=OneWay}"/>)
@@ -290,8 +290,8 @@
 
                                 <Ellipse 
                                     x:Name="RadioOuter"
-                                    Width="16"
-                                    Height="16"
+                                    Width="{DynamicResource Size.Icon.XS}"
+                                    Height="{DynamicResource Size.Icon.XS}"
                                     Stroke="{StaticResource Brush.Text.Dim}"
                                     StrokeThickness="1"
                                     Fill="Transparent"/>
@@ -337,8 +337,8 @@
 
                 <!-- Transport Icon -->
                 <Image Grid.Column="0"
-               Width="24"
-               Height="24"
+               Width="{DynamicResource Size.Icon.M}"
+               Height="{DynamicResource Size.Icon.M}"
                Margin="0,0,8,0">
                     <Image.Source>
                         <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
@@ -369,7 +369,7 @@
                         <Border
                             x:Name="UnitBorder"
                             Padding="12,8"
-                            Margin="4"
+                            Margin="{DynamicResource Space.XS}"
                             Width="320"
                             Background="{StaticResource Brush.Surface.Card}"
                             BorderBrush="{StaticResource Brush.Status.Caution}"
@@ -384,8 +384,8 @@
                                 <!-- Item Icon -->
                                 <Image
                                     Grid.Column="0"
-                                    Width="32"
-                                    Height="32"
+                                    Width="{DynamicResource Size.Icon.L}"
+                                    Height="{DynamicResource Size.Icon.L}"
                                     Margin="0,0,12,0">
                                     <Image.Source>
                                         <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
@@ -408,7 +408,7 @@
                                     </TextBlock>
                                     <TextBlock
                                         Foreground="{StaticResource Brush.Text.Body}"
-                                        FontSize="11"
+                                        FontSize="{DynamicResource Font.Size.Meta}"
                                         FontStyle="Italic"
                                         VerticalAlignment="Center">
                                         <TextBlock.Text>
@@ -445,7 +445,7 @@
                         <Border 
                             x:Name="UnitBorder"
                             Padding="12,8"
-                            Margin="4"
+                            Margin="{DynamicResource Space.XS}"
                             Width="280"
                             Background="{StaticResource Brush.Surface.Card}"
                             BorderBrush="{StaticResource Brush.Border.Hairline}"
@@ -465,8 +465,8 @@
                                     <!-- Unit Icon -->
                                     <Image 
                                         Grid.Column="0"
-                                        Width="32"
-                                        Height="32"
+                                        Width="{DynamicResource Size.Icon.L}"
+                                        Height="{DynamicResource Size.Icon.L}"
                                         Margin="0,0,12,0">
                                         <Image.Source>
                                             <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
@@ -494,8 +494,8 @@
 
                                     <!-- Unit transport -->
                                     <Image 
-                                        Width="24"
-                                        Height="24"
+                                        Width="{DynamicResource Size.Icon.M}"
+                                        Height="{DynamicResource Size.Icon.M}"
                                         Margin="0,0,4,0"
                                         Grid.Column="3"
                                         Visibility="{Binding Squad.HasTransport, Converter={StaticResource BooleanToVisibility}}">
@@ -537,7 +537,7 @@
                     <ControlTemplate TargetType="Button">
                         <Border 
                             x:Name="UpgradeBorder"
-                            Margin="4"
+                            Margin="{DynamicResource Space.XS}"
                             Background="{StaticResource Brush.Surface.Card}"
                             BorderBrush="{StaticResource Brush.Border.Hairline}"
                             BorderThickness="1"
@@ -553,8 +553,8 @@
                                 <Image 
                                     Grid.Column="0"
                                     Margin="2"
-                                    Width="42"
-                                    Height="42">
+                                    Width="{DynamicResource Size.Icon.XL}"
+                                    Height="{DynamicResource Size.Icon.XL}">
                                     <Image.Source>
                                         <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
                                             <Binding Path="Blueprint"/>
@@ -587,7 +587,7 @@
                         <StackPanel>
                             <TextBlock
                                 Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}}"
-                                FontSize="14"
+                                FontSize="{DynamicResource Font.Size.Body}"
                                 FontWeight="Bold"
                                 Foreground="{StaticResource Brush.Text.Primary}"
                                 Margin="0,0,0,4"/>
@@ -609,8 +609,8 @@
                                     Orientation="Horizontal"
                                     Visibility="{Binding Blueprint.Cost.Manpower, Converter={StaticResource ZeroToVisibilityConverter}}">
                                     <Image 
-                                        Width="24"
-                                        Height="24"
+                                        Width="{DynamicResource Size.Icon.M}"
+                                        Height="{DynamicResource Size.Icon.M}"
                                         Source="pack://siteoforigin:,,,/Assets/Resources/coh3_manpower_small.png"/>
                                     <TextBlock 
                                         Margin="4,0,0,0"
@@ -625,8 +625,8 @@
                                     Margin="8,0,0,0"
                                     Visibility="{Binding Blueprint.Cost.Munitions, Converter={StaticResource ZeroToVisibilityConverter}}">
                                     <Image 
-                                        Width="24"
-                                        Height="24"
+                                        Width="{DynamicResource Size.Icon.M}"
+                                        Height="{DynamicResource Size.Icon.M}"
                                         Source="pack://siteoforigin:,,,/Assets/Resources/coh3_munitions_small.png"/>
                                     <TextBlock 
                                         Margin="4,0,0,0"
@@ -641,8 +641,8 @@
                                     Margin="8,0,0,0"
                                     Visibility="{Binding Blueprint.Cost.Fuel, Converter={StaticResource ZeroToVisibilityConverter}}">
                                     <Image 
-                                        Width="24"
-                                        Height="24"
+                                        Width="{DynamicResource Size.Icon.M}"
+                                        Height="{DynamicResource Size.Icon.M}"
                                         Source="pack://siteoforigin:,,,/Assets/Resources/coh3_fuel_small.png"/>
                                     <TextBlock 
                                         Margin="4,0,0,0"
@@ -675,7 +675,7 @@
                     <ControlTemplate TargetType="Button">
                         <Border 
                             x:Name="ItemBorder"
-                            Margin="4"
+                            Margin="{DynamicResource Space.XS}"
                             Background="{StaticResource Brush.Surface.Card}"
                             BorderBrush="{StaticResource Brush.Border.Hairline}"
                             BorderThickness="1"
@@ -684,8 +684,8 @@
                                 <Image 
                                     Grid.Column="0"
                                     Margin="2"
-                                    Width="42"
-                                    Height="42">
+                                    Width="{DynamicResource Size.Icon.XL}"
+                                    Height="{DynamicResource Size.Icon.XL}">
                                     <Image.Source>
                                         <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
                                             <Binding Path="Blueprint"/>
@@ -718,7 +718,7 @@
                         <StackPanel>
                             <TextBlock
                                 Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}}"
-                                FontSize="14"
+                                FontSize="{DynamicResource Font.Size.Body}"
                                 FontWeight="Bold"
                                 Foreground="{StaticResource Brush.Text.Primary}"
                                 Margin="0,0,0,4"/>
@@ -767,7 +767,7 @@
                 <!-- Display: click to begin editing -->
                 <TextBlock
                     Text="{Binding CompanyName}"
-                    FontSize="24"
+                    FontSize="{DynamicResource Font.Size.PageTitle}"
                     FontWeight="Bold"
                     Foreground="{StaticResource Brush.Text.Primary}"
                     HorizontalAlignment="Center"
@@ -784,7 +784,7 @@
                 <TextBox
                     x:Name="CompanyNameTextBox"
                     Text="{Binding EditingCompanyName, UpdateSourceTrigger=PropertyChanged}"
-                    FontSize="24"
+                    FontSize="{DynamicResource Font.Size.PageTitle}"
                     FontWeight="Bold"
                     MinWidth="200"
                     HorizontalAlignment="Center"
@@ -817,8 +817,8 @@
                             Margin="0,0,8,0">
 
                     <Image
-                        Width="16"
-                        Height="16"
+                        Width="{DynamicResource Size.Icon.XS}"
+                        Height="{DynamicResource Size.Icon.XS}"
                         Margin="0,0,8,0"
                         Visibility="{Binding IsDoctrineDirty, Converter={StaticResource BooleanToVisibility}}"
                         Source="pack://siteoforigin:,,,/Assets/Misc/mission_icon_warning.png"/>
@@ -831,8 +831,8 @@
                 </StackPanel>
                 
                 <Image 
-                    Width="36" 
-                    Height="36"
+                    Width="{DynamicResource Size.Icon.L}" 
+                    Height="{DynamicResource Size.Icon.L}"
                     Grid.Column="1">
                     <Image.Source>
                         <MultiBinding Converter="{StaticResource FactionIconConverter}">
@@ -872,7 +872,7 @@
                     BorderBrush="{StaticResource Brush.Border.Hairline}"
                     SelectedIndex="{Binding SelectedAvailableUnitTabIndex}"
                     BorderThickness="1"
-                    Margin="8">
+                    Margin="{DynamicResource Space.S}">
                     <TabControl.Resources>
                         <!-- Style for TabItems -->
                         <Style TargetType="TabItem">
@@ -966,7 +966,7 @@
 
                     <TextBlock
                         Text="Company Units"
-                        FontSize="14"
+                        FontSize="{DynamicResource Font.Size.Body}"
                         FontWeight="Bold"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
@@ -979,7 +979,7 @@
 
                         <TextBlock
                             Text="Company Value:"
-                            FontSize="12"
+                            FontSize="{DynamicResource Font.Size.Eyebrow}"
                             FontStyle="Italic"
                             VerticalAlignment="Center"
                             Foreground="{StaticResource Brush.Text.Dim}"
@@ -990,8 +990,8 @@
                                 Orientation="Horizontal"
                                 Visibility="{Binding TotalManpowerCost, Converter={StaticResource ZeroToVisibilityConverter}}">
                                 <Image 
-                                    Width="24"
-                                    Height="24"
+                                    Width="{DynamicResource Size.Icon.M}"
+                                    Height="{DynamicResource Size.Icon.M}"
                                     Source="pack://siteoforigin:,,,/Assets/Resources/coh3_manpower_small.png"/>
                                 <TextBlock 
                                     Margin="4,0,0,0"
@@ -1005,8 +1005,8 @@
                                 Margin="8,0,0,0"
                                 Visibility="{Binding TotalMunitionsCost, Converter={StaticResource ZeroToVisibilityConverter}}">
                                 <Image 
-                                    Width="24"
-                                    Height="24"
+                                    Width="{DynamicResource Size.Icon.M}"
+                                    Height="{DynamicResource Size.Icon.M}"
                                     Source="pack://siteoforigin:,,,/Assets/Resources/coh3_munitions_small.png"/>
                                 <TextBlock 
                                     Margin="4,0,0,0"
@@ -1020,8 +1020,8 @@
                                 Margin="8,0,0,0"
                                 Visibility="{Binding TotalFuelCost, Converter={StaticResource ZeroToVisibilityConverter}}">
                                 <Image 
-                                    Width="24"
-                                    Height="24"
+                                    Width="{DynamicResource Size.Icon.M}"
+                                    Height="{DynamicResource Size.Icon.M}"
                                     Source="pack://siteoforigin:,,,/Assets/Resources/coh3_fuel_small.png"/>
                                 <TextBlock 
                                     Margin="4,0,0,0"
@@ -1057,7 +1057,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <TextBlock
-                                FontSize="14" 
+                                FontSize="{DynamicResource Font.Size.Body}" 
                                 Grid.Row="0"
                                 FontWeight="Bold"
                                 Foreground="{StaticResource Brush.Text.Dim}"
@@ -1086,7 +1086,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <TextBlock 
-                                FontSize="14" 
+                                FontSize="{DynamicResource Font.Size.Body}" 
                                 Grid.Row="0"
                                 FontWeight="Bold"
                                 Foreground="{StaticResource Brush.Text.Dim}"
@@ -1115,7 +1115,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <TextBlock 
-                                FontSize="14" 
+                                FontSize="{DynamicResource Font.Size.Body}" 
                                 Grid.Row="0"
                                 FontWeight="Bold"
                                 Foreground="{StaticResource Brush.Text.Dim}"
@@ -1144,7 +1144,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <TextBlock 
-                                FontSize="14" 
+                                FontSize="{DynamicResource Font.Size.Body}" 
                                 Grid.Row="0"
                                 FontWeight="Bold"
                                 Foreground="{StaticResource Brush.Text.Dim}"
@@ -1181,10 +1181,10 @@
 
                     <!-- Selection -->
                     <TextBlock
-                            Margin="8"
+                            Margin="{DynamicResource Space.S}"
                             Text="{Binding SelectionTitle}"
                             HorizontalAlignment="Center"
-                            FontSize="18"
+                            FontSize="{DynamicResource Font.Size.Group}"
                             FontWeight="Bold"
                             Foreground="{StaticResource Brush.Text.Primary}"/>
 
@@ -1209,7 +1209,7 @@
                                     BorderThickness="1"
                                     CornerRadius="0"
                                     Margin="8,0,8,8"
-                                    Padding="8"
+                                    Padding="{DynamicResource Space.S}"
                                     Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}">
 
                                 <Grid>
@@ -1225,7 +1225,7 @@
                                         Orientation="Horizontal"
                                         Grid.Row="0">
                                         <!-- Squad icon -->
-                                        <Image Width="70" Height="70">
+                                        <Image Width="{DynamicResource Size.Icon.Huge}" Height="{DynamicResource Size.Icon.Huge}">
                                             <Image.Source>
                                                 <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
                                                     <Binding Path="Blueprint"/>
@@ -1237,7 +1237,7 @@
                                             VerticalAlignment="Center">
                                             <TextBlock 
                                                 Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}}"
-                                                FontSize="16" 
+                                                FontSize="{DynamicResource Font.Size.Section}" 
                                                 FontWeight="Bold"
                                                 Foreground="{StaticResource Brush.Text.Primary}"
                                                 TextWrapping="Wrap"
@@ -1245,7 +1245,7 @@
 
                                             <TextBlock
                                                 Text="{Binding CustomName}"
-                                                FontSize="16" 
+                                                FontSize="{DynamicResource Font.Size.Section}" 
                                                 FontStyle="Italic"
                                                 Foreground="{StaticResource Brush.Text.Primary}"
                                                 TextWrapping="Wrap"
@@ -1281,7 +1281,7 @@
                                                     </ItemsControl.ItemsPanel>
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <Image Width="16" Height="16" Source="pack://siteoforigin:,,,/Assets/Misc/vstar.png">
+                                                            <Image Width="{DynamicResource Size.Icon.XS}" Height="{DynamicResource Size.Icon.XS}" Source="pack://siteoforigin:,,,/Assets/Misc/vstar.png">
                                                                 <Image.Effect>
                                                                     <e:ColourTintBitmapEffect 
                                                                         TintColour="{Binding IsEarned, Converter={StaticResource RankStarColourConverter}}"/>
@@ -1306,7 +1306,7 @@
                                             <TextBlock 
                                                 Grid.Column="1"
                                                 Grid.Row="1"
-                                                FontSize="10"
+                                                FontSize="{DynamicResource Font.Size.Label}"
                                                 HorizontalAlignment="Center"
                                                          VerticalAlignment="Center"
                                                 Foreground="{StaticResource Brush.Text.Primary}">
@@ -1319,12 +1319,12 @@
 
                                         <TextBlock 
                                             Text="{Binding Blueprint, Converter={StaticResource BlueprintHelpTextConverter}}"
-                                            FontSize="14" 
+                                            FontSize="{DynamicResource Font.Size.Body}" 
                                             Foreground="{StaticResource Brush.Text.Dim}"
                                             TextWrapping="Wrap"/>
                                         <TextBlock 
                                             Text="{Binding Blueprint, Converter={StaticResource BlueprintBriefTextConverter}}"
-                                            FontSize="12"
+                                            FontSize="{DynamicResource Font.Size.Eyebrow}"
                                             FontStyle="Italic"
                                             Margin="0,8,0,0"
                                             Foreground="{StaticResource Brush.Text.Dim}"/>
@@ -1341,8 +1341,8 @@
                                             Orientation="Horizontal"
                                             Visibility="{Binding Blueprint.Cost.Manpower, Converter={StaticResource ZeroToVisibilityConverter}}">
                                             <Image 
-                                                Width="24"
-                                                Height="24"
+                                                Width="{DynamicResource Size.Icon.M}"
+                                                Height="{DynamicResource Size.Icon.M}"
                                                 Source="pack://siteoforigin:,,,/Assets/Resources/coh3_manpower_small.png"/>
                                             <TextBlock 
                                                 Margin="4,0,0,0"
@@ -1357,8 +1357,8 @@
                                             Margin="8,0,0,0"
                                             Visibility="{Binding Blueprint.Cost.Munitions, Converter={StaticResource ZeroToVisibilityConverter}}">
                                             <Image 
-                                                Width="24"
-                                                Height="24"
+                                                Width="{DynamicResource Size.Icon.M}"
+                                                Height="{DynamicResource Size.Icon.M}"
                                                 Source="pack://siteoforigin:,,,/Assets/Resources/coh3_munitions_small.png"/>
                                             <TextBlock 
                                                 Margin="4,0,0,0"
@@ -1373,8 +1373,8 @@
                                             Margin="8,0,0,0"
                                             Visibility="{Binding Blueprint.Cost.Fuel, Converter={StaticResource ZeroToVisibilityConverter}}">
                                             <Image 
-                                                Width="24"
-                                                Height="24"
+                                                Width="{DynamicResource Size.Icon.M}"
+                                                Height="{DynamicResource Size.Icon.M}"
                                                 Source="pack://siteoforigin:,,,/Assets/Resources/coh3_fuel_small.png"/>
                                             <TextBlock 
                                                 Margin="4,0,0,0"
@@ -1401,14 +1401,14 @@
                                     BorderThickness="1"
                                     CornerRadius="0"
                                     Margin="8,0,8,8"
-                                    Padding="8">
+                                    Padding="{DynamicResource Space.S}">
 
                                     <StackPanel>
                                         <TextBlock
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Text="Add to Company"
                                             HorizontalAlignment="Center"
-                                            FontSize="16"
+                                            FontSize="{DynamicResource Font.Size.Section}"
                                             FontWeight="Bold"
                                             Foreground="{StaticResource Brush.Text.Dim}"/>
                                         <Button 
@@ -1417,7 +1417,7 @@
                                             Grid.Row="0" 
                                             Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddStartingUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Command="{Binding AddToCompanyCommand}">
                                             <Button.CommandParameter>
                                                 <c:SquadPhase>StartingPhase</c:SquadPhase>
@@ -1429,7 +1429,7 @@
                                             Grid.Row="0" 
                                             Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddSkirmishPhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Command="{Binding AddToCompanyCommand}">
                                             <Button.CommandParameter>
                                                 <c:SquadPhase>SkirmishPhase</c:SquadPhase>
@@ -1441,7 +1441,7 @@
                                             Grid.Row="1" 
                                             Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddBattlePhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Command="{Binding AddToCompanyCommand}">
                                             <Button.CommandParameter>
                                                 <c:SquadPhase>BattlePhase</c:SquadPhase>
@@ -1453,7 +1453,7 @@
                                             Grid.Row="1" 
                                             Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddReservesPhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Command="{Binding AddToCompanyCommand}">
                                             <Button.CommandParameter>
                                                 <c:SquadPhase>ReservesPhase</c:SquadPhase>
@@ -1476,14 +1476,14 @@
                                     BorderThickness="1"
                                     CornerRadius="0"
                                     Margin="8,0,8,8"
-                                    Padding="8">
+                                    Padding="{DynamicResource Space.S}">
                                     <StackPanel>
                                         <TextBlock
                                             Grid.Row="0"
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Text="Squad Upgrades"
                                             HorizontalAlignment="Center"
-                                            FontSize="16"
+                                            FontSize="{DynamicResource Font.Size.Section}"
                                             FontWeight="Bold"
                                             Foreground="{StaticResource Brush.Text.Dim}"/>
                                         <ItemsControl
@@ -1507,14 +1507,14 @@
                                     BorderThickness="1"
                                     CornerRadius="0"
                                     Margin="8,0,8,8"
-                                    Padding="8">
+                                    Padding="{DynamicResource Space.S}">
                                     <StackPanel>
                                         <TextBlock
                                             Grid.Row="0"
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Text="Squad Items"
                                             HorizontalAlignment="Center"
-                                            FontSize="16"
+                                            FontSize="{DynamicResource Font.Size.Section}"
                                             FontWeight="Bold"
                                             Foreground="{StaticResource Brush.Text.Dim}"/>
                                         <ItemsControl
@@ -1538,14 +1538,14 @@
                                     BorderThickness="1"
                                     CornerRadius="0"
                                     Margin="8,0,8,8"
-                                    Padding="8">
+                                    Padding="{DynamicResource Space.S}">
                                     <StackPanel>
                                         <TextBlock
                                             Grid.Row="0"
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Text="Squad Deployment"
                                             HorizontalAlignment="Center"
-                                            FontSize="16"
+                                            FontSize="{DynamicResource Font.Size.Section}"
                                             FontWeight="Bold"
                                             Foreground="{StaticResource Brush.Text.Dim}"/>
 
@@ -1555,7 +1555,7 @@
                                             x:Name="NoTransportOption"
                                             Content="No Transport"
                                             IsChecked="{Binding HasTransport, Converter={StaticResource InverseBooleanConverter}}"
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             IsEnabled="{Binding CanDisableTransport}"
                                             Foreground="{StaticResource Brush.Text.Primary}"
                                             VerticalContentAlignment="Center"/>
@@ -1566,12 +1566,12 @@
                                             GroupName="TransportSelection"
                                             Content="Transport (Drop-Off)"
                                             IsChecked="{Binding HasDropOffTransport}"
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Foreground="{StaticResource Brush.Text.Primary}"
                                             VerticalContentAlignment="Center"/>
 
                                         <ComboBox
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Style="{StaticResource ComboBox.Default}"
                                             ItemTemplate="{StaticResource TransportItemTemplate}"
                                             ItemsSource="{Binding AvailableTransports}"
@@ -1590,20 +1590,20 @@
                                     BorderThickness="1"
                                     CornerRadius="0"
                                     Margin="8,0,8,8"
-                                    Padding="8">
+                                    Padding="{DynamicResource Space.S}">
 
                                     <StackPanel>
                                         <TextBlock
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Text="Passenger Unit"
                                             HorizontalAlignment="Center"
-                                            FontSize="16"
+                                            FontSize="{DynamicResource Font.Size.Section}"
                                             FontWeight="Bold"
                                             Foreground="{StaticResource Brush.Text.Dim}"/>
 
                                         <!-- Infantry unit picker -->
                                         <ComboBox
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Style="{StaticResource ComboBox.Default}"
                                             ItemsSource="{Binding AvailablePassengers}"
                                             SelectedItem="{Binding SelectedPassenger, Mode=TwoWay}"
@@ -1616,8 +1616,8 @@
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
                                                         <Image Grid.Column="0"
-                                                               Width="24"
-                                                               Height="24"
+                                                               Width="{DynamicResource Size.Icon.M}"
+                                                               Height="{DynamicResource Size.Icon.M}"
                                                                Margin="0,0,8,0">
                                                             <Image.Source>
                                                                 <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
@@ -1638,7 +1638,7 @@
                                         </ComboBox>
 
                                         <TextBlock
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Text="No infantry units available in this phase."
                                             FontStyle="Italic"
                                             HorizontalAlignment="Center"
@@ -1646,7 +1646,7 @@
                                             Visibility="{Binding HasAvailablePassengers, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
 
                                         <Button
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Content="Clear Passenger"
                                             Style="{StaticResource Button.Danger}"
                                             Command="{Binding ClearPassengerCommand}"
@@ -1665,7 +1665,7 @@
                                 <Button
                                     Visibility="{Binding IsSquad, Converter={StaticResource BooleanToVisibility}}"
                                     VerticalAlignment="Bottom"
-                                    Margin="8"
+                                    Margin="{DynamicResource Space.S}"
                                     Content="Retire Squad"
                                     Command="{Binding RetireSquadCommand}"
                                     Style="{StaticResource Button.Danger}"
@@ -1696,7 +1696,7 @@
                                     BorderThickness="1"
                                     CornerRadius="0"
                                     Margin="8,0,8,8"
-                                    Padding="8"
+                                    Padding="{DynamicResource Space.S}"
                                     Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}">
 
                                 <Grid>
@@ -1708,7 +1708,7 @@
                                     </Grid.RowDefinitions>
 
                                     <!-- Item icon -->
-                                    <Image Width="70" Height="70">
+                                    <Image Width="{DynamicResource Size.Icon.Huge}" Height="{DynamicResource Size.Icon.Huge}">
                                         <Image.Source>
                                             <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
                                                 <Binding Path="Blueprint"/>
@@ -1724,7 +1724,7 @@
 
                                         <TextBlock 
                                             Text="{Binding Blueprint, Converter={StaticResource BlueprintNameConverter}}"
-                                            FontSize="16" 
+                                            FontSize="{DynamicResource Font.Size.Section}" 
                                             FontWeight="Bold"
                                             Foreground="{StaticResource Brush.Text.Primary}"
                                             TextWrapping="Wrap"
@@ -1732,12 +1732,12 @@
                                             Margin="8,0,0,0"/>
                                         <TextBlock 
                                             Text="{Binding Blueprint, Converter={StaticResource BlueprintHelpTextConverter}, ConverterParameter='EmptyStringIfNotFound'}"
-                                            FontSize="14" 
+                                            FontSize="{DynamicResource Font.Size.Body}" 
                                             Foreground="{StaticResource Brush.Text.Dim}"
                                             TextWrapping="Wrap"/>
                                         <TextBlock 
                                             Text="{Binding Blueprint, Converter={StaticResource BlueprintBriefTextConverter}, ConverterParameter='EmptyStringIfNotFound'}"
-                                            FontSize="12"
+                                            FontSize="{DynamicResource Font.Size.Eyebrow}"
                                             FontStyle="Italic"
                                             Margin="0,8,0,0"
                                             Foreground="{StaticResource Brush.Text.Dim}"/>
@@ -1756,8 +1756,8 @@
                                             Orientation="Horizontal"
                                             Visibility="{Binding Cost.Manpower, Converter={StaticResource ZeroToVisibilityConverter}}">
                                             <Image 
-                                                Width="24"
-                                                Height="24"
+                                                Width="{DynamicResource Size.Icon.M}"
+                                                Height="{DynamicResource Size.Icon.M}"
                                                 Source="pack://siteoforigin:,,,/Assets/Resources/coh3_manpower_small.png"/>
                                             <TextBlock 
                                                 Margin="4,0,0,0"
@@ -1772,8 +1772,8 @@
                                             Margin="8,0,0,0"
                                             Visibility="{Binding Cost.Munitions, Converter={StaticResource ZeroToVisibilityConverter}}">
                                             <Image 
-                                                Width="24"
-                                                Height="24"
+                                                Width="{DynamicResource Size.Icon.M}"
+                                                Height="{DynamicResource Size.Icon.M}"
                                                 Source="pack://siteoforigin:,,,/Assets/Resources/coh3_munitions_small.png"/>
                                             <TextBlock 
                                                 Margin="4,0,0,0"
@@ -1788,8 +1788,8 @@
                                             Margin="8,0,0,0"
                                             Visibility="{Binding Cost.Fuel, Converter={StaticResource ZeroToVisibilityConverter}}">
                                             <Image 
-                                                Width="24"
-                                                Height="24"
+                                                Width="{DynamicResource Size.Icon.M}"
+                                                Height="{DynamicResource Size.Icon.M}"
                                                 Source="pack://siteoforigin:,,,/Assets/Resources/coh3_fuel_small.png"/>
                                             <TextBlock 
                                                 Margin="4,0,0,0"
@@ -1816,14 +1816,14 @@
                                     BorderThickness="1"
                                     CornerRadius="0"
                                     Margin="8,0,8,8"
-                                    Padding="8">
+                                    Padding="{DynamicResource Space.S}">
 
                                     <StackPanel>
                                         <TextBlock
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Text="Add to Company"
                                             HorizontalAlignment="Center"
-                                            FontSize="16"
+                                            FontSize="{DynamicResource Font.Size.Section}"
                                             FontWeight="Bold"
                                             Foreground="{StaticResource Brush.Text.Dim}"/>
                                         <Button 
@@ -1832,7 +1832,7 @@
                                             Grid.Row="0" 
                                             Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddStartingUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Command="{Binding AddToCompanyCommand}">
                                             <Button.CommandParameter>
                                                 <c:SquadPhase>StartingPhase</c:SquadPhase>
@@ -1844,7 +1844,7 @@
                                             Grid.Row="0" 
                                             Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddSkirmishPhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Command="{Binding AddToCompanyCommand}">
                                             <Button.CommandParameter>
                                                 <c:SquadPhase>SkirmishPhase</c:SquadPhase>
@@ -1856,7 +1856,7 @@
                                             Grid.Row="1" 
                                             Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddBattlePhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Command="{Binding AddToCompanyCommand}">
                                             <Button.CommandParameter>
                                                 <c:SquadPhase>BattlePhase</c:SquadPhase>
@@ -1868,7 +1868,7 @@
                                             Grid.Row="1" 
                                             Style="{StaticResource Button.Primary}" 
                                             IsEnabled="{Binding DataContext.CanAddReservesPhaseUnit, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Command="{Binding AddToCompanyCommand}">
                                             <Button.CommandParameter>
                                                 <c:SquadPhase>ReservesPhase</c:SquadPhase>
@@ -1889,14 +1889,14 @@
                                     BorderThickness="1"
                                     CornerRadius="0"
                                     Margin="8,0,8,8"
-                                    Padding="8">
+                                    Padding="{DynamicResource Space.S}">
 
                                     <StackPanel>
                                         <TextBlock
-                                            Margin="4"
+                                            Margin="{DynamicResource Space.XS}"
                                             Text="Add to unit"
                                             HorizontalAlignment="Center"
-                                            FontSize="16"
+                                            FontSize="{DynamicResource Font.Size.Section}"
                                             FontWeight="Bold"
                                             Foreground="{StaticResource Brush.Text.Dim}"/>
 
@@ -1916,7 +1916,7 @@
                             <Button
                                     Grid.Row="4"
                                     VerticalAlignment="Bottom"
-                                    Margin="8"
+                                    Margin="{DynamicResource Space.S}"
                                     Style="{StaticResource Button.Danger}"
                                     Command="{Binding DestroyItemCommand}"
                                     Content="Destroy Item"/>

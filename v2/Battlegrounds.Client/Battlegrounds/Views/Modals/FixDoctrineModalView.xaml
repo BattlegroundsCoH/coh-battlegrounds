@@ -63,7 +63,7 @@
         <DataTemplate x:Key="DoctrineCardDataTemplate">
             <StackPanel>
                 <Image
-                    Width="42" Height="42"
+                    Width="{DynamicResource Size.Icon.XL}" Height="{DynamicResource Size.Icon.XL}"
                     Margin="0,0,0,6"
                     HorizontalAlignment="Center"
                     Source="{Binding Icon}"
@@ -71,7 +71,7 @@
                 <TextBlock
                     Text="{Binding Name}"
                     FontWeight="SemiBold"
-                    FontSize="11"
+                    FontSize="{DynamicResource Font.Size.Meta}"
                     TextWrapping="Wrap"
                     HorizontalAlignment="Center"
                     TextAlignment="Center"
@@ -82,12 +82,12 @@
                             <TextBlock
                                 Text="{Binding Name}"
                                 FontWeight="SemiBold"
-                                FontSize="11"
+                                FontSize="{DynamicResource Font.Size.Meta}"
                                 TextWrapping="Wrap"
                                 Foreground="{StaticResource Brush.Text.Primary}"/>
                             <TextBlock
                                 Text="{Binding Description}"
-                                FontSize="11"
+                                FontSize="{DynamicResource Font.Size.Meta}"
                                 TextWrapping="Wrap"
                                 MaxWidth="320"
                                 Foreground="{StaticResource Brush.Text.Body}"/>
@@ -104,7 +104,7 @@
         BorderBrush="{StaticResource Brush.Border.Hairline}"
         BorderThickness="1"
         CornerRadius="0">
-        <Grid Margin="16">
+        <Grid Margin="{DynamicResource Space.L}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -115,7 +115,7 @@
             <!-- Header -->
             <TextBlock
                 Text="FIX DOCTRINE"
-                FontSize="20"
+                FontSize="{DynamicResource Font.Size.Heading}"
                 FontWeight="Bold"
                 Foreground="{StaticResource Brush.Text.Primary}"
                 Margin="0,0,0,12"/>
@@ -132,14 +132,14 @@
                 <StackPanel>
                     <TextBlock
                         FontWeight="Bold"
-                        FontSize="12"
+                        FontSize="{DynamicResource Font.Size.Eyebrow}"
                         Foreground="{StaticResource Brush.Text.Primary}"
                         TextWrapping="Wrap">
                         The doctrine for <Run FontStyle="Italic" Text="{Binding CompanyName, Mode=OneWay}"/> is outdated or no longer available.
                     </TextBlock>
                     <TextBlock
                         Margin="0,4,0,0"
-                        FontSize="11"
+                        FontSize="{DynamicResource Font.Size.Meta}"
                         Foreground="{StaticResource Brush.Text.Body}"
                         TextWrapping="Wrap"
                         Text="Please select a replacement doctrine below. Units that are incompatible with the new doctrine may need to be removed."/>
@@ -173,12 +173,12 @@
                             Text="{Binding SelectedDoctrine.Name}"
                             FontWeight="Bold"
                             HorizontalAlignment="Center"
-                            FontSize="13"
+                            FontSize="{DynamicResource Font.Size.BodySmall}"
                             Foreground="{StaticResource Brush.Text.Primary}"
                             Margin="0,0,0,4"/>
                         <TextBlock
                             Text="{Binding SelectedDoctrine.Description}"
-                            FontSize="11"
+                            FontSize="{DynamicResource Font.Size.Meta}"
                             TextWrapping="Wrap"
                             Foreground="{StaticResource Brush.Text.Body}"/>
                     </StackPanel>

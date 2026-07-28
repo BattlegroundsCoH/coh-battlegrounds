@@ -37,7 +37,7 @@
                 <controls:Eyebrow Text="ACCESS" Margin="0,0,0,22"/>
 
                 <controls:TrackedTextBlock Style="{StaticResource Display.Hero}"
-                                           FontSize="46"
+                                           FontSize="{DynamicResource Font.Size.DisplayLarge}"
                                            Text="WELCOME BACK"
                                            Margin="0,0,0,8"/>
 
@@ -65,7 +65,7 @@
                         IsEnabled="{Binding CanLogin}"/>
 
                 <TextBlock Style="{StaticResource Text.Body}"
-                           FontSize="13"
+                           FontSize="{DynamicResource Font.Size.BodySmall}"
                            HorizontalAlignment="Center"
                            Margin="0,16,0,0">
                     <Run Text="Don't have an account? "/>
@@ -89,7 +89,7 @@
                     <controls:TrackedTextBlock Grid.Column="1"
                                                Style="{StaticResource Display.Label}"
                                                Foreground="{StaticResource Brush.Text.Faint}"
-                                               FontSize="11"
+                                               FontSize="{DynamicResource Font.Size.Meta}"
                                                Text="OR"
                                                Margin="16,0"/>
                     <Rectangle Grid.Column="2" Height="1" VerticalAlignment="Center"
@@ -102,9 +102,9 @@
                         Command="{Binding ContinueWithDiscordCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/Battlegrounds;component/Assets/IdP_discord.png"
-                               Width="22" Height="22" Margin="0,0,12,0"/>
+                               Width="{DynamicResource Size.Icon.S}" Height="{DynamicResource Size.Icon.S}" Margin="0,0,12,0"/>
                         <TextBlock Text="Continue with Discord"
-                                   FontSize="13"
+                                   FontSize="{DynamicResource Font.Size.BodySmall}"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
@@ -113,9 +113,9 @@
                         Command="{Binding ContinueWithSteamCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/Battlegrounds;component/Assets/IdP_steam.png"
-                               Width="22" Height="22" Margin="0,0,12,0"/>
+                               Width="{DynamicResource Size.Icon.S}" Height="{DynamicResource Size.Icon.S}" Margin="0,0,12,0"/>
                         <TextBlock Text="Continue with Steam"
-                                   FontSize="13"
+                                   FontSize="{DynamicResource Font.Size.BodySmall}"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
@@ -160,14 +160,14 @@
                     <TextBlock Foreground="{StaticResource Brush.Text.Primary}"
                                FontFamily="{StaticResource Font.Heading}"
                                FontStyle="Italic"
-                               FontSize="20"
+                               FontSize="{DynamicResource Font.Size.Heading}"
                                LineHeight="28"
                                TextWrapping="Wrap"
                                Margin="0,0,0,16"
                                Text="&quot;In the chaos of battle, when the ground shakes and the sky's aflame, remember that the ultimate victory belongs to those who remain true to their purpose.&quot;"/>
                     <controls:TrackedTextBlock Style="{StaticResource Display.Label}"
                                                Foreground="{StaticResource Brush.Accent.Gold}"
-                                               FontSize="11"
+                                               FontSize="{DynamicResource Font.Size.Meta}"
                                                Tracking="{StaticResource Track.Wider}"
                                                Text="— COMPANY OF HEROES BATTLEGROUNDS"/>
                 </StackPanel>

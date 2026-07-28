@@ -80,13 +80,13 @@
                          circular badge, not a rounded rectangle. The mockup draws it
                          the same way. -->
                     <Border Grid.Column="0"
-                            Width="44" Height="44"
+                            Width="{DynamicResource Size.Icon.XL}" Height="{DynamicResource Size.Icon.XL}"
                             CornerRadius="22"
                             Background="{StaticResource Brush.Status.Caution}"
                             Margin="0,0,16,0"
                             VerticalAlignment="Center">
                         <TextBlock Text="↑"
-                                   FontSize="22" FontWeight="Bold"
+                                   FontSize="{DynamicResource Font.Size.Cta}" FontWeight="Bold"
                                    Foreground="{StaticResource Brush.Text.OnAccent}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"/>
@@ -95,11 +95,11 @@
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                         <controls:TrackedTextBlock Text="NEW VERSION AVAILABLE"
                                                    FontFamily="{StaticResource Font.Heading}"
-                                                   FontSize="16"
+                                                   FontSize="{DynamicResource Font.Size.Section}"
                                                    FontWeight="SemiBold"
                                                    Tracking="{StaticResource Track.Snug}"
                                                    Foreground="{StaticResource Brush.Status.Caution}"/>
-                        <TextBlock Style="{StaticResource Text.Body}" FontSize="13" Margin="0,2,0,0">
+                        <TextBlock Style="{StaticResource Text.Body}" FontSize="{DynamicResource Font.Size.BodySmall}" Margin="0,2,0,0">
                             <Run Text="Version "/>
                             <Run Text="{Binding NewVersionNumber, Mode=OneWay}"
                                  FontWeight="SemiBold"
@@ -118,10 +118,10 @@
 
             <!-- ===================== Hero ===================== -->
 
-            <controls:Card Padding="30" Margin="0,0,0,16">
+            <controls:Card Padding="{DynamicResource Space.XXL}" Margin="0,0,0,16">
                 <StackPanel>
                     <controls:TrackedTextBlock Style="{StaticResource Display.PageTitle}"
-                                               FontSize="30"
+                                               FontSize="{DynamicResource Font.Size.Title}"
                                                Text="{Binding WelcomeMessage, Converter={StaticResource UpperCase}}"
                                                Margin="0,0,0,26"/>
 
@@ -138,8 +138,8 @@
                     -->
                     <Button Style="{StaticResource Button.Cta}"
                             Content="PLAY NOW"
-                            FontSize="22"
-                            Padding="20"
+                            FontSize="{DynamicResource Font.Size.Cta}"
+                            Padding="{DynamicResource Space.XL}"
                             Margin="0,28,0,0"
                             Command="{Binding DataContext.SingleplayerCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
                 </StackPanel>
@@ -174,7 +174,7 @@
                                             </Grid.ColumnDefinitions>
 
                                             <Border Grid.Column="0" Style="{StaticResource Home.FactionTile}">
-                                                <Image Width="22" Height="22">
+                                                <Image Width="{DynamicResource Size.Icon.S}" Height="{DynamicResource Size.Icon.S}">
                                                     <Image.Source>
                                                         <MultiBinding Converter="{StaticResource FactionIconConverter}">
                                                             <Binding Path="CompanyFaction"/>
@@ -262,8 +262,8 @@
                                 <DataTemplate>
                                     <Border Style="{StaticResource Home.Row}">
                                         <StackPanel Orientation="Horizontal">
-                                            <Border Style="{StaticResource Home.FactionTile}" Width="38" Height="38">
-                                                <Image Width="24" Height="24">
+                                            <Border Style="{StaticResource Home.FactionTile}" Width="{DynamicResource Size.Icon.XL}" Height="{DynamicResource Size.Icon.XL}">
+                                                <Image Width="{DynamicResource Size.Icon.M}" Height="{DynamicResource Size.Icon.M}">
                                                     <Image.Source>
                                                         <MultiBinding Converter="{StaticResource FactionIconConverter}">
                                                             <Binding Path="CompanyFaction"/>
@@ -317,7 +317,7 @@
                     <StackPanel>
                         <Border Style="{StaticResource Home.StatRow}">
                             <Grid>
-                                <TextBlock Style="{StaticResource Text.Body}" FontSize="13" Text="Favourite faction"/>
+                                <TextBlock Style="{StaticResource Text.Body}" FontSize="{DynamicResource Font.Size.BodySmall}" Text="Favourite faction"/>
                                 <TextBlock Style="{StaticResource Text.Strong}" HorizontalAlignment="Right">
                                     <TextBlock.Text>
                                         <MultiBinding Converter="{StaticResource FactionIdToNameConverter}">
@@ -331,7 +331,7 @@
 
                         <Border Style="{StaticResource Home.StatRow}">
                             <Grid>
-                                <TextBlock Style="{StaticResource Text.Body}" FontSize="13" Text="Favourite map"/>
+                                <TextBlock Style="{StaticResource Text.Body}" FontSize="{DynamicResource Font.Size.BodySmall}" Text="Favourite map"/>
                                 <TextBlock Style="{StaticResource Text.Strong}" HorizontalAlignment="Right">
                                     <TextBlock.Text>
                                         <MultiBinding Converter="{StaticResource ScenarioIdToNameConverter}">
@@ -345,7 +345,7 @@
 
                         <Border Style="{StaticResource Home.StatRow}">
                             <Grid>
-                                <TextBlock Style="{StaticResource Text.Body}" FontSize="13" Text="Total playtime"/>
+                                <TextBlock Style="{StaticResource Text.Body}" FontSize="{DynamicResource Font.Size.BodySmall}" Text="Total playtime"/>
                                 <TextBlock Style="{StaticResource Text.Strong}"
                                            HorizontalAlignment="Right"
                                            Text="{Binding TotalPlayTime}"/>
@@ -354,7 +354,7 @@
 
                         <Border Style="{StaticResource Home.StatRow}" BorderThickness="0">
                             <Grid>
-                                <TextBlock Style="{StaticResource Text.Body}" FontSize="13" Text="Companies"/>
+                                <TextBlock Style="{StaticResource Text.Body}" FontSize="{DynamicResource Font.Size.BodySmall}" Text="Companies"/>
                                 <TextBlock Style="{StaticResource Text.Strong}"
                                            HorizontalAlignment="Right"
                                            Text="{Binding CompaniesOwned}"/>
