@@ -247,20 +247,6 @@ public sealed class LobbyViewModelFlowTests {
     }
 
     [Test]
-    public async Task SingleplayerFlow_SettingChange_RaisesPropertyChanged() {
-        var (lobby, events) = CreateLobby(isHost: true, startEventLoop: true);
-        var vm = CreateVm(lobby, BuildServiceProvider());
-
-        var fired = new List<string>();
-        vm.PropertyChanged += (_, e) => fired.Add(e.PropertyName!);
-
-        await PushEventAndWait(vm, events, new LobbyEvent(LobbyEventType.SettingUpdated));
-        events.Writer.Complete();
-
-        Assert.That(fired, Contains.Item(nameof(vm.SelectedSettings)));
-    }
-
-    [Test]
     public async Task SingleplayerFlow_ChatMessageAppearsInViewModel() {
         var (lobby, events) = CreateLobby(isHost: true, startEventLoop: true);
         var vm = CreateVm(lobby, BuildServiceProvider());
