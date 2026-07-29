@@ -54,9 +54,17 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
 
     public bool IsReady => true; // Always ready in singleplayer mode
 
-    public async ValueTask<LobbyEvent?> GetNextEvent() {
+    public LobbyConnectionState ConnectionState => _isActive ? LobbyConnectionState.Connected : LobbyConnectionState.Disposed;
+
+    public long Revision => 0;
+
+    public long GetSlotRevision(int teamId, int slotId) => 0;
+
+    public ValueTask<LobbyEvent?> GetNextEvent() => GetNextEvent(CancellationToken.None);
+
+    public async ValueTask<LobbyEvent?> GetNextEvent(CancellationToken cancellationToken) {
         try {
-            return await _internalEvents.Reader.ReadAsync();
+            return await _internalEvents.Reader.ReadAsync(cancellationToken);
         } catch (ChannelClosedException) {
             return null; // Channel is closed, no more events (why must this be an exception...)
         }

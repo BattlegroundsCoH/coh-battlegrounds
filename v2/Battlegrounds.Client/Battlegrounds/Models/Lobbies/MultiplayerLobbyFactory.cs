@@ -33,7 +33,11 @@ public sealed class MultiplayerLobbyFactory(IServiceProvider serviceProvider) {
     /// <returns>A task that represents the asynchronous operation. The task result contains the created and initialized
     /// MultiplayerLobby instance.</returns>
     /// <exception cref="InvalidOperationException">Thrown if the initial response from the server is not received, indicating that the lobby could not be started.</exception>
-    public async Task<MultiplayerLobby> GetLobbyAsHost(LobbyService.LobbyServiceClient client, AsyncServerStreamingCall<LobbyStateUpdate> stream, LobbySetup setup) {
+    public async Task<MultiplayerLobby> GetLobbyAsHost(
+        LobbyService.LobbyServiceClient client,
+        AsyncServerStreamingCall<LobbyStateUpdate> stream,
+        LobbySetup setup,
+        Func<CancellationToken, AsyncServerStreamingCall<LobbyStateUpdate>>? reconnect = null) {
         var scope = serviceProvider.CreateScope();
         var provider = scope.ServiceProvider;
         var serverAPI = provider.GetRequiredService<IBattlegroundsServerAPI>();
@@ -48,7 +52,7 @@ public sealed class MultiplayerLobbyFactory(IServiceProvider serviceProvider) {
         // Await for the first response to get the lobby ID
         var hostResponse = stream.ResponseStream.Current;
 
-        var lobby = new MultiplayerLobby(hostResponse.LobbyId, stream, client, setup, serverAPI, userService, companyService, mapService) {
+        var lobby = new MultiplayerLobby(hostResponse.LobbyId, stream, client, setup, serverAPI, userService, companyService, mapService, reconnect) {
             IsHost = true,
             IsReady = true // The host is always considered ready
         };
@@ -68,7 +72,11 @@ public sealed class MultiplayerLobbyFactory(IServiceProvider serviceProvider) {
     /// <returns>A task that represents the asynchronous operation. The task result contains a configured instance of the
     /// multiplayer lobby for non-host usage.</returns>
     /// <exception cref="InvalidOperationException">Thrown if no response is received from the server when attempting to join the lobby.</exception>
-    public async Task<MultiplayerLobby> GetLobbyAsNonHost(BrowserLobby browserLobby, LobbyService.LobbyServiceClient client, AsyncServerStreamingCall<LobbyStateUpdate> stream) {
+    public async Task<MultiplayerLobby> GetLobbyAsNonHost(
+        BrowserLobby browserLobby,
+        LobbyService.LobbyServiceClient client,
+        AsyncServerStreamingCall<LobbyStateUpdate> stream,
+        Func<CancellationToken, AsyncServerStreamingCall<LobbyStateUpdate>>? reconnect = null) {
         var scope = serviceProvider.CreateScope();
         var provider = scope.ServiceProvider;
         var serverAPI = provider.GetRequiredService<IBattlegroundsServerAPI>();
@@ -102,7 +110,7 @@ public sealed class MultiplayerLobbyFactory(IServiceProvider serviceProvider) {
             Team2 = MapProtoTeam(currentState.Teams[1]),
         };
 
-        var lobby = new MultiplayerLobby(browserLobby.Id, stream, client, setup, serverAPI, userService, companyService, mapService) {
+        var lobby = new MultiplayerLobby(browserLobby.Id, stream, client, setup, serverAPI, userService, companyService, mapService, reconnect) {
             IsHost = false,
             IsReady = false, // Non-host participants are not considered ready until they explicitly mark themselves as ready
         };

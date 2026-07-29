@@ -141,8 +141,17 @@ public sealed class LobbyService(
             };
 
             var stream = client.HostLobby(hostRequest, headers);
-            var lobby = await _multiplayerLobbyFactory.GetLobbyAsHost(client, stream, lobbySetup);
-            _ = lobby.PollGrpcUpdates(); // Start polling for updates immediately after lobby creation
+            string lobbyId = string.Empty;
+            var lobby = await _multiplayerLobbyFactory.GetLobbyAsHost(
+                client,
+                stream,
+                lobbySetup,
+                token => client.JoinLobby(new JoinLobbyRequest {
+                    LobbyId = lobbyId,
+                    Password = password ?? string.Empty,
+                }, headers, cancellationToken: token));
+            lobbyId = lobby.Id;
+            lobby.StartPolling();
             await lobby.PublishInitialState();
 
             return lobby;
@@ -178,7 +187,7 @@ public sealed class LobbyService(
                 break;
             case MultiplayerLobby multiplayerLobby:
                 await multiplayerLobby.LeaveAsync(); // Leave the multiplayer lobby
-                multiplayerLobby.Dispose(); // Dispose the multiplayer lobby
+                await multiplayerLobby.DisposeAsync();
                 break;
             default:
                 throw new InvalidOperationException("Unknown lobby type.");
@@ -219,8 +228,12 @@ public sealed class LobbyService(
                 { "authorization", $"Bearer {_userService.GetLocalUserToken()}" },
             };
             var stream = client.JoinLobby(joinRequest, headers);
-            var multiplayerLobby = await _multiplayerLobbyFactory.GetLobbyAsNonHost(lobby, client, stream);
-            _ = multiplayerLobby.PollGrpcUpdates();
+            var multiplayerLobby = await _multiplayerLobbyFactory.GetLobbyAsNonHost(
+                lobby,
+                client,
+                stream,
+                token => client.JoinLobby(joinRequest, headers, cancellationToken: token));
+            multiplayerLobby.StartPolling();
             ActiveLobby = multiplayerLobby;
             return multiplayerLobby;
         } catch (Exception ex) {

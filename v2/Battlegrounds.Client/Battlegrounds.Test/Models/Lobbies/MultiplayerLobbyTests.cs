@@ -651,6 +651,67 @@ public sealed class MultiplayerLobbyTests {
         Assert.That(_hostLobby.Companies.ContainsKey(fakeCompany.Id), Is.True);
     }
 
+    [Test]
+    public async Task SlotUpdated_WhenCompanyChanges_IgnoresSupersededDownload() {
+        var firstCompletion = new TaskCompletionSource<Company?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var secondCompletion = new TaskCompletionSource<Company?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _companyService.GetCompanyAsync(
+                Arg.Any<string>(),
+                _remoteParticipant.ParticipantId,
+                localOnly: Arg.Any<bool>(),
+                downloadProgressUpdate: Arg.Any<DownloadProgressUpdateDelegate?>())
+            .Returns(call => new ValueTask<Company?>(
+                call.ArgAt<string>(0) == "company-first"
+                    ? firstCompletion.Task
+                    : secondCompletion.Task));
+
+        var pollTask = Task.Run(_hostLobby.PollGrpcUpdates);
+        await _streamReader.PushAsync(CreateCompanySlotUpdate("company-first"));
+        _ = await _hostLobby.GetNextEvent().AsTask().WaitAsync(TimeSpan.FromSeconds(1));
+        var firstRevision = _hostLobby.GetSlotRevision(1, 0);
+
+        await _streamReader.PushAsync(CreateCompanySlotUpdate("company-second"));
+        _ = await _hostLobby.GetNextEvent().AsTask().WaitAsync(TimeSpan.FromSeconds(1));
+        var secondRevision = _hostLobby.GetSlotRevision(1, 0);
+
+        secondCompletion.SetResult(new Company {
+            Id = "company-second",
+            Name = "Second",
+            Faction = "british_africa",
+            GameId = "CoH3"
+        });
+        firstCompletion.SetResult(new Company {
+            Id = "company-first",
+            Name = "First",
+            Faction = "british_africa",
+            GameId = "CoH3"
+        });
+        await Task.Delay(100);
+
+        Assert.Multiple(() => {
+            Assert.That(secondRevision, Is.GreaterThan(firstRevision));
+            Assert.That(_hostLobby.Companies.ContainsKey("company-second"), Is.True);
+            Assert.That(_hostLobby.Companies.ContainsKey("company-first"), Is.False);
+        });
+
+        _streamReader.Complete();
+        await pollTask.WaitAsync(TimeSpan.FromSeconds(1));
+    }
+
+    private LobbyStateUpdate CreateCompanySlotUpdate(string companyId) => new() {
+        EventType = "SlotUpdated",
+        SlotUpdate = new SlotUpdate {
+            TeamId = 1,
+            Slot = new Slot {
+                Id = 0,
+                ParticipantId = _remoteParticipant.ParticipantId,
+                Faction = "british_africa",
+                CompanyId = companyId,
+                AiDifficulty = "Human",
+            }
+        }
+    };
+
     // ════════════════════════════════════════════════════════════════════════
     //  G — Lifecycle
     // ════════════════════════════════════════════════════════════════════════

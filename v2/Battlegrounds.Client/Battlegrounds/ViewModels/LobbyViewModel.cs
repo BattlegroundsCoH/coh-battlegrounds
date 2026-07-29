@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.ViewModels;
 
-public sealed class LobbyViewModel : INotifyPropertyChanged {
+public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
 
     public const int MAX_CHAT_MESSAGE_LENGTH = 180; // Maximum length of a chat message
     public const string MAX_MESSAGE_LENGTH_REACHED = "Chat message truncated to 180 characters.";
@@ -34,6 +34,9 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     private readonly Dictionary<FactionAlliance, List<Company>> _localPlayerCompaniesByAlliance = [];
     private readonly Dictionary<string, Company> _lobbyCompanies = [];
     private readonly MainWindowViewModel _mainWindowVm;
+    private readonly SynchronizationContext? _uiContext;
+    private readonly CancellationTokenSource _lifetimeCts = new();
+    private readonly Task _lifetimeTask;
 
     private ICollection<LobbySlotViewModel> _team1Slots = [];
     private ICollection<LobbySlotViewModel> _team2Slots = [];
@@ -50,6 +53,9 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     private bool _isPlaying = false;
     private bool _isMatchStarting = false;
     private bool _isWaitingForMatchOver = false;
+    private bool _disposed;
+    private long _lastAppliedRevision;
+    private LobbyConnectionState _connectionState;
 
     private MatchOverViewModel? _matchOverResult;
     private CompanyPreviewViewModel? _companyPreviewResult;
@@ -97,6 +103,18 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     public bool IsHost => _lobby.IsHost;
 
     public bool IsReady => _lobby.IsReady;
+
+    public LobbyConnectionState ConnectionState {
+        get => _connectionState;
+        private set {
+            if (_connectionState == value) return;
+            _connectionState = value;
+            PropertyChanged?.Invoke(this, new(nameof(ConnectionState)));
+            PropertyChanged?.Invoke(this, new(nameof(IsConnected)));
+        }
+    }
+
+    public bool IsConnected => ConnectionState == LobbyConnectionState.Connected;
 
     public IReadOnlyDictionary<FactionAlliance, List<Company>> CompaniesByAlliance => _localPlayerCompaniesByAlliance;
 
@@ -259,6 +277,10 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         _gameMapService = serviceProvider.GetRequiredService<IGameMapService>();
         _statisticsService = serviceProvider.GetRequiredService<IStatisticsService>();
         _mainWindowVm = serviceProvider.GetRequiredService<MainWindowViewModel>();
+        _uiContext = SynchronizationContext.Current is System.Windows.Threading.DispatcherSynchronizationContext
+            ? SynchronizationContext.Current
+            : null;
+        _connectionState = lobby.ConnectionState;
         _selectedMap = lobby.Map;
         _draftSelectedMap = lobby.Map;
 
@@ -268,19 +290,34 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         ToggleReadyCommand = new AsyncRelayCommand(ToggleReady);
         SetMapCommand = new AsyncRelayCommand<Map>(SetMap, map => map is not null && map != _selectedMap);
 
-        // Sync view with lobby state
-        SyncLobbyView();
+        _lifetimeTask = RunSupervisedAsync(_lifetimeCts.Token);
 
     }
 
-    private async void SyncLobbyView() {
-        SyncLobbySettings();
-        AvailableMaps = [.. (await _gameMapService.GetMapsForGame(_lobby.Game.Id)).Select(Map.FromScenario)];
-        Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
-        Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
-        PollLobbyEvents();
-        LoadLocalPlayerCompanies();
-        SyncState();
+    private async Task RunSupervisedAsync(CancellationToken cancellationToken) {
+        try {
+            var maps = (await _gameMapService.GetMapsForGame(_lobby.Game.Id)).Select(Map.FromScenario).ToArray();
+            var team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
+            var team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
+            cancellationToken.ThrowIfCancellationRequested();
+            await InvokeOnUiAsync(() => {
+                SyncLobbySettings();
+                AvailableMaps = maps;
+                Team1Slots = team1Slots;
+                Team2Slots = team2Slots;
+                SyncState();
+            }, cancellationToken);
+            await LoadLocalPlayerCompanies(cancellationToken);
+            await PollLobbyEvents(cancellationToken);
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            // Normal view disposal.
+        } catch (Exception ex) {
+            _logger.LogError(ex, "Lobby view initialization/event loop failed.");
+            await InvokeOnUiAsync(() => {
+                LobbyState = "Lobby synchronization failed";
+                ConnectionState = LobbyConnectionState.Disconnected;
+            }, CancellationToken.None);
+        }
     }
 
     private void SyncState() {
@@ -297,15 +334,16 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         SelectedSettings = [.. _lobby.Settings.Select(x => new LobbySettingViewModel(x, SetSetting))];
     }
 
-    private async void LoadLocalPlayerCompanies() {
+    private async Task LoadLocalPlayerCompanies(CancellationToken cancellationToken) {
 
         string[] factions = _lobby.Game.FactionIds ?? [];
+        var localPlayerCompanies = (await _companyService.GetLocalCompaniesAsync()).ToArray();
         foreach (string faction in factions) {
+            cancellationToken.ThrowIfCancellationRequested();
             var alliance = _lobby.Game.GetFactionAlliance(faction);
             if (!_localPlayerCompaniesByAlliance.TryGetValue(alliance, out var existingCompanies)) {
                 _localPlayerCompaniesByAlliance[alliance] = existingCompanies = [];
             }
-            var localPlayerCompanies = await _companyService.GetLocalCompaniesAsync();
             var factionCompanies = (from c in localPlayerCompanies where c.Faction == faction select c).ToArray();
             if (factionCompanies.Length == 0) {
                 continue; // No companies for this faction
@@ -352,14 +390,44 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
     }
 
-    private async void PollLobbyEvents() {
-        while (_lobby.IsActive) {
-            LobbyEvent? lobbyEvent = await _lobby.GetNextEvent();
+    private async Task PollLobbyEvents(CancellationToken cancellationToken) {
+        while (_lobby.IsActive && !cancellationToken.IsCancellationRequested) {
+            LobbyEvent? lobbyEvent;
+            try {
+                lobbyEvent = await _lobby.GetNextEvent().AsTask().WaitAsync(cancellationToken);
+            } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+                break;
+            }
             if (lobbyEvent is null) {
                 break;
             }
 
+            await InvokeOnUiAsync(async () => {
+            if (IsRevisionedStateEvent(lobbyEvent.EventType)
+                && lobbyEvent.Revision > 0
+                && lobbyEvent.Revision <= _lastAppliedRevision) {
+                return;
+            }
+            if (IsRevisionedStateEvent(lobbyEvent.EventType)) {
+                _lastAppliedRevision = Math.Max(_lastAppliedRevision, lobbyEvent.Revision);
+            }
             switch (lobbyEvent.EventType) {
+                case LobbyEventType.ConnectionStateChanged:
+                    if (lobbyEvent.Arg is LobbyConnectionState connectionState) {
+                        ConnectionState = connectionState;
+                    }
+                    break;
+                case LobbyEventType.SnapshotApplied:
+                    _selectedMap = _lobby.Map;
+                    _draftSelectedMap = _lobby.Map;
+                    SyncLobbySettings();
+                    Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
+                    Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
+                    PropertyChanged?.Invoke(this, new(nameof(SelectedMap)));
+                    PropertyChanged?.Invoke(this, new(nameof(DraftSelectedMap)));
+                    PropertyChanged?.Invoke(this, new(nameof(SelectedMapPreview)));
+                    SetMapCommand.NotifyCanExecuteChanged();
+                    break;
                 case LobbyEventType.ParticipantMessage:
                     if (lobbyEvent.Arg is not ChatMessage chatEvent) {
                         break; // Error?
@@ -443,38 +511,62 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                     TrayMessage = string.Empty;
                     break;
                 case LobbyEventType.MatchOver:
-                    ShowMatchResults();
+                    await ShowMatchResults();
                     break;
                 case LobbyEventType.SlotCompanyDownloadProgress:
-                    switch (lobbyEvent.Arg) {
-                        case (int teamId, int slotId, float progress): {
-                            var slotVm = (teamId == 0 ? Team1Slots : Team2Slots).FirstOrDefault(x => x.Slot.Index == slotId);
-                            if (slotVm is null) {
-                                break;
-                            }
+                    if (lobbyEvent.Arg is SlotCompanyDownloadUpdate download
+                        && download.TeamId is >= 0 and < 2
+                        && _lobby.GetSlotRevision(download.TeamId, download.SlotId) == download.SlotRevision) {
+                        var slots = download.TeamId == 0 ? Team1Slots : Team2Slots;
+                        var slotVm = slots.FirstOrDefault(x => x.Slot.Index == download.SlotId);
+                        if (slotVm is null
+                            || !string.Equals(slotVm.Slot.CompanyId, download.CompanyId, StringComparison.Ordinal)) {
+                            break;
+                        }
+                        if (download.Progress is float progress) {
                             slotVm.CompanyDownloadProgress = progress;
                             PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
                             PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
                             if (progress >= 1.0f) {
-                                _ = HideDownloadProgressAfterDelay(teamId, slotId);
+                                _ = HideDownloadProgressAfterDelay(download.TeamId, download.SlotId, download.CompanyId, download.SlotRevision, cancellationToken);
                             }
-                            break;
                         }
-                        case (int teamId, int slotId, Company company): {
-                            var slot = (teamId == 0 ? Team1Slots : Team2Slots).FirstOrDefault(x => x.Slot.Index == slotId);
-                            if (slot is null) {
-                                break;
-                            }
-                            var updatedSlot = slot.WithServerCompany(company);
-                            ICollection<LobbySlotViewModel> updatedSlots = [..(teamId == 0 ? Team1Slots : Team2Slots).Except([slot]).Append(updatedSlot).OrderBy(x => x.Slot.Index)];
-                            if (teamId == 0) {
+                        if (download.Company is Company company && company.Id == download.CompanyId) {
+                            var updatedSlot = slotVm.WithServerCompany(company);
+                            ICollection<LobbySlotViewModel> updatedSlots = [.. slots.Except([slotVm]).Append(updatedSlot).OrderBy(x => x.Slot.Index)];
+                            if (download.TeamId == 0) {
                                 Team1Slots = updatedSlots;
                             } else {
                                 Team2Slots = updatedSlots;
                             }
                             PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
                             PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
-                            break;
+                        }
+                    } else if (lobbyEvent.Arg is ValueTuple<int, int, float> legacyProgress) {
+                        var (teamId, slotId, progress) = legacyProgress;
+                        var slotVm = (teamId == 0 ? Team1Slots : Team2Slots).FirstOrDefault(x => x.Slot.Index == slotId);
+                        if (slotVm is not null) {
+                            slotVm.CompanyDownloadProgress = progress;
+                            PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
+                            PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
+                            if (progress >= 1.0f) {
+                                _ = HideDownloadProgressAfterDelay(
+                                    teamId,
+                                    slotId,
+                                    slotVm.Slot.CompanyId,
+                                    _lobby.GetSlotRevision(teamId, slotId),
+                                    cancellationToken);
+                            }
+                        }
+                    } else if (lobbyEvent.Arg is ValueTuple<int, int, Company> legacyCompany) {
+                        var (teamId, slotId, company) = legacyCompany;
+                        var slots = teamId == 0 ? Team1Slots : Team2Slots;
+                        var slotVm = slots.FirstOrDefault(x => x.Slot.Index == slotId);
+                        if (slotVm is not null) {
+                            var updatedSlot = slotVm.WithServerCompany(company);
+                            ICollection<LobbySlotViewModel> updatedSlots = [.. slots.Except([slotVm]).Append(updatedSlot).OrderBy(x => x.Slot.Index)];
+                            if (teamId == 0) Team1Slots = updatedSlots;
+                            else Team2Slots = updatedSlots;
                         }
                     }
                     break;
@@ -482,9 +574,21 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                     break;
             }
             SyncState();
-
+            }, cancellationToken);
         }
     }
+
+    private static bool IsRevisionedStateEvent(LobbyEventType eventType) => eventType is
+        LobbyEventType.ParticipantJoined or
+        LobbyEventType.ParticipantLeft or
+        LobbyEventType.ParticipantUpdated or
+        LobbyEventType.ParticipantReady or
+        LobbyEventType.ParticipantUnready or
+        LobbyEventType.TeamUpdated or
+        LobbyEventType.SlotUpdated or
+        LobbyEventType.SettingUpdated or
+        LobbyEventType.MapUpdated or
+        LobbyEventType.SnapshotApplied;
 
     private async Task<List<LobbySlotViewModel>> MapTeamSlotsToLobbySlots(int index, Team.Slot[] slots) {
         List<LobbySlotViewModel> result = [];
@@ -695,26 +799,59 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         };
     }
 
-    private async Task HideDownloadProgressAfterDelay(int teamId, int slotId) {
-        await Task.Delay(TimeSpan.FromSeconds(2), _timeProvider);
-
-        var slot = (teamId == 0 ? Team1Slots : Team2Slots).FirstOrDefault(x => x.Slot.Index == slotId);
-        if (slot is null) {
+    private async Task HideDownloadProgressAfterDelay(int teamId, int slotId, string companyId, long slotRevision, CancellationToken cancellationToken) {
+        try {
+            await Task.Delay(TimeSpan.FromSeconds(2), _timeProvider, cancellationToken);
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             return;
         }
 
-        slot.CompanyDownloadProgress = 0;
-        PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
-        PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
+        await InvokeOnUiAsync(() => {
+            var slot = (teamId == 0 ? Team1Slots : Team2Slots).FirstOrDefault(x => x.Slot.Index == slotId);
+            if (slot is null || slot.Slot.CompanyId != companyId || _lobby.GetSlotRevision(teamId, slotId) != slotRevision) {
+                return;
+            }
+            slot.CompanyDownloadProgress = 0;
+            PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
+            PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
+        }, cancellationToken);
     }
 
-    private async void ShowMatchResults() {
+    private async Task ShowMatchResults() {
         var matchResult = await _lobby.GetMatchResults();
         if (matchResult is null) {
             _logger.LogWarning("Received MatchOver event but GetMatchResults returned null.");
             return;
         }
         MatchOverResult = new MatchOverViewModel(matchResult, _lobby.Game, () => MatchOverResult = null);
+    }
+
+    private Task InvokeOnUiAsync(Action action, CancellationToken cancellationToken) =>
+        InvokeOnUiAsync(() => {
+            action();
+            return Task.CompletedTask;
+        }, cancellationToken);
+
+    private Task InvokeOnUiAsync(Func<Task> action, CancellationToken cancellationToken) {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (_uiContext is null || ReferenceEquals(SynchronizationContext.Current, _uiContext)) {
+            return action();
+        }
+
+        var completion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        _uiContext.Post(async _ => {
+            if (cancellationToken.IsCancellationRequested) {
+                completion.TrySetCanceled(cancellationToken);
+                return;
+            }
+            try {
+                await action();
+                completion.TrySetResult();
+            } catch (Exception ex) {
+                completion.TrySetException(ex);
+            }
+        }, null);
+        return completion.Task;
     }
 
     private async Task SyncLobbyCompanies() {
@@ -844,6 +981,20 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             return;
         }
         CompanyPreviewResult = new CompanyPreviewViewModel(company, GameId, () => CompanyPreviewResult = null);
+    }
+
+    public async ValueTask DisposeAsync() {
+        if (_disposed) {
+            return;
+        }
+        _disposed = true;
+        _lifetimeCts.Cancel();
+        try {
+            await _lifetimeTask.ConfigureAwait(false);
+        } catch (OperationCanceledException) {
+            // Expected during teardown.
+        }
+        _lifetimeCts.Dispose();
     }
 
 }

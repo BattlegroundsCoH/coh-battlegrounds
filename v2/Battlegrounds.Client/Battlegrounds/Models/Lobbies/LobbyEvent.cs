@@ -1,6 +1,8 @@
 ﻿namespace Battlegrounds.Models.Lobbies;
 
 public enum LobbyEventType {
+    ConnectionStateChanged,
+    SnapshotApplied,
     ParticipantJoined,
     ParticipantLeft,
     ParticipantUpdated,
@@ -26,4 +28,20 @@ public enum LobbyEventType {
     SlotCompanyDownloadProgress, // Never sent or received by the server, only used for the client to update the download progress of a company in a slot
 }
 
-public sealed record LobbyEvent(LobbyEventType EventType, object? Arg = null);
+public enum LobbyConnectionState {
+    Connecting,
+    Connected,
+    Reconnecting,
+    Disconnected,
+    Disposed,
+}
+
+public sealed record SlotCompanyDownloadUpdate(
+    int TeamId,
+    int SlotId,
+    string CompanyId,
+    long SlotRevision,
+    float? Progress = null,
+    Models.Companies.Company? Company = null);
+
+public sealed record LobbyEvent(LobbyEventType EventType, object? Arg = null, long Revision = 0);

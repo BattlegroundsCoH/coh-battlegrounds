@@ -877,6 +877,9 @@
                 <Label Content="{Binding LobbyState}"
                        Foreground="{StaticResource ForegroundWhiteBrush}"
                        VerticalAlignment="Center"/>
+                <Label Content="{Binding ConnectionState, StringFormat=Connection: {0}}"
+                       Foreground="{StaticResource ForegroundDarkGrayBrush}"
+                       VerticalAlignment="Center"/>
                 <Label Content="{Binding TrayMessage}"
                        Foreground="{StaticResource ForegroundDarkGrayBrush}"
                        VerticalAlignment="Center"/>

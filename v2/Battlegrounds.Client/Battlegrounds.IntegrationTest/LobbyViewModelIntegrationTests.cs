@@ -58,6 +58,12 @@ public sealed class LobbyViewModelIntegrationTests : LobbyServerIntegrationTests
 
     [TearDown]
     public async Task TearDown() {
+        if (_participantVm is not null) {
+            await _participantVm.DisposeAsync();
+        }
+        if (_hostVm is not null) {
+            await _hostVm.DisposeAsync();
+        }
         await _harness.DisposeAsync();
     }
 
