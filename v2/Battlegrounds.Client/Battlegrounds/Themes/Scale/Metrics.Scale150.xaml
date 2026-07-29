@@ -1,0 +1,82 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--
+        UI scale 150%. See Metrics.Scale110.xaml for why these are hand-authored whole
+        numbers rather than a runtime multiplication, and which token families are
+        deliberately left out.
+
+        Size.Window.Min* reaches 1770x1080 here, which is taller than a 1080p display.
+        MainWindow clamps the minimums to the work area before applying them, so this
+        scale stays usable on a small screen — it just cannot honour the full floor.
+    -->
+
+    <!-- ===================== Spacing ===================== -->
+
+    <Thickness x:Key="Space.XS">6</Thickness>
+    <Thickness x:Key="Space.S">12</Thickness>
+    <Thickness x:Key="Space.M">18</Thickness>
+    <Thickness x:Key="Space.L">24</Thickness>
+    <Thickness x:Key="Space.XL">30</Thickness>
+    <Thickness x:Key="Space.XXL">45</Thickness>
+
+    <Thickness x:Key="Space.Page">30</Thickness>
+    <Thickness x:Key="Space.Card">33</Thickness>
+    <Thickness x:Key="Space.Row">14,18</Thickness>
+    <Thickness x:Key="Space.Field">21,18</Thickness>
+    <Thickness x:Key="Space.Button">27,14</Thickness>
+    <Thickness x:Key="Space.ButtonLarge">48,23</Thickness>
+    <Thickness x:Key="Space.HeadingGap">0,0,0,21</Thickness>
+    <Thickness x:Key="Space.StatGap">0,12,0,0</Thickness>
+    <Thickness x:Key="Space.Badge">14,6</Thickness>
+
+    <!-- ===================== Control sizing ===================== -->
+
+    <sys:Double x:Key="Size.Control">54</sys:Double>
+    <sys:Double x:Key="Size.ControlLarge">66</sys:Double>
+    <sys:Double x:Key="Size.TopBar">90</sys:Double>
+    <sys:Double x:Key="Size.NavItem">68</sys:Double>
+    <sys:Double x:Key="Size.NavRail">300</sys:Double>
+    <sys:Double x:Key="Size.NavRailCompact">225</sys:Double>
+    <sys:Double x:Key="Size.NavLogo">240</sys:Double>
+
+    <sys:Double x:Key="Size.Breakpoint.Medium">2100</sys:Double>
+    <sys:Double x:Key="Size.Breakpoint.Expanded">2700</sys:Double>
+    <sys:Double x:Key="Size.NavIndicator">6</sys:Double>
+    <sys:Double x:Key="Size.ScrollBar">12</sys:Double>
+    <sys:Double x:Key="Size.MenuRow">57</sys:Double>
+    <sys:Double x:Key="Size.EyebrowRule">51</sys:Double>
+    <sys:Double x:Key="Size.Icon.XS">24</sys:Double>
+    <sys:Double x:Key="Size.Icon.S">30</sys:Double>
+    <sys:Double x:Key="Size.Icon.M">36</sys:Double>
+    <sys:Double x:Key="Size.Icon.L">48</sys:Double>
+    <sys:Double x:Key="Size.Icon.XL">63</sys:Double>
+    <sys:Double x:Key="Size.Icon.XXL">72</sys:Double>
+    <sys:Double x:Key="Size.Icon.Huge">105</sys:Double>
+    <sys:Double x:Key="Size.Dot">9</sys:Double>
+
+    <!-- ===================== Window ===================== -->
+    <sys:Double x:Key="Size.Window.DefaultWidth">2580</sys:Double>
+    <sys:Double x:Key="Size.Window.DefaultHeight">1470</sys:Double>
+    <sys:Double x:Key="Size.Window.MinWidth">1770</sys:Double>
+    <sys:Double x:Key="Size.Window.MinHeight">1080</sys:Double>
+
+    <!-- ===================== Type ===================== -->
+
+    <sys:Double x:Key="Font.Size.DisplayLarge">69</sys:Double>
+    <sys:Double x:Key="Font.Size.Display">60</sys:Double>
+    <sys:Double x:Key="Font.Size.Title">45</sys:Double>
+    <sys:Double x:Key="Font.Size.PageTitle">36</sys:Double>
+    <sys:Double x:Key="Font.Size.Cta">33</sys:Double>
+    <sys:Double x:Key="Font.Size.Heading">30</sys:Double>
+    <sys:Double x:Key="Font.Size.Stat">51</sys:Double>
+    <sys:Double x:Key="Font.Size.Section">24</sys:Double>
+    <sys:Double x:Key="Font.Size.Group">27</sys:Double>
+    <sys:Double x:Key="Font.Size.Eyebrow">18</sys:Double>
+    <sys:Double x:Key="Font.Size.Body">21</sys:Double>
+    <sys:Double x:Key="Font.Size.BodySmall">20</sys:Double>
+    <sys:Double x:Key="Font.Size.Meta">17</sys:Double>
+    <sys:Double x:Key="Font.Size.Label">15</sys:Double>
+
+</ResourceDictionary>

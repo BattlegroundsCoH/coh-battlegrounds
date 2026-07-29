@@ -32,6 +32,16 @@ jobs:
       with:
         dotnet-version: '10.0.x'
 
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    # dotnet build does not catch a missing x:Key: a StaticResource throws only when the view is
+    # first opened, and a DynamicResource silently resolves to nothing.
+    - name: Check XAML resource keys
+      run: cd v2\Battlegrounds.Client && python scripts\check-xaml-resources.py
+
     - name: Restore dependencies
       run: cd v2\Battlegrounds.Client && dotnet restore
 

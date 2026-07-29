@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Battlegrounds.Views.MultiplayerView"
+<UserControl x:Class="Battlegrounds.Views.MultiplayerView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -16,9 +16,9 @@
         <converter:ScenarioIdToNameConverter x:Key="ScenarioIdToNameConverter"/>
 
         <Style x:Key="LobbyListView" TargetType="ListView">
-            <Setter Property="Background" Value="{StaticResource BackgroundBlueBrush}"/>
-            <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource BackgroundLightBlueBrush}"/>
+            <Setter Property="Background" Value="{StaticResource Brush.Surface.Card}"/>
+            <Setter Property="Foreground" Value="{StaticResource Brush.Text.Primary}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Hairline}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="6"/>
             <Setter Property="Margin" Value="0"/>
@@ -30,7 +30,7 @@
                     Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}"
-                    CornerRadius="8">
+                    CornerRadius="0">
                             <ScrollViewer Focusable="False" Padding="{TemplateBinding Padding}">
                                 <ItemsPresenter/>
                             </ScrollViewer>
@@ -42,7 +42,7 @@
 
         <Style x:Key="LobbyListViewItem" TargetType="ListViewItem">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource Brush.Text.Primary}"/>
             <Setter Property="Padding" Value="10,8"/>
             <Setter Property="Margin" Value="0,2,0,2"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -54,8 +54,8 @@
                     <ControlTemplate TargetType="ListViewItem">
                         <Border x:Name="Bd"
                         Background="{TemplateBinding Background}"
-                        CornerRadius="4"
-                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        CornerRadius="0"
+                        BorderBrush="{StaticResource Brush.Border.Hairline}"
                         BorderThickness="0">
                             <ContentPresenter 
                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -65,11 +65,11 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource AccentBlueBrush}"/>
-                                <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource Brush.Accent.Gold}"/>
+                                <Setter Property="Foreground" Value="{StaticResource Brush.Text.Primary}"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource Brush.Border.Hairline}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.6"/>
@@ -91,10 +91,10 @@
 
                 <!-- Lock icon (only shown when password protected) -->
                 <TextBlock Text="🔒"
-                           FontSize="13"
+                           FontSize="{DynamicResource Font.Size.BodySmall}"
                            VerticalAlignment="Center"
                            Margin="0,0,8,0"
-                           Foreground="{StaticResource ForegroundGrayBrush}">
+                           Foreground="{StaticResource Brush.Text.Dim}">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -111,12 +111,12 @@
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                     <TextBlock Text="{Binding Name}"
                                FontWeight="SemiBold"
-                               FontSize="13"
-                               Foreground="{StaticResource ForegroundWhiteBrush}"
+                               FontSize="{DynamicResource Font.Size.BodySmall}"
+                               Foreground="{StaticResource Brush.Text.Primary}"
                                TextTrimming="CharacterEllipsis"/>
                     <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
-                        <TextBlock FontSize="11"
-                                   Foreground="{StaticResource ForegroundGrayBrush}"
+                        <TextBlock FontSize="{DynamicResource Font.Size.Meta}"
+                                   Foreground="{StaticResource Brush.Text.Dim}"
                                    TextTrimming="CharacterEllipsis">
                             <TextBlock.Text>
                                 <MultiBinding Converter="{StaticResource ScenarioIdToNameConverter}">
@@ -126,33 +126,33 @@
                             </TextBlock.Text>
                         </TextBlock>
                         <TextBlock Text=" · "
-                                   FontSize="11"
-                                   Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                   FontSize="{DynamicResource Font.Size.Meta}"
+                                   Foreground="{StaticResource Brush.Text.Dim}"/>
                         <TextBlock Text="{Binding GameMode}"
-                                   FontSize="11"
-                                   Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                   FontSize="{DynamicResource Font.Size.Meta}"
+                                   Foreground="{StaticResource Brush.Text.Dim}"/>
                     </StackPanel>
                 </StackPanel>
 
                 <!-- Player count badge -->
                 <Border Grid.Column="2"
-                        CornerRadius="10"
+                        CornerRadius="0"
                         Padding="8,3"
                         Margin="10,0,0,0"
                         VerticalAlignment="Center">
                     <Border.Style>
                         <Style TargetType="Border">
-                            <Setter Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
+                            <Setter Property="Background" Value="{StaticResource Brush.Border.Hairline}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding CanJoin}" Value="False">
-                                    <Setter Property="Background" Value="{StaticResource AccentRedBrush}"/>
+                                    <Setter Property="Background" Value="{StaticResource Brush.Status.Danger}"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </Border.Style>
                     <TextBlock Text="{Binding Players}"
-                               Foreground="{StaticResource ForegroundWhiteBrush}"
-                               FontSize="11"
+                               Foreground="{StaticResource Brush.Text.Primary}"
+                               FontSize="{DynamicResource Font.Size.Meta}"
                                FontWeight="SemiBold"/>
                 </Border>
             </Grid>
@@ -175,9 +175,9 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="AVAILABLE MATCHES" 
-                   FontSize="20" 
+                   FontSize="{DynamicResource Font.Size.Heading}" 
                    FontWeight="Bold"
-                   Foreground="{StaticResource ForegroundWhiteBrush}"
+                   Foreground="{StaticResource Brush.Text.Primary}"
                    VerticalAlignment="Center"/>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal">
@@ -185,23 +185,24 @@
                     Content="Refresh" 
                     Width="100"
                     Command="{Binding RefreshLobbies}"
-                    Style="{StaticResource ActionButton}"
+                    Style="{StaticResource Button.Primary}"
                     IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
                 <Button 
                     Content="Create Lobby" 
                     Margin="10,0,0,0"
                     Width="120" 
                     Command="{Binding CreateLobby}"
-                    Style="{StaticResource ActionButton}"
+                    Style="{StaticResource Button.Primary}"
                     IsEnabled="{Binding IsConnected}"/>
             </StackPanel>
         </Grid>
 
         <!-- Main Content: Lobby list + Preview panel -->
         <Grid Grid.Row="1">
+            <!-- Preview panel shares the extra width rather than pinning at 320. -->
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="320"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*" MinWidth="320" MaxWidth="460"/>
             </Grid.ColumnDefinitions>
 
             <!-- Lobby List -->
@@ -222,8 +223,8 @@
 
         <!-- Bottom Status Bar -->
         <StatusBar Grid.Row="2" Height="30" 
-               Background="{StaticResource BackgroundDarkBlueBrush}"
-               Foreground="{StaticResource ForegroundWhiteBrush}">
+               Background="{StaticResource Brush.Surface.Sunken}"
+               Foreground="{StaticResource Brush.Text.Primary}">
             <StatusBarItem>
                 <TextBlock Text="{Binding StatusMessage, FallbackValue=Connecting...}"/>
             </StatusBarItem>
@@ -235,10 +236,10 @@
         <!-- Loading Overlay -->
         <Grid 
             Grid.RowSpan="3" 
-            Background="#80000000" 
+            Background="{StaticResource Brush.Surface.Scrim}" 
             Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
             <ProgressBar IsIndeterminate="True" 
-                         Style="{StaticResource AnimatedProgressBar}"
+                         Style="{StaticResource ProgressBar.Default}"
                  Width="200" 
                  Height="4"/>
         </Grid>

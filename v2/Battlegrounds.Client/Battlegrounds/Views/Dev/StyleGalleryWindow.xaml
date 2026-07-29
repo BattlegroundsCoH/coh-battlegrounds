@@ -1,0 +1,319 @@
+<Window x:Class="Battlegrounds.Views.Dev.StyleGalleryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:Battlegrounds.Controls"
+        xmlns:dev="clr-namespace:Battlegrounds.Views.Dev"
+        mc:Ignorable="d"
+        Title="Battlegrounds — Design System"
+        Background="{StaticResource Brush.Surface.Window}"
+        FontFamily="{StaticResource Font.Body}"
+        FontSize="{StaticResource Font.Size.Body}"
+        UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display"
+        controls:Responsive.IsBreakpointHost="True"
+        Width="1280" Height="960"
+        WindowStartupLocation="CenterScreen">
+
+    <!--
+        Every token, type style and control in one scrollable page.
+
+        This is the review surface for the design system: changing a value in Palette.xaml
+        and re-running the app with the "gallery" argument shows the effect on everything
+        at once, which the HTML mockups cannot do and which walking the real app only does
+        one screen at a time. It is also where a new control gets exercised in each of its
+        states before any view depends on it.
+
+        Keep it in sync when adding to the system — an entry missing here is a component
+        nobody can review.
+    -->
+
+    <Window.Resources>
+        <Style x:Key="Gallery.SectionRule" TargetType="Border">
+            <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Default}" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="Margin" Value="0,34,0,18" />
+            <Setter Property="Padding" Value="0,0,0,10" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--
+            UI scale switcher. The overlay dictionaries only reach {DynamicResource} references,
+            which the theme layer uses throughout but this gallery does not — so switching reopens
+            the window rather than mutating it in place. That also makes it an honest test: what
+            you see is what a fresh app start at that scale renders.
+        -->
+        <Border Grid.Row="0"
+                Background="{StaticResource Brush.Surface.Chrome}"
+                BorderBrush="{StaticResource Brush.Border.Default}"
+                BorderThickness="0,0,0,1"
+                Padding="36,14">
+            <StackPanel Orientation="Horizontal">
+                <controls:TrackedTextBlock Style="{StaticResource Display.Label}"
+                                           Text="UI SCALE"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,16,0" />
+                <Button Content="100%" Tag="100%" Click="OnScaleClicked" Style="{StaticResource Button.Subtle}" Margin="0,0,8,0" />
+                <Button Content="110%" Tag="110%" Click="OnScaleClicked" Style="{StaticResource Button.Subtle}" Margin="0,0,8,0" />
+                <Button Content="125%" Tag="125%" Click="OnScaleClicked" Style="{StaticResource Button.Subtle}" Margin="0,0,8,0" />
+                <Button Content="150%" Tag="150%" Click="OnScaleClicked" Style="{StaticResource Button.Subtle}" Margin="0,0,8,0" />
+                <controls:TrackedTextBlock x:Name="CurrentScaleLabel"
+                                           Style="{StaticResource Display.Label}"
+                                           VerticalAlignment="Center"
+                                           Margin="16,0,0,0" />
+
+                <!-- Live breakpoint readout: resize the window and watch it change. -->
+                <TextBlock Style="{StaticResource Text.Meta}"
+                           VerticalAlignment="Center"
+                           Margin="24,0,0,0"
+                           Text="{Binding (controls:Responsive.Breakpoint), RelativeSource={RelativeSource Self}, StringFormat=BREAKPOINT: {0}}" />
+            </StackPanel>
+        </Border>
+
+        <!-- Focused on open so Page Up/Down scroll the gallery without clicking into it first. -->
+        <ScrollViewer x:Name="Scroller"
+                  Grid.Row="1"
+                  Style="{StaticResource ScrollViewer.Thin}"
+                  Padding="36,28,28,48"
+                  Focusable="True"
+                  FocusManager.FocusedElement="{Binding ElementName=Scroller}">
+        <StackPanel>
+
+            <controls:PageHeader Header="DESIGN SYSTEM" Eyebrow="BATTLEGROUNDS CLIENT" />
+
+            <!-- ===================== Palette ===================== -->
+
+            <Border Style="{StaticResource Gallery.SectionRule}">
+                <controls:TrackedTextBlock Style="{StaticResource Display.Section}" Text="SURFACES" />
+            </Border>
+
+            <WrapPanel>
+                <dev:Swatch Label="Surface.Window" Fill="{StaticResource Brush.Surface.Window}" />
+                <dev:Swatch Label="Surface.Card" Fill="{StaticResource Brush.Surface.Card}" />
+                <dev:Swatch Label="Surface.Raised" Fill="{StaticResource Brush.Surface.Raised}" />
+                <dev:Swatch Label="Surface.Sunken" Fill="{StaticResource Brush.Surface.Sunken}" />
+                <dev:Swatch Label="Surface.Chrome" Fill="{StaticResource Brush.Surface.Chrome}" />
+                <dev:Swatch Label="Surface.Hover" Fill="{StaticResource Brush.Surface.Hover}" />
+                <dev:Swatch Label="Surface.Pressed" Fill="{StaticResource Brush.Surface.Pressed}" />
+            </WrapPanel>
+
+            <Border Style="{StaticResource Gallery.SectionRule}">
+                <controls:TrackedTextBlock Style="{StaticResource Display.Section}" Text="ACCENT AND STATUS" />
+            </Border>
+
+            <WrapPanel>
+                <dev:Swatch Label="Accent.Gold" Fill="{StaticResource Brush.Accent.Gold}" />
+                <dev:Swatch Label="Accent.GoldHover" Fill="{StaticResource Brush.Accent.GoldHover}" />
+                <dev:Swatch Label="Action.Primary" Fill="{StaticResource Brush.Action.Primary}" />
+                <dev:Swatch Label="Action.PrimaryHover" Fill="{StaticResource Brush.Action.PrimaryHover}" />
+                <dev:Swatch Label="Status.Success" Fill="{StaticResource Brush.Status.Success}" />
+                <dev:Swatch Label="Status.Caution" Fill="{StaticResource Brush.Status.Caution}" />
+                <dev:Swatch Label="Status.DangerText" Fill="{StaticResource Brush.Status.DangerText}" />
+                <dev:Swatch Label="Status.Info" Fill="{StaticResource Brush.Status.Info}" />
+                <dev:Swatch Label="Faction.Axis" Fill="{StaticResource Brush.Faction.Axis}" />
+                <dev:Swatch Label="Faction.Allies" Fill="{StaticResource Brush.Faction.Allies}" />
+            </WrapPanel>
+
+            <Border Style="{StaticResource Gallery.SectionRule}">
+                <controls:TrackedTextBlock Style="{StaticResource Display.Section}" Text="TEXT AND BORDERS" />
+            </Border>
+
+            <WrapPanel>
+                <dev:Swatch Label="Text.Primary" Fill="{StaticResource Brush.Text.Primary}" />
+                <dev:Swatch Label="Text.Body" Fill="{StaticResource Brush.Text.Body}" />
+                <dev:Swatch Label="Text.Muted" Fill="{StaticResource Brush.Text.Muted}" />
+                <dev:Swatch Label="Text.Dim" Fill="{StaticResource Brush.Text.Dim}" />
+                <dev:Swatch Label="Text.Faint" Fill="{StaticResource Brush.Text.Faint}" />
+                <dev:Swatch Label="Border.Outline" Fill="{StaticResource Brush.Border.Outline}" />
+                <dev:Swatch Label="Border.Strong" Fill="{StaticResource Brush.Border.Strong}" />
+                <dev:Swatch Label="Border.Hairline" Fill="{StaticResource Brush.Border.Hairline}" />
+            </WrapPanel>
+
+            <!-- ===================== Type ===================== -->
+
+            <Border Style="{StaticResource Gallery.SectionRule}">
+                <controls:TrackedTextBlock Style="{StaticResource Display.Section}" Text="TYPE SCALE" />
+            </Border>
+
+            <StackPanel>
+                <controls:TrackedTextBlock Style="{StaticResource Display.Hero}" Text="DISPLAY.HERO — VICTORY" Margin="0,0,0,12" />
+                <controls:TrackedTextBlock Style="{StaticResource Display.PageTitle}" Text="DISPLAY.PAGETITLE — COMPANIES" Margin="0,0,0,12" />
+                <controls:TrackedTextBlock Style="{StaticResource Display.Section}" Text="DISPLAY.SECTION — RECENT MATCHES" Margin="0,0,0,12" />
+                <controls:TrackedTextBlock Style="{StaticResource Display.Group}" Text="DISPLAY.GROUP — COMPANY OF HEROES 3" Margin="0,0,0,12" />
+                <controls:TrackedTextBlock Style="{StaticResource Display.Stat}" Text="248" Margin="0,0,0,4" />
+                <controls:TrackedTextBlock Style="{StaticResource Display.StatLabel}" Text="DISPLAY.STATLABEL — TOTAL MATCHES" Margin="0,0,0,12" />
+                <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="DISPLAY.LABEL — USERNAME" Margin="0,0,0,12" />
+                <controls:TrackedTextBlock Style="{StaticResource Display.NavItem}" Text="DISPLAY.NAVITEM — MULTIPLAYER" Margin="0,0,0,16" />
+
+                <TextBlock Style="{StaticResource Text.Body}" Text="Text.Body — the reading face. JetBrains Mono at 14, warm off-white." Margin="0,0,0,8" />
+                <TextBlock Style="{StaticResource Text.Strong}" Text="Text.Strong — a row title, a company name." Margin="0,0,0,8" />
+                <TextBlock Style="{StaticResource Text.Meta}" Text="Text.Meta — Soviet · Arnhem Checkpoint · 22:45" Margin="0,0,0,8" />
+                <TextBlock Style="{StaticResource Text.Error}" Text="Text.Error — that password was not recognised." Margin="0,0,0,8" />
+                <TextBlock Style="{StaticResource Text.Empty}" Text="Text.Empty — there are currently no new updates." HorizontalAlignment="Left" />
+
+                <!-- Tracking is the reason TrackedTextBlock exists; show it working. -->
+                <StackPanel Margin="0,20,0,0">
+                    <controls:TrackedTextBlock Text="TRACKING 0.00 — ABCDEFGHIJ" Tracking="0" FontFamily="{StaticResource Font.Heading}" FontSize="18" Foreground="{StaticResource Brush.Text.Body}" Margin="0,0,0,6" />
+                    <controls:TrackedTextBlock Text="TRACKING 0.08 — ABCDEFGHIJ" Tracking="0.08" FontFamily="{StaticResource Font.Heading}" FontSize="18" Foreground="{StaticResource Brush.Text.Body}" Margin="0,0,0,6" />
+                    <controls:TrackedTextBlock Text="TRACKING 0.20 — ABCDEFGHIJ" Tracking="0.2" FontFamily="{StaticResource Font.Heading}" FontSize="18" Foreground="{StaticResource Brush.Text.Body}" Margin="0,0,0,6" />
+                    <controls:TrackedTextBlock Text="TRACKING 0.34 — ABCDEFGHIJ" Tracking="0.34" FontFamily="{StaticResource Font.Heading}" FontSize="18" Foreground="{StaticResource Brush.Text.Body}" />
+                </StackPanel>
+
+                <!-- The app is localised into Polish; Oswald must cover those glyphs. -->
+                <controls:TrackedTextBlock Text="POLISH GLYPH CHECK — ŁĄĘŚŻŹĆŃÓ · ÄÖÜSS · ÉÈÊÇ"
+                                           Tracking="0.06"
+                                           FontFamily="{StaticResource Font.Heading}"
+                                           FontSize="16"
+                                           Foreground="{StaticResource Brush.Accent.Gold}"
+                                           Margin="0,20,0,0" />
+            </StackPanel>
+
+            <!-- ===================== Buttons ===================== -->
+
+            <Border Style="{StaticResource Gallery.SectionRule}">
+                <controls:TrackedTextBlock Style="{StaticResource Display.Section}" Text="BUTTONS" />
+            </Border>
+
+            <WrapPanel>
+                <StackPanel Margin="0,0,28,16">
+                    <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="PRIMARY (GOLD)" Margin="0,0,0,8" />
+                    <Button Style="{StaticResource Button.Primary}" Content="NEW COMPANY" Margin="0,0,0,8" />
+                    <Button Style="{StaticResource Button.Primary}" Content="DISABLED" IsEnabled="False" />
+                </StackPanel>
+
+                <StackPanel Margin="0,0,28,16">
+                    <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="CTA (RED)" Margin="0,0,0,8" />
+                    <Button Style="{StaticResource Button.Cta}" Content="PLAY NOW" Margin="0,0,0,8" />
+                    <Button Style="{StaticResource Button.Cta}" Content="DISABLED" IsEnabled="False" />
+                </StackPanel>
+
+                <StackPanel Margin="0,0,28,16">
+                    <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="DANGER" Margin="0,0,0,8" />
+                    <Button Style="{StaticResource Button.Danger}" Content="DELETE" Margin="0,0,0,8" />
+                    <Button Style="{StaticResource Button.Caution}" Content="INSTALL NOW" />
+                </StackPanel>
+
+                <StackPanel Margin="0,0,28,16">
+                    <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="QUIET" Margin="0,0,0,8" />
+                    <Button Style="{StaticResource Button.Ghost}" Content="EDIT COMPANY" Margin="0,0,0,8" />
+                    <Button Style="{StaticResource Button.Subtle}" Content="INSPECT" Margin="0,0,0,8" />
+                    <Button Style="{StaticResource Button.Bare}" Content="Bare button" />
+                </StackPanel>
+
+                <StackPanel Margin="0,0,28,16" Width="200">
+                    <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="NAV RAIL" Margin="0,0,0,8" />
+                    <RadioButton Style="{StaticResource Button.Nav}" Content="HOME" />
+                    <RadioButton Style="{StaticResource Button.Nav}" Content="COMPANIES" IsChecked="True" />
+                    <RadioButton Style="{StaticResource Button.Nav}" Content="MULTIPLAYER" />
+                </StackPanel>
+
+                <StackPanel Margin="0,0,28,16" Width="210">
+                    <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="MENU ROWS" Margin="0,0,0,8" />
+                    <Border Background="{StaticResource Brush.Surface.Raised}"
+                            BorderBrush="{StaticResource Brush.Border.Strong}"
+                            BorderThickness="1"
+                            Padding="0,6">
+                        <StackPanel>
+                            <Button Style="{StaticResource Button.Menu}" Content="Settings" />
+                            <Button Style="{StaticResource Button.Menu}" Content="Profile" IsEnabled="False" />
+                            <Button Style="{StaticResource Button.Menu}" Content="Log Out"
+                                    Foreground="{StaticResource Brush.Status.DangerText}" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </WrapPanel>
+
+            <!-- ===================== Inputs ===================== -->
+
+            <Border Style="{StaticResource Gallery.SectionRule}">
+                <controls:TrackedTextBlock Style="{StaticResource Display.Section}" Text="INPUTS" />
+            </Border>
+
+            <WrapPanel>
+                <StackPanel Width="280" Margin="0,0,28,16">
+                    <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="TEXT FIELD" Margin="0,0,0,8" />
+                    <TextBox Style="{StaticResource TextBox.Field}"
+                             controls:ControlAssist.Placeholder="Enter name here..."
+                             Margin="0,0,0,10" />
+                    <TextBox Style="{StaticResource TextBox.Field}" Text="Super Cool Company" Margin="0,0,0,10" />
+                    <TextBox Style="{StaticResource TextBox.Field}" Text="Disabled" IsEnabled="False" />
+                </StackPanel>
+
+                <StackPanel Width="280" Margin="0,0,28,16">
+                    <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="PASSWORD" Margin="0,0,0,8" />
+                    <PasswordBox Style="{StaticResource PasswordBox.Field}" Password="hunter2" Margin="0,0,0,10" />
+
+                    <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="COMBO BOX" Margin="0,0,0,8" />
+                    <ComboBox Style="{StaticResource ComboBox.Default}" SelectedIndex="0">
+                        <ComboBoxItem Content="Victory Points" />
+                        <ComboBoxItem Content="Annihilation" />
+                        <ComboBoxItem Content="Control Territory" />
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Width="280" Margin="0,0,28,16">
+                    <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="PROGRESS" Margin="0,0,0,8" />
+                    <ProgressBar Style="{StaticResource ProgressBar.Default}" IsIndeterminate="True" Margin="0,0,0,14" />
+                    <ProgressBar Style="{StaticResource ProgressBar.Default}" IsIndeterminate="False" Value="65" Maximum="100" />
+                </StackPanel>
+            </WrapPanel>
+
+            <!-- ===================== Composites ===================== -->
+
+            <Border Style="{StaticResource Gallery.SectionRule}">
+                <controls:TrackedTextBlock Style="{StaticResource Display.Section}" Text="COMPONENTS" />
+            </Border>
+
+            <StackPanel>
+                <controls:Eyebrow Text="LOBBY BRIEFING" Margin="0,0,0,18" />
+
+                <Grid Margin="0,0,0,18">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <controls:Card Grid.Column="0" Header="QUICK STATS">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource Text.Body}" Text="Favourite faction: Soviet Union" Margin="0,0,0,6" />
+                            <TextBlock Style="{StaticResource Text.Body}" Text="Total playtime: 96h 12m" />
+                        </StackPanel>
+                    </controls:Card>
+
+                    <controls:Card Grid.Column="2" Header="NEWS &amp; UPDATES" MinHeight="120">
+                        <TextBlock Style="{StaticResource Text.Empty}" Text="There are currently no new updates." />
+                    </controls:Card>
+                </Grid>
+
+                <controls:Card Header="STAT TILES" Margin="0,0,0,18">
+                    <UniformGrid Columns="4">
+                        <controls:StatTile Value="248" Label="TOTAL MATCHES" />
+                        <controls:StatTile Value="169" Label="VICTORIES" />
+                        <controls:StatTile Value="68%" Label="WIN RATE" />
+                        <controls:StatTile Value="F. MARSHAL" Label="CURRENT RANK" />
+                    </UniformGrid>
+                </controls:Card>
+
+                <controls:Card Header="STATUS BADGES">
+                    <StackPanel Orientation="Horizontal">
+                        <controls:StatusBadge Content="VICTORY" Tone="Success" Margin="0,0,10,0" />
+                        <controls:StatusBadge Content="DEFEAT" Tone="Danger" Margin="0,0,10,0" />
+                        <controls:StatusBadge Content="KIA" Tone="Caution" Margin="0,0,10,0" />
+                        <controls:StatusBadge Content="VETERAN" Tone="Accent" Margin="0,0,10,0" />
+                        <controls:StatusBadge Content="RESERVE" Tone="Neutral" />
+                    </StackPanel>
+                </controls:Card>
+            </StackPanel>
+
+        </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

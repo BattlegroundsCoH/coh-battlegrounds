@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Battlegrounds.Views.LobbyView"
+<UserControl x:Class="Battlegrounds.Views.LobbyView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Battlegrounds.Views"
              xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels"
              xmlns:converters="clr-namespace:Battlegrounds.Converters"
+             xmlns:controls="clr-namespace:Battlegrounds.Controls"
              xmlns:selectors="clr-namespace:Battlegrounds.Selectors"
              d:DataContext="{d:DesignInstance Type=viewmodels:LobbyViewModel}"
              mc:Ignorable="d" 
@@ -22,6 +23,7 @@
         <converters:MatchButtonStateConverter x:Key="MatchButtonStateConverter"/>
         <converters:ButtonStateToContentConverter x:Key="ButtonStateToContentConverter"/>
         <converters:ReadyStateConverter x:Key="ReadyStateConverter"/>
+        <converters:UpperCaseConverter x:Key="UpperCase"/>
         <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
         <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
         <converters:DownloadProgressArcConverter x:Key="DownloadProgressArcConverter"/>
@@ -34,7 +36,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Faction icon -->
-                <Image Width="20" Height="20" Margin="0,0,8,0"
+                <Image Width="{DynamicResource Size.Icon.S}" Height="{DynamicResource Size.Icon.S}" Margin="0,0,8,0"
                Source="{Binding Company.Faction, Converter={StaticResource FactionIconConverter}, ConverterParameter=CoH3}"
                Visibility="{Binding Company, Converter={StaticResource EmptyStringToVisibilityConverter}}"/>
 
@@ -45,7 +47,7 @@
             </Grid>
         </DataTemplate>
 
-        <Style x:Key="CompanySelectionComboBox" TargetType="ComboBox" BasedOn="{StaticResource SettingsComboBox}">
+        <Style x:Key="CompanySelectionComboBox" TargetType="ComboBox" BasedOn="{StaticResource ComboBox.Default}">
             <Setter Property="ItemTemplate" Value="{StaticResource CompanyComboBoxItemTemplate}"/>
             <Setter Property="Width" Value="220"/>
             <Setter Property="Height" Value="30"/>
@@ -56,8 +58,8 @@
                 <Setter Property="Height" Value="60"/>
                 <Setter Property="Margin" Value="0,0,0,10"/>
                 <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="BorderBrush" Value="{StaticResource BackgroundLightBlueBrush}"/>
-                <Setter Property="Background" Value="{StaticResource BackgroundBlueBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Hairline}"/>
+                <Setter Property="Background" Value="{StaticResource Brush.Surface.Card}"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ContentControl}">
@@ -66,7 +68,7 @@
                                     x:Name="SlotBorder"
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Visibility="{Binding Slot.Hidden, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
-                                    CornerRadius="4">
+                                    CornerRadius="0">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -78,8 +80,8 @@
 
                                     <!-- Player Icon/Avatar -->
                                     <Ellipse 
-                                        Width="40" 
-                                        Height="40" 
+                                        Width="{DynamicResource Size.Icon.XL}" 
+                                        Height="{DynamicResource Size.Icon.XL}" 
                                         Margin="10,0,0,0" 
                                         Grid.Column="0" 
                                         VerticalAlignment="Center"
@@ -90,19 +92,30 @@
                                         </Ellipse.Fill>
                                     </Ellipse>
 
-                                    <!-- Company download progress doughnut (overlays avatar, hidden when progress = 0) -->
-                                    <Grid Width="40" Height="40"
-                                          Margin="10,0,0,0"
-                                          Grid.Column="0"
-                                          VerticalAlignment="Center"
-                                          Visibility="Collapsed">
-                                        
+                                    <!--
+                                        Company download progress doughnut (overlays avatar, hidden when progress = 0).
+
+                                        The Viewbox is load-bearing: the geometry below is authored against a
+                                        40x40 box (centre 20,20, radii 16 and 10) and DownloadProgressArcConverter
+                                        emits arcs in those same coordinates. Resizing the container alone would
+                                        leave the donut drawn at 40px inside it. The Viewbox scales the whole
+                                        40x40 design box up to the icon token instead.
+                                    -->
+                                    <Viewbox Width="{DynamicResource Size.Icon.XL}" Height="{DynamicResource Size.Icon.XL}"
+                                             Margin="10,0,0,0"
+                                             Grid.Column="0"
+                                             VerticalAlignment="Center"
+                                             Stretch="Uniform"
+                                             Visibility="Collapsed">
+
                                         <!-- TODO: Use this:
                                         Visibility="{Binding CompanyDownloadProgress, Converter={StaticResource ZeroToVisibilityConverter}}"
                                         -->
 
+                                    <Grid Width="40" Height="40">
+
                                         <!-- Background track ring (full donut, semi-transparent) -->
-                                        <Path Fill="#55FFFFFF">
+                                        <Path Fill="{StaticResource Brush.Surface.Track}">
                                             <Path.Data>
                                                 <PathGeometry FillRule="EvenOdd">
                                                     <PathFigure StartPoint="20,4" IsClosed="True">
@@ -118,10 +131,11 @@
                                         </Path>
 
                                         <!-- Progress arc -->
-                                        <Path Fill="{StaticResource AccentBlueBrush}"
+                                        <Path Fill="{StaticResource Brush.Accent.Gold}"
                                               Data="{Binding CompanyDownloadProgress, Converter={StaticResource DownloadProgressArcConverter}}"/>
 
                                     </Grid>
+                                    </Viewbox>
 
                                     <!-- Player Name -->
                                     <TextBlock Text="{Binding DisplayName}" 
@@ -130,7 +144,7 @@
                                                Margin="10,0,0,0"
                                                VerticalAlignment="Center"
                                                x:Name="DisplayName"
-                                               Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                                               Foreground="{StaticResource Brush.Text.Primary}"/>
                                     
                                     <!-- Company Selection -->
                                     <Grid
@@ -143,7 +157,7 @@
                                                    Width="220" Height="42"
                                                    ItemsSource="{Binding AvailableCompanies}"
                                                    SelectedItem="{Binding SelectedCompany, Mode=TwoWay}"
-                                                   Style="{StaticResource SettingsComboBox}"
+                                                   Style="{StaticResource ComboBox.Default}"
                                                    Visibility="{Binding CanSetCompany, Converter={StaticResource BoolToVisibilityConverter}}">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate>
@@ -154,7 +168,7 @@
                                                         </Grid.ColumnDefinitions>
 
                                                         <!-- Faction icon -->
-                                                        <Image Width="32" Height="32" Margin="0,0,8,0">
+                                                        <Image Width="{DynamicResource Size.Icon.L}" Height="{DynamicResource Size.Icon.L}" Margin="0,0,8,0">
                                                             <Image.Source>
                                                                 <MultiBinding Converter="{StaticResource FactionIconConverter}">
                                                                     <Binding Path="Company.Faction"/>
@@ -178,11 +192,11 @@
                                             Height="42"
                                             Width="220"
                                             VerticalAlignment="Center"
-                                            Style="{StaticResource InspectButton}"
+                                            Style="{StaticResource Button.Subtle}"
                                             Command="{Binding ShowCompanyPreviewCommand}"
                                             Visibility="{Binding CanSetCompany, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                                             <StackPanel Orientation="Horizontal">
-                                                <Image Width="32" Height="32" VerticalAlignment="Center">
+                                                <Image Width="{DynamicResource Size.Icon.L}" Height="{DynamicResource Size.Icon.L}" VerticalAlignment="Center">
                                                     <Image.Source>
                                                         <MultiBinding Converter="{StaticResource FactionIconConverter}">
                                                             <Binding Path="SelectedCompany.Faction"/>
@@ -195,7 +209,7 @@
                                                        FontWeight="SemiBold"
                                                            Margin="8,0,8,6"
                                                            VerticalAlignment="Center"
-                                                       Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                                       Foreground="{StaticResource Brush.Text.Dim}"/>
                                             </StackPanel>
                                         </Button>
 
@@ -208,7 +222,7 @@
                                         Grid.Column="2"
                                         Margin="0,0,8,0"
                                             Width="220"
-                                            Style="{StaticResource ActionButton}"
+                                            Style="{StaticResource Button.Primary}"
                                             Command="{Binding MoveToSlotCommand}"
                                             CommandParameter="{Binding Slot.Index}"
                                             Visibility="{Binding IsOccupiable, Converter={StaticResource BoolToVisibilityConverter}}"/>
@@ -226,14 +240,14 @@
                                                     ItemsSource="{Binding AvailableAIDifficulties}"
                                                   SelectedItem="{Binding SelectedAIDifficulty, Mode=TwoWay}"
                                                   DisplayMemberPath="DisplayName"
-                                                  Style="{StaticResource SettingsComboBox}"
+                                                  Style="{StaticResource ComboBox.Default}"
                                                   Visibility="{Binding CanSetAIDifficulty, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
 
                                         <!-- Lock/Unlock Button (shown only if slot is unoccupied) -->
                                         <Button Width="30" Height="42" 
                                             Margin="5,0"
-                                                Style="{StaticResource TransparentButton}"
+                                                Style="{StaticResource Button.Bare}"
                                             ToolTip="{Binding Slot.Locked, Converter={StaticResource LockStateConverter}}"
                                             Command="{Binding LockUnlockCommand}"
                                             CommandParameter="{Binding Slot.Index}"
@@ -259,18 +273,18 @@
 
                             <ControlTemplate.Triggers>
                                 <DataTrigger Binding="{Binding IsLocalPlayer}" Value="True">
-                                    <Setter TargetName="SlotBorder" Property="BorderBrush" Value="{StaticResource ForegroundLightBlueBrush}"/>
+                                    <Setter TargetName="SlotBorder" Property="BorderBrush" Value="{StaticResource Brush.Accent.Gold}"/>
                                 </DataTrigger>
 
                                 <DataTrigger Binding="{Binding IsOccupiable}" Value="True">
                                     <Setter TargetName="DisplayName" Property="Text" Value="Open Slot"/>
-                                    <Setter TargetName="DisplayName" Property="Foreground" Value="{StaticResource ForegroundGrayBrush}"/>
+                                    <Setter TargetName="DisplayName" Property="Foreground" Value="{StaticResource Brush.Text.Dim}"/>
                                     <Setter TargetName="DisplayName" Property="FontStyle" Value="Italic"/>
                                 </DataTrigger>
 
                                 <DataTrigger Binding="{Binding Slot.Locked}" Value="True">
                                     <Setter TargetName="DisplayName" Property="Text" Value="Locked Slot"/>
-                                    <Setter TargetName="DisplayName" Property="Foreground" Value="{StaticResource ForegroundGrayBrush}"/>
+                                    <Setter TargetName="DisplayName" Property="Foreground" Value="{StaticResource Brush.Text.Dim}"/>
                                     <Setter TargetName="DisplayName" Property="FontStyle" Value="Italic"/>
                                 </DataTrigger>
 
@@ -285,7 +299,7 @@
         <DataTemplate x:Key="BooleanSettingTemplate">
             <CheckBox Content="{Binding Name}"
              IsChecked="{Binding BoolValue, Mode=TwoWay}"
-             Foreground="{StaticResource ForegroundWhiteBrush}"
+             Foreground="{StaticResource Brush.Text.Primary}"
              IsEnabled="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}}"
              Margin="0,5"/>
         </DataTemplate>
@@ -302,12 +316,12 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Text="{Binding Name}"
-                 Foreground="{StaticResource ForegroundWhiteBrush}"
+                 Foreground="{StaticResource Brush.Text.Primary}"
                  Grid.Column="0" Grid.Row="0"/>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
                     <TextBlock Text="{Binding IntValue}"
-                     Foreground="{StaticResource ForegroundLightBlueBrush}"
+                     Foreground="{StaticResource Brush.Accent.Gold}"
                      Margin="5,0,0,0"/>
                 </StackPanel>
 
@@ -330,7 +344,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="{Binding Name}"
-                 Foreground="{StaticResource ForegroundWhiteBrush}"
+                 Foreground="{StaticResource Brush.Text.Primary}"
                  VerticalAlignment="Center"/>
 
                 <Grid Grid.Column="1">
@@ -340,13 +354,13 @@
                 DisplayMemberPath="Name"
                 SelectedIndex="{Binding SelectedOptionIndex, Mode=TwoWay}"
                 Width="150"
-                        Style="{StaticResource SettingsComboBox}"
+                        Style="{StaticResource ComboBox.Default}"
                 Visibility="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
                     <!-- For non-host: read-only text -->
                     <TextBlock 
                 Text="{Binding SelectedOption.Name}"
-                Foreground="{StaticResource ForegroundGrayBrush}"
+                Foreground="{StaticResource Brush.Text.Dim}"
                 VerticalAlignment="Center"
                 Visibility="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
                 </Grid>
@@ -365,27 +379,34 @@
             <Setter Property="Height" Value="50"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-            <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource Brush.Text.Primary}"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="{DynamicResource Font.Size.Section}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid x:Name="RootGrid">
-                            <!-- Animated pulse border for Starting state -->
-                            <Border x:Name="PulseBorder" 
-                            BorderThickness="2" 
-                            CornerRadius="4"
+                            <!--
+                                Animated pulse border for the Starting state.
+
+                                BorderBrush stays a literal rather than a token: the
+                                storyboard below animates this brush's Color, and a brush
+                                taken from a resource dictionary is frozen and cannot be
+                                animated. It starts fully transparent.
+                            -->
+                            <Border x:Name="PulseBorder"
+                            BorderThickness="2"
+                            CornerRadius="0"
                             BorderBrush="#00FFFFFF"
                             Opacity="0"
                             Margin="-4"/>
 
                             <!-- Main button border -->
                             <Border x:Name="MainBorder" 
-                           Background="{StaticResource BackgroundBlueBrush}"
-                           BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                           Background="{StaticResource Brush.Surface.Card}"
+                           BorderBrush="{StaticResource Brush.Border.Hairline}"
                            BorderThickness="1"
-                           CornerRadius="4">
+                           CornerRadius="0">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -405,9 +426,9 @@
                                        Grid.Column="1"
                                        Margin="0,0,20,0"
                                        Opacity="0">
-                                        <Ellipse x:Name="Dot1" Width="6" Height="6" Fill="{StaticResource ForegroundWhiteBrush}" Margin="3,0"/>
-                                        <Ellipse x:Name="Dot2" Width="6" Height="6" Fill="{StaticResource ForegroundWhiteBrush}" Margin="3,0"/>
-                                        <Ellipse x:Name="Dot3" Width="6" Height="6" Fill="{StaticResource ForegroundWhiteBrush}" Margin="3,0"/>
+                                        <Ellipse x:Name="Dot1" Width="{DynamicResource Size.Dot}" Height="{DynamicResource Size.Dot}" Fill="{StaticResource Brush.Text.Primary}" Margin="3,0"/>
+                                        <Ellipse x:Name="Dot2" Width="{DynamicResource Size.Dot}" Height="{DynamicResource Size.Dot}" Fill="{StaticResource Brush.Text.Primary}" Margin="3,0"/>
+                                        <Ellipse x:Name="Dot3" Width="{DynamicResource Size.Dot}" Height="{DynamicResource Size.Dot}" Fill="{StaticResource Brush.Text.Primary}" Margin="3,0"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -416,15 +437,15 @@
                         <ControlTemplate.Triggers>
                             <!-- CanStart state - Green color -->
                             <Trigger Property="Tag" Value="CanStart">
-                                <Setter Property="Background" TargetName="MainBorder" Value="#4CAF50"/>
-                                <Setter Property="BorderBrush" TargetName="MainBorder" Value="#66BB6A"/>
+                                <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource Brush.Status.Success}"/>
+                                <Setter Property="BorderBrush" TargetName="MainBorder" Value="{StaticResource Brush.Status.SuccessHover}"/>
                                 <Setter Property="IsEnabled" Value="True"/>
                                 <Setter TargetName="PulseBorder" Property="Opacity" Value="0"/>
                             </Trigger>
 
                             <!-- CannotStart state -->
                             <Trigger Property="Tag" Value="CannotStart">
-                                <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource BackgroundDarkBlueBrush}"/>
+                                <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource Brush.Surface.Sunken}"/>
                                 <Setter Property="Opacity" Value="0.7"/>
                                 <Setter Property="IsEnabled" Value="False"/>
                                 <Setter TargetName="PulseBorder" Property="Opacity" Value="0"/>
@@ -432,8 +453,8 @@
 
                             <!-- Starting state with pulse animation -->
                             <Trigger Property="Tag" Value="Starting">
-                                <Setter Property="Background" TargetName="MainBorder" Value="#FFC107"/>
-                                <Setter Property="BorderBrush" TargetName="MainBorder" Value="#FFD54F"/>
+                                <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource Brush.Status.Caution}"/>
+                                <Setter Property="BorderBrush" TargetName="MainBorder" Value="{StaticResource Brush.Status.CautionHover}"/>
                                 <Setter Property="IsEnabled" Value="False"/>
                                 <Setter Property="Visibility" TargetName="PulseBorder" Value="Visible"/>
                                 <Trigger.EnterActions>
@@ -443,7 +464,7 @@
                                             <ColorAnimation 
                                         Storyboard.TargetName="PulseBorder" 
                                         Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-                                        From="#00FFD54F" To="#FFFFD54F" Duration="0:0:0.75" 
+                                        From="{StaticResource Color.Caution.Transparent}" To="{StaticResource Color.Amber.400}" Duration="0:0:0.75" 
                                         AutoReverse="True"/>
                                             <DoubleAnimation 
                                         Storyboard.TargetName="PulseBorder"
@@ -457,8 +478,8 @@
 
                             <!-- Waiting state with dots animation -->
                             <Trigger Property="Tag" Value="Waiting">
-                                <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource AccentRedBrush}"/>
-                                <Setter Property="BorderBrush" TargetName="MainBorder" Value="#E57373"/>
+                                <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource Brush.Status.Danger}"/>
+                                <Setter Property="BorderBrush" TargetName="MainBorder" Value="{StaticResource Brush.Status.DangerHover}"/>
                                 <Setter Property="IsEnabled" Value="False"/>
                                 <Setter Property="Visibility" TargetName="WaitingDots" Value="Visible"/>
                                 <Setter Property="Opacity" TargetName="WaitingDots" Value="1"/>
@@ -493,16 +514,16 @@
 
                             <!-- Ready state - Green color (player is ready) -->
                             <Trigger Property="Tag" Value="Ready">
-                                <Setter Property="Background" TargetName="MainBorder" Value="#4CAF50"/>
-                                <Setter Property="BorderBrush" TargetName="MainBorder" Value="#66BB6A"/>
+                                <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource Brush.Status.Success}"/>
+                                <Setter Property="BorderBrush" TargetName="MainBorder" Value="{StaticResource Brush.Status.SuccessHover}"/>
                                 <Setter Property="IsEnabled" Value="True"/>
                                 <Setter TargetName="PulseBorder" Property="Opacity" Value="0"/>
                             </Trigger>
 
                             <!-- Unready state - Orange/Yellow color (player is not ready) -->
                             <Trigger Property="Tag" Value="Unready">
-                                <Setter Property="Background" TargetName="MainBorder" Value="#FF9800"/>
-                                <Setter Property="BorderBrush" TargetName="MainBorder" Value="#FFB74D"/>
+                                <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource Brush.Status.Caution}"/>
+                                <Setter Property="BorderBrush" TargetName="MainBorder" Value="{StaticResource Brush.Status.CautionHover}"/>
                                 <Setter Property="IsEnabled" Value="True"/>
                                 <Setter TargetName="PulseBorder" Property="Opacity" Value="0"/>
                             </Trigger>
@@ -513,7 +534,7 @@
                                     <Condition Property="IsMouseOver" Value="True"/>
                                     <Condition Property="Tag" Value="CanStart"/>
                                 </MultiTrigger.Conditions>
-                                <Setter Property="Background" TargetName="MainBorder" Value="#66BB6A"/>
+                                <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource Brush.Status.SuccessHover}"/>
                             </MultiTrigger>
 
                             <!-- Pressed state for CanStart -->
@@ -522,7 +543,7 @@
                                     <Condition Property="IsPressed" Value="True"/>
                                     <Condition Property="Tag" Value="CanStart"/>
                                 </MultiTrigger.Conditions>
-                                <Setter Property="Background" TargetName="MainBorder" Value="#43A047"/>
+                                <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource Brush.Status.Success}"/>
                             </MultiTrigger>
 
                             <!-- Hover state for Ready -->
@@ -531,7 +552,7 @@
                                     <Condition Property="IsMouseOver" Value="True"/>
                                     <Condition Property="Tag" Value="Ready"/>
                                 </MultiTrigger.Conditions>
-                                <Setter Property="Background" TargetName="MainBorder" Value="#66BB6A"/>
+                                <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource Brush.Status.SuccessHover}"/>
                             </MultiTrigger>
 
                             <!-- Pressed state for Ready -->
@@ -540,7 +561,7 @@
                                     <Condition Property="IsPressed" Value="True"/>
                                     <Condition Property="Tag" Value="Ready"/>
                                 </MultiTrigger.Conditions>
-                                <Setter Property="Background" TargetName="MainBorder" Value="#43A047"/>
+                                <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource Brush.Status.Success}"/>
                             </MultiTrigger>
 
                             <!-- Hover state for Unready -->
@@ -549,7 +570,7 @@
                                     <Condition Property="IsMouseOver" Value="True"/>
                                     <Condition Property="Tag" Value="Unready"/>
                                 </MultiTrigger.Conditions>
-                                <Setter Property="Background" TargetName="MainBorder" Value="#FFB74D"/>
+                                <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource Brush.Status.CautionHover}"/>
                             </MultiTrigger>
 
                             <!-- Pressed state for Unready -->
@@ -558,7 +579,7 @@
                                     <Condition Property="IsPressed" Value="True"/>
                                     <Condition Property="Tag" Value="Unready"/>
                                 </MultiTrigger.Conditions>
-                                <Setter Property="Background" TargetName="MainBorder" Value="#F57C00"/>
+                                <Setter Property="Background" TargetName="MainBorder" Value="{StaticResource Brush.Action.PrimaryPressed}"/>
                             </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -570,7 +591,7 @@
             <StackPanel Orientation="Horizontal" Margin="0,2">
                 <!-- The sender name with accent color -->
                 <TextBlock Text="{Binding FormattedTimestamp}" 
-                 Foreground="{StaticResource ForegroundWhiteBrush}"
+                 Foreground="{StaticResource Brush.Text.Primary}"
                  FontWeight="SemiBold"/>
 
                 <!-- The sender name with accent color -->
@@ -587,7 +608,7 @@
 
                 <!-- The message content -->
                 <TextBlock Text="{Binding Message}" 
-                 Foreground="{StaticResource ForegroundWhiteBrush}"
+                 Foreground="{StaticResource Brush.Text.Primary}"
                  TextWrapping="Wrap"
                            Margin="4,0,0,0"/>
             </StackPanel>
@@ -610,31 +631,37 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Button Content="← Go Back" 
-                    Style="{StaticResource BackButton}"
+            <Button Content="← GO BACK"
+                    Style="{StaticResource Button.Ghost}"
+                    VerticalAlignment="Center"
                     Command="{Binding LeaveCommand}"/>
 
-            <TextBlock Grid.Column="1"
-                       Text="{Binding LobbyName}" 
-                       FontSize="24" 
-                       FontWeight="Bold"
-                       Foreground="{StaticResource ForegroundWhiteBrush}"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
+            <StackPanel Grid.Column="1" Margin="28,0,0,0" VerticalAlignment="Center">
+                <controls:Eyebrow Text="LOBBY BRIEFING" Margin="0,0,0,10"/>
+                <controls:TrackedTextBlock Style="{StaticResource Display.PageTitle}"
+                                           FontSize="{DynamicResource Font.Size.Title}"
+                                           Text="{Binding LobbyName, Converter={StaticResource UpperCase}}"/>
+            </StackPanel>
         </Grid>
 
         <!-- Main Content Area -->
         <Grid Grid.Row="1">
+            <!--
+                The right panel takes a share of the width rather than a flat 300, so on a wide
+                window it grows with the teams area instead of leaving all the extra space to
+                the left. Min/Max keep the match settings legible without letting the panel
+                swallow the lobby.
+            -->
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>    <!-- Teams Area -->
-                <ColumnDefinition Width="300"/>  <!-- Right Panel -->
+                <ColumnDefinition Width="3*"/>                          <!-- Teams Area -->
+                <ColumnDefinition Width="*" MinWidth="300" MaxWidth="440"/>  <!-- Right Panel -->
             </Grid.ColumnDefinitions>
 
             <!-- Left Side - Teams and Chat -->
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>    <!-- Teams -->
-                    <RowDefinition Height="250"/>  <!-- Chat -->
+                    <RowDefinition Height="2*"/>                          <!-- Teams -->
+                    <RowDefinition Height="*" MinHeight="200" MaxHeight="360"/>  <!-- Chat -->
                 </Grid.RowDefinitions>
 
                 <!-- Teams Section -->
@@ -652,24 +679,23 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="TEAM 1" 
-                                 FontSize="20" 
-                                 FontWeight="Bold"
-                                 Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                <controls:TrackedTextBlock Text="TEAM 1"
+                                 Style="{StaticResource Display.Section}"
+                                 FontSize="{DynamicResource Font.Size.Heading}"
                                  HorizontalAlignment="Center"/>
 
                         <TextBlock Grid.Column="1" 
                                  Text="VS" 
-                                 FontSize="24"
+                                 FontSize="{DynamicResource Font.Size.PageTitle}"
                                  Margin="20,0"
-                                 Foreground="{StaticResource AccentBlueBrush}"
+                                                                  Foreground="{StaticResource Brush.Action.Primary}"
+                                 FontFamily="{StaticResource Font.Heading}"
                                  FontWeight="Bold"/>
 
-                        <TextBlock Grid.Column="2" 
-                                 Text="TEAM 2" 
-                                 FontSize="20"
-                                 FontWeight="Bold"
-                                 Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                <controls:TrackedTextBlock Grid.Column="2"
+                                 Text="TEAM 2"
+                                 Style="{StaticResource Display.Section}"
+                                 FontSize="{DynamicResource Font.Size.Heading}"
                                  HorizontalAlignment="Center"/>
                     </Grid>
 
@@ -704,10 +730,10 @@
                 <!-- Chat Section -->
                 <Border Grid.Row="1" 
                         Margin="0,20,0,0"
-                        Background="{StaticResource BackgroundBlueBrush}"
-                        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                        Background="{StaticResource Brush.Surface.Card}"
+                        BorderBrush="{StaticResource Brush.Border.Hairline}"
                         BorderThickness="1"
-                        CornerRadius="8">
+                        CornerRadius="0">
                     <Grid Margin="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -715,7 +741,7 @@
                         </Grid.RowDefinitions>
 
                         <!-- Chat Messages -->
-                        <ScrollViewer Style="{StaticResource ChatScrollViewer}">
+                        <ScrollViewer Style="{StaticResource ScrollViewer.Thin}">
                             <ItemsControl 
                                 ItemsSource="{Binding ChatMessages}" 
                                 ItemTemplate="{StaticResource ChatMessageTemplate}">
@@ -732,18 +758,18 @@
 
                             <TextBox 
                                 Text="{Binding ChatMessage, UpdateSourceTrigger=PropertyChanged}"
-                                Style="{StaticResource ChatTextBox}"/>
+                                Style="{StaticResource TextBox.Field}"/>
                             <ComboBox
                                 Width="130"
                                 Height="30"
                                 Grid.Column="1"
-                                Style="{StaticResource SettingsComboBox}"
+                                Style="{StaticResource ComboBox.Default}"
                                 ItemsSource="{Binding AvailableChatChannels}"
                                 DisplayMemberPath="DisplayName"
                                 SelectedItem="{Binding SelectedChatChannel, Mode=TwoWay}"
                                 />
                             <Button Grid.Column="2" 
-                                    Style="{StaticResource ActionButton}"
+                                    Style="{StaticResource Button.Primary}"
                                     Content="Send"
                                     Margin="10,0,0,0"
                                     IsDefault="True"
@@ -756,27 +782,30 @@
             <!-- Right Side - Map and Settings -->
             <Border Grid.Column="1" 
                     Margin="20,0,0,0"
-                    Background="{StaticResource BackgroundBlueBrush}"
-                    BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                    Background="{StaticResource Brush.Surface.Card}"
+                    BorderBrush="{StaticResource Brush.Border.Hairline}"
                     BorderThickness="1"
-                    CornerRadius="8">
+                    CornerRadius="0">
                 <Grid Margin="15">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="240"/> <!-- Map Preview -->
-                        <RowDefinition Height="*"/>   <!-- Settings -->
+                        <RowDefinition Height="Auto"/> <!-- Map Preview, sized square below -->
+                        <RowDefinition Height="*"/>    <!-- Settings -->
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="MATCH SETTINGS"
-                             FontSize="18"
-                             FontWeight="Bold"
-                             Foreground="{StaticResource ForegroundWhiteBrush}"
+                                        <controls:TrackedTextBlock Text="MATCH SETTINGS"
+                             Style="{StaticResource Display.Section}"
                              Margin="0,0,0,15"/>
 
-                    <!-- Map Preview -->
+                    <!--
+                        Map Preview. Minimaps are square, so the container tracks its own width to
+                        stay square as the panel resizes — a fixed 240 height cropped them.
+                    -->
                     <Border Grid.Row="1"
-                            Background="{StaticResource BackgroundDarkBlueBrush}"
-                            CornerRadius="4">
+                            Height="{Binding ActualWidth, RelativeSource={RelativeSource Self}}"
+                            Background="{StaticResource Brush.Surface.Sunken}"
+                            BorderBrush="{StaticResource Brush.Border.AccentSoft}"
+                            BorderThickness="1">
                         <Image Source="{Binding SelectedMapPreview, FallbackValue='Assets/Scenarios/CoH3/mm/pachino_2p_mm_handmade.png'}"
                                Stretch="UniformToFill"/>
                     </Border>
@@ -786,13 +815,13 @@
                         <Grid>
                             <TextBlock Text="{Binding SelectedMap.Name}"
                                      FontWeight="SemiBold"
-                                     Foreground="{StaticResource ForegroundWhiteBrush}"
+                                     Foreground="{StaticResource Brush.Text.Primary}"
                                        Visibility="{Binding IsHost, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
                             <ComboBox
                                 DisplayMemberPath="Name"
                                 SelectedItem="{Binding SelectedMap}"
                                 ItemsSource="{Binding AvailableMaps}"
-                                Style="{StaticResource SettingsComboBox}"
+                                Style="{StaticResource ComboBox.Default}"
                                 Visibility="{Binding IsHost, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         </Grid>
 
@@ -817,10 +846,10 @@
             <StackPanel HorizontalAlignment="Left"
                         VerticalAlignment="Center">
                 <Label Content="{Binding LobbyState}"
-                       Foreground="{StaticResource ForegroundWhiteBrush}"
+                       Foreground="{StaticResource Brush.Text.Primary}"
                        VerticalAlignment="Center"/>
                 <Label Content="{Binding TrayMessage}"
-                       Foreground="{StaticResource ForegroundDarkGrayBrush}"
+                       Foreground="{StaticResource Brush.Text.Faint}"
                        VerticalAlignment="Center"/>
             </StackPanel>
 
@@ -875,9 +904,10 @@
                 <DataTemplate>
                     <Grid>
                         <!-- Semi-transparent backdrop -->
-                        <Rectangle Fill="#BF000000"/>
-                        <!-- Centred results card -->
-                        <local:MatchOverView HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Rectangle Fill="{StaticResource Brush.Surface.Scrim}"/>
+                        <!-- Stretched, not centred: the card centres and caps itself, so stretching
+                             here is what lets it grow with the window instead of staying 760 wide. -->
+                        <local:MatchOverView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="40"/>
                     </Grid>
                 </DataTemplate>
             </ContentControl.ContentTemplate>
@@ -892,9 +922,9 @@
                 <DataTemplate>
                     <Grid>
                         <!-- Semi-transparent backdrop -->
-                        <Rectangle Fill="#BF000000"/>
-                        <!-- Centred preview card -->
-                        <local:CompanyPreviewView HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Rectangle Fill="{StaticResource Brush.Surface.Scrim}"/>
+                        <!-- Stretched, not centred — see the MatchOverView overlay above. -->
+                        <local:CompanyPreviewView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="40"/>
                     </Grid>
                 </DataTemplate>
             </ContentControl.ContentTemplate>

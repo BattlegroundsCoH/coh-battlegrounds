@@ -1,0 +1,43 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:Battlegrounds.Controls"
+                    xmlns:dev="clr-namespace:Battlegrounds.Views.Dev">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Brushes.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Metrics.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Typography.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Style-gallery furniture. Not used by the app proper. -->
+
+    <Style TargetType="{x:Type dev:Swatch}">
+        <Setter Property="Margin" Value="0,0,14,14" />
+        <Setter Property="Width" Value="150" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type dev:Swatch}">
+                    <StackPanel>
+                        <!-- Hairline keeps near-black swatches distinguishable from the
+                             page they sit on. -->
+                        <Border Height="52"
+                                Background="{TemplateBinding Fill}"
+                                BorderBrush="{DynamicResource Brush.Border.Strong}"
+                                BorderThickness="1" />
+                        <TextBlock Text="{TemplateBinding Label}"
+                                   FontFamily="{DynamicResource Font.Body}"
+                                   FontSize="{DynamicResource Font.Size.Meta}"
+                                   Foreground="{DynamicResource Brush.Text.Body}"
+                                   Margin="0,6,0,0"
+                                   TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding Hex, RelativeSource={RelativeSource TemplatedParent}}"
+                                   FontFamily="{DynamicResource Font.Body}"
+                                   FontSize="{DynamicResource Font.Size.Label}"
+                                   Foreground="{DynamicResource Brush.Text.Faint}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

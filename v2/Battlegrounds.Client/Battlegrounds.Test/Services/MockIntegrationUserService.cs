@@ -16,7 +16,7 @@ public sealed class MockIntegrationUserService(string user) : IUserService {
 
     private static readonly Configuration Configuration = new() {
         API = new Configuration.APIConfiguration {
-            LoginUrlOverride = "http://bg.test.service.cohbattlegrounds.com:8087",
+            LoginUrlOverride = "https:// bg.test.service.cohbg.com:8087",
             LoginEndpoint = "/api/v1/login",
         }
     };

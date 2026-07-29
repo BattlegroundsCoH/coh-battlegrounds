@@ -1,0 +1,125 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:Battlegrounds.Controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Brushes.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Metrics.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Typography.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--
+        Text entry.
+
+        There is one TextBox style, not the two the app used to carry: ChatTextBox and
+        NameTextBox were identical apart from their hard-coded placeholder strings, so the
+        placeholder moved to ControlAssist.Placeholder and the duplicate went away.
+
+            <TextBox Style="{StaticResource TextBox.Field}"
+                     controls:ControlAssist.Placeholder="Enter name here..." />
+
+        Focus is a gold border on every input in the app — no glow, no shadow. The website
+        does the same thing with `border-color: gold` plus a 1px ring.
+    -->
+
+    <Style x:Key="TextBox.Field" TargetType="TextBox">
+        <Setter Property="Background" Value="{DynamicResource Brush.Surface.Sunken}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource Brush.Accent.Gold}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource Brush.Accent.Gold}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border.Strong}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource Stroke.Hairline}" />
+        <Setter Property="FontFamily" Value="{DynamicResource Font.Body}" />
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.BodySmall}" />
+        <Setter Property="Padding" Value="{DynamicResource Space.Field}" />
+        <Setter Property="MinHeight" Value="{DynamicResource Size.Control}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="Root"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                        <Grid>
+                            <TextBlock x:Name="Placeholder"
+                                       Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(controls:ControlAssist.Placeholder)}"
+                                       Foreground="{DynamicResource Brush.Text.Faint}"
+                                       Margin="{TemplateBinding Padding}"
+                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                       IsHitTestVisible="False"
+                                       Visibility="Collapsed" />
+
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          BorderThickness="0"
+                                          IsTabStop="False" />
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="Placeholder" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource Brush.Border.Focus}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Opacity" Value="0.45" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--
+        PasswordBox cannot share the TextBox template — its content host is a different
+        part and it deliberately exposes no Text property to trigger on, so there is no
+        placeholder here.
+    -->
+    <Style x:Key="PasswordBox.Field" TargetType="PasswordBox">
+        <Setter Property="Background" Value="{DynamicResource Brush.Surface.Sunken}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource Brush.Accent.Gold}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource Brush.Accent.Gold}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border.Strong}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource Stroke.Hairline}" />
+        <Setter Property="FontFamily" Value="{DynamicResource Font.Body}" />
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.BodySmall}" />
+        <Setter Property="Padding" Value="{DynamicResource Space.Field}" />
+        <Setter Property="MinHeight" Value="{DynamicResource Size.Control}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PasswordBox">
+                    <Border x:Name="Root"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      Margin="{TemplateBinding Padding}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      BorderThickness="0"
+                                      IsTabStop="False" />
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource Brush.Border.Focus}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Opacity" Value="0.45" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

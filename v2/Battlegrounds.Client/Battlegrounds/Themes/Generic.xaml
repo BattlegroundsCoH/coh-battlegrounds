@@ -1,0 +1,18 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        WPF looks here, and only here, for the default styles of lookless controls — the
+        path and filename are fixed by convention, and AssemblyInfo.cs already declares
+        ResourceDictionaryLocation.SourceAssembly for it.
+
+        The styles themselves live in Controls/Surfaces.xaml so that the gallery and the
+        theme can merge them directly. This file exists to satisfy the lookup.
+    -->
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/Surfaces.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/Dev.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

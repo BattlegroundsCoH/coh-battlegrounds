@@ -1,8 +1,12 @@
 ﻿using System.Windows;
 
 using Battlegrounds.Views;
+using Battlegrounds.Views.Dev;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+using Serilog;
 
 using Velopack;
 
@@ -15,13 +19,26 @@ public partial class App : Application {
 
     private IServiceProvider? _serviceProvider = null!;
 
+    /// <summary>Logging for the --gallery path, which never builds the DI container.</summary>
+    private ILoggerFactory? _galleryLoggerFactory;
+
     public App() {
         VelopackApp.Build().Run();
     }
 
     protected override void OnStartup(StartupEventArgs e) {
-        
+
         base.OnStartup(e);
+
+        // --gallery opens the design-system gallery instead of the app.
+        if (e.Args.Contains("--gallery")) {
+            _galleryLoggerFactory = LoggerFactory.Create(builder => builder.AddSerilog(new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console(outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] {Message}{NewLine}{Exception}")
+                .CreateLogger(), dispose: true));
+            new StyleGalleryWindow(_galleryLoggerFactory).Show();
+            return;
+        }
 
         var bgApp = new BattlegroundsApp(e.Args);
         bgApp.ConfigureFileStorage();
@@ -39,6 +56,11 @@ public partial class App : Application {
         mainWindow.Title = "Company of Heroes: Battlegrounds";
         mainWindow.Show();
 
+    }
+
+    protected override void OnExit(ExitEventArgs e) {
+        _galleryLoggerFactory?.Dispose(); // Flushes the gallery's console sink; a no-op in the normal path.
+        base.OnExit(e);
     }
 
 }
