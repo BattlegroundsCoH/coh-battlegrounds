@@ -62,6 +62,27 @@ public sealed class LobbySettingViewModel : ObservableObject {
     public int MaxValue => Setting.MaxValue;
     public int Step => Setting.Step;
 
+    public void ApplyServerValue(int value) {
+        var normalizedValue = Setting.Type == LobbySettingType.Integer
+            ? Math.Clamp(value, Setting.MinValue, Setting.MaxValue)
+            : value;
+        if (Setting.Value == normalizedValue && _draftValue == normalizedValue) {
+            return;
+        }
+
+        Setting.Value = normalizedValue;
+        _draftValue = normalizedValue;
+        OnPropertyChanged(nameof(BoolValue));
+        OnPropertyChanged(nameof(IntValue));
+        OnPropertyChanged(nameof(SelectedOptionIndex));
+        OnPropertyChanged(nameof(SelectedOption));
+        OnPropertyChanged(nameof(DraftBoolValue));
+        OnPropertyChanged(nameof(DraftIntValue));
+        OnPropertyChanged(nameof(DraftSelectedOptionIndex));
+        OnPropertyChanged(nameof(IsDirty));
+        ApplyCommand.NotifyCanExecuteChanged();
+    }
+
     private void SetDraftValue(int value) {
         if (_draftValue == value) {
             return;

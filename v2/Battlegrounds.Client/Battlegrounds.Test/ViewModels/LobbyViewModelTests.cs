@@ -66,7 +66,8 @@ public sealed class LobbyViewModelTests {
     /// </summary>
     private static (ILobby lobby, Channel<LobbyEvent> events) CreateLobby(
         bool isHost = true,
-        bool startEventLoop = false) {
+        bool startEventLoop = false,
+        IList<LobbySetting>? settings = null) {
 
         var game = CreateMockGame();
         var localPlayer = new Participant(0, "local-player-1", "Player One", false, false);
@@ -83,7 +84,7 @@ public sealed class LobbyViewModelTests {
         lobby.Team2.Returns(team2);
         lobby.Participants.Returns(new HashSet<Participant> { localPlayer });
         lobby.Companies.Returns(new Dictionary<string, Company>());
-        lobby.Settings.Returns(new List<LobbySetting>());
+        lobby.Settings.Returns(settings ?? new List<LobbySetting>());
         lobby.GetLocalPlayerId().Returns(localPlayer.ParticipantId);
         lobby.GetLocalPlayerSlot().Returns((team1, 0));
 
@@ -513,7 +514,7 @@ public sealed class LobbyViewModelTests {
     }
 
     [Test]
-    public async Task TeamUpdated_Event_WithInvalidIntPayload_IsIgnored() {
+    public async Task TeamUpdated_Event_WithIntegerTeamId_UpdatesExpectedTeam() {
         var (lobby, events) = CreateLobby(startEventLoop: true);
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
@@ -521,12 +522,12 @@ public sealed class LobbyViewModelTests {
         vm.PropertyChanged += (_, e) => fired.Add(e.PropertyName!);
 
         var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
-        await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, 0));
+        await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, 1));
         await processed;
         events.Writer.Complete();
 
         Assert.That(fired, Has.No.Member(nameof(vm.Team1Slots)));
-        Assert.That(fired, Has.No.Member(nameof(vm.Team2Slots)));
+        Assert.That(fired, Contains.Item(nameof(vm.Team2Slots)));
     }
 
     [Test]
@@ -549,43 +550,79 @@ public sealed class LobbyViewModelTests {
     // ── Event: SettingUpdated ─────────────────────────────────────────────────
 
     [Test]
-    public async Task SettingUpdated_Event_WithLobbySetting_DoesTargetedUpdate() {
-        var (lobby, events) = CreateLobby(startEventLoop: true);
+    public async Task SettingUpdated_Event_RefreshesExistingControlWithoutEchoOrReorder() {
+        var firstSetting = new LobbySetting {
+            Name = "first_setting",
+            Priority = 1,
+            Type = LobbySettingType.Boolean,
+            Value = 0
+        };
+        var updatedSetting = new LobbySetting {
+            Name = "test_setting",
+            Priority = 2,
+            Type = LobbySettingType.Integer,
+            Value = 2,
+            MinValue = 0,
+            MaxValue = 10
+        };
+        var (lobby, events) = CreateLobby(
+            startEventLoop: true,
+            settings: [firstSetting, updatedSetting]);
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
+        var originalItems = vm.SelectedSettings.ToArray();
+        var targetItem = originalItems[1];
 
-        // Pre-populate a setting via the lobby backing data (simulating SyncLobbySettings ran)
-        var setting = new LobbySetting { Name = "test_setting", Type = LobbySettingType.Boolean, Value = 0 };
-        lobby.Settings.Returns(new List<LobbySetting> { setting });
-
-        // Force resync so the VM picks up the setting
-        vm.LobbyState = "trigger resync"; // just to change something, settings are synced at construction
-
-        var fired = new List<string>();
-        vm.PropertyChanged += (_, e) => fired.Add(e.PropertyName!);
-
-        // This is how MapAndApplyGrpcEvent sends setting updates (with the LobbySetting as Arg)
-        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
-        await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated, setting));
+        updatedSetting.Value = 7;
+        var processed = WaitForPropertyChangedAsync(targetItem, nameof(targetItem.IntValue));
+        await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated, updatedSetting));
         await processed;
         events.Writer.Complete();
 
-        Assert.That(fired, Contains.Item(nameof(vm.SelectedSettings)));
+        Assert.Multiple(() => {
+            Assert.That(targetItem.IntValue, Is.EqualTo(7));
+            Assert.That(targetItem.DraftIntValue, Is.EqualTo(7));
+            Assert.That(vm.SelectedSettings, Is.EqualTo(originalItems));
+            Assert.That(vm.SelectedSettings[1], Is.SameAs(targetItem));
+        });
+        await lobby.DidNotReceive().SetSetting(Arg.Any<LobbySetting>());
     }
 
     [Test]
     public async Task SettingUpdated_Event_WithMissingPayload_DoesNotReplaceSetting() {
-        var (lobby, events) = CreateLobby(startEventLoop: true);
+        var setting = new LobbySetting {
+            Name = "setting",
+            Type = LobbySettingType.Boolean,
+            Value = 0
+        };
+        var (lobby, events) = CreateLobby(startEventLoop: true, settings: [setting]);
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
-
-        var fired = new List<string>();
-        vm.PropertyChanged += (_, e) => fired.Add(e.PropertyName!);
+        var originalItem = vm.SelectedSettings.Single();
 
         var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated));
         await processed;
         events.Writer.Complete();
 
-        Assert.That(fired, Contains.Item(nameof(vm.SelectedSettings)));
+        Assert.Multiple(() => {
+            Assert.That(vm.SelectedSettings, Has.Count.EqualTo(1));
+            Assert.That(vm.SelectedSettings[0], Is.SameAs(originalItem));
+            Assert.That(originalItem.BoolValue, Is.False);
+        });
+    }
+
+    [Test]
+    public async Task DisposeAsync_PreventsLaterEventFromMutatingUiState() {
+        var (lobby, events) = CreateLobby(startEventLoop: true);
+        var vm = await CreateVmAsync(lobby, BuildServiceProvider());
+
+        await vm.DisposeAsync();
+        await events.Writer.WriteAsync(new LobbyEvent(
+            LobbyEventType.ParticipantMessage,
+            new ChatMessage("remote", "Remote", ChatChannel.All, "too late")));
+        await Task.Delay(50);
+        events.Writer.Complete();
+
+        Assert.That(vm.ChatMessages, Is.Empty);
     }
 
     // ── Event: SlotCompanyDownloadProgress ────────────────────────────────────
@@ -630,17 +667,21 @@ public sealed class LobbyViewModelTests {
     [Test]
     public async Task DownloadedCompany_Event_AppliesStateWithoutSendingCompanyCommand() {
         var (lobby, events) = CreateLobby(startEventLoop: true);
-        var vm = await CreateVmAsync(lobby, BuildServiceProvider());
         var company = new Company {
             Id = "downloaded-company",
             Name = "Downloaded Company",
             Faction = "british_africa",
             GameId = "CoH3"
         };
+        lobby.Team1.Slots[0] = lobby.Team1.Slots[0] with { CompanyId = company.Id };
+        lobby.GetSlotRevision(0, 0).Returns(1);
+        var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
         var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(
-            new LobbyEvent(LobbyEventType.SlotCompanyDownloadProgress, (0, 0, company)));
+            new LobbyEvent(
+                LobbyEventType.SlotCompanyDownloadProgress,
+                new SlotCompanyDownloadUpdate(0, 0, company.Id, 1, Company: company)));
         await processed;
         events.Writer.Complete();
 

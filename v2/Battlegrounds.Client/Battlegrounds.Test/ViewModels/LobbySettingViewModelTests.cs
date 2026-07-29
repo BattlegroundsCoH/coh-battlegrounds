@@ -94,4 +94,34 @@ public sealed class LobbySettingViewModelTests {
         Assert.That(requested!.Value, Is.EqualTo(1));
     }
 
+    [Test]
+    public void ApplyServerValue_RefreshesConfirmedAndDraftPropertiesWithoutApplying() {
+        var applyCalls = 0;
+        var vm = new LobbySettingViewModel(
+            new LobbySetting {
+                Name = "tickets",
+                Type = LobbySettingType.Integer,
+                Value = 500,
+                MinValue = 100,
+                MaxValue = 1000
+            },
+            _ => {
+                applyCalls++;
+                return Task.CompletedTask;
+            });
+        var changed = new List<string>();
+        vm.PropertyChanged += (_, args) => changed.Add(args.PropertyName!);
+
+        vm.ApplyServerValue(700);
+
+        Assert.Multiple(() => {
+            Assert.That(vm.IntValue, Is.EqualTo(700));
+            Assert.That(vm.DraftIntValue, Is.EqualTo(700));
+            Assert.That(vm.IsDirty, Is.False);
+            Assert.That(changed, Contains.Item(nameof(vm.IntValue)));
+            Assert.That(changed, Contains.Item(nameof(vm.DraftIntValue)));
+            Assert.That(applyCalls, Is.Zero);
+        });
+    }
+
 }

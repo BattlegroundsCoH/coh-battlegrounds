@@ -712,6 +712,90 @@ public sealed class MultiplayerLobbyTests {
         }
     };
 
+    [Test]
+    public async Task Reconnection_AppliesAuthoritativeSnapshotAndReturnsConnected() {
+        var reconnectReader = new TestGrpcStreamReader();
+        var reconnectLobby = new MultiplayerLobby(
+            LobbyId,
+            _streamReader.WrapInCall(),
+            _grpcClient,
+            _setup,
+            _serverAPI,
+            _userService,
+            _companyService,
+            _mapService,
+            _ => reconnectReader.WrapInCall()) {
+            IsHost = true,
+            IsReady = true
+        };
+        await reconnectReader.PushAsync(new LobbyStateUpdate {
+            EventType = "LobbyState",
+            LobbyState = new Proto.Lobbies.Lobby {
+                Id = LobbyId,
+                Name = "Snapshot Lobby",
+                HostId = _localParticipant.ParticipantId,
+                GameId = "CoH3",
+                Participants = {
+                    new Proto.Lobbies.Participant {
+                        ParticipantId = _localParticipant.ParticipantId,
+                        Name = "Host from snapshot",
+                        Ready = true
+                    }
+                },
+                Teams = {
+                    new Proto.Lobbies.Team {
+                        Id = 0,
+                        Alias = "Allies",
+                        Type = "Allies",
+                        Slots = {
+                            new Slot {
+                                Id = 0,
+                                ParticipantId = _localParticipant.ParticipantId,
+                                Faction = "british_africa",
+                                CompanyId = string.Empty,
+                                AiDifficulty = "Human"
+                            }
+                        }
+                    },
+                    new Proto.Lobbies.Team {
+                        Id = 1,
+                        Alias = "Axis",
+                        Type = "Axis",
+                        Slots = {
+                            new Slot {
+                                Id = 0,
+                                ParticipantId = "snapshot-player",
+                                Faction = "germans",
+                                CompanyId = string.Empty,
+                                AiDifficulty = "Human"
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        var pollTask = reconnectLobby.PollGrpcUpdates();
+        _streamReader.Complete();
+
+        LobbyEvent? snapshotApplied = null;
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(4));
+        while (snapshotApplied?.EventType != LobbyEventType.SnapshotApplied) {
+            snapshotApplied = await reconnectLobby.GetNextEvent(timeout.Token);
+        }
+
+        Assert.Multiple(() => {
+            Assert.That(reconnectLobby.ConnectionState, Is.EqualTo(LobbyConnectionState.Connected));
+            Assert.That(reconnectLobby.Team2.Slots[0].ParticipantId, Is.EqualTo("snapshot-player"));
+            Assert.That(reconnectLobby.Team2.Slots[0].Faction, Is.EqualTo("germans"));
+            Assert.That(reconnectLobby.Revision, Is.GreaterThan(0));
+            Assert.That(snapshotApplied!.Revision, Is.EqualTo(reconnectLobby.Revision));
+        });
+
+        await reconnectLobby.DisposeAsync();
+        await pollTask.WaitAsync(TimeSpan.FromSeconds(1));
+    }
+
     // ════════════════════════════════════════════════════════════════════════
     //  G — Lifecycle
     // ════════════════════════════════════════════════════════════════════════

@@ -41,7 +41,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
     private ICollection<LobbySlotViewModel> _team1Slots = [];
     private ICollection<LobbySlotViewModel> _team2Slots = [];
     private ICollection<Map> _availableMaps = [];
-    private ICollection<LobbySettingViewModel> _settings = [];
+    private readonly ObservableCollection<LobbySettingViewModel> _settings = [];
 
     private PickableChatChannel _selectedChatChannel = new PickableChatChannel("all"); // TODO: Support chat channels properly
     private Map _selectedMap;
@@ -178,14 +178,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
 
     public string SelectedMapPreview => $"pack://siteoforigin:,,,/Assets/Scenarios/{_lobby.Game.Id}/mm/{DraftSelectedMap.Preview}.png";
 
-    public ICollection<LobbySettingViewModel> SelectedSettings {
-        get => _settings;
-        private set {
-            if (value == _settings) return;
-            _settings = value;
-            PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
-        }
-    }
+    public ObservableCollection<LobbySettingViewModel> SelectedSettings => _settings;
 
     public string ChatMessage {
         get => _chatMessage;
@@ -331,7 +324,14 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
     }
 
     private void SyncLobbySettings() {
-        SelectedSettings = [.. _lobby.Settings.Select(x => new LobbySettingViewModel(x, SetSetting))];
+        foreach (var setting in _lobby.Settings.OrderBy(x => x.Priority)) {
+            var existing = SelectedSettings.FirstOrDefault(x => x.Name == setting.Name);
+            if (existing is not null) {
+                existing.ApplyServerValue(setting.Value);
+                continue;
+            }
+            SelectedSettings.Add(new LobbySettingViewModel(setting, SetSetting));
+        }
     }
 
     private async Task LoadLocalPlayerCompanies(CancellationToken cancellationToken) {
@@ -446,14 +446,20 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
                     PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
                     break;
                 case LobbyEventType.TeamUpdated:
-                    if (lobbyEvent.Arg is not TeamType updatedTeam) {
+                    var updatedTeam = lobbyEvent.Arg switch {
+                        TeamType teamType => teamType,
+                        int teamId when teamId == 0 => _lobby.Team1.TeamType,
+                        int teamId when teamId == 1 => _lobby.Team2.TeamType,
+                        _ => (TeamType?)null
+                    };
+                    if (updatedTeam is null) {
                         _logger.LogWarning("Received TeamUpdated lobby event with invalid argument: {Arg}", lobbyEvent.Arg);
                         break;
                     }
-                    if (updatedTeam == _lobby.Team1.TeamType) {
+                    if (updatedTeam.Value == _lobby.Team1.TeamType) {
                         Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
                     }
-                    if (updatedTeam == _lobby.Team2.TeamType) {
+                    if (updatedTeam.Value == _lobby.Team2.TeamType) {
                         Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
                     }
                     break;
@@ -486,13 +492,11 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
                     if (lobbyEvent.Arg is LobbySetting newLobbySetting) {
                         var settingVm = SelectedSettings.FirstOrDefault(x => x.Name == newLobbySetting.Name);
                         if (settingVm is not null) {
-                            SelectedSettings.Remove(settingVm);
-                            SelectedSettings.Add(new LobbySettingViewModel(newLobbySetting, SetSetting));
+                            settingVm.ApplyServerValue(newLobbySetting.Value);
                         } else {
                             SyncLobbySettings(); // If we can't find the setting, just resync all settings (should be rare)
                         }
                     }
-                    PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
                     break;
                 case LobbyEventType.GameStarted:
                     var launched = await _playService.LaunchGameApp(_lobby.Game); // Will never happen in singleplayer, but will happen for non-host participants in multiplayer when host starts the game
