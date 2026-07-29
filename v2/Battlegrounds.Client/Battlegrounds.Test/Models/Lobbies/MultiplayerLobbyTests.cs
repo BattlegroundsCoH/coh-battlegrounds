@@ -270,6 +270,28 @@ public sealed class MultiplayerLobbyTests {
     }
 
     [Test]
+    public async Task GrpcEvent_SettingUpdated_Selection_SetsConfirmedIndex() {
+        _hostLobby.Settings.Clear();
+        _hostLobby.Settings.Add(new LobbySetting {
+            Name = "gamemode",
+            Type = LobbySettingType.Selection,
+            Value = 0,
+            Options = [
+                new LobbySettingOption("Annihilation", "annihilation"),
+                new LobbySettingOption("Victory Points", "victory_points")
+            ]
+        });
+        var update = new LobbyStateUpdate {
+            EventType = "SettingUpdated",
+            SettingsUpdate = new Proto.Lobbies.LobbySetting { Key = "gamemode", NewValue = "1" }
+        };
+
+        await PushAndReceiveAsync(update);
+
+        Assert.That(_hostLobby.Settings.Single().Value, Is.EqualTo(1));
+    }
+
+    [Test]
     public async Task GrpcEvent_SettingUpdated_UnknownKey_ReturnsNull() {
         var update = new LobbyStateUpdate {
             EventType = "SettingUpdated",
@@ -520,6 +542,37 @@ public sealed class MultiplayerLobbyTests {
             Assert.That(lobbyEvent!.EventType, Is.EqualTo(LobbyEventType.TeamUpdated));
             Assert.That(lobbyEvent.Arg, Is.EqualTo(TeamType.Allies));
         });
+    }
+
+    [Test]
+    public async Task GrpcEvent_SettingUpdated_BooleanOne_SetsValueToOne() {
+        var update = new LobbyStateUpdate {
+            EventType = "SettingUpdated",
+            SettingsUpdate = new Proto.Lobbies.LobbySetting { Key = "gamemode", NewValue = "1" }
+        };
+
+        await PushAndReceiveAsync(update);
+
+        Assert.That(_hostLobby.Settings.Single().Value, Is.EqualTo(1));
+    }
+
+    [Test]
+    public async Task SetSetting_AsHost_WaitsForServerEventBeforeChangingConfirmedState() {
+        var requestedSetting = new LobbySetting {
+            Name = "gamemode",
+            Type = LobbySettingType.Boolean,
+            Value = 1
+        };
+
+        await _hostLobby.SetSetting(requestedSetting);
+
+        Assert.That(_hostLobby.Settings.Single().Value, Is.Zero);
+        _ = _grpcClient.Received(1).UpdateLobbyStateAsync(
+            Arg.Is<LobbyStateUpdate>(update =>
+                update.EventType == LobbyEventType.SettingUpdated.ToString() &&
+                update.SettingsUpdate.NewValue == "1"),
+            Arg.Any<Metadata>());
+        Assert.That(_hostLobby.GetNextEvent().AsTask().IsCompleted, Is.False);
     }
 
     [Test]

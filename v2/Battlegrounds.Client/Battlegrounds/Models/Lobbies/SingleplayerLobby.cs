@@ -199,7 +199,7 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
         } else {
             _settings.Add(newSetting);
         }
-        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated)); // Notify the UI of setting change
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated, newSetting)); // Notify the UI of setting change
     }
 
     public async Task SendMessage(ChatChannel channel, string msg) {

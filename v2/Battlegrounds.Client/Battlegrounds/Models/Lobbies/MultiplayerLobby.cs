@@ -216,10 +216,11 @@ public sealed class MultiplayerLobby(
                 var newSetting = update.SettingsUpdate;
                 int indexOfSetting = _settings.FindIndex(x => x.Name == newSetting.Key);
                 if (indexOfSetting != -1) {
-                   var currentSetting = _settings[indexOfSetting];
+                    var currentSetting = _settings[indexOfSetting];
                     int mappedValue = currentSetting.Type switch {
-                        LobbySettingType.Boolean => newSetting.NewValue == "true" ? 1 : 0,
+                        LobbySettingType.Boolean => newSetting.NewValue.Equals("true", StringComparison.OrdinalIgnoreCase) || newSetting.NewValue == "1" ? 1 : 0,
                         LobbySettingType.Integer => int.TryParse(newSetting.NewValue, out var intValue) ? intValue : currentSetting.Value,
+                        LobbySettingType.Selection => int.TryParse(newSetting.NewValue, out var selectedIndex) ? selectedIndex : currentSetting.Value,
                         _ => currentSetting.Value
                     };
                     _settings[indexOfSetting].Value = mappedValue;
@@ -435,18 +436,7 @@ public sealed class MultiplayerLobby(
         if (!IsHost) {
             return; // Only the host can set settings
         }
-        int indexOfSetting = _settings.FindIndex(x => x.Name == newSetting.Name);
-        if (newSetting.Name == LobbySetting.SETTING_GAMEMODE) {
-            // TODO: Handle gamemode change
-            // ie. if gamemode == victory_points add a new setting for specifying amount of victory points (250, 500, etc)
-        }
-        if (indexOfSetting != -1) { // Swapping existing setting
-            _settings[indexOfSetting] = newSetting;
-        } else {
-            _settings.Add(newSetting);
-        }
-        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated)); // Notify the UI of setting change
-        await PublishSetting(newSetting); // Publish the setting change to the server
+        await PublishSetting(newSetting); // Confirmed state is updated only when the server stream publishes SettingUpdated
     }
 
     public async Task SetSlotAIDifficulty(Team team, int slotIndex, AIDifficulty difficulty) {

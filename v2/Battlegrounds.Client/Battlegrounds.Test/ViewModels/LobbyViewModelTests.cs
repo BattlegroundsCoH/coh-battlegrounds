@@ -6,6 +6,7 @@ using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Services;
 using Battlegrounds.ViewModels;
+using Battlegrounds.ViewModels.LobbyHelpers;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -30,14 +31,6 @@ namespace Battlegrounds.Test.ViewModels;
 ///     <b><c>SingleplayerLobby.SetSlotFaction</c> is NOP</b> —
 ///     The ViewModel's <c>AddAIToSlot</c> calls <c>_lobby.SetSlotFaction</c> after setting AI
 ///     difficulty.  In singleplayer, this does nothing, so AI slots never receive a faction.
-///   </item>
-///   <item>
-///     <b><c>SettingUpdated</c> event <c>Arg</c></b> —
-///     Both lobby implementations write <c>LobbyEvent(LobbyEventType.SettingUpdated)</c> with <c>null</c>
-///     <c>Arg</c> for local changes.  The ViewModel's targeted-update path
-///     (<c>lobbyEvent.Arg is LobbySetting</c>) never matches for local changes, so it always
-///     falls through to a <c>PropertyChanged</c> notification only.  Only gRPC-sourced events
-///     from <c>MapAndApplyGrpcEvent</c> include the <c>LobbySetting</c> as <c>Arg</c>.
 ///   </item>
 /// </list>
 /// </para>
@@ -579,27 +572,19 @@ public sealed class LobbyViewModelTests {
         Assert.That(fired, Contains.Item(nameof(vm.SelectedSettings)));
     }
 
-    /// <summary>
-    /// Documents discrepancy #5: both lobby implementations send <c>SettingUpdated</c> with
-    /// <c>null</c> <c>Arg</c> for local changes.  The ViewModel's targeted-update path
-    /// (<c>lobbyEvent.Arg is LobbySetting</c>) never fires; only <c>PropertyChanged</c> is raised.
-    /// </summary>
     [Test]
-    [NUnit.Framework.Category("Discrepancy")]
-    public async Task SettingUpdated_Event_WithNullArg_OnlyFiresPropertyChanged() {
+    public async Task SettingUpdated_Event_WithMissingPayload_DoesNotReplaceSetting() {
         var (lobby, events) = CreateLobby(startEventLoop: true);
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
         var fired = new List<string>();
         vm.PropertyChanged += (_, e) => fired.Add(e.PropertyName!);
 
-        // Both SingleplayerLobby.SetSetting and MultiplayerLobby.SetSetting send this form
         var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated));
         await processed;
         events.Writer.Complete();
 
-        // PropertyChanged still fires (so the UI re-reads existing wrappers), but no targeted swap
         Assert.That(fired, Contains.Item(nameof(vm.SelectedSettings)));
     }
 
@@ -742,6 +727,72 @@ public sealed class LobbyViewModelTests {
         await vm.ToggleReadyCommand.ExecuteAsync(null);
 
         Assert.That(fired, Contains.Item(nameof(vm.IsReady)));
+    }
+
+    [Test]
+    public async Task MapDraft_DoesNotSendUntilSetMapCommandExecutes() {
+        var (lobby, _) = CreateLobby();
+        lobby.SetMap(Arg.Any<Map>()).Returns(Task.FromResult(true));
+        var vm = await CreateVmAsync(lobby, BuildServiceProvider());
+        var requestedMap = new Map("Requested", "Draft map", 4, "requested", "requested_map");
+
+        vm.DraftSelectedMap = requestedMap;
+
+        Assert.That(vm.SelectedMap, Is.EqualTo(DefaultMap));
+        await lobby.DidNotReceive().SetMap(Arg.Any<Map>());
+
+        await vm.SetMapCommand.ExecuteAsync(vm.DraftSelectedMap);
+
+        await lobby.Received(1).SetMap(requestedMap);
+    }
+
+    [Test]
+    public async Task CompanyDraft_DoesNotSendUntilSetCompanyCommandExecutes() {
+        var (lobby, _) = CreateLobby();
+        var team1 = lobby.Team1;
+        var vm = await CreateVmAsync(lobby, BuildServiceProvider());
+        var company = new Company {
+            Id = "draft-company",
+            Name = "Draft Company",
+            Faction = "british_africa",
+            GameId = "CoH3"
+        };
+        var requestedCompany = new PickableCompany(false, false, company);
+        var slot = vm.Team1Slots.Single(x => x.Slot.Index == 0);
+
+        slot.DraftSelectedCompany = requestedCompany;
+
+        Assert.That(slot.SelectedCompany.IsNone, Is.True);
+        await lobby.DidNotReceive().SetCompany(
+            Arg.Any<Team>(),
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<string>());
+
+        await slot.SetCompanyCommand.ExecuteAsync(slot.DraftSelectedCompany);
+
+        await lobby.Received(1).SetCompany(team1, 0, company.Id, company.Faction);
+    }
+
+    [Test]
+    public async Task AIDifficultyDraft_DoesNotSendUntilDifficultyCommandExecutes() {
+        var (lobby, _) = CreateLobby();
+        var team2 = lobby.Team2;
+        var vm = await CreateVmAsync(lobby, BuildServiceProvider());
+        var slot = vm.Team2Slots.Single(x => x.Slot.Index == 0);
+        var requestedDifficulty = new PickableAIDifficulty(AIDifficulty.HARD);
+
+        slot.DraftSelectedAIDifficulty = requestedDifficulty;
+
+        Assert.That(slot.SelectedAIDifficulty.Difficulty, Is.EqualTo(AIDifficulty.HUMAN));
+        await lobby.DidNotReceive().SetSlotAIDifficulty(
+            Arg.Any<Team>(),
+            Arg.Any<int>(),
+            Arg.Any<AIDifficulty>());
+
+        await slot.DifficultyCommand.ExecuteAsync(slot.DraftSelectedAIDifficulty.Difficulty);
+
+        await lobby.Received(1).SetSlotAIDifficulty(team2, 0, AIDifficulty.HARD);
     }
 
     // ── Initial state ─────────────────────────────────────────────────────────

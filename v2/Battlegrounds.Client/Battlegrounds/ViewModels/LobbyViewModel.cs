@@ -42,6 +42,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
 
     private PickableChatChannel _selectedChatChannel = new PickableChatChannel("all"); // TODO: Support chat channels properly
     private Map _selectedMap;
+    private Map _draftSelectedMap;
 
     private string _chatMessage = string.Empty;
     private string _state = "Loading match information";
@@ -144,18 +145,20 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
     }
 
-    public Map SelectedMap {
-        get => _selectedMap;
+    public Map SelectedMap => _selectedMap;
+
+    public Map DraftSelectedMap {
+        get => _draftSelectedMap ?? _selectedMap;
         set {
-            if (_selectedMap == value) return;
-            _selectedMap = value;
-            SetMapCommand.Execute(value);
-            PropertyChanged?.Invoke(this, new(nameof(SelectedMap)));
+            if (value is null || _draftSelectedMap == value) return;
+            _draftSelectedMap = value;
+            PropertyChanged?.Invoke(this, new(nameof(DraftSelectedMap)));
             PropertyChanged?.Invoke(this, new(nameof(SelectedMapPreview)));
+            SetMapCommand.NotifyCanExecuteChanged();
         }
     }
 
-    public string SelectedMapPreview => $"pack://siteoforigin:,,,/Assets/Scenarios/{_lobby.Game.Id}/mm/{_selectedMap.Preview}.png";
+    public string SelectedMapPreview => $"pack://siteoforigin:,,,/Assets/Scenarios/{_lobby.Game.Id}/mm/{DraftSelectedMap.Preview}.png";
 
     public ICollection<LobbySettingViewModel> SelectedSettings {
         get => _settings;
@@ -257,12 +260,13 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         _statisticsService = serviceProvider.GetRequiredService<IStatisticsService>();
         _mainWindowVm = serviceProvider.GetRequiredService<MainWindowViewModel>();
         _selectedMap = lobby.Map;
+        _draftSelectedMap = lobby.Map;
 
         LeaveCommand = new AsyncRelayCommand(LeaveLobby);
         SendMessageCommand = new AsyncRelayCommand(SendChatMessage);
         StartMatchCommand = new AsyncRelayCommand(StartGame);
         ToggleReadyCommand = new AsyncRelayCommand(ToggleReady);
-        SetMapCommand = new AsyncRelayCommand<Map>(SetMap);
+        SetMapCommand = new AsyncRelayCommand<Map>(SetMap, map => map is not null && map != _selectedMap);
 
         // Sync view with lobby state
         SyncLobbyView();
@@ -290,7 +294,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     }
 
     private void SyncLobbySettings() {
-        SelectedSettings = [.. _lobby.Settings.Select(x => new LobbySettingViewModel(x, new AsyncRelayCommand<LobbySetting>(SetSetting)))];
+        SelectedSettings = [.. _lobby.Settings.Select(x => new LobbySettingViewModel(x, SetSetting))];
     }
 
     private async void LoadLocalPlayerCompanies() {
@@ -399,20 +403,23 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                         break; // No change
                     }
                     _selectedMap = updatedMap; // NOP if already selected (so NOP for host)
+                    _draftSelectedMap = updatedMap;
 
                     // Update team slots as well, since some slots may become hidden/unhidden based on map selection
                     Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
                     Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
                     PropertyChanged?.Invoke(this, new(nameof(SelectedMap)));
+                    PropertyChanged?.Invoke(this, new(nameof(DraftSelectedMap)));
                     PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
                     PropertyChanged?.Invoke(this, new(nameof(SelectedMapPreview)));
+                    SetMapCommand.NotifyCanExecuteChanged();
                     break;
                 case LobbyEventType.SettingUpdated:
                     if (lobbyEvent.Arg is LobbySetting newLobbySetting) {
                         var settingVm = SelectedSettings.FirstOrDefault(x => x.Name == newLobbySetting.Name);
                         if (settingVm is not null) {
                             SelectedSettings.Remove(settingVm);
-                            SelectedSettings.Add(new LobbySettingViewModel(newLobbySetting, new AsyncRelayCommand<LobbySetting>(SetSetting)));
+                            SelectedSettings.Add(new LobbySettingViewModel(newLobbySetting, SetSetting));
                         } else {
                             SyncLobbySettings(); // If we can't find the setting, just resync all settings (should be rare)
                         }
@@ -738,9 +745,13 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
     }
 
     private async ValueTask<LobbySlotViewModel> MapToLobbySlot(int teamIndex, Team.Slot slot) {
-        var addAICommand = new AsyncRelayCommand<AIDifficulty>(args => AddAIToSlot(teamIndex, slot.Index, args));
+        var addAICommand = new AsyncRelayCommand<AIDifficulty>(
+            args => AddAIToSlot(teamIndex, slot.Index, args),
+            args => args != slot.Difficulty);
         var lockUnlockCommand = new AsyncRelayCommand<int>(args => LockOrUnlockSlot(teamIndex, args));
-        var setCompanyCommand = new AsyncRelayCommand<PickableCompany>(args => SetSlotCompany(teamIndex, slot.Index, args));
+        var setCompanyCommand = new AsyncRelayCommand<PickableCompany>(
+            args => SetSlotCompany(teamIndex, slot.Index, args),
+            args => args?.Company is Company company && company.Id != slot.CompanyId);
         var moveToSlotCommand = new AsyncRelayCommand<int>(args => MoveToSlot(teamIndex, args));
         Participant? p = (from participant in _lobby.Participants where participant.ParticipantId == slot.ParticipantId select participant).FirstOrDefault();
         Company? c = string.IsNullOrEmpty(slot.CompanyId) ? null : (from company in _lobby.Companies where company.Key == slot.CompanyId select company.Value).FirstOrDefault();
@@ -798,9 +809,10 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
             return;
         }
         if (!await _lobby.SetMap(map)) {
-            _selectedMap = _lobby.Map; // RESET to _lobby map
-            PropertyChanged?.Invoke(this, new(nameof(SelectedMap)));
+            _draftSelectedMap = _selectedMap;
+            PropertyChanged?.Invoke(this, new(nameof(DraftSelectedMap)));
             PropertyChanged?.Invoke(this, new(nameof(SelectedMapPreview)));
+            SetMapCommand.NotifyCanExecuteChanged();
             SyncState();
         }
     }

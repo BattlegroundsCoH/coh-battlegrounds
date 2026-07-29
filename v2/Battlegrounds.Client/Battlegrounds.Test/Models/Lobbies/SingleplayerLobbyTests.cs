@@ -517,11 +517,15 @@ public sealed class SingleplayerLobbyTests {
     [Test]
     public async Task SetSetting_EmitsSettingUpdatedEvent() {
         using var lobby = CreateLobby();
+        var setting = new LobbySetting { Name = "x", Type = LobbySettingType.Boolean };
 
-        await lobby.SetSetting(new LobbySetting { Name = "x", Type = LobbySettingType.Boolean });
+        await lobby.SetSetting(setting);
 
         var ev = await ConsumeEventAsync(lobby);
-        Assert.That(ev!.EventType, Is.EqualTo(LobbyEventType.SettingUpdated));
+        Assert.Multiple(() => {
+            Assert.That(ev!.EventType, Is.EqualTo(LobbyEventType.SettingUpdated));
+            Assert.That(ev.Arg, Is.SameAs(setting));
+        });
     }
 
     // ── SendMessage ──────────────────────────────────────────────────────────
