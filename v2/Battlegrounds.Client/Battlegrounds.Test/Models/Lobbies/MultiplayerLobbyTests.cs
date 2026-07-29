@@ -310,6 +310,7 @@ public sealed class MultiplayerLobbyTests {
         Assert.Multiple(() => {
             Assert.That(evt, Is.Not.Null);
             Assert.That(evt!.EventType, Is.EqualTo(LobbyEventType.TeamUpdated));
+            Assert.That(evt.Arg, Is.EqualTo(TeamType.Axis));
             Assert.That(_hostLobby.Team2.Slots[0].ParticipantId, Is.EqualTo(_remoteParticipant.ParticipantId));
             Assert.That(_hostLobby.Team2.Slots[0].Faction, Is.EqualTo("germans"));
         });
@@ -507,6 +508,18 @@ public sealed class MultiplayerLobbyTests {
                 u.EventType == LobbyEventType.SlotUpdated.ToString() &&
                 u.SlotUpdate.Slot.CompanyId == "company-abc"),
             Arg.Any<Metadata>());
+    }
+
+    [Test]
+    public async Task SetSlotFaction_AsHost_EmitsTeamUpdatedWithTeamType() {
+        await _hostLobby.SetSlotFaction(_team1, 0, "british_africa");
+
+        var lobbyEvent = await _hostLobby.GetNextEvent().AsTask().WaitAsync(TimeSpan.FromSeconds(1));
+
+        Assert.Multiple(() => {
+            Assert.That(lobbyEvent!.EventType, Is.EqualTo(LobbyEventType.TeamUpdated));
+            Assert.That(lobbyEvent.Arg, Is.EqualTo(TeamType.Allies));
+        });
     }
 
     [Test]

@@ -320,6 +320,9 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
         }
 
         var slot = team.Slots[slotId];
+        if (!string.IsNullOrEmpty(slot.CompanyId)) {
+            return; // Preserve the server-confirmed company selected in the lobby snapshot
+        }
         var factionAlliance = _lobby.Game.GetFactionAlliance(slot.Faction);
         if (string.IsNullOrEmpty(slot.Faction)) {
             var teamAlliance = team.TeamType switch {
@@ -371,12 +374,14 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                     PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
                     break;
                 case LobbyEventType.TeamUpdated:
-                    bool updateTeam1 = lobbyEvent is null || (lobbyEvent.Arg is TeamType t1t && t1t == _lobby.Team1.TeamType);
-                    bool updateTeam2 = lobbyEvent is null || (lobbyEvent.Arg is TeamType t2t && t2t == _lobby.Team2.TeamType);
-                    if (updateTeam1) {
+                    if (lobbyEvent.Arg is not TeamType updatedTeam) {
+                        _logger.LogWarning("Received TeamUpdated lobby event with invalid argument: {Arg}", lobbyEvent.Arg);
+                        break;
+                    }
+                    if (updatedTeam == _lobby.Team1.TeamType) {
                         Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
                     }
-                    if (updateTeam2) {
+                    if (updatedTeam == _lobby.Team2.TeamType) {
                         Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
                     }
                     break;
@@ -453,7 +458,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged {
                             if (slot is null) {
                                 break;
                             }
-                            var updatedSlot = slot with { SelectedCompany = new PickableCompany(false, false, company) };
+                            var updatedSlot = slot.WithServerCompany(company);
                             ICollection<LobbySlotViewModel> updatedSlots = [..(teamId == 0 ? Team1Slots : Team2Slots).Except([slot]).Append(updatedSlot).OrderBy(x => x.Slot.Index)];
                             if (teamId == 0) {
                                 Team1Slots = updatedSlots;

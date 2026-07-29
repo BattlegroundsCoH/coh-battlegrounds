@@ -27,23 +27,6 @@ namespace Battlegrounds.Test.ViewModels;
 ///     hardcodes <c>1</c>. The ViewModel uses this in <c>StartGame</c> to decide the countdown duration.
 ///   </item>
 ///   <item>
-///     <b><c>TeamUpdated</c> event <c>Arg</c> type</b> —
-///     <c>MultiplayerLobby.MapAndApplyGrpcEvent</c> passes <c>teamId</c> (<c>int</c>) as the event
-///     <c>Arg</c> for both <c>TeamUpdated</c> and <c>SlotUpdated</c> events received via gRPC.
-///     <c>MultiplayerLobby.SetSlotFaction</c> also passes <c>int</c>.
-///     However the ViewModel handler expects <c>TeamType</c> (enum).  When the <c>Arg</c> is <c>int</c>,
-///     the pattern <c>lobbyEvent.Arg is TeamType</c> fails and <em>neither team is updated</em>.
-///     See <see cref="TeamUpdated_Event_WithIntArg_DropsUpdate_Discrepancy"/>.
-///   </item>
-///   <item>
-///     <b><c>TeamUpdated</c> event with <c>null</c> <c>Arg</c></b> —
-///     <c>SingleplayerLobby.SetMap</c> writes <c>new LobbyEvent(LobbyEventType.TeamUpdated)</c>
-///     (no <c>Arg</c>) when the map player count changes.  The ViewModel's
-///     <c>lobbyEvent is null</c> guard checks the <em>event</em>, not its <c>Arg</c>, so it is
-///     always <c>false</c> here and neither team is refreshed.
-///     See <see cref="TeamUpdated_Event_WithNullArg_DropsUpdate_Discrepancy"/>.
-///   </item>
-///   <item>
 ///     <b><c>SingleplayerLobby.SetSlotFaction</c> is NOP</b> —
 ///     The ViewModel's <c>AddAIToSlot</c> calls <c>_lobby.SetSlotFaction</c> after setting AI
 ///     difficulty.  In singleplayer, this does nothing, so AI slots never receive a faction.
@@ -536,54 +519,36 @@ public sealed class LobbyViewModelTests {
         Assert.That(fired, Contains.Item(nameof(vm.Team1Slots)));
     }
 
-    /// <summary>
-    /// Documents discrepancy #2: <c>MultiplayerLobby.MapAndApplyGrpcEvent</c> passes an <c>int</c>
-    /// teamId for <c>TeamUpdated</c> and <c>SlotUpdated</c> gRPC events, but the ViewModel expects
-    /// <c>TeamType</c>.  Because <c>lobbyEvent.Arg is TeamType</c> fails for <c>int</c>, neither team is
-    /// refreshed and the update is silently dropped.
-    /// </summary>
     [Test]
-    [NUnit.Framework.Category("Discrepancy")]
-    public async Task TeamUpdated_Event_WithIntArg_DropsUpdate_Discrepancy() {
+    public async Task TeamUpdated_Event_WithInvalidIntPayload_IsIgnored() {
         var (lobby, events) = CreateLobby(startEventLoop: true);
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
         var fired = new List<string>();
         vm.PropertyChanged += (_, e) => fired.Add(e.PropertyName!);
 
-        // MultiplayerLobby.MapAndApplyGrpcEvent sends int teamId, not TeamType
         var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, 0));
         await processed;
         events.Writer.Complete();
 
-        // BUG: neither team is refreshed because the VM expects TeamType, not int
         Assert.That(fired, Has.No.Member(nameof(vm.Team1Slots)));
         Assert.That(fired, Has.No.Member(nameof(vm.Team2Slots)));
     }
 
-    /// <summary>
-    /// Documents discrepancy #3: <c>SingleplayerLobby.SetMap</c> writes
-    /// <c>new LobbyEvent(LobbyEventType.TeamUpdated)</c> with no <c>Arg</c> when the map's
-    /// player count changes.  The ViewModel checks <c>lobbyEvent is null</c> (the event object
-    /// itself, not its <c>Arg</c>) which is always <c>false</c>, so neither team is refreshed.
-    /// </summary>
     [Test]
-    [NUnit.Framework.Category("Discrepancy")]
-    public async Task TeamUpdated_Event_WithNullArg_DropsUpdate_Discrepancy() {
+    public async Task TeamUpdated_Event_WithMissingPayload_IsIgnored() {
         var (lobby, events) = CreateLobby(startEventLoop: true);
         var vm = await CreateVmAsync(lobby, BuildServiceProvider());
 
         var fired = new List<string>();
         vm.PropertyChanged += (_, e) => fired.Add(e.PropertyName!);
 
-        // SingleplayerLobby.SetMap writes TeamUpdated with no Arg
         var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
         await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated));
         await processed;
         events.Writer.Complete();
 
-        // BUG: neither team is refreshed
         Assert.That(fired, Has.No.Member(nameof(vm.Team1Slots)));
         Assert.That(fired, Has.No.Member(nameof(vm.Team2Slots)));
     }
@@ -675,6 +640,31 @@ public sealed class LobbyViewModelTests {
         events.Writer.Complete();
 
         Assert.That(slot.CompanyDownloadProgress, Is.EqualTo(0f), "Should be reset to 0 after auto-hide delay");
+    }
+
+    [Test]
+    public async Task DownloadedCompany_Event_AppliesStateWithoutSendingCompanyCommand() {
+        var (lobby, events) = CreateLobby(startEventLoop: true);
+        var vm = await CreateVmAsync(lobby, BuildServiceProvider());
+        var company = new Company {
+            Id = "downloaded-company",
+            Name = "Downloaded Company",
+            Faction = "british_africa",
+            GameId = "CoH3"
+        };
+
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
+        await events.Writer.WriteAsync(
+            new LobbyEvent(LobbyEventType.SlotCompanyDownloadProgress, (0, 0, company)));
+        await processed;
+        events.Writer.Complete();
+
+        Assert.That(vm.Team1Slots.Single(x => x.Slot.Index == 0).SelectedCompany.Company, Is.SameAs(company));
+        await lobby.DidNotReceive().SetCompany(
+            Arg.Any<Team>(),
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<string>());
     }
 
     // ── Event: MatchOver ──────────────────────────────────────────────────────
@@ -779,6 +769,58 @@ public sealed class LobbyViewModelTests {
 
         Assert.That(vm.Team1Slots, Has.Count.EqualTo(2));
         Assert.That(vm.Team2Slots, Has.Count.EqualTo(2));
+    }
+
+    [Test]
+    public async Task Constructor_WithServerSelectedCompany_DoesNotOverwriteCompany() {
+        var (lobby, _) = CreateLobby();
+        lobby.Team1.Slots[0] = lobby.Team1.Slots[0] with {
+            CompanyId = "server-company",
+            Faction = "british_africa"
+        };
+        var company = new Company {
+            Id = "different-local-company",
+            Name = "Different Local Company",
+            Faction = "british_africa",
+            GameId = "CoH3"
+        };
+        var serviceProvider = BuildServiceProvider();
+        serviceProvider.GetRequiredService<ICompanyService>()
+            .GetLocalCompaniesAsync()
+            .Returns(Task.FromResult<IEnumerable<Company>>([company]));
+
+        _ = await CreateVmAsync(lobby, serviceProvider);
+
+        await lobby.DidNotReceive().SetCompany(
+            Arg.Any<Team>(),
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<string>());
+    }
+
+    [Test]
+    public async Task AvailableCompanies_Getter_DoesNotSendCompanyCommand() {
+        var (lobby, _) = CreateLobby();
+        var company = new Company {
+            Id = "axis-company",
+            Name = "Axis Company",
+            Faction = "germans",
+            GameId = "CoH3"
+        };
+        var serviceProvider = BuildServiceProvider();
+        serviceProvider.GetRequiredService<ICompanyService>()
+            .GetLocalCompaniesAsync()
+            .Returns(Task.FromResult<IEnumerable<Company>>([company]));
+        var vm = await CreateVmAsync(lobby, serviceProvider);
+
+        var availableCompanies = vm.Team2Slots.First().AvailableCompanies;
+
+        Assert.That(availableCompanies.Any(x => x.Company == company), Is.True);
+        await lobby.DidNotReceive().SetCompany(
+            Arg.Any<Team>(),
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<string>());
     }
 
 }

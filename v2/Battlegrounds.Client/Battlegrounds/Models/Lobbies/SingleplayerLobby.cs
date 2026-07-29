@@ -180,7 +180,8 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
                 _team1.Slots[i] = _team1.Slots[i] with { Hidden = isHidden };
                 _team2.Slots[i] = _team2.Slots[i] with { Hidden = isHidden };
             }
-            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated)); // Notify the UI of changes to teams
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, _team1.TeamType)); // Notify the UI of changes to team 1
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, _team2.TeamType)); // Notify the UI of changes to team 2
         }
         _map = map; // Set the new map
         await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.MapUpdated, map)); // Notify the UI of map change

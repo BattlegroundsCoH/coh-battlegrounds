@@ -211,7 +211,7 @@ public sealed class MultiplayerLobby(
                     // If the slot update contains a participant ID and company ID, update the company data for that participant, as it may have changed due to the slot update (eg. they switched to a different company or faction)
                     _ = DownloadCompanyForParticipant(update.SlotUpdate.TeamId, updatedSlot.Id, updatedSlot.ParticipantId, updatedSlot.CompanyId); // Start the download but don't await it, as we don't want to block the processing of further lobby updates while waiting for the download to complete
                 }
-                return new LobbyEvent(LobbyEventType.TeamUpdated, update.SlotUpdate.TeamId); // Make UI simply update the whole team when a slot is updated for simplicity, as that's what the UI currently supports
+                return new LobbyEvent(LobbyEventType.TeamUpdated, _teams[update.SlotUpdate.TeamId].TeamType); // Make UI simply update the whole team when a slot is updated for simplicity, as that's what the UI currently supports
             case LobbyEventType.SettingUpdated:
                 var newSetting = update.SettingsUpdate;
                 int indexOfSetting = _settings.FindIndex(x => x.Name == newSetting.Key);
@@ -505,7 +505,7 @@ public sealed class MultiplayerLobby(
             },
         }, GetGrpcMetadata());
         team.Slots[slotIndex] = team.Slots[slotIndex] with { Faction = faction ?? string.Empty }; // Update local state
-        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, teamId)); // Notify the UI of the change
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI of the change
     }
 
     public async Task ToggleSlotLock(Team team, int slotIndex) {

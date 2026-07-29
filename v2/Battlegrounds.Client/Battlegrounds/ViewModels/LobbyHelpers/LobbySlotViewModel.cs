@@ -52,11 +52,6 @@ public sealed record LobbySlotViewModel(
         get {
             var companies = ParentContext.CompaniesByAlliance[Alliance].Select(x => new PickableCompany(false, false, x));
             var available = (IsAIPlayer ? companies.Append(new PickableCompany(false, true, null)) : companies).ToList();
-            // WARNING : SIDE_EFFECT!!!!
-            if (string.IsNullOrEmpty(_companyId) && IsAIPlayer) {
-                SelectedCompany = available.FirstOrDefault(x => x.Company is not null) ?? new PickableCompany(true, false, null);
-                _companyId = _selectedCompany?.Company?.Id ?? string.Empty;
-            }
             if (available.Count == 0)
                 return [new PickableCompany(true, false, null)];
             else
@@ -84,6 +79,13 @@ public sealed record LobbySlotViewModel(
             _companyId = _selectedCompany?.Company?.Id ?? string.Empty;
             SetCompanyCommand.Execute(value);
         }
+    }
+
+    public LobbySlotViewModel WithServerCompany(Company company) {
+        var updated = this with { };
+        updated._selectedCompany = new PickableCompany(false, false, company);
+        updated._companyId = company.Id;
+        return updated;
     }
 
     public bool HasOccupant => !string.IsNullOrEmpty(Slot.ParticipantId);
