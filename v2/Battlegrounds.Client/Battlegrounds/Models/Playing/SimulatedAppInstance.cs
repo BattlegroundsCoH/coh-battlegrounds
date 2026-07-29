@@ -97,6 +97,7 @@ public sealed class SimulatedAppInstance(Game game, bool launchSuccessful, Simul
             var replayPlayer = new ReplayPlayer(
                 1000 + participant.LobbyId,
                 teamId,
+                slot.Index,
                 participant.ParticipantName,
                 (ulong)Math.Max(participant.LobbyId, 0),
                 0,

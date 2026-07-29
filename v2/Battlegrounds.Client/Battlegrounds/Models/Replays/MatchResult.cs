@@ -64,7 +64,6 @@ public sealed class MatchResult {
     /// <summary>
     /// Gets the list of events that indicate issues with the match.
     /// </summary>
-    [JsonIgnore]
     public IReadOnlyList<BadMatchEvent> BadEvents { get; init; } = []; // List of events that indicate issues with the match
 
     /// <summary>
@@ -93,11 +92,48 @@ public sealed class MatchResult {
     /// <remarks>
     /// This ignores AI players, as they are not relevant for determining the outcome of the match. The set includes only human players who actively participated in the game.
     /// </remarks>
-    public IReadOnlySet<string> Players { get; init;  } = new HashSet<string>();
+    public IReadOnlySet<string> Players { get; init; } = new HashSet<string>();
 
     /// <summary>
     /// Gets a value indicating whether the match has concluded.
     /// </summary>
     public bool Concluded { get; init; } = false; // Indicates if the match has concluded (e.g., victory or defeat)
+
+    /// <summary>
+    /// Gets the array of players in Team 1, including their display name, user ID, faction, and AI status.
+    /// </summary>
+    public MatchResultPlayer[] Team1 { get; init; } = [];
+
+    /// <summary>
+    /// Gets the array of players in Team 2, including their display name, user ID, faction, and AI status.
+    /// </summary>
+    public MatchResultPlayer[] Team2 { get; init; } = [];
+
+}
+
+/// <summary>
+/// Represents a player in the match result, including their display name, user ID, faction, and AI status.
+/// </summary>
+public sealed class MatchResultPlayer {
+
+    /// <summary>
+    /// Gets the display name of the player. This property is initialized to an empty string by default.
+    /// </summary>
+    public string DisplayName { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Gets the unique identifier of the player. This property is initialized to an empty string by default.
+    /// </summary>
+    public string UserId { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Gets the faction of the player. This property is initialized to an empty string by default.
+    /// </summary>
+    public string Faction { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Indicates whether the player is controlled by AI. This property is initialized to false by default.
+    /// </summary>
+    public bool IsAI { get; init; } = false;
 
 }

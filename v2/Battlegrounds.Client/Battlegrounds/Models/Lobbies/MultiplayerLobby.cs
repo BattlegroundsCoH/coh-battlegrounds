@@ -585,11 +585,12 @@ public sealed class MultiplayerLobby(
             _logger.Error("Failed to report match result for game {GameId} to the server", matchResult.GameId);
             return false;
         } else {
-            await _gRPCClient.InitiateDownloadAsync(new InitiateDownloadRequest {
+            var participantDownloadTask = _gRPCClient.InitiateDownloadAsync(new InitiateDownloadRequest {
                 ResourceId = "company_update" // After reporting the match result, initiate a download to update company data for all participants, as the match result may have caused changes to company stats, levels, etc.
             }, GetGrpcMetadata());
             // Download the host company changes (other participants have been told to download their company).
-            await DownloadCompany(false);
+            var selfDownloadTask = DownloadCompany(false);
+            await Task.WhenAll(participantDownloadTask.ResponseAsync, selfDownloadTask); // Wait for both the participant download initiation and the local company download to complete
         }
 
         return true;

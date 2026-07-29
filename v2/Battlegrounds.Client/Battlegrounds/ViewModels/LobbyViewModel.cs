@@ -785,23 +785,45 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
 
     private MatchPlayed MapToPlayedMatch(ReplayAnalysisResult replayAnalysis) {
         var result = replayAnalysis.GetMatchResult(_lobby);
+        var localPlayerId = _lobby.GetLocalPlayerId() ?? string.Empty;
+        if (string.IsNullOrEmpty(localPlayerId) || !result.CompanyModifiers.ContainsKey(localPlayerId)) {
+            return new MatchPlayed {
+                ClientVersion = BattlegroundsApp.Version,
+                DatePlayed = DateTime.Now.Subtract(replayAnalysis.Replay?.Duration ?? TimeSpan.Zero),
+                Duration = replayAnalysis.Replay?.Duration ?? TimeSpan.Zero,
+                IsSinglePlayer = _lobby is SingleplayerLobby,
+                IsVictory = false,
+                GameId = _lobby.Game.Id,
+                CompanyVersion = 0,
+                PlayerCompanyId = string.Empty,
+                PlayedMap = result.Scenario,
+                PlayerFaction = string.Empty,
+                MatchId = result.MatchId,
+                TotalKills = 0,
+                TotalLosses = 0
+            };
+        }
         var localCompany = _lobby.Companies.TryGetValue(_lobby.GetLocalPlayerSlot().team?.Slots[_lobby.GetLocalPlayerSlot().slotId].CompanyId ?? string.Empty, out var company) ? company : null;
         return new MatchPlayed {
             ClientVersion = BattlegroundsApp.Version,
             DatePlayed = DateTime.Now.Subtract(replayAnalysis.Replay?.Duration ?? TimeSpan.Zero),
             Duration = replayAnalysis.Replay?.Duration ?? TimeSpan.Zero,
             IsSinglePlayer = _lobby is SingleplayerLobby,
-            IsVictory = result.Winners.Contains(_lobby.GetLocalPlayerId() ?? string.Empty),
+            IsVictory = result.Winners.Contains(localPlayerId),
             GameId = _lobby.Game.Id,
             CompanyVersion = localCompany?.Version ?? 0,
             PlayerCompanyId = localCompany?.Id ?? string.Empty,
             PlayedMap = result.Scenario,
             PlayerFaction = localCompany?.Faction ?? string.Empty,
             MatchId = result.MatchId,
-            TotalKills = 0,
-            TotalLosses = 0
+            TotalKills = result.CompanyModifiers[localPlayerId].Sum(GetKillsFromEvents),
+            TotalLosses = result.CompanyModifiers[localPlayerId].Sum(GetLossesFromEvents)
         };
     }
+
+    private static int GetKillsFromEvents(CompanyEventModifier e) => e.EventType is CompanyEventModifier.EVENT_TYPE_STATISTICS ? e.IntValue1 + e.IntValue2 : 0;
+
+    private static int GetLossesFromEvents(CompanyEventModifier e) => e.EventType is CompanyEventModifier.EVENT_TYPE_STATISTICS ? e.IntValue3 : 0;
 
     private async Task HideDownloadProgressAfterDelay(int teamId, int slotId, string companyId, long slotRevision, CancellationToken cancellationToken) {
         try {
