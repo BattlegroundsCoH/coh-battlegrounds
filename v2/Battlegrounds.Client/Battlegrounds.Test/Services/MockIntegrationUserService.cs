@@ -86,4 +86,5 @@ public sealed class MockIntegrationUserService(string user) : IUserService {
     public Task<User> LoginWithSteamAsync() {
         throw new NotImplementedException();
     }
+
 }
