@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 namespace Battlegrounds.Services.Infrastructure;
 
 /// <inheritdoc cref="IUiScaleService"/>
-public sealed class UiScaleService : IUiScaleService {
+public sealed class UiScaleService(ILogger<UiScaleService> logger) : IUiScaleService {
 
     public const string DefaultScale = "100%";
 
@@ -27,7 +27,7 @@ public sealed class UiScaleService : IUiScaleService {
     /// </summary>
     public static IReadOnlyList<string> AvailableScales { get; } = [DefaultScale, "110%", "125%", "150%"];
 
-    private readonly ILogger<UiScaleService>? _logger;
+    private readonly ILogger<UiScaleService> _logger = logger;
 
     /// <summary>The overlay currently merged into Application.Resources, if any.</summary>
     private ResourceDictionary? _applied;
@@ -38,15 +38,11 @@ public sealed class UiScaleService : IUiScaleService {
 
     public event EventHandler? ScaleChanged;
 
-    public UiScaleService(ILogger<UiScaleService>? logger = null) {
-        _logger = logger;
-    }
-
     public void Apply(string? scale) {
 
         string requested = scale ?? DefaultScale;
         if (!Scales.TryGetValue(requested, out var target)) {
-            _logger?.LogWarning("Unknown UI scale '{Scale}', falling back to {Default}.", requested, DefaultScale);
+            _logger.LogWarning("Unknown UI scale '{Scale}', falling back to {Default}.", requested, DefaultScale);
             requested = DefaultScale;
             target = Scales[DefaultScale];
         }
@@ -76,7 +72,7 @@ public sealed class UiScaleService : IUiScaleService {
         CurrentScale = requested;
         CurrentFactor = target.Factor;
 
-        _logger?.LogInformation("UI scale set to {Scale}.", requested);
+        _logger.LogInformation("UI scale set to {Scale}.", requested);
         ScaleChanged?.Invoke(this, EventArgs.Empty);
     }
 

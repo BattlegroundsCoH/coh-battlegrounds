@@ -236,7 +236,8 @@ system — anything missing there is a component nobody can review.
 `{StaticResource}`/`{DynamicResource}` that resolves to no `x:Key`. Worth running after any
 theme change: `dotnet build` does *not* catch a missing key — a static reference throws when
 the view is first opened and a dynamic one silently resolves to nothing, so a typo can only
-surface by navigating to the affected screen.
+surface by navigating to the affected screen. CI runs it as a build step, so an unresolved key
+fails the PR.
 
 ### Domain models (`Models/`)
 
@@ -244,4 +245,4 @@ Companies (`Company`, `Squad`), Blueprints, Doctrines, Gamemodes, Lobbies, Match
 
 ## CI
 
-`.github/workflows/dotnet-build-test.yml` runs on push/PR to `master` (windows-latest): restore, build, non-integration tests — PRs with failing tests are rejected. `dotnet-build-release.yml` runs on `v*` tags: publishes a self-contained `win-x64` build and packs/uploads via Velopack.
+`.github/workflows/dotnet-build-test.yml` runs on push/PR to `master` (windows-latest): restore, `scripts/check-xaml-resources.py`, build, non-integration tests — PRs with failing tests or an unresolved resource key are rejected. `dotnet-build-release.yml` runs on `v*` tags: publishes a self-contained `win-x64` build and packs/uploads via Velopack.

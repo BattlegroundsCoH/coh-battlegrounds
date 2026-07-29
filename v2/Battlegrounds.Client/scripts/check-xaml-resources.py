@@ -60,7 +60,7 @@ for path in xaml_files('Themes', 'Views'):
             problems[os.path.relpath(path, ROOT)].append((line_no, key))
 
 if not problems:
-    print('OK — every resource reference resolves.')
+    print('OK - every resource reference resolves.')
     sys.exit(0)
 
 total = 0
