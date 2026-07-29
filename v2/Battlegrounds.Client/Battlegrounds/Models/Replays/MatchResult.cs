@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-using Battlegrounds.Models.Companies;
+﻿using Battlegrounds.Models.Companies;
 
 namespace Battlegrounds.Models.Replays;
 

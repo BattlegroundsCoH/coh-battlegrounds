@@ -129,7 +129,17 @@ public sealed class LoginViewModel : INotifyPropertyChanged {
 
     private async Task ContinueWithSteamAsync() {
         _logger.LogInformation("Continuing login with Steam...");
-        throw new NotImplementedException("Steam login is not implemented yet.");
+        try {
+            var user = await _userService.LoginWithSteamAsync();
+            if (user is not null) {
+                NotifyUserLoggedIn(user);
+            } else {
+                ErrorMessage = "Steam login failed. Please try again.";
+            }
+
+        } catch (Exception ex) {
+            ErrorMessage = $"Steam login error: {ex.Message}";
+        }
     }
 
     public async Task<bool> AutoLoginAsync() {

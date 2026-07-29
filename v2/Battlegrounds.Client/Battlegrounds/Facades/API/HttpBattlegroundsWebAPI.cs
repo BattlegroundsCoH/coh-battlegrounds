@@ -31,14 +31,14 @@ public sealed class HttpBattlegroundsWebAPI(
     public string RefreshEndpoint => $"{_configuration.API.LoginUrlOverride}/auth/refresh";
     public string PublicKeyEndpoint => $"{_configuration.API.LoginUrlOverride}/publickey";
 
-    public string AuthStartEndpoint(AuthProvider authProvider) => $"{_configuration.API.BaseUrl}{("/auth/<IdP>/start").Replace("<IdP>", authProvider switch {
+    public string AuthStartEndpoint(AuthProvider authProvider) => $"{_configuration.API.BaseUrl}{("/auth/v1/<IdP>/start").Replace("<IdP>", authProvider switch {
         AuthProvider.Battlegrounds => "battlegrounds",
         AuthProvider.Steam => "steam",
         AuthProvider.Discord => "discord",
         _ => throw new ArgumentOutOfRangeException(nameof(authProvider), $"Unsupported authentication provider: {authProvider}")
     })}";
 
-    public string AuthStatusEndpoint(AuthProvider authProvider) => $"{_configuration.API.BaseUrl}{("/auth/<IdP>/status").Replace("<IdP>", authProvider switch {
+    public string AuthStatusEndpoint(AuthProvider authProvider) => $"{_configuration.API.BaseUrl}{("/auth/v1/<IdP>/status").Replace("<IdP>", authProvider switch {
         AuthProvider.Battlegrounds => "battlegrounds",
         AuthProvider.Steam => "steam",
         AuthProvider.Discord => "discord",
@@ -120,9 +120,9 @@ public sealed class HttpBattlegroundsWebAPI(
     const int RetryDelayMilliseconds = 1000; // Delay between retries in milliseconds
     // 60 retries with 1000ms delay = 60 seconds total wait time (Not accounting for network latency)
 
-    public async Task<EndAuthResponse?> EndAuthAsync(AuthProvider provider, string sessionId) {
+    public async Task<EndAuthResponse?> EndAuthAsync(AuthProvider provider, string sessionId, string verifier) {
 
-        string endpoint = $"{AuthStatusEndpoint(provider)}?id={sessionId}";
+        string endpoint = $"{AuthStatusEndpoint(provider)}?id={sessionId}&verifier={verifier}";
         for (int i = 0; i < MaxRetries; i++) {
             try {
                 HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, endpoint);
