@@ -1,4 +1,4 @@
-﻿<Window x:Class="Battlegrounds.Views.MainWindow"
+<Window x:Class="Battlegrounds.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,15 +7,25 @@
         xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels"
         xmlns:converters="clr-namespace:Battlegrounds.Converters"
         xmlns:views="clr-namespace:Battlegrounds.Views"
+        xmlns:controls="clr-namespace:Battlegrounds.Controls"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
-        Background="{StaticResource BackgroundDeepBlueBrush}"
+        Background="{StaticResource Brush.Surface.Window}"
+        FontFamily="{StaticResource Font.Body}"
+        FontSize="{DynamicResource Font.Size.Body}"
+        controls:Responsive.IsBreakpointHost="True"
+        UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display"
         mc:Ignorable="d"
         Title="MainWindow"
-        WindowStartupLocation="CenterOwner"
-        MaxHeight="{StaticResource DEFAULT_APP_HEIGHT}"
-        MaxWidth="{StaticResource DEFAULT_APP_WIDTH}"
-        Height="{StaticResource DEFAULT_APP_HEIGHT}" 
-        Width="{StaticResource DEFAULT_APP_WIDTH}">
+        WindowStartupLocation="CenterScreen"
+        Height="{StaticResource Size.Window.DefaultHeight}"
+        Width="{StaticResource Size.Window.DefaultWidth}">
+    <!--
+        Width/Height above use StaticResource on purpose: they are the startup size only. A live
+        UI-scale change resizes the window proportionally in code (MainWindow.xaml.cs) rather than
+        snapping it to the new scale's default. Everything else here scales dynamically.
+    -->
+
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
@@ -28,146 +38,66 @@
         </Grid>
         
         <Grid Visibility="{Binding UserViewModel.IsAuthenticated, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <!-- Top Bar -->
-            <Grid Grid.Row="0" Background="{StaticResource BackgroundBlueBrush}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <!-- App Logo/Name -->
-                <TextBlock Text="BATTLEGROUNDS" 
-                   Margin="20,0,0,0" 
-                   VerticalAlignment="Center"
-                       Foreground="{StaticResource ForegroundWhiteBrush}"
-                   FontSize="24"
-                   FontWeight="Bold"/>
-
-                <!-- User Profile Section -->
-                <ToggleButton x:Name="ProfileToggle"
-                              Grid.Column="2"
-                              HorizontalAlignment="Right"
-                              Margin="0,0,10,0"
-                              Cursor="Hand"
-                              FocusVisualStyle="{x:Null}"
-                              Background="Transparent"
-                              BorderThickness="0">
-                    <ToggleButton.Template>
-                        <ControlTemplate TargetType="ToggleButton">
-                            <Border x:Name="ProfileBorder"
-                                    Background="{TemplateBinding Background}"
-                                    CornerRadius="6"
-                                    Padding="10,6">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Ellipse Width="36" Height="36" Margin="0,0,10,0">
-                                        <Ellipse.Fill>
-                                            <ImageBrush ImageSource="pack://application:,,,/Battlegrounds;component/Assets/dummy_avatar.png"/>
-                                        </Ellipse.Fill>
-                                    </Ellipse>
-                                    <TextBlock Text="{Binding UserViewModel.LocalUser.UserDisplayName}"
-                                               VerticalAlignment="Center"
-                                               Foreground="{StaticResource ForegroundWhiteBrush}"
-                                               Margin="0,0,8,0"/>
-                                    <Path x:Name="Chevron"
-                                          Data="M0,0 L4,4 L8,0"
-                                          Stroke="{StaticResource ForegroundLightGrayBrush}"
-                                          StrokeThickness="1.5"
-                                          VerticalAlignment="Center"
-                                          Margin="0,2,0,0"
-                                          RenderTransformOrigin="0.5,0.5">
-                                        <Path.RenderTransform>
-                                            <RotateTransform Angle="0"/>
-                                        </Path.RenderTransform>
-                                    </Path>
-                                </StackPanel>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="ProfileBorder" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
-                                </Trigger>
-                                <Trigger Property="IsChecked" Value="True">
-                                    <Setter TargetName="ProfileBorder" Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
-                                    <Setter TargetName="Chevron" Property="RenderTransform">
-                                        <Setter.Value>
-                                            <RotateTransform Angle="180"/>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </ToggleButton.Template>
-                </ToggleButton>
-
-                <!-- Profile Dropdown Popup -->
-                <Popup x:Name="ProfilePopup"
-                       Grid.Column="2"
-                       IsOpen="{Binding IsChecked, ElementName=ProfileToggle}"
-                       PlacementTarget="{Binding ElementName=ProfileToggle}"
-                       Placement="Custom"
-                       StaysOpen="False"
-                       AllowsTransparency="True"
-                       PopupAnimation="Fade">
-                    <Border Background="{StaticResource BackgroundDarkBlueBrush}"
-                            BorderBrush="{StaticResource BackgroundLightGrayBrush}"
-                            BorderThickness="1"
-                            CornerRadius="6"
-                            MinWidth="200"
-                            Margin="8,0,8,8"
-                            Padding="0,6">
-                        <Border.Effect>
-                            <DropShadowEffect Color="Black" BlurRadius="16" ShadowDepth="4" Opacity="0.5"/>
-                        </Border.Effect>
-                        <StackPanel>
-                            <!-- Profile header -->
-                            <StackPanel Margin="14,8,14,10">
-                                <TextBlock Text="{Binding UserViewModel.LocalUser.UserDisplayName}"
-                                           Foreground="{StaticResource ForegroundWhiteBrush}"
-                                           FontWeight="SemiBold"
-                                           FontSize="14"/>
-                            </StackPanel>
-                            <Separator Background="{StaticResource BackgroundLightGrayBrush}" Margin="10,0,10,4"/>
-
-                            <Button Style="{StaticResource ProfileMenuItemButton}"
-                                    Content="⚙  Settings"
-                                    Command="{Binding SettingsCommand}"
-                                    Click="SettingsButton_Click"/>
-                            <Button Style="{StaticResource ProfileMenuItemButton}"
-                                    Content="👤  Profile"
-                                    IsEnabled="False"/>
-                            <Separator Background="{StaticResource BackgroundLightGrayBrush}" Margin="10,4"/>
-                            <Button Style="{StaticResource ProfileMenuItemButton}"
-                                    Content="🚪  Log Out"
-                                    Command="{Binding LogoutCommand}"
-                                    Click="LogOutButton_Click"
-                                    Foreground="{StaticResource ForegroundLightRedBrush}"/>
-                        </StackPanel>
-                    </Border>
-                </Popup>
-            </Grid>
 
             <!-- Main Content Area -->
-            <Grid Grid.Row="1" Margin="20" Visibility="{Binding HasMainContent, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+            <Grid Margin="{DynamicResource Space.XL}" Visibility="{Binding HasMainContent, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Navigation Menu -->
-                <StackPanel Margin="0,4,0,0">
-                    <RadioButton x:Name="HomeButton" Style="{StaticResource NavigationButton}" Content="Home" Margin="0,0,0,10" IsChecked="{Binding IsHomeButtonActive}"/>
-                    <RadioButton x:Name="CompaniesButton" Style="{StaticResource NavigationButton}" Content="Companies" Margin="0,0,0,10"/>
-                    <RadioButton x:Name="MultiplayerButton" Style="{StaticResource NavigationButton}" Content="Multiplayer" Margin="0,0,0,10" IsChecked="{Binding IsMultiplayerButtonActive}"/>
-                    <RadioButton Style="{StaticResource NavigationButton}" Content="Single Player" Margin="0,0,0,10" Command="{Binding SingleplayerCommand}" />
-                </StackPanel>
+                <!--
+                    Navigation rail. The logo heads it, the primary destinations sit at the top and
+                    SETTINGS is pinned to the bottom. GroupName is required, not decorative: WPF
+                    scopes RadioButton exclusion to the parent container, so the two StackPanels
+                    would otherwise each keep their own checked item.
+                -->
+                <!--
+                    The rail narrows on a Compact window so the content area keeps its room. The
+                    labels are TrackedTextBlocks and cannot wrap or trim, so Size.NavRailCompact
+                    stays wide enough for "SINGLE PLAYER" at every UI scale rather than relying on
+                    the text to reflow.
+                -->
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Width" Value="{DynamicResource Size.NavRail}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding (controls:Responsive.Breakpoint), RelativeSource={RelativeSource Self}}" Value="Compact">
+                                    <Setter Property="Width" Value="{DynamicResource Size.NavRailCompact}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Image Grid.Row="0"
+                           Source="pack://application:,,,/Battlegrounds;component/Assets/BattlegroundsLogo.png"
+                           MaxWidth="{DynamicResource Size.NavLogo}"
+                           Stretch="Uniform"
+                           HorizontalAlignment="Left"
+                           Margin="16,4,16,28"
+                           RenderOptions.BitmapScalingMode="HighQuality"/>
+
+                    <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                        <RadioButton x:Name="HomeButton" GroupName="MainNav" Style="{StaticResource Button.Nav}" Content="HOME" Margin="0,0,0,10" IsChecked="{Binding IsHomeButtonActive}"/>
+                        <RadioButton x:Name="CompaniesButton" GroupName="MainNav" Style="{StaticResource Button.Nav}" Content="COMPANIES" Margin="0,0,0,10"/>
+                        <RadioButton x:Name="MultiplayerButton" GroupName="MainNav" Style="{StaticResource Button.Nav}" Content="MULTIPLAYER" Margin="0,0,0,10" IsChecked="{Binding IsMultiplayerButtonActive}"/>
+                        <RadioButton GroupName="MainNav" Style="{StaticResource Button.Nav}" Content="SINGLE PLAYER" Margin="0,0,0,10" Command="{Binding SingleplayerCommand}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2">
+                        <Separator Background="{StaticResource Brush.Border.Hairline}" Margin="0,0,0,10"/>
+                        <RadioButton x:Name="SettingsButton" GroupName="MainNav" Style="{StaticResource Button.Nav}" Content="SETTINGS"/>
+                    </StackPanel>
+                </Grid>
 
                 <!-- Content Presenter -->
-                <ContentPresenter Grid.Column="1" x:Name="MainContent">
+                <ContentPresenter Grid.Column="1" x:Name="MainContent" Margin="20,0,0,0">
                     <ContentPresenter.Style>
                         <Style TargetType="ContentPresenter">
                             <Style.Triggers>
@@ -180,13 +110,16 @@
                                 <DataTrigger Binding="{Binding ElementName=CompaniesButton, Path=IsChecked}" Value="True">
                                     <Setter Property="Content" Value="{Binding CompanyBrowserView}"/>
                                 </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=SettingsButton, Path=IsChecked}" Value="True">
+                                    <Setter Property="Content" Value="{Binding SettingsView}"/>
+                                </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </ContentPresenter.Style>
                 </ContentPresenter>
             </Grid>
 
-            <Grid Grid.Row="1" Margin="20" Visibility="{Binding HasMainContent, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid Margin="{DynamicResource Space.XL}" Visibility="{Binding HasMainContent, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <ContentPresenter>
                     <ContentPresenter.Style>
                         <Style TargetType="ContentPresenter">
@@ -197,23 +130,27 @@
             </Grid>
 
 
-            <!-- Modal Content Area -->
-            <Grid 
-            Grid.Row="1"
+            <!--
+                Modal Content Area.
+
+                The host bounds the dialog rather than sizing it. It used to set Width="400" and
+                MinHeight="300" on every dialog, which squeezed the company-creation wizard —
+                authored at 800 wide — into a 400px column. Each modal now declares its own
+                MinWidth/MaxWidth and the ScrollViewer keeps a tall one reachable instead of
+                clipping it against the window edge.
+            -->
+            <Grid
             Visibility="{Binding HasDialog, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Hidden}"
-            Background="#FF000000">
-                <ContentPresenter
-                Content="{Binding DialogContent}"
-                Margin="20"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center">
-                    <ContentPresenter.Style>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Width" Value="400"/>
-                            <Setter Property="MinHeight" Value="300"/>
-                        </Style>
-                    </ContentPresenter.Style>
-                </ContentPresenter>
+            Background="{StaticResource Brush.Surface.Scrim}">
+                <ScrollViewer Style="{StaticResource ScrollViewer.Thin}"
+                              Margin="{DynamicResource Space.Page}"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Auto">
+                    <ContentPresenter
+                        Content="{Binding DialogContent}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+                </ScrollViewer>
             </Grid>
 
         </Grid>

@@ -1,4 +1,4 @@
-﻿<helpers:DialogUserControl x:Class="Battlegrounds.Views.Modals.CreateCompanyModalView"
+<helpers:DialogUserControl x:Class="Battlegrounds.Views.Modals.CreateCompanyModalView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,6 +9,7 @@
              xmlns:converters="clr-namespace:Battlegrounds.Converters"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=viewmodels:CreateCompanyModalViewModel}"
+             MinWidth="640" MaxWidth="900"
              d:DesignHeight="550" d:DesignWidth="800">
     <helpers:DialogUserControl.Resources>
         <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
@@ -27,7 +28,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Faction icon -->
-                <Image Width="20" Height="20" Margin="0,0,8,0">
+                <Image Width="{DynamicResource Size.Icon.S}" Height="{DynamicResource Size.Icon.S}" Margin="0,0,8,0">
                     <Image.Source>
                         <MultiBinding Converter="{StaticResource FactionIconConverter}">
                             <Binding Path="."/>
@@ -63,8 +64,8 @@
         </Style>
 
         <Style x:Key="DoctrineCardItem" TargetType="ListBoxItem">
-            <Setter Property="Background" Value="{StaticResource BackgroundLightBlueBrush}"/>
-            <Setter Property="Foreground" Value="{StaticResource ForegroundWhiteBrush}"/>
+            <Setter Property="Background" Value="{StaticResource Brush.Border.Hairline}"/>
+            <Setter Property="Foreground" Value="{StaticResource Brush.Text.Primary}"/>
             <Setter Property="Padding" Value="4"/>
             <Setter Property="Margin" Value="0,4,4,0"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -75,19 +76,19 @@
                     <ControlTemplate TargetType="ListBoxItem">
                         <Border x:Name="CardBorder"
                                 Background="{TemplateBinding Background}"
-                                BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+                                BorderBrush="{StaticResource Brush.Border.Hairline}"
                                 BorderThickness="2"
-                                CornerRadius="6"
+                                CornerRadius="0"
                                 Padding="{TemplateBinding Padding}">
                             <ContentPresenter/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="CardBorder" Property="Background" Value="{StaticResource BackgroundGrayBrush}"/>
+                                <Setter TargetName="CardBorder" Property="Background" Value="{StaticResource Brush.Surface.Hover}"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="{StaticResource ForegroundLightBlueBrush}"/>
-                                <Setter TargetName="CardBorder" Property="Background" Value="{StaticResource BackgroundGrayBrush}"/>
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="{StaticResource Brush.Accent.Gold}"/>
+                                <Setter TargetName="CardBorder" Property="Background" Value="{StaticResource Brush.Surface.Hover}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -98,7 +99,7 @@
         <DataTemplate x:Key="DoctrineCardDataTemplate">
             <StackPanel>
                 <Image 
-                    Width="42" Height="42"
+                    Width="{DynamicResource Size.Icon.XL}" Height="{DynamicResource Size.Icon.XL}"
                     Margin="0,0,0,6"
                     HorizontalAlignment="Center"
                     Source="{Binding Icon}"
@@ -106,28 +107,28 @@
                 <TextBlock 
                     Text="{Binding Name}"
                     FontWeight="SemiBold"
-                    FontSize="11"
+                    FontSize="{DynamicResource Font.Size.Meta}"
                     TextWrapping="Wrap"
                     HorizontalAlignment="Center"
                     TextAlignment="Center"
-                    Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                    Foreground="{StaticResource Brush.Text.Primary}"/>
                 <StackPanel.ToolTip>
-                    <ToolTip Style="{StaticResource BattlegroundsTooltip}">
+                    <ToolTip Style="{StaticResource ToolTip.Default}">
                         <StackPanel>
                             <TextBlock 
                                 Text="{Binding Name}"
                                 FontWeight="SemiBold"
-                                FontSize="11"
+                                FontSize="{DynamicResource Font.Size.Meta}"
                                 TextWrapping="Wrap"
                                 HorizontalAlignment="Left"
                                 TextAlignment="Center"
-                                Foreground="{StaticResource ForegroundWhiteBrush}"/>
+                                Foreground="{StaticResource Brush.Text.Primary}"/>
                             <TextBlock
                                 Text="{Binding Description}"
-                                FontSize="11"
+                                FontSize="{DynamicResource Font.Size.Meta}"
                                 TextWrapping="Wrap"
                                 MaxWidth="320"
-                                Foreground="{StaticResource ForegroundLightGrayBrush}"/>
+                                Foreground="{StaticResource Brush.Text.Body}"/>
                         </StackPanel>
                     </ToolTip>
                 </StackPanel.ToolTip>
@@ -136,11 +137,11 @@
 
     </helpers:DialogUserControl.Resources>
     <Border 
-        Background="{StaticResource BackgroundBlueBrush}"
-        BorderBrush="{StaticResource BackgroundLightBlueBrush}"
+        Background="{StaticResource Brush.Surface.Card}"
+        BorderBrush="{StaticResource Brush.Border.Hairline}"
         BorderThickness="1"
-        CornerRadius="8">
-        <Grid Margin="16">
+        CornerRadius="0">
+        <Grid Margin="{DynamicResource Space.L}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -149,46 +150,46 @@
 
             <!-- Header -->
             <TextBlock Text="CREATE NEW COMPANY"
-               FontSize="20"
+               FontSize="{DynamicResource Font.Size.Heading}"
                FontWeight="Bold"
-               Foreground="{StaticResource ForegroundWhiteBrush}"
+               Foreground="{StaticResource Brush.Text.Primary}"
                Margin="0,0,0,20"/>
 
             <!-- Form Content -->
             <StackPanel Grid.Row="1">
                 <StackPanel>
                     <TextBlock Text="Company Name"
-                       Foreground="{StaticResource ForegroundWhiteBrush}"
+                       Foreground="{StaticResource Brush.Text.Primary}"
                        Margin="0,0,0,5"/>
                     <TextBox 
-                        Style="{StaticResource NameTextBox}"
+                        Style="{StaticResource TextBox.Field}"
                         Text="{Binding CompanyName, UpdateSourceTrigger=PropertyChanged}"
                         MaxLength="32"/>
                 </StackPanel>
 
                 <StackPanel Margin="0,8,0,0">
                     <TextBlock Text="Game"
-                       Foreground="{StaticResource ForegroundWhiteBrush}"
+                       Foreground="{StaticResource Brush.Text.Primary}"
                        Margin="0,0,0,5"/>
                     <ComboBox ItemsSource="{Binding AvailableGames}"
                               SelectedItem="{Binding SelectedGame}"
                               DisplayMemberPath="GameName"
-                              Style="{StaticResource SettingsComboBox}"/>
+                              Style="{StaticResource ComboBox.Default}"/>
                 </StackPanel>
 
                 <StackPanel Margin="0,8,0,0">
                     <TextBlock Text="Faction"
-                       Foreground="{StaticResource ForegroundWhiteBrush}"
+                       Foreground="{StaticResource Brush.Text.Primary}"
                        Margin="0,0,0,5"/>
                     <ComboBox ItemsSource="{Binding AvailableFactions}"
                               SelectedItem="{Binding SelectedFaction}"
-                              Style="{StaticResource SettingsComboBox}"
+                              Style="{StaticResource ComboBox.Default}"
                               ItemTemplate="{StaticResource FactionComboBoxItemTemplate}"/>
                 </StackPanel>
 
                 <StackPanel Margin="0,8,0,12">
                     <TextBlock Text="Doctrine"
-                       Foreground="{StaticResource ForegroundWhiteBrush}"
+                       Foreground="{StaticResource Brush.Text.Primary}"
                        Margin="0,0,0,5"/>
                     <ListBox
                         HorizontalAlignment="Center"
@@ -200,10 +201,10 @@
                         Margin="0,0,0,8"/>
                     <!-- Selected doctrine detail panel -->
                     <Border
-                        Background="{StaticResource BackgroundLightBlueBrush}"
-                        BorderBrush="{StaticResource ForegroundLightBlueBrush}"
+                        Background="{StaticResource Brush.Border.Hairline}"
+                        BorderBrush="{StaticResource Brush.Accent.Gold}"
                         BorderThickness="1"
-                        CornerRadius="6"
+                        CornerRadius="0"
                         Height="200"
                         Padding="12,10"
                         Visibility="{Binding SelectedDoctrine, Converter={StaticResource NullToVisibilityConverter}}">
@@ -212,15 +213,15 @@
                                 Text="{Binding SelectedDoctrine.Name}"
                                 FontWeight="Bold"
                                 HorizontalAlignment="Center"
-                                FontSize="13"
-                                Foreground="{StaticResource ForegroundWhiteBrush}"
+                                FontSize="{DynamicResource Font.Size.BodySmall}"
+                                Foreground="{StaticResource Brush.Text.Primary}"
                                 Margin="0,0,0,4"/>
                             <TextBlock
                                 Text="{Binding SelectedDoctrine.ShortDescription}"
-                                FontSize="11"
+                                FontSize="{DynamicResource Font.Size.Meta}"
                                 TextWrapping="Wrap"
                                 Height="50"
-                                Foreground="{StaticResource ForegroundLightGrayBrush}"/>
+                                Foreground="{StaticResource Brush.Text.Body}"/>
                             <Grid Margin="0,8,0,0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition/>
@@ -229,8 +230,8 @@
                                 <TextBlock 
                                     Text="Additional Units" 
                                     Grid.Row="0" 
-                                    Foreground="{StaticResource ForegroundWhiteBrush}" 
-                                    FontSize="12" 
+                                    Foreground="{StaticResource Brush.Text.Primary}" 
+                                    FontSize="{DynamicResource Font.Size.Eyebrow}" 
                                     HorizontalAlignment="Center"
                                     FontWeight="DemiBold"/>
                                 <ItemsControl 
@@ -252,8 +253,8 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Image 
                                                         Grid.Column="0"
-                                                        Width="42"
-                                                        Height="42"
+                                                        Width="{DynamicResource Size.Icon.XL}"
+                                                        Height="{DynamicResource Size.Icon.XL}"
                                                         Margin="0,0,12,0">
                                                     <Image.Source>
                                                         <MultiBinding Converter="{StaticResource BlueprintIconMultiConverter}">
@@ -262,25 +263,25 @@
                                                         </MultiBinding>
                                                     </Image.Source>
                                                     <Image.ToolTip>
-                                                        <ToolTip Style="{StaticResource BattlegroundsTooltip}" MaxWidth="360">
+                                                        <ToolTip Style="{StaticResource ToolTip.Default}" MaxWidth="360">
                                                             <StackPanel>
                                                                 <TextBlock 
                                                                     Text="{Binding Converter={StaticResource BlueprintNameConverter}}"
-                                                                    FontSize="16" 
+                                                                    FontSize="{DynamicResource Font.Size.Section}" 
                                                                     FontWeight="Bold"
-                                                                    Foreground="{StaticResource ForegroundWhiteBrush}"
+                                                                    Foreground="{StaticResource Brush.Text.Primary}"
                                                                     TextWrapping="Wrap"/>
                                                                 <TextBlock 
                                                                     Text="{Binding Converter={StaticResource BlueprintHelpTextConverter}}"
-                                                                    FontSize="14" 
-                                                                    Foreground="{StaticResource ForegroundGrayBrush}"
+                                                                    FontSize="{DynamicResource Font.Size.Body}" 
+                                                                    Foreground="{StaticResource Brush.Text.Dim}"
                                                                     TextWrapping="Wrap"/>
                                                                 <TextBlock 
                                                                     Text="{Binding Converter={StaticResource BlueprintBriefTextConverter}}"
-                                                                    FontSize="12"
+                                                                    FontSize="{DynamicResource Font.Size.Eyebrow}"
                                                                     FontStyle="Italic"
                                                                     Margin="0,8,0,0"
-                                                                    Foreground="{StaticResource ForegroundGrayBrush}"/>
+                                                                    Foreground="{StaticResource Brush.Text.Dim}"/>
                                                             </StackPanel>
                                                         </ToolTip>
                                                     </Image.ToolTip>
@@ -303,12 +304,12 @@
                 HorizontalAlignment="Right">
                 <Button 
                     Content="Cancel"
-                    Style="{StaticResource DangerActionButton}"
+                    Style="{StaticResource Button.Danger}"
                     Width="100"
                     Command="{Binding CancelCommand}"/>
                 <Button 
                     Content="Create"
-                    Style="{StaticResource ActionButton}"
+                    Style="{StaticResource Button.Primary}"
                     Margin="8,0,0,0"
                     Width="100"
                     Command="{Binding CreateCommand}"

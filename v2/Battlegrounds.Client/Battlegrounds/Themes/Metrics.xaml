@@ -1,0 +1,125 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--
+        Spatial tokens: corners, spacing, strokes, control sizing.
+
+        The redesign is square-cornered on purpose — the website sets every Tailwind
+        radius token to 0px. Radius.None exists as a named token rather than a literal 0
+        so that the decision is visible and revocable in one place. The scrollbar thumb
+        is the single exception; at 8px wide a square thumb reads as a scratch.
+    -->
+
+    <!-- ===================== Corners ===================== -->
+
+    <CornerRadius x:Key="Radius.None">0</CornerRadius>
+    <CornerRadius x:Key="Radius.Thumb">2</CornerRadius>
+
+    <!-- ===================== Spacing ===================== -->
+    <!-- A 4px scale. Use the token nearest the mockup rather than inventing a value. -->
+
+    <Thickness x:Key="Space.XS">4</Thickness>
+    <Thickness x:Key="Space.S">8</Thickness>
+    <Thickness x:Key="Space.M">12</Thickness>
+    <Thickness x:Key="Space.L">16</Thickness>
+    <Thickness x:Key="Space.XL">20</Thickness>
+    <Thickness x:Key="Space.XXL">30</Thickness>
+
+    <!-- Directional variants that recur often enough to be worth naming. -->
+    <Thickness x:Key="Space.Page">20</Thickness>
+    <Thickness x:Key="Space.Card">22</Thickness>
+    <Thickness x:Key="Space.Row">9,12</Thickness>
+    <Thickness x:Key="Space.Field">14,12</Thickness>
+    <Thickness x:Key="Space.Button">18,9</Thickness>
+    <Thickness x:Key="Space.ButtonLarge">32,15</Thickness>
+
+    <!-- Gap below a section heading, applied as a bottom margin. -->
+    <Thickness x:Key="Space.HeadingGap">0,0,0,14</Thickness>
+
+    <!-- Gap between a stat number and its caption. -->
+    <Thickness x:Key="Space.StatGap">0,8,0,0</Thickness>
+
+    <!-- StatusBadge interior. Tighter than Space.Row because the badge wraps one short word. -->
+    <Thickness x:Key="Space.Badge">9,4</Thickness>
+
+    <!-- ===================== Strokes ===================== -->
+
+    <Thickness x:Key="Stroke.None">0</Thickness>
+    <Thickness x:Key="Stroke.Hairline">1</Thickness>
+
+    <!-- Left accent edge: update banner, quote card, lobby slot team colour. -->
+    <Thickness x:Key="Stroke.EdgeLeft">3,0,0,0</Thickness>
+    <Thickness x:Key="Stroke.EdgeLeftThick">6,0,0,0</Thickness>
+
+    <!-- Underline separating rows in a stat list. -->
+    <Thickness x:Key="Stroke.RowDivider">0,0,0,1</Thickness>
+
+    <!-- ===================== Control sizing ===================== -->
+
+    <sys:Double x:Key="Size.Control">36</sys:Double>
+    <sys:Double x:Key="Size.ControlLarge">44</sys:Double>
+    <sys:Double x:Key="Size.TopBar">60</sys:Double>
+    <sys:Double x:Key="Size.NavItem">45</sys:Double>
+    <sys:Double x:Key="Size.NavRail">200</sys:Double>
+    <sys:Double x:Key="Size.NavRailCompact">150</sys:Double>
+    <sys:Double x:Key="Size.NavLogo">160</sys:Double>
+    <sys:Double x:Key="Size.NavIndicator">4</sys:Double>
+    <sys:Double x:Key="Size.ScrollBar">8</sys:Double>
+
+    <!-- Row in the profile dropdown. Deliberately not Size.Control — a menu row is taller. -->
+    <sys:Double x:Key="Size.MenuRow">38</sys:Double>
+
+    <!-- The red rule that heads an Eyebrow. Width only; the 2px thickness is a hairline
+         and stays put at every UI scale, like the other strokes. -->
+    <sys:Double x:Key="Size.EyebrowRule">34</sys:Double>
+
+    <!-- ===================== Icons ===================== -->
+    <!--
+        Icons and avatars. Before this scale existed the views had invented fifteen distinct
+        square sizes between 16 and 70, none of which scaled with the UI scale — so at 150%
+        the type grew and the icons beside it did not. Snap to the nearest step rather than
+        adding another.
+    -->
+
+    <sys:Double x:Key="Size.Icon.XS">16</sys:Double>
+    <sys:Double x:Key="Size.Icon.S">20</sys:Double>
+    <sys:Double x:Key="Size.Icon.M">24</sys:Double>
+    <sys:Double x:Key="Size.Icon.L">32</sys:Double>
+    <sys:Double x:Key="Size.Icon.XL">42</sys:Double>
+    <sys:Double x:Key="Size.Icon.XXL">48</sys:Double>
+    <sys:Double x:Key="Size.Icon.Huge">70</sys:Double>
+
+    <!-- Status dot: the ready/unready pip on a lobby slot. -->
+    <sys:Double x:Key="Size.Dot">6</sys:Double>
+
+    <!-- ===================== Breakpoints ===================== -->
+    <!--
+        Width thresholds for Responsive.Breakpoint: below Medium is Compact, at or above
+        Expanded is Expanded, in between is Medium.
+
+        They live here, and get scaled by the UI-scale overlays, because a 1400px window at
+        150% holds proportionally less content than the same window at 100% — a fixed pixel
+        threshold would report Expanded on a window that is visually cramped.
+    -->
+
+    <sys:Double x:Key="Size.Breakpoint.Medium">1400</sys:Double>
+    <sys:Double x:Key="Size.Breakpoint.Expanded">1800</sys:Double>
+
+    <!-- ===================== Window ===================== -->
+    <!--
+        Startup size only — the window is free to grow past it. These were previously
+        DEFAULT_APP_WIDTH/HEIGHT and were bound to MaxWidth/MaxHeight as well as
+        Width/Height, which capped the window at 1720x980 even when maximized.
+
+        The minimums are the floor the layout is designed to survive: below them views
+        clip rather than reflow. MainWindow scales them by the active UI scale, so a
+        150% user gets a proportionally larger floor.
+    -->
+
+    <sys:Double x:Key="Size.Window.DefaultWidth">1720</sys:Double>
+    <sys:Double x:Key="Size.Window.DefaultHeight">980</sys:Double>
+    <sys:Double x:Key="Size.Window.MinWidth">1180</sys:Double>
+    <sys:Double x:Key="Size.Window.MinHeight">720</sys:Double>
+
+</ResourceDictionary>

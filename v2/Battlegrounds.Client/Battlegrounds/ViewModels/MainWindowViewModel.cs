@@ -28,6 +28,14 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
 
     public CompanyBrowserView CompanyBrowserView => _serviceProvider.GetRequiredService<CompanyBrowserView>();
 
+    /// <summary>
+    /// The settings page. Cached, unlike its siblings above: both <see cref="SettingsView"/> and its
+    /// view-model are registered transient and the view-model rebuilds every section from
+    /// <c>Configuration</c> in its constructor, so resolving a fresh instance each time the binding
+    /// re-evaluates would silently throw away the user's unsaved edits.
+    /// </summary>
+    public SettingsView SettingsView => field ??= _serviceProvider.GetRequiredService<SettingsView>();
+
     public UserViewModel UserViewModel => _serviceProvider.GetRequiredService<UserViewModel>();
 
     public LoginViewModel LoginViewModel { get; }
@@ -79,15 +87,12 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
 
     public IAsyncRelayCommand SingleplayerCommand { get; }
 
-    public IRelayCommand SettingsCommand { get; }
-
     public IAsyncRelayCommand LogoutCommand { get; }
 
     public MainWindowViewModel(IServiceProvider serviceProvider, LoginViewModel loginViewModel) {
         _serviceProvider = serviceProvider;
         _serviceProvider.GetRequiredService<IDialogService>().RegisterHost(this);
         SingleplayerCommand = new AsyncRelayCommand(StartSingleplayerLobby);
-        SettingsCommand = new RelayCommand(OpenSettings);
         LogoutCommand = new AsyncRelayCommand(LogoutAsync);
         LoginViewModel = loginViewModel ?? throw new ArgumentNullException(nameof(loginViewModel));
     }
@@ -110,12 +115,9 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
         SetContent(null); // Currently, we don't have a back stack, so we just clear the content
     }
 
-    private void OpenSettings() {
-        SetContent(_serviceProvider.GetRequiredService<SettingsView>());
-    }
-
     private async Task LogoutAsync() {
         SetContent(null);
+        IsHomeButtonActive = true; // Also unchecks SETTINGS, so the next login lands on Home
         await UserViewModel.LogoutAsync();
     }
 

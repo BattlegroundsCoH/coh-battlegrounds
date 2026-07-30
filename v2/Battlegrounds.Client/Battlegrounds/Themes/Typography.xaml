@@ -1,0 +1,172 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:controls="clr-namespace:Battlegrounds.Controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Brushes.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--
+        Type system: Oswald for anything that shouts (headings, labels, buttons — always
+        uppercase), JetBrains Mono for everything you actually read.
+
+        Both are embedded from Assets/Fonts. The '#Family' suffix picks the family out of
+        the fonts found at that folder URI; the four weights of each family register as one
+        family through their name tables, so FontWeight selects the right file.
+
+        Tracking (letter-spacing) is expressed in ems to match the CSS the design came from.
+        Only TrackedTextBlock honours it — see that class for why plain TextBlock cannot.
+        Styles below come in pairs where both are needed: Text.* for TextBlock, Display.*
+        for TrackedTextBlock.
+    -->
+
+    <FontFamily x:Key="Font.Heading">pack://application:,,,/Battlegrounds;component/Assets/Fonts/#Oswald</FontFamily>
+    <FontFamily x:Key="Font.Body">pack://application:,,,/Battlegrounds;component/Assets/Fonts/#JetBrains Mono</FontFamily>
+
+    <!-- ===================== Sizes ===================== -->
+
+    <!-- The login screen's headline, the one place the app goes bigger than Display. -->
+    <sys:Double x:Key="Font.Size.DisplayLarge">46</sys:Double>
+    <sys:Double x:Key="Font.Size.Display">40</sys:Double>
+    <sys:Double x:Key="Font.Size.Title">30</sys:Double>
+    <sys:Double x:Key="Font.Size.PageTitle">24</sys:Double>
+    <!-- Caption on the primary call to action. -->
+    <sys:Double x:Key="Font.Size.Cta">22</sys:Double>
+    <!-- Heading for a panel or dialog: "TEAM 1", "AVAILABLE MATCHES", "CREATE NEW COMPANY". -->
+    <sys:Double x:Key="Font.Size.Heading">20</sys:Double>
+    <sys:Double x:Key="Font.Size.Stat">34</sys:Double>
+    <sys:Double x:Key="Font.Size.Section">16</sys:Double>
+    <sys:Double x:Key="Font.Size.Group">18</sys:Double>
+    <sys:Double x:Key="Font.Size.Eyebrow">12</sys:Double>
+    <sys:Double x:Key="Font.Size.Body">14</sys:Double>
+    <sys:Double x:Key="Font.Size.BodySmall">13</sys:Double>
+    <sys:Double x:Key="Font.Size.Meta">11</sys:Double>
+    <sys:Double x:Key="Font.Size.Label">10</sys:Double>
+
+    <!-- ===================== Tracking ===================== -->
+    <!-- Named so the values stay consistent; CSS equivalents in the comments. -->
+
+    <sys:Double x:Key="Track.Tight">0.02</sys:Double>   <!-- .02em — display headings -->
+    <sys:Double x:Key="Track.Snug">0.05</sys:Double>    <!-- .05em — nav items -->
+    <sys:Double x:Key="Track.Wide">0.08</sys:Double>    <!-- .08em — button captions -->
+    <sys:Double x:Key="Track.Wider">0.14</sys:Double>   <!-- .14em — stat labels -->
+    <sys:Double x:Key="Track.Widest">0.2</sys:Double>   <!-- .2em  — field labels -->
+    <sys:Double x:Key="Track.Eyebrow">0.34</sys:Double> <!-- .34em — section eyebrows -->
+
+    <!-- ===================== Display type (Oswald, uppercase, tracked) ===================== -->
+
+    <!-- Screen-defining heading: "WELCOME BACK", a lobby name, a match verdict. -->
+    <Style x:Key="Display.Hero" TargetType="controls:TrackedTextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Font.Heading}" />
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.Display}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Tracking" Value="{DynamicResource Track.Tight}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+    </Style>
+
+    <!-- Page heading inside the app shell: "COMPANIES", "WELCOME BACK, RAGNAR". -->
+    <Style x:Key="Display.PageTitle" TargetType="controls:TrackedTextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Font.Heading}" />
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.PageTitle}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Tracking" Value="{DynamicResource Track.Tight}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+    </Style>
+
+    <!-- Card and section heading: "RECENT MATCHES". -->
+    <Style x:Key="Display.Section" TargetType="controls:TrackedTextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Font.Heading}" />
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.Section}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Tracking" Value="{DynamicResource Track.Wide}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+    </Style>
+
+    <!-- Gold group heading: a game title above its companies. -->
+    <Style x:Key="Display.Group" TargetType="controls:TrackedTextBlock" BasedOn="{StaticResource Display.Section}">
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.Group}" />
+        <Setter Property="Tracking" Value="{DynamicResource Track.Snug}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Accent.Gold}" />
+    </Style>
+
+    <!-- The gold number in a stat tile. -->
+    <Style x:Key="Display.Stat" TargetType="controls:TrackedTextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Font.Heading}" />
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.Stat}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Accent.Gold}" />
+    </Style>
+
+    <!-- Widely tracked gold eyebrow. The red tick beside it belongs to the Eyebrow control. -->
+    <Style x:Key="Display.Eyebrow" TargetType="controls:TrackedTextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Font.Body}" />
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.Eyebrow}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Tracking" Value="{DynamicResource Track.Eyebrow}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Accent.Gold}" />
+    </Style>
+
+    <!-- Field label, table column header, stat caption. -->
+    <Style x:Key="Display.Label" TargetType="controls:TrackedTextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Font.Body}" />
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.Label}" />
+        <Setter Property="Tracking" Value="{DynamicResource Track.Widest}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Dim}" />
+    </Style>
+
+    <!-- Caption under a stat number — same idea as Label, one step larger and less tracked. -->
+    <Style x:Key="Display.StatLabel" TargetType="controls:TrackedTextBlock" BasedOn="{StaticResource Display.Label}">
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.Meta}" />
+        <Setter Property="Tracking" Value="{DynamicResource Track.Wider}" />
+    </Style>
+
+    <!-- Nav rail item. -->
+    <Style x:Key="Display.NavItem" TargetType="controls:TrackedTextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Font.Heading}" />
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.Body}" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Tracking" Value="{DynamicResource Track.Snug}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Muted}" />
+    </Style>
+
+    <!-- ===================== Reading type (JetBrains Mono) ===================== -->
+
+    <Style x:Key="Text.Body" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource Font.Body}" />
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.Body}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Body}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <!-- Body text that carries the row: a company name, a player name. -->
+    <Style x:Key="Text.Strong" TargetType="TextBlock" BasedOn="{StaticResource Text.Body}">
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.BodySmall}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+    </Style>
+
+    <!-- The dim second line under a row title: "Soviet · Arnhem Checkpoint · 22:45". -->
+    <Style x:Key="Text.Meta" TargetType="TextBlock" BasedOn="{StaticResource Text.Body}">
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.Meta}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Dim}" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+
+    <!-- Empty-state copy: "There are currently no new updates." -->
+    <Style x:Key="Text.Empty" TargetType="TextBlock" BasedOn="{StaticResource Text.Body}">
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.BodySmall}" />
+        <Setter Property="FontStyle" Value="Italic" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Faint}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="Text.Error" TargetType="TextBlock" BasedOn="{StaticResource Text.Body}">
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.BodySmall}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Status.DangerText}" />
+    </Style>
+
+</ResourceDictionary>

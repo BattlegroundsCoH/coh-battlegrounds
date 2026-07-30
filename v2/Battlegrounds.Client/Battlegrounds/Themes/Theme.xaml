@@ -1,0 +1,43 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        The application theme. App.xaml merges this and nothing else.
+
+        Layering, top to bottom — each layer may only reference the ones above it:
+
+          Palette     raw colour values, no roles          (Palette.xaml)
+          Brushes     semantic roles over the palette      (Brushes.xaml)
+          Metrics     corners, spacing, strokes, sizing    (Metrics.xaml)
+          Typography  fonts and named text styles          (Typography.xaml)
+          Controls    control styles and templates         (Controls/*.xaml)
+          Legacy      deprecated aliases, being removed    (Legacy.xaml)
+
+        Each dictionary merges what it depends on, so it also resolves standalone —
+        that is what lets the WPF designer and the style gallery render a single file.
+        Re-merging an already-loaded dictionary is cheap; WPF caches by URI.
+
+        Resource lookup convention:
+          - Inside Themes/, reference tokens with {DynamicResource}. Generic.xaml is
+            resolved independently of Application.Resources, so {StaticResource} in a
+            control template there would not find them.
+          - Inside Views/, reference tokens with {StaticResource}.
+    -->
+
+    <ResourceDictionary.MergedDictionaries>
+
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Palette.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Brushes.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Metrics.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Typography.xaml" />
+
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/ScrollViewer.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/Button.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/TextInput.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/ComboBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/Feedback.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/Surfaces.xaml" />
+
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

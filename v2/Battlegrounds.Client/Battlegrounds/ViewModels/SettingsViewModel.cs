@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Reflection;
 
 using Battlegrounds.Models;
+using Battlegrounds.Services;
 using Battlegrounds.ViewModels.Settings;
 
 using CommunityToolkit.Mvvm.Input;
@@ -23,22 +24,29 @@ public sealed class SettingsViewModel {
     private readonly Configuration _configuration;
     private readonly BattlegroundsApp _app;
     private readonly MainWindowViewModel _mainWindowViewModel;
+    private readonly IUiScaleService _uiScaleService;
     private readonly ILogger<SettingsViewModel> _logger;
 
     public ObservableCollection<SettingsSectionModel> Sections { get; } = [];
 
+    /// <summary>
+    /// The signed-in user, surfaced here because the Account section is the only place the app
+    /// shows identity now that the top bar is gone.
+    /// </summary>
+    public UserViewModel UserViewModel => _mainWindowViewModel.UserViewModel;
+
     public IRelayCommand SaveCommand { get; }
 
-    public IRelayCommand BackCommand { get; }
+    public IAsyncRelayCommand LogoutCommand => _mainWindowViewModel.LogoutCommand;
 
-    public SettingsViewModel(Configuration configuration, BattlegroundsApp app, MainWindowViewModel mainWindowViewModel, ILogger<SettingsViewModel> logger) {
+    public SettingsViewModel(Configuration configuration, BattlegroundsApp app, MainWindowViewModel mainWindowViewModel, IUiScaleService uiScaleService, ILogger<SettingsViewModel> logger) {
         _configuration = configuration;
         _app = app;
         _mainWindowViewModel = mainWindowViewModel;
+        _uiScaleService = uiScaleService;
         _logger = logger;
 
         SaveCommand = new RelayCommand(Save);
-        BackCommand = new RelayCommand(GoBack);
 
         BuildSections();
     }
@@ -123,11 +131,13 @@ public sealed class SettingsViewModel {
             }
         }
         _app.SaveConfiguration();
-        _logger.LogInformation("Configuration saved successfully.");
-    }
 
-    private void GoBack() {
-        _mainWindowViewModel.GoBack();
+        // Applied after the write so the persisted value and the live UI cannot disagree. This is a
+        // no-op when the scale did not change, and takes effect without a restart because the theme
+        // layer references its size tokens with {DynamicResource}.
+        _uiScaleService.Apply(_configuration.UiScale);
+
+        _logger.LogInformation("Configuration saved successfully.");
     }
 
 }
