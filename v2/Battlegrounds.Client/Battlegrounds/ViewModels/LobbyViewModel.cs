@@ -403,181 +403,188 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
             }
 
             await InvokeOnUiAsync(async () => {
-            if (IsRevisionedStateEvent(lobbyEvent.EventType)
-                && lobbyEvent.Revision > 0
-                && lobbyEvent.Revision <= _lastAppliedRevision) {
-                return;
-            }
-            if (IsRevisionedStateEvent(lobbyEvent.EventType)) {
-                _lastAppliedRevision = Math.Max(_lastAppliedRevision, lobbyEvent.Revision);
-            }
-            switch (lobbyEvent.EventType) {
-                case LobbyEventType.ConnectionStateChanged:
-                    if (lobbyEvent.Arg is LobbyConnectionState connectionState) {
-                        ConnectionState = connectionState;
-                    }
-                    break;
-                case LobbyEventType.SnapshotApplied:
-                    _selectedMap = _lobby.Map;
-                    _draftSelectedMap = _lobby.Map;
-                    SyncLobbySettings();
-                    Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
-                    Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
-                    PropertyChanged?.Invoke(this, new(nameof(SelectedMap)));
-                    PropertyChanged?.Invoke(this, new(nameof(DraftSelectedMap)));
-                    PropertyChanged?.Invoke(this, new(nameof(SelectedMapPreview)));
-                    SetMapCommand.NotifyCanExecuteChanged();
-                    break;
-                case LobbyEventType.ParticipantMessage:
-                    if (lobbyEvent.Arg is not ChatMessage chatEvent) {
-                        break; // Error?
-                    }
-                    bool isSelf = chatEvent.SenderId == _lobby.GetLocalPlayerId();
-                    var (localPlayerTeam, _) = _lobby.GetLocalPlayerSlot();
-                    bool isAllied = localPlayerTeam?.Participants.Any(x => x == chatEvent.SenderId) ?? false;
-                    ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, chatEvent.Channel, isSelf, isAllied, chatEvent.Sender, chatEvent.Message));
-                    PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
-                    break;
-                case LobbyEventType.ParticipantJoined:
-                    if (lobbyEvent.Arg is not Participant newParticipant) {
-                        break;
-                    }
-                    ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, ChatChannel.All, false, false, "System", $"{newParticipant.ParticipantName} has joined the lobby.", IsSystemMessage: true));
-                    PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
-                    break;
-                case LobbyEventType.TeamUpdated:
-                    var updatedTeam = lobbyEvent.Arg switch {
-                        TeamType teamType => teamType,
-                        int teamId when teamId == 0 => _lobby.Team1.TeamType,
-                        int teamId when teamId == 1 => _lobby.Team2.TeamType,
-                        _ => (TeamType?)null
-                    };
-                    if (updatedTeam is null) {
-                        _logger.LogWarning("Received TeamUpdated lobby event with invalid argument: {Arg}", lobbyEvent.Arg);
-                        break;
-                    }
-                    if (updatedTeam.Value == _lobby.Team1.TeamType) {
-                        Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
-                    }
-                    if (updatedTeam.Value == _lobby.Team2.TeamType) {
-                        Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
-                    }
-                    break;
-                case LobbyEventType.UpdatedCompany:
-                    if (lobbyEvent.Arg is not Company updatedCompany) {
-                        break;
-                    }
-                    _lobbyCompanies[updatedCompany.Id] = updatedCompany;
-                    break;
-                case LobbyEventType.MapUpdated:
-                    if (lobbyEvent.Arg is not Map updatedMap) {
-                        break;
-                    }
-                    if (updatedMap == _selectedMap) {
-                        break; // No change
-                    }
-                    _selectedMap = updatedMap; // NOP if already selected (so NOP for host)
-                    _draftSelectedMap = updatedMap;
-
-                    // Update team slots as well, since some slots may become hidden/unhidden based on map selection
-                    Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
-                    Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
-                    PropertyChanged?.Invoke(this, new(nameof(SelectedMap)));
-                    PropertyChanged?.Invoke(this, new(nameof(DraftSelectedMap)));
-                    PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
-                    PropertyChanged?.Invoke(this, new(nameof(SelectedMapPreview)));
-                    SetMapCommand.NotifyCanExecuteChanged();
-                    break;
-                case LobbyEventType.SettingUpdated:
-                    if (lobbyEvent.Arg is LobbySetting newLobbySetting) {
-                        var settingVm = SelectedSettings.FirstOrDefault(x => x.Name == newLobbySetting.Name);
-                        if (settingVm is not null) {
-                            settingVm.ApplyServerValue(newLobbySetting.Value);
-                        } else {
-                            SyncLobbySettings(); // If we can't find the setting, just resync all settings (should be rare)
+                if (IsRevisionedStateEvent(lobbyEvent.EventType)
+                    && lobbyEvent.Revision > 0
+                    && lobbyEvent.Revision <= _lastAppliedRevision) {
+                    return;
+                }
+                if (IsRevisionedStateEvent(lobbyEvent.EventType)) {
+                    _lastAppliedRevision = Math.Max(_lastAppliedRevision, lobbyEvent.Revision);
+                }
+                switch (lobbyEvent.EventType) {
+                    case LobbyEventType.ConnectionStateChanged:
+                        if (lobbyEvent.Arg is LobbyConnectionState connectionState) {
+                            ConnectionState = connectionState;
                         }
-                    }
-                    break;
-                case LobbyEventType.GameStarted:
-                    var launched = await _playService.LaunchGameApp(_lobby.Game); // Will never happen in singleplayer, but will happen for non-host participants in multiplayer when host starts the game
-                    if (launched.Failed) {
-                        // TODO: Inform the lobby that the local player failed to launch the game, so host can handle it (probably by cancelling the game start and returning to lobby)
-                    }
-                    break;
-                case LobbyEventType.TrayMessage:
-                    if (lobbyEvent.Arg is not string trayMessage) {
-                        _logger.LogWarning("Received TrayMessage lobby event with invalid argument: {Arg}", lobbyEvent.Arg);
                         break;
-                    }
-                    TrayMessage = trayMessage;
-                    break;
-                case LobbyEventType.TrayMessageHide:
-                    TrayMessage = string.Empty;
-                    break;
-                case LobbyEventType.MatchOver:
-                    await ShowMatchResults();
-                    break;
-                case LobbyEventType.SlotCompanyDownloadProgress:
-                    if (lobbyEvent.Arg is SlotCompanyDownloadUpdate download
-                        && download.TeamId is >= 0 and < 2
-                        && _lobby.GetSlotRevision(download.TeamId, download.SlotId) == download.SlotRevision) {
-                        var slots = download.TeamId == 0 ? Team1Slots : Team2Slots;
-                        var slotVm = slots.FirstOrDefault(x => x.Slot.Index == download.SlotId);
-                        if (slotVm is null
-                            || !string.Equals(slotVm.Slot.CompanyId, download.CompanyId, StringComparison.Ordinal)) {
+                    case LobbyEventType.SnapshotApplied:
+                        _selectedMap = _lobby.Map;
+                        _draftSelectedMap = _lobby.Map;
+                        SyncLobbySettings();
+                        Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
+                        Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
+                        PropertyChanged?.Invoke(this, new(nameof(SelectedMap)));
+                        PropertyChanged?.Invoke(this, new(nameof(DraftSelectedMap)));
+                        PropertyChanged?.Invoke(this, new(nameof(SelectedMapPreview)));
+                        SetMapCommand.NotifyCanExecuteChanged();
+                        break;
+                    case LobbyEventType.ParticipantMessage:
+                        if (lobbyEvent.Arg is not ChatMessage chatEvent) {
+                            break; // Error?
+                        }
+                        bool isSelf = chatEvent.SenderId == _lobby.GetLocalPlayerId();
+                        var (localPlayerTeam, _) = _lobby.GetLocalPlayerSlot();
+                        bool isAllied = localPlayerTeam?.Participants.Any(x => x == chatEvent.SenderId) ?? false;
+                        ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, chatEvent.Channel, isSelf, isAllied, chatEvent.Sender, chatEvent.Message));
+                        PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
+                        break;
+                    case LobbyEventType.ParticipantJoined:
+                        if (lobbyEvent.Arg is not Participant newParticipant) {
                             break;
                         }
-                        if (download.Progress is float progress) {
-                            slotVm.CompanyDownloadProgress = progress;
-                            PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
-                            PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
-                            if (progress >= 1.0f) {
-                                _ = HideDownloadProgressAfterDelay(download.TeamId, download.SlotId, download.CompanyId, download.SlotRevision, cancellationToken);
-                            }
+                        ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, ChatChannel.All, false, false, "System", $"{newParticipant.ParticipantName} has joined the lobby.", IsSystemMessage: true));
+                        PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
+                        break;
+                    case LobbyEventType.ParticipantLeft:
+                        if (lobbyEvent.Arg is not Participant leftParticipant) {
+                            break;
                         }
-                        if (download.Company is Company company && company.Id == download.CompanyId) {
-                            var updatedSlot = slotVm.WithServerCompany(company);
-                            ICollection<LobbySlotViewModel> updatedSlots = [.. slots.Except([slotVm]).Append(updatedSlot).OrderBy(x => x.Slot.Index)];
-                            if (download.TeamId == 0) {
-                                Team1Slots = updatedSlots;
+                        ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, ChatChannel.All, false, false, "System", $"{leftParticipant.ParticipantName} has left the lobby.", IsSystemMessage: true));
+                        PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
+                        break;
+                    case LobbyEventType.TeamUpdated:
+                        var updatedTeam = lobbyEvent.Arg switch {
+                            TeamType teamType => teamType,
+                            int teamId when teamId == 0 => _lobby.Team1.TeamType,
+                            int teamId when teamId == 1 => _lobby.Team2.TeamType,
+                            _ => (TeamType?)null
+                        };
+                        if (updatedTeam is null) {
+                            _logger.LogWarning("Received TeamUpdated lobby event with invalid argument: {Arg}", lobbyEvent.Arg);
+                            break;
+                        }
+                        if (updatedTeam.Value == _lobby.Team1.TeamType) {
+                            Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
+                        }
+                        if (updatedTeam.Value == _lobby.Team2.TeamType) {
+                            Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
+                        }
+                        break;
+                    case LobbyEventType.UpdatedCompany:
+                        if (lobbyEvent.Arg is not Company updatedCompany) {
+                            break;
+                        }
+                        _lobbyCompanies[updatedCompany.Id] = updatedCompany;
+                        break;
+                    case LobbyEventType.MapUpdated:
+                        if (lobbyEvent.Arg is not Map updatedMap) {
+                            break;
+                        }
+                        if (updatedMap == _selectedMap) {
+                            break; // No change
+                        }
+                        _selectedMap = updatedMap; // NOP if already selected (so NOP for host)
+                        _draftSelectedMap = updatedMap;
+
+                        // Update team slots as well, since some slots may become hidden/unhidden based on map selection
+                        Team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
+                        Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
+                        PropertyChanged?.Invoke(this, new(nameof(SelectedMap)));
+                        PropertyChanged?.Invoke(this, new(nameof(DraftSelectedMap)));
+                        PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
+                        PropertyChanged?.Invoke(this, new(nameof(SelectedMapPreview)));
+                        SetMapCommand.NotifyCanExecuteChanged();
+                        break;
+                    case LobbyEventType.SettingUpdated:
+                        if (lobbyEvent.Arg is LobbySetting newLobbySetting) {
+                            var settingVm = SelectedSettings.FirstOrDefault(x => x.Name == newLobbySetting.Name);
+                            if (settingVm is not null) {
+                                settingVm.ApplyServerValue(newLobbySetting.Value);
                             } else {
-                                Team2Slots = updatedSlots;
-                            }
-                            PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
-                            PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
-                        }
-                    } else if (lobbyEvent.Arg is ValueTuple<int, int, float> legacyProgress) {
-                        var (teamId, slotId, progress) = legacyProgress;
-                        var slotVm = (teamId == 0 ? Team1Slots : Team2Slots).FirstOrDefault(x => x.Slot.Index == slotId);
-                        if (slotVm is not null) {
-                            slotVm.CompanyDownloadProgress = progress;
-                            PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
-                            PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
-                            if (progress >= 1.0f) {
-                                _ = HideDownloadProgressAfterDelay(
-                                    teamId,
-                                    slotId,
-                                    slotVm.Slot.CompanyId,
-                                    _lobby.GetSlotRevision(teamId, slotId),
-                                    cancellationToken);
+                                SyncLobbySettings(); // If we can't find the setting, just resync all settings (should be rare)
                             }
                         }
-                    } else if (lobbyEvent.Arg is ValueTuple<int, int, Company> legacyCompany) {
-                        var (teamId, slotId, company) = legacyCompany;
-                        var slots = teamId == 0 ? Team1Slots : Team2Slots;
-                        var slotVm = slots.FirstOrDefault(x => x.Slot.Index == slotId);
-                        if (slotVm is not null) {
-                            var updatedSlot = slotVm.WithServerCompany(company);
-                            ICollection<LobbySlotViewModel> updatedSlots = [.. slots.Except([slotVm]).Append(updatedSlot).OrderBy(x => x.Slot.Index)];
-                            if (teamId == 0) Team1Slots = updatedSlots;
-                            else Team2Slots = updatedSlots;
+                        break;
+                    case LobbyEventType.GameStarted:
+                        var launched = await _playService.LaunchGameApp(_lobby.Game); // Will never happen in singleplayer, but will happen for non-host participants in multiplayer when host starts the game
+                        if (launched.Failed) {
+                            // TODO: Inform the lobby that the local player failed to launch the game, so host can handle it (probably by cancelling the game start and returning to lobby)
                         }
-                    }
-                    break;
-                default:
-                    break;
-            }
-            SyncState();
+                        break;
+                    case LobbyEventType.TrayMessage:
+                        if (lobbyEvent.Arg is not string trayMessage) {
+                            _logger.LogWarning("Received TrayMessage lobby event with invalid argument: {Arg}", lobbyEvent.Arg);
+                            break;
+                        }
+                        TrayMessage = trayMessage;
+                        break;
+                    case LobbyEventType.TrayMessageHide:
+                        TrayMessage = string.Empty;
+                        break;
+                    case LobbyEventType.MatchOver:
+                        await ShowMatchResults();
+                        break;
+                    case LobbyEventType.SlotCompanyDownloadProgress:
+                        if (lobbyEvent.Arg is SlotCompanyDownloadUpdate download
+                            && download.TeamId is >= 0 and < 2
+                            && _lobby.GetSlotRevision(download.TeamId, download.SlotId) == download.SlotRevision) {
+                            var slots = download.TeamId == 0 ? Team1Slots : Team2Slots;
+                            var slotVm = slots.FirstOrDefault(x => x.Slot.Index == download.SlotId);
+                            if (slotVm is null
+                                || !string.Equals(slotVm.Slot.CompanyId, download.CompanyId, StringComparison.Ordinal)) {
+                                break;
+                            }
+                            if (download.Progress is float progress) {
+                                slotVm.CompanyDownloadProgress = progress;
+                                PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
+                                PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
+                                if (progress >= 1.0f) {
+                                    _ = HideDownloadProgressAfterDelay(download.TeamId, download.SlotId, download.CompanyId, download.SlotRevision, cancellationToken);
+                                }
+                            }
+                            if (download.Company is Company company && company.Id == download.CompanyId) {
+                                var updatedSlot = slotVm.WithServerCompany(company);
+                                ICollection<LobbySlotViewModel> updatedSlots = [.. slots.Except([slotVm]).Append(updatedSlot).OrderBy(x => x.Slot.Index)];
+                                if (download.TeamId == 0) {
+                                    Team1Slots = updatedSlots;
+                                } else {
+                                    Team2Slots = updatedSlots;
+                                }
+                                PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
+                                PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
+                            }
+                        } else if (lobbyEvent.Arg is ValueTuple<int, int, float> legacyProgress) {
+                            var (teamId, slotId, progress) = legacyProgress;
+                            var slotVm = (teamId == 0 ? Team1Slots : Team2Slots).FirstOrDefault(x => x.Slot.Index == slotId);
+                            if (slotVm is not null) {
+                                slotVm.CompanyDownloadProgress = progress;
+                                PropertyChanged?.Invoke(this, new(nameof(Team1Slots)));
+                                PropertyChanged?.Invoke(this, new(nameof(Team2Slots)));
+                                if (progress >= 1.0f) {
+                                    _ = HideDownloadProgressAfterDelay(
+                                        teamId,
+                                        slotId,
+                                        slotVm.Slot.CompanyId,
+                                        _lobby.GetSlotRevision(teamId, slotId),
+                                        cancellationToken);
+                                }
+                            }
+                        } else if (lobbyEvent.Arg is ValueTuple<int, int, Company> legacyCompany) {
+                            var (teamId, slotId, company) = legacyCompany;
+                            var slots = teamId == 0 ? Team1Slots : Team2Slots;
+                            var slotVm = slots.FirstOrDefault(x => x.Slot.Index == slotId);
+                            if (slotVm is not null) {
+                                var updatedSlot = slotVm.WithServerCompany(company);
+                                ICollection<LobbySlotViewModel> updatedSlots = [.. slots.Except([slotVm]).Append(updatedSlot).OrderBy(x => x.Slot.Index)];
+                                if (teamId == 0) Team1Slots = updatedSlots;
+                                else Team2Slots = updatedSlots;
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                SyncState();
             }, cancellationToken);
         }
     }

@@ -1,5 +1,3 @@
-using System.Threading.Channels;
-
 using Battlegrounds.Facades.API;
 using Battlegrounds.Factories;
 using Battlegrounds.Models.Companies;
@@ -153,18 +151,18 @@ public sealed class MultiplayerLobbyTests {
 
     [Test]
     public void WhenCreated_IsActiveTrue_IsReadyFalse() {
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(_hostLobby.IsActive, Is.True);
             Assert.That(_hostLobby.IsReady, Is.True);
-        });
+        }
     }
 
     [Test]
     public void WhenCreated_TeamsMatchSetup() {
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(_hostLobby.Team1.TeamType, Is.EqualTo(TeamType.Allies));
             Assert.That(_hostLobby.Team2.TeamType, Is.EqualTo(TeamType.Axis));
-        });
+        }
     }
 
     [Test]
@@ -185,10 +183,10 @@ public sealed class MultiplayerLobbyTests {
     [Test]
     public void GetLocalPlayerSlot_WhenParticipantInTeam1_ReturnsCorrectTeamAndIndex() {
         var (team, slotId) = _hostLobby.GetLocalPlayerSlot();
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(team, Is.SameAs(_hostLobby.Team1));
             Assert.That(slotId, Is.EqualTo(0));
-        });
+        }
     }
 
     [Test]
@@ -206,10 +204,10 @@ public sealed class MultiplayerLobbyTests {
             _serverAPI, _userService, _companyService, _mapService);
 
         var (team, slotId) = lobby.GetLocalPlayerSlot();
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(team, Is.Null);
             Assert.That(slotId, Is.EqualTo(-1));
-        });
+        }
     }
 
     // ════════════════════════════════════════════════════════════════════════
@@ -229,14 +227,14 @@ public sealed class MultiplayerLobbyTests {
 
         var evt = await PushAndReceiveAsync(update);
 
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(evt, Is.Not.Null);
             Assert.That(evt!.EventType, Is.EqualTo(LobbyEventType.ParticipantMessage));
             Assert.That(evt.Arg, Is.InstanceOf<Battlegrounds.Models.Lobbies.ChatMessage>());
             var chat = (Battlegrounds.Models.Lobbies.ChatMessage)evt.Arg!;
             Assert.That(chat.Message, Is.EqualTo("Hello!"));
             Assert.That(chat.Sender, Is.EqualTo(_remoteParticipant.ParticipantName));
-        });
+        }
     }
 
     [Test]
@@ -248,11 +246,11 @@ public sealed class MultiplayerLobbyTests {
 
         var evt = await PushAndReceiveAsync(update);
 
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(evt, Is.Not.Null);
             Assert.That(evt!.EventType, Is.EqualTo(LobbyEventType.SettingUpdated));
             Assert.That(_hostLobby.Settings.First(s => s.Name == "gamemode").Value, Is.EqualTo(1));
-        });
+        }
     }
 
     [Test]
@@ -329,13 +327,13 @@ public sealed class MultiplayerLobbyTests {
 
         var evt = await PushAndReceiveAsync(update);
 
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(evt, Is.Not.Null);
             Assert.That(evt!.EventType, Is.EqualTo(LobbyEventType.TeamUpdated));
             Assert.That(evt.Arg, Is.EqualTo(TeamType.Axis));
             Assert.That(_hostLobby.Team2.Slots[0].ParticipantId, Is.EqualTo(_remoteParticipant.ParticipantId));
             Assert.That(_hostLobby.Team2.Slots[0].Faction, Is.EqualTo("germans"));
-        });
+        }
     }
 
     [Test]
@@ -371,6 +369,23 @@ public sealed class MultiplayerLobbyTests {
     }
 
     [Test]
+    public async Task GrpcEvent_ParticipantLeft_RemovesParticipant() {
+        var update = new LobbyStateUpdate {
+            EventType = "ParticipantLeft",
+            ParticipantId = _remoteParticipant.ParticipantId,
+            ParticipantUpdate = new Proto.Lobbies.Participant() {
+                ParticipantId = _remoteParticipant.ParticipantId,
+            }
+        };
+        var evt = await PushAndReceiveAsync(update);
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(evt, Is.Not.Null);
+            Assert.That(evt!.EventType, Is.EqualTo(LobbyEventType.ParticipantLeft));
+            Assert.That(_hostLobby.Participants.Any(p => p.ParticipantId == _remoteParticipant.ParticipantId), Is.False);
+        }
+    }
+
+    [Test]
     public async Task GrpcEvent_ParticipantReady_SetsParticipantReadyTrue() {
         var update = new LobbyStateUpdate {
             EventType = "ParticipantReady",
@@ -379,13 +394,13 @@ public sealed class MultiplayerLobbyTests {
 
         var evt = await PushAndReceiveAsync(update);
 
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(evt, Is.Not.Null);
             Assert.That(evt!.EventType, Is.EqualTo(LobbyEventType.ParticipantReady));
             Assert.That(
                 _hostLobby.Participants.First(p => p.ParticipantId == _remoteParticipant.ParticipantId).IsReady,
                 Is.True);
-        });
+        }
     }
 
     [Test]
@@ -413,13 +428,13 @@ public sealed class MultiplayerLobbyTests {
         var evt = await lobby2.GetNextEvent().AsTask().WaitAsync(TimeSpan.FromSeconds(1));
         unreadyReader.Complete();
 
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(evt, Is.Not.Null);
             Assert.That(evt!.EventType, Is.EqualTo(LobbyEventType.ParticipantUnready));
             Assert.That(
                 lobby2.Participants.First(p => p.ParticipantId == _remoteParticipant.ParticipantId).IsReady,
                 Is.False);
-        });
+        }
     }
 
     [Test]
@@ -468,28 +483,28 @@ public sealed class MultiplayerLobbyTests {
     [Test]
     public async Task LaunchGame_WhenNotHost_DoesNotCallGrpc() {
         await _participantLobby.LaunchGame();
-        _grpcClient.DidNotReceive().LaunchGameAsync(Arg.Any<LaunchGameRequest>(), Arg.Any<Metadata>());
+        _ = _grpcClient.DidNotReceive().LaunchGameAsync(Arg.Any<LaunchGameRequest>(), Arg.Any<Metadata>());
     }
 
     [Test]
     public async Task RemoveAI_WhenNotHost_DoesNotCallGrpc() {
         var team = _participantLobby.Team2;
         await _participantLobby.RemoveAI(team, 0);
-        _grpcClient.DidNotReceive().UpdateLobbyStateAsync(Arg.Any<LobbyStateUpdate>(), Arg.Any<Metadata>());
+        _ =  _grpcClient.DidNotReceive().UpdateLobbyStateAsync(Arg.Any<LobbyStateUpdate>(), Arg.Any<Metadata>());
     }
 
     [Test]
     public async Task SetMap_WhenNotHost_ReturnsFalse() {
         var result = await _participantLobby.SetMap(_defaultMap);
         Assert.That(result, Is.False);
-        _grpcClient.DidNotReceive().ChangeMapAsync(Arg.Any<ChangeMapRequest>(), Arg.Any<Metadata>());
+        _ =  _grpcClient.DidNotReceive().ChangeMapAsync(Arg.Any<ChangeMapRequest>(), Arg.Any<Metadata>());
     }
 
     [Test]
     public async Task SetSetting_WhenNotHost_DoesNotCallGrpc() {
         var setting = new LobbySetting { Name = "gamemode", Type = LobbySettingType.Boolean };
         await _participantLobby.SetSetting(setting);
-        _grpcClient.DidNotReceive().UpdateLobbyStateAsync(Arg.Any<LobbyStateUpdate>(), Arg.Any<Metadata>());
+        _ =  _grpcClient.DidNotReceive().UpdateLobbyStateAsync(Arg.Any<LobbyStateUpdate>(), Arg.Any<Metadata>());
     }
 
     [Test]
@@ -538,10 +553,10 @@ public sealed class MultiplayerLobbyTests {
 
         var lobbyEvent = await _hostLobby.GetNextEvent().AsTask().WaitAsync(TimeSpan.FromSeconds(1));
 
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(lobbyEvent!.EventType, Is.EqualTo(LobbyEventType.TeamUpdated));
             Assert.That(lobbyEvent.Arg, Is.EqualTo(TeamType.Allies));
-        });
+        }
     }
 
     [Test]
@@ -688,11 +703,11 @@ public sealed class MultiplayerLobbyTests {
         });
         await Task.Delay(100);
 
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(secondRevision, Is.GreaterThan(firstRevision));
             Assert.That(_hostLobby.Companies.ContainsKey("company-second"), Is.True);
             Assert.That(_hostLobby.Companies.ContainsKey("company-first"), Is.False);
-        });
+        }
 
         _streamReader.Complete();
         await pollTask.WaitAsync(TimeSpan.FromSeconds(1));
@@ -784,13 +799,13 @@ public sealed class MultiplayerLobbyTests {
             snapshotApplied = await reconnectLobby.GetNextEvent(timeout.Token);
         }
 
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(reconnectLobby.ConnectionState, Is.EqualTo(LobbyConnectionState.Connected));
             Assert.That(reconnectLobby.Team2.Slots[0].ParticipantId, Is.EqualTo("snapshot-player"));
             Assert.That(reconnectLobby.Team2.Slots[0].Faction, Is.EqualTo("germans"));
             Assert.That(reconnectLobby.Revision, Is.GreaterThan(0));
             Assert.That(snapshotApplied!.Revision, Is.EqualTo(reconnectLobby.Revision));
-        });
+        }
 
         await reconnectLobby.DisposeAsync();
         await pollTask.WaitAsync(TimeSpan.FromSeconds(1));

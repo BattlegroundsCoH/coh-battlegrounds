@@ -341,7 +341,11 @@ public sealed class MultiplayerLobby(
                 _participants.Add(joinedParticipant);
                 return new LobbyEvent(LobbyEventType.ParticipantJoined, joinedParticipant);
             case LobbyEventType.ParticipantLeft:
-                throw new NotImplementedException("Participant left event is not yet implemented in the gRPC lobby handler.");
+                var leftParticipant = _participants.FirstOrDefault(p => p.ParticipantId == update.ParticipantUpdate.ParticipantId);
+                if (leftParticipant is not null) {
+                    _participants.Remove(leftParticipant);
+                }
+                return new LobbyEvent(LobbyEventType.ParticipantLeft, leftParticipant);
             case LobbyEventType.ParticipantMessage:
                 var senderName = _participants.FirstOrDefault(p => p.ParticipantId == update.ChatMessage.SenderId)?.ParticipantName ?? "Unknown";
                 var channel = Enum.TryParse(update.ChatMessage.Channel, true, out ChatChannel parsedChannel) ? parsedChannel : ChatChannel.All;
