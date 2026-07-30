@@ -49,6 +49,8 @@ public sealed class MultiplayerLobby(
     IGameMapService mapService,
     Func<CancellationToken, AsyncServerStreamingCall<LobbyStateUpdate>>? reconnect = null) : ILobby, IDisposable, IAsyncDisposable {
 
+    private const string __SERVER_MAP_SETTING_KEY = "$map";
+
     private readonly ILogger _logger = Log.ForContext<MultiplayerLobby>();
     private readonly string _lobbyId = lobbyId;
 
@@ -73,6 +75,8 @@ public sealed class MultiplayerLobby(
     private readonly Team _team1 = setup.Team1;
     private readonly Team _team2 = setup.Team2;
     private readonly Team[] _teams = [setup.Team1, setup.Team2];
+
+    private readonly int _victoryPointsSettingIndex = setup.Settings.FindIndex(x => x.Name == LobbySetting.SETTING_VICTORY_POINTS);
 
     private bool _isActive = true;
     private bool _isReady = false;
@@ -368,6 +372,9 @@ public sealed class MultiplayerLobby(
                 return new LobbyEvent(LobbyEventType.TeamUpdated, _teams[update.SlotUpdate.TeamId].TeamType); // Make UI simply update the whole team when a slot is updated for simplicity, as that's what the UI currently supports
             case LobbyEventType.SettingUpdated:
                 var newSetting = update.SettingsUpdate;
+                if (newSetting.Key is __SERVER_MAP_SETTING_KEY) {
+                    return null; // The map setting is handled separately in the MapUpdated event, so we ignore it here to avoid duplicate handling.
+                }
                 int indexOfSetting = _settings.FindIndex(x => x.Name == newSetting.Key);
                 if (indexOfSetting != -1) {
                     var currentSetting = _settings[indexOfSetting];
@@ -378,6 +385,14 @@ public sealed class MultiplayerLobby(
                         _ => currentSetting.Value
                     };
                     _settings[indexOfSetting].Value = mappedValue;
+                    if (newSetting.Key is LobbySetting.SETTING_GAMEMODE && _victoryPointsSettingIndex != -1) {
+                        if (newSetting.NewValue is "1") { // If the gamemode is set to "1" (which we assume corresponds to a mode that uses victory points), make the victory points setting visible (needs better semantics)
+                            _settings[_victoryPointsSettingIndex].IsVisible = true;
+                        } else {
+                            _settings[_victoryPointsSettingIndex].IsVisible = false;
+                        }
+                        _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.SettingUpdated, _settings[_victoryPointsSettingIndex])); // Notify the UI about the visibility change of the victory points setting
+                    }
                     return new LobbyEvent(LobbyEventType.SettingUpdated, _settings[indexOfSetting]);
                 } else {
                     _logger.Warning("Received update for unknown setting: {SettingKey}", newSetting.Key);

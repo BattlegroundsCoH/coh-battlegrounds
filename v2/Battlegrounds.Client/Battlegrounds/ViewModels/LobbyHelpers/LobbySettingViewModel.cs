@@ -1,3 +1,5 @@
+using System.Windows;
+
 using Battlegrounds.Models.Lobbies;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -16,6 +18,8 @@ public sealed class LobbySettingViewModel : ObservableObject {
         _draftValue = setting.Value;
         ApplyCommand = new AsyncRelayCommand(ApplyAsync, () => IsDirty);
     }
+
+    public Visibility Visibility { get; set; }
 
     public LobbySetting Setting { get; }
 
@@ -66,6 +70,7 @@ public sealed class LobbySettingViewModel : ObservableObject {
         var normalizedValue = Setting.Type == LobbySettingType.Integer
             ? Math.Clamp(value, Setting.MinValue, Setting.MaxValue)
             : value;
+        OnPropertyChanged(nameof(Visibility));
         if (Setting.Value == normalizedValue && _draftValue == normalizedValue) {
             return;
         }

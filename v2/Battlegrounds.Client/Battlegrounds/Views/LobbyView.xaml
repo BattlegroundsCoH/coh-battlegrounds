@@ -28,6 +28,7 @@
         <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
         <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
         <converters:DownloadProgressArcConverter x:Key="DownloadProgressArcConverter"/>
+        <converters:GamemodeNameConverter x:Key="GamemodeNameConverter"/>
 
         <DataTemplate x:Key="CompanyComboBoxItemTemplate">
             <Grid>
@@ -303,16 +304,18 @@
         </Style>
 
         <DataTemplate x:Key="BooleanSettingTemplate">
-            <Grid Margin="0,5">
+            <Grid Margin="0,5" Visibility="{Binding Visibility}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <CheckBox Content="{Binding Name}"
+                <CheckBox Content="{Binding Name, Converter={StaticResource GamemodeNameConverter}}"
                           IsChecked="{Binding DraftBoolValue, Mode=TwoWay}"
                           Foreground="{StaticResource Brush.Text.Primary}"
                           IsEnabled="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}}"
                           Margin="0,5"/>
+                
+                <!-- TODO: Remove this button and make Apply action implicit -->
                 <Button Grid.Column="1"
                         Content="Apply"
                         Width="55"
@@ -324,7 +327,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="IntegerSettingTemplate">
-            <Grid Margin="0,5">
+            <Grid Margin="0,5" Visibility="{Binding Visibility}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
@@ -335,7 +338,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="{Binding Name}"
+                <TextBlock Text="{Binding Name, Converter={StaticResource GamemodeNameConverter}}"
                  Foreground="{StaticResource Brush.Text.Primary}"
                  Grid.Column="0" Grid.Row="0"/>
 
@@ -345,6 +348,7 @@
                      Margin="5,0,0,0"/>
                 </StackPanel>
 
+                <!-- TODO: Remove this button and make Apply action implicit -->
                 <Button Grid.Column="2"
                         Content="Apply"
                         Width="55"
@@ -366,13 +370,13 @@
         </DataTemplate>
 
         <DataTemplate x:Key="SelectionSettingTemplate">
-            <Grid Margin="0,5">
+            <Grid Margin="0,5" Visibility="{Binding Visibility}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="{Binding Name}"
+                <TextBlock Text="{Binding Name, Converter={StaticResource GamemodeNameConverter}}"
                  Foreground="{StaticResource Brush.Text.Primary}"
                  VerticalAlignment="Center"/>
 
@@ -847,17 +851,15 @@
                                      FontWeight="SemiBold"
                                      Foreground="{StaticResource Brush.Text.Primary}"
                                        Visibility="{Binding IsHost, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
-                            <StackPanel Orientation="Horizontal"
-                                        Visibility="{Binding IsHost, Converter={StaticResource BoolToVisibilityConverter}}">
-                                <ComboBox
-                                    Width="260"
-                                    DisplayMemberPath="Name"
-                                    SelectedItem="{Binding DraftSelectedMap, Mode=TwoWay}"
-                                    ItemsSource="{Binding AvailableMaps}"
-                                    behaviors:SelectionChangedCommandBehavior.Command="{Binding SetMapCommand}"
-                                    behaviors:SelectionChangedCommandBehavior.CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Self}}"
-                                    Style="{StaticResource ComboBox.Default}"/>
-                            </StackPanel>
+                            <ComboBox
+                                Width="Auto"
+                                DisplayMemberPath="Name"
+                                SelectedItem="{Binding DraftSelectedMap, Mode=TwoWay}"
+                                ItemsSource="{Binding AvailableMaps}"
+                                behaviors:SelectionChangedCommandBehavior.Command="{Binding SetMapCommand}"
+                                behaviors:SelectionChangedCommandBehavior.CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Self}}"
+                                Style="{StaticResource ComboBox.Default}"
+                                Visibility="{Binding IsHost, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         </Grid>
 
                         <!-- Settings ItemsControl with TemplateSelector -->

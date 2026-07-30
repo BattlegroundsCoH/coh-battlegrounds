@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Lobbies;
@@ -499,7 +500,9 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
                         if (lobbyEvent.Arg is LobbySetting newLobbySetting) {
                             var settingVm = SelectedSettings.FirstOrDefault(x => x.Name == newLobbySetting.Name);
                             if (settingVm is not null) {
+                                settingVm.Visibility = newLobbySetting.IsVisible ? Visibility.Visible : Visibility.Collapsed;
                                 settingVm.ApplyServerValue(newLobbySetting.Value);
+                                PropertyChanged?.Invoke(this, new(nameof(SelectedSettings)));
                             } else {
                                 SyncLobbySettings(); // If we can't find the setting, just resync all settings (should be rare)
                             }

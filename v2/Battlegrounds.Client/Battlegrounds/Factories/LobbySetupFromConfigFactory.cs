@@ -46,13 +46,7 @@ public sealed class LobbySetupFromConfigFactory(Configuration configuration, IGa
     }
 
     private static List<LobbySetting> GetSettings(Game game, Configuration cfg) {
-        List<LobbySetting> settings = [
-            new LobbySetting { Name = LobbySetting.SETTING_GAMEMODE, Type = LobbySettingType.Selection, Options = [
-                new ("Domination", "domination"),
-                new ("Victory Points", "victory_points")]
-            },
-            // TODO: More settings
-        ];
+        List<LobbySetting> settings = [.. LobbySetting.DefaultSettings];
         var gameSettings = cfg.GetLatestLobbySettings(game.Id);
         foreach (var setting in gameSettings) {
             if (settings.FirstOrDefault(s => s.Name == setting.Key) is LobbySetting existing) {
