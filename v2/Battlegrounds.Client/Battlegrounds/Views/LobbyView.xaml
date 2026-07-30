@@ -317,7 +317,7 @@
                         Content="Apply"
                         Width="55"
                         Height="30"
-                        Style="{StaticResource ActionButton}"
+                        Style="{StaticResource Button.Primary}"
                         Command="{Binding ApplyCommand}"
                         Visibility="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVisibilityConverter}}"/>
             </Grid>
@@ -350,7 +350,7 @@
                         Width="55"
                         Height="30"
                         Margin="5,0,0,0"
-                        Style="{StaticResource ActionButton}"
+                        Style="{StaticResource Button.Primary}"
                         Command="{Binding ApplyCommand}"
                         Visibility="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
