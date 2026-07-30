@@ -884,7 +884,7 @@
                        Foreground="{StaticResource Brush.Text.Primary}"
                        VerticalAlignment="Center"/>
                 <Label Content="{Binding ConnectionState, StringFormat=Connection: {0}}"
-                       Foreground="{StaticResource ForegroundDarkGrayBrush}"
+                       Foreground="{StaticResource Brush.Text.Dim}"
                        VerticalAlignment="Center"/>
                 <Label Content="{Binding TrayMessage}"
                        Foreground="{StaticResource Brush.Text.Faint}"
