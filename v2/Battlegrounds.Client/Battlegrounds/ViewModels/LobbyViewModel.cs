@@ -416,9 +416,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
                     case LobbyEventType.ConnectionStateChanged:
                         if (lobbyEvent.Arg is LobbyConnectionState connectionState) {
                             ConnectionState = connectionState;
-                        } else if (lobbyEvent.Arg is false)
-                        {
-                            await LeaveLobby();
+                        } else if (lobbyEvent.Arg is false) {
+                            await LeaveLobby(true);
                         }
                         break;
                     case LobbyEventType.SnapshotApplied:
@@ -616,7 +615,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
         return result;
     }
 
-    private async Task LeaveLobby(bool forceLeave = false) {
+    private async Task LeaveLobby(bool forceLeave = false, string? reason = null) {
         if (!forceLeave) {
             // TODO: Show confirmation dialog before leaving lobby?
             if (!_lobby.IsActive) {
@@ -625,6 +624,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
 
             await _lobbyService.LeaveLobbyAsync(_lobby);
         }
+
+        // TODO: Add a reason modal to why you left by force
 
         if (_lobby is SingleplayerLobby) {
             _mainWindowVm.IsHomeButtonActive = true; // Return to home view for singleplayer lobby
