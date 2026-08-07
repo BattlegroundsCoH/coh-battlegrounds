@@ -284,7 +284,7 @@ public class HttpBattlegroundsServerAPITests {
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(result.LobbyId, Is.EqualTo("test-lobby"));
             Assert.That(result.MatchId, Is.EqualTo("test-match"));
             Assert.That(result.Scenario, Is.EqualTo("test-scenario"));
@@ -296,7 +296,7 @@ public class HttpBattlegroundsServerAPITests {
             Assert.That(result.PlayerCompanies["player-1"], Is.EqualTo("company-a"));
             Assert.That(result.CompanyModifiers["player-1"].First!.Value.SquadId, Is.EqualTo(1));
             Assert.That(result.CompanyModifiers["player-1"].First!.Value.EventType, Is.EqualTo(CompanyEventModifier.EVENT_TYPE_KILL_SQUAD));
-        });
+        }
         await _httpClient.Received(1).SendRequestAsync(Arg.Is<HttpRequestMessage>(
             req => req.Method == HttpMethod.Get &&
                    req.RequestUri!.ToString().Contains(HttpBattlegroundsServerAPI.GetLobbyResultEndpoint) &&
@@ -315,6 +315,105 @@ public class HttpBattlegroundsServerAPITests {
 
         // Assert
         Assert.That(result, Is.Null);
+    }
+
+    [Test]
+    public async Task DownloadGamemodeAsync_WhenSuccessful_WritesFileAndReturnsTrue() {
+        // Arrange
+        string lobbyId = "test-lobby";
+        string destinationPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.sga");
+        byte[] payload = Encoding.UTF8.GetBytes("gamemode-payload-content");
+
+        var httpResponse = new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = new ByteArrayContent(payload)
+        };
+
+        _httpClient.SendRequestAsync(Arg.Any<HttpRequestMessage>())
+            .Returns(httpResponse);
+
+        var progressUpdates = new List<(long Downloaded, long? Total)>();
+        DownloadProgressUpdateDelegate progressCallback = (downloaded, total) => progressUpdates.Add((downloaded, total));
+
+        try {
+            // Act
+            var result = await _api.DownloadGamemodeAsync(lobbyId, destinationPath, progressCallback);
+
+            // Assert
+            Assert.That(result, Is.True, "Download should return true on success");
+            Assert.That(File.Exists(destinationPath), Is.True, "File should be written to destination path");
+
+            byte[] writtenBytes = await File.ReadAllBytesAsync(destinationPath);
+            Assert.That(writtenBytes, Is.EqualTo(payload));
+
+            Assert.That(progressUpdates, Is.Not.Empty, "Progress callback should be invoked at least once");
+            Assert.That(progressUpdates[^1].Downloaded, Is.EqualTo(payload.Length));
+            Assert.That(progressUpdates[^1].Total, Is.EqualTo(payload.Length));
+
+            await _httpClient.Received(1).SendRequestAsync(Arg.Is<HttpRequestMessage>(
+                req => req.Method == HttpMethod.Get &&
+                       req.RequestUri!.ToString().Contains(HttpBattlegroundsServerAPI.DownloadGamemodeEndpoint) &&
+                       req.RequestUri.ToString().Contains($"guid={lobbyId}") &&
+                       req.Headers.Any(kvp => kvp.Key == "User-Agent")
+            ));
+        } finally {
+            if (File.Exists(destinationPath)) {
+                File.Delete(destinationPath);
+            }
+        }
+    }
+
+    [Test]
+    public async Task DownloadGamemodeAsync_WithoutProgressCallback_StillDownloadsSuccessfully() {
+        // Arrange
+        string lobbyId = "test-lobby";
+        string destinationPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.sga");
+        byte[] payload = Encoding.UTF8.GetBytes("no-progress-callback-payload");
+
+        var httpResponse = new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = new ByteArrayContent(payload)
+        };
+
+        _httpClient.SendRequestAsync(Arg.Any<HttpRequestMessage>())
+            .Returns(httpResponse);
+
+        try {
+            // Act
+            var result = await _api.DownloadGamemodeAsync(lobbyId, destinationPath);
+
+            // Assert
+            Assert.That(result, Is.True);
+            Assert.That(File.Exists(destinationPath), Is.True);
+
+            byte[] writtenBytes = await File.ReadAllBytesAsync(destinationPath);
+            Assert.That(writtenBytes, Is.EqualTo(payload));
+        } finally {
+            if (File.Exists(destinationPath)) {
+                File.Delete(destinationPath);
+            }
+        }
+    }
+
+    [Test]
+    public async Task DownloadGamemodeAsync_WhenServerError_ReturnsFalseAndDoesNotCreateFile() {
+        // Arrange
+        string lobbyId = "missing-lobby";
+        string destinationPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.sga");
+
+        _httpClient.SendRequestAsync(Arg.Any<HttpRequestMessage>())
+            .Returns(new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        try {
+            // Act
+            var result = await _api.DownloadGamemodeAsync(lobbyId, destinationPath);
+
+            // Assert
+            Assert.That(result, Is.False, "Download should return false on server error");
+            Assert.That(File.Exists(destinationPath), Is.False, "No file should be created on failure");
+        } finally {
+            if (File.Exists(destinationPath)) {
+                File.Delete(destinationPath);
+            }
+        }
     }
 
 }
