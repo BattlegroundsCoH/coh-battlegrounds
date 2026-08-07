@@ -968,14 +968,12 @@ public sealed class MultiplayerLobby(
             _ => throw new NotSupportedException($"Game {Game.GameName} is not supported for gamemode downloads.")
         };
 
-        var downloadResult = await _serverAPI.DownloadGamemodeAsync(_lobbyId, destination, async (downloaded, total) => {
+        var downloadResult = await _serverAPI.DownloadGamemodeAsync(_lobbyId, destination, (downloaded, total) => {
             var totalSafe = total ?? 0;
             float progress = totalSafe > 0 ? (float)downloaded / totalSafe : 0;
             _logger.Information("Gamemode download progress: {Progress:P2}", progress);
             _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TrayMessage, $"Downloading gamemode... {progress:P2} complete")); // Notify the UI about the download progress
-            await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
-                Progress = progress
-            }, GetGrpcMetadata()); // Report the download progress to the server so it can update the lobby state and notify other participants
+            _ = ReportDownloadProgressSafeAsync(progress); // Fire-and-forget, but caught to avoid an unobserved/async-void exception silently aborting the download
         });
 
         if (downloadResult) {
@@ -993,6 +991,16 @@ public sealed class MultiplayerLobby(
             _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.SystemError, "Failed to download gamemode. Please report this issue.")); // Notify the UI about the failure
         }
 
+    }
+
+    private async Task ReportDownloadProgressSafeAsync(float progress) {
+        try {
+            await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
+                Progress = progress
+            }, GetGrpcMetadata()); // Report the download progress to the server so it can update the lobby state and notify other participants
+        } catch (Exception ex) {
+            _logger.Warning(ex, "Failed to report gamemode download progress to the server.");
+        }
     }
 
     private async Task DownloadCompany(bool reportProgress) {
