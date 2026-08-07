@@ -762,7 +762,7 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             return; // No change needed, already using the same transport
         }
 
-        SwapSquad(squad, new Squad { 
+        Squad updatedSquad = new Squad { 
             Id = squad.Id,
             SlotItems = squad.SlotItems,
             Upgrades = squad.Upgrades,
@@ -778,7 +778,9 @@ public sealed class CompanyEditorViewModel : INotifyPropertyChanged {
             TotalInfantryKills = squad.TotalInfantryKills,
             Passenger = squad.Passenger,
             CapturedWeapon = squad.CapturedWeapon,
-        });
+        };
+
+        SetSelectedSquad(SwapSquad(squad, updatedSquad)); // Update the selection to reflect the new deployment method
 
         IsDirty = true; // Mark the company as dirty after changing deployment method
 
