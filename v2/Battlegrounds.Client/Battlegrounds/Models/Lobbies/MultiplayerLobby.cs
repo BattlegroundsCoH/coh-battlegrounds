@@ -236,12 +236,14 @@ public sealed class MultiplayerLobby(
 
         SetConnectionState(LobbyConnectionState.Reconnecting);
         CancelAllSlotDownloads();
-        try {
+        try
+        {
             var delay = TimeSpan.FromSeconds(Math.Min(30, Math.Pow(2, Math.Min(attempt - 1, 4))));
             await Task.Delay(delay, cancellationToken);
             var replacement = _reconnect(cancellationToken);
             if (!await replacement.ResponseStream.MoveNext(cancellationToken)
-                || replacement.ResponseStream.Current.LobbyState is null) {
+                || replacement.ResponseStream.Current.LobbyState is null)
+            {
                 replacement.Dispose();
                 return true;
             }
@@ -256,9 +258,19 @@ public sealed class MultiplayerLobby(
                 Revision));
             _ = SyncRemoteCompanies(cancellationToken);
             return true;
-        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
             return false;
-        } catch (Exception ex) {
+        }
+        catch (RpcException rpcEx) when (rpcEx.StatusCode is StatusCode.Cancelled or StatusCode.Unavailable or StatusCode.NotFound)
+        {
+            _isActive = false;
+            _logger.Warning(rpcEx, "Lobby update stream was interrupted.");
+            return false;
+        }
+        catch (Exception ex)
+        {
             _logger.Warning(ex, "Lobby reconnection attempt {Attempt} failed.", attempt);
             return true;
         }
