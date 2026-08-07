@@ -78,6 +78,12 @@ public sealed class PlayService(CoH3ArchiverService coh3Archiver, Configuration 
         }
 
         var latestAvailableSource = await _battlegroundsServerAPI.GetLatestWinconditionSourceMetadata();
+        if (latestAvailableSource is null) {
+            _logger.LogError("Failed to fetch latest win condition source metadata from server.");
+            // TODO: Push error to user interface?
+            return;
+        }
+
         if (latestAvailableSource.Equals(storedMetadata)) {
             _logger.LogInformation("Stored win condition source is up to date.");
             return;

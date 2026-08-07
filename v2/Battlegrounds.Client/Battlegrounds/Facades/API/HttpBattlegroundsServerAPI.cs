@@ -409,7 +409,7 @@ public sealed class HttpBattlegroundsServerAPI(
 
     }
 
-    public async Task<LatestWinconditionDTO> GetLatestWinconditionSourceMetadata() {
+    public async Task<LatestWinconditionDTO?> GetLatestWinconditionSourceMetadata() {
 
         string endpoint = $"{BaseUrl}{LatestWinconditionSrcEndpoint}";
         HttpRequestMessage request = new(HttpMethod.Get, endpoint);
@@ -427,7 +427,8 @@ public sealed class HttpBattlegroundsServerAPI(
             }
         } 
 
-        throw new InvalidDataException($"Failed to retrieve latest wincondition source metadata. Status code: {response.StatusCode}, Reason: {response.ReasonPhrase}");
+        _logger.LogError("Failed to retrieve latest wincondition source metadata. Status code: {StatusCode}, Reason: {ReasonPhrase}", response.StatusCode, response.ReasonPhrase);
+        return null;
 
     }
 

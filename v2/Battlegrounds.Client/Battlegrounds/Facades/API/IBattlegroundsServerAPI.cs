@@ -132,8 +132,8 @@ public interface IBattlegroundsServerAPI {
     /// Asynchronously retrieves the metadata for the most recent win condition source.
     /// </summary>
     /// <returns>A task that represents the asynchronous operation. The task result contains a <see
-    /// cref="LatestWinconditionDTO"/> instance with metadata for the latest win condition source.</returns>
-    Task<LatestWinconditionDTO> GetLatestWinconditionSourceMetadata();
+    /// cref="LatestWinconditionDTO"/> instance with metadata for the latest win condition source, or null if the metadata could not be retrieved.</returns>
+    Task<LatestWinconditionDTO?> GetLatestWinconditionSourceMetadata();
     
     /// <summary>
     /// Downloads the latest wincondition source file for the specified tag and saves it to the provided output path.
