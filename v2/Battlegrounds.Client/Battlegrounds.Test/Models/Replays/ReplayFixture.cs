@@ -74,6 +74,14 @@ public static class ReplayFixture {
     /// </remarks>
     public static readonly string TEMP_24_04_2026__19_25_FILE = GetReplayLocation("temp_24-04-2026__19_25.rec");
 
+    /// <summary>
+    /// Gets the location of a sample replay file for testing.
+    /// </summary>
+    /// <remarks>
+    /// Contains no bg_events, but is a valid replay file otherwise. Used to test compatibility with Company of Heroes 3 version 2.5.0.
+    /// </remarks>
+    public static readonly string BG_COMPATIBILITY_TEST_2_5_0_FILE = GetReplayLocation("bg-compatibility-test-2_5_0.rec");
+
     private static string GetReplayLocation(string replayName) {
         var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "Playbacks", replayName);
         Assert.That(File.Exists(path), Is.True, $"Replay file not found: {path}");

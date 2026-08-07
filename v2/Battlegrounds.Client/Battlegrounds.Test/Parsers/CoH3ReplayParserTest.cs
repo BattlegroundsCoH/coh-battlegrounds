@@ -73,4 +73,11 @@ public class CoH3ReplayParserTest {
         }
     }
 
+    [Test]
+    public void WillParseCoH3V250ReplayFormat() {
+        string replayLocation = ReplayFixture.BG_COMPATIBILITY_TEST_2_5_0_FILE;
+        var replay = _parser.ParseReplayFile(replayLocation);
+        Assert.That(replay, Is.Not.Null, "Replay should not be null.");
+    }
+
 }
