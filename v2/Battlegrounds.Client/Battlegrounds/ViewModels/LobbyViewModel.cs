@@ -184,7 +184,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
     public string ChatMessage {
         get => _chatMessage;
         set {
-            if (value == _chatMessage) 
+            if (value == _chatMessage)
                 return;
             if (value.Length > MAX_CHAT_MESSAGE_LENGTH) {
                 SystemWarnMessageTooLong(); // Warn user that message was truncated
@@ -258,7 +258,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
     public string? LocalParticipant => _lobby.GetLocalPlayerId();
 
     public LobbyViewModel(ILobby lobby, IServiceProvider serviceProvider, ILogger<LobbyViewModel> logger) {
-        // Probably an anti-pattern to pass IServiceProvider instead of the specific services, but this class has many dependencies 
+        // Probably an anti-pattern to pass IServiceProvider instead of the specific services, but this class has many dependencies
         // So... collect the services in a facade class to make it easier to test and maintain (Probably also solves the comment regarding a separate controller class for the StartGame method)
 
         _lobby = lobby;
@@ -278,7 +278,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
         _selectedMap = lobby.Map;
         _draftSelectedMap = lobby.Map;
 
-        LeaveCommand = new AsyncRelayCommand(LeaveLobby);
+        LeaveCommand = new AsyncRelayCommand(_ => LeaveLobby());
         SendMessageCommand = new AsyncRelayCommand(SendChatMessage);
         StartMatchCommand = new AsyncRelayCommand(StartGame);
         ToggleReadyCommand = new AsyncRelayCommand(ToggleReady);
@@ -416,6 +416,9 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
                     case LobbyEventType.ConnectionStateChanged:
                         if (lobbyEvent.Arg is LobbyConnectionState connectionState) {
                             ConnectionState = connectionState;
+                        } else if (lobbyEvent.Arg is false)
+                        {
+                            await LeaveLobby();
                         }
                         break;
                     case LobbyEventType.SnapshotApplied:
@@ -613,18 +616,22 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
         return result;
     }
 
-    private async Task LeaveLobby() {
-        // TODO: Show confirmation dialog before leaving lobby?
-        if (!_lobby.IsActive) {
-            return; // Already left
+    private async Task LeaveLobby(bool forceLeave = false) {
+        if (!forceLeave) {
+            // TODO: Show confirmation dialog before leaving lobby?
+            if (!_lobby.IsActive) {
+                return; // Already left
+            }
+
+            await _lobbyService.LeaveLobbyAsync(_lobby);
         }
-        await _lobbyService.LeaveLobbyAsync(_lobby);
+
         if (_lobby is SingleplayerLobby) {
             _mainWindowVm.IsHomeButtonActive = true; // Return to home view for singleplayer lobby
-            _mainWindowVm.SetContent(null); 
+            _mainWindowVm.SetContent(null);
         } else {
             _mainWindowVm.IsMultiplayerButtonActive = true; // Return to multiplayer view for multiplayer lobby
-            _mainWindowVm.SetContent(null); 
+            _mainWindowVm.SetContent(null);
         }
     }
 
@@ -716,7 +723,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
 
             LobbyState = "Waiting for all players to download the gamemode...";
             var allDownloaded = await _lobby.WaitForAllPlayersHaveGamemode();
-            if (!allDownloaded) { 
+            if (!allDownloaded) {
                 LobbyState = "Failed while waiting for players to download gamemode, please check logs for details.";
                 await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;

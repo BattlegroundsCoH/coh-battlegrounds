@@ -1,4 +1,137 @@
-﻿[*.cs]
+# EditorConfig for the Battlegrounds Desktop Launcher V2 client.
+# https://editorconfig.org
+#
+# Layout this file covers:
+#   Battlegrounds/                  WPF app — C#, XAML, HLSL shader source, YAML assets, app.manifest
+#   Battlegrounds.Cli/              bgc-edit console company editor — C#
+#   Battlegrounds.Test/             NUnit unit tests — C#, YAML/binary test data
+#   Battlegrounds.IntegrationTest/  Testcontainers integration tests — C#
+#   scripts/                        tooling — Python
+#
+# Binary content lives under Battlegrounds/Assets (png, jpg, ico, ttf), Battlegrounds.Test/TestData
+# (rec replays) and Battlegrounds/Rendering/Effects (*.ps is fxc-compiled shader bytecode, NOT a
+# PowerShell script). Those extensions are deliberately given no rules.
+#
+# `charset` is deliberately unset: the tree is a mix of BOM (Visual Studio) and BOM-less
+# (Rider, hand-authored) UTF-8, and declaring either one rewrites the first bytes of hundreds
+# of otherwise untouched files on first save.
 
+root = true
+
+##########################################################################
+# Defaults for every text file.
+# C#, XAML, HLSL and Python all sit on this 4-space default; only the
+# sections below that name a different indent are overriding it.
+##########################################################################
+[*]
+end_of_line = crlf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+##########################################################################
+# C#
+##########################################################################
+[*.cs]
+tab_width = 4
+
+# --- Language conventions (these describe what the code already does) ---
+csharp_style_namespace_declarations = file_scoped:warning
+csharp_using_directive_placement = outside_namespace:warning
+dotnet_sort_system_directives_first = true
+
+# --- Formatting ---
+# The codebase is K&R, not Allman; leaving this unset makes Format Document rewrite every file.
+csharp_new_line_before_open_brace = none
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_finally = false
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_between_query_expression_clauses = true
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = one_less_than_current
+csharp_space_after_cast = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = false
+
+# --- Naming ---
+# Private instance fields are _camelCase; private statics are PascalCase. Consts are a mix of
+# UPPER_SNAKE (parser/protocol literals) and PascalCase, so they are matched first and left alone.
+dotnet_naming_rule.const_fields_unenforced.severity = none
+dotnet_naming_rule.const_fields_unenforced.symbols = const_fields
+dotnet_naming_rule.const_fields_unenforced.style = pascal_case_style
+
+dotnet_naming_rule.static_fields_pascal_case.severity = suggestion
+dotnet_naming_rule.static_fields_pascal_case.symbols = private_static_fields
+dotnet_naming_rule.static_fields_pascal_case.style = pascal_case_style
+
+dotnet_naming_rule.instance_fields_underscore.severity = suggestion
+dotnet_naming_rule.instance_fields_underscore.symbols = private_instance_fields
+dotnet_naming_rule.instance_fields_underscore.style = underscore_camel_case_style
+
+dotnet_naming_symbols.const_fields.applicable_kinds = field
+dotnet_naming_symbols.const_fields.applicable_accessibilities = *
+dotnet_naming_symbols.const_fields.required_modifiers = const
+
+dotnet_naming_symbols.private_static_fields.applicable_kinds = field
+dotnet_naming_symbols.private_static_fields.applicable_accessibilities = private, internal
+dotnet_naming_symbols.private_static_fields.required_modifiers = static
+
+dotnet_naming_symbols.private_instance_fields.applicable_kinds = field
+dotnet_naming_symbols.private_instance_fields.applicable_accessibilities = private
+
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+
+dotnet_naming_style.underscore_camel_case_style.required_prefix = _
+dotnet_naming_style.underscore_camel_case_style.capitalization = camel_case
+
+# --- Analyzer severities ---
 # CA1873: Avoid potentially expensive logging
 dotnet_diagnostic.CA1873.severity = none
+
+##########################################################################
+# Generated code — protobuf stubs from lobby.proto, XAML code-behind
+##########################################################################
+[{**/obj/**,**/bin/**,*.g.cs,*.g.i.cs,*.Designer.cs}]
+generated_code = true
+
+##########################################################################
+# MSBuild, solution and other XML-shaped project files
+##########################################################################
+[*.{csproj,props,targets,ruleset,config,nuspec,resx,manifest,xml}]
+indent_size = 2
+
+[*.sln]
+indent_style = tab
+
+##########################################################################
+# YAML — blueprints, doctrines, locales, scenarios, test fixtures
+##########################################################################
+# Test fixtures and anything new follow the usual 2-space YAML convention.
+[*.{yaml,yml}]
+indent_size = 2
+
+# The shipped assets under Battlegrounds/Assets are authored at 4 spaces.
+[Battlegrounds/Assets/**.{yaml,yml}]
+indent_size = 4
+
+##########################################################################
+# JSON — config.json, .claude/settings*.json
+##########################################################################
+[*.json]
+indent_size = 2
+
+##########################################################################
+# Docs and licence text
+##########################################################################
+[*.md]
+# Two trailing spaces are a hard line break in Markdown.
+trim_trailing_whitespace = false
+
+[*.txt]
+insert_final_newline = false

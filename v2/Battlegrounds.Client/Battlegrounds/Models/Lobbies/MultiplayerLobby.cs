@@ -267,6 +267,8 @@ public sealed class MultiplayerLobby(
         {
             _isActive = false;
             _logger.Warning(rpcEx, "Lobby update stream was interrupted.");
+            await _internalEvents.Writer.WriteAsync(
+                new LobbyEvent(LobbyEventType.ConnectionStateChanged, false), cancellationToken);
             return false;
         }
         catch (Exception ex)
