@@ -365,16 +365,29 @@ public sealed class HttpBattlegroundsServerAPI(
             long? totalBytes = response.Content.Headers.ContentLength;
             long bytesDownloaded = 0;
 
-            using Stream contentStream = await response.Content.ReadAsStreamAsync();
-            using FileStream fileStream = new(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
+            try {
 
-            byte[] buffer = new byte[8192]; // 8KB chunks
-            int bytesRead;
+                // The destination directory only exists on a machine that has built the archive itself; a joining
+                // player has never had it created for them.
+                if (Path.GetDirectoryName(destinationPath) is string destinationDirectory && !string.IsNullOrEmpty(destinationDirectory)) {
+                    Directory.CreateDirectory(destinationDirectory);
+                }
 
-            while ((bytesRead = await contentStream.ReadAsync(buffer)) > 0) {
-                await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
-                bytesDownloaded += bytesRead;
-                progressUpdate?.Invoke(bytesDownloaded, totalBytes);
+                using Stream contentStream = await response.Content.ReadAsStreamAsync();
+                using FileStream fileStream = new(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
+
+                byte[] buffer = new byte[8192]; // 8KB chunks
+                int bytesRead;
+
+                while ((bytesRead = await contentStream.ReadAsync(buffer)) > 0) {
+                    await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+                    bytesDownloaded += bytesRead;
+                    progressUpdate?.Invoke(bytesDownloaded, totalBytes);
+                }
+
+            } catch (Exception ex) {
+                _logger.LogError(ex, "Failed to write gamemode for lobby {LobbyId} to {DestinationPath} after {BytesDownloaded} bytes.", lobbyId, destinationPath, bytesDownloaded);
+                return false;
             }
 
             _logger.LogInformation("Gamemode for lobby {LobbyId} downloaded successfully. Total bytes: {BytesDownloaded}", lobbyId, bytesDownloaded);

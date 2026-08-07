@@ -426,7 +426,7 @@ public sealed class MultiplayerLobby(
             case LobbyEventType.SystemError:
                 return new LobbyEvent(eventType, update.SystemMessage.Content);
             case LobbyEventType.DownloadInitiated:
-                _ = BeginDownloadResource(update.DownloadState.ResourceId); // Start the download but don't await it, as we don't want to block the processing of further lobby updates while waiting for the download to complete
+                _ = BeginDownloadResourceSafe(update.DownloadState.ResourceId); // Start the download but don't await it, as we don't want to block the processing of further lobby updates while waiting for the download to complete
                 return new LobbyEvent(LobbyEventType.DownloadInitiated, update.DownloadState.ResourceId); // Ignored by the UI for now, but could be used to trigger a download progress UI in the future
             case LobbyEventType.DownloadProgress:
                 return new LobbyEvent(LobbyEventType.DownloadProgress); // NOP for now
@@ -948,6 +948,16 @@ public sealed class MultiplayerLobby(
 
     public async Task LeaveAsync() {
         await _gRPCClient.LeaveLobbyAsync(new(), GetGrpcMetadata());
+    }
+
+    private async Task BeginDownloadResourceSafe(string resourceId) {
+        try {
+            await BeginDownloadResource(resourceId);
+        } catch (Exception ex) {
+            // The caller discards this task, so an escaping exception would otherwise leave the download silently dead
+            _logger.Error(ex, "Download of resource {ResourceId} failed.", resourceId);
+            _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.SystemError, $"Failed to download {resourceId}. Please report this issue."));
+        }
     }
 
     private Task BeginDownloadResource(string resourceId) => resourceId switch {
