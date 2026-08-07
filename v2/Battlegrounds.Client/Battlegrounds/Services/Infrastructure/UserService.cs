@@ -192,6 +192,8 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
 
     public Task<User> LoginWithDiscordAsync() => LoginWithProviderAsync(AuthProvider.Discord);
 
+    public Task<User> LoginWithSteamAsync() => LoginWithProviderAsync(AuthProvider.Steam);
+
     private async Task<User> LoginWithProviderAsync(AuthProvider provider) {
 
         StartAuthResponse? startAuthResponse = await _webAPI.StartAuthAsync(provider) ?? throw new InvalidOperationException("Failed to start authentication with provider.");
@@ -207,7 +209,7 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
 
         _logger.LogInformation("Waiting for authentication to complete...");
 
-        EndAuthResponse? endAuthResponse = await _webAPI.EndAuthAsync(provider, startAuthResponse.SessionId);
+        EndAuthResponse? endAuthResponse = await _webAPI.EndAuthAsync(provider, startAuthResponse.SessionId, startAuthResponse.Verifier);
         if (endAuthResponse is null) {
             _logger.LogWarning("Authentication session ended without response for provider {Provider}.", provider);
             throw new InvalidOperationException("Authentication session ended without response.");

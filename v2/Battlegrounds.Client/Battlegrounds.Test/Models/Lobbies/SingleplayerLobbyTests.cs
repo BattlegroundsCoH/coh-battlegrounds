@@ -457,16 +457,22 @@ public sealed class SingleplayerLobbyTests {
     }
 
     [Test]
-    public async Task SetMap_DifferentPlayerCount_EmitsTeamUpdatedThenMapUpdated() {
+    public async Task SetMap_DifferentPlayerCount_EmitsTypedTeamUpdatesThenMapUpdated() {
         using var lobby = CreateLobby();
 
         await lobby.SetMap(LargeMap);
 
         var first = await ConsumeEventAsync(lobby);
         var second = await ConsumeEventAsync(lobby);
+        var third = await ConsumeEventAsync(lobby);
 
-        Assert.That(first!.EventType, Is.EqualTo(LobbyEventType.TeamUpdated));
-        Assert.That(second!.EventType, Is.EqualTo(LobbyEventType.MapUpdated));
+        Assert.Multiple(() => {
+            Assert.That(first!.EventType, Is.EqualTo(LobbyEventType.TeamUpdated));
+            Assert.That(first.Arg, Is.EqualTo(TeamType.Allies));
+            Assert.That(second!.EventType, Is.EqualTo(LobbyEventType.TeamUpdated));
+            Assert.That(second.Arg, Is.EqualTo(TeamType.Axis));
+            Assert.That(third!.EventType, Is.EqualTo(LobbyEventType.MapUpdated));
+        });
     }
 
     [Test]
@@ -511,11 +517,15 @@ public sealed class SingleplayerLobbyTests {
     [Test]
     public async Task SetSetting_EmitsSettingUpdatedEvent() {
         using var lobby = CreateLobby();
+        var setting = new LobbySetting { Name = "x", Type = LobbySettingType.Boolean };
 
-        await lobby.SetSetting(new LobbySetting { Name = "x", Type = LobbySettingType.Boolean });
+        await lobby.SetSetting(setting);
 
         var ev = await ConsumeEventAsync(lobby);
-        Assert.That(ev!.EventType, Is.EqualTo(LobbyEventType.SettingUpdated));
+        Assert.Multiple(() => {
+            Assert.That(ev!.EventType, Is.EqualTo(LobbyEventType.SettingUpdated));
+            Assert.That(ev.Arg, Is.SameAs(setting));
+        });
     }
 
     // ── SendMessage ──────────────────────────────────────────────────────────
@@ -878,7 +888,8 @@ public sealed class SingleplayerLobbyTests {
 
         // Switch to 8-player map
         await lobby.SetMap(LargeMap);
-        await ConsumeEventAsync(lobby); // TeamUpdated
+        await ConsumeEventAsync(lobby); // TeamUpdated: Allies
+        await ConsumeEventAsync(lobby); // TeamUpdated: Axis
         await ConsumeEventAsync(lobby); // MapUpdated
 
         Assert.That(lobby.Team1.Slots[2].Hidden, Is.False);
@@ -886,7 +897,8 @@ public sealed class SingleplayerLobbyTests {
 
         // Switch back to 4-player map
         await lobby.SetMap(DefaultMap);
-        await ConsumeEventAsync(lobby); // TeamUpdated
+        await ConsumeEventAsync(lobby); // TeamUpdated: Allies
+        await ConsumeEventAsync(lobby); // TeamUpdated: Axis
         await ConsumeEventAsync(lobby); // MapUpdated
 
         Assert.That(lobby.Team1.Slots[2].Hidden, Is.True);

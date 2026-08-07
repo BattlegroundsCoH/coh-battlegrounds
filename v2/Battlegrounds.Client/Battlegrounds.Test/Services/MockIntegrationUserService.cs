@@ -82,4 +82,9 @@ public sealed class MockIntegrationUserService(string user) : IUserService {
     public Task<User> LoginWithDiscordAsync() {
         throw new NotImplementedException();
     }
+
+    public Task<User> LoginWithSteamAsync() {
+        throw new NotImplementedException();
+    }
+
 }

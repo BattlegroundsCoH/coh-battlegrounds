@@ -1,5 +1,7 @@
 ﻿using System.Threading.Channels;
 
+using System.Collections.Concurrent;
+
 using Battlegrounds.Facades.API;
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Playing;
@@ -44,12 +46,16 @@ public sealed class MultiplayerLobby(
     IBattlegroundsServerAPI serverAPI,
     IUserService userService,
     ICompanyService companyService,
-    IGameMapService mapService) : ILobby, IDisposable {
+    IGameMapService mapService,
+    Func<CancellationToken, AsyncServerStreamingCall<LobbyStateUpdate>>? reconnect = null) : ILobby, IDisposable, IAsyncDisposable {
+
+    private const string __SERVER_MAP_SETTING_KEY = "$map";
 
     private readonly ILogger _logger = Log.ForContext<MultiplayerLobby>();
     private readonly string _lobbyId = lobbyId;
 
-    private readonly AsyncServerStreamingCall<LobbyStateUpdate> _stateUpdater = stateUpdater;
+    private AsyncServerStreamingCall<LobbyStateUpdate> _stateUpdater = stateUpdater;
+    private readonly Func<CancellationToken, AsyncServerStreamingCall<LobbyStateUpdate>>? _reconnect = reconnect;
     private readonly LobbyService.LobbyServiceClient _gRPCClient = gRPCClient;
     private readonly IBattlegroundsServerAPI _serverAPI = serverAPI;
     private readonly ICompanyService _companyService = companyService;
@@ -61,14 +67,23 @@ public sealed class MultiplayerLobby(
     private readonly List<LobbySetting> _settings = setup.Settings;
     private readonly Dictionary<string, Company> _companies = [];
     private readonly Channel<LobbyEvent> _internalEvents = Channel.CreateUnbounded<LobbyEvent>();
+    private readonly CancellationTokenSource _lifetimeCts = new();
+    private readonly Dictionary<(int TeamId, int SlotId), CancellationTokenSource> _slotDownloadCts = [];
+    private readonly ConcurrentDictionary<(int TeamId, int SlotId), long> _slotRevisions = [];
+    private readonly object _slotDownloadLock = new();
 
     private readonly Team _team1 = setup.Team1;
     private readonly Team _team2 = setup.Team2;
     private readonly Team[] _teams = [setup.Team1, setup.Team2];
 
+    private readonly int _victoryPointsSettingIndex = setup.Settings.FindIndex(x => x.Name == LobbySetting.SETTING_VICTORY_POINTS);
+
     private bool _isActive = true;
     private bool _isReady = false;
     private bool _disposedValue = false;
+    private Task? _updateLoopTask;
+    private long _revision;
+    private LobbyConnectionState _connectionState = LobbyConnectionState.Connected;
 
     private Dictionary<string, Company>? _latestMatchCompanies;
 
@@ -76,9 +91,15 @@ public sealed class MultiplayerLobby(
 
     public string Name { get; } = setup.Name;
 
+    public string Id => _lobbyId;
+
     public bool IsHost { get; init; } = true; // Assuming the host is the one who created the lobby
 
     public bool IsActive => _isActive;
+
+    public LobbyConnectionState ConnectionState => _connectionState;
+
+    public long Revision => Interlocked.Read(ref _revision);
 
     public ISet<Participant> Participants => _participants;
 
@@ -135,9 +156,16 @@ public sealed class MultiplayerLobby(
         return (null, -1);
     }
 
-    public async ValueTask<LobbyEvent?> GetNextEvent() {
+    public long GetSlotRevision(int teamId, int slotId) =>
+        _slotRevisions.TryGetValue((teamId, slotId), out var revision) ? revision : 0;
+
+    public ValueTask<LobbyEvent?> GetNextEvent() => GetNextEvent(CancellationToken.None);
+
+    public async ValueTask<LobbyEvent?> GetNextEvent(CancellationToken cancellationToken) {
         try {
-            return await _internalEvents.Reader.ReadAsync();
+            return await _internalEvents.Reader.ReadAsync(cancellationToken);
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            return null;
         } catch (Exception ex) {
             _logger.Error(ex, "Error while getting next lobby event");
             return null;
@@ -153,25 +181,150 @@ public sealed class MultiplayerLobby(
     /// gracefully. Any unrecognized lobby updates are converted to a default system message event. Errors encountered
     /// during polling are logged for diagnostic purposes.</remarks>
     /// <returns>A task that represents the asynchronous polling operation.</returns>
-    public async Task PollGrpcUpdates() {
+    public Task PollGrpcUpdates() => PollGrpcUpdates(CancellationToken.None);
+
+    public void StartPolling() {
+        if (_updateLoopTask is not null) {
+            return;
+        }
+        _updateLoopTask = PollGrpcUpdates(_lifetimeCts.Token);
+    }
+
+    public async Task PollGrpcUpdates(CancellationToken cancellationToken) {
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_lifetimeCts.Token, cancellationToken);
+        var token = linkedCts.Token;
+        var reconnectAttempt = 0;
+        SetConnectionState(LobbyConnectionState.Connected);
         // Polls the gRPC stream for lobby updates and pushes them to the internal channel as LobbyEvents for the UI to consume
         // That avoids the issue of reading from the gRPC stream and fetching the next internal event (ie. for client-side actions) at the same time
-        while (_isActive) {
+        while (_isActive && !token.IsCancellationRequested) {
             try {
-                if (await _stateUpdater.ResponseStream.MoveNext()) {
+                if (await _stateUpdater.ResponseStream.MoveNext(token)) {
+                    reconnectAttempt = 0;
                     var lobbyEvent = MapAndApplyGrpcEvent(_stateUpdater.ResponseStream.Current);
                     if (lobbyEvent is not null) {
-                        _internalEvents.Writer.TryWrite(lobbyEvent); // Map the gRPC update to a LobbyEvent and push it to the internal channel
+                        _internalEvents.Writer.TryWrite(lobbyEvent with { Revision = Revision }); // Map the gRPC update to a LobbyEvent and push it to the internal channel
                     }
                 } else {
-                    break; // Stream ended; stop polling
+                    if (!await TryReconnect(++reconnectAttempt, token)) {
+                        break;
+                    }
                 }
+            } catch (OperationCanceledException) when (token.IsCancellationRequested) {
+                break;
             } catch (RpcException rpcEx) when (rpcEx.StatusCode is StatusCode.Cancelled or StatusCode.Unavailable) {
-                _logger.Information("gRPC lobby updates stream was cancelled or is unavailable, likely due to leaving the lobby or shutting down. Stopping the update poller.");
-                break; // Exit the loop if the stream was cancelled
+                _logger.Warning(rpcEx, "Lobby update stream was interrupted.");
+                if (!await TryReconnect(++reconnectAttempt, token)) {
+                    break;
+                }
             } catch (Exception ex) {
                 _logger.Error(ex, "Error while polling gRPC lobby updates");
+                if (!await TryReconnect(++reconnectAttempt, token)) {
+                    break;
+                }
             }
+        }
+        if (_reconnect is not null && _isActive && !token.IsCancellationRequested) {
+            SetConnectionState(LobbyConnectionState.Disconnected);
+        }
+    }
+
+    private async Task<bool> TryReconnect(int attempt, CancellationToken cancellationToken) {
+        if (_reconnect is null || !_isActive || cancellationToken.IsCancellationRequested) {
+            return false;
+        }
+
+        SetConnectionState(LobbyConnectionState.Reconnecting);
+        CancelAllSlotDownloads();
+        try {
+            var delay = TimeSpan.FromSeconds(Math.Min(30, Math.Pow(2, Math.Min(attempt - 1, 4))));
+            await Task.Delay(delay, cancellationToken);
+            var replacement = _reconnect(cancellationToken);
+            if (!await replacement.ResponseStream.MoveNext(cancellationToken)
+                || replacement.ResponseStream.Current.LobbyState is null) {
+                replacement.Dispose();
+                return true;
+            }
+
+            _stateUpdater.Dispose();
+            _stateUpdater = replacement;
+            ApplySnapshot(replacement.ResponseStream.Current.LobbyState);
+            SetConnectionState(LobbyConnectionState.Connected);
+            _internalEvents.Writer.TryWrite(new LobbyEvent(
+                LobbyEventType.SnapshotApplied,
+                null,
+                Revision));
+            _ = SyncRemoteCompanies(cancellationToken);
+            return true;
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            return false;
+        } catch (Exception ex) {
+            _logger.Warning(ex, "Lobby reconnection attempt {Attempt} failed.", attempt);
+            return true;
+        }
+    }
+
+    private void SetConnectionState(LobbyConnectionState state) {
+        if (_connectionState == state) {
+            return;
+        }
+        _connectionState = state;
+        _internalEvents.Writer.TryWrite(new LobbyEvent(
+            LobbyEventType.ConnectionStateChanged,
+            state,
+            Revision));
+    }
+
+    private void ApplySnapshot(Proto.Lobbies.Lobby snapshot) {
+        Interlocked.Increment(ref _revision);
+
+        _participants.Clear();
+        foreach (var participant in snapshot.Participants) {
+            _participants.Add(new Participant(
+                -1,
+                participant.ParticipantId,
+                participant.Name,
+                participant.IsAi,
+                participant.Ready));
+        }
+
+        for (var teamId = 0; teamId < Math.Min(_teams.Length, snapshot.Teams.Count); teamId++) {
+            var sourceTeam = snapshot.Teams[teamId];
+            var targetSlots = _teams[teamId].Slots;
+            for (var slotId = 0; slotId < targetSlots.Length; slotId++) {
+                if (slotId < sourceTeam.Slots.Count) {
+                    var sourceSlot = sourceTeam.Slots[slotId];
+                    targetSlots[slotId] = new Team.Slot(
+                        slotId,
+                        sourceSlot.ParticipantId,
+                        sourceSlot.Faction,
+                        sourceSlot.CompanyId,
+                        AIDifficulty.FromName(sourceSlot.AiDifficulty),
+                        sourceSlot.Hidden,
+                        sourceSlot.Locked);
+                } else {
+                    targetSlots[slotId] = targetSlots[slotId] with {
+                        ParticipantId = string.Empty,
+                        CompanyId = string.Empty,
+                        Hidden = true
+                    };
+                }
+                IncrementSlotRevision(teamId, slotId);
+            }
+        }
+
+        foreach (var setting in _settings) {
+            if (!snapshot.Settings.TryGetValue(setting.Name, out var value)) {
+                continue;
+            }
+            setting.Value = setting.Type switch {
+                LobbySettingType.Boolean => value.Equals("true", StringComparison.OrdinalIgnoreCase) || value == "1" ? 1 : 0,
+                _ => int.TryParse(value, out var parsed) ? parsed : setting.Value
+            };
+        }
+
+        if (snapshot.Settings.TryGetValue("$map", out var scenarioName)) {
+            _map = Map.FromScenario(_mapService.GetMapByScenarioName(Game, scenarioName));
         }
     }
 
@@ -181,6 +334,7 @@ public sealed class MultiplayerLobby(
         if (update == null) {
             return null;
         }
+        Interlocked.Increment(ref _revision);
         if (!Enum.TryParse(update.EventType, true, out LobbyEventType eventType)) {
             _logger.Warning("Unknown gRPC lobby event type: {EventType}", update.EventType);
             return null;
@@ -191,7 +345,11 @@ public sealed class MultiplayerLobby(
                 _participants.Add(joinedParticipant);
                 return new LobbyEvent(LobbyEventType.ParticipantJoined, joinedParticipant);
             case LobbyEventType.ParticipantLeft:
-                throw new NotImplementedException("Participant left event is not yet implemented in the gRPC lobby handler.");
+                var leftParticipant = _participants.FirstOrDefault(p => p.ParticipantId == update.ParticipantUpdate.ParticipantId);
+                if (leftParticipant is not null) {
+                    _participants.Remove(leftParticipant);
+                }
+                return new LobbyEvent(LobbyEventType.ParticipantLeft, leftParticipant);
             case LobbyEventType.ParticipantMessage:
                 var senderName = _participants.FirstOrDefault(p => p.ParticipantId == update.ChatMessage.SenderId)?.ParticipantName ?? "Unknown";
                 var channel = Enum.TryParse(update.ChatMessage.Channel, true, out ChatChannel parsedChannel) ? parsedChannel : ChatChannel.All;
@@ -201,28 +359,40 @@ public sealed class MultiplayerLobby(
                 for (int i = 0; i < update.TeamUpdate.Slots.Count; i++) {
                     var slot = update.TeamUpdate.Slots[i];
                     _teams[update.TeamUpdate.Id].Slots[i] = new Team.Slot(i, slot.ParticipantId, slot.Faction, slot.CompanyId, AIDifficulty.FromName(slot.AiDifficulty), slot.Hidden, slot.Locked);
+                    var slotRevision = IncrementSlotRevision(update.TeamUpdate.Id, i);
+                    StartCompanyDownload(update.TeamUpdate.Id, i, slot.ParticipantId, slot.CompanyId, slotRevision);
                 }
                 var teamType = update.TeamUpdate.Id == 0 ? _team1.TeamType : _team2.TeamType;
                 return new LobbyEvent(LobbyEventType.TeamUpdated, teamType);
             case LobbyEventType.SlotUpdated:
                 var updatedSlot = update.SlotUpdate.Slot;
                 _teams[update.SlotUpdate.TeamId].Slots[updatedSlot.Id] = new(updatedSlot.Id, updatedSlot.ParticipantId, updatedSlot.Faction, updatedSlot.CompanyId, AIDifficulty.FromName(updatedSlot.AiDifficulty), updatedSlot.Hidden, updatedSlot.Locked);
-                if (!string.IsNullOrEmpty(updatedSlot.ParticipantId) && !string.IsNullOrEmpty(updatedSlot.CompanyId)) {
-                    // If the slot update contains a participant ID and company ID, update the company data for that participant, as it may have changed due to the slot update (eg. they switched to a different company or faction)
-                    _ = DownloadCompanyForParticipant(update.SlotUpdate.TeamId, updatedSlot.Id, updatedSlot.ParticipantId, updatedSlot.CompanyId); // Start the download but don't await it, as we don't want to block the processing of further lobby updates while waiting for the download to complete
-                }
-                return new LobbyEvent(LobbyEventType.TeamUpdated, update.SlotUpdate.TeamId); // Make UI simply update the whole team when a slot is updated for simplicity, as that's what the UI currently supports
+                var updatedSlotRevision = IncrementSlotRevision(update.SlotUpdate.TeamId, updatedSlot.Id);
+                StartCompanyDownload(update.SlotUpdate.TeamId, updatedSlot.Id, updatedSlot.ParticipantId, updatedSlot.CompanyId, updatedSlotRevision);
+                return new LobbyEvent(LobbyEventType.TeamUpdated, _teams[update.SlotUpdate.TeamId].TeamType); // Make UI simply update the whole team when a slot is updated for simplicity, as that's what the UI currently supports
             case LobbyEventType.SettingUpdated:
                 var newSetting = update.SettingsUpdate;
+                if (newSetting.Key is __SERVER_MAP_SETTING_KEY) {
+                    return null; // The map setting is handled separately in the MapUpdated event, so we ignore it here to avoid duplicate handling.
+                }
                 int indexOfSetting = _settings.FindIndex(x => x.Name == newSetting.Key);
                 if (indexOfSetting != -1) {
-                   var currentSetting = _settings[indexOfSetting];
+                    var currentSetting = _settings[indexOfSetting];
                     int mappedValue = currentSetting.Type switch {
-                        LobbySettingType.Boolean => newSetting.NewValue == "true" ? 1 : 0,
+                        LobbySettingType.Boolean => newSetting.NewValue.Equals("true", StringComparison.OrdinalIgnoreCase) || newSetting.NewValue == "1" ? 1 : 0,
                         LobbySettingType.Integer => int.TryParse(newSetting.NewValue, out var intValue) ? intValue : currentSetting.Value,
+                        LobbySettingType.Selection => int.TryParse(newSetting.NewValue, out var selectedIndex) ? selectedIndex : currentSetting.Value,
                         _ => currentSetting.Value
                     };
                     _settings[indexOfSetting].Value = mappedValue;
+                    if (newSetting.Key is LobbySetting.SETTING_GAMEMODE && _victoryPointsSettingIndex != -1) {
+                        if (newSetting.NewValue is "1") { // If the gamemode is set to "1" (which we assume corresponds to a mode that uses victory points), make the victory points setting visible (needs better semantics)
+                            _settings[_victoryPointsSettingIndex].IsVisible = true;
+                        } else {
+                            _settings[_victoryPointsSettingIndex].IsVisible = false;
+                        }
+                        _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.SettingUpdated, _settings[_victoryPointsSettingIndex])); // Notify the UI about the visibility change of the victory points setting
+                    }
                     return new LobbyEvent(LobbyEventType.SettingUpdated, _settings[indexOfSetting]);
                 } else {
                     _logger.Warning("Received update for unknown setting: {SettingKey}", newSetting.Key);
@@ -271,22 +441,94 @@ public sealed class MultiplayerLobby(
         return null; // No event to return
     }
 
-    private async Task DownloadCompanyForParticipant(int teamId, int slotId, string participantId, string companyId) {
+    private long IncrementSlotRevision(int teamId, int slotId) =>
+        _slotRevisions.AddOrUpdate((teamId, slotId), 1, static (_, revision) => revision + 1);
 
-        var company = await _companyService.GetCompanyAsync(companyId, participantId, downloadProgressUpdate: async (downloaded, total) => {
-            long totalBytes = total ?? 0;
-            float progress = totalBytes > 0 ? (float)downloaded / totalBytes : 0;
-            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SlotCompanyDownloadProgress, (teamId, slotId, progress))); // Notify the UI about the download progress
-        });
+    private void StartCompanyDownload(int teamId, int slotId, string? participantId, string? companyId, long slotRevision) {
+        CancellationTokenSource cts;
+        lock (_slotDownloadLock) {
+            if (_slotDownloadCts.Remove((teamId, slotId), out var previous)) {
+                previous.Cancel();
+                previous.Dispose();
+            }
+            cts = CancellationTokenSource.CreateLinkedTokenSource(_lifetimeCts.Token);
+            _slotDownloadCts[(teamId, slotId)] = cts;
+        }
 
-        if (company is null) {
-            _logger.Error("Failed to download company data for participant {ParticipantId} with company ID {CompanyId}", participantId, companyId);
+        if (string.IsNullOrWhiteSpace(participantId) || string.IsNullOrWhiteSpace(companyId)) {
+            cts.Cancel();
+            lock (_slotDownloadLock) {
+                _slotDownloadCts.Remove((teamId, slotId));
+            }
+            cts.Dispose();
             return;
         }
 
-        _companies[company.Id] = company; // Update the company data for the participant in the local lobby state
-        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SlotCompanyDownloadProgress, (teamId, slotId, company))); // Notify the UI about the updated company data for the participant
+        _ = DownloadCompanyForParticipant(teamId, slotId, participantId, companyId, slotRevision, cts);
+    }
 
+    private bool IsCurrentSlotDownload(int teamId, int slotId, string companyId, long slotRevision, CancellationToken token) =>
+        !token.IsCancellationRequested
+        && GetSlotRevision(teamId, slotId) == slotRevision
+        && string.Equals(_teams[teamId].Slots[slotId].CompanyId, companyId, StringComparison.Ordinal);
+
+    private async Task DownloadCompanyForParticipant(
+        int teamId,
+        int slotId,
+        string participantId,
+        string companyId,
+        long slotRevision,
+        CancellationTokenSource cts) {
+        var cancellationToken = cts.Token;
+        try {
+            var company = await _companyService.GetCompanyAsync(companyId, participantId, downloadProgressUpdate: async (downloaded, total) => {
+                if (!IsCurrentSlotDownload(teamId, slotId, companyId, slotRevision, cancellationToken)) {
+                    return;
+                }
+                long totalBytes = total ?? 0;
+                float progress = totalBytes > 0 ? (float)downloaded / totalBytes : 0;
+                await _internalEvents.Writer.WriteAsync(
+                    new LobbyEvent(
+                        LobbyEventType.SlotCompanyDownloadProgress,
+                        new SlotCompanyDownloadUpdate(teamId, slotId, companyId, slotRevision, Progress: progress),
+                        Revision),
+                    cancellationToken);
+            }).AsTask().WaitAsync(cancellationToken);
+
+            if (company is null || company.Id != companyId
+                || !IsCurrentSlotDownload(teamId, slotId, companyId, slotRevision, cancellationToken)) {
+                return;
+            }
+
+            _companies[company.Id] = company;
+            await _internalEvents.Writer.WriteAsync(
+                new LobbyEvent(
+                    LobbyEventType.SlotCompanyDownloadProgress,
+                    new SlotCompanyDownloadUpdate(teamId, slotId, companyId, slotRevision, Company: company),
+                    Revision),
+                cancellationToken);
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            // A newer slot revision superseded this download.
+        } catch (Exception ex) {
+            _logger.Error(ex, "Failed to download company data for participant {ParticipantId} with company ID {CompanyId}", participantId, companyId);
+        } finally {
+            lock (_slotDownloadLock) {
+                if (_slotDownloadCts.TryGetValue((teamId, slotId), out var current) && ReferenceEquals(current, cts)) {
+                    _slotDownloadCts.Remove((teamId, slotId));
+                    cts.Dispose();
+                }
+            }
+        }
+    }
+
+    private void CancelAllSlotDownloads() {
+        lock (_slotDownloadLock) {
+            foreach (var cts in _slotDownloadCts.Values) {
+                cts.Cancel();
+                cts.Dispose();
+            }
+            _slotDownloadCts.Clear();
+        }
     }
 
     public async Task<LaunchGameResult> LaunchGame() {
@@ -362,11 +604,12 @@ public sealed class MultiplayerLobby(
             _logger.Error("Failed to report match result for game {GameId} to the server", matchResult.GameId);
             return false;
         } else {
-            await _gRPCClient.InitiateDownloadAsync(new InitiateDownloadRequest {
+            var participantDownloadTask = _gRPCClient.InitiateDownloadAsync(new InitiateDownloadRequest {
                 ResourceId = "company_update" // After reporting the match result, initiate a download to update company data for all participants, as the match result may have caused changes to company stats, levels, etc.
             }, GetGrpcMetadata());
             // Download the host company changes (other participants have been told to download their company).
-            await DownloadCompany(false);
+            var selfDownloadTask = DownloadCompany(false);
+            await Task.WhenAll(participantDownloadTask.ResponseAsync, selfDownloadTask); // Wait for both the participant download initiation and the local company download to complete
         }
 
         return true;
@@ -435,18 +678,7 @@ public sealed class MultiplayerLobby(
         if (!IsHost) {
             return; // Only the host can set settings
         }
-        int indexOfSetting = _settings.FindIndex(x => x.Name == newSetting.Name);
-        if (newSetting.Name == LobbySetting.SETTING_GAMEMODE) {
-            // TODO: Handle gamemode change
-            // ie. if gamemode == victory_points add a new setting for specifying amount of victory points (250, 500, etc)
-        }
-        if (indexOfSetting != -1) { // Swapping existing setting
-            _settings[indexOfSetting] = newSetting;
-        } else {
-            _settings.Add(newSetting);
-        }
-        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated)); // Notify the UI of setting change
-        await PublishSetting(newSetting); // Publish the setting change to the server
+        await PublishSetting(newSetting); // Confirmed state is updated only when the server stream publishes SettingUpdated
     }
 
     public async Task SetSlotAIDifficulty(Team team, int slotIndex, AIDifficulty difficulty) {
@@ -505,7 +737,7 @@ public sealed class MultiplayerLobby(
             },
         }, GetGrpcMetadata());
         team.Slots[slotIndex] = team.Slots[slotIndex] with { Faction = faction ?? string.Empty }; // Update local state
-        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, teamId)); // Notify the UI of the change
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI of the change
     }
 
     public async Task ToggleSlotLock(Team team, int slotIndex) {
@@ -677,10 +909,26 @@ public sealed class MultiplayerLobby(
         if (!_disposedValue) {
             _isActive = false;
             _disposedValue = true;
+            _lifetimeCts.Cancel();
+            CancelAllSlotDownloads();
+            SetConnectionState(LobbyConnectionState.Disposed);
             // Complete the internal event channel so any consumers waiting on GetNextEvent() will unblock
             _internalEvents.Writer.TryComplete();
             // Close connection with the server (and the lobby) and dispose of the gRPC client
             _stateUpdater.Dispose();
+            _lifetimeCts.Dispose();
+        }
+    }
+
+    public async ValueTask DisposeAsync() {
+        Dispose();
+        if (_updateLoopTask is null) {
+            return;
+        }
+        try {
+            await _updateLoopTask.ConfigureAwait(false);
+        } catch (OperationCanceledException) {
+            // Expected when disposal stops the connection loop.
         }
     }
 
@@ -831,33 +1079,21 @@ public sealed class MultiplayerLobby(
         return MatchOverData.FromMatchResultForPlayer(serverVersion, _localParticipant.ParticipantId, matchCompanies);
     }
 
-    public async Task SyncRemoteCompanies() {
-
+    public Task SyncRemoteCompanies(CancellationToken cancellationToken = default) {
         for (int teamId = 0; teamId < 2; teamId++) {
-            var team = teamId == 0 ? setup.Team1 : setup.Team2;
+            var team = _teams[teamId];
             for (int slotIndex = 0; slotIndex < team.Slots.Length; slotIndex++) {
                 var slot = team.Slots[slotIndex];
                 if (slot.ParticipantId == _localParticipant.ParticipantId) {
                     continue; // Skip downloading company data for the local participant, as it should already be up to date
                 }
                 if (!string.IsNullOrEmpty(slot.CompanyId) && !string.IsNullOrEmpty(slot.ParticipantId)) {
-                    var result = await _companyService.DownloadRemoteCompanyAsync(slot.CompanyId, slot.ParticipantId, downloadProgressUpdate: async (downloaded, total) => {
-                        long totalBytes = total ?? 0;
-                        float progress = totalBytes > 0 ? (float)downloaded / totalBytes : 0;
-                        _logger.Debug("Downloading company data for participant {ParticipantId} in team {TeamId} slot {SlotIndex}: {Progress:P2}", slot.ParticipantId, teamId, slotIndex, progress);
-                        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SlotCompanyDownloadProgress, (teamId, slotIndex, progress))); // Notify the UI about the download progress for this slot
-                    }); // Start downloading company data for each participant in the lobby to ensure we have the latest data for all participants
-                    if (result is not null) {
-                        _companies[slot.CompanyId] = result; // Update the company data for this participant in the local lobby state
-                        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SlotCompanyDownloadProgress, (teamId, slotIndex, result))); // Notify the UI about the updated company data for this slot
-                    } else {
-                        _logger.Error("Failed to download company data for participant {ParticipantId} with company ID {CompanyId}", slot.ParticipantId, slot.CompanyId);
-                        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, $"Failed to download company data for participant {slot.ParticipantId}. Please report this issue.")); // Notify the UI about the failure to download company data for this participant
-                    }
+                    var slotRevision = IncrementSlotRevision(teamId, slotIndex);
+                    StartCompanyDownload(teamId, slotIndex, slot.ParticipantId, slot.CompanyId, slotRevision);
                 }
             }
         }
-
+        return Task.CompletedTask;
     }
 
     public async Task MoveToSlot(Team team, int slotIndex) {

@@ -57,6 +57,7 @@ public sealed class CoH3ReplayParser : IReplayParser {
         var isCoH3_2_3_0_or_later = chunkyHeaderVersion >= COH3_V_2_3_0_CHUNKY_VERSION;
 
         ReplayPlayer[] players = new ReplayPlayer[playerCount];
+        Dictionary<uint, int> slotCounters = [];
         for (int i = 0; i < playerCount; i++) {
 
             long startPos = chunkyReader.Position;
@@ -64,6 +65,12 @@ public sealed class CoH3ReplayParser : IReplayParser {
 
             string playerName = chunkyReader.ReadUTF16String(-1);
             uint team = chunkyReader.ReadUInt32();
+            if (!slotCounters.TryGetValue(team, out int value)) {
+                slotCounters[team] = 0;
+            } else {
+                slotCounters[team] = value + 1;
+            }
+
             uint playerId = 1000 + chunkyReader.ReadUInt32(); // + 1000 to match CoH3's player ID scheme
             chunkyReader.Advance(1); // Skip 1 byte (unknown data)
 
@@ -85,7 +92,7 @@ public sealed class CoH3ReplayParser : IReplayParser {
             }
             chunkyReader.Advance(18); // Skip 18 bytes (unknown data)
 
-            players[i] = new ReplayPlayer((int)playerId, (int)team, playerName, profileId, steamId, faction, aiProfile, IsHuman: isHuman);
+            players[i] = new ReplayPlayer((int)playerId, (int)team, slotCounters[team], playerName, profileId, steamId, faction, aiProfile, IsHuman: isHuman);
 
             // Skip over items
             SkipCoH3PlayerItems(chunkyReader, isHuman);

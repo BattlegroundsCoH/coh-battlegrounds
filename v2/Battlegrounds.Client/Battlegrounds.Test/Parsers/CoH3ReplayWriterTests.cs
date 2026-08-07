@@ -20,7 +20,7 @@ public class CoH3ReplayWriterTests {
     public void CanRoundTripDummyReplayWithoutEvents() {
         var players = new[] {
             ReplayPlayerFixture.CODIEX,
-            new ReplayPlayer(1001, 1, "Opponent", 1234, 76561198000000001, "german", string.Empty)
+            new ReplayPlayer(1001, 1, 0, "Opponent", 1234, 76561198000000001, "german", string.Empty)
         };
 
         var replay = ParseDummyReplay(players, []);
@@ -36,8 +36,8 @@ public class CoH3ReplayWriterTests {
     [Test]
     public void CanRoundTripDummyReplayWithSupportedEvents() {
         var players = new[] {
-            new ReplayPlayer(1000, 0, "CoDiEx", 376, 76561198000000000, "british_africa", string.Empty),
-            new ReplayPlayer(1001, 1, "Opponent", 512, 76561198000000001, "german", string.Empty)
+            new ReplayPlayer(1000, 0, 0, "CoDiEx", 376, 76561198000000000, "british_africa", string.Empty),
+            new ReplayPlayer(1001, 1, 0, "Opponent", 512, 76561198000000001, "german", string.Empty)
         };
 
         var expectedEvents = new ReplayEvent[] {

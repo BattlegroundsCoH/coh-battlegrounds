@@ -111,7 +111,7 @@ public sealed class MatchOverDataTests {
 
     [Test]
     public void FromMatchResultForPlayer_SetsHasBadEvents_WhenBadEventsExist() {
-        var replayPlayer = new ReplayPlayer(1000, 0, "Player", 0, 0, "british_africa", "default_ai");
+        var replayPlayer = new ReplayPlayer(1000, 0, 0, "Player", 0, 0, "british_africa", "default_ai");
         var badEvent = new BadMatchEvent(new SquadDeployedEvent(TimeSpan.Zero, replayPlayer, 1), "Test bad event");
         var result = BuildValidResult(badEvents: [badEvent]);
 

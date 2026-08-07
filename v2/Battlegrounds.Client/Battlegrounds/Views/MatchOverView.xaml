@@ -113,13 +113,13 @@
             -->
             <Grid Grid.Row="3" Margin="0,0,0,6">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" MinWidth="100" SharedSizeGroup="MatchOver.Squad"/>
+                    <ColumnDefinition Width="Auto" MinWidth="100" SharedSizeGroup="MatchOver_Squad"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto" MinWidth="64" SharedSizeGroup="MatchOver.Status"/>
-                    <ColumnDefinition Width="Auto" MinWidth="110" SharedSizeGroup="MatchOver.Pickup"/>
+                    <ColumnDefinition Width="Auto" MinWidth="64" SharedSizeGroup="MatchOver_Status"/>
+                    <ColumnDefinition Width="Auto" MinWidth="110" SharedSizeGroup="MatchOver_Pickup"/>
                 </Grid.ColumnDefinitions>
                 <controls:TrackedTextBlock Text="SQUAD" Grid.Column="0" Style="{StaticResource Display.Label}" FontSize="{DynamicResource Font.Size.Meta}" Tracking="{StaticResource Track.Wide}" Margin="8,0,0,0"/>
                 <controls:TrackedTextBlock Text="INF. KILLS" Grid.Column="1" Style="{StaticResource Display.Label}" FontSize="{DynamicResource Font.Size.Meta}" Tracking="{StaticResource Track.Wide}"/>

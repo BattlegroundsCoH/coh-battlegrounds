@@ -36,6 +36,10 @@ public interface ILobby {
     /// </summary>
     bool IsActive { get; }
 
+    LobbyConnectionState ConnectionState => LobbyConnectionState.Connected;
+
+    long Revision => 0;
+
     /// <summary>
     /// Gets a value indicating whether the user is marked as ready in the lobby. 
     /// This indicates that the user has completed their setup and is prepared to start the match.
@@ -127,6 +131,11 @@ public interface ILobby {
     /// <returns>A value task that represents the asynchronous operation. The result contains the next available <see
     /// cref="LobbyEvent"/>, or <see langword="null"/> if no event is available.</returns>
     ValueTask<LobbyEvent?> GetNextEvent();
+
+    async ValueTask<LobbyEvent?> GetNextEvent(CancellationToken cancellationToken) =>
+        await GetNextEvent().AsTask().WaitAsync(cancellationToken);
+
+    long GetSlotRevision(int teamId, int slotId) => 0;
 
     /// <summary>
     /// Retrieves the participant associated with the specified identifier.

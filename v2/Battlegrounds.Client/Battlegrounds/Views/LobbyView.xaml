@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Battlegrounds.Views"
              xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels"
+             xmlns:behaviors="clr-namespace:Battlegrounds.Behaviors"
              xmlns:converters="clr-namespace:Battlegrounds.Converters"
              xmlns:controls="clr-namespace:Battlegrounds.Controls"
              xmlns:selectors="clr-namespace:Battlegrounds.Selectors"
@@ -27,6 +28,7 @@
         <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
         <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
         <converters:DownloadProgressArcConverter x:Key="DownloadProgressArcConverter"/>
+        <converters:GamemodeNameConverter x:Key="GamemodeNameConverter"/>
 
         <DataTemplate x:Key="CompanyComboBoxItemTemplate">
             <Grid>
@@ -153,38 +155,42 @@
                                         Margin="0,0,8,0">
                                         
                                         <!-- Company selection -->
-                                        <ComboBox
-                                                   Width="220" Height="42"
-                                                   ItemsSource="{Binding AvailableCompanies}"
-                                                   SelectedItem="{Binding SelectedCompany, Mode=TwoWay}"
-                                                   Style="{StaticResource ComboBox.Default}"
-                                                   Visibility="{Binding CanSetCompany, Converter={StaticResource BoolToVisibilityConverter}}">
-                                            <ComboBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Grid>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="Auto"/>
-                                                            <ColumnDefinition Width="*"/>
-                                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal"
+                                                    Visibility="{Binding CanSetCompany, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <ComboBox
+                                                       Width="220" Height="42"
+                                                       ItemsSource="{Binding AvailableCompanies}"
+                                                       SelectedItem="{Binding DraftSelectedCompany, Mode=TwoWay}"
+                                                       behaviors:SelectionChangedCommandBehavior.Command="{Binding SetCompanyCommand}"
+                                                       behaviors:SelectionChangedCommandBehavior.CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Self}}"
+                                                       Style="{StaticResource ComboBox.Default}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
 
-                                                        <!-- Faction icon -->
-                                                        <Image Width="{DynamicResource Size.Icon.L}" Height="{DynamicResource Size.Icon.L}" Margin="0,0,8,0">
-                                                            <Image.Source>
-                                                                <MultiBinding Converter="{StaticResource FactionIconConverter}">
-                                                                    <Binding Path="Company.Faction"/>
-                                                                    <Binding Path="Company.GameId"/>
-                                                                </MultiBinding>
-                                                            </Image.Source>
-                                                        </Image>
+                                                            <!-- Faction icon -->
+                                                            <Image Width="{DynamicResource Size.Icon.L}" Height="{DynamicResource Size.Icon.L}" Margin="0,0,8,0">
+                                                                <Image.Source>
+                                                                    <MultiBinding Converter="{StaticResource FactionIconConverter}">
+                                                                        <Binding Path="Company.Faction"/>
+                                                                        <Binding Path="Company.GameId"/>
+                                                                    </MultiBinding>
+                                                                </Image.Source>
+                                                            </Image>
 
-                                                        <!-- Company name -->
-                                                        <TextBlock Grid.Column="1" 
-                                                            Text="{Binding DisplayName}"
-                                                            VerticalAlignment="Center"/>
-                                                    </Grid>
-                                                </DataTemplate>
-                                            </ComboBox.ItemTemplate>
-                                        </ComboBox>
+                                                            <!-- Company name -->
+                                                            <TextBlock Grid.Column="1" 
+                                                              Text="{Binding DisplayName}"
+                                                              VerticalAlignment="Center"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </StackPanel>
 
                                         <!-- Selected company (view-only, clickable for preview) -->
                                         <Button
@@ -235,14 +241,15 @@
                                             Visibility="{Binding ParentContext.IsHost, Converter={StaticResource BoolToVisibilityConverter}}">
 
                                         <!-- AI Difficulty ComboBox (shown only when adding an AI) -->
-                                        <ComboBox Width="160" Height="42"
+                                        <ComboBox Width="220" Height="42"
                                                   Margin="10,0,0,0"
-                                                    ItemsSource="{Binding AvailableAIDifficulties}"
-                                                  SelectedItem="{Binding SelectedAIDifficulty, Mode=TwoWay}"
+                                                  ItemsSource="{Binding AvailableAIDifficulties}"
+                                                  SelectedItem="{Binding DraftSelectedAIDifficulty, Mode=TwoWay}"
                                                   DisplayMemberPath="DisplayName"
+                                                  behaviors:SelectionChangedCommandBehavior.Command="{Binding DifficultyCommand}"
+                                                  behaviors:SelectionChangedCommandBehavior.CommandParameter="{Binding SelectedItem.Difficulty, RelativeSource={RelativeSource Self}}"
                                                   Style="{StaticResource ComboBox.Default}"
                                                   Visibility="{Binding CanSetAIDifficulty, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
 
                                         <!-- Lock/Unlock Button (shown only if slot is unoccupied) -->
                                         <Button Width="30" Height="42" 
@@ -297,17 +304,33 @@
         </Style>
 
         <DataTemplate x:Key="BooleanSettingTemplate">
-            <CheckBox Content="{Binding Name}"
-             IsChecked="{Binding BoolValue, Mode=TwoWay}"
-             Foreground="{StaticResource Brush.Text.Primary}"
-             IsEnabled="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}}"
-             Margin="0,5"/>
+            <Grid Margin="0,5" Visibility="{Binding Visibility}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox Content="{Binding Name, Converter={StaticResource GamemodeNameConverter}}"
+                          IsChecked="{Binding DraftBoolValue, Mode=TwoWay}"
+                          Foreground="{StaticResource Brush.Text.Primary}"
+                          IsEnabled="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                          Margin="0,5"/>
+                
+                <!-- TODO: Remove this button and make Apply action implicit -->
+                <Button Grid.Column="1"
+                        Content="Apply"
+                        Width="55"
+                        Height="30"
+                        Style="{StaticResource Button.Primary}"
+                        Command="{Binding ApplyCommand}"
+                        Visibility="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="IntegerSettingTemplate">
-            <Grid Margin="0,5">
+            <Grid Margin="0,5" Visibility="{Binding Visibility}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -315,20 +338,30 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="{Binding Name}"
+                <TextBlock Text="{Binding Name, Converter={StaticResource GamemodeNameConverter}}"
                  Foreground="{StaticResource Brush.Text.Primary}"
                  Grid.Column="0" Grid.Row="0"/>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
-                    <TextBlock Text="{Binding IntValue}"
+                    <TextBlock Text="{Binding DraftIntValue}"
                      Foreground="{StaticResource Brush.Accent.Gold}"
                      Margin="5,0,0,0"/>
                 </StackPanel>
 
-                <Slider Grid.Row="1" Grid.ColumnSpan="2"
+                <!-- TODO: Remove this button and make Apply action implicit -->
+                <Button Grid.Column="2"
+                        Content="Apply"
+                        Width="55"
+                        Height="30"
+                        Margin="5,0,0,0"
+                        Style="{StaticResource Button.Primary}"
+                        Command="{Binding ApplyCommand}"
+                        Visibility="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                <Slider Grid.Row="1" Grid.ColumnSpan="3"
                Minimum="{Binding MinValue}"
                Maximum="{Binding MaxValue}"
-               Value="{Binding IntValue, Mode=TwoWay}"
+               Value="{Binding DraftIntValue, Mode=TwoWay}"
                IsSnapToTickEnabled="True"
                TickFrequency="{Binding Step}"
                IsEnabled="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -337,24 +370,25 @@
         </DataTemplate>
 
         <DataTemplate x:Key="SelectionSettingTemplate">
-            <Grid Margin="0,5">
+            <Grid Margin="0,5" Visibility="{Binding Visibility}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="{Binding Name}"
+                <TextBlock Text="{Binding Name, Converter={StaticResource GamemodeNameConverter}}"
                  Foreground="{StaticResource Brush.Text.Primary}"
                  VerticalAlignment="Center"/>
 
                 <Grid Grid.Column="1">
                     <!-- For host: editable combo box -->
                     <ComboBox
-                ItemsSource="{Binding Options}"
-                DisplayMemberPath="Name"
-                SelectedIndex="{Binding SelectedOptionIndex, Mode=TwoWay}"
-                Width="150"
-                        Style="{StaticResource ComboBox.Default}"
+                      ItemsSource="{Binding Options}"
+                      DisplayMemberPath="Name"
+                      SelectedIndex="{Binding DraftSelectedOptionIndex, Mode=TwoWay}"
+                      Width="150"
+                      behaviors:SelectionChangedCommandBehavior.Command="{Binding ApplyCommand}"
+                      Style="{StaticResource ComboBox.Default}"
                 Visibility="{Binding DataContext.IsHost, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
                     <!-- For non-host: read-only text -->
@@ -818,9 +852,12 @@
                                      Foreground="{StaticResource Brush.Text.Primary}"
                                        Visibility="{Binding IsHost, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
                             <ComboBox
+                                Width="Auto"
                                 DisplayMemberPath="Name"
-                                SelectedItem="{Binding SelectedMap}"
+                                SelectedItem="{Binding DraftSelectedMap, Mode=TwoWay}"
                                 ItemsSource="{Binding AvailableMaps}"
+                                behaviors:SelectionChangedCommandBehavior.Command="{Binding SetMapCommand}"
+                                behaviors:SelectionChangedCommandBehavior.CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Self}}"
                                 Style="{StaticResource ComboBox.Default}"
                                 Visibility="{Binding IsHost, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         </Grid>
@@ -847,6 +884,9 @@
                         VerticalAlignment="Center">
                 <Label Content="{Binding LobbyState}"
                        Foreground="{StaticResource Brush.Text.Primary}"
+                       VerticalAlignment="Center"/>
+                <Label Content="{Binding ConnectionState, StringFormat=Connection: {0}}"
+                       Foreground="{StaticResource Brush.Text.Dim}"
                        VerticalAlignment="Center"/>
                 <Label Content="{Binding TrayMessage}"
                        Foreground="{StaticResource Brush.Text.Faint}"

@@ -32,7 +32,8 @@ public sealed record RefreshResponse(
 
 public sealed record StartAuthResponse(
     [property: JsonPropertyName("loginSessionId")] string SessionId,
-    [property: JsonPropertyName("authLink")] string AuthUrl
+    [property: JsonPropertyName("authLink")] string AuthUrl,
+    [property: JsonPropertyName("verifier")] string Verifier
 );
 
 public sealed record EndAuthResponse(
@@ -96,10 +97,11 @@ public interface IBattlegroundsWebAPI {
     /// </summary>
     /// <param name="provider">The authentication provider used to complete the process.</param>
     /// <param name="sessionId">The unique identifier for the authentication session. Cannot be null or empty.</param>
+    /// <param name="verifier">The verifier string provided by the authentication provider. Cannot be null or empty.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains an  <see cref="EndAuthResponse"/>
     /// object with the authentication result, or <see langword="null"/>  if the session is invalid or the process could
     /// not be completed.</returns>
-    Task<EndAuthResponse?> EndAuthAsync(AuthProvider provider, string sessionId);
+    Task<EndAuthResponse?> EndAuthAsync(AuthProvider provider, string sessionId, string verifier);
 
     void SetAuthenticationToken(string token);
 

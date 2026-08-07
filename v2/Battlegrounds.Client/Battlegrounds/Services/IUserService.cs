@@ -54,5 +54,9 @@ public interface IUserService {
     string GetLocalUserRefreshToken();
     
     ValueTask<bool> AutoLoginAsync();
+    
     Task<User> LoginWithDiscordAsync();
+    
+    Task<User> LoginWithSteamAsync();
+
 }

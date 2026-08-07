@@ -1,4 +1,6 @@
-﻿using Battlegrounds.Models.Companies;
+using System.ComponentModel;
+
+using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Lobbies;
 using Battlegrounds.Models.Playing;
 
@@ -16,16 +18,20 @@ public sealed record LobbySlotViewModel(
         IAsyncRelayCommand<int> LockUnlockCommand,
         IAsyncRelayCommand<PickableCompany> SetCompanyCommand,
         IAsyncRelayCommand<int> MoveToSlotCommand,
-        LobbyViewModel ParentContext) {
+        LobbyViewModel ParentContext) : INotifyPropertyChanged {
 
-    private PickableCompany? _selectedCompany = null;
-    private PickableAIDifficulty _selectedAIDifficulty = new PickableAIDifficulty(Slot.Difficulty);
+    private PickableCompany? _selectedCompany;
+    private PickableCompany? _draftSelectedCompany;
+    private readonly PickableAIDifficulty _selectedAIDifficulty = new(Slot.Difficulty);
+    private PickableAIDifficulty _draftSelectedAIDifficulty = new(Slot.Difficulty);
     private string _companyId = Slot.CompanyId;
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public string GameId => ParentContext.GameId;
-    
+
     public bool CanSetAIDifficulty => string.IsNullOrEmpty(Slot.ParticipantId) || Slot.Difficulty != AIDifficulty.HUMAN;
-    
+
     public string DisplayName {
         get {
             if (Slot.Difficulty != AIDifficulty.HUMAN)
@@ -36,15 +42,19 @@ public sealed record LobbySlotViewModel(
 
     public bool IsLocalPlayer => ParentContext.LocalParticipant == Slot.ParticipantId;
 
-    public List<PickableAIDifficulty> AvailableAIDifficulties => [new PickableAIDifficulty(AIDifficulty.HUMAN), new(AIDifficulty.EASY), new(AIDifficulty.NORMAL), new(AIDifficulty.HARD), new(AIDifficulty.EXPERT)];
-    
-    public PickableAIDifficulty SelectedAIDifficulty {
-        get => _selectedAIDifficulty;
+    public List<PickableAIDifficulty> AvailableAIDifficulties =>
+        [new PickableAIDifficulty(AIDifficulty.HUMAN), new(AIDifficulty.EASY), new(AIDifficulty.NORMAL), new(AIDifficulty.HARD), new(AIDifficulty.EXPERT)];
+
+    public PickableAIDifficulty SelectedAIDifficulty => _selectedAIDifficulty;
+
+    public PickableAIDifficulty DraftSelectedAIDifficulty {
+        get => _draftSelectedAIDifficulty;
         set {
-            if (_selectedAIDifficulty == value)
+            if (value is null || _draftSelectedAIDifficulty == value)
                 return;
-            _selectedAIDifficulty = value;
-            DifficultyCommand.Execute(value.Difficulty);
+            _draftSelectedAIDifficulty = value;
+            PropertyChanged?.Invoke(this, new(nameof(DraftSelectedAIDifficulty)));
+            DifficultyCommand.NotifyCanExecuteChanged();
         }
     }
 
@@ -52,15 +62,9 @@ public sealed record LobbySlotViewModel(
         get {
             var companies = ParentContext.CompaniesByAlliance[Alliance].Select(x => new PickableCompany(false, false, x));
             var available = (IsAIPlayer ? companies.Append(new PickableCompany(false, true, null)) : companies).ToList();
-            // WARNING : SIDE_EFFECT!!!!
-            if (string.IsNullOrEmpty(_companyId) && IsAIPlayer) {
-                SelectedCompany = available.FirstOrDefault(x => x.Company is not null) ?? new PickableCompany(true, false, null);
-                _companyId = _selectedCompany?.Company?.Id ?? string.Empty;
-            }
             if (available.Count == 0)
                 return [new PickableCompany(true, false, null)];
-            else
-                return available;
+            return available;
         }
     }
 
@@ -72,18 +76,30 @@ public sealed record LobbySlotViewModel(
             if (string.IsNullOrEmpty(_companyId)) {
                 return new PickableCompany(true, false, null);
             }
-            if (ParentContext.GetCompany(_companyId) is Company cmp) {
-                return new PickableCompany(false, false, cmp);
+            if (ParentContext.GetCompany(_companyId) is Company company) {
+                return new PickableCompany(false, false, company);
             }
             return new PickableCompany(true, false, null);
         }
+    }
+
+    public PickableCompany DraftSelectedCompany {
+        get => _draftSelectedCompany ?? SelectedCompany;
         set {
-            if (_selectedCompany == value)
+            if (value is null || DraftSelectedCompany == value)
                 return;
-            _selectedCompany = value;
-            _companyId = _selectedCompany?.Company?.Id ?? string.Empty;
-            SetCompanyCommand.Execute(value);
+            _draftSelectedCompany = value;
+            PropertyChanged?.Invoke(this, new(nameof(DraftSelectedCompany)));
+            SetCompanyCommand.NotifyCanExecuteChanged();
         }
+    }
+
+    public LobbySlotViewModel WithServerCompany(Company company) {
+        var updated = this with { };
+        updated._selectedCompany = new PickableCompany(false, false, company);
+        updated._draftSelectedCompany = updated._selectedCompany;
+        updated._companyId = company.Id;
+        return updated;
     }
 
     public bool HasOccupant => !string.IsNullOrEmpty(Slot.ParticipantId);

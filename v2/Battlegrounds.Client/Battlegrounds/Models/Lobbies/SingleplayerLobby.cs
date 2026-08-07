@@ -54,9 +54,17 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
 
     public bool IsReady => true; // Always ready in singleplayer mode
 
-    public async ValueTask<LobbyEvent?> GetNextEvent() {
+    public LobbyConnectionState ConnectionState => _isActive ? LobbyConnectionState.Connected : LobbyConnectionState.Disposed;
+
+    public long Revision => 0;
+
+    public long GetSlotRevision(int teamId, int slotId) => 0;
+
+    public ValueTask<LobbyEvent?> GetNextEvent() => GetNextEvent(CancellationToken.None);
+
+    public async ValueTask<LobbyEvent?> GetNextEvent(CancellationToken cancellationToken) {
         try {
-            return await _internalEvents.Reader.ReadAsync();
+            return await _internalEvents.Reader.ReadAsync(cancellationToken);
         } catch (ChannelClosedException) {
             return null; // Channel is closed, no more events (why must this be an exception...)
         }
@@ -180,7 +188,8 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
                 _team1.Slots[i] = _team1.Slots[i] with { Hidden = isHidden };
                 _team2.Slots[i] = _team2.Slots[i] with { Hidden = isHidden };
             }
-            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated)); // Notify the UI of changes to teams
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, _team1.TeamType)); // Notify the UI of changes to team 1
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, _team2.TeamType)); // Notify the UI of changes to team 2
         }
         _map = map; // Set the new map
         await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.MapUpdated, map)); // Notify the UI of map change
@@ -198,7 +207,7 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
         } else {
             _settings.Add(newSetting);
         }
-        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated)); // Notify the UI of setting change
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SettingUpdated, newSetting)); // Notify the UI of setting change
     }
 
     public async Task SendMessage(ChatChannel channel, string msg) {

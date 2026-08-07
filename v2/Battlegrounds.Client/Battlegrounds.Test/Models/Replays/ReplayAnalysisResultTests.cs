@@ -31,8 +31,8 @@ public sealed class ReplayAnalysisResultTests {
     public void GetMatchResult_ReturnsValidMatchResult_WhenReplayIsValid() {
 
         // Arrange
-        ReplayPlayer player1 = new ReplayPlayer(1000, 0, "Player 1", 0, 0, "british_africa", "ai_default");
-        ReplayPlayer player2 = new ReplayPlayer(1001, 1, "Player 2", 0, 0, "afrika_korps", "ai_default");
+        ReplayPlayer player1 = new ReplayPlayer(1000, 0, 0, "Player 1", 0, 0, "british_africa", "ai_default");
+        ReplayPlayer player2 = new ReplayPlayer(1001, 1, 0, "Player 2", 0, 0, "afrika_korps", "ai_default");
         var replay = new Replay {
             Players = [player1, player2],
             Events = [
@@ -76,8 +76,8 @@ public sealed class ReplayAnalysisResultTests {
     public void GetMatchResult_ReturnsInvalidMatchResult_WhenReplayHasBadEvents() {
 
         // Arrange
-        ReplayPlayer player1 = new ReplayPlayer(1000, 0, "Player 1", 0, 0, "british_africa", "ai_default");
-        ReplayPlayer player2 = new ReplayPlayer(1001, 1, "Player 2", 0, 0, "afrika_korps", "ai_default");
+        ReplayPlayer player1 = new ReplayPlayer(1000, 0, 0, "Player 1", 0, 0, "british_africa", "ai_default");
+        ReplayPlayer player2 = new ReplayPlayer(1001, 1, 0, "Player 2", 0, 0, "afrika_korps", "ai_default");
         var replay = new Replay {
             Players = [player1, player2],
             Events = [
@@ -122,8 +122,8 @@ public sealed class ReplayAnalysisResultTests {
     [Test]
     public void GetMatchResult_ReturnsInvalidMatchResult_WhenReplayHasMultipleBadEvents() {
         // Arrange
-        ReplayPlayer player1 = new ReplayPlayer(1000, 0, "Player 1", 0, 0, "british_africa", "ai_default");
-        ReplayPlayer player2 = new ReplayPlayer(1001, 1, "Player 2", 0, 0, "afrika_korps", "ai_default");
+        ReplayPlayer player1 = new ReplayPlayer(1000, 0, 0, "Player 1", 0, 0, "british_africa", "ai_default");
+        ReplayPlayer player2 = new ReplayPlayer(1001, 1, 0, "Player 2", 0, 0, "afrika_korps", "ai_default");
         var replay = new Replay {
             Players = [player1, player2],
             Events = [
@@ -200,8 +200,8 @@ public sealed class ReplayAnalysisResultTests {
     [Test]
     public void GetMatchResult_ReturnsInvalid_WhenReplayHasNoEvents() {
         // Arrange
-        ReplayPlayer player1 = new ReplayPlayer(1000, 0, "Player 1", 0, 0, "british_africa", "ai_default");
-        ReplayPlayer player2 = new ReplayPlayer(1001, 1, "Player 2", 0, 0, "afrika_korps", "ai_default");
+        ReplayPlayer player1 = new ReplayPlayer(1000, 0, 0, "Player 1", 0, 0, "british_africa", "ai_default");
+        ReplayPlayer player2 = new ReplayPlayer(1001, 1, 0, "Player 2", 0, 0, "afrika_korps", "ai_default");
         var replay = new Replay {
             Players = [player1, player2],
             Events = [], // No events
@@ -244,8 +244,8 @@ public sealed class ReplayAnalysisResultTests {
     [Test]
     public void GetMatchResult_ReturnsInvalid_WhenReplayHasNoStartEvent() {
         // Arrange
-        ReplayPlayer player1 = new ReplayPlayer(1000, 0, "Player 1", 0, 0, "british_africa", "ai_default");
-        ReplayPlayer player2 = new ReplayPlayer(1001, 1, "Player 2", 0, 0, "afrika_korps", "ai_default");
+        ReplayPlayer player1 = new ReplayPlayer(1000, 0, 0, "Player 1", 0, 0, "british_africa", "ai_default");
+        ReplayPlayer player2 = new ReplayPlayer(1001, 1, 0, "Player 2", 0, 0, "afrika_korps", "ai_default");
         var replay = new Replay {
             Players = [player1, player2],
             Events = [
@@ -273,7 +273,7 @@ public sealed class ReplayAnalysisResultTests {
     [Test]
     public void GetMatchResult_ReturnsInvalidMatchResult_WhenReplayHasNoMatchOverEvent() {
         // Arrange
-        ReplayPlayer player1 = new ReplayPlayer(1000, 0, "Player 1", 0, 0, "british_africa", "ai_default");
+        ReplayPlayer player1 = new ReplayPlayer(1000, 0, 0, "Player 1", 0, 0, "british_africa", "ai_default");
         var replay = new Replay {
             Players = [player1],
             Events = [
@@ -302,7 +302,7 @@ public sealed class ReplayAnalysisResultTests {
     [Test]
     public void GetMatchResult_ReturnsInvalidMatchResult_WhenPlayerDataDoesNotMatchLobby() {
         // Arrange
-        ReplayPlayer player1 = new ReplayPlayer(1000, 0, "Player 1", 0, 0, "british_africa", "ai_default");
+        ReplayPlayer player1 = new ReplayPlayer(1000, 0, 0, "Player 1", 0, 0, "british_africa", "ai_default");
         var replay = new Replay {
             Players = [player1],
             Events = [
@@ -332,7 +332,7 @@ public sealed class ReplayAnalysisResultTests {
     [Test]
     public void GetMatchResult_ReturnsValidMatchResult_WithCorrectPlayerStatistics() {
         // Arrange
-        ReplayPlayer player1 = new ReplayPlayer(1000, 0, "Player 1", 0, 0, "british_africa", "ai_default");
+        ReplayPlayer player1 = new ReplayPlayer(1000, 0, 0, "Player 1", 0, 0, "british_africa", "ai_default");
         var replay = new Replay {
             Players = [player1],
             Events = [
@@ -368,7 +368,7 @@ public sealed class ReplayAnalysisResultTests {
     [Test]
     public void GetMatchResult_HandlesTimeSpanOverflow_WhenEventsAreOutOfOrder() {
         // Arrange
-        ReplayPlayer player1 = new ReplayPlayer(1000, 0, "Player 1", 0, 0, "british_africa", "ai_default");
+        ReplayPlayer player1 = new ReplayPlayer(1000, 0, 0, "Player 1", 0, 0, "british_africa", "ai_default");
         var replay = new Replay {
             Players = [player1],
             Events = [
@@ -396,8 +396,8 @@ public sealed class ReplayAnalysisResultTests {
     public void GetMatchResult_ReturnsValidListOfPlayerEvents_WhenPlayersHaveEvents() {
 
         // Arrange
-        ReplayPlayer player1 = new ReplayPlayer(1000, 0, "Player 1", 0, 0, "british_africa", "ai_default");
-        ReplayPlayer player2 = new ReplayPlayer(1001, 1, "Player 2", 0, 0, "afrika_korps", "ai_default");
+        ReplayPlayer player1 = new ReplayPlayer(1000, 0, 0, "Player 1", 0, 0, "british_africa", "ai_default");
+        ReplayPlayer player2 = new ReplayPlayer(1001, 1, 0, "Player 2", 0, 0, "afrika_korps", "ai_default");
         var replay = new Replay {
             Players = [player1, player2],
             Events = [

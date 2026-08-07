@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.IO.Pipes;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -223,7 +222,6 @@ public sealed class HttpBattlegroundsServerAPI(
         _logger.LogInformation("Sending POST request to {RequestUri}", requestUri);
 
         HttpRequestMessage request = await GetHttpRequestWithAuthHeaders(HttpMethod.Post, requestUri);
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await _userService.GetLocalUserTokenAsync()); // Ensure we have the latest token
         request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
 
         // Serialize JSON to byte stream and create a ProgressStream to track upload progress
@@ -334,7 +332,6 @@ public sealed class HttpBattlegroundsServerAPI(
         _logger.LogInformation("Sending POST request to {RequestUri}", requestUri);
         HttpRequestMessage request = await GetHttpRequestWithAuthHeaders(HttpMethod.Post, requestUri);
         request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await _userService.GetLocalUserTokenAsync()); // Ensure we have the latest token
         request.Content = new StreamContent(new ProgressStream(gamemodeStream, gamemodeStream.Length, progressUpdate));
         request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
         request.Content.Headers.ContentLength = gamemodeStream.Length; // Set content length for the stream
@@ -412,7 +409,7 @@ public sealed class HttpBattlegroundsServerAPI(
 
     }
 
-    public async Task<LatestWinconditionDTO> GetLatestWinconditionSourceMetadata() {
+    public async Task<LatestWinconditionDTO?> GetLatestWinconditionSourceMetadata() {
 
         string endpoint = $"{BaseUrl}{LatestWinconditionSrcEndpoint}";
         HttpRequestMessage request = new(HttpMethod.Get, endpoint);
@@ -430,7 +427,8 @@ public sealed class HttpBattlegroundsServerAPI(
             }
         } 
 
-        throw new InvalidDataException($"Failed to retrieve latest wincondition source metadata. Status code: {response.StatusCode}, Reason: {response.ReasonPhrase}");
+        _logger.LogError("Failed to retrieve latest wincondition source metadata. Status code: {StatusCode}, Reason: {ReasonPhrase}", response.StatusCode, response.ReasonPhrase);
+        return null;
 
     }
 

@@ -58,6 +58,12 @@ public sealed class LobbyViewModelIntegrationTests : LobbyServerIntegrationTests
 
     [TearDown]
     public async Task TearDown() {
+        if (_participantVm is not null) {
+            await _participantVm.DisposeAsync();
+        }
+        if (_hostVm is not null) {
+            await _hostVm.DisposeAsync();
+        }
         await _harness.DisposeAsync();
     }
 
@@ -195,16 +201,21 @@ public sealed class LobbyViewModelIntegrationTests : LobbyServerIntegrationTests
         List<MatchOverReplayEvent.PlayerStatistics> playerStats = [];
         List<int> winners = [];
         List<int> losers = [];
+        // Replay slot IDs are dense within each team and do not correspond to lobby slot indexes.
+        Dictionary<int, int> nextSlotIdByTeam = [];
 
         for (int i = 0; i < participants.Length; i++) {
             var participant = participants[i];
             int playerId = 1000 + i;
             int teamId = lobby.GetTeam(participant);
+            int slotId = nextSlotIdByTeam.GetValueOrDefault(teamId);
+            nextSlotIdByTeam[teamId] = slotId + 1;
             string companyId = FindParticipantCompanyId(lobby, participant.ParticipantId) ?? $"company-{playerId}";
 
             replayPlayers.Add(new ReplayPlayer(
                 PlayerId: playerId,
                 TeamId: teamId,
+                SlotId: slotId,
                 PlayerName: participant.ParticipantName,
                 ProfileId: 0,
                 SteamId: 0,

@@ -24,13 +24,24 @@ public sealed class ReplayAnalysisResult {
         Dictionary<int, LinkedList<ReplayEvent>> companyChanges = [];
         Dictionary<int, HashSet<ushort>> deployedSquads = [];
         Dictionary<int, int> teams = [];
+        int team1PlayerCount = 0;
+        int team2PlayerCount = 0;
         foreach (var player in Replay.Players) {
             companyChanges[player.PlayerId] = [];
             deployedSquads[player.PlayerId] = [];
             teams[player.PlayerId] = player.TeamId;
+            if (player.TeamId == 0) {
+                team1PlayerCount++;
+            } else if (player.TeamId == 1) {
+                team2PlayerCount++;
+            } else {
+                _logger.Warning("Player {PlayerId} has invalid team ID {TeamId}", player.PlayerId, player.TeamId);
+            }
         }
 
         bool isHuman(int id) => Replay.Players.FirstOrDefault(x => x.PlayerId == id)?.IsHuman ?? false;
+        string faction(int id) => Replay.Players.FirstOrDefault(x => x.PlayerId == id)?.Faction ?? string.Empty;
+        int slotId(int id) => Replay.Players.FirstOrDefault(x => x.PlayerId == id)?.SlotId ?? -1;
 
         List<BadMatchEvent> badEvents = [];
 
@@ -104,6 +115,8 @@ public sealed class ReplayAnalysisResult {
         }
 
         // Now we map ingame player IDs to participant IDs
+        MatchResultPlayer[] team1Players = new MatchResultPlayer[team1PlayerCount];
+        MatchResultPlayer[] team2Players = new MatchResultPlayer[team2PlayerCount];
         Dictionary<int, string> playerIdToParticipantId = [];
         Dictionary<string, string> playerCompanies = [];
         HashSet<string> winners = [];
@@ -137,6 +150,24 @@ public sealed class ReplayAnalysisResult {
             }
             playerIdToParticipantId[playerData.PlayerId] = participant.ParticipantId;
             playerCompanies[participant.ParticipantId] = playerData.CompanyId; // Map participant ID to company ID
+            if (teamId == 0) {
+                team1Players[slotId(playerData.PlayerId)] = new MatchResultPlayer() {
+                    DisplayName = participant.ParticipantName,
+                    UserId = participant.ParticipantId,
+                    Faction = faction(playerData.PlayerId),
+                    IsAI = !isHuman(playerData.PlayerId)
+                };
+            } else if (teamId == 1) {
+                team2Players[slotId(playerData.PlayerId)] = new MatchResultPlayer() {
+                    DisplayName = participant.ParticipantName,
+                    UserId = participant.ParticipantId,
+                    Faction = faction(playerData.PlayerId),
+                    IsAI = !isHuman(playerData.PlayerId)
+                };
+            } else {
+                _logger.Warning("Player {PlayerId} has invalid team ID {TeamId}", playerData.PlayerId, teamId);
+                badEvents.Add(new BadMatchEvent(registeredStartEvent, $"Player {playerData.PlayerId} has invalid team ID {teamId}"));
+            }
         }
 
         // Transform company changes to match the participant IDs and filter companies not mapped to a participant
@@ -167,6 +198,8 @@ public sealed class ReplayAnalysisResult {
             Losers = losers,
             Players =lobby.Participants.Where(x => !x.IsAIParticipant).Select(x => x.ParticipantId).ToHashSet(),
             IsValid = badEvents.Count == 0 && !string.IsNullOrEmpty(registeredStartEvent.MatchId) && !string.IsNullOrEmpty(registeredStartEvent.ModVersion) && Replay.Duration > TimeSpan.Zero,
+            Team1 = team1Players,
+            Team2 = team2Players,
         };
 
     }
