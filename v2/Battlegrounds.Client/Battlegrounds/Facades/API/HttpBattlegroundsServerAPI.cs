@@ -350,7 +350,7 @@ public sealed class HttpBattlegroundsServerAPI(
     public async Task<bool> DownloadGamemodeAsync(string lobbyId, string destinationPath, DownloadProgressUpdateDelegate? progressUpdate = null) {
         string endpoint = $"{BaseUrl}{DownloadGamemodeEndpoint}";
         var parameters = new Dictionary<string, string> {
-            { "lobbyId", lobbyId }
+            { "guid", lobbyId }
         };
         string requestUri = $"{endpoint}?{ToUrlEncodedString(parameters)}";
         _logger.LogInformation("Sending GET request to {RequestUri} to download gamemode for lobby {LobbyId}", requestUri, lobbyId);

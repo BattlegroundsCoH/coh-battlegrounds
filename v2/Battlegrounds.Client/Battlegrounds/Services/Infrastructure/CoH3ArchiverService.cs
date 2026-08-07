@@ -50,7 +50,7 @@ public sealed class CoH3ArchiverService(CoH3 game, Configuration configuration, 
                 throw new InvalidOperationException("Essence Editor is not running.");
             }
             await _eeProcess.WaitForExitAsync();
-            if (_eeProcess.ExitCode != 0) {
+            if (_eeProcess.ExitCode != 0 && _eeProcess.ExitCode != -1073610751) { // -1073610751 is some weird error code that the Essence Editor sometimes returns on success, so we ignore it
                 string errorOutput = await _eeProcess.StandardError.ReadToEndAsync();
                 _logger.LogError("Essence Editor exiected with code 0x{Code}, stderr: {Error}", _eeProcess.ExitCode, errorOutput);
                 throw new InvalidOperationException($"Essence Editor exited with code {_eeProcess.ExitCode}: {errorOutput}");
