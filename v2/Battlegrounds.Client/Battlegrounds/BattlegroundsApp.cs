@@ -191,6 +191,10 @@ public sealed class BattlegroundsApp {
         services.AddTransient<CompanyBrowserView>();
         services.AddSingleton<CompanyBrowserViewModel>();
 
+        // Register News view
+        services.AddTransient<NewsView>();
+        services.AddSingleton<NewsViewModel>();
+
         // Register Company Editor view model
         services.AddTransient<CompanyEditorView>();
         services.AddSingleton<CompanyEditorViewModel>();
@@ -234,6 +238,8 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<IBlueprintService, BlueprintService>();
         services.AddSingleton<IStatisticsService, StatisticsService>();
         services.AddSingleton<IBrowserService, BrowserService>();
+        services.AddSingleton<INewsService, NewsService>();
+        services.AddSingleton<IImageCacheService, ImageCacheService>();
         services.AddSingleton<IUiScaleService, UiScaleService>();
         services.AddSingleton<IDoctrineService, DoctrineService>();
         services.AddSingleton<ICompanySerializer, BinaryCompanySerializer>();

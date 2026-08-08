@@ -19,16 +19,9 @@ public sealed class DialogModal(IServiceProvider serviceProvider) {
     private static DialogModal GetDefaultModel() {
         return new DialogModal(BattlegroundsApp.Instance!.ServiceProvider!);
     }
-
-    public async Task<DialogResult> CreateAndShowModalAsync(DialogType dialogType = DialogType.Confirm, string? header = null, string? description = null) {
-        DialogModalView view = _serviceProvider.GetRequiredService<DialogModalView>();
-        if (view.DataContext is not DialogModalViewModel viewModel) {
-            return default!;
-        }
-        viewModel.SetType(dialogType, header, description);
-        IDialogService dialogService = _serviceProvider.GetRequiredService<IDialogService>();
-        return await dialogService.ShowDialogAsync<DialogResult>(view);
-    }
+    
+    public Task<DialogResult> CreateAndShowModalAsync(DialogType dialogType = DialogType.Confirm, string? header = null, string? description = null)
+        => _serviceProvider.GetRequiredService<IDialogService>().ShowConfirmationAsync(dialogType, header, description);
 
     public static Task<DialogResult> ShowModalAsync(DialogType dialogType = DialogType.Confirm, string? header = null, string? description = null) {
         return GetDefaultModel().CreateAndShowModalAsync(dialogType, header, description);

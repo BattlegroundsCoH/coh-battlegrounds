@@ -99,6 +99,13 @@ public sealed class LobbyViewModelIntegrationTests : LobbyServerIntegrationTests
         ss.IsLoaded.Returns(Task.CompletedTask);
         services.AddSingleton(ss);
 
+        // HomeViewModel is pulled in transitively by MainWindowViewModel, so its news dependencies
+        // have to be resolvable here even though no lobby test touches the news feed.
+        var news = Substitute.For<INewsService>();
+        news.GetLatestAsync(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns([]);
+        services.AddSingleton(news);
+        services.AddSingleton(Substitute.For<IImageCacheService>());
+
         services.AddSingleton<UserViewModel>();
         services.AddSingleton<HomeViewModel>();
         services.AddSingleton<LoginViewModel>();
@@ -447,6 +454,11 @@ public sealed class LobbyViewModelIntegrationTests : LobbyServerIntegrationTests
         var ss2 = Substitute.For<IStatisticsService>();
         ss2.IsLoaded.Returns(Task.CompletedTask);
         services.AddSingleton(ss2);
+        // HomeViewModel is pulled in transitively by MainWindowViewModel.
+        var news2 = Substitute.For<INewsService>();
+        news2.GetLatestAsync(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns([]);
+        services.AddSingleton(news2);
+        services.AddSingleton(Substitute.For<IImageCacheService>());
         services.AddSingleton<UserViewModel>();
         services.AddSingleton<HomeViewModel>();
         services.AddSingleton<LoginViewModel>();

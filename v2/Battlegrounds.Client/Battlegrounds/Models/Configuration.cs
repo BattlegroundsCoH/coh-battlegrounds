@@ -161,6 +161,14 @@ public sealed class Configuration {
     public string LogsPath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "CoHBattlegrounds", "logs");
 
     /// <summary>
+    /// Gets or sets the file system path where downloaded remote images are cached.
+    /// </summary>
+    /// <remarks>Unlike the other paths this one lives under <c>%AppData%</c> rather than Documents:
+    /// the contents are disposable and re-downloadable, not user data. Deliberately carries no
+    /// <see cref="ConfigurationPropertyAttribute"/> — it is not something the user edits in Settings.</remarks>
+    public string ImageCachePath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CoHBattlegrounds", "cache", "images");
+
+    /// <summary>
     /// Gets or sets the configuration settings for Company of Heroes 2.
     /// </summary>
     [ConfigurationInclude()]
@@ -243,6 +251,17 @@ public sealed class Configuration {
     [ConfigurationSection("General", "General application settings", priority: 0)]
     [ConfigurationProperty("GitHub Repository", "The URL of the GitHub repository for the project. This can be used for reference or to direct users to the source code and issue tracker.", propertyType: ConfigurationPropertyType.String, developerModeOnly: true)]
     public string GithubRepository { get; set; } = "https://github.com/BattlegroundsCoH/coh-battlegrounds";
+
+    /// <summary>
+    /// Gets or sets the base URL of the public Battlegrounds website.
+    /// </summary>
+    /// <remarks>The client shows news previews only; clicking one hands off to
+    /// <c>{WebsiteUrl}/news/{slug}</c> in the user's browser for the article itself. This is
+    /// deliberately independent of <see cref="APIConfiguration.BaseUrl"/>, which defaults to the
+    /// test environment — a slug that only exists on the test API will 404 on the live site.</remarks>
+    [ConfigurationSection("General", "General application settings", priority: 0)]
+    [ConfigurationProperty("Website URL", "The base URL of the public Battlegrounds website. Used to open news articles in the browser.", propertyType: ConfigurationPropertyType.String, developerModeOnly: true)]
+    public string WebsiteUrl { get; set; } = "https://cohbattlegrounds.com";
 
     /// <summary>
     /// Gets or sets the last known placement of the main window.

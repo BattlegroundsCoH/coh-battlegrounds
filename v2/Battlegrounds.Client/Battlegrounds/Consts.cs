@@ -21,6 +21,16 @@ public static class Consts {
     ];
 
     /// <summary>
+    /// How often the dashboard card and the news page re-request the feed while they are on screen.
+    /// </summary>
+    /// <remarks>Comfortably longer than the API's own sixty-second edge cache on the news routes, so a
+    /// poll is usually answered by Cloudflare rather than by Postgres, and short enough that a freshly
+    /// published entry appears while someone is still looking at the page.
+    /// <para>Both pages stop polling the moment they are hidden — switching page, opening a lobby or
+    /// signing out — so this is an interval for a visible page, not a background heartbeat.</para></remarks>
+    public static readonly TimeSpan NewsRefreshInterval = TimeSpan.FromMinutes(2);
+
+    /// <summary>
     /// Represents the UTF-8 encoding, which is a character encoding capable of encoding all possible characters (code
     /// points) in Unicode.
     /// </summary>

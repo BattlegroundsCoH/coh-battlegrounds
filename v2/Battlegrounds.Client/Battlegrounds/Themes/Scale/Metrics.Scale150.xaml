@@ -55,6 +55,8 @@
     <sys:Double x:Key="Size.Icon.XXL">72</sys:Double>
     <sys:Double x:Key="Size.Icon.Huge">105</sys:Double>
     <sys:Double x:Key="Size.Dot">9</sys:Double>
+    <sys:Double x:Key="Size.NewsCover.ThumbWidth">144</sys:Double>
+    <sys:Double x:Key="Size.NewsGrid.MaxWidth">2100</sys:Double>
 
     <!-- ===================== Window ===================== -->
     <sys:Double x:Key="Size.Window.DefaultWidth">2580</sys:Double>
