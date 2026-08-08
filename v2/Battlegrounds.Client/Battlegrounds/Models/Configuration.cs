@@ -253,6 +253,17 @@ public sealed class Configuration {
     public string GithubRepository { get; set; } = "https://github.com/BattlegroundsCoH/coh-battlegrounds";
 
     /// <summary>
+    /// Gets or sets the base URL of the public Battlegrounds website.
+    /// </summary>
+    /// <remarks>The client shows news previews only; clicking one hands off to
+    /// <c>{WebsiteUrl}/news/{slug}</c> in the user's browser for the article itself. This is
+    /// deliberately independent of <see cref="APIConfiguration.BaseUrl"/>, which defaults to the
+    /// test environment — a slug that only exists on the test API will 404 on the live site.</remarks>
+    [ConfigurationSection("General", "General application settings", priority: 0)]
+    [ConfigurationProperty("Website URL", "The base URL of the public Battlegrounds website. Used to open news articles in the browser.", propertyType: ConfigurationPropertyType.String, developerModeOnly: true)]
+    public string WebsiteUrl { get; set; } = "https://cohbattlegrounds.com";
+
+    /// <summary>
     /// Gets or sets the last known placement of the main window.
     /// </summary>
     /// <remarks>Deliberately carries no <see cref="ConfigurationPropertyAttribute"/>: it is persisted state,
