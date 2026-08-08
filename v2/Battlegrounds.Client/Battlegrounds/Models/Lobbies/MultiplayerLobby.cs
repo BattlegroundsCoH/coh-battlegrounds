@@ -359,7 +359,7 @@ public sealed class MultiplayerLobby(
         }
         switch (eventType) {
             case LobbyEventType.ParticipantJoined:
-                var participantName = update.ParticipantUpdate.IsAi ? update.ParticipantUpdate.Name : (await userService.GetUserAsync(update.ParticipantUpdate.ParticipantId)).UserDisplayName;
+                var participantName = update.ParticipantUpdate.IsAi ? update.ParticipantUpdate.Name : (await _userService.GetUserAsync(update.ParticipantUpdate.ParticipantId)).UserDisplayName;
                 Participant joinedParticipant = new Participant(-1, update.ParticipantUpdate.ParticipantId, participantName, update.ParticipantUpdate.IsAi, update.ParticipantUpdate.Ready);
                 _participants.Add(joinedParticipant);
                 return new LobbyEvent(LobbyEventType.ParticipantJoined, joinedParticipant);
