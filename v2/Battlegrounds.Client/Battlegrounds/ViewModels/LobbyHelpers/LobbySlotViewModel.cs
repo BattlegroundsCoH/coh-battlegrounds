@@ -109,6 +109,11 @@ public sealed record LobbySlotViewModel(
 
     public bool IsReady => !string.IsNullOrEmpty(Slot.ParticipantId) && ParentContext.Model.GetParticipant(Slot.ParticipantId)?.IsReady is true && !IsHostSlot;
 
+    /// <summary>
+    /// Re-reads <see cref="IsReady"/>, which is derived from the participant rather than stored.
+    /// </summary>
+    public void NotifyReadyChanged() => PropertyChanged?.Invoke(this, new(nameof(IsReady)));
+
     public bool IsOccupiable => !HasOccupant && !Slot.Locked;
 
     /// <summary>Whether the host may pick an AI difficulty for this slot.</summary>

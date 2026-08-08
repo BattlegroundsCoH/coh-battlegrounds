@@ -39,9 +39,9 @@ namespace Battlegrounds.Models.Lobbies;
 /// <param name="userService">A service for managing user-related operations, such as retrieving the local user's token and information.</param>
 /// <param name="companyService">A service for managing company-related operations, such as retrieving and updating company data for participants.</param>
 public sealed class MultiplayerLobby(
-    string lobbyId, 
-    AsyncServerStreamingCall<LobbyStateUpdate> stateUpdater, 
-    LobbyService.LobbyServiceClient gRPCClient, 
+    string lobbyId,
+    AsyncServerStreamingCall<LobbyStateUpdate> stateUpdater,
+    LobbyService.LobbyServiceClient gRPCClient,
     LobbySetup setup,
     IBattlegroundsServerAPI serverAPI,
     IUserService userService,
@@ -142,7 +142,7 @@ public sealed class MultiplayerLobby(
             return 1;
         }
         return -1; // Team not found
-    } 
+    }
 
     public (Team? team, int slotId) GetLocalPlayerSlot() {
         var id = Array.FindIndex(_team1.Slots, x => x.ParticipantId == _localParticipant.ParticipantId);
@@ -620,7 +620,7 @@ public sealed class MultiplayerLobby(
 
         result.LobbyId = _lobbyId; // Ensure the lobby ID is set on the match result
 
-        var reported = await _serverAPI.ReportMatchResults(result, async (progress, done, totalBytes) => { 
+        var reported = await _serverAPI.ReportMatchResults(result, async (progress, done, totalBytes) => {
             if (done) {
                 await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TrayMessageHide)); // Notify the UI about the completed upload
             } else {
@@ -1062,7 +1062,7 @@ public sealed class MultiplayerLobby(
 
         await _companyService.SaveCompany(updatedCompany, syncWithRemote: false);
 
-        if (reportProgress) { 
+        if (reportProgress) {
             await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
                 Progress = 1.0f,
                 Completed = true
@@ -1125,7 +1125,19 @@ public sealed class MultiplayerLobby(
 
         _isReady = isReady;
 
-        await _internalEvents.Writer.WriteAsync(new LobbyEvent(eventType, isReady)); // Notify the UI about the ready state change
+        // Apply to our own participant as well, not just the lobby-level flag. A slot shows
+        // ready from Participant.IsReady, so without this the local player's own slot stayed
+        // un-readied until the server echoed the change back — and did not change at all if
+        // the echo never came. The RPC above has already succeeded, so this is not a guess.
+        var self = _participants.FirstOrDefault(p => p.ParticipantId == _localParticipant.ParticipantId);
+        if (self is not null) {
+            _participants.Remove(self);
+            _participants.Add(self with { IsReady = isReady });
+        } else {
+            _logger.Warning("Local participant {ParticipantId} is missing from the lobby's participants; ready state applied to the lobby only", _localParticipant.ParticipantId);
+        }
+
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(eventType, _localParticipant.ParticipantId));
     }
 
     public Task KickPlayer(Team team, int slotIndex) {
@@ -1189,6 +1201,13 @@ public sealed class MultiplayerLobby(
 
     public int GetTeam(Participant participant) {
         if (Team1.Participants.Contains(participant.ParticipantId))
+            return 0;
+        else
+            return 1;
+    }
+
+    public int GetTeam(string participantId) {
+        if (Team1.Participants.Contains(participantId))
             return 0;
         else
             return 1;

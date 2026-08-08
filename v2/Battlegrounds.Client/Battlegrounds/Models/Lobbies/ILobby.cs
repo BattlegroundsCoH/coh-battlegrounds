@@ -30,7 +30,7 @@ public interface ILobby {
     /// Gets a value indicating whether the current user is the host of the session.
     /// </summary>
     bool IsHost { get; }
-    
+
     /// <summary>
     /// Gets a value indicating whether the current instance is active.
     /// </summary>
@@ -41,7 +41,7 @@ public interface ILobby {
     long Revision => 0;
 
     /// <summary>
-    /// Gets a value indicating whether the user is marked as ready in the lobby. 
+    /// Gets a value indicating whether the user is marked as ready in the lobby.
     /// This indicates that the user has completed their setup and is prepared to start the match.
     /// </summary>
     bool IsReady { get; }
@@ -125,7 +125,7 @@ public interface ILobby {
     /// </summary>
     /// <remarks>
     /// This method allows you to asynchronously retrieve the next event that occurs in the lobby. It is useful for
-    /// handling lobby events in a non-blocking manner. Any visual updates or state changes that need to occur in response to lobby events should be performed after awaiting this method. 
+    /// handling lobby events in a non-blocking manner. Any visual updates or state changes that need to occur in response to lobby events should be performed after awaiting this method.
     /// If no events are available, the result will be null.
     /// </remarks>
     /// <returns>A value task that represents the asynchronous operation. The result contains the next available <see
@@ -143,13 +143,13 @@ public interface ILobby {
     /// <param name="participantId">The unique identifier of the participant to retrieve. Cannot be null or empty.</param>
     /// <returns>A <see cref="Participant"/> object representing the participant if found; otherwise, <see langword="null"/>.</returns>
     Participant? GetParticipant(string participantId);
-    
+
     /// <summary>
     /// Gets the number of real (non-bot) players currently present.
     /// </summary>
     /// <returns>The total count of real players. Returns 0 if no real players are present.</returns>
     int GetRealPlayersCount();
-    
+
     /// <summary>
     /// Launches the game process asynchronously.
     /// </summary>
@@ -171,7 +171,7 @@ public interface ILobby {
     /// indices for the team.</param>
     /// <returns>A task that represents the asynchronous remove operation.</returns>
     Task RemoveAI(Team team, int slotIndex);
-    
+
     /// <summary>
     /// Reports the result of a replay match analysis asynchronously.
     /// </summary>
@@ -197,7 +197,7 @@ public interface ILobby {
     /// <param name="faction">The faction to assign to the slot. Cannot be null or empty.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task SetCompany(Team team, int slotId, string id, string faction);
-    
+
     /// <summary>
     /// Asynchronously sets the current map to the specified value.
     /// </summary>
@@ -205,14 +205,14 @@ public interface ILobby {
     /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the map was set
     /// successfully; otherwise, <see langword="false"/>.</returns>
     Task<bool> SetMap(Map map);
-    
+
     /// <summary>
     /// Asynchronously updates the lobby configuration with the specified setting.
     /// </summary>
     /// <param name="newSetting">The new lobby setting to apply. Cannot be null.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task SetSetting(LobbySetting newSetting);
-    
+
     /// <summary>
     /// Sets the AI difficulty level for a specific slot on the given team.
     /// </summary>
@@ -274,7 +274,7 @@ public interface ILobby {
     /// <param name="slotIndex">The zero-based index of the player slot to remove. Must be within the valid range of player slots for the team.</param>
     /// <returns>A task that represents the asynchronous operation of removing the player.</returns>
     Task KickPlayer(Team team, int slotIndex);
-    
+
     /// <summary>
     /// Asynchronously retrieves the results of the completed match, if available.
     /// </summary>
@@ -283,7 +283,7 @@ public interface ILobby {
     /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="MatchOverData"/> object
     /// with the match results if the match has concluded; otherwise, <see langword="null"/>.</returns>
     Task<MatchOverData?> GetMatchResults();
-    
+
     /// <summary>
     /// Moves the local player to the specified team to the given slot asynchronously.
     /// </summary>
@@ -291,12 +291,14 @@ public interface ILobby {
     /// <param name="slotIndex">The zero-based index of the slot to move the team to. Must be within the valid range of available slots.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task MoveToSlot(Team team, int slotIndex);
-    
+
     /// <summary>
     /// Gets the team for the specified participant.
     /// </summary>
     /// <param name="participant">The participant to get the team for.</param>
     /// <returns>The team identifier.</returns>
     int GetTeam(Participant participant);
+
+    int GetTeam(string participantId);
 
 }

@@ -294,6 +294,10 @@ public class CoH3MatchDataBuilderTests {
         public int GetTeam(Participant participant) {
             throw new NotImplementedException();
         }
+
+        public int GetTeam(string participantId) {
+            throw new NotImplementedException();
+        }
     }
 
     #endregion
