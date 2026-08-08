@@ -65,7 +65,7 @@ public sealed class LobbySetting {
     public static readonly LobbySetting[] DefaultSettings = [
         new LobbySetting { Name = SETTING_GAMEMODE, Type = LobbySettingType.Selection, Options = [new("Domination", SETTING_OPTION_DOMINATION), new("Victory Points", SETTING_OPTION_VICTORY_POINTS)] },
         new LobbySetting { Name = SETTING_VICTORY_POINTS, Type = LobbySettingType.Selection, Options = [new("100 Points", "100"), new("500 Points", "500"), new("750 Points", "750"), new("1000 Points", "1000")], IsVisible = true },
-        new LobbySetting { Name = SETTING_SUPPLY_SYSTEM, Type = LobbySettingType.Selection, Options = [new("False", "0"), new("True", "1")], IsVisible = false },
+        new LobbySetting { Name = SETTING_SUPPLY_SYSTEM, Type = LobbySettingType.Selection, Options = [new("Off", "0"), new("On", "1")], IsVisible = false },
     ];
 
     /// <summary>

@@ -103,7 +103,7 @@ public sealed class MultiplayerLobbyFactory(IServiceProvider serviceProvider) {
             Name = currentState.Name,
             Self = MapProtoParticipant(currentState.Participants.FirstOrDefault(p => p.ParticipantId == selfUser.UserId) ?? throw new InvalidOperationException("Failed to identify self participant in lobby state.")),
             Map = Map.FromScenario(mapService.GetMapByScenarioName(game, currentState.Settings.TryGetValue("$map", out string scenarioName) ? scenarioName : string.Empty)),
-            Settings = [],
+            Settings = [..LobbySetting.DefaultSettings],
             Game = game,
             Participants = [.. currentState.Participants.Select(MapProtoParticipant)],
             Team1 = MapProtoTeam(currentState.Teams[0]),
