@@ -24,13 +24,13 @@ public sealed class LobbySetupFromConfigFactory(Configuration configuration, IGa
     private readonly IGameMapService _mapService = mapService ?? throw new ArgumentNullException(nameof(mapService), "Game map service cannot be null.");
     private readonly ILogger<LobbySetupFromConfigFactory> _logger = logger ?? throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
 
-    public ValueTask<LobbySetup> FromConfig(string name, Game game, User host) => FromConfig(name, game, host, _configuration);
+    public ValueTask<LobbySetup> FromConfig(string name, Game game, User host, bool isMultiplayer) => FromConfig(name, game, host, _configuration, isMultiplayer);
 
-    public async ValueTask<LobbySetup> FromConfig(string name, Game game, User host, Configuration configuration) {
+    public async ValueTask<LobbySetup> FromConfig(string name, Game game, User host, Configuration configuration, bool isMultiplayer) {
         Participant self = new Participant(0, host.UserId, host.UserDisplayName, false, true);
         HashSet<Participant> participants = [self];
-        var team1 = GetLatestTeamSetup(1, game, configuration, self, participants);
-        var team2 = GetLatestTeamSetup(2, game, configuration, self, participants);
+        var team1 = GetLatestTeamSetup(1, game, configuration, self, participants, isMultiplayer);
+        var team2 = GetLatestTeamSetup(2, game, configuration, self, participants, isMultiplayer);
         var lobbySetup = new LobbySetup {
             Name = name,
             Self = self,
@@ -56,12 +56,16 @@ public sealed class LobbySetupFromConfigFactory(Configuration configuration, IGa
         return settings;
     }
 
-    private static Team GetLatestTeamSetup(int idx, Game game, Configuration cfg, Participant self, HashSet<Participant> participants) {
+    private static Team GetLatestTeamSetup(int idx, Game game, Configuration cfg, Participant self, HashSet<Participant> participants, bool isMultiplayer) {
         var tt = cfg.GetTeamType(idx, game.Id);
         Team.Slot[] slots = new Team.Slot[4];
         for (int i = 0; i < 4; i++) {
             var cfgSlot = cfg.GetTeamSlot(idx, i, game.Id);
             string participantId = cfgSlot.IsLocal ? self.ParticipantId : string.Empty;
+            if (!cfgSlot.IsLocal && isMultiplayer) {
+                slots[i] = new Team.Slot(i, string.Empty, string.Empty, string.Empty, AIDifficulty.HUMAN, i != 0, false);
+                continue;
+            }
             if (!cfgSlot.IsLocal && !string.IsNullOrEmpty(cfgSlot.Faction)) {
                 int id = idx * 4 + i;
                 Participant aiParticipant = new Participant(id, id.ToString(), string.Empty, true, true);

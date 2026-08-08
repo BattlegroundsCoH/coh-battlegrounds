@@ -116,7 +116,7 @@ public sealed class LobbyService(
     private async Task<ILobby> CreateSingleplayerLobbyAsync(string name, Game game) {
         _logger.LogInformation("Creating singleplayer lobby with name: {LobbyName} for game: {GameId}", name, game.Id);
         var localUser = await _userService.GetLocalUserAsync() ?? throw new InvalidOperationException("Cannot create a singleplayer lobby without a local user.");
-        var lobbySetup = await _lobbySetupFromConfigFactory.FromConfig(name, game, localUser);
+        var lobbySetup = await _lobbySetupFromConfigFactory.FromConfig(name, game, localUser, false);
         return new SingleplayerLobby(lobbySetup, _serverAPI, _companyService);
     }
 
@@ -127,7 +127,7 @@ public sealed class LobbyService(
 
         try {
 
-            var lobbySetup = await _lobbySetupFromConfigFactory.FromConfig(name, game, localUser);
+            var lobbySetup = await _lobbySetupFromConfigFactory.FromConfig(name, game, localUser, true);
 
             var client = _clientFactory.CreateClient(_configuration);
 
@@ -218,7 +218,6 @@ public sealed class LobbyService(
         }
         try {
             var localUser = await _userService.GetLocalUserAsync() ?? throw new InvalidOperationException("Cannot join a lobby without a local user.");
-            var lobbySetup = await _lobbySetupFromConfigFactory.FromConfig(lobby.Name, game, localUser);
             var client = _clientFactory.CreateClient(_configuration);
             var joinRequest = new JoinLobbyRequest {
                 LobbyId = lobby.Id,

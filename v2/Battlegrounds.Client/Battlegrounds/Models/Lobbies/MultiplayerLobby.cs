@@ -838,8 +838,8 @@ public sealed class MultiplayerLobby(
     public async Task PublishInitialState() {
 
         // Tell server about the local lobby state
-        await PublishTeam(0, setup.Team1);
-        await PublishTeam(1, setup.Team2);
+        await PublishTeam(0, setup.Team1, includeSlots: true);
+        await PublishTeam(1, setup.Team2, includeSlots: true);
 
         // Publish settings
         foreach (var setting in setup.Settings) {
@@ -852,44 +852,60 @@ public sealed class MultiplayerLobby(
 
     }
 
-    private async Task PublishTeam(int tid, Team team) {
-        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
-            LobbyId = _lobbyId,
-            EventType = LobbyEventType.TeamUpdated.ToString(),
-            TeamUpdate = new Proto.Lobbies.Team {
-                Id = tid,
-                Alias = team.TeamAlias,
-                Type = team.TeamType.ToString(),
-                Slots = { team.Slots.Select(slot => new Slot {
-                    Id = slot.Index,
-                    ParticipantId = slot.ParticipantId ?? string.Empty,
-                    Faction = slot.Faction,
-                    CompanyId = slot.CompanyId,
-                    AiDifficulty = slot.Difficulty.Name,
-                    Hidden = slot.Hidden,
-                    Locked = slot.Locked
-                }) }
+    private async Task PublishTeam(int tid, Team team, bool includeSlots = false) {
+        try {
+            var slots = team.Slots.Select(slot => new Slot {
+                Id = slot.Index,
+                ParticipantId = slot.ParticipantId ?? string.Empty,
+                Faction = slot.Faction,
+                CompanyId = slot.CompanyId,
+                AiDifficulty = slot.Difficulty.Name,
+                Hidden = slot.Hidden,
+                Locked = slot.Locked
+            });
+            var update = new LobbyStateUpdate {
+                LobbyId = _lobbyId,
+                EventType = LobbyEventType.TeamUpdated.ToString(),
+                TeamUpdate = new Proto.Lobbies.Team {
+                    Id = tid,
+                    Alias = team.TeamAlias,
+                    Type = team.TeamType.ToString()
+                }
+            };
+            await _gRPCClient.UpdateLobbyStateAsync(update, GetGrpcMetadata());
+            if (includeSlots) {
+                foreach (var slot in slots) {
+                    await PublishSlot(tid, slot.Id, new Team.Slot(slot.Id, slot.ParticipantId, slot.Faction, slot.CompanyId, AIDifficulty.FromName(slot.AiDifficulty), slot.Hidden, slot.Locked));
+                }
             }
-        }, GetGrpcMetadata());
+        } catch (Exception ex) {
+            _logger.Error(ex, "Failed to publish team {TeamId} state to the server.", tid);
+            throw; // Rethrow the exception to allow the caller to handle it if needed
+        }
     }
 
     private async Task PublishSlot(int tid, int slotId, Team.Slot slot) {
-        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
-            LobbyId = _lobbyId,
-            EventType = LobbyEventType.SlotUpdated.ToString(),
-            SlotUpdate = new Proto.Lobbies.SlotUpdate {
-                TeamId = tid,
-                Slot = new Slot {
-                    Id = slotId,
-                    ParticipantId = slot.ParticipantId ?? string.Empty,
-                    Faction = slot.Faction,
-                    CompanyId = slot.CompanyId,
-                    AiDifficulty = slot.Difficulty.Name,
-                    Hidden = slot.Hidden,
-                    Locked = slot.Locked
-                }
-            },
-        }, GetGrpcMetadata());
+        try {
+            await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+                LobbyId = _lobbyId,
+                EventType = LobbyEventType.SlotUpdated.ToString(),
+                SlotUpdate = new Proto.Lobbies.SlotUpdate {
+                    TeamId = tid,
+                    Slot = new Slot {
+                        Id = slotId,
+                        ParticipantId = slot.ParticipantId ?? string.Empty,
+                        Faction = slot.Faction,
+                        CompanyId = slot.CompanyId,
+                        AiDifficulty = slot.Difficulty.Name,
+                        Hidden = slot.Hidden,
+                        Locked = slot.Locked
+                    }
+                },
+            }, GetGrpcMetadata());
+        } catch (Exception ex) {
+            _logger.Error(ex, "Failed to publish slot {SlotId} of team {TeamId} state to the server.", slotId, tid);
+            throw; // Rethrow the exception to allow the caller to handle it if needed
+        }
     }
 
     private async Task PublishSetting(LobbySetting setting) {
