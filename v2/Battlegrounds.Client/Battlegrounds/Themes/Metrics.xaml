@@ -93,6 +93,24 @@
     <!-- Status dot: the ready/unready pip on a lobby slot. -->
     <sys:Double x:Key="Size.Dot">6</sys:Double>
 
+    <!-- ===================== News ===================== -->
+    <!--
+        Cover art is remote and authored at a fixed ratio — 16:9 — so unlike an icon it is not
+        square and does not belong on the Size.Icon.* ladder.
+
+        Only the dashboard thumbnail's width is a token. Every cover height is derived from the
+        box's own width by AspectRatioConverter instead, because the tiles on the NEWS page are
+        fluid: a fixed height matched the art at exactly one window width and letterboxed it at
+        every other.
+
+        The grid cap keeps a maximised window from stretching three tiles across the whole
+        display. Cover height follows tile width, so uncapped the art grew until a single row
+        filled the viewport.
+    -->
+
+    <sys:Double x:Key="Size.NewsCover.ThumbWidth">96</sys:Double>
+    <sys:Double x:Key="Size.NewsGrid.MaxWidth">1400</sys:Double>
+
     <!-- ===================== Breakpoints ===================== -->
     <!--
         Width thresholds for Responsive.Breakpoint: below Medium is Compact, at or above
