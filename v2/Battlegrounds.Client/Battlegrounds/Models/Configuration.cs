@@ -161,6 +161,14 @@ public sealed class Configuration {
     public string LogsPath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "my games", "CoHBattlegrounds", "logs");
 
     /// <summary>
+    /// Gets or sets the file system path where downloaded remote images are cached.
+    /// </summary>
+    /// <remarks>Unlike the other paths this one lives under <c>%AppData%</c> rather than Documents:
+    /// the contents are disposable and re-downloadable, not user data. Deliberately carries no
+    /// <see cref="ConfigurationPropertyAttribute"/> — it is not something the user edits in Settings.</remarks>
+    public string ImageCachePath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CoHBattlegrounds", "cache", "images");
+
+    /// <summary>
     /// Gets or sets the configuration settings for Company of Heroes 2.
     /// </summary>
     [ConfigurationInclude()]
