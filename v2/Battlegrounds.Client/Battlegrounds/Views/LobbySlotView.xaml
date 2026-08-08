@@ -1,0 +1,377 @@
+<UserControl x:Class="Battlegrounds.Views.LobbySlotView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:behaviors="clr-namespace:Battlegrounds.Behaviors"
+             xmlns:converters="clr-namespace:Battlegrounds.Converters"
+             xmlns:controls="clr-namespace:Battlegrounds.Controls"
+             xmlns:lobbyhelpers="clr-namespace:Battlegrounds.ViewModels.LobbyHelpers"
+             d:DataContext="{d:DesignInstance Type=lobbyhelpers:LobbySlotViewModel}"
+             mc:Ignorable="d"
+             d:DesignWidth="520">
+
+    <!--
+        One player slot.
+
+        Two lines when occupied, one when not. The previous single-row slot asked for
+        ~630px of fixed-width controls — a 280px company combo, a 220px difficulty combo,
+        a lock and an avatar — inside a team column that is ~530px wide on the default
+        window and ~330px at the minimum. It was over budget at every supported size,
+        which is why the selectors clipped. Splitting identity from company lets the
+        selectors take a *share* of the column instead of a fixed slice of it, so nothing
+        has a width to outgrow.
+
+        An empty slot carries neither an avatar nor a company — just its label and the two
+        actions available on it — but it keeps the same overall height as an occupied one,
+        so the two teams' bars line up.
+
+        Nothing here carries a literal Width or Height for the same reason: the UI scale
+        grows the type inside a control but cannot grow a frozen box around it.
+
+        State is expressed with per-element Style.Triggers rather than one trigger block at
+        the root: FrameworkElement.Triggers accepts only EventTriggers, and Setter.TargetName
+        is a ControlTemplate facility. A style on the element it styles needs neither.
+    -->
+
+    <UserControl.Resources>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:InvertedBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+        <converters:ValidCompanyVisibilityConverter x:Key="ValidCompanyVisibilityConverter"/>
+        <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
+        <converters:LockImageConverter x:Key="LockImageConverter"/>
+        <converters:LockStateConverter x:Key="LockStateConverter"/>
+        <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
+        <converters:DownloadProgressArcConverter x:Key="DownloadProgressArcConverter"/>
+
+        <!--
+            The closed field reuses a ComboBox's ItemTemplate, so anything in here also
+            renders inside the field. That is what broke before: the item template carried
+            an Inspect button, which then sat on top of the field's chevron. Keep this to
+            the identity of the company and nothing else — Inspect is a sibling control.
+        -->
+        <DataTemplate x:Key="CompanyOptionTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Width="{DynamicResource Size.Icon.S}"
+                       Height="{DynamicResource Size.Icon.S}"
+                       Margin="0,0,8,0"
+                       VerticalAlignment="Center">
+                    <Image.Source>
+                        <MultiBinding Converter="{StaticResource FactionIconConverter}">
+                            <Binding Path="Company.Faction"/>
+                            <Binding Path="Company.GameId"/>
+                        </MultiBinding>
+                    </Image.Source>
+                </Image>
+
+                <TextBlock Grid.Column="1"
+                           Text="{Binding DisplayName}"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"/>
+            </Grid>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <Border Margin="0,0,0,8"
+            Background="{StaticResource Brush.Surface.Card}"
+            BorderThickness="{StaticResource Stroke.Hairline}"
+            Visibility="{Binding Slot.Hidden, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+        <Border.Style>
+            <Style TargetType="Border">
+                <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Hairline}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsLocalPlayer}" Value="True">
+                        <Setter Property="BorderBrush" Value="{StaticResource Brush.Accent.Gold}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+
+        <!-- The alliance edge. Metrics.xaml names Stroke.EdgeLeft for exactly this. -->
+        <Border BorderThickness="{StaticResource Stroke.EdgeLeft}">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Transparent}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Alliance}" Value="Allies">
+                            <Setter Property="BorderBrush" Value="{StaticResource Brush.Faction.Allies}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Alliance}" Value="Axis">
+                            <Setter Property="BorderBrush" Value="{StaticResource Brush.Faction.Axis}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+
+            <Grid Margin="{DynamicResource Space.Row}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>  <!-- Avatar -->
+                    <ColumnDefinition Width="*"/>     <!-- Identity and controls -->
+                    <ColumnDefinition Width="Auto"/>  <!-- Lock -->
+                </Grid.ColumnDefinitions>
+                <!--
+                    Both rows are shared-size, scoped by the teams grid in LobbyView. Every
+                    slot therefore measures to the same two row heights whatever it holds,
+                    which is what keeps the bars level without anyone naming a pixel height
+                    that would then have to be maintained across three UI scales.
+                -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" SharedSizeGroup="SlotIdentity"/>
+                    <RowDefinition Height="Auto" SharedSizeGroup="SlotControls"/>
+                </Grid.RowDefinitions>
+
+                <!-- Avatar. An empty slot has nobody to picture, so the whole column
+                     collapses and the label starts at the slot's edge. -->
+                <Grid Grid.Column="0" Grid.RowSpan="2"
+                      Margin="0,0,12,0"
+                      VerticalAlignment="Center"
+                      Visibility="{Binding HasOccupant, Converter={StaticResource BoolToVisibilityConverter}}">
+
+                    <Ellipse Width="{DynamicResource Size.Icon.XL}"
+                             Height="{DynamicResource Size.Icon.XL}">
+                        <Ellipse.Style>
+                            <Style TargetType="Ellipse">
+                                <Setter Property="Fill">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="pack://application:,,,/Battlegrounds;component/Assets/dummy_avatar.png"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <!-- Ring plus glow. The glow is what reads as "ready" at
+                                         a glance across a full 4v4; the 1px ring alone is
+                                         easy to miss. -->
+                                    <DataTrigger Binding="{Binding IsReady}" Value="True">
+                                        <Setter Property="Stroke" Value="{StaticResource Brush.Status.Success}"/>
+                                        <Setter Property="StrokeThickness" Value="1"/>
+                                        <Setter Property="Effect">
+                                            <Setter.Value>
+                                                <DropShadowEffect Color="{StaticResource Color.Green.500}" BlurRadius="10" ShadowDepth="0"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="ToolTip">
+                                            <Setter.Value>
+                                                <ToolTip Content="Ready" Style="{StaticResource ToolTip.Default}"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Ellipse.Style>
+                    </Ellipse>
+
+                    <!--
+                        Company download progress doughnut (overlays avatar, hidden when progress = 0).
+
+                        The Viewbox is load-bearing: the geometry below is authored against a
+                        40x40 box (centre 20,20, radii 16 and 10) and DownloadProgressArcConverter
+                        emits arcs in those same coordinates. Resizing the container alone would
+                        leave the donut drawn at 40px inside it. The Viewbox scales the whole
+                        40x40 design box up to the icon token instead.
+                    -->
+                    <Viewbox Width="{DynamicResource Size.Icon.XL}"
+                             Height="{DynamicResource Size.Icon.XL}"
+                             Stretch="Uniform"
+                             Visibility="Collapsed">
+
+                        <!-- TODO: Use this:
+                        Visibility="{Binding CompanyDownloadProgress, Converter={StaticResource ZeroToVisibilityConverter}}"
+                        -->
+
+                        <Grid Width="40" Height="40">
+
+                            <!-- Background track ring (full donut, semi-transparent) -->
+                            <Path Fill="{StaticResource Brush.Surface.Track}">
+                                <Path.Data>
+                                    <PathGeometry FillRule="EvenOdd">
+                                        <PathFigure StartPoint="20,4" IsClosed="True">
+                                            <ArcSegment Point="20,36" Size="16,16" IsLargeArc="True" SweepDirection="Clockwise"/>
+                                            <ArcSegment Point="20,4"  Size="16,16" IsLargeArc="True" SweepDirection="Clockwise"/>
+                                        </PathFigure>
+                                        <PathFigure StartPoint="20,10" IsClosed="True">
+                                            <ArcSegment Point="20,30" Size="10,10" IsLargeArc="True" SweepDirection="Clockwise"/>
+                                            <ArcSegment Point="20,10" Size="10,10" IsLargeArc="True" SweepDirection="Clockwise"/>
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+
+                            <!-- Progress arc -->
+                            <Path Fill="{StaticResource Brush.Accent.Gold}"
+                                  Data="{Binding CompanyDownloadProgress, Converter={StaticResource DownloadProgressArcConverter}}"/>
+
+                        </Grid>
+                    </Viewbox>
+                </Grid>
+
+                <!-- ===== Identity line ===== Who is in the slot. Nothing to say when empty. -->
+                <Grid Grid.Column="1" Grid.Row="0"
+                      Visibility="{Binding HasOccupant, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="{Binding DisplayName}"
+                               Style="{StaticResource Text.Strong}"
+                               VerticalAlignment="Center"
+                               TextWrapping="NoWrap"
+                               TextTrimming="CharacterEllipsis"/>
+
+                    <controls:StatusBadge Grid.Column="1"
+                                          Content="READY"
+                                          Tone="Success"
+                                          Margin="8,0,0,0"
+                                          Visibility="{Binding IsReady, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </Grid>
+
+                <!--
+                    ===== Controls line =====
+
+                    Always laid out, never collapsed, and floored at one control height:
+                    that is what keeps every slot the same height, so the two teams' bars
+                    line up whether a slot holds a player, an AI, or nobody. Collapsing it
+                    for empty slots left short bars sitting beside tall ones.
+
+                    Each control decides for itself whether it appears. An empty slot has
+                    no company, so it shows only the two things you can do to it — claim it,
+                    or turn it into an AI.
+                -->
+                <Grid MinHeight="{DynamicResource Size.Control}">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Grid.Column" Value="1"/>
+                            <Setter Property="Grid.Row" Value="1"/>
+                            <Setter Property="Margin" Value="0,8,0,0"/>
+                            <Style.Triggers>
+                                <!-- With no identity line above it, this is the slot's only
+                                     content, so it takes the whole box and centres — which
+                                     puts it on the lock button's line rather than below it. -->
+                                <DataTrigger Binding="{Binding HasOccupant}" Value="False">
+                                    <Setter Property="Grid.Row" Value="0"/>
+                                    <Setter Property="Grid.RowSpan" Value="2"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>     <!-- Company, or the empty-slot label -->
+                        <ColumnDefinition Width="Auto"/>  <!-- Inspect -->
+                        <ColumnDefinition Width="Auto"/>  <!-- Move here -->
+                        <ColumnDefinition Width="Auto"/>  <!-- AI difficulty -->
+                    </Grid.ColumnDefinitions>
+
+                    <!-- The empty-slot label sits in the company column, which is by
+                         definition free when there is nobody to have a company. -->
+                    <TextBlock Grid.Column="0"
+                               VerticalAlignment="Center"
+                               TextWrapping="NoWrap"
+                               TextTrimming="CharacterEllipsis"
+                               Foreground="{StaticResource Brush.Text.Dim}"
+                               FontStyle="Italic"
+                               Visibility="{Binding HasOccupant, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource Text.Strong}">
+                                <Setter Property="Text" Value="Open Slot"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Slot.Locked}" Value="True">
+                                        <Setter Property="Text" Value="Locked Slot"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <!-- Company picker. Star-sized: it gives up width to INSPECT rather
+                         than pushing it off the row. -->
+                    <ComboBox Grid.Column="0"
+                              ItemsSource="{Binding AvailableCompanies}"
+                              ItemTemplate="{StaticResource CompanyOptionTemplate}"
+                              SelectedItem="{Binding DraftSelectedCompany, Mode=TwoWay}"
+                              behaviors:SelectionChangedCommandBehavior.Command="{Binding SetCompanyCommand}"
+                              behaviors:SelectionChangedCommandBehavior.CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Self}}"
+                              Style="{StaticResource ComboBox.Default}"
+                              Visibility="{Binding CanPickCompany, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                    <!-- Someone else's company: the same information, not editable. -->
+                    <Button Grid.Column="0"
+                            HorizontalContentAlignment="Left"
+                            Style="{StaticResource Button.Subtle}"
+                            Command="{Binding ShowCompanyPreviewCommand}"
+                            Visibility="{Binding ShowsCompanyReadOnly, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="{DynamicResource Size.Icon.S}"
+                                   Height="{DynamicResource Size.Icon.S}"
+                                   VerticalAlignment="Center">
+                                <Image.Source>
+                                    <MultiBinding Converter="{StaticResource FactionIconConverter}">
+                                        <Binding Path="SelectedCompany.Faction"/>
+                                        <Binding Path="SelectedCompany.GameId"/>
+                                    </MultiBinding>
+                                </Image.Source>
+                            </Image>
+                            <TextBlock Text="{Binding SelectedCompany.DisplayName}"
+                                       Margin="8,0,0,0"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{StaticResource Brush.Text.Body}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Grid.Column="1"
+                            Content="INSPECT"
+                            Margin="8,0,0,0"
+                            Style="{StaticResource Button.Subtle}"
+                            Command="{Binding DraftSelectedCompany.ShowCompanyPreviewCommand}"
+                            Visibility="{Binding DraftSelectedCompany, Converter={StaticResource ValidCompanyVisibilityConverter}}"/>
+
+                    <!-- Claiming an empty slot, immediately before the difficulty picker:
+                         the two things anyone can do with a slot nobody is sitting in. -->
+                    <Button Grid.Column="2"
+                            Content="MOVE HERE"
+                            Margin="8,0,0,0"
+                            Style="{StaticResource Button.Primary}"
+                            Command="{Binding MoveToSlotCommand}"
+                            CommandParameter="{Binding Slot.Index}"
+                            Visibility="{Binding IsOccupiable, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                    <!-- Auto-sized in an Auto column: the difficulty captions are short and
+                         fixed, so it measures to its own content and can never clip. -->
+                    <ComboBox Grid.Column="3"
+                              Margin="8,0,0,0"
+                              ItemsSource="{Binding AvailableAIDifficulties}"
+                              SelectedItem="{Binding DraftSelectedAIDifficulty, Mode=TwoWay}"
+                              DisplayMemberPath="DisplayName"
+                              behaviors:SelectionChangedCommandBehavior.Command="{Binding DifficultyCommand}"
+                              behaviors:SelectionChangedCommandBehavior.CommandParameter="{Binding SelectedItem.Difficulty, RelativeSource={RelativeSource Self}}"
+                              Style="{StaticResource ComboBox.Default}"
+                              Visibility="{Binding CanPickAIDifficulty, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </Grid>
+
+                <!-- Lock/unlock. Host-only, and only on a slot nobody is sitting in. -->
+                <Button Grid.Column="2" Grid.RowSpan="2"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource Button.Bare}"
+                        ToolTip="{Binding Slot.Locked, Converter={StaticResource LockStateConverter}}"
+                        Command="{Binding LockUnlockCommand}"
+                        CommandParameter="{Binding Slot.Index}"
+                        Visibility="{Binding CanToggleLock, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Image Width="{DynamicResource Size.Icon.M}"
+                           Height="{DynamicResource Size.Icon.M}"
+                           Source="{Binding Slot.Locked, Converter={StaticResource LockImageConverter}}"/>
+                </Button>
+
+            </Grid>
+        </Border>
+    </Border>
+
+</UserControl>

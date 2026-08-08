@@ -111,6 +111,18 @@ public sealed record LobbySlotViewModel(
 
     public bool IsOccupiable => !HasOccupant && !Slot.Locked;
 
+    /// <summary>Whether the host may pick an AI difficulty for this slot.</summary>
+    public bool CanPickAIDifficulty => ParentContext.IsHost && CanSetAIDifficulty;
+
+    /// <summary>Whether to offer a company picker — an empty slot has no company to pick for.</summary>
+    public bool CanPickCompany => HasOccupant && CanSetCompany;
+
+    /// <summary>Whether to show someone else's company read-only, for the same reason.</summary>
+    public bool ShowsCompanyReadOnly => HasOccupant && !CanSetCompany;
+
+    /// <summary>Whether the host may lock or unlock this slot — only ones nobody is sitting in.</summary>
+    public bool CanToggleLock => ParentContext.IsHost && string.IsNullOrEmpty(DisplayName);
+
     public bool CanSetCompany => (ParentContext.IsHost && Slot.Difficulty != AIDifficulty.HUMAN && !Slot.Locked) || (Slot.ParticipantId == ParentContext.Model.GetLocalPlayerId());
 
     public bool CanKickOccupant => ParentContext.IsHost && Slot.Difficulty == AIDifficulty.HUMAN && !string.IsNullOrEmpty(Slot.ParticipantId) && Slot.ParticipantId != ParentContext.Model.GetLocalPlayerId();

@@ -107,6 +107,12 @@ Rules that are load-bearing, not stylistic:
 - Red is the primary CTA *and* the destructive colour — `Button.Cta` and `Button.Danger`
   differ by size and tracking, not hue. That is faithful to the design.
 
+`Themes/Controls/` currently holds `Button.xaml`, `ComboBox.xaml`, `TextInput.xaml`,
+`Selection.xaml` (CheckBox, Slider), `ScrollViewer.xaml`, `Feedback.xaml` and `Surfaces.xaml`.
+A control with no style there renders stock WPF chrome — rounded, blue, Aero-era — which reads
+as a bolted-on control rather than a broken one, so it survives review. Add the style when you
+first need the control.
+
 **Reusable controls** live in `Controls/` (lookless, C#) with their default styles in
 `Themes/Controls/Surfaces.xaml`, reached through `Themes/Generic.xaml`: `Card`, `PageHeader`,
 `Eyebrow`, `StatTile`, `StatusBadge`. Use these instead of hand-assembling a `Border` — that
@@ -173,10 +179,19 @@ that the scale does not model, and naming each one would be worse than leaving i
 that governs how the UI feels at larger scales — card, button, field and row padding — lives in
 the theme layer and does scale.
 
-**Scaling a container does not scale fixed-coordinate vector art.** `LobbyView`'s download-progress
-donut is authored against a 40x40 box (and `DownloadProgressArcConverter` emits arcs in those
-coordinates), so it sits in a `Viewbox` that scales the design box. Resizing the container alone
-would have left the art drawn at 40px inside it.
+**Scaling a container does not scale fixed-coordinate vector art.** `LobbySlotView`'s
+download-progress donut is authored against a 40x40 box (and `DownloadProgressArcConverter` emits
+arcs in those coordinates), so it sits in a `Viewbox` that scales the design box. Resizing the
+container alone would have left the art drawn at 40px inside it.
+
+**A control with a fixed `Width` or `Height` does not scale either, and that is the failure the
+lobby was built out of.** Its slots packed ~630px of literal-width selectors into a ~330–530px
+team column, and a `Height="30"` combo kept a 30px box while the type inside it grew to 16px at
+125%. Views should size controls with star shares, `Auto`, `Min*` and the `Size.*` tokens; a
+literal `Width`/`Height` on an interactive control is nearly always a bug waiting for the next
+scale step. Where a control template needs an inset that includes room for chrome — the ComboBox
+reserving a lane for its chevron — the inset is a `Thickness` token (`Space.ComboField`) driven
+through `Padding`, not a literal in the template.
 
 **Fluid layout.** Panels take a share of the space with `Min`/`Max` bounds rather than a fixed
 width, so extra width on a large window is shared instead of all landing on one column — e.g.
@@ -226,6 +241,15 @@ coordinates are `double?`, not NaN-sentinelled — `System.Text.Json` throws on 
 `ControlAssist` supplies per-variant hover/pressed brushes and input placeholders so a single
 `ControlTemplate` serves every button variant. It exists because `Setter.Value` cannot be a
 binding in WPF, which is what normally forces a copy of the template per variant.
+
+**Attached behaviours (`Behaviors/`) are how a view commits a draft.** Several view-models keep a
+draft value separate from the confirmed one and expose an `ApplyCommand` — the split is
+deliberate and unit-tested, so "apply on change" is a *view* decision, not a reason to collapse
+the two in the view-model. `SelectionChangedCommandBehavior` (ComboBox),
+`ToggleCommandBehavior` (CheckBox) and `ValueCommittedCommandBehavior` (Slider, on drag-complete
+rather than per tick) each fire a command from a control's own notion of "the user is done".
+They all defer through the dispatcher, because the bound property is written by the binding
+*after* the event and executing inline would send the previous value.
 
 **Reviewing the system:** `dotnet run --project Battlegrounds/Battlegrounds.csproj -- --gallery`
 opens a window rendering every token, type style, control and state on one page. It

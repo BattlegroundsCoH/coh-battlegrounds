@@ -25,6 +25,8 @@
     <Thickness x:Key="Space.Card">33</Thickness>
     <Thickness x:Key="Space.Row">14,18</Thickness>
     <Thickness x:Key="Space.Field">21,18</Thickness>
+    <Thickness x:Key="Space.FieldInset">21,0</Thickness>
+    <Thickness x:Key="Space.ComboField">18,0,45,0</Thickness>
     <Thickness x:Key="Space.Button">27,14</Thickness>
     <Thickness x:Key="Space.ButtonLarge">48,23</Thickness>
     <Thickness x:Key="Space.HeadingGap">0,0,0,21</Thickness>

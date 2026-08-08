@@ -31,6 +31,24 @@
     <Thickness x:Key="Space.Card">22</Thickness>
     <Thickness x:Key="Space.Row">9,12</Thickness>
     <Thickness x:Key="Space.Field">14,12</Thickness>
+
+    <!--
+        Single-line field interior. Horizontal only, so the height comes from Size.Control
+        and centred content, exactly as it does for a ComboBox. With vertical padding the
+        two never matched: a text box was Size.Control *plus* its padding, so it stood
+        taller than every control beside it and the gap widened at each UI scale.
+
+        A multi-line field would want Space.Field instead — there are none today.
+    -->
+    <Thickness x:Key="Space.FieldInset">14,0</Thickness>
+
+    <!--
+        ComboBox interior. The right inset is wider than the left because it also reserves
+        room for the chevron, which is drawn over the field rather than laid out beside it.
+        It is a token rather than a literal in the template so that it grows with the type
+        at higher UI scales — a frozen reserve is what let 16px text collide with the arrow.
+    -->
+    <Thickness x:Key="Space.ComboField">12,0,30,0</Thickness>
     <Thickness x:Key="Space.Button">18,9</Thickness>
     <Thickness x:Key="Space.ButtonLarge">32,15</Thickness>
 

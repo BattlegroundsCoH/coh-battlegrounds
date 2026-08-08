@@ -35,6 +35,7 @@
         <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/Button.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/TextInput.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/ComboBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/Selection.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/Feedback.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/Surfaces.xaml" />
 

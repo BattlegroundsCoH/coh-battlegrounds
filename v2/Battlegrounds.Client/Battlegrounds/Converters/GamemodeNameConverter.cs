@@ -16,11 +16,16 @@ public sealed class GamemodeNameConverter : IValueConverter {
         { LobbySetting.SETTING_SUPPLY_SYSTEM, "Supply System" },
     };
 
+    /// <summary>
+    /// Converts a gamemode identifier to its display name, upper-cased when the converter
+    /// parameter is <c>upper</c> — settings panels label their controls in caps.
+    /// </summary>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-        if (value is string gamemode && GamemodeNames.TryGetValue(gamemode, out var name)) {
-            return name;
+        if (value is not string gamemode) {
+            return value;
         }
-        return value;
+        var name = GamemodeNames.TryGetValue(gamemode, out var display) ? display : gamemode;
+        return parameter is "upper" ? name.ToUpperInvariant() : name;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {

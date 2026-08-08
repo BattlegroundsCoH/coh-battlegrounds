@@ -44,7 +44,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
     private ICollection<Map> _availableMaps = [];
     private readonly ObservableCollection<LobbySettingViewModel> _settings = [];
 
-    private PickableChatChannel _selectedChatChannel = new PickableChatChannel("all"); // TODO: Support chat channels properly
+    private ChatChannel _selectedChatChannel = ChatChannel.All;
     private Map _selectedMap;
     private Map _draftSelectedMap;
 
@@ -245,13 +245,35 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
         }
     } = string.Empty;
 
-    public PickableChatChannel[] AvailableChatChannels => [new PickableChatChannel("all"), new PickableChatChannel("team")];
-
-    public PickableChatChannel SelectedChatChannel {
+    /// <summary>
+    /// The channel outgoing chat is sent on.
+    /// </summary>
+    /// <remarks>
+    /// Surfaced to the view as the two booleans below rather than as a list: there are exactly
+    /// two channels, so the lobby shows them as a pair of tabs instead of a dropdown.
+    /// </remarks>
+    public ChatChannel SelectedChatChannel {
         get => _selectedChatChannel;
         set {
             if (_selectedChatChannel == value) return;
             _selectedChatChannel = value;
+            PropertyChanged?.Invoke(this, new(nameof(SelectedChatChannel)));
+            PropertyChanged?.Invoke(this, new(nameof(IsAllChannelSelected)));
+            PropertyChanged?.Invoke(this, new(nameof(IsTeamChannelSelected)));
+        }
+    }
+
+    public bool IsAllChannelSelected {
+        get => _selectedChatChannel is ChatChannel.All;
+        set {
+            if (value) SelectedChatChannel = ChatChannel.All;
+        }
+    }
+
+    public bool IsTeamChannelSelected {
+        get => _selectedChatChannel is ChatChannel.Team;
+        set {
+            if (value) SelectedChatChannel = ChatChannel.Team;
         }
     }
 
@@ -660,11 +682,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
             msg = msg[..MAX_CHAT_MESSAGE_LENGTH]; // Limit chat message length to MAX_CHAT_MESSAGE_LENGTH characters
             SystemWarnMessageTooLong(); // Warn user that message was truncated
         }
-        await _lobby.SendMessage(SelectedChatChannel.ChannelName switch {
-            "all" => ChatChannel.All,
-            "team" => ChatChannel.Team,
-            _ => ChatChannel.All // Default to All if unknown channel
-        }, msg);
+        await _lobby.SendMessage(SelectedChatChannel, msg);
     }
 
     private void SystemWarnMessageTooLong() {
