@@ -1,5 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
+using Battlegrounds.Models;
+
 namespace Battlegrounds.Facades.API;
 
 public sealed record LoginRequest(
@@ -134,5 +136,13 @@ public interface IBattlegroundsWebAPI {
     Task<byte[]?> DownloadResourceAsync(string resourceId);
 
     string GetResourceUrl(string resourceId);
+
+    /// <summary>
+    /// Asynchronously retrieves user information based on the provided user ID.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="User"/>
+    /// object with the user's information, or <see langword="null"/> if the user is not found or an error occurs.</returns>
+    Task<User?> GetUserAsync(string userId);
 
 }

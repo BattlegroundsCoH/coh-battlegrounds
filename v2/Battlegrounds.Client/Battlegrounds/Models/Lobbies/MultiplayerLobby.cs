@@ -201,7 +201,7 @@ public sealed class MultiplayerLobby(
             try {
                 if (await _stateUpdater.ResponseStream.MoveNext(token)) {
                     reconnectAttempt = 0;
-                    var lobbyEvent = MapAndApplyGrpcEvent(_stateUpdater.ResponseStream.Current);
+                    var lobbyEvent = await MapAndApplyGrpcEvent(_stateUpdater.ResponseStream.Current);
                     if (lobbyEvent is not null) {
                         _internalEvents.Writer.TryWrite(lobbyEvent with { Revision = Revision }); // Map the gRPC update to a LobbyEvent and push it to the internal channel
                     }
@@ -348,7 +348,7 @@ public sealed class MultiplayerLobby(
 
     // Maps a gRPC lobby state update to a LobbyEvent and applies the necessary changes to the local lobby state. If the update type is unrecognized, returns null.
     // The returned type is for triggering UI updates based on the event, as some events may not require a UI update.
-    private LobbyEvent? MapAndApplyGrpcEvent(LobbyStateUpdate? update) { 
+    private async Task<LobbyEvent?> MapAndApplyGrpcEvent(LobbyStateUpdate? update) { 
         if (update == null) {
             return null;
         }
@@ -359,10 +359,20 @@ public sealed class MultiplayerLobby(
         }
         switch (eventType) {
             case LobbyEventType.ParticipantJoined:
-                Participant joinedParticipant = new Participant(-1, update.ParticipantUpdate.ParticipantId, update.ParticipantUpdate.Name, update.ParticipantUpdate.IsAi, update.ParticipantUpdate.Ready);
+                var participantName = update.ParticipantUpdate.IsAi ? update.ParticipantUpdate.Name : (await userService.GetUserAsync(update.ParticipantUpdate.ParticipantId)).UserDisplayName;
+                Participant joinedParticipant = new Participant(-1, update.ParticipantUpdate.ParticipantId, participantName, update.ParticipantUpdate.IsAi, update.ParticipantUpdate.Ready);
                 _participants.Add(joinedParticipant);
                 return new LobbyEvent(LobbyEventType.ParticipantJoined, joinedParticipant);
             case LobbyEventType.ParticipantLeft:
+                var participantTeam = _team1.Participants.Contains(update.ParticipantUpdate.ParticipantId) ? _team1 : _team2;
+                var slotIndex = Array.FindIndex(participantTeam.Slots, s => s.ParticipantId == update.ParticipantUpdate.ParticipantId);
+                if (slotIndex != -1) {
+                    participantTeam.Slots[slotIndex] = participantTeam.Slots[slotIndex] with {
+                        ParticipantId = string.Empty,
+                        CompanyId = string.Empty,
+                        Hidden = false
+                    };
+                }
                 var leftParticipant = _participants.FirstOrDefault(p => p.ParticipantId == update.ParticipantUpdate.ParticipantId);
                 if (leftParticipant is not null) {
                     _participants.Remove(leftParticipant);

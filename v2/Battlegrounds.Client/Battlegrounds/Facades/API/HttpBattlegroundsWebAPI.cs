@@ -235,4 +235,38 @@ public sealed class HttpBattlegroundsWebAPI(
 
     }
 
+    public async Task<User?> GetUserAsync(string userId) {
+
+        string endpoint = $"{BaseUrl}/api/v1/users/{Uri.EscapeDataString(userId)}";
+        _logger.LogDebug("Retrieving user from {Endpoint}", endpoint);
+
+        HttpRequestMessage request = new(HttpMethod.Get, endpoint);
+        request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _authToken);
+        HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
+        if (!response.IsSuccessStatusCode) {
+            _logger.LogError("Failed to retrieve user {UserId}. Status code: {StatusCode}, Reason: {ReasonPhrase}", userId, response.StatusCode, response.ReasonPhrase);
+            return null;
+        }
+
+        try {
+            var responseMapped = await response.Content.ReadFromJsonAsync<GetUserResponse>(_jsonOptions);
+            if (responseMapped is null) {
+                _logger.LogError("Failed to deserialize the user {UserId} response.", userId);
+                return null;
+            }
+            return new User() { UserId = responseMapped.Id, UserDisplayName = responseMapped.UserDisplayName };
+        } catch (Exception ex) {
+            _logger.LogError(ex, "Failed to deserialize the user {UserId} response.", userId);
+            return null;
+        }
+
+    }
+
+    private sealed record GetUserResponse(
+        [property: JsonPropertyName("bgId")] string Id,
+        [property: JsonPropertyName("username")] string Username,
+        [property: JsonPropertyName("displayName")] string UserDisplayName
+    );
+
 }

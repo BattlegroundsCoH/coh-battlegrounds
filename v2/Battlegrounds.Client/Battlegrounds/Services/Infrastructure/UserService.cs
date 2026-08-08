@@ -75,7 +75,15 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
 
     public string GetLocalUserToken() => _token; // Returns the current token, which may be expired
 
-    public Task<User> GetUserAsync(string userId) => GetLocalUserAsync()!; // TODO: Implement this method to fetch user data from Battlegrounds API
+    public async Task<User> GetUserAsync(string userId) {
+        if (string.IsNullOrWhiteSpace(userId)) {
+            throw new ArgumentException("User ID cannot be null or empty.", nameof(userId));
+        }
+        if (_localUser is not null && _localUser.UserId == userId) {
+            return await GetLocalUserAsync() ?? throw new InvalidOperationException("Local user is not available."); // Return the cached local user if it matches the requested userId
+        }
+        return (await _webAPI.GetUserAsync(userId)) ?? throw new InvalidOperationException($"User with ID {userId} not found."); // Fetch the user from the web API if not cached
+    }
 
     public async Task<User?> LoginAsync(string userName, string password) {
 
@@ -168,6 +176,7 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
         _tokenExpiration = tokenData.Expiration;
         _localUser = tokenData.User;
         _hasLoggedInUser.SetResult(true);
+        _webAPI.SetAuthenticationToken(_token); // Set the authentication token for the web API
 
         return tokenData.User is not null && _tokenExpiration > DateTime.UtcNow;
 
