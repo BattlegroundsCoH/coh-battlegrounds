@@ -191,6 +191,10 @@ public sealed class BattlegroundsApp {
         services.AddTransient<CompanyBrowserView>();
         services.AddSingleton<CompanyBrowserViewModel>();
 
+        // Register News view
+        services.AddTransient<NewsView>();
+        services.AddSingleton<NewsViewModel>();
+
         // Register Company Editor view model
         services.AddTransient<CompanyEditorView>();
         services.AddSingleton<CompanyEditorViewModel>();

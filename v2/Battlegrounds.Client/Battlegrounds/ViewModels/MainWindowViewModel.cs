@@ -28,6 +28,8 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
 
     public CompanyBrowserView CompanyBrowserView => _serviceProvider.GetRequiredService<CompanyBrowserView>();
 
+    public NewsView NewsView => _serviceProvider.GetRequiredService<NewsView>();
+
     /// <summary>
     /// The settings page. Cached, unlike its siblings above: both <see cref="SettingsView"/> and its
     /// view-model are registered transient and the view-model rebuilds every section from
@@ -85,16 +87,32 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
         }
     } = false;
 
+    public bool IsNewsButtonActive {
+        get;
+        set {
+            field = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsNewsButtonActive)));
+        }
+    } = false;
+
     public IAsyncRelayCommand SingleplayerCommand { get; }
 
     public IAsyncRelayCommand LogoutCommand { get; }
+
+    public IAsyncRelayCommand ShowNewsCommand { get; }
 
     public MainWindowViewModel(IServiceProvider serviceProvider, LoginViewModel loginViewModel) {
         _serviceProvider = serviceProvider;
         _serviceProvider.GetRequiredService<IDialogService>().RegisterHost(this);
         SingleplayerCommand = new AsyncRelayCommand(StartSingleplayerLobby);
         LogoutCommand = new AsyncRelayCommand(LogoutAsync);
+        ShowNewsCommand = new AsyncRelayCommand(ShowNews);
         LoginViewModel = loginViewModel ?? throw new ArgumentNullException(nameof(loginViewModel));
+    }
+
+    private Task ShowNews() {
+        IsNewsButtonActive = true;
+        return Task.CompletedTask;
     }
 
     public void PresentDialog(object dialog) {
@@ -130,7 +148,7 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
 
         // Set lobby view as content
         SetContent(LobbyViewFactory.CreateLobbyViewForLobby(_serviceProvider, lobby));
-    
+
     }
 
 }

@@ -85,6 +85,7 @@
 
                     <StackPanel Grid.Row="1" VerticalAlignment="Top">
                         <RadioButton x:Name="HomeButton" GroupName="MainNav" Style="{StaticResource Button.Nav}" Content="HOME" Margin="0,0,0,10" IsChecked="{Binding IsHomeButtonActive}"/>
+                        <RadioButton x:Name="NewsButton" GroupName="MainNav" Style="{StaticResource Button.Nav}" Content="NEWS" Margin="0,0,0,10" IsChecked="{Binding IsNewsButtonActive}"/>
                         <RadioButton x:Name="CompaniesButton" GroupName="MainNav" Style="{StaticResource Button.Nav}" Content="COMPANIES" Margin="0,0,0,10"/>
                         <RadioButton x:Name="MultiplayerButton" GroupName="MainNav" Style="{StaticResource Button.Nav}" Content="MULTIPLAYER" Margin="0,0,0,10" IsChecked="{Binding IsMultiplayerButtonActive}"/>
                         <RadioButton GroupName="MainNav" Style="{StaticResource Button.Nav}" Content="SINGLE PLAYER" Margin="0,0,0,10" Command="{Binding SingleplayerCommand}" />
@@ -109,6 +110,9 @@
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding ElementName=CompaniesButton, Path=IsChecked}" Value="True">
                                     <Setter Property="Content" Value="{Binding CompanyBrowserView}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=NewsButton, Path=IsChecked}" Value="True">
+                                    <Setter Property="Content" Value="{Binding NewsView}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding ElementName=SettingsButton, Path=IsChecked}" Value="True">
                                     <Setter Property="Content" Value="{Binding SettingsView}"/>

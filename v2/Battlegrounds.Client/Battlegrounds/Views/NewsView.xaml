@@ -1,0 +1,158 @@
+<UserControl x:Class="Battlegrounds.Views.NewsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewmodels="clr-namespace:Battlegrounds.ViewModels"
+             xmlns:converters="clr-namespace:Battlegrounds.Converters"
+             xmlns:controls="clr-namespace:Battlegrounds.Controls"
+             d:DataContext="{d:DesignInstance Type=viewmodels:NewsViewModel}"
+             mc:Ignorable="d"
+             d:DesignHeight="900" d:DesignWidth="1200"
+             Initialized="NewsView_Initialized"
+             IsVisibleChanged="NewsView_IsVisibleChanged">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+        <converters:AspectRatioConverter x:Key="AspectRatio"/>
+        <converters:RelativeTimeConverter x:Key="RelativeTimeConverter"/>
+        <converters:UpperCaseConverter x:Key="UpperCase"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <controls:PageHeader Grid.Row="0" Header="NEWS">
+            <TextBlock Style="{StaticResource Text.Meta}"
+                       Text="{Binding LastUpdatedLabel, Mode=OneWay}"
+                       VerticalAlignment="Center"
+                       Visibility="{Binding HasLastUpdated, Converter={StaticResource BoolToVisibility}}"/>
+        </controls:PageHeader>
+
+        <ScrollViewer Grid.Row="1"
+                      Style="{StaticResource ScrollViewer.Thin}"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <Grid>
+                <ItemsControl x:Name="NewsGrid"
+                              ItemsSource="{Binding Articles}"
+                              VerticalAlignment="Top"
+                              HorizontalAlignment="Center"
+                              MaxWidth="{DynamicResource Size.NewsGrid.MaxWidth}"
+                              Margin="0,0,8,0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid>
+                                <UniformGrid.Style>
+                                    <Style TargetType="UniformGrid">
+                                        <Setter Property="Columns" Value="3"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding (controls:Responsive.Breakpoint), RelativeSource={RelativeSource Self}}" Value="Compact">
+                                                <Setter Property="Columns" Value="2"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </UniformGrid.Style>
+                            </UniformGrid>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource Button.Bare}"
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Padding="0"
+                                    Margin="0,0,16,16"
+                                    Cursor="Hand"
+                                    Command="{Binding OpenCommand}">
+                                <Border Background="{StaticResource Brush.Surface.Card}"
+                                        BorderBrush="{StaticResource Brush.Border.Hairline}"
+                                        BorderThickness="1">
+                                    <StackPanel>
+                                        <Border Background="{StaticResource Brush.Surface.Raised}"
+                                                ClipToBounds="True"
+                                                Height="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource AspectRatio}, ConverterParameter=16:9}">
+                                            <Grid>
+                                                <Image Source="{Binding CoverImage}"
+                                                       Stretch="UniformToFill"
+                                                       RenderOptions.BitmapScalingMode="HighQuality"/>
+                                                
+                                                <controls:StatusBadge Content="FEATURED"
+                                                                      Tone="Accent"
+                                                                      HorizontalAlignment="Left"
+                                                                      VerticalAlignment="Top"
+                                                                      Margin="{DynamicResource Space.S}"
+                                                                      Visibility="{Binding IsFeatured, Converter={StaticResource BoolToVisibility}}"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <StackPanel Margin="{DynamicResource Space.M}">
+                                            <controls:Eyebrow Text="{Binding Category, Converter={StaticResource UpperCase}, Mode=OneWay}"
+                                                              Margin="0,0,0,8"/>
+                                            <TextBlock Style="{StaticResource Text.Strong}"
+                                                       Text="{Binding Title, Mode=OneWay}"
+                                                       TextWrapping="Wrap"/>
+                                            <TextBlock Style="{StaticResource Text.Body}"
+                                                       Text="{Binding Description, Mode=OneWay}"
+                                                       TextWrapping="Wrap"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       MaxHeight="60"
+                                                       Margin="0,6,0,0"/>
+                                            <TextBlock Style="{StaticResource Text.Meta}" Margin="0,8,0,0">
+                                                <Run Text="{Binding Author, Mode=OneWay}"/>
+                                                <Run Text=" · "/>
+                                                <Run Text="{Binding PublishedAt, Converter={StaticResource RelativeTimeConverter}, Mode=OneWay}"/>
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                    </StackPanel>
+                                </Border>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock Text="There is no news to show right now.">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource Text.Empty}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding ElementName=NewsGrid, Path=Items.Count}" Value="0"/>
+                                        <Condition Binding="{Binding IsLoading}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,16,0,0"
+                    Visibility="{Binding HasPager, Converter={StaticResource BoolToVisibility}}">
+            <Button Content="PREVIOUS"
+                    Style="{StaticResource Button.Subtle}"
+                    Command="{Binding PreviousPageCommand}"
+                    Margin="0,0,16,0"/>
+            <controls:TrackedTextBlock Style="{StaticResource Display.Label}"
+                                       Text="{Binding PageLabel}"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,16,0"/>
+            <Button Content="NEXT"
+                    Style="{StaticResource Button.Subtle}"
+                    Command="{Binding NextPageCommand}"/>
+        </StackPanel>
+
+    </Grid>
+</UserControl>
