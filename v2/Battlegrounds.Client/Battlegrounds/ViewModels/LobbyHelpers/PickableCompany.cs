@@ -16,7 +16,7 @@ namespace Battlegrounds.ViewModels.LobbyHelpers;
 /// <param name="Company">The company associated with this option, or null if the option is 'None' or a random AI company.</param>
 /// <param name="ShowCompanyPreviewCommand">The command to show the company preview.</param>
 public sealed record PickableCompany(bool IsNone, bool GenerateRandom, Company? Company, IRelayCommand ShowCompanyPreviewCommand) {
-    
+
     /// <summary>
     /// Gets the display name representing the current company state.
     /// </summary>
@@ -31,17 +31,29 @@ public sealed record PickableCompany(bool IsNone, bool GenerateRandom, Company? 
             return Company?.Name ?? "Unknown Company";
         }
     }
-    
+
     /// <summary>
     /// Gets the faction associated with the company. Returns an empty string if no faction is available.
     /// </summary>
     public string Faction => Company?.Faction ?? string.Empty;
-    
+
     /// <summary>
     /// Gets the unique identifier of the game associated with the company.
     /// </summary>
     /// <remarks>Returns an empty string if the company is not set or does not have a game
     /// identifier.</remarks>
     public string GameId => Company?.GameId ?? string.Empty;
+
+    /// <summary>
+    /// Two options are the same option when they name the same choice — the same company id, or
+    /// both being the same placeholder.
+    /// </summary>
+    public bool Equals(PickableCompany? other) => other is not null
+        && IsNone == other.IsNone
+        && GenerateRandom == other.GenerateRandom
+        && string.Equals(Company?.Id, other.Company?.Id, StringComparison.Ordinal);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => HashCode.Combine(IsNone, GenerateRandom, Company?.Id);
 
 }

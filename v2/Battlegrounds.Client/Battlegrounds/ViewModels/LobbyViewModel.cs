@@ -313,6 +313,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
     private async Task RunSupervisedAsync(CancellationToken cancellationToken) {
         try {
             var maps = (await _gameMapService.GetMapsForGame(_lobby.Game.Id)).Select(Map.FromScenario).ToArray();
+            await LoadLocalPlayerCompanies(cancellationToken);
             var team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
             var team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
             cancellationToken.ThrowIfCancellationRequested();
@@ -323,7 +324,6 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
                 Team2Slots = team2Slots;
                 SyncState();
             }, cancellationToken);
-            await LoadLocalPlayerCompanies(cancellationToken);
             await PollLobbyEvents(cancellationToken);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             // Normal view disposal.

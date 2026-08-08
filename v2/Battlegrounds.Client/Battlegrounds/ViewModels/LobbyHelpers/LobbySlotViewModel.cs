@@ -61,7 +61,10 @@ public sealed record LobbySlotViewModel(
 
     public List<PickableCompany> AvailableCompanies {
         get {
-            var companies = ParentContext.CompaniesByAlliance[Alliance].Select(x => new PickableCompany(false, false, x, CreatePreviewCommand(x)));
+            List<Company> known = ParentContext.CompaniesByAlliance.TryGetValue(Alliance, out var forAlliance)
+                ? forAlliance
+                : [];
+            var companies = known.Select(x => new PickableCompany(false, false, x, CreatePreviewCommand(x)));
             var available = (IsAIPlayer ? companies.Append(new PickableCompany(false, true, null, CreatePreviewCommand(null))) : companies).ToList();
             if (available.Count == 0)
                 return [new PickableCompany(true, false, null, CreatePreviewCommand(null))];

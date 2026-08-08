@@ -897,6 +897,134 @@ public sealed class LobbyViewModelTests {
             Arg.Any<string>());
     }
 
+    // ── Company picker selection resolves against its own option list ─────────
+    //
+    // A WPF Selector looks its SelectedItem up in ItemsSource by equality; when the lookup fails it
+    // clears the selection and pushes null back through the two-way binding, which the draft setter
+    // ignores — the picker renders blank while the view-model still believes a company is selected,
+    // and only picking a second time (which hands the control an instance it already owns) sticks.
+    // Every assertion below is that lookup.
+
+    [Test]
+    public async Task SelectedCompany_IsFoundInAvailableCompanies() {
+        var (lobby, _) = CreateLobby();
+        var company = new Company {
+            Id = "allied-company",
+            Name = "Allied Company",
+            Faction = "british_africa",
+            GameId = "CoH3"
+        };
+        lobby.Team1.Slots[0] = lobby.Team1.Slots[0] with {
+            CompanyId = company.Id,
+            Faction = company.Faction
+        };
+        var serviceProvider = BuildServiceProvider();
+        serviceProvider.GetRequiredService<ICompanyService>()
+            .GetLocalCompaniesAsync()
+            .Returns(Task.FromResult<IEnumerable<Company>>([company]));
+        var vm = await CreateVmAsync(lobby, serviceProvider);
+
+        var slot = vm.Team1Slots.Single(x => x.Slot.Index == 0);
+
+        Assert.That(slot.SelectedCompany.Company, Is.SameAs(company));
+        Assert.That(slot.AvailableCompanies, Does.Contain(slot.SelectedCompany));
+        Assert.That(slot.AvailableCompanies, Does.Contain(slot.DraftSelectedCompany));
+    }
+
+    [Test]
+    public async Task DraftSelectedCompany_AfterServerRebuildsSlots_IsFoundInAvailableCompanies() {
+        var (lobby, events) = CreateLobby(startEventLoop: true);
+        var company = new Company {
+            Id = "allied-company",
+            Name = "Allied Company",
+            Faction = "british_africa",
+            GameId = "CoH3"
+        };
+        var serviceProvider = BuildServiceProvider();
+        serviceProvider.GetRequiredService<ICompanyService>()
+            .GetLocalCompaniesAsync()
+            .Returns(Task.FromResult<IEnumerable<Company>>([company]));
+        var vm = await CreateVmAsync(lobby, serviceProvider);
+
+        // Pick the company, then let the server's echo rebuild the slot view-models the way
+        // SetCompany does in the running app.
+        var picked = vm.Team1Slots.Single(x => x.Slot.Index == 0).AvailableCompanies
+            .Single(x => x.Company == company);
+        vm.Team1Slots.Single(x => x.Slot.Index == 0).DraftSelectedCompany = picked;
+        lobby.Team1.Slots[0] = lobby.Team1.Slots[0] with {
+            CompanyId = company.Id,
+            Faction = company.Faction
+        };
+
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
+        await events.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, 0));
+        await processed;
+        events.Writer.Complete();
+
+        var slot = vm.Team1Slots.Single(x => x.Slot.Index == 0);
+        Assert.That(slot.DraftSelectedCompany.Company?.Id, Is.EqualTo(company.Id));
+        Assert.That(slot.AvailableCompanies, Does.Contain(slot.DraftSelectedCompany));
+    }
+
+    [Test]
+    public async Task DownloadedCompany_Event_LeavesSelectionFoundInAvailableCompanies() {
+        var (lobby, events) = CreateLobby(startEventLoop: true);
+        var localCompany = new Company {
+            Id = "allied-company",
+            Name = "Allied Company",
+            Faction = "british_africa",
+            GameId = "CoH3"
+        };
+        // Same company, different instance — what the server hands back after a download.
+        var downloadedCompany = new Company {
+            Id = localCompany.Id,
+            Name = localCompany.Name,
+            Faction = localCompany.Faction,
+            GameId = localCompany.GameId
+        };
+        lobby.Team1.Slots[0] = lobby.Team1.Slots[0] with {
+            CompanyId = localCompany.Id,
+            Faction = localCompany.Faction
+        };
+        lobby.GetSlotRevision(0, 0).Returns(1);
+        var serviceProvider = BuildServiceProvider();
+        serviceProvider.GetRequiredService<ICompanyService>()
+            .GetLocalCompaniesAsync()
+            .Returns(Task.FromResult<IEnumerable<Company>>([localCompany]));
+        var vm = await CreateVmAsync(lobby, serviceProvider);
+
+        var processed = WaitForPropertyChangedAsync(vm, nameof(vm.CanStartMatch));
+        await events.Writer.WriteAsync(
+            new LobbyEvent(
+                LobbyEventType.SlotCompanyDownloadProgress,
+                new SlotCompanyDownloadUpdate(0, 0, downloadedCompany.Id, 1, Company: downloadedCompany)));
+        await processed;
+        events.Writer.Complete();
+
+        var slot = vm.Team1Slots.Single(x => x.Slot.Index == 0);
+        Assert.That(slot.SelectedCompany.Company, Is.SameAs(downloadedCompany));
+        Assert.That(slot.AvailableCompanies, Does.Contain(slot.DraftSelectedCompany));
+    }
+
+    [Test]
+    public async Task AvailableCompanies_WhenNoCompaniesLoadedForAlliance_ReturnsNonePlaceholder() {
+        // CompaniesByAlliance is read straight from a binding. An indexer miss there throws inside
+        // WPF's binding engine, which swallows it and leaves ItemsSource null — a blank picker with
+        // nothing in the log.
+        var (lobby, _) = CreateLobby();
+        var serviceProvider = BuildServiceProvider();
+        serviceProvider.GetRequiredService<ICompanyService>()
+            .GetLocalCompaniesAsync()
+            .Returns(Task.FromResult<IEnumerable<Company>>([]));
+        var vm = await CreateVmAsync(lobby, serviceProvider);
+
+        var slot = vm.Team1Slots.Single(x => x.Slot.Index == 0);
+
+        Assert.That(slot.AvailableCompanies, Has.Count.EqualTo(1));
+        Assert.That(slot.AvailableCompanies[0].IsNone, Is.True);
+        Assert.That(slot.AvailableCompanies, Does.Contain(slot.DraftSelectedCompany));
+    }
+
     [Test]
     public async Task AvailableCompanies_Getter_DoesNotSendCompanyCommand() {
         var (lobby, _) = CreateLobby();
