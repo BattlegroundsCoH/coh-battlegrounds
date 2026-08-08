@@ -54,7 +54,7 @@
         <Setter Property="BorderThickness" Value="{DynamicResource Stroke.Hairline}" />
         <Setter Property="FontFamily" Value="{DynamicResource Font.Body}" />
         <Setter Property="FontSize" Value="{DynamicResource Font.Size.BodySmall}" />
-        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Padding" Value="{DynamicResource Space.ComboField}" />
         <Setter Property="MinHeight" Value="{DynamicResource Size.Control}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Cursor" Value="Hand" />
@@ -103,13 +103,17 @@
                         </ToggleButton>
 
                         <!-- Sits above the toggle and is click-through, so the selected
-                             value renders with the ComboBox's own ItemTemplate. -->
+                             value renders with the ComboBox's own ItemTemplate.
+
+                             Padding drives the inset rather than a literal margin: the
+                             right side also reserves the chevron's lane, and both have to
+                             grow with the type at higher UI scales. See Space.ComboField. -->
                         <ContentPresenter x:Name="SelectedValue"
                                           Content="{TemplateBinding SelectionBoxItem}"
                                           ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                           ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                           ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
-                                          Margin="12,0,30,0"
+                                          Margin="{TemplateBinding Padding}"
                                           HorizontalAlignment="Left"
                                           VerticalAlignment="Center"
                                           IsHitTestVisible="False" />

@@ -183,6 +183,75 @@
     </Style>
 
     <!--
+        Channel tab. A RadioButton for the same reason Button.Nav is one — the choice is
+        mutually exclusive — but the selected mark is a rule underneath rather than an
+        indicator beside, so it gets its own template too.
+
+        Used where a dropdown would be overkill: two or three short, always-visible
+        options, like the lobby chat's ALL / TEAM.
+    -->
+    <Style x:Key="Button.Tab" TargetType="RadioButton">
+        <Setter Property="Background" Value="{DynamicResource Brush.Transparent}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Dim}" />
+        <Setter Property="FontFamily" Value="{DynamicResource Font.Heading}" />
+        <Setter Property="FontSize" Value="{DynamicResource Font.Size.Meta}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="controls:TrackedTextBlock.Tracking" Value="{DynamicResource Track.Wide}" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <ControlTemplate.Resources>
+                        <DataTemplate DataType="{x:Type sys:String}">
+                            <controls:TrackedTextBlock Text="{Binding}" />
+                        </DataTemplate>
+                    </ControlTemplate.Resources>
+
+                    <Grid SnapsToDevicePixels="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border x:Name="Fill"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+
+                        <!-- 2px like the Eyebrow rule, and for the same reason: a hairline
+                             disappears under a caption, a 3px edge shouts. -->
+                        <Border x:Name="Rule"
+                                Grid.Row="1"
+                                Height="2"
+                                Background="{DynamicResource Brush.Accent.Gold}"
+                                Opacity="0" />
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Fill" Property="Background" Value="{DynamicResource Brush.Surface.Hover}" />
+                            <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Rule" Property="Opacity" Value="1" />
+                            <Setter Property="Foreground" Value="{DynamicResource Brush.Accent.Gold}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.45" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--
         Nav rail item. A RadioButton so that selection is mutually exclusive, with the
         gold indicator bar sitting outside the fill — hence its own template rather than
         the shared one.

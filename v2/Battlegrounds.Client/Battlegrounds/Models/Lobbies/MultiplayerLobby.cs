@@ -265,10 +265,14 @@ public sealed class MultiplayerLobby(
         }
         catch (RpcException rpcEx) when (rpcEx.StatusCode is StatusCode.Cancelled or StatusCode.Unavailable or StatusCode.NotFound)
         {
-            _isActive = false;
             _logger.Warning(rpcEx, "Lobby update stream was interrupted.");
-            await _internalEvents.Writer.WriteAsync(
-                new LobbyEvent(LobbyEventType.ConnectionStateChanged, false), cancellationToken);
+            // Through SetConnectionState, not a hand-rolled event: this used to publish
+            // ConnectionStateChanged carrying `false`, and consumers match the Arg against
+            // LobbyConnectionState — so a bool matched nothing and the UI went on reporting
+            // a live connection. Clearing _isActive first would also have suppressed the
+            // fallback in PollUpdates, leaving nowhere else to correct it.
+            SetConnectionState(LobbyConnectionState.Disconnected);
+            _isActive = false;
             return false;
         }
         catch (Exception ex)

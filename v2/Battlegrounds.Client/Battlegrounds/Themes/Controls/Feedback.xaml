@@ -13,6 +13,11 @@
         These keep their drop shadows. The design drops shadows on cards in favour of
         hairline borders, but a tooltip floats above the app and needs to separate from
         whatever is behind it — the mockups shadow popups and modals for the same reason.
+
+        The tooltip style is also applied implicitly, because the common case is a plain
+        string — ToolTip="Click to rename" — and there is nowhere to hang a Style on one of
+        those. Keyed-only, every such tooltip in the app quietly rendered in stock WPF
+        chrome; the key stays for the cases that build a ToolTip element by hand.
     -->
 
     <Style x:Key="ToolTip.Default" TargetType="ToolTip">
@@ -41,6 +46,8 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="ToolTip" BasedOn="{StaticResource ToolTip.Default}" />
 
     <!--
         Progress: a gold bar on a sunken track.

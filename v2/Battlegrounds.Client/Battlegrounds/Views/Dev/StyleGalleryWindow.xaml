@@ -259,6 +259,26 @@
                 </StackPanel>
 
                 <StackPanel Width="280" Margin="0,0,28,16">
+                    <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="CHECK BOX" Margin="0,0,0,8" />
+                    <CheckBox Style="{StaticResource CheckBox.Default}" Content="Supply System" IsChecked="True" />
+                    <CheckBox Style="{StaticResource CheckBox.Default}" Content="Weather effects" />
+                    <CheckBox Style="{StaticResource CheckBox.Default}" Content="Locked to host" IsEnabled="False" />
+
+                    <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="SLIDER" Margin="0,14,0,8" />
+                    <Slider Style="{StaticResource Slider.Default}" Minimum="100" Maximum="1000" Value="500" TickFrequency="100" IsSnapToTickEnabled="True" />
+                    <Slider Style="{StaticResource Slider.Default}" Minimum="0" Maximum="100" Value="30" IsEnabled="False" />
+                </StackPanel>
+
+                <StackPanel Width="280" Margin="0,0,28,16">
+                    <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="CHANNEL TABS" Margin="0,0,0,8" />
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton Style="{StaticResource Button.Tab}" GroupName="GalleryTabs" Content="ALL" IsChecked="True" />
+                        <RadioButton Style="{StaticResource Button.Tab}" GroupName="GalleryTabs" Content="TEAM" />
+                        <RadioButton Style="{StaticResource Button.Tab}" GroupName="GalleryTabs" Content="OFF" IsEnabled="False" />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Width="280" Margin="0,0,28,16">
                     <controls:TrackedTextBlock Style="{StaticResource Display.Label}" Text="PROGRESS" Margin="0,0,0,8" />
                     <ProgressBar Style="{StaticResource ProgressBar.Default}" IsIndeterminate="True" Margin="0,0,0,14" />
                     <ProgressBar Style="{StaticResource ProgressBar.Default}" IsIndeterminate="False" Value="65" Maximum="100" />

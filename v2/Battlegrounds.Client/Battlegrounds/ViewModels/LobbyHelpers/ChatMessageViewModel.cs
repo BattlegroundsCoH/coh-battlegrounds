@@ -1,5 +1,3 @@
-﻿using System.Windows.Media;
-
 using Battlegrounds.Models.Lobbies;
 
 namespace Battlegrounds.ViewModels.LobbyHelpers;
@@ -11,35 +9,59 @@ public enum SystemMessageType {
     Error
 }
 
+/// <summary>
+/// The role a piece of a chat line plays, which the view maps onto a themed brush.
+/// </summary>
+/// <remarks>
+/// A tone rather than a colour: these used to be SolidColorBrushes built from raw hex here in
+/// the view-model, which put literal colours outside the palette and made the chat the one part
+/// of the app a recolour would miss. <see cref="Converters.ChatToneBrushConverter"/> resolves
+/// them against the theme instead.
+/// </remarks>
+public enum ChatTone {
+    ChannelAll,
+    ChannelTeam,
+    Self,
+    Ally,
+    Enemy,
+    SystemInfo,
+    SystemWarning,
+    SystemError
+}
+
 public sealed record ChatMessageViewModel(DateTime Timestamp, ChatChannel Channel, bool IsSelf, bool IsAllied, string Sender, string Message, SystemMessageType SystemMessageKind = SystemMessageType.None) {
-    public string FormattedTimestamp => $"{Timestamp:HH:mm:ss} -"; // Format the timestamp as needed
+
+    public string FormattedTimestamp => $"{Timestamp:HH:mm:ss}";
+
+    /// <summary>
+    /// The channel tag, carrying its own trailing separator.
+    /// </summary>
+    /// <remarks>
+    /// The separator belongs to the tag because a system message has no channel: with a
+    /// space on each side of an empty tag, "[System]" ended up double-spaced from the time.
+    /// </remarks>
     public string FormattedChannel => SystemMessageKind != SystemMessageType.None ? "" : Channel switch {
-        ChatChannel.All => "[All]",
-        ChatChannel.Team => "[Team]",
-        _ => "[Unknown]"
+        ChatChannel.All => "[All] ",
+        ChatChannel.Team => "[Team] ",
+        _ => "[Unknown] "
     };
-    public string FormattedSender => $"{(SystemMessageKind != SystemMessageType.None ? "[System]" : Sender)}:"; // Format sender for system messages
-    public SolidColorBrush ChannelColour => Channel switch {
-        ChatChannel.All => new SolidColorBrush(Color.FromRgb(0xFF, 0xFF, 0x00)), // Yellow for All
-        ChatChannel.Team => new SolidColorBrush(Color.FromRgb(0x00, 0xFF, 0xFF)),
-        _ => new SolidColorBrush(Color.FromRgb(0xFF, 0x00, 0x00)) // Red for unknown channels
+
+    /// <summary>
+    /// The sender tag. A player's name is followed by a colon because they are speaking;
+    /// the system is labelling, so <c>[System]</c> stands on its own.
+    /// </summary>
+    public string FormattedSender => SystemMessageKind != SystemMessageType.None ? "[System]" : $"{Sender}:";
+
+    public ChatTone ChannelTone => Channel switch {
+        ChatChannel.Team => ChatTone.ChannelTeam,
+        _ => ChatTone.ChannelAll
     };
-    public SolidColorBrush SenderColour {
-        get {
-            if (SystemMessageKind is not SystemMessageType.None) {
-                return SystemMessageKind switch {
-                    SystemMessageType.Info => new SolidColorBrush(Color.FromRgb(0xFF, 0xFF, 0xFF)), // White for info messages
-                    SystemMessageType.Warning => new SolidColorBrush(Color.FromRgb(0xFF, 0xA5, 0x00)), // Orange for warning messages
-                    SystemMessageType.Error => new SolidColorBrush(Color.FromRgb(0xFF, 0x00, 0x00)), // Red for error messages
-                    _ => new SolidColorBrush(Color.FromRgb(0xFF, 0x00, 0x00)) // Red for unknown system messages
-                };
-            } else if (IsSelf) {
-                return new SolidColorBrush(Color.FromRgb(0x45, 0xA7, 0xe5)); // Blue for self
-            } else if (IsAllied) {
-                return new SolidColorBrush(Color.FromRgb(0xFF, 0xA5, 0x00)); // Orange for allied players
-            } else {
-                return new SolidColorBrush(Color.FromRgb(0xE5, 0x45, 0x45)); // Red for other players
-            }
-        }
-    }
+
+    public ChatTone SenderTone => SystemMessageKind switch {
+        SystemMessageType.Info => ChatTone.SystemInfo,
+        SystemMessageType.Warning => ChatTone.SystemWarning,
+        SystemMessageType.Error => ChatTone.SystemError,
+        _ => IsSelf ? ChatTone.Self : IsAllied ? ChatTone.Ally : ChatTone.Enemy
+    };
+
 }

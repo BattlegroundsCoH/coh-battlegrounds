@@ -20,6 +20,10 @@
 
         Focus is a gold border on every input in the app — no glow, no shadow. The website
         does the same thing with `border-color: gold` plus a 1px ring.
+
+        Height comes from Size.Control and centred content, not from padding — see
+        Space.FieldInset. A field has to be able to sit in a row beside a ComboBox or a
+        Button and land at the same height, which vertical padding made impossible.
     -->
 
     <Style x:Key="TextBox.Field" TargetType="TextBox">
@@ -31,7 +35,7 @@
         <Setter Property="BorderThickness" Value="{DynamicResource Stroke.Hairline}" />
         <Setter Property="FontFamily" Value="{DynamicResource Font.Body}" />
         <Setter Property="FontSize" Value="{DynamicResource Font.Size.BodySmall}" />
-        <Setter Property="Padding" Value="{DynamicResource Space.Field}" />
+        <Setter Property="Padding" Value="{DynamicResource Space.FieldInset}" />
         <Setter Property="MinHeight" Value="{DynamicResource Size.Control}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -52,8 +56,13 @@
                                        IsHitTestVisible="False"
                                        Visibility="Collapsed" />
 
+                            <!--
+                                No Margin here, deliberately. TextBoxBase already lays its
+                                content host out inside Padding, so binding Padding to Margin
+                                as well indents the text twice — the caret then sat a whole
+                                inset right of where the placeholder started.
+                            -->
                             <ScrollViewer x:Name="PART_ContentHost"
-                                          Margin="{TemplateBinding Padding}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           BorderThickness="0"
                                           IsTabStop="False" />
@@ -90,7 +99,7 @@
         <Setter Property="BorderThickness" Value="{DynamicResource Stroke.Hairline}" />
         <Setter Property="FontFamily" Value="{DynamicResource Font.Body}" />
         <Setter Property="FontSize" Value="{DynamicResource Font.Size.BodySmall}" />
-        <Setter Property="Padding" Value="{DynamicResource Space.Field}" />
+        <Setter Property="Padding" Value="{DynamicResource Space.FieldInset}" />
         <Setter Property="MinHeight" Value="{DynamicResource Size.Control}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -102,8 +111,8 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             SnapsToDevicePixels="True">
+                        <!-- No Margin — see the TextBox template above. -->
                         <ScrollViewer x:Name="PART_ContentHost"
-                                      Margin="{TemplateBinding Padding}"
                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                       BorderThickness="0"
                                       IsTabStop="False" />
