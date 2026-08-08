@@ -122,6 +122,13 @@ public sealed class LobbyViewModelFlowTests {
         services.AddSingleton(Substitute.For<IUpdateService>());
         services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
 
+        // HomeViewModel is pulled in transitively by MainWindowViewModel, so its news dependencies
+        // have to be resolvable here even though no lobby test touches the news feed.
+        var newsService = Substitute.For<INewsService>();
+        newsService.GetLatestAsync(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns([]);
+        services.AddSingleton(newsService);
+        services.AddSingleton(Substitute.For<IImageCacheService>());
+
         var gms = gameMapService ?? Substitute.For<IGameMapService>();
         gms.GetMapsForGame(Arg.Any<string>()).Returns(Task.FromResult(new List<Scenario>()));
         services.AddSingleton(gms);

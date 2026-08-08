@@ -9,13 +9,15 @@
              d:DataContext="{d:DesignInstance Type=viewmodels:HomeViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="900" d:DesignWidth="1200"
-             Initialized="HomeView_Initialized">
+             Initialized="HomeView_Initialized"
+             IsVisibleChanged="HomeView_IsVisibleChanged">
 
     <UserControl.Resources>
 
         <converters:FactionIdToNameConverter x:Key="FactionIdToNameConverter"/>
         <converters:FactionIconMultiBindingConverter x:Key="FactionIconConverter"/>
         <converters:ScenarioIdToNameConverter x:Key="ScenarioIdToNameConverter"/>
+        <converters:AspectRatioConverter x:Key="AspectRatio"/>
         <converters:RelativeTimeConverter x:Key="RelativeTimeConverter"/>
         <converters:DurationConverter x:Key="DurationConverter"/>
         <converters:UpperCaseConverter x:Key="UpperCase"/>
@@ -263,10 +265,115 @@
                     </Grid>
                 </controls:Card>
 
-                <!-- News -->
-                <controls:Card Grid.Column="2" Grid.Row="0" Header="NEWS &amp; UPDATES" MinHeight="290">
-                    <TextBlock Style="{StaticResource Text.Empty}"
-                               Text="There are currently no new updates."/>
+                <!--
+                    News. Previews only — cover and title. A click hands off to the public
+                    website, which is what renders the article body; the client never sees
+                    the markdown.
+                -->
+                <controls:Card Grid.Column="2" Grid.Row="0" Header="RECENT NEWS" MinHeight="290">
+                    <DockPanel>
+
+                        <!--
+                            Docked first so the list takes the space that is left, not the other
+                            way round. Hidden when the card is empty: with the feed unreachable
+                            there is nothing on the news page either, so the link would lead to
+                            a second empty state.
+                        -->
+                        <Button DockPanel.Dock="Bottom"
+                                Content="SEE ALL NEWS"
+                                HorizontalAlignment="Right"
+                                Padding="8,6"
+                                Cursor="Hand"
+                                Foreground="{StaticResource Brush.Accent.Gold}"
+                                Command="{Binding DataContext.ShowNewsCommand, RelativeSource={RelativeSource AncestorType=Window}}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource Button.Bare}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=NewsControl, Path=Items.Count}" Value="0">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <Grid>
+                            <ItemsControl x:Name="NewsControl" ItemsSource="{Binding NewsAndUpdates}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <!-- Padding moves onto the button so the whole row is the hit target. -->
+                                        <Border Style="{StaticResource Home.Row}" Padding="0">
+                                            <Button Style="{StaticResource Button.Bare}"
+                                                    HorizontalContentAlignment="Stretch"
+                                                    Padding="12,10"
+                                                    Cursor="Hand"
+                                                    Command="{Binding OpenCommand}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <!--
+                                                        The filled border behind the image is the placeholder:
+                                                        covers arrive over the network and an article need not
+                                                        have one, so a null Source has to read as an empty tile
+                                                        rather than a hole in the row.
+                                                    -->
+                                                    <Border Grid.Column="0"
+                                                            Background="{StaticResource Brush.Surface.Raised}"
+                                                            BorderBrush="{StaticResource Brush.Border.Hairline}"
+                                                            BorderThickness="1"
+                                                            ClipToBounds="True"
+                                                            Margin="0,0,12,0"
+                                                            Width="{DynamicResource Size.NewsCover.ThumbWidth}"
+                                                            Height="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource AspectRatio}, ConverterParameter=16:9}">
+                                                        <!--
+                                                            Width is the token, height follows from
+                                                            it, so the one thumbnail size does not
+                                                            have to be restated per UI scale.
+                                                        -->
+                                                        <Image Source="{Binding CoverImage}"
+                                                               Stretch="UniformToFill"
+                                                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                                                    </Border>
+
+                                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                        <!--
+                                                            Trimmed rather than wrapped: the card is half the
+                                                            content width and has room for exactly three rows.
+                                                        -->
+                                                        <TextBlock Style="{StaticResource Text.Strong}"
+                                                                   Text="{Binding Title, Mode=OneWay}"
+                                                                   TextWrapping="NoWrap"
+                                                                   TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Style="{StaticResource Text.Meta}">
+                                                            <Run Text="{Binding Category, Converter={StaticResource UpperCase}, Mode=OneWay}"/>
+                                                            <Run Text=" · "/>
+                                                            <Run Text="{Binding PublishedAt, Converter={StaticResource RelativeTimeConverter}, Mode=OneWay}"/>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Button>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <TextBlock Text="There are currently no new updates.">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource Text.Empty}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ElementName=NewsControl, Path=Items.Count}" Value="0">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+                    </DockPanel>
                 </controls:Card>
 
                 <!-- Featured companies -->

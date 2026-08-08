@@ -1,13 +1,18 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
+using Battlegrounds.Helpers;
 using Battlegrounds.Models;
 using Battlegrounds.Models.Companies;
+using Battlegrounds.Models.News;
 using Battlegrounds.Models.Playing;
 using Battlegrounds.Models.Statistics;
 using Battlegrounds.Services;
+using Battlegrounds.ViewModels.News;
 
 using CommunityToolkit.Mvvm.Input;
+
+using Microsoft.Extensions.Logging;
 
 namespace Battlegrounds.ViewModels;
 
@@ -15,18 +20,34 @@ public record RecentMatchViewModel(string GameId, string CompanyFaction, string 
 
 public record FeaturedCompanyViewModel(string CompanyFaction, string CompanyName, string GameId, int PlayCount, int VeteranUnits);
 
-public record NewsOrUpdatesViewModel();
+public sealed class HomeViewModel(
+    ILogger<HomeViewModel> logger,
+    IStatisticsService statisticsService,
+    ICompanyService companyService,
+    IUpdateService updateService,
+    INewsService newsService,
+    IImageCacheService imageCacheService,
+    IBrowserService browserService,
+    IDialogService dialogService) : INotifyPropertyChanged {
 
-public sealed class HomeViewModel(IStatisticsService statisticsService, ICompanyService companyService, IUpdateService updateService) : INotifyPropertyChanged {
+    /// <summary>How many previews the dashboard card has room for.</summary>
+    private const int NewsPreviewCount = 3;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private readonly TaskCompletionSource _dataLoadedCompletionSource = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly ILogger<HomeViewModel> _logger = logger;
     private readonly IStatisticsService _statisticsService = statisticsService;
     private readonly ICompanyService _companyService = companyService;
     private readonly IUpdateService _updateService = updateService;
+    private readonly INewsService _newsService = newsService;
+    private readonly IImageCacheService _imageCacheService = imageCacheService;
+    private readonly IBrowserService _browserService = browserService;
+    private readonly IDialogService _dialogService = dialogService;
 
     private bool _isInitialized = false;
+
+    private PeriodicRefresh? _newsRefresh;
 
     private string _welcomeMessage = "Welcome back, Commander!";
 
@@ -51,7 +72,7 @@ public sealed class HomeViewModel(IStatisticsService statisticsService, ICompany
 
     public ObservableCollection<FeaturedCompanyViewModel> FeaturedCompanies { get; } = [];
 
-    public ObservableCollection<NewsOrUpdatesViewModel> NewsAndUpdates { get; } = [];
+    public ObservableCollection<NewsItemViewModel> NewsAndUpdates { get; } = [];
 
     public IAsyncRelayCommand InstallUpdateCommand => new AsyncRelayCommand(InstallUpdate, () => IsUpdateAvailable);
 
@@ -66,7 +87,23 @@ public sealed class HomeViewModel(IStatisticsService statisticsService, ICompany
 
     public void OnViewActivated() {
         OnViewModelInitialized();
+        LoadNews();
     }
+
+    /// <summary>
+    /// Starts re-requesting the news feed every <see cref="Consts.NewsRefreshInterval"/>.
+    /// </summary>
+    /// <remarks>Driven by the view's visibility rather than its construction, because this view-model
+    /// is a singleton and the view is not: the dashboard is also merely <i>hidden</i> — not
+    /// unloaded — while a lobby is open, so an activation hook alone would leave it polling behind a
+    /// screen nobody is looking at. Safe to call when already running.</remarks>
+    public void StartNewsAutoRefresh() {
+        _newsRefresh ??= new PeriodicRefresh(Consts.NewsRefreshInterval, RefreshNewsSilentlyAsync, _logger);
+        _newsRefresh.Start();
+    }
+
+    /// <summary>Stops the automatic refresh and abandons a request that is still in flight.</summary>
+    public void StopNewsAutoRefresh() => _newsRefresh?.Stop();
 
     private async void OnViewModelInitialized() {
 
@@ -121,6 +158,8 @@ public sealed class HomeViewModel(IStatisticsService statisticsService, ICompany
 
     public async void Refresh() {
 
+        LoadNews();
+
         if (!_isInitialized) {
             return;
         }
@@ -128,6 +167,57 @@ public sealed class HomeViewModel(IStatisticsService statisticsService, ICompany
         // Refresh logic here
         await UpdateData();
 
+    }
+
+    /// <summary>
+    /// Fills the dashboard's news card.
+    /// </summary>
+    /// <remarks>Deliberately not part of <see cref="UpdateData"/>: that runs only once
+    /// <see cref="IStatisticsService.IsLoaded"/> and the replay/company load have both completed, and
+    /// gating the news feed on either would leave the card empty for seconds on a cold start.
+    /// <para>A failed fetch leaves the collection empty, which the view renders as its empty
+    /// state — the client never surfaces a transport error.</para></remarks>
+    public async Task LoadNewsAsync(bool forceRefresh = false, CancellationToken ct = default) {
+        var articles = await _newsService.GetLatestAsync(NewsPreviewCount, forceRefresh, ct);
+        await ShowNewsAsync(articles, ct);
+    }
+
+    /// <summary>
+    /// Re-requests the feed on the timer and shows it only if it actually differs.
+    /// </summary>
+    /// <remarks>Bypasses the service's cache — that cache exists so returning to the dashboard does not
+    /// re-request the feed.
+    /// <para>An empty result is left on the floor rather than shown: the service cannot distinguish a
+    /// failed request from a genuinely empty feed.</para></remarks>
+    private async Task RefreshNewsSilentlyAsync(CancellationToken ct) {
+
+        var articles = await _newsService.GetLatestAsync(NewsPreviewCount, forceRefresh: true, ct);
+        if (articles.Count == 0 || NewsItemViewModel.Matches(NewsAndUpdates, articles)) {
+            return;
+        }
+
+        await ShowNewsAsync(articles, ct);
+
+    }
+
+    private async Task ShowNewsAsync(IReadOnlyList<NewsArticle> articles, CancellationToken ct) {
+
+        NewsAndUpdates.Clear();
+        var items = articles.Select(x => new NewsItemViewModel(x, _imageCacheService, _browserService, _dialogService, _logger)).ToList();
+        items.ForEach(NewsAndUpdates.Add);
+
+        // Covers are fetched after the rows are bound, so the titles appear immediately and each
+        // thumbnail fades in as it lands rather than the whole card waiting on the slowest image.
+        await Task.WhenAll(items.Select(x => x.LoadCoverImageAsync(ct)));
+
+    }
+
+    private async void LoadNews() {
+        try {
+            await LoadNewsAsync();
+        } catch (Exception ex) {
+            _logger.LogError(ex, "Failed to load the news feed for the dashboard.");
+        }
     }
 
     private async Task UpdateData() {
