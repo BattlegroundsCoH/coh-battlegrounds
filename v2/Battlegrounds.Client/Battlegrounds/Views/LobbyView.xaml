@@ -29,6 +29,7 @@
         <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
         <converters:DownloadProgressArcConverter x:Key="DownloadProgressArcConverter"/>
         <converters:GamemodeNameConverter x:Key="GamemodeNameConverter"/>
+        <converters:ValidCompanyVisibilityConverter x:Key="ValidCompanyVisibilityConverter"/>
 
         <DataTemplate x:Key="CompanyComboBoxItemTemplate">
             <Grid>
@@ -158,7 +159,7 @@
                                         <StackPanel Orientation="Horizontal"
                                                     Visibility="{Binding CanSetCompany, Converter={StaticResource BoolToVisibilityConverter}}">
                                             <ComboBox
-                                                       Width="220" Height="42"
+                                                       Width="280" Height="42"
                                                        ItemsSource="{Binding AvailableCompanies}"
                                                        SelectedItem="{Binding DraftSelectedCompany, Mode=TwoWay}"
                                                        behaviors:SelectionChangedCommandBehavior.Command="{Binding SetCompanyCommand}"
@@ -170,10 +171,14 @@
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="Auto"/>
                                                                 <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="100"/>
                                                             </Grid.ColumnDefinitions>
 
                                                             <!-- Faction icon -->
-                                                            <Image Width="{DynamicResource Size.Icon.L}" Height="{DynamicResource Size.Icon.L}" Margin="0,0,8,0">
+                                                            <Image Width="{DynamicResource Size.Icon.L}"
+                                                                   Height="{DynamicResource Size.Icon.L}"
+                                                                   Margin="0,0,8,0"
+                                                                   Grid.Column="0">
                                                                 <Image.Source>
                                                                     <MultiBinding Converter="{StaticResource FactionIconConverter}">
                                                                         <Binding Path="Company.Faction"/>
@@ -186,10 +191,29 @@
                                                             <TextBlock Grid.Column="1" 
                                                               Text="{Binding DisplayName}"
                                                               VerticalAlignment="Center"/>
+
+                                                            <Button
+                                                                Height="42"
+                                                                Width="96"
+                                                                VerticalAlignment="Center"
+                                                                Margin="4,0,0,0"
+                                                                Style="{StaticResource Button.Subtle}"
+                                                                Visibility="{Binding Converter={StaticResource ValidCompanyVisibilityConverter}}"
+                                                                Command="{Binding ShowCompanyPreviewCommand}"
+                                                                Grid.Column="2">
+                                                                <TextBlock
+                                                                    Text="Inspect"
+                                                                    FontWeight="SemiBold"
+                                                                    Margin="8,0,8,6"
+                                                                    VerticalAlignment="Center"
+                                                                    Foreground="{StaticResource Brush.Text.Dim}"/>
+                                                            </Button>
+
                                                         </Grid>
                                                     </DataTemplate>
                                                 </ComboBox.ItemTemplate>
                                             </ComboBox>
+                                            
                                         </StackPanel>
 
                                         <!-- Selected company (view-only, clickable for preview) -->

@@ -1,5 +1,7 @@
 ﻿using Battlegrounds.Models.Companies;
 
+using CommunityToolkit.Mvvm.Input;
+
 namespace Battlegrounds.ViewModels.LobbyHelpers;
 
 /// <summary>
@@ -12,7 +14,8 @@ namespace Battlegrounds.ViewModels.LobbyHelpers;
 /// <param name="IsNone">Indicates whether this instance represents the 'None' option, meaning no company is selected.</param>
 /// <param name="GenerateRandom">Specifies whether this instance represents a randomly generated AI company.</param>
 /// <param name="Company">The company associated with this option, or null if the option is 'None' or a random AI company.</param>
-public sealed record PickableCompany(bool IsNone, bool GenerateRandom, Company? Company) {
+/// <param name="ShowCompanyPreviewCommand">The command to show the company preview.</param>
+public sealed record PickableCompany(bool IsNone, bool GenerateRandom, Company? Company, IRelayCommand ShowCompanyPreviewCommand) {
     
     /// <summary>
     /// Gets the display name representing the current company state.

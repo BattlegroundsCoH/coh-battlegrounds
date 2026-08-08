@@ -60,10 +60,10 @@ public sealed record LobbySlotViewModel(
 
     public List<PickableCompany> AvailableCompanies {
         get {
-            var companies = ParentContext.CompaniesByAlliance[Alliance].Select(x => new PickableCompany(false, false, x));
-            var available = (IsAIPlayer ? companies.Append(new PickableCompany(false, true, null)) : companies).ToList();
+            var companies = ParentContext.CompaniesByAlliance[Alliance].Select(x => new PickableCompany(false, false, x, CreatePreviewCommand(x)));
+            var available = (IsAIPlayer ? companies.Append(new PickableCompany(false, true, null, CreatePreviewCommand(null))) : companies).ToList();
             if (available.Count == 0)
-                return [new PickableCompany(true, false, null)];
+                return [new PickableCompany(true, false, null, CreatePreviewCommand(null))];
             return available;
         }
     }
@@ -74,12 +74,12 @@ public sealed record LobbySlotViewModel(
                 return _selectedCompany;
             }
             if (string.IsNullOrEmpty(_companyId)) {
-                return new PickableCompany(true, false, null);
+                return new PickableCompany(true, false, null, CreatePreviewCommand(null));
             }
             if (ParentContext.GetCompany(_companyId) is Company company) {
-                return new PickableCompany(false, false, company);
+                return new PickableCompany(false, false, company, CreatePreviewCommand(company));
             }
-            return new PickableCompany(true, false, null);
+            return new PickableCompany(true, false, null, CreatePreviewCommand(null));
         }
     }
 
@@ -96,7 +96,7 @@ public sealed record LobbySlotViewModel(
 
     public LobbySlotViewModel WithServerCompany(Company company) {
         var updated = this with { };
-        updated._selectedCompany = new PickableCompany(false, false, company);
+        updated._selectedCompany = new PickableCompany(false, false, company, CreatePreviewCommand(company));
         updated._draftSelectedCompany = updated._selectedCompany;
         updated._companyId = company.Id;
         return updated;
@@ -113,5 +113,7 @@ public sealed record LobbySlotViewModel(
     public IRelayCommand ShowCompanyPreviewCommand => new RelayCommand(() => ParentContext.ShowCompanyPreview(SelectedCompany?.Company));
 
     public float CompanyDownloadProgress { get; set; }
+
+    private IRelayCommand CreatePreviewCommand(Company? company) => new RelayCommand(() => ParentContext.ShowCompanyPreview(company));
 
 }

@@ -798,7 +798,7 @@ public sealed class LobbyViewModelTests {
             Faction = "british_africa",
             GameId = "CoH3"
         };
-        var requestedCompany = new PickableCompany(false, false, company);
+        var requestedCompany = new PickableCompany(false, false, company, null!);
         var slot = vm.Team1Slots.Single(x => x.Slot.Index == 0);
 
         slot.DraftSelectedCompany = requestedCompany;
