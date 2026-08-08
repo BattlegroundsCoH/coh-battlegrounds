@@ -1068,12 +1068,24 @@ public sealed class MultiplayerLobby(
         if (IsHost) {
             return; // The host cannot mark themselves as ready/unready, as they are always considered ready
         }
-        _isReady = isReady;
+
         var eventType = isReady ? LobbyEventType.ParticipantReady : LobbyEventType.ParticipantUnready;
-        await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
-            LobbyId = _lobbyId,
-            EventType = eventType.ToString(),
-        }, GetGrpcMetadata());
+        try {
+            await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+                LobbyId = _lobbyId,
+                EventType = eventType.ToString(),
+            }, GetGrpcMetadata());
+        } catch (RpcException ex) when (ex.Status.Detail is "lobby is frozen - no changes allowed") {
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemMessage, $"Unable to change ready state. Lobby is frozen - no changes allowed.")); // Notify the UI about the failure
+            return;
+        } catch (Exception ex) {
+            _logger.Error(ex, "Unexpected error while changing ready state to {IsReady}", isReady);
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, $"An unexpected error occurred while trying to change ready state to {isReady}. Please report this issue.")); // Notify the UI about the failure
+            return;
+        }
+
+        _isReady = isReady;
+
         await _internalEvents.Writer.WriteAsync(new LobbyEvent(eventType, isReady)); // Notify the UI about the ready state change
     }
 
@@ -1120,10 +1132,20 @@ public sealed class MultiplayerLobby(
 
     public async Task MoveToSlot(Team team, int slotIndex) {
         // Simple gRPC call to the server to move the local participant to the specified slot, the server will handle updating the lobby state and notifying all participants of the change
-        await _gRPCClient.MoveSlotAsync(new MoveSlotRequest {
-            TargetTeamId = GetIndexOfTeam(team),
-            TargetSlotId = slotIndex
-        }, GetGrpcMetadata());
+        try {
+            await _gRPCClient.MoveSlotAsync(new MoveSlotRequest {
+                TargetTeamId = GetIndexOfTeam(team),
+                TargetSlotId = slotIndex
+            }, GetGrpcMetadata());
+        } catch (RpcException ex) when (ex.Status.Detail is "failed to move participant slot") {
+            _logger.Warning(ex, "Failed to move local participant to slot {SlotIndex} in team {TeamId}", slotIndex, GetIndexOfTeam(team));
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, $"Unable to move to slot {slotIndex} in team {GetIndexOfTeam(team)}.")); // Notify the UI about the failure
+        } catch (RpcException ex) when (ex.Status.Detail is "lobby is frozen - no changes allowed") {
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemMessage, $"Unable to move to slot. Lobby is frozen - no changes allowed.")); // Notify the UI about the failure
+        } catch (Exception ex) {
+            _logger.Error(ex, "Unexpected error while moving local participant to slot {SlotIndex} in team {TeamId}", slotIndex, GetIndexOfTeam(team));
+            await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, $"An unexpected error occurred while trying to move to slot {slotIndex} in team {GetIndexOfTeam(team)}. Please report this issue.")); // Notify the UI about the failure
+        }
     }
 
     public int GetTeam(Participant participant) {
