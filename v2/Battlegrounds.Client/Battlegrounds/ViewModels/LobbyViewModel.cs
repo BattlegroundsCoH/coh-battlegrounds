@@ -441,18 +441,32 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
                         ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, chatEvent.Channel, isSelf, isAllied, chatEvent.Sender, chatEvent.Message));
                         PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
                         break;
+                    case LobbyEventType.SystemMessage:
+                        if (lobbyEvent.Arg is not string systemMessage) {
+                            break;
+                        }
+                        ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, ChatChannel.All, false, false, "System", systemMessage, SystemMessageKind: SystemMessageType.Info));
+                        PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
+                        break;
+                    case LobbyEventType.SystemError:
+                        if (lobbyEvent.Arg is not string systemError) {
+                            break;
+                        }
+                        ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, ChatChannel.All, false, false, "System", systemError, SystemMessageKind: SystemMessageType.Error));
+                        PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
+                        break;
                     case LobbyEventType.ParticipantJoined:
                         if (lobbyEvent.Arg is not Participant newParticipant) {
                             break;
                         }
-                        ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, ChatChannel.All, false, false, "System", $"{newParticipant.ParticipantName} has joined the lobby.", IsSystemMessage: true));
+                        ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, ChatChannel.All, false, false, "System", $"{newParticipant.ParticipantName} has joined the lobby.", SystemMessageKind: SystemMessageType.Info));
                         PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
                         break;
                     case LobbyEventType.ParticipantLeft:
                         if (lobbyEvent.Arg is not Participant leftParticipant) {
                             break;
                         }
-                        ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, ChatChannel.All, false, false, "System", $"{leftParticipant.ParticipantName} has left the lobby.", IsSystemMessage: true));
+                        ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, ChatChannel.All, false, false, "System", $"{leftParticipant.ParticipantName} has left the lobby.", SystemMessageKind: SystemMessageType.Info));
                         PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
                         break;
                     case LobbyEventType.TeamUpdated:
@@ -654,8 +668,8 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
     }
 
     private void SystemWarnMessageTooLong() {
-        if (ChatMessages.OrderByDescending(x => x.Timestamp).FirstOrDefault() is not ChatMessageViewModel { IsSystemMessage: true, Message: MAX_MESSAGE_LENGTH_REACHED }) {
-            ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, ChatChannel.All, true, false, "System", MAX_MESSAGE_LENGTH_REACHED, IsSystemMessage: true));
+        if (ChatMessages.OrderByDescending(x => x.Timestamp).FirstOrDefault() is not ChatMessageViewModel { SystemMessageKind: SystemMessageType.Warning, Message: MAX_MESSAGE_LENGTH_REACHED }) {
+            ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, ChatChannel.All, true, false, "System", MAX_MESSAGE_LENGTH_REACHED, SystemMessageKind: SystemMessageType.Warning));
         }
     }
 

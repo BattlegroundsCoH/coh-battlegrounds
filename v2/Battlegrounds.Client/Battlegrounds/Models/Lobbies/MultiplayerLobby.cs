@@ -422,8 +422,7 @@ public sealed class MultiplayerLobby(
                 throw new NotImplementedException($"Event type {eventType} is not yet implemented in the gRPC lobby handler.");
             case LobbyEventType.GameEnded:
                 throw new NotImplementedException($"Event type {eventType} is not yet implemented in the gRPC lobby handler.");
-            case LobbyEventType.SystemMessage:
-            case LobbyEventType.SystemError:
+            case LobbyEventType.SystemMessage or LobbyEventType.SystemError:
                 return new LobbyEvent(eventType, update.SystemMessage.Content);
             case LobbyEventType.DownloadInitiated:
                 _ = BeginDownloadResource(update.DownloadState.ResourceId); // Start the download but don't await it, as we don't want to block the processing of further lobby updates while waiting for the download to complete

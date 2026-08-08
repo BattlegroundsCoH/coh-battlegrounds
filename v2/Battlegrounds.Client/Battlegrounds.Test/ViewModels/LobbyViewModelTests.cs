@@ -278,7 +278,7 @@ public sealed class LobbyViewModelTests {
         vm.ChatMessage = new string('a', 250);
 
         Assert.That(vm.ChatMessages.Any(m =>
-            m.IsSystemMessage && m.Message == LobbyViewModel.MAX_MESSAGE_LENGTH_REACHED), Is.True);
+            m.SystemMessageKind == SystemMessageType.Warning && m.Message == LobbyViewModel.MAX_MESSAGE_LENGTH_REACHED), Is.True);
     }
 
     [Test]
@@ -289,7 +289,7 @@ public sealed class LobbyViewModelTests {
         vm.ChatMessage = new string('a', 250);
         vm.ChatMessage = new string('b', 250);
 
-        Assert.That(vm.ChatMessages.Count(m => m.IsSystemMessage), Is.EqualTo(1));
+        Assert.That(vm.ChatMessages.Count(m => m.SystemMessageKind == SystemMessageType.Warning), Is.EqualTo(1));
     }
 
     // ── PropertyChanged notifications ─────────────────────────────────────────
