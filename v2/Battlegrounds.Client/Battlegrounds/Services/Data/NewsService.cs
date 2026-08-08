@@ -8,14 +8,14 @@ namespace Battlegrounds.Services.Data;
 
 public sealed class NewsService(
     ILogger<NewsService> logger,
-    IBattlegroundsNewsAPI newsApi,
+    IBattlegroundsWebAPI webApi,
     Configuration configuration,
     TimeProvider timeProvider) : INewsService {
 
     private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(5);
 
     private readonly ILogger<NewsService> _logger = logger;
-    private readonly IBattlegroundsNewsAPI _newsApi = newsApi;
+    private readonly IBattlegroundsWebAPI _webApi = webApi;
     private readonly Configuration _configuration = configuration;
     private readonly TimeProvider _timeProvider = timeProvider;
     private readonly SemaphoreSlim _latestLock = new(1, 1);
@@ -30,7 +30,7 @@ public sealed class NewsService(
 
             bool isStale = _latest is null || _timeProvider.GetUtcNow() - _latestFetchedAt >= CacheDuration;
             if (forceRefresh || isStale) {
-                var response = await _newsApi.GetLatestNewsAsync();
+                var response = await _webApi.GetLatestNewsAsync();
                 if (response.Count > 0) {
                     _latest = [.. response.Select(MapToArticle).OrderByDescending(x => x.PublishedAt)];
                     _latestFetchedAt = _timeProvider.GetUtcNow();
@@ -50,7 +50,7 @@ public sealed class NewsService(
 
     public async Task<NewsPage> GetPageAsync(int page, int pageSize, CancellationToken ct = default) {
 
-        var response = await _newsApi.GetNewsPageAsync(page, pageSize);
+        var response = await _webApi.GetNewsPageAsync(page, pageSize);
         if (response is null) {
             return NewsPage.Empty(page, pageSize);
         }
@@ -77,7 +77,7 @@ public sealed class NewsService(
         ArticleUrl: GetArticleUrl(response.Slug));
 
     private string? GetCoverImageUrl(NewsPreviewResponse response)
-        => response.Resources is { Count: > 0 } resources ? _newsApi.GetResourceUrl(resources[0]) : null;
+        => response.Resources is { Count: > 0 } resources ? _webApi.GetResourceUrl(resources[0]) : null;
 
     private string GetArticleUrl(string slug)
         => $"{_configuration.WebsiteUrl.TrimEnd('/')}/news/{Uri.EscapeDataString(slug)}";

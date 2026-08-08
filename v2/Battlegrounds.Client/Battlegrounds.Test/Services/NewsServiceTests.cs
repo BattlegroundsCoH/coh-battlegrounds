@@ -12,24 +12,24 @@ namespace Battlegrounds.Test.Services;
 public class NewsServiceTests {
 
     private NewsService _service;
-    private IBattlegroundsNewsAPI _newsApi;
+    private IBattlegroundsWebAPI _webApi;
     private TestLogger<NewsService> _logger;
     private Configuration _configuration;
     private FakeTimeProvider _timeProvider;
 
     [SetUp]
     public void SetUp() {
-        _newsApi = Substitute.For<IBattlegroundsNewsAPI>();
-        _newsApi.GetResourceUrl(Arg.Any<string>()).Returns(x => $"https://api.example.com/api/news/resources/{x.Arg<string>()}");
+        _webApi = Substitute.For<IBattlegroundsWebAPI>();
+        _webApi.GetResourceUrl(Arg.Any<string>()).Returns(x => $"https://api.example.com/api/news/resources/{x.Arg<string>()}");
         _logger = new TestLogger<NewsService>();
         _configuration = new Configuration { WebsiteUrl = "https://cohbattlegrounds.com" };
         _timeProvider = new FakeTimeProvider(new DateTimeOffset(2026, 8, 8, 12, 0, 0, TimeSpan.Zero));
-        _service = new NewsService(_logger, _newsApi, _configuration, _timeProvider);
+        _service = new NewsService(_logger, _webApi, _configuration, _timeProvider);
     }
 
     [TearDown]
     public void TearDown() {
-        _newsApi.ClearReceivedCalls();
+        _webApi.ClearReceivedCalls();
         _logger.Dispose();
     }
 
@@ -54,7 +54,7 @@ public class NewsServiceTests {
     public async Task GetLatestAsync_BuildsTheCoverUrlFromTheFirstResource() {
 
         // Arrange — the API returns resource ids, never image URLs, and index 0 is the cover
-        _newsApi.GetLatestNewsAsync().Returns([Preview(resources: ["cover-id", "second-id"])]);
+        _webApi.GetLatestNewsAsync().Returns([Preview(resources: ["cover-id", "second-id"])]);
 
         // Act
         var result = await _service.GetLatestAsync(3);
@@ -69,7 +69,7 @@ public class NewsServiceTests {
     public async Task GetLatestAsync_WhenTheEntryHasNoResources_HasNoCover() {
 
         // Arrange
-        _newsApi.GetLatestNewsAsync().Returns([Preview()]);
+        _webApi.GetLatestNewsAsync().Returns([Preview()]);
 
         // Act
         var result = await _service.GetLatestAsync(3);
@@ -83,7 +83,7 @@ public class NewsServiceTests {
     public async Task GetLatestAsync_BuildsTheArticleUrlFromTheWebsiteHost() {
 
         // Arrange
-        _newsApi.GetLatestNewsAsync().Returns([Preview(slug: "patch 1.2 & more")]);
+        _webApi.GetLatestNewsAsync().Returns([Preview(slug: "patch 1.2 & more")]);
 
         // Act
         var result = await _service.GetLatestAsync(3);
@@ -100,7 +100,7 @@ public class NewsServiceTests {
         // Arrange — the API serializes UTC with neither a Z nor an offset, so the value arrives
         // as Unspecified and would otherwise be read as already-local
         var published = new DateTime(2026, 7, 19, 10, 0, 0, DateTimeKind.Unspecified);
-        _newsApi.GetLatestNewsAsync().Returns([Preview(publishedAt: published)]);
+        _webApi.GetLatestNewsAsync().Returns([Preview(publishedAt: published)]);
 
         // Act
         var result = await _service.GetLatestAsync(3);
@@ -119,7 +119,7 @@ public class NewsServiceTests {
 
         // Arrange
         var created = new DateTime(2026, 7, 18, 9, 0, 0);
-        _newsApi.GetLatestNewsAsync().Returns([Preview(publishedAt: null, createdAt: created)]);
+        _webApi.GetLatestNewsAsync().Returns([Preview(publishedAt: null, createdAt: created)]);
 
         // Act
         var result = await _service.GetLatestAsync(3);
@@ -134,7 +134,7 @@ public class NewsServiceTests {
     public async Task GetLatestAsync_ReordersByPublicationDate() {
 
         // Arrange — the API orders by created_at, the website by published_at
-        _newsApi.GetLatestNewsAsync().Returns([
+        _webApi.GetLatestNewsAsync().Returns([
             Preview(slug: "older", publishedAt: new DateTime(2026, 7, 1, 12, 0, 0), createdAt: new DateTime(2026, 7, 20, 12, 0, 0)),
             Preview(slug: "newer", publishedAt: new DateTime(2026, 7, 25, 12, 0, 0), createdAt: new DateTime(2026, 7, 10, 12, 0, 0))
         ]);
@@ -152,7 +152,7 @@ public class NewsServiceTests {
     public async Task GetLatestAsync_TakesNoMoreThanTheRequestedCount() {
 
         // Arrange
-        _newsApi.GetLatestNewsAsync().Returns([Preview(slug: "a"), Preview(slug: "b"), Preview(slug: "c")]);
+        _webApi.GetLatestNewsAsync().Returns([Preview(slug: "a"), Preview(slug: "b"), Preview(slug: "c")]);
 
         // Act
         var result = await _service.GetLatestAsync(2);
@@ -166,7 +166,7 @@ public class NewsServiceTests {
     public async Task GetLatestAsync_WithinTheCacheWindow_DoesNotRefetch() {
 
         // Arrange
-        _newsApi.GetLatestNewsAsync().Returns([Preview()]);
+        _webApi.GetLatestNewsAsync().Returns([Preview()]);
         await _service.GetLatestAsync(3);
 
         // Act
@@ -174,7 +174,7 @@ public class NewsServiceTests {
         await _service.GetLatestAsync(3);
 
         // Assert
-        await _newsApi.Received(1).GetLatestNewsAsync();
+        await _webApi.Received(1).GetLatestNewsAsync();
 
     }
 
@@ -182,7 +182,7 @@ public class NewsServiceTests {
     public async Task GetLatestAsync_OnceTheCacheHasExpired_Refetches() {
 
         // Arrange
-        _newsApi.GetLatestNewsAsync().Returns([Preview()]);
+        _webApi.GetLatestNewsAsync().Returns([Preview()]);
         await _service.GetLatestAsync(3);
 
         // Act
@@ -190,7 +190,7 @@ public class NewsServiceTests {
         await _service.GetLatestAsync(3);
 
         // Assert
-        await _newsApi.Received(2).GetLatestNewsAsync();
+        await _webApi.Received(2).GetLatestNewsAsync();
 
     }
 
@@ -198,14 +198,14 @@ public class NewsServiceTests {
     public async Task GetLatestAsync_WhenForced_RefetchesWithinTheCacheWindow() {
 
         // Arrange
-        _newsApi.GetLatestNewsAsync().Returns([Preview()]);
+        _webApi.GetLatestNewsAsync().Returns([Preview()]);
         await _service.GetLatestAsync(3);
 
         // Act
         await _service.GetLatestAsync(3, forceRefresh: true);
 
         // Assert
-        await _newsApi.Received(2).GetLatestNewsAsync();
+        await _webApi.Received(2).GetLatestNewsAsync();
 
     }
 
@@ -213,9 +213,9 @@ public class NewsServiceTests {
     public async Task GetLatestAsync_WhenAFetchFails_KeepsTheEntriesItAlreadyHad() {
 
         // Arrange — a transient outage must not blank the dashboard
-        _newsApi.GetLatestNewsAsync().Returns([Preview(slug: "cached")]);
+        _webApi.GetLatestNewsAsync().Returns([Preview(slug: "cached")]);
         await _service.GetLatestAsync(3);
-        _newsApi.GetLatestNewsAsync().Returns([]);
+        _webApi.GetLatestNewsAsync().Returns([]);
 
         // Act
         var result = await _service.GetLatestAsync(3, forceRefresh: true);
@@ -229,7 +229,7 @@ public class NewsServiceTests {
     public async Task GetLatestAsync_WhenTheFirstFetchFails_ReturnsEmpty() {
 
         // Arrange
-        _newsApi.GetLatestNewsAsync().Returns([]);
+        _webApi.GetLatestNewsAsync().Returns([]);
 
         // Act
         var result = await _service.GetLatestAsync(3);
@@ -243,7 +243,7 @@ public class NewsServiceTests {
     public async Task GetPageAsync_ReturnsThePageWithItsPagingState() {
 
         // Arrange
-        _newsApi.GetNewsPageAsync(2, 9).Returns(new PagedNewsResponse([Preview()], Page: 2, PageSize: 9, Total: 27, HasMore: true));
+        _webApi.GetNewsPageAsync(2, 9).Returns(new PagedNewsResponse([Preview()], Page: 2, PageSize: 9, Total: 27, HasMore: true));
 
         // Act
         var result = await _service.GetPageAsync(2, 9);
@@ -263,7 +263,7 @@ public class NewsServiceTests {
     public async Task GetPageAsync_WhenTheRequestFails_ReturnsAnEmptyPage() {
 
         // Arrange
-        _newsApi.GetNewsPageAsync(Arg.Any<int>(), Arg.Any<int>()).Returns((PagedNewsResponse?)null);
+        _webApi.GetNewsPageAsync(Arg.Any<int>(), Arg.Any<int>()).Returns((PagedNewsResponse?)null);
 
         // Act
         var result = await _service.GetPageAsync(3, 9);
@@ -282,14 +282,14 @@ public class NewsServiceTests {
     public async Task GetPageAsync_IsNotCached() {
 
         // Arrange
-        _newsApi.GetNewsPageAsync(1, 9).Returns(new PagedNewsResponse([Preview()], 1, 9, 1, false));
+        _webApi.GetNewsPageAsync(1, 9).Returns(new PagedNewsResponse([Preview()], 1, 9, 1, false));
 
         // Act
         await _service.GetPageAsync(1, 9);
         await _service.GetPageAsync(1, 9);
 
         // Assert — the caller asked for this page, so it gets a fresh one
-        await _newsApi.Received(2).GetNewsPageAsync(1, 9);
+        await _webApi.Received(2).GetNewsPageAsync(1, 9);
 
     }
 

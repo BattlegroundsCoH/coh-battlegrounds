@@ -8,12 +8,12 @@ using NSubstitute;
 
 namespace Battlegrounds.Test.Facades.API;
 
-[TestOf(typeof(HttpBattlegroundsNewsAPI))]
-public class HttpBattlegroundsNewsAPITests {
+[TestOf(typeof(HttpBattlegroundsWebAPI))]
+public class HttpBattlegroundsWebAPITests {
 
-    private HttpBattlegroundsNewsAPI _api;
+    private HttpBattlegroundsWebAPI _api;
     private IAsyncHttpClient _httpClient;
-    private TestLogger<HttpBattlegroundsNewsAPI> _logger;
+    private TestLogger<HttpBattlegroundsWebAPI> _logger;
     private Configuration _configuration;
 
     private string BaseUrl => _configuration.API.BaseUrl.TrimEnd('/');
@@ -21,9 +21,9 @@ public class HttpBattlegroundsNewsAPITests {
     [SetUp]
     public void SetUp() {
         _httpClient = Substitute.For<IAsyncHttpClient>();
-        _logger = new TestLogger<HttpBattlegroundsNewsAPI>();
+        _logger = new TestLogger<HttpBattlegroundsWebAPI>();
         _configuration = new Configuration();
-        _api = new HttpBattlegroundsNewsAPI(_logger, _httpClient, _configuration);
+        _api = new HttpBattlegroundsWebAPI(_logger, _httpClient, _configuration);
     }
 
     [TearDown]
@@ -40,7 +40,7 @@ public class HttpBattlegroundsNewsAPITests {
     public async Task GetLatestNewsAsync_WhenFeedHasEntries_ReturnsThem() {
 
         // Arrange
-        var expectedRequestUri = $"{BaseUrl}{HttpBattlegroundsNewsAPI.LatestNewsEndpoint}";
+        var expectedRequestUri = $"{BaseUrl}{HttpBattlegroundsWebAPI.LatestNewsEndpoint}";
         _httpClient.SendRequestAsync(Arg.Any<HttpRequestMessage>()).Returns(JsonResponse("""
             [
               {
@@ -104,7 +104,7 @@ public class HttpBattlegroundsNewsAPITests {
     public async Task GetNewsPageAsync_RequestsTheRequestedPage_AndReturnsIt() {
 
         // Arrange
-        var expectedRequestUri = $"{BaseUrl}{HttpBattlegroundsNewsAPI.NewsPageEndpoint}?page=2&pageSize=9";
+        var expectedRequestUri = $"{BaseUrl}{HttpBattlegroundsWebAPI.NewsPageEndpoint}?page=2&pageSize=9";
         _httpClient.SendRequestAsync(Arg.Any<HttpRequestMessage>()).Returns(JsonResponse("""
             {
               "items": [
@@ -169,7 +169,7 @@ public class HttpBattlegroundsNewsAPITests {
 
         // Arrange
         byte[] content = [0x89, 0x50, 0x4E, 0x47];
-        var expectedRequestUri = $"{BaseUrl}{HttpBattlegroundsNewsAPI.NewsResourceEndpoint}/cover-id";
+        var expectedRequestUri = $"{BaseUrl}{HttpBattlegroundsWebAPI.NewsResourceEndpoint}/cover-id";
         _httpClient.SendRequestAsync(Arg.Any<HttpRequestMessage>())
             .Returns(new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(content) });
 
