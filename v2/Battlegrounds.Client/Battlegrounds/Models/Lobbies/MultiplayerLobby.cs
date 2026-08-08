@@ -1219,6 +1219,7 @@ public sealed class MultiplayerLobby(
         foreach (var team in _teams) {
             foreach (var slot in team.Slots) {
                 if (!string.IsNullOrEmpty(slot.CompanyId) && !companies.ContainsKey(slot.CompanyId) ) {
+                    await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TrayMessage, $"Downloading company data for participant {slot.ParticipantId}...")); // Notify the UI about the download progress
                     var company = await _companyService.GetCompanyAsync(slot.CompanyId, slot.ParticipantId);
                     if (company is null) {
                         _logger.Warning("Company with ID {CompanyId} not found while retrieving all companies in the lobby.", slot.CompanyId);
