@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 using Battlegrounds.Models.Companies;
 using Battlegrounds.Models.Lobbies;
@@ -103,6 +104,10 @@ public sealed record LobbySlotViewModel(
     }
 
     public bool HasOccupant => !string.IsNullOrEmpty(Slot.ParticipantId);
+
+    public bool IsHostSlot => ParentContext.IsHost && ParentContext.Model.GetLocalPlayerId() == Slot.ParticipantId;
+
+    public bool IsReady => !string.IsNullOrEmpty(Slot.ParticipantId) && ParentContext.Model.GetParticipant(Slot.ParticipantId)?.IsReady is true && !IsHostSlot;
 
     public bool IsOccupiable => !HasOccupant && !Slot.Locked;
 

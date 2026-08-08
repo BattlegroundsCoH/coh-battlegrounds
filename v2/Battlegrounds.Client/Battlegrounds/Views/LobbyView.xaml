@@ -82,18 +82,24 @@
                                     </Grid.ColumnDefinitions>
 
                                     <!-- Player Icon/Avatar -->
-                                    <Ellipse 
-                                        Width="{DynamicResource Size.Icon.XL}" 
-                                        Height="{DynamicResource Size.Icon.XL}" 
+                                    <StackPanel
+                                        Visibility="{Binding HasOccupant, Converter={StaticResource BoolToVisibilityConverter}}"
                                         Margin="10,0,0,0" 
-                                        Grid.Column="0" 
-                                        VerticalAlignment="Center"
-                                        Visibility="{Binding HasOccupant, Converter={StaticResource BoolToVisibilityConverter}}">
-                                        <Ellipse.Fill>
-                                            <ImageBrush 
+                                            Width="{DynamicResource Size.Icon.XL}" 
+                                            Height="{DynamicResource Size.Icon.XL}" 
+                                            VerticalAlignment="Center"
+                                        Grid.Column="0" >
+                                        <Ellipse 
+                                            Width="{DynamicResource Size.Icon.XL}" 
+                                            Height="{DynamicResource Size.Icon.XL}" 
+                                            VerticalAlignment="Center"
+                                            x:Name="PlayerAvatarEllipse">
+                                            <Ellipse.Fill>
+                                                <ImageBrush 
                                                 ImageSource="pack://application:,,,/Battlegrounds;component/Assets/dummy_avatar.png"/>
-                                        </Ellipse.Fill>
-                                    </Ellipse>
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+                                    </StackPanel>
 
                                     <!--
                                         Company download progress doughnut (overlays avatar, hidden when progress = 0).
@@ -115,29 +121,29 @@
                                         Visibility="{Binding CompanyDownloadProgress, Converter={StaticResource ZeroToVisibilityConverter}}"
                                         -->
 
-                                    <Grid Width="40" Height="40">
+                                        <Grid Width="40" Height="40">
 
-                                        <!-- Background track ring (full donut, semi-transparent) -->
-                                        <Path Fill="{StaticResource Brush.Surface.Track}">
-                                            <Path.Data>
-                                                <PathGeometry FillRule="EvenOdd">
-                                                    <PathFigure StartPoint="20,4" IsClosed="True">
-                                                        <ArcSegment Point="20,36" Size="16,16" IsLargeArc="True" SweepDirection="Clockwise"/>
-                                                        <ArcSegment Point="20,4"  Size="16,16" IsLargeArc="True" SweepDirection="Clockwise"/>
-                                                    </PathFigure>
-                                                    <PathFigure StartPoint="20,10" IsClosed="True">
-                                                        <ArcSegment Point="20,30" Size="10,10" IsLargeArc="True" SweepDirection="Clockwise"/>
-                                                        <ArcSegment Point="20,10" Size="10,10" IsLargeArc="True" SweepDirection="Clockwise"/>
-                                                    </PathFigure>
-                                                </PathGeometry>
-                                            </Path.Data>
-                                        </Path>
+                                            <!-- Background track ring (full donut, semi-transparent) -->
+                                            <Path Fill="{StaticResource Brush.Surface.Track}">
+                                                <Path.Data>
+                                                    <PathGeometry FillRule="EvenOdd">
+                                                        <PathFigure StartPoint="20,4" IsClosed="True">
+                                                            <ArcSegment Point="20,36" Size="16,16" IsLargeArc="True" SweepDirection="Clockwise"/>
+                                                            <ArcSegment Point="20,4"  Size="16,16" IsLargeArc="True" SweepDirection="Clockwise"/>
+                                                        </PathFigure>
+                                                        <PathFigure StartPoint="20,10" IsClosed="True">
+                                                            <ArcSegment Point="20,30" Size="10,10" IsLargeArc="True" SweepDirection="Clockwise"/>
+                                                            <ArcSegment Point="20,10" Size="10,10" IsLargeArc="True" SweepDirection="Clockwise"/>
+                                                        </PathFigure>
+                                                    </PathGeometry>
+                                                </Path.Data>
+                                            </Path>
 
-                                        <!-- Progress arc -->
-                                        <Path Fill="{StaticResource Brush.Accent.Gold}"
-                                              Data="{Binding CompanyDownloadProgress, Converter={StaticResource DownloadProgressArcConverter}}"/>
+                                            <!-- Progress arc -->
+                                            <Path Fill="{StaticResource Brush.Accent.Gold}"
+                                                  Data="{Binding CompanyDownloadProgress, Converter={StaticResource DownloadProgressArcConverter}}"/>
 
-                                    </Grid>
+                                        </Grid>
                                     </Viewbox>
 
                                     <!-- Player Name -->
@@ -317,6 +323,25 @@
                                     <Setter TargetName="DisplayName" Property="Text" Value="Locked Slot"/>
                                     <Setter TargetName="DisplayName" Property="Foreground" Value="{StaticResource Brush.Text.Dim}"/>
                                     <Setter TargetName="DisplayName" Property="FontStyle" Value="Italic"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding IsReady}" Value="True">
+                                    <Setter TargetName="PlayerAvatarEllipse" Property="Stroke">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="{StaticResource Color.Green.500}"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter TargetName="PlayerAvatarEllipse" Property="StrokeThickness" Value="1"/>
+                                    <Setter TargetName="PlayerAvatarEllipse" Property="Effect">
+                                        <Setter.Value>
+                                            <DropShadowEffect Color="{StaticResource Color.Green.500}" BlurRadius="10" ShadowDepth="0"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter TargetName="PlayerAvatarEllipse" Property="ToolTip">
+                                        <Setter.Value>
+                                            <ToolTip Content="Ready" Style="{StaticResource ToolTip.Default}"/>
+                                        </Setter.Value>
+                                    </Setter>
                                 </DataTrigger>
 
                             </ControlTemplate.Triggers>
