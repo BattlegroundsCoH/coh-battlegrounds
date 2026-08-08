@@ -509,6 +509,23 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
                             Team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
                         }
                         break;
+                    case LobbyEventType.ParticipantReady or LobbyEventType.ParticipantUnready: {
+                        if (lobbyEvent.Arg is not string participantId) {
+                            _logger.LogWarning("{EventType} carried {ArgType} rather than a participant id; ready state not reflected",
+                                lobbyEvent.EventType, lobbyEvent.Arg?.GetType().Name ?? "nothing");
+                            break;
+                        }
+                        var readied = Team1Slots.Concat(Team2Slots)
+                            .Where(x => x.Slot.ParticipantId == participantId)
+                            .ToArray();
+                        foreach (var slot in readied) {
+                            slot.NotifyReadyChanged();
+                        }
+                        _logger.LogDebug("{EventType} for {ParticipantId} refreshed {Count} slot(s)",
+                            lobbyEvent.EventType, participantId, readied.Length);
+                        break;
+                    }
+                    case LobbyEventType.ParticipantUpdated:
                     case LobbyEventType.UpdatedCompany:
                         if (lobbyEvent.Arg is not Company updatedCompany) {
                             break;
