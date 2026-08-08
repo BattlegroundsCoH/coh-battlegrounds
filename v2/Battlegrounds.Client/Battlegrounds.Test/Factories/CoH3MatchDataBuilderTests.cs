@@ -91,10 +91,10 @@ public class CoH3MatchDataBuilderTests {
         bool result = await _builder.WriteMatchData(await _builder.BuildMatchData());
 
         // Assert
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(result, Is.True);
             Assert.That(File.Exists(_testFilePath), Is.True);
-        });
+        }
 
         string fileContent = await File.ReadAllTextAsync(_testFilePath);
         // We ignore the dummy content as the method will generate its own content
@@ -107,10 +107,10 @@ public class CoH3MatchDataBuilderTests {
         bool result = await _builder.WriteMatchData(await _builder.BuildMatchData());
 
         // Assert
-        Assert.Multiple(() => {
+        using (Assert.EnterMultipleScope()) {
             Assert.That(result, Is.True);
             Assert.That(File.Exists(_testFilePath), Is.True);
-        });
+        }
 
         string fileContent = await File.ReadAllTextAsync(_testFilePath);
         Assert.That(fileContent, Does.Contain("companies = {"));
@@ -298,6 +298,8 @@ public class CoH3MatchDataBuilderTests {
         public int GetTeam(string participantId) {
             throw new NotImplementedException();
         }
+
+        public Task<Dictionary<string, Company>> GetAllCompanies() => Task.FromResult(Companies);
     }
 
     #endregion

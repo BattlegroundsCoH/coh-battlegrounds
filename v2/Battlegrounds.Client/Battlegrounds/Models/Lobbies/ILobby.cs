@@ -299,6 +299,17 @@ public interface ILobby {
     /// <returns>The team identifier.</returns>
     int GetTeam(Participant participant);
 
+    /// <summary>
+    /// Gets the team for the specified participant ID.
+    /// </summary>
+    /// <param name="participantId">The ID of the participant to get the team for.</param>
+    /// <returns>The team identifier.</returns>
     int GetTeam(string participantId);
+    
+    /// <summary>
+    /// Asynchronously retrieves all companies in the lobby.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a dictionary mapping company IDs to company objects.</returns>
+    Task<Dictionary<string, Company>> GetAllCompanies();
 
 }

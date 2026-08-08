@@ -35,8 +35,8 @@ public sealed class CoH3MatchDataBuilder(ILobby lobby, ICoH3Game game) {
             .DeclareTable("teams", table =>
                 table.AddNestedTable(teamTable => BuildTeamData(teamTable, 1, lobby.Team1))
                     .AddNestedTable(teamTable => BuildTeamData(teamTable, 2, lobby.Team2)))
-            .DeclareTable("companies", table => {
-                foreach (var company in lobby.Companies) {
+            .DeclareTable("companies", async table => {
+                foreach (var company in await lobby.GetAllCompanies()) {
                     table.AddNestedTable(company.Key, subTable => BuildCompanyData(subTable, company.Value));
                 }
             })

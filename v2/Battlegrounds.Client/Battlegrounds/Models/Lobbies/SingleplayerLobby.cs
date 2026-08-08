@@ -302,4 +302,6 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
             return 1;
     }
 
+    public Task<Dictionary<string, Company>> GetAllCompanies() => Task.FromResult(_companies); // Return the local companies dictionary in singleplayer mode
+
 }

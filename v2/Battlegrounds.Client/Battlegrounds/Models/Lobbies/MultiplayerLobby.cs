@@ -1213,4 +1213,22 @@ public sealed class MultiplayerLobby(
             return 1;
     }
 
+    public async Task<Dictionary<string, Company>> GetAllCompanies() {
+        // Implementation for retrieving all companies in the lobby
+        var companies = _companies.Select(kvp => new KeyValuePair<string, Company>(kvp.Key, kvp.Value)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        foreach (var team in _teams) {
+            foreach (var slot in team.Slots) {
+                if (!string.IsNullOrEmpty(slot.CompanyId) && !companies.ContainsKey(slot.CompanyId) ) {
+                    var company = await _companyService.GetCompanyAsync(slot.CompanyId, slot.ParticipantId);
+                    if (company is null) {
+                        _logger.Warning("Company with ID {CompanyId} not found while retrieving all companies in the lobby.", slot.CompanyId);
+                        throw new Exception($"Company with ID {slot.CompanyId} not found while retrieving all companies in the lobby.");
+                    }
+                    companies[slot.CompanyId] = company;
+                }
+            }
+        }
+        return companies;
+    }
+
 }
