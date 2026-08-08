@@ -728,6 +728,52 @@ public sealed class MultiplayerLobbyTests {
     };
 
     [Test]
+    public async Task HostLeaving_QueuesTheLeaveSignalBeforeAnyLaterEvent() {
+        // The server closes a participant's stream cleanly when the host destroys the lobby, so the
+        // client only learns the lobby is gone when the reconnect attempt comes back NotFound.
+        var participantLobby = new MultiplayerLobby(
+            LobbyId,
+            _streamReader.WrapInCall(),
+            _grpcClient,
+            _setup,
+            _serverAPI,
+            _userService,
+            _companyService,
+            _mapService,
+            _ => throw new RpcException(new Status(StatusCode.NotFound, "lobby not found"))) {
+            IsHost = false,
+            IsReady = false
+        };
+
+        var pollTask = participantLobby.PollGrpcUpdates();
+        _streamReader.Complete(); // Host left: the stream ends without an error status
+        await pollTask.WaitAsync(TimeSpan.FromSeconds(10));
+
+        List<LobbyEvent> events = [];
+        using var drain = new CancellationTokenSource(TimeSpan.FromMilliseconds(250));
+        while (await participantLobby.GetNextEvent(drain.Token) is { } queued) {
+            events.Add(queued);
+        }
+
+        var reconnecting = events.FindIndex(e =>
+            e.EventType == LobbyEventType.ConnectionStateChanged && e.Arg is LobbyConnectionState.Reconnecting);
+
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(participantLobby.IsActive, Is.False);
+            Assert.That(participantLobby.ConnectionState, Is.EqualTo(LobbyConnectionState.Disconnected));
+            Assert.That(reconnecting, Is.GreaterThanOrEqualTo(0), "Expected the lobby to attempt a reconnect first.");
+            // LobbyViewModel re-tests IsActive between events, so only the first event queued once the
+            // lobby gives up is guaranteed to be drained. Anything ahead of the leave signal here strands
+            // the player in a dead lobby.
+            Assert.That(events[reconnecting + 1].EventType, Is.EqualTo(LobbyEventType.ConnectionStateChanged));
+            Assert.That(events[reconnecting + 1].Arg, Is.EqualTo(false),
+                "The leave signal must be the first event queued when the lobby is abandoned.");
+        }
+
+        await participantLobby.DisposeAsync();
+    }
+
+    [Test]
     public async Task Reconnection_AppliesAuthoritativeSnapshotAndReturnsConnected() {
         var reconnectReader = new TestGrpcStreamReader();
         var reconnectLobby = new MultiplayerLobby(

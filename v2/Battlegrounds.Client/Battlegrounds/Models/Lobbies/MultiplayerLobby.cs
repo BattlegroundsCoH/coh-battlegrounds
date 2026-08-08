@@ -266,13 +266,7 @@ public sealed class MultiplayerLobby(
         catch (RpcException rpcEx) when (rpcEx.StatusCode is StatusCode.Cancelled or StatusCode.Unavailable or StatusCode.NotFound)
         {
             _logger.Warning(rpcEx, "Lobby update stream was interrupted.");
-            // Through SetConnectionState, not a hand-rolled event: this used to publish
-            // ConnectionStateChanged carrying `false`, and consumers match the Arg against
-            // LobbyConnectionState — so a bool matched nothing and the UI went on reporting
-            // a live connection. Clearing _isActive first would also have suppressed the
-            // fallback in PollUpdates, leaving nowhere else to correct it.
-            SetConnectionState(LobbyConnectionState.Disconnected);
-            _isActive = false;
+            AbandonLobby();
             return false;
         }
         catch (Exception ex)
@@ -280,6 +274,12 @@ public sealed class MultiplayerLobby(
             _logger.Warning(ex, "Lobby reconnection attempt {Attempt} failed.", attempt);
             return true;
         }
+    }
+
+    private void AbandonLobby() {
+        _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.ConnectionStateChanged, false, Revision));
+        SetConnectionState(LobbyConnectionState.Disconnected);
+        _isActive = false;
     }
 
     private void SetConnectionState(LobbyConnectionState state) {
@@ -348,7 +348,7 @@ public sealed class MultiplayerLobby(
 
     // Maps a gRPC lobby state update to a LobbyEvent and applies the necessary changes to the local lobby state. If the update type is unrecognized, returns null.
     // The returned type is for triggering UI updates based on the event, as some events may not require a UI update.
-    private async Task<LobbyEvent?> MapAndApplyGrpcEvent(LobbyStateUpdate? update) { 
+    private async Task<LobbyEvent?> MapAndApplyGrpcEvent(LobbyStateUpdate? update) {
         if (update == null) {
             return null;
         }

@@ -669,13 +669,19 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
     }
 
     private async Task LeaveLobby(bool forceLeave = false, string? reason = null) {
-        if (!forceLeave) {
-            // TODO: Show confirmation dialog before leaving lobby?
-            if (!_lobby.IsActive) {
-                return; // Already left
-            }
+        // TODO: Show confirmation dialog before leaving lobby?
+        if (!forceLeave && !_lobby.IsActive) {
+            return; // Already left
+        }
 
+        // A forced leave still has to go through the service: it is what disposes the lobby and clears
+        // ILobbyService.ActiveLobby. Skipping it navigates the player out but leaves the dead lobby
+        // registered as active, so every later Join/CreateLobbyAsync throws "an active lobby exists".
+        // The server-side leave is a no-op once the lobby is gone, so failure here must not block the exit.
+        try {
             await _lobbyService.LeaveLobbyAsync(_lobby);
+        } catch (Exception ex) when (forceLeave) {
+            _logger.LogWarning(ex, "Failed to cleanly leave lobby '{LobbyName}' after being disconnected.", _lobby.Name);
         }
 
         // TODO: Add a reason modal to why you left by force
