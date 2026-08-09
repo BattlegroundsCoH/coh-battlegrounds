@@ -202,7 +202,6 @@ public sealed class LobbyIntegrationHarness : IAsyncDisposable {
 
         var userService = Substitute.For<IUserService>();
         string token = BuildTestJwt(userId);
-        userService.GetLocalUserToken().Returns(token);
         userService.GetLocalUserTokenAsync().Returns(Task.FromResult(token));
         userService.GetLocalUserAsync().Returns(Task.FromResult<User?>(new User {
             UserId = userId,

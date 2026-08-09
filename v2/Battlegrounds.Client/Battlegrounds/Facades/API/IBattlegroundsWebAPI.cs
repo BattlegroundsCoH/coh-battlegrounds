@@ -29,8 +29,17 @@ public sealed record RefreshRequest(
 
 public sealed record RefreshResponse(
     [property: JsonPropertyName("token")] string Token,
-    [property: JsonPropertyName("refreshToken")] string RefreshToken
+    [property: JsonPropertyName("refreshToken")] string RefreshToken,
+    [property: JsonPropertyName("user")] ApiUser? User
 );
+
+public enum RefreshOutcome {
+    Success,
+    Rejected,
+    Transient
+}
+
+public sealed record RefreshResult(RefreshOutcome Outcome, RefreshResponse? Response, string? ErrorCode = null);
 
 public sealed record StartAuthResponse(
     [property: JsonPropertyName("loginSessionId")] string SessionId,
@@ -105,7 +114,9 @@ public interface IBattlegroundsWebAPI {
 
     Task<LoginResponse> LoginAsync(LoginRequest request);
 
-    Task<RefreshResponse> RefreshTokenAsync(RefreshRequest request);
+    Task<RefreshResult> RefreshTokenAsync(RefreshRequest request);
+
+    Task<bool> LogoutAsync();
 
     /// <summary>
     /// Initiates an authentication process with the specified authentication provider.

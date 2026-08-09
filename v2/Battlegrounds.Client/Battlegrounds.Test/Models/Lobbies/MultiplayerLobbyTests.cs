@@ -75,7 +75,7 @@ public sealed class MultiplayerLobbyTests {
         _grpcClient.InitiateDownloadAsync(Arg.Any<InitiateDownloadRequest>(), Arg.Any<Metadata>()).Returns(emptyCall);
         _grpcClient.ChangeMapAsync(Arg.Any<ChangeMapRequest>(), Arg.Any<Metadata>()).Returns(changeMapCall);
 
-        _userService.GetLocalUserToken().Returns("test-bearer-token");
+        _userService.GetLocalUserTokenAsync().Returns("test-bearer-token");
 
         var mockGame = Substitute.For<Game>();
         mockGame.Id.Returns("CoH3");

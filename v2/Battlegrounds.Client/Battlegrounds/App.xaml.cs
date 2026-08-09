@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 
+using Battlegrounds.Services;
 using Battlegrounds.Views;
 using Battlegrounds.Views.Dev;
 
@@ -47,7 +48,7 @@ public partial class App : Application {
         services.AddSingleton(bgApp);
 
         bgApp.ConfigureServices(services);
-        
+
         _serviceProvider = services.BuildServiceProvider();
         bgApp.ServiceProvider = _serviceProvider;
         bgApp.FinishStartup();
@@ -58,9 +59,20 @@ public partial class App : Application {
 
     }
 
+    private static readonly TimeSpan LogOutGracePeriod = TimeSpan.FromSeconds(3);
+
     protected override void OnExit(ExitEventArgs e) {
+
+        if (_serviceProvider is not null) {
+            _serviceProvider.GetRequiredService<IUserService>()
+                .WaitForPendingLogOutAsync(LogOutGracePeriod)
+                .GetAwaiter().GetResult();
+            (_serviceProvider as IDisposable)?.Dispose(); // Stops the background token refresh
+        }
+
         _galleryLoggerFactory?.Dispose(); // Flushes the gallery's console sink; a no-op in the normal path.
         base.OnExit(e);
+
     }
 
 }

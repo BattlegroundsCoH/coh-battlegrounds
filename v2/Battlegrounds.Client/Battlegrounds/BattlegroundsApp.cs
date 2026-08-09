@@ -256,7 +256,7 @@ public sealed class BattlegroundsApp {
             services.AddSingleton(new SimulationParameters {
                 LaunchSuccessful = true,
                 RunParameters = new SimulatedAppRunParameters {
-                    
+
                 }
             });
             services.AddSingleton<IPlayService, SimulatedPlayService>(); // Use the simulated play service which does not actually launch games, for testing and development purposes

@@ -41,8 +41,10 @@ public sealed class UserViewModel : INotifyPropertyChanged {
     }
     
     public async Task LogoutAsync() {
-        await _userService.LogOutAsync();
+        // Drop the user before awaiting, not after. Revoking the session server-side is a network round-trip, and
+        // until IsAuthenticated flips the window keeps showing the signed-in content behind it.
         LocalUser = null;
+        await _userService.LogOutAsync();
     }
 
 }
