@@ -51,8 +51,6 @@ public sealed class MockIntegrationUserService(string user) : IUserService {
         throw new NotImplementedException();
     }
 
-    public string GetLocalUserToken() => _token;
-
     public async Task<string> GetLocalUserTokenAsync() {
         if (!string.IsNullOrEmpty(_token)) {
             return _token;

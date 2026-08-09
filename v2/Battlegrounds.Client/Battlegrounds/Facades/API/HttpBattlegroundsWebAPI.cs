@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -39,7 +40,9 @@ public sealed class HttpBattlegroundsWebAPI(
     private string _authToken = string.Empty;
 
     public string LoginEndpoint => $"{_configuration.API.LoginUrlOverride}{_configuration.API.LoginEndpoint}";
-    public string RefreshEndpoint => $"{_configuration.API.LoginUrlOverride}/auth/refresh";
+
+    public string RefreshEndpoint => $"{BaseUrl}/auth/v1/refresh";
+
     public string PublicKeyEndpoint => $"{_configuration.API.LoginUrlOverride}/publickey";
 
     private string BaseUrl => _configuration.API.BaseUrl.TrimEnd('/');
@@ -73,17 +76,52 @@ public sealed class HttpBattlegroundsWebAPI(
         return await FromJson<LoginResponse>(contentStream) ?? throw new InvalidOperationException("Failed to deserialize login response.");
     }
 
-    public async Task<RefreshResponse> RefreshTokenAsync(RefreshRequest request) {
-        _logger.LogDebug("Refreshing token using {Endpoint} using request {@Request}", RefreshEndpoint, request);
+    public async Task<RefreshResult> RefreshTokenAsync(RefreshRequest request) {
+
+        _logger.LogDebug("Refreshing token using {Endpoint}", RefreshEndpoint);
         HttpRequestMessage requestMessage = new(HttpMethod.Post, RefreshEndpoint) {
             Content = JsonContent.Create(request, options: _jsonOptions)
         };
         HttpResponseMessage response = await _httpClient.SendRequestAsync(requestMessage);
-        if (!response.IsSuccessStatusCode) {
-            throw new HttpRequestException($"Token refresh failed with status code {response.StatusCode}.");
+
+        if (response.IsSuccessStatusCode) {
+            try {
+                Stream contentStream = await response.Content.ReadAsStreamAsync();
+                RefreshResponse? refreshResponse = await FromJson<RefreshResponse>(contentStream);
+                if (refreshResponse is null || string.IsNullOrWhiteSpace(refreshResponse.Token) || string.IsNullOrWhiteSpace(refreshResponse.RefreshToken)) {
+                    _logger.LogError("Token refresh returned a success status but an unusable body.");
+                    return new RefreshResult(RefreshOutcome.Transient, null);
+                }
+                return new RefreshResult(RefreshOutcome.Success, refreshResponse);
+            } catch (Exception ex) {
+                _logger.LogError(ex, "Failed to deserialize the token refresh response.");
+                return new RefreshResult(RefreshOutcome.Transient, null);
+            }
         }
-        Stream contentStream = await response.Content.ReadAsStreamAsync() ?? throw new InvalidOperationException("Response content is null.");
-        return await FromJson<RefreshResponse>(contentStream) ?? throw new InvalidOperationException("Failed to deserialize refresh response.");
+
+        string? errorCode = await ReadProblemTitleAsync(response);
+
+        if (response.StatusCode is HttpStatusCode.BadRequest or HttpStatusCode.Unauthorized or HttpStatusCode.NotFound) {
+            _logger.LogWarning("Token refresh was rejected with status {StatusCode} ({ErrorCode}).", response.StatusCode, errorCode ?? "no error code");
+            return new RefreshResult(RefreshOutcome.Rejected, null, errorCode);
+        }
+
+        _logger.LogWarning("Token refresh failed with status {StatusCode} ({Reason}). The refresh token is retained.", response.StatusCode, response.ReasonPhrase);
+        return new RefreshResult(RefreshOutcome.Transient, null, errorCode);
+
+    }
+
+    private static async Task<string?> ReadProblemTitleAsync(HttpResponseMessage response) {
+        try {
+            string body = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrWhiteSpace(body)) {
+                return null;
+            }
+            using JsonDocument document = JsonDocument.Parse(body);
+            return document.RootElement.TryGetProperty("title", out JsonElement title) ? title.GetString() : null;
+        } catch (Exception) {
+            return null;
+        }
     }
 
     private static ValueTask<T?> FromJson<T>(Stream source) {
@@ -118,7 +156,7 @@ public sealed class HttpBattlegroundsWebAPI(
                 _logger.LogError("Failed to start authentication with {Provider}. Status code: {StatusCode}. Error: {ErrorMessage}", provider, response.StatusCode, await response.Content.ReadAsStringAsync());
                 return null;
             }
-            return await response.Content.ReadFromJsonAsync<StartAuthResponse>(_jsonOptions) 
+            return await response.Content.ReadFromJsonAsync<StartAuthResponse>(_jsonOptions)
                    ?? throw new InvalidOperationException("Failed to deserialize start auth response.");
         } catch (HttpRequestException ex) {
             _logger.LogError(ex, "Error starting authentication with {Provider}.", provider);
@@ -147,7 +185,7 @@ public sealed class HttpBattlegroundsWebAPI(
                 } else if (response.StatusCode is HttpStatusCode.NotFound) {
                     _logger.LogDebug("Authentication status for {Provider} with session {SessionId} not found. Retrying...", provider, sessionId);
                     await Task.Delay(RetryDelayMilliseconds); // Wait before retrying
-                } else if (response.StatusCode is HttpStatusCode.Accepted) { 
+                } else if (response.StatusCode is HttpStatusCode.Accepted) {
                     if (i % 5 == 0) { // Log every 5 attempts to avoid spamming logs
                         _logger.LogDebug("Authentication for {Provider} with session {SessionId} is still pending. Retrying...", provider, sessionId);
                     }
@@ -242,7 +280,7 @@ public sealed class HttpBattlegroundsWebAPI(
 
         HttpRequestMessage request = new(HttpMethod.Get, endpoint);
         request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _authToken);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _authToken);
         HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
         if (!response.IsSuccessStatusCode) {
             _logger.LogError("Failed to retrieve user {UserId}. Status code: {StatusCode}, Reason: {ReasonPhrase}", userId, response.StatusCode, response.ReasonPhrase);

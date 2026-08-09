@@ -47,9 +47,15 @@ public interface IUserService {
 
     Task<bool> LogOutAsync();
 
-    string GetLocalUserToken();
-
-    Task<string> GetLocalUserTokenAsync(); // Will refresh token if expired
+    /// <summary>
+    /// Gets the access token to authenticate outbound calls with, refreshing it first if it is at or near expiry.
+    /// </summary>
+    /// <remarks>This is the only supported way to obtain the access token. There is deliberately no synchronous
+    /// counterpart: the API rotates refresh tokens and revokes the previous access token the moment a refresh
+    /// happens, so a token handed out without the chance to refresh is one the server may already have rejected.</remarks>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the access token, or an
+    /// empty string if the user could not be authenticated and must sign in again.</returns>
+    Task<string> GetLocalUserTokenAsync();
 
     string GetLocalUserRefreshToken();
     

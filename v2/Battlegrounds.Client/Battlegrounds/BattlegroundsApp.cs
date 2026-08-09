@@ -232,7 +232,10 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<CoH3ArchiverService>();
         services.AddSingleton<CoH3ReplayParser>();
         services.AddSingleton<ScenarioParser<CoH3>>();
-        services.AddSingleton<IUserService, UserService>();
+        services.AddSingleton<IUserService>(sp => new UserService(
+            sp.GetRequiredService<ILogger<UserService>>(),
+            sp.GetRequiredService<IBattlegroundsWebAPI>(),
+            sp.GetRequiredService<IBrowserService>()));
         services.AddSingleton<ICompanyService, CompanyService>();
         services.AddSingleton<IGameLocaleService, GameLocaleService>();
         services.AddSingleton<IBlueprintService, BlueprintService>();
@@ -256,7 +259,7 @@ public sealed class BattlegroundsApp {
             services.AddSingleton(new SimulationParameters {
                 LaunchSuccessful = true,
                 RunParameters = new SimulatedAppRunParameters {
-                    
+
                 }
             });
             services.AddSingleton<IPlayService, SimulatedPlayService>(); // Use the simulated play service which does not actually launch games, for testing and development purposes

@@ -47,7 +47,7 @@ public partial class App : Application {
         services.AddSingleton(bgApp);
 
         bgApp.ConfigureServices(services);
-        
+
         _serviceProvider = services.BuildServiceProvider();
         bgApp.ServiceProvider = _serviceProvider;
         bgApp.FinishStartup();
@@ -59,8 +59,12 @@ public partial class App : Application {
     }
 
     protected override void OnExit(ExitEventArgs e) {
+
+        (_serviceProvider as IDisposable)?.Dispose(); // Stops the background token refresh
+
         _galleryLoggerFactory?.Dispose(); // Flushes the gallery's console sink; a no-op in the normal path.
         base.OnExit(e);
+
     }
 
 }
