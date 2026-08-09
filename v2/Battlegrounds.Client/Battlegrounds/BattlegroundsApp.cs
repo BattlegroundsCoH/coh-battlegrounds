@@ -232,10 +232,7 @@ public sealed class BattlegroundsApp {
         services.AddSingleton<CoH3ArchiverService>();
         services.AddSingleton<CoH3ReplayParser>();
         services.AddSingleton<ScenarioParser<CoH3>>();
-        services.AddSingleton<IUserService>(sp => new UserService(
-            sp.GetRequiredService<ILogger<UserService>>(),
-            sp.GetRequiredService<IBattlegroundsWebAPI>(),
-            sp.GetRequiredService<IBrowserService>()));
+        services.AddSingleton<IUserService, UserService>();
         services.AddSingleton<ICompanyService, CompanyService>();
         services.AddSingleton<IGameLocaleService, GameLocaleService>();
         services.AddSingleton<IBlueprintService, BlueprintService>();
