@@ -17,10 +17,10 @@ using Microsoft.Extensions.Logging;
 namespace Battlegrounds.Facades.API;
 
 public sealed class HttpBattlegroundsServerAPI(
-    ILogger<HttpBattlegroundsServerAPI> logger, 
-    IAsyncHttpClient asyncHttpClient, 
-    IUserService userService, 
-    ICompanyDeserializer companyDeserializer, 
+    ILogger<HttpBattlegroundsServerAPI> logger,
+    IAsyncHttpClient asyncHttpClient,
+    IUserService userService,
+    ICompanyDeserializer companyDeserializer,
     Configuration configuration) : IBattlegroundsServerAPI {
 
     private static readonly JsonSerializerOptions serializerOptions = new(JsonSerializerDefaults.Web) {
@@ -62,7 +62,6 @@ public sealed class HttpBattlegroundsServerAPI(
 
         HttpRequestMessage request = await GetHttpRequestWithAuthHeaders(HttpMethod.Delete, requestUri);
         request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await _userService.GetLocalUserTokenAsync()); // Ensure we have the latest token
 
         HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
         if (response.IsSuccessStatusCode) {
@@ -184,8 +183,7 @@ public sealed class HttpBattlegroundsServerAPI(
 
         _logger.LogInformation("Sending POST request to {RequestUri}", requestUri);
         HttpRequestMessage request = await GetHttpRequestWithAuthHeaders(HttpMethod.Post, requestUri);
-        request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await _userService.GetLocalUserTokenAsync()); // Ensure we have the latest token
+        request.Headers.Add("User-Agent", "BattlegroundsClient/1.0"); // GetHttpRequestWithAuthHeaders already applied the bearer
         request.Content = new StreamContent(new ProgressStream(serializedCompanyStream, serializedCompanyStream.Length, progressUpdate));
         request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
         request.Content.Headers.ContentLength = serializedCompanyStream.Length; // Set content length for the stream
@@ -438,7 +436,7 @@ public sealed class HttpBattlegroundsServerAPI(
                 _logger.LogError("Failed to deserialize latest wincondition source metadata. Response content could not be parsed.");
                 throw new InvalidDataException("Response content could not be parsed as LatestWinconditionDTO.");
             }
-        } 
+        }
 
         _logger.LogError("Failed to retrieve latest wincondition source metadata. Status code: {StatusCode}, Reason: {ReasonPhrase}", response.StatusCode, response.ReasonPhrase);
         return null;

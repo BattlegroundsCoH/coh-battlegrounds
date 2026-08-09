@@ -137,7 +137,7 @@ public sealed class LobbyService(
                 GameId = game.Id,
             };
             var headers = new Metadata {
-                { "authorization", $"Bearer {_userService.GetLocalUserToken()}" },
+                { "authorization", $"Bearer {await _userService.GetLocalUserTokenAsync()}" },
             };
 
             var stream = client.HostLobby(hostRequest, headers);
@@ -224,7 +224,7 @@ public sealed class LobbyService(
                 Password = password ?? string.Empty,
             };
             var headers = new Metadata {
-                { "authorization", $"Bearer {_userService.GetLocalUserToken()}" },
+                { "authorization", $"Bearer {await _userService.GetLocalUserTokenAsync()}" },
             };
             var stream = client.JoinLobby(joinRequest, headers);
             var multiplayerLobby = await _multiplayerLobbyFactory.GetLobbyAsNonHost(

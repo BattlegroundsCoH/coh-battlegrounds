@@ -121,9 +121,9 @@ public sealed class MultiplayerLobby(
     }
 
     public string? GetLocalPlayerId() => _localParticipant.ParticipantId;
-
-    private Metadata GetGrpcMetadata() {
-        var token = $"Bearer {_userService.GetLocalUserToken()}";
+    
+    private async Task<Metadata> GetGrpcMetadataAsync() {
+        var token = $"Bearer {await _userService.GetLocalUserTokenAsync()}";
         return new Metadata {
             { "authorization", token },
             { "x-lobby-id", _lobbyId },
@@ -565,7 +565,7 @@ public sealed class MultiplayerLobby(
             return new LaunchGameResult() {}; // Only the host can launch the game
         }
 
-        await _gRPCClient.LaunchGameAsync(new(), GetGrpcMetadata());
+        await _gRPCClient.LaunchGameAsync(new(), await GetGrpcMetadataAsync());
 
         return new LaunchGameResult() {}; // TODO: Return actual result from gRPC call
     }
@@ -590,7 +590,7 @@ public sealed class MultiplayerLobby(
                     Locked = team.Slots[slotIndex].Locked
                 }
             },
-        }, GetGrpcMetadata());
+        }, await GetGrpcMetadataAsync());
         _participants.RemoveWhere(p => p.ParticipantId == team.Slots[slotIndex].ParticipantId); // Remove the participant from the lobby if it was an AI (ie. it won't be in the participants list if it was a human player)
         team.Slots[slotIndex] = team.Slots[slotIndex] with { ParticipantId = string.Empty, Faction = string.Empty, CompanyId = string.Empty, Difficulty = AIDifficulty.HUMAN }; // Update local state
         _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI of the change
@@ -633,7 +633,7 @@ public sealed class MultiplayerLobby(
         } else {
             var participantDownloadTask = _gRPCClient.InitiateDownloadAsync(new InitiateDownloadRequest {
                 ResourceId = "company_update" // After reporting the match result, initiate a download to update company data for all participants, as the match result may have caused changes to company stats, levels, etc.
-            }, GetGrpcMetadata());
+            }, await GetGrpcMetadataAsync());
             // Download the host company changes (other participants have been told to download their company).
             var selfDownloadTask = DownloadCompany(false);
             await Task.WhenAll(participantDownloadTask.ResponseAsync, selfDownloadTask); // Wait for both the participant download initiation and the local company download to complete
@@ -649,7 +649,7 @@ public sealed class MultiplayerLobby(
         await _gRPCClient.SendChatMessageAsync(new Proto.Lobbies.ChatMessage {
             Content = chatMessage.Message,
             Channel = channel.ToString().ToLowerInvariant(),
-        }, GetGrpcMetadata());
+        }, await GetGrpcMetadataAsync());
     }
 
     public async Task SetCompany(Team team, int slotId, string companyId, string faction) {
@@ -669,7 +669,7 @@ public sealed class MultiplayerLobby(
                     Locked = team.Slots[slotId].Locked
                 }
             },
-        }, GetGrpcMetadata());
+        }, await GetGrpcMetadataAsync());
         if (IsHost || (local.team == team && slotId == local.slotId)) {
             // Push the local event too to update the UI immediately
             team.Slots[slotId] = team.Slots[slotId] with { CompanyId = companyId, Faction = faction };
@@ -686,7 +686,7 @@ public sealed class MultiplayerLobby(
                 MaxPlayers = map.MaxPlayers,
                 MapId = map.ScenarioName
             }
-        }, GetGrpcMetadata());
+        }, await GetGrpcMetadataAsync());
         if (updateMap is null || !updateMap.Success) {
             var errorReason = updateMap?.ErrorReason switch {
                 1 => "The specified map was not found on the server.",
@@ -728,7 +728,7 @@ public sealed class MultiplayerLobby(
                     Locked = team.Slots[slotIndex].Locked
                 }
             },
-        }, GetGrpcMetadata());
+        }, await GetGrpcMetadataAsync());
 
         // Add participant to the lobby if not already added
         int participantId = teamId * 4 + slotIndex; // Generate a unique participant ID for the AI based on its team and slot index
@@ -762,7 +762,7 @@ public sealed class MultiplayerLobby(
                     Locked = team.Slots[slotIndex].Locked
                 }
             },
-        }, GetGrpcMetadata());
+        }, await GetGrpcMetadataAsync());
         team.Slots[slotIndex] = team.Slots[slotIndex] with { Faction = faction ?? string.Empty }; // Update local state
         await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI of the change
     }
@@ -789,7 +789,7 @@ public sealed class MultiplayerLobby(
                     Locked = newLockState
                 }
             },
-        }, GetGrpcMetadata());
+        }, await GetGrpcMetadataAsync());
         team.Slots[slotIndex] = team.Slots[slotIndex] with { Locked = newLockState }; // Update local state
         await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.TeamUpdated, team.TeamType)); // Notify the UI of the change
     }
@@ -818,7 +818,7 @@ public sealed class MultiplayerLobby(
             ResourceId = "gamemode"
         };
 
-        var metadata = GetGrpcMetadata();
+        var metadata = await GetGrpcMetadataAsync();
 
         using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3)); // Set a timeout for waiting, in case something goes wrong with the download process
         var token = cts.Token;
@@ -886,7 +886,7 @@ public sealed class MultiplayerLobby(
                     Type = team.TeamType.ToString()
                 }
             };
-            await _gRPCClient.UpdateLobbyStateAsync(update, GetGrpcMetadata());
+            await _gRPCClient.UpdateLobbyStateAsync(update, await GetGrpcMetadataAsync());
             if (includeSlots) {
                 foreach (var slot in slots) {
                     await PublishSlot(tid, slot.Id, new Team.Slot(slot.Id, slot.ParticipantId, slot.Faction, slot.CompanyId, AIDifficulty.FromName(slot.AiDifficulty), slot.Hidden, slot.Locked));
@@ -915,7 +915,7 @@ public sealed class MultiplayerLobby(
                         Locked = slot.Locked
                     }
                 },
-            }, GetGrpcMetadata());
+            }, await GetGrpcMetadataAsync());
         } catch (Exception ex) {
             _logger.Error(ex, "Failed to publish slot {SlotId} of team {TeamId} state to the server.", slotId, tid);
             throw; // Rethrow the exception to allow the caller to handle it if needed
@@ -923,7 +923,7 @@ public sealed class MultiplayerLobby(
     }
 
     private async Task PublishSetting(LobbySetting setting) {
-        var metadata = GetGrpcMetadata();
+        var metadata = await GetGrpcMetadataAsync();
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
             LobbyId = _lobbyId,
             EventType = LobbyEventType.SettingUpdated.ToString(),
@@ -936,7 +936,7 @@ public sealed class MultiplayerLobby(
 
 
     private async Task PublishSetting(string key, string value) {
-        var metadata = GetGrpcMetadata();
+        var metadata = await GetGrpcMetadataAsync();
         await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
             LobbyId = _lobbyId,
             EventType = LobbyEventType.SettingUpdated.ToString(),
@@ -976,7 +976,7 @@ public sealed class MultiplayerLobby(
     }
 
     public async Task LeaveAsync() {
-        await _gRPCClient.LeaveLobbyAsync(new(), GetGrpcMetadata());
+        await _gRPCClient.LeaveLobbyAsync(new(), await GetGrpcMetadataAsync());
     }
 
     private async Task BeginDownloadResourceSafe(string resourceId) {
@@ -1023,7 +1023,7 @@ public sealed class MultiplayerLobby(
             await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
                 Progress = 1.0f,
                 Completed = true
-            }, GetGrpcMetadata());
+            }, await GetGrpcMetadataAsync());
 
         } else {
             _logger.Error("Gamemode download failed.");
@@ -1036,7 +1036,7 @@ public sealed class MultiplayerLobby(
         try {
             await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
                 Progress = progress
-            }, GetGrpcMetadata()); // Report the download progress to the server so it can update the lobby state and notify other participants
+            }, await GetGrpcMetadataAsync()); // Report the download progress to the server so it can update the lobby state and notify other participants
         } catch (Exception ex) {
             _logger.Warning(ex, "Failed to report gamemode download progress to the server.");
         }
@@ -1066,7 +1066,7 @@ public sealed class MultiplayerLobby(
             await _gRPCClient.ReportDownloadProgressAsync(new ReportDownloadProgressRequest {
                 Progress = 1.0f,
                 Completed = true
-            }, GetGrpcMetadata()); // Report to the server that the company download is complete, so it can update the lobby state and notify other participants
+            }, await GetGrpcMetadataAsync()); // Report to the server that the company download is complete, so it can update the lobby state and notify other participants
         }
 
         _internalEvents.Writer.TryWrite(new LobbyEvent(LobbyEventType.TrayMessageHide)); // Notify the UI to hide the tray message about downloading company data
@@ -1078,7 +1078,7 @@ public sealed class MultiplayerLobby(
     public int GetRealPlayersCount() => _participants.Count(x => !x.IsAIParticipant);
 
     public async Task BeginMatch() {
-        await _gRPCClient.BeginMatchAsync(new Empty(), GetGrpcMetadata());
+        await _gRPCClient.BeginMatchAsync(new Empty(), await GetGrpcMetadataAsync());
     }
 
     public async Task EndMatch(EndMatchReason reason) {
@@ -1089,7 +1089,7 @@ public sealed class MultiplayerLobby(
                 EndMatchReason.ScarError => Proto.Lobbies.EndMatchReason.ScarError,
                 _ => Proto.Lobbies.EndMatchReason.Unknown
             }
-        }, GetGrpcMetadata());
+        }, await GetGrpcMetadataAsync());
     }
 
     public async ValueTask PublishSystemMessage(string message) {
@@ -1100,7 +1100,7 @@ public sealed class MultiplayerLobby(
                 MessageType = "info",
                 Content = message
             }
-        }, GetGrpcMetadata());
+        }, await GetGrpcMetadataAsync());
     }
 
     public async Task MarkReady(bool isReady) {
@@ -1113,7 +1113,7 @@ public sealed class MultiplayerLobby(
             await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
                 LobbyId = _lobbyId,
                 EventType = eventType.ToString(),
-            }, GetGrpcMetadata());
+            }, await GetGrpcMetadataAsync());
         } catch (RpcException ex) when (ex.Status.Detail is "lobby is frozen - no changes allowed") {
             await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemMessage, $"Unable to change ready state. Lobby is frozen - no changes allowed.")); // Notify the UI about the failure
             return;
@@ -1187,7 +1187,7 @@ public sealed class MultiplayerLobby(
             await _gRPCClient.MoveSlotAsync(new MoveSlotRequest {
                 TargetTeamId = GetIndexOfTeam(team),
                 TargetSlotId = slotIndex
-            }, GetGrpcMetadata());
+            }, await GetGrpcMetadataAsync());
         } catch (RpcException ex) when (ex.Status.Detail is "failed to move participant slot") {
             _logger.Warning(ex, "Failed to move local participant to slot {SlotIndex} in team {TeamId}", slotIndex, GetIndexOfTeam(team));
             await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.SystemError, $"Unable to move to slot {slotIndex} in team {GetIndexOfTeam(team)}.")); // Notify the UI about the failure
