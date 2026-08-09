@@ -95,10 +95,11 @@ public class NewsServiceTests {
     }
 
     [Test]
-    public async Task GetLatestAsync_TreatsTimestampsAsUtcAndConvertsThemToLocalTime() {
+    public async Task GetLatestAsync_TreatsAnUnspecifiedTimestampAsUtcAndConvertsItToLocalTime() {
 
-        // Arrange — the API serializes UTC with neither a Z nor an offset, so the value arrives
-        // as Unspecified and would otherwise be read as already-local
+        // Arrange — a timestamp that reached us without a kind. The API has stamped a Z since its
+        // UtcDateTimeJsonConverter shipped, so this no longer describes the live wire format, but
+        // an unmarked value is still the one case that has to be *told* it is UTC
         var published = new DateTime(2026, 7, 19, 10, 0, 0, DateTimeKind.Unspecified);
         _webApi.GetLatestNewsAsync().Returns([Preview(publishedAt: published)]);
 
@@ -110,6 +111,44 @@ public class NewsServiceTests {
         using (Assert.EnterMultipleScope()) {
             Assert.That(result[0].PublishedAt, Is.EqualTo(expected), "The timestamp should be converted from UTC to local time");
             Assert.That(result[0].PublishedAt.Kind, Is.EqualTo(DateTimeKind.Local), "The timestamp should be local");
+        }
+
+    }
+
+    [Test]
+    public async Task GetLatestAsync_ConvertsAUtcTimestampToLocalTime() {
+
+        // Arrange — what the API actually sends today: "…Z", which System.Text.Json reads as Utc
+        var published = new DateTime(2026, 7, 19, 10, 0, 0, DateTimeKind.Utc);
+        _webApi.GetLatestNewsAsync().Returns([Preview(publishedAt: published)]);
+
+        // Act
+        var result = await _service.GetLatestAsync(3);
+
+        // Assert
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(result[0].PublishedAt, Is.EqualTo(published.ToLocalTime()), "The timestamp should be converted from UTC to local time");
+            Assert.That(result[0].PublishedAt.Kind, Is.EqualTo(DateTimeKind.Local), "The timestamp should be local");
+        }
+
+    }
+
+    [Test]
+    public async Task GetLatestAsync_DoesNotConvertAnAlreadyLocalTimestampASecondTime() {
+
+        // Arrange — the shape an offset form ("…+00:00") produces: System.Text.Json takes its
+        // offset branch and hands back a value that is *already* local. Converting again would
+        // add this machine's offset twice, putting every article in the future
+        var published = new DateTimeOffset(2026, 7, 19, 10, 0, 0, TimeSpan.Zero).LocalDateTime;
+        _webApi.GetLatestNewsAsync().Returns([Preview(publishedAt: published)]);
+
+        // Act
+        var result = await _service.GetLatestAsync(3);
+
+        // Assert
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(result[0].PublishedAt, Is.EqualTo(published), "An already-local timestamp should pass through unchanged");
+            Assert.That(result[0].PublishedAt, Is.LessThanOrEqualTo(DateTime.Now), "A double conversion would place it in the future");
         }
 
     }
