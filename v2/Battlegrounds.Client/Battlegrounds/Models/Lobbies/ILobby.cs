@@ -164,6 +164,17 @@ public interface ILobby {
     ValueTask PublishSystemMessage(string message);
 
     /// <summary>
+    /// Publishes a state message asynchronously to all connected clients or subscribers.
+    /// </summary>
+    /// <param name="type">The type of the state message. Cannot be null or empty.</param>
+    /// <param name="message">The content of the state message. Cannot be null or empty.</param>
+    /// <param name="priority">The priority of the state message. Higher values indicate higher priority.</param>
+    /// <param name="removeAfterSeconds">The time in seconds after which the message should be removed. Default is -1 (no removal).</param>
+    /// <param name="clear">Indicates whether to clear existing messages before publishing this one.</param>
+    /// <returns>A ValueTask that represents the asynchronous publish operation. The result contains the identifier of the published message.</returns>
+    ValueTask<int> PublishStateMessage(string type, string message, int priority = int.MaxValue, int removeAfterSeconds = -1, bool clear = false);
+
+    /// <summary>
     /// Removes the AI-controlled participant from the specified slot in the given team.
     /// </summary>
     /// <param name="team">The team from which the AI participant will be removed. Cannot be null.</param>

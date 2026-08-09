@@ -70,7 +70,7 @@ public sealed class MultiplayerLobby(
     private readonly CancellationTokenSource _lifetimeCts = new();
     private readonly Dictionary<(int TeamId, int SlotId), CancellationTokenSource> _slotDownloadCts = [];
     private readonly ConcurrentDictionary<(int TeamId, int SlotId), long> _slotRevisions = [];
-    private readonly object _slotDownloadLock = new();
+    private readonly Lock _slotDownloadLock = new();
 
     private readonly Team _team1 = setup.Team1;
     private readonly Team _team2 = setup.Team2;
@@ -78,6 +78,7 @@ public sealed class MultiplayerLobby(
 
     private readonly int _victoryPointsSettingIndex = setup.Settings.FindIndex(x => x.Name == LobbySetting.SETTING_VICTORY_POINTS);
 
+    private int _lobbyStateMessageIdCounter = 0;
     private bool _isActive = true;
     private bool _isReady = false;
     private bool _disposedValue = false;
@@ -461,6 +462,9 @@ public sealed class MultiplayerLobby(
                 return new LobbyEvent(LobbyEventType.ParticipantUnready, update.ParticipantId);
             case LobbyEventType.MatchOver:
                 return new LobbyEvent(LobbyEventType.MatchOver); // Instructs the LobbyViewModel to show the match results screen.
+            case LobbyEventType.LobbyStateMessage:
+                _lobbyStateMessageIdCounter = Math.Max(_lobbyStateMessageIdCounter + 1, update.LobbyStateMessage.Id + 1);
+                return new LobbyEvent(LobbyEventType.LobbyStateMessage, update.LobbyStateMessage);
             default:
                 _logger.Warning("Unhandled gRPC lobby event type: {EventType}", eventType);
                 break;
@@ -1230,6 +1234,31 @@ public sealed class MultiplayerLobby(
             }
         }
         return companies;
+    }
+
+    public async ValueTask<int> PublishStateMessage(string type, string message, int priority = int.MaxValue, int removeAfterSeconds = -1, bool clear = false) {
+        if (!IsHost) {
+            return -1; // Only the host can publish state messages
+        }
+        int mid = _lobbyStateMessageIdCounter++;
+        try {
+            await _gRPCClient.UpdateLobbyStateAsync(new LobbyStateUpdate {
+                LobbyId = _lobbyId,
+                EventType = LobbyEventType.LobbyStateMessage.ToString(),
+                LobbyStateMessage = new LobbyStateMessage {
+                    Id = mid,
+                    MessageType = type,
+                    Content = message,
+                    Priority = priority,
+                    Lifetime = removeAfterSeconds,
+                    ClearMessage = clear
+                }
+            }, await GetGrpcMetadataAsync());
+        } catch (Exception ex) {
+            _logger.Error(ex, "Failed to publish state message to the server.");
+            return -1;
+        }
+        return mid;
     }
 
 }

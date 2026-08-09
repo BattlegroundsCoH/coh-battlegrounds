@@ -199,8 +199,8 @@ public sealed class CoH3ReplayWriter {
 
     private static string EncodeLuaEvent(ReplayEvent @event) {
         string inner = @event switch {
-            SquadDeployedEvent e     => $"{{<type=squad_deployed><player={e.Player.PlayerId}><companyId={e.SquadCompanyId}>}}",
-            SquadKilledEvent e       => $"{{<type=squad_killed><player={e.Player.PlayerId}><companyId={e.SquadCompanyId}>}}",
+            SquadDeployedEvent e     => $"{{<type=squad_deployed><player={e.Player!.PlayerId}><companyId={e.SquadCompanyId}>}}",
+            SquadKilledEvent e       => $"{{<type=squad_killed><player={e.Player!.PlayerId}><companyId={e.SquadCompanyId}>}}",
             SquadRecalledEvent e     => EncodeSquadRecalled(e),
             SquadWeaponPickupEvent e => EncodeWeaponPickup(e),
             MatchStartReplayEvent e  => EncodeMatchStart(e),
@@ -211,13 +211,13 @@ public sealed class CoH3ReplayWriter {
     }
 
     private static string EncodeSquadRecalled(SquadRecalledEvent e) =>
-        $"{{<type=squad_recalled><player={e.Player.PlayerId}><companyId={e.SquadCompanyId}>" +
+        $"{{<type=squad_recalled><player={e.Player!.PlayerId}><companyId={e.SquadCompanyId}>" +
         $"<experience={e.Experience.ToString(CultureInfo.InvariantCulture)}>" +
         $"<infantryKills={e.InfantryKills}><vehicleKills={e.VehicleKills}><losses={e.EntityLosses}>}}";
 
     private static string EncodeWeaponPickup(SquadWeaponPickupEvent e) {
         string weaponKey = e.IsEntityBlueprint ? "ebp" : "upg";
-        return $"{{<type=item_pickup><player={e.Player.PlayerId}><companyId={e.SquadCompanyId}><{weaponKey}={e.WeaponName}>}}";
+        return $"{{<type=item_pickup><player={e.Player!.PlayerId}><companyId={e.SquadCompanyId}><{weaponKey}={e.WeaponName}>}}";
     }
 
     private static string EncodeMatchStart(MatchStartReplayEvent e) {

@@ -300,6 +300,10 @@ public class CoH3MatchDataBuilderTests {
         }
 
         public Task<Dictionary<string, Company>> GetAllCompanies() => Task.FromResult(Companies);
+
+        public ValueTask<int> PublishStateMessage(string type, string message, int priority = int.MaxValue, int removeAfterSeconds = -1, bool clear = false) {
+            throw new NotImplementedException();
+        }
     }
 
     #endregion

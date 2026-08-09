@@ -304,4 +304,11 @@ public sealed class SingleplayerLobby(LobbySetup lobbySetup, IBattlegroundsServe
 
     public Task<Dictionary<string, Company>> GetAllCompanies() => Task.FromResult(_companies); // Return the local companies dictionary in singleplayer mode
 
+    public async ValueTask<int> PublishStateMessage(string type, string message, int priority = int.MaxValue, int removeAfterSeconds = -1, bool clear = false) {
+        await _internalEvents.Writer.WriteAsync(new LobbyEvent(LobbyEventType.LobbyStateMessage, new Proto.Lobbies.LobbyStateMessage {
+            Id = 0, MessageType = type, Content = message, Priority = priority, Lifetime = removeAfterSeconds, ClearMessage = clear
+        }));
+        return 0; // Return a dummy message ID in singleplayer mode
+    }
+
 }

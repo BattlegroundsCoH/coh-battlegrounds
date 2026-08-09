@@ -51,6 +51,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
     private string _chatMessage = string.Empty;
     private string _state = "Loading match information";
 
+    private int _currentStateMessagePriority = 0;
     private bool _isPlaying = false;
     private bool _isMatchStarting = false;
     private bool _isWaitingForMatchOver = false;
@@ -317,12 +318,12 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
             var team1Slots = await MapTeamSlotsToLobbySlots(0, _lobby.Team1.Slots);
             var team2Slots = await MapTeamSlotsToLobbySlots(1, _lobby.Team2.Slots);
             cancellationToken.ThrowIfCancellationRequested();
-            await InvokeOnUiAsync(() => {
+            await InvokeOnUiAsync(async () => {
                 SyncLobbySettings();
                 AvailableMaps = maps;
                 Team1Slots = team1Slots;
                 Team2Slots = team2Slots;
-                SyncState();
+                await SyncState();
             }, cancellationToken);
             await PollLobbyEvents(cancellationToken);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
@@ -336,14 +337,23 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
         }
     }
 
-    private void SyncState() {
+    private async Task SyncState() {
         if (!CanStartMatch) {
-            LobbyState = "Waiting for players to select companies and factions";
+            await PublishState("info", "Waiting for players to select companies and factions", priority: 0);
             PropertyChanged?.Invoke(this, new(nameof(CanStartMatch)));
             return;
         }
-        LobbyState = "Ready to start the match";
+        await PublishState("info", "Ready to start the match", priority: 0);
         PropertyChanged?.Invoke(this, new(nameof(CanStartMatch)));
+    }
+
+    /// <summary>
+    /// Updates the local <see cref="LobbyState"/> immediately and publishes the same message to the lobby
+    /// so other participants receive the same status update.
+    /// </summary>
+    private ValueTask<int> PublishState(string messageType, string content, int priority = int.MaxValue) {
+        LobbyState = content;
+        return _lobby.PublishStateMessage(messageType, content, priority);
     }
 
     private void SyncLobbySettings() {
@@ -476,6 +486,23 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
                         }
                         ChatMessages.Add(new ChatMessageViewModel(DateTime.Now, ChatChannel.All, false, false, "System", systemError, SystemMessageKind: SystemMessageType.Error));
                         PropertyChanged?.Invoke(this, new(nameof(ChatMessages)));
+                        break;
+                    case LobbyEventType.LobbyStateMessage:
+                        if (lobbyEvent.Arg is not Proto.Lobbies.LobbyStateMessage stateMessage) {
+                            break;
+                        }
+                        if (stateMessage.Priority < _currentStateMessagePriority) {
+                            break; // Ignore lower-priority messages
+                        }
+                        _currentStateMessagePriority = stateMessage.Priority;
+                        switch (stateMessage.MessageType) {
+                            case "error" or "warn" or "info":
+                                LobbyState = stateMessage.Content;
+                                break;
+                            default:
+                                _logger.LogInformation("Received unhandled lobby state message type: {MessageType}", stateMessage.MessageType);
+                                break;
+                        }
                         break;
                     case LobbyEventType.ParticipantJoined:
                         if (lobbyEvent.Arg is not Participant newParticipant) {
@@ -642,7 +669,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
                     default:
                         break;
                 }
-                SyncState();
+                await SyncState();
             }, cancellationToken);
         }
     }
@@ -724,11 +751,12 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
         // Will freeze lobby state for all other participants and prevent any further changes to the lobby (e.g. changing companies, maps, settings, etc.) and will also prevent new participants from joining
         // (NOP in singleplayer)
         await _lobby.BeginMatch();
+        LobbyState = "Starting match...";
 
         EndMatchReason reason = EndMatchReason.Unknown;
         try {
             IsMatchStarting = true;
-            LobbyState = "Starting match...";
+            await PublishState("info", "Match is starting, please wait...");
 
             // Sync corrent lobby view status with backing model based on selected PickableCompany (based on host client view!)
             var synced = SyncLobbyCompanies(); // Start syncing companies (but do not await yet, as we can do this in parallel count down)
@@ -754,14 +782,15 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
                 _ => 10
             };
             for (int i = waitSeconds; i > 0; i--) {
-                LobbyState = $"Starting match in {i} second{(i > 1 ? "s" : string.Empty)}...";
-                await _lobby.PublishSystemMessage($"Match starting in {i} second{(i > 1 ? "s" : string.Empty)}...");
+                var countdownMessage = $"Match starting in {i} second{(i > 1 ? "s" : string.Empty)}...";
+                LobbyState = countdownMessage;
+                await _lobby.PublishSystemMessage(countdownMessage);
                 await Task.Delay(TimeSpan.FromSeconds(1), _timeProvider);
             }
 
             await synced; // Ensure companies are synced before building gamemode
 
-            LobbyState = "Building gamemode...";
+            await PublishState("info", "Building gamemode...");
             var buildResult = await _playService.BuildGamemode(_lobby);
             if (buildResult.Failed) {
                 LobbyState = "Failed to build gamemode, please check logs for details.";
@@ -769,26 +798,26 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
                 return;
             }
 
-            LobbyState = "Uploading gamemode...";
+            await PublishState("info", "Uploading gamemode...");
             var uploadResult = await _lobby.UploadGamemode(buildResult.GamemodeSgaFileLocation); // NOP operation in singleplayer mode
             if (uploadResult.Failed) {
-                LobbyState = "Failed to upload gamemode, please check logs for details.";
+                await PublishState("error", "Failed to upload gamemode, please check logs for details.");
                 await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             }
 
-            LobbyState = "Waiting for all players to download the gamemode...";
+            await PublishState("info", "Waiting for all players to download the gamemode...");
             var allDownloaded = await _lobby.WaitForAllPlayersHaveGamemode();
             if (!allDownloaded) {
-                LobbyState = "Failed while waiting for players to download gamemode, please check logs for details.";
+                await PublishState("error", "Failed while waiting for players to download gamemode, please check logs for details.");
                 await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             }
 
-            LobbyState = "Launching game...";
+            await PublishState("info", "Launching game...");
             var launchResult = await _lobby.LaunchGame(); // for multiplayer this means tell other players to launch (NOP in singleplayer)
             if (launchResult.Failed) {
-                LobbyState = "Failed to launch game, please check logs for details.";
+                await PublishState("error", "Failed to launch game, please check logs for details.");
                 await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             }
@@ -796,11 +825,11 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
             IsMatchStarting = false;
             IsWaitingForMatchOver = true;
             IsPlaying = true;
-            LobbyState = "Waiting for ingame results...";
+            await PublishState("info", "Waiting for ingame results...");
 
             var playResult = await _playService.LaunchGameApp(_lobby.Game);
             if (playResult.Failed) {
-                LobbyState = "Failed to launch game application.";
+                await PublishState("error", "Failed to launch game application.");
                 await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             }
@@ -808,25 +837,25 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
             IsPlaying = false;
             var matchResult = await playResult.GameInstance.WaitForMatch();
             if (matchResult.Failed) {
-                LobbyState = "Match failed to complete, please check logs for details.";
+                await PublishState("error", "Match failed to complete, please check logs for details.");
                 reason = EndMatchReason.GameCancelled;
                 await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             } else if (matchResult.ScarError) {
-                LobbyState = "Fatal SCAR error occurred during match, please check logs.";
+                await PublishState("error", "Fatal SCAR error occurred during match, please check logs.");
                 reason = EndMatchReason.ScarError;
                 await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             } else if (matchResult.BugSplat) {
-                LobbyState = "BugSplat occurred during match, please check logs.";
+                await PublishState("error", "BugSplat occurred during match, please check logs for details.");
                 await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             }
 
-            LobbyState = "Match over, analysing replay...";
+            await PublishState("info", "Match over, analysing replay...");
             var replayAnalysis = await _replayService.AnalyseReplay(matchResult.ReplayFilePath, _lobby.Game.Id);
             if (replayAnalysis.Failed) {
-                LobbyState = "Failed to analyse replay, please check logs for details.";
+                await PublishState("error", "Failed to analyse replay, please check logs for details.");
                 await Task.Delay(TimeSpan.FromSeconds(5), _timeProvider); // Wait for 5 seconds before resetting state
                 return;
             }
@@ -835,11 +864,11 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
             // This is for local statistics only, as we do not want to rely on the server to track statistics for singleplayer matches (and also for multiplayer matches in case of server issues or if the player wants to keep their statistics private)
             await _statisticsService.RegisterPlayedMatchAsync(MapToPlayedMatch(replayAnalysis));
 
-            LobbyState = "Match over, reporting results to server...";
+            await PublishState("info", "Match over, reporting results to server...");
             if (!await _lobby.ReportMatchResult(replayAnalysis)) {
-                LobbyState = "Failed to report match results to server...";
+                await PublishState("error", "Failed to report match results to server...");
             } else {
-                LobbyState = "Match results reported successfully!";
+                await PublishState("info", "Match results reported successfully!");
             }
 
             reason = EndMatchReason.MatchEndedInSuccess;
@@ -850,7 +879,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
             IsMatchStarting = false;
             IsWaitingForMatchOver = false;
             IsPlaying = false;
-            SyncState(); // Resync state after match is over (or an error occurred)
+            await SyncState(); // Resync state after match is over (or an error occurred)
             await _lobby.EndMatch(reason); // End the match and return to lobby state (NOP in singleplayer)
         }
 
@@ -1049,7 +1078,7 @@ public sealed class LobbyViewModel : INotifyPropertyChanged, IAsyncDisposable {
             PropertyChanged?.Invoke(this, new(nameof(DraftSelectedMap)));
             PropertyChanged?.Invoke(this, new(nameof(SelectedMapPreview)));
             SetMapCommand.NotifyCanExecuteChanged();
-            SyncState();
+            await SyncState();
         }
     }
 

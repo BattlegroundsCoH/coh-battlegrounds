@@ -639,23 +639,12 @@
             </Grid>
         </Grid>
 
-        <!--
-            Footer.
-
-            The columns repeat the main content area's above, so the match button sits in
-            the same track as the settings panel and lines up with LEAVE LOBBY at the top
-            of it. Aligned by construction rather than by a matching fixed width, which
-            would drift the moment either side changed.
-        -->
         <Grid Grid.Row="2" Margin="0,20,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="*" MinWidth="300" MaxWidth="440"/>
             </Grid.ColumnDefinitions>
 
-            <!-- TextBlocks, not Labels: a Label brings its own padding and takes none of
-                 the type styles, which is why these three sat at odd intervals. The
-                 connection state moved up to the page header. -->
             <StackPanel HorizontalAlignment="Left"
                         VerticalAlignment="Center">
                 <TextBlock Text="{Binding LobbyState}"

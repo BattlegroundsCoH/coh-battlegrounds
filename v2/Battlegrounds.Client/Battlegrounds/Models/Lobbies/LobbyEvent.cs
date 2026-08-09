@@ -26,6 +26,7 @@ public enum LobbyEventType {
     DownloadProgress,
     DownloadCompleted,
     SlotCompanyDownloadProgress, // Never sent or received by the server, only used for the client to update the download progress of a company in a slot
+    LobbyStateMessage,
 }
 
 public enum LobbyConnectionState {
