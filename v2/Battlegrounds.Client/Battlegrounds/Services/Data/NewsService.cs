@@ -81,8 +81,10 @@ public sealed class NewsService(
 
     private string GetArticleUrl(string slug)
         => $"{_configuration.WebsiteUrl.TrimEnd('/')}/news/{Uri.EscapeDataString(slug)}";
-    
-    private static DateTime ToLocalTime(DateTime timestamp)
-        => DateTime.SpecifyKind(timestamp, DateTimeKind.Utc).ToLocalTime();
+
+    private static DateTime ToLocalTime(DateTime timestamp) => timestamp.Kind switch {
+        DateTimeKind.Unspecified => DateTime.SpecifyKind(timestamp, DateTimeKind.Utc).ToLocalTime(),
+        _ => timestamp.ToLocalTime()
+    };
 
 }

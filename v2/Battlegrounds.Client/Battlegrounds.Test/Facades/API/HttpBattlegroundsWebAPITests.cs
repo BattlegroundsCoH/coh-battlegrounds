@@ -46,7 +46,7 @@ public class HttpBattlegroundsWebAPITests {
               {
                 "id": "3f2a", "slug": "patch-1-2", "title": "Patch 1.2", "description": "Balance pass",
                 "category": "Patch", "author": "Ragnar", "authorRole": "Developer", "isFeatured": true,
-                "publishedAt": "2026-07-19T10:00:00", "createdAt": "2026-07-18T09:00:00",
+                "publishedAt": "2026-07-19T10:00:00Z", "createdAt": "2026-07-18T09:00:00Z",
                 "resources": ["cover-id", "second-id"]
               }
             ]
@@ -111,7 +111,7 @@ public class HttpBattlegroundsWebAPITests {
                 {
                   "id": "3f2a", "slug": "patch-1-2", "title": "Patch 1.2", "description": "",
                   "category": "Patch", "author": "Ragnar", "authorRole": "Developer", "isFeatured": false,
-                  "publishedAt": "2026-07-19T10:00:00", "createdAt": "2026-07-18T09:00:00",
+                  "publishedAt": "2026-07-19T10:00:00Z", "createdAt": "2026-07-18T09:00:00Z",
                   "resources": []
                 }
               ],
