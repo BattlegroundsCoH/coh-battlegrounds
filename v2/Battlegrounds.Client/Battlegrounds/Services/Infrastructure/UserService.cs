@@ -82,6 +82,11 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
     /// </summary>
     private Timer? _refreshTimer;
 
+    /// <summary>
+    /// The most recent sign-out, so shutdown can wait for its server-side revocation. Never faults.
+    /// </summary>
+    private Task _pendingLogOut = Task.CompletedTask;
+
     private TaskCompletionSource<bool> _hasLoggedInUser = new TaskCompletionSource<bool>();
 
     private User? _localUser;
@@ -150,8 +155,48 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
     }
 
     public Task<bool> LogOutAsync() {
+        // Run on the thread pool rather than inheriting the dispatcher: shutdown blocks on this, and continuations
+        // queued back onto a blocked UI thread would never get to run.
+        Task<bool> logOut = Task.Run(LogOutCoreAsync);
+        _pendingLogOut = logOut;
+        return logOut;
+    }
+
+    public async Task WaitForPendingLogOutAsync(TimeSpan timeout) {
+
+        Task pending = _pendingLogOut;
+        if (pending.IsCompleted) {
+            return;
+        }
+
+        _logger.LogInformation("Waiting up to {Timeout} for the session revocation to finish before exiting.", timeout);
+        try {
+            await pending.WaitAsync(timeout).ConfigureAwait(false);
+        } catch (TimeoutException) {
+            _logger.LogWarning("The session revocation did not finish within {Timeout}; exiting anyway.", timeout);
+        } catch (Exception ex) {
+            _logger.LogError(ex, "The pending session revocation failed.");
+        }
+
+    }
+
+    private async Task<bool> LogOutCoreAsync() {
+
+        bool revoked = false;
+        try {
+            string token = await GetToken();
+            if (string.IsNullOrEmpty(token)) {
+                _logger.LogWarning("No usable access token at logout; the session cannot be revoked server-side.");
+            } else {
+                revoked = await _webAPI.LogoutAsync();
+            }
+        } catch (Exception ex) {
+            _logger.LogError(ex, "Failed to revoke the session server-side during logout.");
+        }
+
         ClearLocalCredentials();
-        return Task.FromResult(true);
+        return revoked;
+
     }
 
     /// <summary>

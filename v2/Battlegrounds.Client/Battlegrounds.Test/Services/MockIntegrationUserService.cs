@@ -74,8 +74,11 @@ public sealed class MockIntegrationUserService(string user) : IUserService {
     }
 
     public Task<bool> LogOutAsync() {
-        throw new NotImplementedException();
+        _token = string.Empty;
+        return Task.FromResult(true);
     }
+
+    public Task WaitForPendingLogOutAsync(TimeSpan timeout) => Task.CompletedTask;
 
     public Task<User> LoginWithDiscordAsync() {
         throw new NotImplementedException();

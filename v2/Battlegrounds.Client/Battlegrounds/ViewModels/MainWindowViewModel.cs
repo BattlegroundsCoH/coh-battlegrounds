@@ -133,10 +133,12 @@ public sealed class MainWindowViewModel : IDialogHost, INotifyPropertyChanged {
         SetContent(null); // Currently, we don't have a back stack, so we just clear the content
     }
 
-    private async Task LogoutAsync() {
+    private Task LogoutAsync() {
+        // Every state change here must happen before the first await, so the window renders the login view once
+        Task logout = UserViewModel.LogoutAsync();
         SetContent(null);
         IsHomeButtonActive = true; // Also unchecks SETTINGS, so the next login lands on Home
-        await UserViewModel.LogoutAsync();
+        return logout;
     }
 
     private async Task StartSingleplayerLobby() {

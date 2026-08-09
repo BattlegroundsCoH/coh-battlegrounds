@@ -43,6 +43,8 @@ public sealed class HttpBattlegroundsWebAPI(
 
     public string RefreshEndpoint => $"{BaseUrl}/auth/v1/refresh";
 
+    public string LogoutEndpoint => $"{BaseUrl}/auth/v1/logout";
+
     public string PublicKeyEndpoint => $"{_configuration.API.LoginUrlOverride}/publickey";
 
     private string BaseUrl => _configuration.API.BaseUrl.TrimEnd('/');
@@ -108,6 +110,25 @@ public sealed class HttpBattlegroundsWebAPI(
 
         _logger.LogWarning("Token refresh failed with status {StatusCode} ({Reason}). The refresh token is retained.", response.StatusCode, response.ReasonPhrase);
         return new RefreshResult(RefreshOutcome.Transient, null, errorCode);
+
+    }
+
+    public async Task<bool> LogoutAsync() {
+
+        _logger.LogDebug("Logging out using {Endpoint}", LogoutEndpoint);
+
+        HttpRequestMessage request = new(HttpMethod.Post, LogoutEndpoint);
+        request.Headers.Add("User-Agent", "BattlegroundsClient/1.0");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _authToken);
+
+        HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
+        if (!response.IsSuccessStatusCode) {
+            _logger.LogError("Logout failed with status code {StatusCode}, Reason: {ReasonPhrase}", response.StatusCode, response.ReasonPhrase);
+            return false;
+        }
+
+        _logger.LogInformation("Session revoked successfully.");
+        return true;
 
     }
 

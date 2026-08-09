@@ -116,6 +116,8 @@ public interface IBattlegroundsWebAPI {
 
     Task<RefreshResult> RefreshTokenAsync(RefreshRequest request);
 
+    Task<bool> LogoutAsync();
+
     /// <summary>
     /// Initiates an authentication process with the specified authentication provider.
     /// </summary>

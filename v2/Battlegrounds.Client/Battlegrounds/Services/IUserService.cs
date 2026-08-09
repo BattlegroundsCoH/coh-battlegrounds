@@ -45,7 +45,24 @@ public interface IUserService {
     /// langword="null"/> if the credentials are invalid.</returns>
     Task<User?> LoginAsync(string userName, string password);
 
+    /// <summary>
+    /// Signs the local user out, revoking the session server-side and clearing all locally stored credentials.
+    /// </summary>
+    /// <remarks>The local credentials are cleared whether or not the server could be reached; the return value
+    /// reports only whether the server acknowledged the revocation.</remarks>
+    /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the
+    /// session was revoked server-side; otherwise <see langword="false"/>.</returns>
     Task<bool> LogOutAsync();
+
+    /// <summary>
+    /// Waits for an in-flight sign-out to finish revoking the session server-side.
+    /// </summary>
+    /// <remarks>Intended for the shutdown path. The UI switches to the login view as soon as the local credentials
+    /// are dropped, so without this a user who closes the app immediately after signing out can exit before the
+    /// revocation reaches the server, leaving the refresh token valid for its full lifetime.</remarks>
+    /// <param name="timeout">How long to wait before giving up so a hung request cannot hold up shutdown.</param>
+    /// <returns>A task that completes when the revocation finishes, fails, or the timeout elapses. It does not fault.</returns>
+    Task WaitForPendingLogOutAsync(TimeSpan timeout);
 
     /// <summary>
     /// Gets the access token to authenticate outbound calls with, refreshing it first if it is at or near expiry.
