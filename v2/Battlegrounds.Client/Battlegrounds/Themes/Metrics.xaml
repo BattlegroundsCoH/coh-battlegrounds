@@ -108,7 +108,7 @@
     <sys:Double x:Key="Size.Icon.XXL">48</sys:Double>
     <sys:Double x:Key="Size.Icon.Huge">70</sys:Double>
 
-    <!-- Status dot: the ready/unready pip on a lobby slot. -->
+    <!-- Status dot: the ready/unready pip on a lobby slot, and the BusyDots cycle. -->
     <sys:Double x:Key="Size.Dot">6</sys:Double>
 
     <!-- ===================== News ===================== -->

@@ -10,6 +10,7 @@
           Brushes     semantic roles over the palette      (Brushes.xaml)
           Metrics     corners, spacing, strokes, sizing    (Metrics.xaml)
           Typography  fonts and named text styles          (Typography.xaml)
+          Icons       vector artwork, geometry only        (Icons.xaml)
           Controls    control styles and templates         (Controls/*.xaml)
           Legacy      deprecated aliases, being removed    (Legacy.xaml)
 
@@ -30,6 +31,7 @@
         <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Brushes.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Metrics.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Typography.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Icons.xaml" />
 
         <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/ScrollViewer.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Battlegrounds;component/Themes/Controls/Button.xaml" />
