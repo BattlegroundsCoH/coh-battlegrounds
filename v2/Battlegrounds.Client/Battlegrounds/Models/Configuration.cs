@@ -36,11 +36,14 @@ public sealed class Configuration {
             set => _loginUrlOverride = value;
         }
         public TimeSpan RequestTimeout { get; set; } = TimeSpan.FromSeconds(15); // Default timeout for API requests
+        
+        [ConfigurationProperty("Use Loopback Sign-In", "Whether browser sign-in returns to a local listener the launcher opens instead of the API's own success page. Requires the API to allow http://127.0.0.1/auth/callback; where it does not, sign-in still works but ends on the API's page.", developerModeOnly: true, propertyType: ConfigurationPropertyType.Boolean)]
+        public bool UseLoopbackSignIn { get; set; } = true;
     }
 
     [ConfigurationSection("Company of Heroes 3", "Settings for Company of Heroes 3", priority: 10)]
     public sealed class CoH3Configuration {
-        
+
         [ConfigurationProperty("Install Path", "The file system path where Company of Heroes 3 is installed. This path is used to locate the game executable and related files. Ensure that the path is correct and that the application has appropriate permissions to access it.", propertyType: ConfigurationPropertyType.DirectoryPath)]
         public string InstallPath { get; set; } = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Company of Heroes 3";
 
@@ -190,7 +193,7 @@ public sealed class Configuration {
     /// <summary>
     /// Gets or sets the port number used by the Battlegrounds HTTP server.
     /// </summary>
-    /// <remarks>Ensure that the specified port is not already in use by another application and is 
+    /// <remarks>Ensure that the specified port is not already in use by another application and is
     /// accessible through the network firewall, if applicable.</remarks>
     [ConfigurationSection("Server", "Settings related to the Battlegrounds server", developerModeOnly: true, priority: 90)]
     [ConfigurationProperty("Battlegrounds HTTP Server Port", "The port number used by the Battlegrounds HTTP server. Ensure that the specified port is not already in use by another application and is accessible through the network firewall, if applicable.", developerModeOnly: true)]
@@ -275,7 +278,7 @@ public sealed class Configuration {
     /// Gets or sets the logging level for the application.
     /// </summary>
     public string LogLevel { get; set; } =
-        #if DEBUG 
+        #if DEBUG
             "trace"; // Default log level testing
         #else
             "info"; // Default log level for production

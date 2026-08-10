@@ -31,6 +31,18 @@
   </ItemGroup>
 
   <!--
+    The pages the loopback sign-in listener serves to the browser. Embedded rather than copied
+    to the output directory so they survive a self-contained publish and Velopack packaging as
+    part of the assembly, and so they load without a WPF Application context (the listener tests
+    have none). LogicalName is set explicitly rather than left to the default path-derived name,
+    which the hyphen in the filename would otherwise make easy to get subtly wrong.
+  -->
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\Auth\signin.html" LogicalName="Battlegrounds.Auth.SignIn.html" />
+    <EmbeddedResource Include="Assets\Auth\notice.html" LogicalName="Battlegrounds.Auth.Notice.html" />
+  </ItemGroup>
+
+  <!--
     Design-system fonts, embedded so the app renders identically on a machine that has
     neither installed. Oswald's static weights are instanced from the upstream variable
     font (WPF only ever renders a variable font's default instance, so the four files
