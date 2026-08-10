@@ -21,8 +21,6 @@
   <ItemGroup>
     <None Remove="Assets\auth.jpg" />
     <None Remove="Assets\dummy_avatar.png" />
-    <None Remove="Assets\IdP_discord.png" />
-    <None Remove="Assets\IdP_steam.png" />
     <None Remove="Rendering\Effects\ColourTintShader.ps" />
   </ItemGroup>
 
@@ -58,8 +56,6 @@
   <ItemGroup>
     <Resource Include="Assets\auth.jpg" />
     <Resource Include="Assets\BattlegroundsLogo.png" />
-    <Resource Include="Assets\IdP_discord.png" />
-    <Resource Include="Assets\IdP_steam.png" />
     <Resource Include="Rendering\Effects\ColourTintShader.ps" />
   </ItemGroup>
 
