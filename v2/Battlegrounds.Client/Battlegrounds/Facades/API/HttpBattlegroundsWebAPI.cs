@@ -15,7 +15,9 @@ namespace Battlegrounds.Facades.API;
 public sealed class HttpBattlegroundsWebAPI(
     ILogger<HttpBattlegroundsWebAPI> logger,
     IAsyncHttpClient asyncHttpClient,
-    Configuration configuration) : IBattlegroundsWebAPI {
+    Configuration configuration,
+    TimeSpan? authPollInterval = null,
+    TimeSpan? authPollBudget = null) : IBattlegroundsWebAPI {
 
     private static readonly JsonSerializerOptions _jsonOptions = new() {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -33,9 +35,15 @@ public sealed class HttpBattlegroundsWebAPI(
     /// </summary>
     public static readonly string NewsResourceEndpoint = "/api/news/resources";
 
+    private static readonly TimeSpan DefaultAuthPollBudget = TimeSpan.FromMinutes(4.5);
+
+    private static readonly TimeSpan DefaultAuthPollInterval = TimeSpan.FromSeconds(1);
+
     private readonly ILogger<HttpBattlegroundsWebAPI> _logger = logger;
     private readonly IAsyncHttpClient _httpClient = asyncHttpClient;
     private readonly Configuration _configuration = configuration;
+    private readonly TimeSpan _authPollInterval = authPollInterval ?? DefaultAuthPollInterval;
+    private readonly TimeSpan _authPollBudget = authPollBudget ?? DefaultAuthPollBudget;
 
     private string _authToken = string.Empty;
 
@@ -49,19 +57,18 @@ public sealed class HttpBattlegroundsWebAPI(
 
     private string BaseUrl => _configuration.API.BaseUrl.TrimEnd('/');
 
-    public string AuthStartEndpoint(AuthProvider authProvider) => $"{_configuration.API.BaseUrl}{("/auth/v1/<IdP>/start").Replace("<IdP>", authProvider switch {
-        AuthProvider.Battlegrounds => "battlegrounds",
-        AuthProvider.Steam => "steam",
-        AuthProvider.Discord => "discord",
-        _ => throw new ArgumentOutOfRangeException(nameof(authProvider), $"Unsupported authentication provider: {authProvider}")
-    })}";
+    public string AuthStartEndpoint(AuthProvider authProvider) => $"{BaseUrl}/auth/v1/{ProviderSegment(authProvider)}/start";
 
-    public string AuthStatusEndpoint(AuthProvider authProvider) => $"{_configuration.API.BaseUrl}{("/auth/v1/<IdP>/status").Replace("<IdP>", authProvider switch {
+    public string AuthStatusEndpoint(AuthProvider authProvider) => $"{BaseUrl}/auth/v1/{ProviderSegment(authProvider)}/status";
+
+    public string AuthCancelEndpoint => $"{BaseUrl}/auth/v1/session/cancel";
+
+    private static string ProviderSegment(AuthProvider authProvider) => authProvider switch {
         AuthProvider.Battlegrounds => "battlegrounds",
         AuthProvider.Steam => "steam",
         AuthProvider.Discord => "discord",
         _ => throw new ArgumentOutOfRangeException(nameof(authProvider), $"Unsupported authentication provider: {authProvider}")
-    })}";
+    };
 
     public async Task<LoginResponse> LoginAsync(LoginRequest request) {
         _logger.LogDebug("Logging in using {Endpoint}", LoginEndpoint);
@@ -165,9 +172,11 @@ public sealed class HttpBattlegroundsWebAPI(
         return await response.Content.ReadAsStringAsync();
     }
 
-    public async Task<StartAuthResponse?> StartAuthAsync(AuthProvider provider) {
+    public async Task<StartAuthResponse?> StartAuthAsync(AuthProvider provider, string? returnUrl = null) {
 
-        string endpoint = AuthStartEndpoint(provider);
+        string endpoint = string.IsNullOrWhiteSpace(returnUrl)
+            ? AuthStartEndpoint(provider)
+            : $"{AuthStartEndpoint(provider)}?returnUrl={Uri.EscapeDataString(returnUrl)}";
         _logger.LogDebug("Starting authentication with {Provider} at {Endpoint}", provider, endpoint);
 
         HttpRequestMessage request = new(HttpMethod.Get, endpoint);
@@ -188,44 +197,118 @@ public sealed class HttpBattlegroundsWebAPI(
         }
     }
 
-    const int MaxRetries = 60; // Maximum number of retries for checking auth status
-    const int RetryDelayMilliseconds = 1000; // Delay between retries in milliseconds
-    // 60 retries with 1000ms delay = 60 seconds total wait time (Not accounting for network latency)
+    public async Task<AuthStatusResult> EndAuthAsync(AuthProvider provider, string sessionId, string verifier, CancellationToken cancellationToken = default) {
 
-    public async Task<EndAuthResponse?> EndAuthAsync(AuthProvider provider, string sessionId, string verifier) {
+        string endpoint = $"{AuthStatusEndpoint(provider)}?id={Uri.EscapeDataString(sessionId)}&verifier={Uri.EscapeDataString(verifier)}";
+        DateTime deadline = DateTime.UtcNow + _authPollBudget;
+        int attempt = 0;
 
-        string endpoint = $"{AuthStatusEndpoint(provider)}?id={sessionId}&verifier={verifier}";
-        for (int i = 0; i < MaxRetries; i++) {
-            try {
-                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, endpoint);
-                HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
-                if (response.StatusCode is HttpStatusCode.OK) {
-                    _logger.LogDebug("Authentication status for {Provider} with session {SessionId} is OK.", provider, sessionId);
-                    Stream contentStream = await response.Content.ReadAsStreamAsync() ?? throw new InvalidOperationException("Response content is null.");
-                    return await FromJson<EndAuthResponse>(contentStream) ?? throw new InvalidOperationException("Failed to deserialize end auth response.");
-                } else if (response.StatusCode is HttpStatusCode.NotFound) {
-                    _logger.LogDebug("Authentication status for {Provider} with session {SessionId} not found. Retrying...", provider, sessionId);
-                    await Task.Delay(RetryDelayMilliseconds); // Wait before retrying
-                } else if (response.StatusCode is HttpStatusCode.Accepted) {
-                    if (i % 5 == 0) { // Log every 5 attempts to avoid spamming logs
-                        _logger.LogDebug("Authentication for {Provider} with session {SessionId} is still pending. Retrying...", provider, sessionId);
-                    }
-                    await Task.Delay(RetryDelayMilliseconds); // Authentication is still pending, wait before retrying
-                } else {
-                    _logger.LogError("Authentication status check failed with status code {StatusCode}. Error: {ErrorMessage}", response.StatusCode, await response.Content.ReadAsStringAsync());
-                    await Task.Delay(RetryDelayMilliseconds); // Wait before retrying
-                }
-            } catch (HttpRequestException ex) {
-                _logger.LogError(ex, "Error checking authentication status for {Provider} with session {SessionId}. Retrying...", provider, sessionId);
-                await Task.Delay(RetryDelayMilliseconds); // Wait before retrying
-            } catch (Exception ex) {
-                _logger.LogError(ex, "Unexpected error checking authentication status for {Provider} with session {SessionId}. Retrying...", provider, sessionId);
-                await Task.Delay(RetryDelayMilliseconds); // Wait before retrying
+        while (DateTime.UtcNow < deadline) {
+
+            if (cancellationToken.IsCancellationRequested) {
+                _logger.LogDebug("Waiting on the {Provider} login session was cancelled.", provider);
+                return new AuthStatusResult(AuthStatusOutcome.Cancelled);
             }
+
+            attempt++;
+
+            try {
+
+                HttpRequestMessage request = new(HttpMethod.Get, endpoint);
+                HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
+
+                if (response.StatusCode is HttpStatusCode.OK) {
+                    return await ReadAuthStatusAsync(provider, sessionId, response);
+                }
+
+                if (response.StatusCode is HttpStatusCode.Accepted or HttpStatusCode.NotFound) {
+                    // 404 is not "gone": the API answers it for a session it cannot see yet as well as one that has
+                    // expired, deliberately indistinguishably. Both are waited out.
+                    if (attempt % 5 == 1) {
+                        _logger.LogDebug("The {Provider} login session {SessionId} has not resolved yet ({StatusCode}).", provider, sessionId, response.StatusCode);
+                    }
+                } else {
+                    _logger.LogError("Checking the {Provider} login session failed with status {StatusCode}. Error: {ErrorMessage}", provider, response.StatusCode, await response.Content.ReadAsStringAsync());
+                }
+
+            } catch (OperationCanceledException) {
+                _logger.LogDebug("Waiting on the {Provider} login session was cancelled.", provider);
+                return new AuthStatusResult(AuthStatusOutcome.Cancelled);
+            } catch (Exception ex) {
+                _logger.LogError(ex, "Unexpected error checking the {Provider} login session {SessionId}.", provider, sessionId);
+            }
+
+            try {
+                await Task.Delay(_authPollInterval, cancellationToken);
+            } catch (OperationCanceledException) {
+                _logger.LogDebug("Waiting on the {Provider} login session was cancelled.", provider);
+                return new AuthStatusResult(AuthStatusOutcome.Cancelled);
+            }
+
         }
 
-        _logger.LogError("Authentication status check for {Provider} with session {SessionId} timed out after {MaxRetries} attempts.", provider, sessionId, MaxRetries);
-        return null;
+        _logger.LogError("The {Provider} login session {SessionId} did not resolve within {Budget}.", provider, sessionId, _authPollBudget);
+        return new AuthStatusResult(AuthStatusOutcome.TimedOut);
+
+    }
+
+    public async Task CancelAuthAsync(string sessionId, string verifier) {
+
+        string endpoint = $"{AuthCancelEndpoint}?id={Uri.EscapeDataString(sessionId)}&verifier={Uri.EscapeDataString(verifier)}";
+
+        try {
+            HttpRequestMessage request = new(HttpMethod.Post, endpoint);
+            HttpResponseMessage response = await _httpClient.SendRequestAsync(request);
+            if (response.IsSuccessStatusCode) {
+                _logger.LogDebug("The login session {SessionId} was abandoned server-side.", sessionId);
+            } else {
+                _logger.LogDebug("Abandoning the login session {SessionId} answered {StatusCode}.", sessionId, response.StatusCode);
+            }
+        } catch (Exception ex) {
+            _logger.LogDebug(ex, "The login session {SessionId} could not be abandoned server-side.", sessionId);
+        }
+
+    }
+    
+    private async Task<AuthStatusResult> ReadAuthStatusAsync(AuthProvider provider, string sessionId, HttpResponseMessage response) {
+
+        string body = await response.Content.ReadAsStringAsync();
+
+        try {
+
+            using JsonDocument document = JsonDocument.Parse(body);
+            if (document.RootElement.TryGetProperty("status", out JsonElement status)) {
+
+                string? code = document.RootElement.TryGetProperty("code", out JsonElement codeElement) ? codeElement.GetString() : null;
+                string? description = document.RootElement.TryGetProperty("description", out JsonElement descriptionElement) ? descriptionElement.GetString() : null;
+
+                if (string.Equals(status.GetString(), "MergeRequired", StringComparison.OrdinalIgnoreCase)) {
+                    _logger.LogWarning("The {Provider} login session {SessionId} needs an account merge, which is a website flow.", provider, sessionId);
+                    return new AuthStatusResult(AuthStatusOutcome.MergeRequired, null, code, description);
+                }
+
+                _logger.LogWarning("The {Provider} login session {SessionId} was refused ({Code}).", provider, sessionId, code ?? "no code");
+                return new AuthStatusResult(AuthStatusOutcome.Failed, null, code, description);
+
+            }
+
+        } catch (JsonException ex) {
+            _logger.LogError(ex, "The {Provider} login session {SessionId} returned a body that is not JSON.", provider, sessionId);
+            return new AuthStatusResult(AuthStatusOutcome.Failed, null, null, "The sign-in response could not be read.");
+        }
+
+        try {
+            EndAuthResponse? endAuthResponse = JsonSerializer.Deserialize<EndAuthResponse>(body, _jsonOptions);
+            if (endAuthResponse is null || string.IsNullOrWhiteSpace(endAuthResponse.Token)) {
+                _logger.LogError("The {Provider} login session {SessionId} completed but carried no token.", provider, sessionId);
+                return new AuthStatusResult(AuthStatusOutcome.Failed, null, null, "The sign-in response could not be read.");
+            }
+            _logger.LogDebug("The {Provider} login session {SessionId} completed.", provider, sessionId);
+            return new AuthStatusResult(AuthStatusOutcome.Success, endAuthResponse);
+        } catch (JsonException ex) {
+            _logger.LogError(ex, "Failed to deserialize the {Provider} login session {SessionId}.", provider, sessionId);
+            return new AuthStatusResult(AuthStatusOutcome.Failed, null, null, "The sign-in response could not be read.");
+        }
 
     }
 
