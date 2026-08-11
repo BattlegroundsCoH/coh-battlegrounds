@@ -14,12 +14,7 @@ namespace Battlegrounds.ViewModels;
 
 public sealed class SettingsViewModel {
 
-    private static bool IsDeveloperMode =>
-#if DEBUG
-        true;
-#else
-        false;
-#endif
+    private static bool IsDeveloperMode => AppEnvironment.IsDeveloperMode;
 
     private readonly Configuration _configuration;
     private readonly BattlegroundsApp _app;

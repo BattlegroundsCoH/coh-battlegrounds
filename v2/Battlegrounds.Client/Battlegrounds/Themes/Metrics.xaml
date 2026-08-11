@@ -108,8 +108,20 @@
     <sys:Double x:Key="Size.Icon.XXL">48</sys:Double>
     <sys:Double x:Key="Size.Icon.Huge">70</sys:Double>
 
-    <!-- Status dot: the ready/unready pip on a lobby slot. -->
+    <!-- Status dot: the ready/unready pip on a lobby slot, and the BusyDots cycle. -->
     <sys:Double x:Key="Size.Dot">6</sys:Double>
+
+    <!-- ===================== Quote card ===================== -->
+    <!--
+        The pull-quote floated over the sign-in artwork.
+
+        A token rather than a literal because it holds text that cannot reflow: the
+        attribution is a TrackedTextBlock, which draws a GlyphRun and therefore neither wraps
+        nor trims. Frozen at 360 it clipped the attribution the moment the UI scale grew the
+        type underneath it — Font.Size.Meta alone goes 11 -> 17 across the overlays.
+    -->
+
+    <sys:Double x:Key="Size.QuoteCard.MaxWidth">460</sys:Double>
 
     <!-- ===================== News ===================== -->
     <!--

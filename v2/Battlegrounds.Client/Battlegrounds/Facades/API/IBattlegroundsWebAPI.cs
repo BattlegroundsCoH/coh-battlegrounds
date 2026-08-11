@@ -55,6 +55,24 @@ public sealed record EndAuthResponse(
     [property: JsonPropertyName("expiresAt")] DateTime ExpiresAt
 );
 
+public enum AuthStatusOutcome {
+    Success,
+
+    /// <summary>The provider identity belongs to another account. Merging is a website flow; the client cannot finish it.</summary>
+    MergeRequired,
+
+    Failed,
+    TimedOut,
+    Cancelled
+
+}
+
+public sealed record AuthStatusResult(
+    AuthStatusOutcome Outcome,
+    EndAuthResponse? Response = null,
+    string? Code = null,
+    string? Description = null);
+
 public sealed record NewsPreviewResponse(
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("slug")] string Slug,
@@ -122,21 +140,31 @@ public interface IBattlegroundsWebAPI {
     /// Initiates an authentication process with the specified authentication provider.
     /// </summary>
     /// <param name="provider">The authentication provider to use for the authentication process.</param>
+    /// <param name="returnUrl">Where the API should send the browser once the provider has answered. Omit it and the
+    /// browser ends on the API's own success page instead. A URL the API does not allow is <i>ignored</i> rather than
+    /// refused, so passing a wrong one costs the redirect, not the sign-in.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a  <see cref="StartAuthResponse"/>
     /// object with details about the authentication process,  or <see langword="null"/> if the operation fails or is
     /// canceled.</returns>
-    Task<StartAuthResponse?> StartAuthAsync(AuthProvider provider);
+    Task<StartAuthResponse?> StartAuthAsync(AuthProvider provider, string? returnUrl = null);
 
     /// <summary>
-    /// Completes the authentication process for the specified provider and session.
+    /// Waits for a login session to resolve and collects its tokens.
     /// </summary>
     /// <param name="provider">The authentication provider used to complete the process.</param>
     /// <param name="sessionId">The unique identifier for the authentication session. Cannot be null or empty.</param>
-    /// <param name="verifier">The verifier string provided by the authentication provider. Cannot be null or empty.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains an  <see cref="EndAuthResponse"/>
-    /// object with the authentication result, or <see langword="null"/>  if the session is invalid or the process could
-    /// not be completed.</returns>
-    Task<EndAuthResponse?> EndAuthAsync(AuthProvider provider, string sessionId, string verifier);
+    /// <param name="verifier">The verifier issued alongside the session. Cannot be null or empty; the API releases
+    /// nothing without it.</param>
+    /// <param name="cancellationToken">Stops waiting. Takes effect within one in-flight request.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result reports how the session ended and,
+    /// on success, carries the tokens.</returns>
+    Task<AuthStatusResult> EndAuthAsync(AuthProvider provider, string sessionId, string verifier, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Abandons a login session server-side, so finishing in the browser afterwards cannot mint tokens nobody is
+    /// waiting for.
+    /// </summary>
+    Task CancelAuthAsync(string sessionId, string verifier);
 
     void SetAuthenticationToken(string token);
 

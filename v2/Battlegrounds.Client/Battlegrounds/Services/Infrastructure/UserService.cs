@@ -33,7 +33,9 @@ namespace Battlegrounds.Services.Infrastructure;
 /// <param name="browserService"></param>
 /// <param name="tokenStorePath">Where the encrypted token file lives. Defaults to the per-user application data
 /// location; supplied by tests so they do not write to the real user's store.</param>
-public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAPI webAPI, IBrowserService browserService, string? tokenStorePath = null) : IUserService, IDisposable {
+/// <param name="loopbackListenerFactory">Opens the local listener a browser sign-in returns to. Optional: without
+/// one the sign-in still completes, it just ends on the API's own page instead of ours.</param>
+public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAPI webAPI, IBrowserService browserService, string? tokenStorePath = null, ILoopbackAuthListenerFactory? loopbackListenerFactory = null, IWindowActivationService? windowActivationService = null) : IUserService, IDisposable {
 
     private sealed record StoredTokenData(
         [property: JsonPropertyName("token")] string Token,
@@ -70,6 +72,11 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
     private readonly IBattlegroundsWebAPI _webAPI = webAPI;
     private readonly IBrowserService _browserService = browserService;
     private readonly string _userTokenStore = tokenStorePath ?? DefaultTokenStorePath;
+    private readonly ILoopbackAuthListenerFactory? _loopbackListenerFactory = loopbackListenerFactory;
+
+    // Optional for the same reason as the listener factory above: the tests construct this service directly, and
+    // neither of them has a WPF Application to raise a window on.
+    private readonly IWindowActivationService? _windowActivationService = windowActivationService;
 
     /// <summary>
     /// Serialises refresh attempts so a rotated token is never spent twice.
@@ -414,17 +421,29 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
 
     }
 
-    public Task<User> LoginWithDiscordAsync() => LoginWithProviderAsync(AuthProvider.Discord);
+    public Task<User> LoginWithDiscordAsync(CancellationToken cancellationToken = default) => LoginWithProviderAsync(AuthProvider.Discord, cancellationToken);
 
-    public Task<User> LoginWithSteamAsync() => LoginWithProviderAsync(AuthProvider.Steam);
+    public Task<User> LoginWithSteamAsync(CancellationToken cancellationToken = default) => LoginWithProviderAsync(AuthProvider.Steam, cancellationToken);
 
-    private async Task<User> LoginWithProviderAsync(AuthProvider provider) {
+    /// <summary>
+    /// Runs a browser sign-in with a provider and applies the tokens it yields.
+    /// </summary>
+    /// <remarks>The loopback listener is a signal, never a gate. The API <i>ignores</i> a return URL it does not
+    /// allow rather than refusing it, so a client whose address is not on the operator's list still signs in
+    /// successfully -- the browser just lands on the API's own page and the listener never fires. Polling therefore
+    /// starts alongside the browser and stays authoritative; the listener only buys us a page we control and an
+    /// earlier notion of "the user is done".</remarks>
+    private async Task<User> LoginWithProviderAsync(AuthProvider provider, CancellationToken cancellationToken) {
 
-        StartAuthResponse? startAuthResponse = await _webAPI.StartAuthAsync(provider) ?? throw new InvalidOperationException("Failed to start authentication with provider.");
-        if (startAuthResponse is null) {
-            _logger.LogWarning("Authentication session could not be started for provider {Provider}.", provider);
-            throw new InvalidOperationException("Authentication session could not be started.");
+        using CancellationTokenSource attempt = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using ILoopbackAuthListener? listener = _loopbackListenerFactory?.TryStart();
+
+        if (listener is null) {
+            _logger.LogInformation("No loopback listener for the {Provider} sign-in; the result will be collected by polling alone.", provider);
         }
+
+        StartAuthResponse startAuthResponse = await _webAPI.StartAuthAsync(provider, listener?.ReturnUrl)
+            ?? throw new InvalidOperationException("Authentication session could not be started.");
 
         _logger.LogInformation("Starting authentication with {Provider}", provider);
 
@@ -433,23 +452,89 @@ public sealed class UserService(ILogger<UserService> logger, IBattlegroundsWebAP
 
         _logger.LogInformation("Waiting for authentication to complete...");
 
-        EndAuthResponse? endAuthResponse = await _webAPI.EndAuthAsync(provider, startAuthResponse.SessionId, startAuthResponse.Verifier);
-        if (endAuthResponse is null) {
-            _logger.LogWarning("Authentication session ended without response for provider {Provider}.", provider);
-            throw new InvalidOperationException("Authentication session ended without response.");
+        // Started before the callback is awaited, and deliberately so. A completed login session's payload lives one
+        // minute; if the return URL was silently rejected, waiting on a listener that will never fire would leave
+        // nothing to collect by the time polling began.
+        Task<AuthStatusResult> poll = _webAPI.EndAuthAsync(provider, startAuthResponse.SessionId, startAuthResponse.Verifier, attempt.Token);
+        Task<string?> callback = listener is null
+            ? Task.FromResult<string?>(null)
+            : listener.WaitForCallbackAsync(attempt.Token);
+
+        AuthStatusResult result;
+        try {
+            if (await Task.WhenAny(poll, callback) == callback) {
+                ObserveCallback(await callback, startAuthResponse.SessionId);
+            }
+            result = await poll;
+        } finally {
+            attempt.Cancel();   // Releases the listener's accept loop before it is disposed.
+            await callback;     // Never faults by contract, so this cannot throw over an in-flight exception.
         }
 
-        _logger.LogInformation("Authentication with {Provider} completed successfully.", provider);
+        if (result.Outcome is AuthStatusOutcome.Cancelled) {
+            // Cancelling was local until this call: the poll stopped and the listener closed, but the session stayed
+            // valid for its five minutes, so a user who then finished in the browser had tokens minted for a client
+            // that had stopped listening -- and hit a closed port on the way. Deliberately not passed a token: the
+            // one that got us here is the one that was just cancelled.
+            await _webAPI.CancelAuthAsync(startAuthResponse.SessionId, startAuthResponse.Verifier);
+        } else {
+            // Every other outcome has something for the user in the launcher, and they are still looking at a browser.
+            // Not on a cancel, where they pressed the button and are already here.
+            _windowActivationService?.Activate();
+        }
 
-        ApplyTokens(endAuthResponse.Token, endAuthResponse.RefreshToken, GetTokenExpiration(endAuthResponse.Token, endAuthResponse.ExpiresAt), new User {
-            UserId = endAuthResponse.User.Id,
-            UserDisplayName = endAuthResponse.User.DisplayName,
-        });
-        await PersistTokensAsync();
+        return await CompleteProviderLoginAsync(provider, result, cancellationToken);
 
-        _logger.LogInformation("User {UserName} with Id {Id} logged in successfully via {Provider}.", _localUser.UserDisplayName, _localUser.UserId, provider);
+    }
 
-        return _localUser;
+    /// <summary>
+    /// Records what the loopback listener saw. Never fails the sign-in.
+    /// </summary>
+    /// <remarks>A state that is not this session is logged and dropped rather than treated as an attack. The state
+    /// is not a secret -- it travels to the identity provider and back -- and the API releases nothing without the
+    /// verifier only this client holds, so failing here would hand anyone who can reach the port a way to break our
+    /// own sign-in.</remarks>
+    private void ObserveCallback(string? state, string sessionId) {
+        if (state is null) {
+            _logger.LogDebug("The loopback listener stopped without receiving a callback.");
+        } else if (!string.Equals(state, sessionId, StringComparison.OrdinalIgnoreCase)) {
+            _logger.LogWarning("A loopback callback carried a state that is not this login session; ignoring it.");
+        } else {
+            _logger.LogInformation("The browser returned to the loopback listener.");
+        }
+    }
+
+    /// <summary>
+    /// Turns a resolved login session into a signed-in user, or into a message the login view can show as-is.
+    /// </summary>
+    private async Task<User> CompleteProviderLoginAsync(AuthProvider provider, AuthStatusResult result, CancellationToken cancellationToken) {
+
+        switch (result.Outcome) {
+
+            case AuthStatusOutcome.Success when result.Response is not null:
+                EndAuthResponse response = result.Response;
+                ApplyTokens(response.Token, response.RefreshToken, GetTokenExpiration(response.Token, response.ExpiresAt), new User {
+                    UserId = response.User.Id,
+                    UserDisplayName = response.User.DisplayName,
+                });
+                await PersistTokensAsync();
+                _logger.LogInformation("User {UserName} with Id {Id} logged in successfully via {Provider}.", _localUser.UserDisplayName, _localUser.UserId, provider);
+                return _localUser;
+
+            case AuthStatusOutcome.Cancelled:
+                throw new OperationCanceledException(cancellationToken);
+
+            case AuthStatusOutcome.MergeRequired:
+                // The merge token is single-use and the client has no UI to spend it on; dropping it is deliberate.
+                throw new InvalidOperationException("That account is already linked to a different Battlegrounds account. Finish merging on the website, then sign in again.");
+
+            case AuthStatusOutcome.Failed:
+                throw new InvalidOperationException(result.Description ?? "The sign-in was refused.");
+
+            default:
+                throw new InvalidOperationException("The sign-in did not finish in time. Please try again.");
+
+        }
 
     }
 

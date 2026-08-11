@@ -21,13 +21,23 @@
   <ItemGroup>
     <None Remove="Assets\auth.jpg" />
     <None Remove="Assets\dummy_avatar.png" />
-    <None Remove="Assets\IdP_discord.png" />
-    <None Remove="Assets\IdP_steam.png" />
     <None Remove="Rendering\Effects\ColourTintShader.ps" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="App.ico" />
+  </ItemGroup>
+
+  <!--
+    The pages the loopback sign-in listener serves to the browser. Embedded rather than copied
+    to the output directory so they survive a self-contained publish and Velopack packaging as
+    part of the assembly, and so they load without a WPF Application context (the listener tests
+    have none). LogicalName is set explicitly rather than left to the default path-derived name,
+    which the hyphen in the filename would otherwise make easy to get subtly wrong.
+  -->
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\Auth\signin.html" LogicalName="Battlegrounds.Auth.SignIn.html" />
+    <EmbeddedResource Include="Assets\Auth\notice.html" LogicalName="Battlegrounds.Auth.Notice.html" />
   </ItemGroup>
 
   <!--
@@ -46,8 +56,6 @@
   <ItemGroup>
     <Resource Include="Assets\auth.jpg" />
     <Resource Include="Assets\BattlegroundsLogo.png" />
-    <Resource Include="Assets\IdP_discord.png" />
-    <Resource Include="Assets\IdP_steam.png" />
     <Resource Include="Rendering\Effects\ColourTintShader.ps" />
   </ItemGroup>
 

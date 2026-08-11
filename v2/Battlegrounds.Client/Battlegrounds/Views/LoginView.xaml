@@ -19,6 +19,27 @@
         <Style x:Key="Login.FieldLabel" TargetType="controls:TrackedTextBlock" BasedOn="{StaticResource Display.Label}">
             <Setter Property="Margin" Value="0,0,0,8"/>
         </Style>
+
+        <Style x:Key="Login.ProviderButton" TargetType="Button" BasedOn="{StaticResource Button.Ghost}">
+            <Setter Property="MinHeight" Value="{DynamicResource Size.ControlLarge}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
+
+        <Style x:Key="Login.DiscordButton" TargetType="Button" BasedOn="{StaticResource Login.ProviderButton}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsDiscordPending}" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent.Gold}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="Login.SteamButton" TargetType="Button" BasedOn="{StaticResource Login.ProviderButton}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSteamPending}" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent.Gold}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <Grid>
@@ -42,87 +63,85 @@
 
                 <controls:TrackedTextBlock Style="{StaticResource Display.Hero}"
                                            FontSize="{DynamicResource Font.Size.DisplayLarge}"
-                                           Text="WELCOME BACK"
+                                           Text="SIGN IN"
                                            Margin="0,0,0,8"/>
 
                 <TextBlock Style="{StaticResource Text.Body}"
                            Foreground="{StaticResource Brush.Text.Dim}"
-                           Text="Sign in to your account."
-                           Margin="0,0,0,34"/>
+                           TextWrapping="Wrap"
+                           Text="If you haven't played before, your account is created the first time you sign in."
+                           Margin="0,0,0,30"/>
 
-                <controls:TrackedTextBlock Style="{StaticResource Login.FieldLabel}" Text="USERNAME"/>
-                <TextBox Style="{StaticResource TextBox.Field}"
-                         Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                         Margin="0,0,0,20"/>
-
-                <controls:TrackedTextBlock Style="{StaticResource Login.FieldLabel}" Text="PASSWORD"/>
-                <PasswordBox x:Name="PasswordBox"
-                             Style="{StaticResource PasswordBox.Field}"
-                             Margin="0,0,0,26"/>
-
-                <Button Style="{StaticResource Button.Cta}"
-                        Content="LOGIN"
-                        Padding="15"
-                        Command="{Binding LoginCommand}"
-                        CommandParameter="{Binding ElementName=PasswordBox}"
-                        IsDefault="True"
-                        IsEnabled="{Binding CanLogin}"/>
-
-                <TextBlock Style="{StaticResource Text.Body}"
-                           FontSize="{DynamicResource Font.Size.BodySmall}"
-                           HorizontalAlignment="Center"
-                           Margin="0,16,0,0">
-                    <Run Text="Don't have an account? "/>
-                    <Run Text="Sign up now"
-                         FontWeight="Bold"
-                         Foreground="{StaticResource Brush.Accent.Gold}"
-                         TextDecorations="Underline"
-                         MouseDown="RegisterNow_MouseDown"
-                         Cursor="Hand"/>
-                </TextBlock>
-
-                <!-- OR divider -->
-                <Grid Margin="0,24">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Rectangle Grid.Column="0" Height="1" VerticalAlignment="Center"
-                               Fill="{StaticResource Brush.Border.Default}"/>
-                    <controls:TrackedTextBlock Grid.Column="1"
-                                               Style="{StaticResource Display.Label}"
-                                               Foreground="{StaticResource Brush.Text.Faint}"
-                                               FontSize="{DynamicResource Font.Size.Meta}"
-                                               Text="OR"
-                                               Margin="16,0"/>
-                    <Rectangle Grid.Column="2" Height="1" VerticalAlignment="Center"
-                               Fill="{StaticResource Brush.Border.Default}"/>
-                </Grid>
-
-                <Button Style="{StaticResource Button.Ghost}"
+                <Button Style="{StaticResource Login.SteamButton}"
                         Margin="0,0,0,12"
+                        Command="{Binding ContinueWithSteamCommand}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Path Data="{StaticResource Icon.Brand.Steam}"
+                                  Fill="{StaticResource Brush.Text.Primary}"
+                                  Stretch="Uniform"
+                                  Width="{DynamicResource Size.Icon.S}"
+                                  Height="{DynamicResource Size.Icon.S}"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,12,0"/>
+                            <TextBlock Text="Continue with Steam"
+                                       FontSize="{DynamicResource Font.Size.BodySmall}"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <controls:BusyDots Grid.Column="2"
+                                           IsActive="{Binding IsSteamPending}"
+                                           HorizontalAlignment="Right"/>
+                    </Grid>
+                </Button>
+
+                <Button Style="{StaticResource Login.DiscordButton}"
                         Visibility="{Binding IsDiscordVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                         Command="{Binding ContinueWithDiscordCommand}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="pack://application:,,,/Battlegrounds;component/Assets/IdP_discord.png"
-                               Width="{DynamicResource Size.Icon.S}" Height="{DynamicResource Size.Icon.S}" Margin="0,0,12,0"/>
-                        <TextBlock Text="Continue with Discord"
-                                   FontSize="{DynamicResource Font.Size.BodySmall}"
-                                   VerticalAlignment="Center"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Path Data="{StaticResource Icon.Brand.Discord}"
+                                  Fill="{StaticResource Brush.Text.Primary}"
+                                  Stretch="Uniform"
+                                  Width="{DynamicResource Size.Icon.S}"
+                                  Height="{DynamicResource Size.Icon.S}"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,12,0"/>
+                            <TextBlock Text="Continue with Discord"
+                                       FontSize="{DynamicResource Font.Size.BodySmall}"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <controls:BusyDots Grid.Column="2"
+                                           IsActive="{Binding IsDiscordPending}"
+                                           HorizontalAlignment="Right"/>
+                    </Grid>
                 </Button>
 
-                <Button Style="{StaticResource Button.Ghost}"
-                        Command="{Binding ContinueWithSteamCommand}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="pack://application:,,,/Battlegrounds;component/Assets/IdP_steam.png"
-                               Width="{DynamicResource Size.Icon.S}" Height="{DynamicResource Size.Icon.S}" Margin="0,0,12,0"/>
-                        <TextBlock Text="Continue with Steam"
-                                   FontSize="{DynamicResource Font.Size.BodySmall}"
-                                   VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
+                <TextBlock Style="{StaticResource Text.Body}"
+                           Foreground="{StaticResource Brush.Text.Dim}"
+                           FontSize="{DynamicResource Font.Size.BodySmall}"
+                           Text="{Binding StatusMessage}"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           Margin="0,16,0,0"
+                           Visibility="{Binding HasStatus, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                <Button Style="{StaticResource Button.Bare}"
+                        Content="CANCEL"
+                        HorizontalAlignment="Center"
+                        Margin="0,6,0,0"
+                        Command="{Binding CancelProviderLoginCommand}"
+                        Visibility="{Binding HasStatus, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 <TextBlock Style="{StaticResource Text.Error}"
                            Text="{Binding ErrorMessage}"
@@ -130,6 +149,55 @@
                            TextWrapping="Wrap"
                            Margin="0,16,0,0"
                            Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                <!-- ===================== Developer sign-in ===================== -->
+                <!--
+                    Debug builds only. One visibility binding on the whole block, so there is no
+                    way to ship half of it: the divider, the fields and the button go together.
+
+                    LOGIN is Subtle rather than Cta on purpose. The red call to action is one per
+                    screen, and this is not the action the screen is for.
+                -->
+
+                <StackPanel Visibility="{Binding IsPasswordLoginVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                    <Grid Margin="0,34,0,26">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Rectangle Grid.Column="0" Height="1" VerticalAlignment="Center"
+                                   Fill="{StaticResource Brush.Border.Default}"/>
+                        <controls:TrackedTextBlock Grid.Column="1"
+                                                   Style="{StaticResource Display.Label}"
+                                                   Foreground="{StaticResource Brush.Text.Faint}"
+                                                   FontSize="{DynamicResource Font.Size.Meta}"
+                                                   Text="DEVELOPER SIGN-IN"
+                                                   Margin="16,0"/>
+                        <Rectangle Grid.Column="2" Height="1" VerticalAlignment="Center"
+                                   Fill="{StaticResource Brush.Border.Default}"/>
+                    </Grid>
+
+                    <controls:TrackedTextBlock Style="{StaticResource Login.FieldLabel}" Text="USERNAME"/>
+                    <TextBox Style="{StaticResource TextBox.Field}"
+                             Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0,0,0,20"/>
+
+                    <controls:TrackedTextBlock Style="{StaticResource Login.FieldLabel}" Text="PASSWORD"/>
+                    <PasswordBox x:Name="PasswordBox"
+                                 Style="{StaticResource PasswordBox.Field}"
+                                 Margin="0,0,0,26"/>
+
+                    <!-- IsDefault is safe on a collapsed button: WPF does not route Enter to one. -->
+                    <Button Style="{StaticResource Button.Subtle}"
+                            Content="LOGIN"
+                            Command="{Binding LoginCommand}"
+                            CommandParameter="{Binding ElementName=PasswordBox}"
+                            IsDefault="True"
+                            IsEnabled="{Binding CanLogin}"/>
+
+                </StackPanel>
 
             </StackPanel>
         </ScrollViewer>
@@ -151,12 +219,12 @@
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-
+            
             <Border HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    MaxWidth="360"
+                    MaxWidth="{DynamicResource Size.QuoteCard.MaxWidth}"
                     Margin="0,0,44,0"
-                    Padding="28,26"
+                    Padding="{StaticResource Space.Card}"
                     Background="{StaticResource Brush.Surface.Overlay}"
                     BorderBrush="{StaticResource Brush.Action.Primary}"
                     BorderThickness="{StaticResource Stroke.EdgeLeft}">
@@ -165,14 +233,13 @@
                                FontFamily="{StaticResource Font.Heading}"
                                FontStyle="Italic"
                                FontSize="{DynamicResource Font.Size.Heading}"
-                               LineHeight="28"
                                TextWrapping="Wrap"
                                Margin="0,0,0,16"
                                Text="&quot;In the chaos of battle, when the ground shakes and the sky's aflame, remember that the ultimate victory belongs to those who remain true to their purpose.&quot;"/>
                     <controls:TrackedTextBlock Style="{StaticResource Display.Label}"
                                                Foreground="{StaticResource Brush.Accent.Gold}"
                                                FontSize="{DynamicResource Font.Size.Meta}"
-                                               Tracking="{StaticResource Track.Wider}"
+                                               Tracking="{StaticResource Track.Wide}"
                                                Text="— COMPANY OF HEROES BATTLEGROUNDS"/>
                 </StackPanel>
             </Border>

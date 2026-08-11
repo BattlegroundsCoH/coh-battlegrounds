@@ -30,7 +30,7 @@ public interface IUserService {
     /// <remarks>This method performs an asynchronous operation to fetch user details. Ensure that the
     /// <paramref name="userId"/>  is valid and corresponds to an existing user in the system.</remarks>
     /// <param name="userId">The unique identifier of the user to retrieve. Cannot be null or empty.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the <see cref="User"/> object 
+    /// <returns>A task that represents the asynchronous operation. The task result contains the <see cref="User"/> object
     /// corresponding to the specified <paramref name="userId"/>, or <see langword="null"/> if no user is found.</returns>
     Task<User> GetUserAsync(string userId);
 
@@ -75,11 +75,11 @@ public interface IUserService {
     Task<string> GetLocalUserTokenAsync();
 
     string GetLocalUserRefreshToken();
-    
+
     ValueTask<bool> AutoLoginAsync();
-    
-    Task<User> LoginWithDiscordAsync();
-    
-    Task<User> LoginWithSteamAsync();
+
+    Task<User> LoginWithDiscordAsync(CancellationToken cancellationToken = default);
+
+    Task<User> LoginWithSteamAsync(CancellationToken cancellationToken = default);
 
 }

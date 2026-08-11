@@ -80,11 +80,11 @@ public sealed class MockIntegrationUserService(string user) : IUserService {
 
     public Task WaitForPendingLogOutAsync(TimeSpan timeout) => Task.CompletedTask;
 
-    public Task<User> LoginWithDiscordAsync() {
+    public Task<User> LoginWithDiscordAsync(CancellationToken cancellationToken = default) {
         throw new NotImplementedException();
     }
 
-    public Task<User> LoginWithSteamAsync() {
+    public Task<User> LoginWithSteamAsync(CancellationToken cancellationToken = default) {
         throw new NotImplementedException();
     }
 

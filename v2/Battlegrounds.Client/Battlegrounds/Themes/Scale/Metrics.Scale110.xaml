@@ -61,6 +61,7 @@
     <sys:Double x:Key="Size.Icon.XXL">53</sys:Double>
     <sys:Double x:Key="Size.Icon.Huge">77</sys:Double>
     <sys:Double x:Key="Size.Dot">7</sys:Double>
+    <sys:Double x:Key="Size.QuoteCard.MaxWidth">506</sys:Double>
     <sys:Double x:Key="Size.NewsCover.ThumbWidth">106</sys:Double>
     <sys:Double x:Key="Size.NewsGrid.MaxWidth">1540</sys:Double>
 

@@ -322,13 +322,65 @@
                     </UniformGrid>
                 </controls:Card>
 
-                <controls:Card Header="STATUS BADGES">
+                <controls:Card Header="STATUS BADGES" Margin="0,0,0,18">
                     <StackPanel Orientation="Horizontal">
                         <controls:StatusBadge Content="VICTORY" Tone="Success" Margin="0,0,10,0" />
                         <controls:StatusBadge Content="DEFEAT" Tone="Danger" Margin="0,0,10,0" />
                         <controls:StatusBadge Content="KIA" Tone="Caution" Margin="0,0,10,0" />
                         <controls:StatusBadge Content="VETERAN" Tone="Accent" Margin="0,0,10,0" />
                         <controls:StatusBadge Content="RESERVE" Tone="Neutral" />
+                    </StackPanel>
+                </controls:Card>
+
+                <controls:Card Header="BUSY DOTS" Margin="0,0,0,18">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <controls:TrackedTextBlock Style="{StaticResource Display.Label}"
+                                                   Foreground="{StaticResource Brush.Text.Dim}"
+                                                   Text="ACTIVE"
+                                                   VerticalAlignment="Center"
+                                                   Margin="0,0,14,0" />
+                        <controls:BusyDots IsActive="True"
+                                           Foreground="{StaticResource Brush.Text.Primary}"
+                                           Margin="0,0,40,0" />
+                        <controls:TrackedTextBlock Style="{StaticResource Display.Label}"
+                                                   Foreground="{StaticResource Brush.Text.Dim}"
+                                                   Text="INACTIVE (COLLAPSED)"
+                                                   VerticalAlignment="Center"
+                                                   Margin="0,0,14,0" />
+                        <controls:BusyDots IsActive="False"
+                                           Foreground="{StaticResource Brush.Text.Primary}" />
+                    </StackPanel>
+                </controls:Card>
+
+                <controls:Card Header="BRAND MARKS">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Path Data="{StaticResource Icon.Brand.Discord}"
+                              Fill="{StaticResource Brush.Text.Primary}"
+                              Stretch="Uniform"
+                              Width="{DynamicResource Size.Icon.S}"
+                              Height="{DynamicResource Size.Icon.S}"
+                              VerticalAlignment="Center"
+                              Margin="0,0,10,0" />
+                        <Path Data="{StaticResource Icon.Brand.Discord}"
+                              Fill="{StaticResource Brush.Text.Primary}"
+                              Stretch="Uniform"
+                              Width="{DynamicResource Size.Icon.L}"
+                              Height="{DynamicResource Size.Icon.L}"
+                              VerticalAlignment="Center"
+                              Margin="0,0,40,0" />
+                        <Path Data="{StaticResource Icon.Brand.Steam}"
+                              Fill="{StaticResource Brush.Text.Primary}"
+                              Stretch="Uniform"
+                              Width="{DynamicResource Size.Icon.S}"
+                              Height="{DynamicResource Size.Icon.S}"
+                              VerticalAlignment="Center"
+                              Margin="0,0,10,0" />
+                        <Path Data="{StaticResource Icon.Brand.Steam}"
+                              Fill="{StaticResource Brush.Text.Primary}"
+                              Stretch="Uniform"
+                              Width="{DynamicResource Size.Icon.L}"
+                              Height="{DynamicResource Size.Icon.L}"
+                              VerticalAlignment="Center" />
                     </StackPanel>
                 </controls:Card>
             </StackPanel>
